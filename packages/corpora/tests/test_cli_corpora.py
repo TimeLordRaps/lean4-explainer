@@ -1,7 +1,8 @@
 """Command-line surface for Lake roots and the built-in corpora."""
 
 from lean4_explainer import cli
-from lean4_explainer.showcase import ShowcaseResult
+from lean4_explainer_corpora import extension
+from lean4_explainer_corpora.showcase import ShowcaseResult
 
 
 def _lake_project(root):
@@ -68,7 +69,7 @@ def test_build_needs_exactly_one_root(tmp_path):
 
 
 def test_showcase_without_yes_prints_the_plan_and_downloads_nothing(tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(cli, "build_showcase", lambda *a, **k: (_ for _ in ()).throw(AssertionError("downloaded")))
+    monkeypatch.setattr(extension.showcase, "build_showcase", lambda *a, **k: (_ for _ in ()).throw(AssertionError("downloaded")))
     monkeypatch.setattr("sys.stdin", _NotATty())
 
     code = cli.main(["showcase", "pfr", "--out", str(tmp_path / "site"), "--work", str(tmp_path / "work")])
@@ -80,7 +81,7 @@ def test_showcase_without_yes_prints_the_plan_and_downloads_nothing(tmp_path, mo
 
 def test_no_command_is_the_showcase_of_all_eight(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(cli, "build_showcase", lambda *a, **k: (_ for _ in ()).throw(AssertionError("downloaded")))
+    monkeypatch.setattr(extension.showcase, "build_showcase", lambda *a, **k: (_ for _ in ()).throw(AssertionError("downloaded")))
     monkeypatch.setattr("sys.stdin", _NotATty())
 
     code = cli.main([])
@@ -98,7 +99,7 @@ def test_showcase_with_yes_builds_and_reports(tmp_path, monkeypatch, capsys):
         seen.update(names=[c.name for c in corpora], out=out, jobs=kwargs["jobs"])
         return ShowcaseResult((), 1234, 1000)
 
-    monkeypatch.setattr(cli, "build_showcase", fake)
+    monkeypatch.setattr(extension.showcase, "build_showcase", fake)
 
     code = cli.main(["showcase", "tutorials", "--yes", "--out", str(tmp_path / "s"), "--work", str(tmp_path / "w")])
 
@@ -109,7 +110,7 @@ def test_showcase_with_yes_builds_and_reports(tmp_path, monkeypatch, capsys):
 
 def test_fetch_with_yes_fetches_each_corpus(tmp_path, monkeypatch, capsys):
     fetched = []
-    monkeypatch.setattr(cli, "fetch_corpus", lambda corpus, work, **k: fetched.append(corpus.name) or work / corpus.name)
+    monkeypatch.setattr(extension.showcase, "fetch_corpus", lambda corpus, work, **k: fetched.append(corpus.name) or work / corpus.name)
 
     assert cli.main(["fetch", "lft", "pfr", "--yes", "--work", str(tmp_path)]) == 0
 

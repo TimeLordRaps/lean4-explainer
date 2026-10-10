@@ -1,13 +1,13 @@
 import pytest
 
 from lean4_explainer.build import build_site
-from lean4_explainer.cache import Note
+from lean4_explainer_l4del.model import Note
 from lean4_explainer.config import Config, load_config
 from lean4_explainer.errors import ExplainerError
-from lean4_explainer.graph import build_glossary, build_learning_path, resolve, unresolved_links
-from lean4_explainer.objects import plain_objects
-from lean4_explainer.l4del import parse_l4del
-from lean4_explainer.render import file_page, term_pattern
+from lean4_explainer_l4del.graph import build_glossary, build_learning_path, unresolved_links
+from lean4_explainer.objects import plain_objects, resolve
+from lean4_explainer_l4del.grammar import parse_l4del
+from lean4_explainer.render import file_page
 from lean4_explainer.scan import parse_source
 from lean4_explainer.search import shard_key, write_search
 
@@ -141,14 +141,20 @@ def test_glossary_keeps_first_definition():
     assert len(warnings) == 1
 
 
-def test_glossary_terms_are_linked_in_intuition(make_context):
-    text = "/-- Doc. -/\n-- L4DEL: intuition: An empty set has no members.\ntheorem t : True := trivial\n"
-    ctx = make_context(
-        glossary={"empty set": ("no members", "A.t", ("a.lean", 3))},
-        term_anchors={"empty set": "t0"},
-        term_pattern=term_pattern(["empty set"]),
+def test_glossary_terms_are_linked_in_intuition(tmp_path):
+    lean = tmp_path / "lean"
+    _tree(
+        lean,
+        {
+            "A.lean": "-- L4DEL: term: empty set = a set with no members\ntheorem s : True := trivial\n\n"
+            "-- L4DEL: intuition: An empty set has no members.\ntheorem t : True := trivial\n"
+        },
     )
-    html = file_page(parse_source(text, "a.lean"), ctx)
+    out = tmp_path / "docs"
+
+    build_site(lean, out)
+
+    html = (out / "A.lean.html").read_text(encoding="utf-8")
     assert '<a class="term" href="glossary.html#t0">empty set</a>' in html
 
 

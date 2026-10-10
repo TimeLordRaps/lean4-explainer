@@ -1,4 +1,4 @@
-"""Index a Lean tree, check its L4DEL annotations, and write the proofsite."""
+"""Index a Lean tree and write the proofsite. Extensions add to both steps (see extensions.py)."""
 
 from __future__ import annotations
 
@@ -11,10 +11,10 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
-from .cache import Cache, FileIndex, Note, load_cache, save_cache
+from .cache import Cache, FileIndex, load_cache, save_cache
 from .config import Config
 from .errors import ExplainerError
-from .graph import build_glossary, build_learning_path, merge_notes, unresolved_links
+from .extensions import Extension, extensions
 from .objects import Copy, Objects, index_objects
 from .render import (
     ASSET_DIR,
@@ -23,28 +23,22 @@ from .render import (
     Context,
     file_page,
     folder_pages,
-    glossary_page,
-    guide_page,
-    learning_path_page,
     search_page,
-    term_pattern,
 )
 from .scan import FileSummary, LeanFile, iter_lean_files, parse_source
 from .search import write_search
-from .templates import annotation_report, annotation_state
 from .version import __version__
 
 __all__ = [
     "BuildSummary",
     "ExplainerError",
     "TreeIndex",
-    "annotation_templates",
     "build_site",
     "check_tree",
     "collect_tree",
 ]
 
-CACHE_FORMAT = 6
+CACHE_FORMAT = 7
 # Lake's build configuration and its older dependency directory are not library source. Always skipped,
 # at the root and in any subdirectory, on top of the user's exclude patterns. Hidden directories (.lake)
 # are already skipped by the scanner.
@@ -62,16 +56,9 @@ class TreeIndex:
     locations: dict[str, tuple[str, int]]
     objects: Objects
     summaries: list[FileSummary]
-    notes: list[Note]
     issues: list[str]
-    graph_issues: list[str]
-    terms: dict
-    steps: list
-    anchors: dict[str, str]
-    annotated: int
-    flagged: int
-    unannotated: int
     described: frozenset[str]
+    analyses: list[tuple[Extension, object]]  # each active extension with its analysis of this tree
 
 
 @dataclass(frozen=True)
@@ -80,21 +67,17 @@ class BuildSummary:
     declarations: int
     sorry: int
     axioms: int
-    annotated: int
-    flagged: int
-    unannotated: int
     pages_written: int
     pages_reused: int
     bytes_written: int
     total_bytes: int
     byte_budget: int
     search_entries: int
-    glossary_terms: int
-    learning_steps: int
     errors: tuple[str, ...]
     warnings: tuple[str, ...]
     identical_names: int
     variant_names: int
+    extension_lines: tuple[str, ...] = ()  # what each extension reports after a build
 
     @property
     def over_budget(self) -> bool:
@@ -116,6 +99,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
     ]
     if not sources:
         raise ExplainerError(f"no .lean files found under {lean_root}")
+    active = extensions()
     cache = load_cache(cache_dir / CACHE_FILE, _fingerprint(config))
     live = {rel for rel, _ in sources}
     stale = sorted(set(cache.files) - live)
@@ -135,9 +119,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
     first: dict[str, int] = {}
     extra: dict[str, list[int]] = {}
     summaries: list[FileSummary] = []
-    notes: list[Note] = []
     issues: list[str] = []
-    annotated = flagged = unannotated = 0
     described: set[str] = set()
     for file_ord, rel in enumerate(rels):
         entry = cache.files[rel]
@@ -153,11 +135,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
                 first[name] = ref
             else:
                 extra.setdefault(name, [seen]).append(ref)
-        notes.extend(entry.notes)
         issues.extend(entry.diagnostics)
-        annotated += entry.annotated
-        flagged += entry.flagged
-        unannotated += entry.unannotated
         if entry.described:
             described.update(entry.described.split("\n"))
 
@@ -168,12 +146,14 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
         return Copy(rel, entry.lines[slot], entry.codes[slot], entry.headers[slot])
 
     objects = index_objects(first, extra, copy_at)
-    merged, merge_issues = merge_notes(notes, objects)
-    terms, term_issues = build_glossary(merged)
-    steps, path_issues = build_learning_path(merged, objects) if config.learning_path else ([], [])
-    graph_issues = [*merge_issues, *path_issues, *unresolved_links(notes, objects)]
-    issues.extend([*objects.issues, *term_issues, *graph_issues])
-    anchors = {term: f"t{index}" for index, term in enumerate(sorted(terms, key=str.lower))}
+    issues.extend(objects.issues)
+    options = dict(config.options)
+    analyses: list[tuple[Extension, object]] = []
+    for ext in active:
+        per_file = {rel: dict(cache.files[rel].ext).get(ext.name) for rel in rels}
+        analysis = ext.analyze(objects, per_file, options)
+        analyses.append((ext, analysis))
+        issues.extend(ext.analysis_issues(analysis))
     return TreeIndex(
         sources=sources,
         cache=cache,
@@ -181,16 +161,9 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
         locations=objects.locations,
         objects=objects,
         summaries=summaries,
-        notes=notes,
         issues=issues,
-        graph_issues=graph_issues,
-        terms=terms,
-        steps=steps,
-        anchors=anchors,
-        annotated=annotated,
-        flagged=flagged,
-        unannotated=unannotated,
         described=frozenset(described),
+        analyses=analyses,
     )
 
 
@@ -227,8 +200,8 @@ def _build_site(
     for rel, _ in tree.sources:
         entry = tree.cache.files[rel]
         digest.update(rel.encode("utf-8") + b"\0" + entry.names.encode("utf-8") + b"\0" + entry.lines.tobytes())
-    for note in tree.notes:
-        digest.update(repr(note).encode("utf-8"))
+    for ext, analysis in tree.analyses:
+        digest.update(repr((ext.name, ext.fingerprint(dict(config.options)), analysis)).encode("utf-8"))
     for name in sorted(tree.objects.copies):
         digest.update(repr((name, tree.objects.copies[name])).encode("utf-8"))
     global_key = digest.hexdigest()
@@ -237,20 +210,18 @@ def _build_site(
         source_url=config.source_url,
         source_ref=config.source_ref,
         locations=tree.locations,
-        glossary=tree.terms,
-        term_anchors=tree.anchors,
-        term_pattern=term_pattern(tree.terms),
         cross_links=config.cross_links,
         search=config.search,
-        learning_path=config.learning_path,
-        status=_status(tree),
+        status=" ".join(filter(None, (ext.status(analysis) for ext, analysis in tree.analyses))),
         objects=tree.objects,
+        extensions=tuple(tree.analyses),
+        options=config.options,
         home=config.home,
         source_links=config.source_links,
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    written = _write(out_dir / ASSET_DIR / "site.css", SITE_CSS)
+    written = _write(out_dir / ASSET_DIR / "site.css", SITE_CSS + "".join(ext.css() for ext, _ in tree.analyses))
     written += _write(out_dir / ASSET_DIR / "site.js", SITE_JS)
     written += _write(out_dir / ".nojekyll", "")
 
@@ -268,10 +239,9 @@ def _build_site(
 
     for dirs, html in folder_pages(tree.summaries, ctx):
         written += _write(out_dir.joinpath(*dirs, "index.html"), html)
-    written += _write(out_dir / "glossary.html", glossary_page(ctx))
-    written += _write(out_dir / "annotate.html", guide_page(ctx))
-    if config.learning_path:
-        written += _write(out_dir / "learning-path.html", learning_path_page(tree.steps, tree.graph_issues, ctx))
+    for ext, analysis in tree.analyses:
+        for name, html in ext.pages(ctx, analysis).items():
+            written += _write(out_dir / name, html)
     search_entries = 0
     if config.search:
         written += _write(out_dir / "search.html", search_page(ctx))
@@ -291,21 +261,17 @@ def _build_site(
         declarations=sum(s.declarations for s in tree.summaries),
         sorry=sum(s.sorry for s in tree.summaries),
         axioms=sum(s.axioms for s in tree.summaries),
-        annotated=tree.annotated,
-        flagged=tree.flagged,
-        unannotated=tree.unannotated,
         pages_written=pages_written,
         pages_reused=pages_reused,
         bytes_written=written,
         total_bytes=_tree_bytes(out_dir),
         byte_budget=config.byte_budget,
         search_entries=search_entries,
-        glossary_terms=len(tree.terms),
-        learning_steps=len(tree.steps),
         errors=tuple(issue for issue in tree.issues if issue.startswith("error:")),
         warnings=tuple(issue for issue in tree.issues if issue.startswith("warning:")),
         identical_names=tree.objects.identical,
         variant_names=tree.objects.variant,
+        extension_lines=tuple(line for ext, analysis in tree.analyses for line in ext.summary(analysis)),
     )
 
 
@@ -316,48 +282,16 @@ def check_tree(
     return collect_tree(lean_root, config, cache_dir or lean_root.parent / ".lean4-explainer-check", jobs)
 
 
-def annotation_templates(
-    lean_root: Path,
-    rel: str,
-    config: Config | None = None,
-    cache_dir: Path | None = None,
-) -> str:
-    tree = check_tree(lean_root, config, cache_dir)
-    path = lean_root / rel
-    if not path.is_file():
-        raise ExplainerError(f"not a Lean file under {lean_root}: {rel}")
-    lean_file = parse_source(path.read_bytes().decode("utf-8-sig", errors="replace"), rel, statements=True)
-    return annotation_report(lean_file, tree.locations, tree.objects.ambiguous)
-
-
-def _status(tree: TreeIndex) -> str:
-    return (
-        f"L4DEL: {tree.annotated} annotated, {tree.flagged} flagged (errors or placeholders), "
-        f"{tree.unannotated} without L4DEL. Run lean4-explainer annotate --file <path> for templates."
-    )
-
-
 def _index_of(lean_file: LeanFile, sha: str) -> FileIndex:
     named = [decl for decl in lean_file.declarations if "(" not in decl.name]
-    notes = tuple(
-        Note(
-            name=decl.name,
-            rel=lean_file.path,
-            line=decl.line,
-            title=decl.l4.title,
-            prereqs=decl.l4.prereqs,
-            see=decl.l4.see,
-            terms=decl.l4.terms,
-        )
-        for decl in named
-        if decl.l4.title or decl.l4.prereqs or decl.l4.see or decl.l4.terms
-    )
-    diagnostics = tuple(
-        f"{d.severity}: {lean_file.path}:{d.line}: {d.message}"
-        for decl in lean_file.declarations
-        for d in decl.l4.diagnostics
-    ) + tuple(f"{d.severity}: {lean_file.path}:{d.line}: {d.message}" for d in lean_file.diagnostics)
-    states = [annotation_state(decl) for decl in named]
+    active = extensions()
+    summaries: list[tuple[str, object]] = []
+    diagnostics: list[str] = []
+    for ext in active:
+        summary = ext.index_file(lean_file.path, lean_file.declarations, lean_file.diagnostics.get(ext.name, ()))
+        if summary is not None:
+            summaries.append((ext.name, summary))
+            diagnostics.extend(ext.issues(lean_file.path, summary))
     return FileIndex(
         sha=sha,
         declarations=len(lean_file.declarations),
@@ -367,12 +301,13 @@ def _index_of(lean_file: LeanFile, sha: str) -> FileIndex:
         lines=array("I", (decl.line for decl in named)),
         codes=array("Q", (decl.code_digest for decl in named)),
         headers=array("Q", (decl.header_digest for decl in named)),
-        notes=notes,
-        diagnostics=diagnostics,
-        annotated=states.count("annotated"),
-        flagged=states.count("flagged"),
-        unannotated=states.count("unannotated"),
-        described="\n".join(decl.name for decl in named if decl.description or not decl.l4.is_empty),
+        diagnostics=tuple(diagnostics),
+        described="\n".join(
+            decl.name
+            for decl in named
+            if decl.description or any(ext.is_described(decl.ext[ext.name]) for ext in active if ext.name in decl.ext)
+        ),
+        ext=tuple(summaries),
     )
 
 
@@ -387,7 +322,8 @@ def _refresh_file(job: tuple[str, str, str]) -> tuple[str, str, FileIndex | None
 
 
 def _fingerprint(config: Config) -> str:
-    return hashlib.sha256(f"{__version__}|{CACHE_FORMAT}|{config!r}".encode("utf-8")).hexdigest()
+    installed = "|".join(ext.fingerprint(dict(config.options)) for ext in extensions())
+    return hashlib.sha256(f"{__version__}|{CACHE_FORMAT}|{config!r}|{installed}".encode("utf-8")).hexdigest()
 
 
 def _excluded(rel: str, patterns: tuple[str, ...]) -> bool:

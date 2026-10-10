@@ -1,15 +1,15 @@
 from lean4_explainer.build import build_site
 from lean4_explainer.config import Config
-from lean4_explainer.l4del import normalize_directive
+from lean4_explainer_l4del.grammar import normalize_directive
 from lean4_explainer.scan import parse_source
-from lean4_explainer.templates import annotation_state, placeholder_block
+from lean4_explainer_l4del.templates import annotation_state, notes_of, placeholder_block
 
 
 def issues(text):
     lean_file = parse_source(text, "a.lean")
-    found = [str(d) for d in lean_file.diagnostics]
+    found = [str(d) for d in lean_file.diagnostics.get("l4del", ())]
     for decl in lean_file.declarations:
-        found += [str(d) for d in decl.l4.diagnostics]
+        found += [str(d) for d in notes_of(decl).diagnostics]
     return found
 
 
@@ -85,8 +85,8 @@ def test_orphan_directive_is_error():
 def test_directive_crosses_blank_and_attribute_lines():
     text = "-- L4DEL: title: X\n\n@[simp]\ntheorem t : True := trivial\n"
     lean_file = parse_source(text, "a.lean")
-    assert lean_file.diagnostics == ()
-    assert lean_file.declarations[0].l4.title == "X"
+    assert lean_file.diagnostics == {"l4del": ()}
+    assert lean_file.declarations[0].ext["l4del"].title == "X"
 
 
 def test_anonymous_declaration_rejects_directive():
@@ -108,7 +108,7 @@ def test_value_length_limit():
 
 def test_unicode_is_normalized_to_nfc():
     text = "-- L4DEL: title: cafe\u0301\ntheorem t : True := trivial\n"
-    assert parse_source(text, "a.lean").declarations[0].l4.title == "caf\u00e9"
+    assert parse_source(text, "a.lean").declarations[0].ext["l4del"].title == "caf\u00e9"
     assert normalize_directive("  e\u0301  ") == "\u00e9"
 
 
@@ -118,8 +118,8 @@ def test_unannotated_declaration_state_and_valid_template():
     assert annotation_state(decl) == "unannotated"
     block = placeholder_block(decl, {})
     parsed = parse_source(block + "\ntheorem t : True := trivial\n", "a.lean").declarations[0]
-    assert [d.severity for d in parsed.l4.diagnostics] == ["warning"] * 4
-    assert all("placeholder" in d.message for d in parsed.l4.diagnostics)
+    assert [d.severity for d in notes_of(parsed).diagnostics] == ["warning"] * 4
+    assert all("placeholder" in d.message for d in notes_of(parsed).diagnostics)
 
 
 def test_ambiguous_reference_is_error(tmp_path):

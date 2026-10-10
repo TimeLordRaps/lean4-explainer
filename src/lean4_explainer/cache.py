@@ -7,16 +7,7 @@ import pickle
 from dataclasses import dataclass, field
 from pathlib import Path
 
-
-@dataclass(frozen=True)
-class Note:
-    name: str
-    rel: str
-    line: int
-    title: str | None
-    prereqs: tuple[str, ...]
-    see: tuple[str, ...]
-    terms: tuple[tuple[str, str], ...]
+from .extensions import cache_types
 
 
 @dataclass(frozen=True)
@@ -29,12 +20,9 @@ class FileIndex:
     lines: array
     codes: array
     headers: array
-    notes: tuple[Note, ...]
     diagnostics: tuple[str, ...]
-    annotated: int = 0
-    flagged: int = 0
-    unannotated: int = 0
-    described: str = ""  # newline-joined names of declarations with a description or an L4DEL note
+    described: str = ""  # newline-joined names of declarations with a description (comment or extension note)
+    ext: tuple[tuple[str, object], ...] = ()  # (extension name, that extension's summary of the file)
 
 
 @dataclass
@@ -52,14 +40,14 @@ _ALLOWED_GLOBALS = frozenset(
         ("array", "_array_reconstructor"),
         (__name__, "Cache"),
         (__name__, "FileIndex"),
-        (__name__, "Note"),
     }
 )
 
 
 class _CacheUnpickler(pickle.Unpickler):
     def find_class(self, module: str, name: str) -> object:
-        if (module, name) not in _ALLOWED_GLOBALS:
+        # Extensions list the types of their own file summaries; nothing else is ever loaded.
+        if (module, name) not in _ALLOWED_GLOBALS and (module, name) not in cache_types():
             raise pickle.UnpicklingError(f"cache refers to {module}.{name}")
         return super().find_class(module, name)
 

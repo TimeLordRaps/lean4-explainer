@@ -7,10 +7,11 @@ import os
 import re
 import textwrap
 from bisect import bisect_left, bisect_right
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
-from .l4del import Diagnostic, L4Notes, parse_l4del
+from .extensions import Comment, Diagnostic, Head, SourceView, extensions
 
 DECLARATION_KINDS = (
     "theorem",
@@ -43,8 +44,6 @@ _BLOCK_TOKEN_RE = re.compile(r"/-|-/")
 _STRING_BODY_RE = re.compile(r'(?:\\.|[^"\\])*"', re.DOTALL)
 _CHAR_LITERAL_RE = re.compile(r"'(?:\\.|[^'\\\n])'")
 
-_L4DEL_PREFIX = "L4DEL:"
-_CARRIER_RE = re.compile(r"^[ \t]*L4DEL:(?P<rest>.*)$")
 _LEADING_SKIP_PREFIXES = ("@[", "set_option")
 _STATEMENT_MAX_LINES = 12
 _INDENTED = ("", " ", "\t")
@@ -57,11 +56,11 @@ class Declaration:
     line: int
     doc: str | None
     comment: str | None
-    l4: L4Notes
     statement: str
     has_sorry: bool
     code_digest: int = 0
     header_digest: int = 0
+    ext: dict[str, Any] = field(default_factory=dict)  # extension name -> that extension's payload
 
     @property
     def description(self) -> str | None:
@@ -74,7 +73,7 @@ class LeanFile:
     module_doc: str | None
     imports: tuple[str, ...]
     declarations: tuple[Declaration, ...]
-    diagnostics: tuple[Diagnostic, ...] = ()
+    diagnostics: dict[str, tuple[Diagnostic, ...]] = field(default_factory=dict)  # by extension name
 
 
 @dataclass(frozen=True)
@@ -95,12 +94,7 @@ def summarize(lean_file: LeanFile) -> FileSummary:
     )
 
 
-@dataclass(frozen=True)
-class _Comment:
-    kind: str  # "line", "block", "doc", or "module"
-    start_line: int
-    end_line: int
-    body: str
+_Comment = Comment
 
 
 def scan_file(path: Path, relative: str) -> LeanFile:
@@ -118,8 +112,13 @@ def parse_source(text: str, path: str, statements: bool = False) -> LeanFile:
     for comment in comments:
         ending.setdefault(comment.end_line, []).append(comment)
 
+    active = extensions()
+
+    def hidden(body: str) -> bool:
+        return any(ext.hides_comment(body) for ext in active)
+
     module_doc = next(
-        (_clean(c.body) for c in comments if c.kind == "module" and not _is_l4del(c.body)),
+        (_clean(c.body) for c in comments if c.kind == "module" and not hidden(c.body)),
         "",
     )
 
@@ -132,46 +131,27 @@ def parse_source(text: str, path: str, statements: bool = False) -> LeanFile:
     heads = _declaration_heads(code)
     bounds = [index for index, _, _ in heads[1:]] + [len(code)]
 
-    file_diagnostics: list[Diagnostic] = []
-    carriers: list[tuple[int, int, str]] = []
-    for comment in comments:
-        if comment.kind == "line":
-            match = _CARRIER_RE.match(comment.body)
-            if match is None:
-                continue
-            rest = match["rest"]
-            if not rest.strip(" \t"):
-                file_diagnostics.append(Diagnostic("error", comment.start_line, "empty L4DEL directive"))
-            elif rest[0] not in " \t":
-                file_diagnostics.append(
-                    Diagnostic("error", comment.start_line, "L4DEL: needs a space before the directive")
-                )
-            else:
-                carriers.append((comment.start_line - 1, comment.start_line, rest))
-        elif _is_l4del(comment.body):
-            file_diagnostics.append(
-                Diagnostic("error", comment.start_line, "L4DEL is allowed only in line comments")
-            )
-    directives_by_head: dict[int, list[tuple[int, str]]] = {}
-    for code_index, line, rest in carriers:
-        following = next((head for head in heads if head[0] > code_index), None)
-        if following is None or any(_is_code(code[k]) for k in range(code_index + 1, following[0])):
-            file_diagnostics.append(Diagnostic("error", line, "orphan L4DEL directive: no declaration follows it"))
-        elif "(" in following[2]:
-            file_diagnostics.append(Diagnostic("error", line, "anonymous declarations cannot carry L4DEL"))
-        else:
-            directives_by_head.setdefault(following[0], []).append((line, rest))
+    payloads: dict[str, dict[int, Any]] = {}
+    file_diagnostics: dict[str, tuple[Diagnostic, ...]] = {}
+    if active:
+        view = SourceView(path, code, comments, tuple(Head(*head) for head in heads))
+        for ext in active:
+            result = ext.parse(view)
+            if result is not None:
+                payloads[ext.name] = dict(result.by_head)
+                file_diagnostics[ext.name] = tuple(result.diagnostics)
     boundaries = [k for k, line in enumerate(code) if line[:1] not in _INDENTED and _BOUNDARY_RE.match(line)]
     sorry_lines = [k for k, line in enumerate(code) if "sorry" in line and _SORRY_RE.search(line)]
     declarations = []
     for (index, kind, name), bound in zip(heads, bounds):
-        leading, plain = _leading_comments(index, code, ending)
-        doc = next((c for c in leading if c.kind == "doc" and not _is_l4del(c.body)), None)
+        leading, plain = _leading_comments(index, code, ending, hidden)
+        doc = next((c for c in leading if c.kind == "doc" and not hidden(c.body)), None)
         doc_text = _clean(doc.body) if doc else ""
         comment = _plain_text(plain)
-        directives = directives_by_head.get(index)
-        l4 = parse_l4del(directives) if directives else L4Notes()
-        described = bool(doc_text or comment or not l4.is_empty)
+        here = {ext_name: by_head[index] for ext_name, by_head in payloads.items() if index in by_head}
+        described = bool(doc_text or comment) or any(
+            ext.is_described(here[ext.name]) for ext in active if ext.name in here
+        )
         code_digest, header_digest = _fingerprints(code, boundaries, index, bound, name)
         at = bisect_left(sorry_lines, index)
         declarations.append(
@@ -181,11 +161,11 @@ def parse_source(text: str, path: str, statements: bool = False) -> LeanFile:
                 line=index + 1,
                 doc=doc_text or None,
                 comment=comment,
-                l4=l4,
                 statement=_statement(source, code, index, bound) if described or statements else "",
                 has_sorry=at < len(sorry_lines) and sorry_lines[at] < bound,
                 code_digest=code_digest,
                 header_digest=header_digest,
+                ext=here,
             )
         )
 
@@ -194,7 +174,7 @@ def parse_source(text: str, path: str, statements: bool = False) -> LeanFile:
         module_doc=module_doc or None,
         imports=tuple(imports),
         declarations=tuple(declarations),
-        diagnostics=tuple(file_diagnostics),
+        diagnostics=file_diagnostics,
     )
 
 
@@ -305,7 +285,7 @@ def _string_end(text: str, start: int) -> tuple[int, bool]:
 
 
 def _leading_comments(
-    index: int, code: list[str], ending: dict[int, list[_Comment]]
+    index: int, code: list[str], ending: dict[int, list[_Comment]], hidden
 ) -> tuple[list[_Comment], list[_Comment]]:
     """Comments above a declaration, nearest first, as (all, plain). Plain comments must touch the declaration."""
     found: list[_Comment] = []
@@ -320,7 +300,7 @@ def _leading_comments(
         if here:
             found.extend(here)
             if attached:
-                plain.extend(c for c in here if c.kind in ("line", "block") and not _is_l4del(c.body))
+                plain.extend(c for c in here if c.kind in ("line", "block") and not hidden(c.body))
             j = min(c.start_line for c in here) - 2
         else:
             if not stripped:
@@ -374,17 +354,6 @@ def _digest(text: str) -> int:
 
 def _is_ident_char(char: str) -> bool:
     return char.isalnum() or char in "_'!?"
-
-
-def _is_l4del(body: str) -> bool:
-    return body.strip().startswith(_L4DEL_PREFIX)
-
-
-def _is_code(line: str) -> bool:
-    stripped = line.strip()
-    return bool(stripped) and not stripped.startswith(_LEADING_SKIP_PREFIXES)
-
-
 
 
 def _clean(body: str) -> str:

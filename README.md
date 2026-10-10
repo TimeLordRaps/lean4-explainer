@@ -1,23 +1,68 @@
 # lean4-explainer
 
-Builds a static HTML proofsite from a Lean 4 source tree. It reads `.lean` files as text and lists declarations, doc comments, L4DEL notes, and statement snippets. It never runs Lean, so axiom and trust checks are UNKNOWN.
+Builds a static HTML proofsite from a Lean 4 source tree, so you can show your theorems to people who have not read the source. It reads `.lean` files as text and lists declarations, doc comments, plain comments, and statement snippets. It never runs Lean, so axiom and trust checks are UNKNOWN.
 
-**Jump to:** [Write your own explanations with L4DEL](#start-here-lean4-explainer-and-l4del-go-together) | [Try it on 8 Lean projects](#built-in-corpora-and-extras) | [Use it on your Lake project](#lake-projects) | [Usage](#usage)
+The core is small and needs nothing else. Everything that adds weight is an extension you opt into with a pip extra:
 
-The default site, built by `lean4-explainer` with no annotation at all, is published from this repository's GitHub Pages once Pages is enabled for it (Settings, Pages, Source: GitHub Actions).
+| You want | Install | What you get |
+|---|---|---|
+| A quick explanation page of your Lean code | `pip install lean4-explainer` | The site, from declarations and standard Lean comments |
+| To write richer explanations in comments | `pip install lean4-explainer[l4del]` | **[L4DEL](#l4del-write-your-own-explanations)**: titles, intuition, proof steps, prerequisites, glossary, learning path, `check` and `annotate` |
+| To see it on well-known Lean projects | `pip install lean4-explainer[all]` | Pinned descriptions of 8 projects, plus `sources`, `fetch` and `showcase` |
 
-## Start here: lean4-explainer and L4DEL go together
+**Jump to:** [L4DEL: write your own explanations](#l4del-write-your-own-explanations) | [Quick start](#quick-start) | [Lake projects](#lake-projects) | [Built-in corpora](#built-in-corpora-and-extras) | [Extensions](#extensions) | [Configuration](#configuration)
 
-lean4-explainer reads L4DEL, the explanation metadata that Lean authors write as line comments. L4DEL is optional at first, but the tool is built around it. Whenever a declaration has no valid L4DEL, lean4-explainer says what is missing and prints a template to paste in.
+The default site, which `lean4-explainer[all]` builds with no annotation at all, is published from this repository's GitHub Pages once Pages is enabled for it (Settings, Pages, Source: GitHub Actions).
 
-The workflow for a human or an agent:
+Note: the extension packages (`lean4-explainer-l4del`, `lean4-explainer-corpora`, `lean4-explainer-<corpus>`) are in `packages/` in this repository and have not been published to PyPI yet, so the extras resolve only after they are published. Until then install them from a checkout (see [Development](#development)).
+
+## Quick start
+
+```
+pip install lean4-explainer
+lean4-explainer build --lean-root lean --out docs
+```
+
+This writes `docs/index.html`, one page per Lean file (`docs/Foo/Bar.lean.html`), one `index.html` per folder, a search page, and shared assets in `docs/_assets/`. Pages make no network requests.
+
+For a Lake project, list only the libraries its lakefile declares:
+
+```
+lean4-explainer build --lake-root . --out docs
+```
+
+### What is listed
+
+- Declarations at column 0: `theorem`, `lemma`, `def`, `abbrev`, `structure`, `class`, `inductive`, `instance`, `axiom`, `opaque`, `example`.
+- Qualified names from `namespace` and `section` blocks.
+- A `/-- ... -/` doc comment directly above a declaration. If there is none, a plain `--` or `/- ... -/` comment directly above it (no blank line between) is used as its description.
+- Statement snippets only for declarations that have a description. This keeps full-tree output small.
+- The first `/-! ... -/` module doc in each file.
+- Whether a declaration's text contains the word `sorry`.
+- Same-named declarations: identical copies are one object; distinct definitions are listed with their files.
+
+### Limits
+
+- This is a text heuristic. Indented declarations, macro-generated declarations, and names created by `notation` or `syntax` are not listed.
+- `sorry` detection is textual. It does not follow dependencies and does not check axioms.
+- Lean is not run, so axiom and trust checks are UNKNOWN. Tactic traces, trust badges from kernel terms, expression-tree compression, a Lake facet, `explain#Name` links and version diffs all need a Lean run and are not implemented.
+
+## L4DEL: write your own explanations
+
+L4DEL is an optional extension. It reads `-- L4DEL: key: value` line comments and adds an explanation layer to the site. The core never needs it, and a project that writes none gets the same output as without it.
+
+```
+pip install lean4-explainer[l4del]
+```
+
+Whenever a declaration has no valid L4DEL, the tool says what is missing and prints a template to paste in. The workflow for a human or an agent:
 
 1. **Check** the tree with `lean4-explainer check --lean-root lean`. Errors go to stderr and the command exits with code 1. Warnings are listed.
 2. **Annotate** one file with `lean4-explainer annotate --lean-root lean --file Demo/Basics.lean`. Each declaration without a valid annotation gets a template. Templates are printed, never written into your files.
 3. **Paste** a template directly above its declaration, then replace every `TODO_` value.
 4. **Build** with `lean4-explainer build --lean-root lean --out docs`. A `TODO_` left in a value is a warning, so the build reports it.
 
-The generated site has an L4DEL guide page (`annotate.html`) with the same workflow and a worked example.
+The generated site gets an L4DEL guide page (`annotate.html`), a glossary, and a learning path ordered by prerequisites.
 
 ### The directive grammar
 
@@ -41,102 +86,84 @@ Rules:
 - A directive attaches to the next declaration. Only blank lines, comments, attribute lines, and `set_option` lines may separate them. Other code makes a directive an orphan, which is an error.
 - Anonymous declarations (`example`, unnamed `instance`) cannot carry directives.
 - `prereq` and `see` names are exact. `foo` does not match `Demo.foo`. A name that matches nothing is a warning.
-- Same-named declarations: identical copies are one object, so a plain name refers to it. A name with distinct definitions is ambiguous: a plain reference is an error, and it must be written `Name@path`, for example `Demo.value@Var/B.lean`.
+- A name with distinct definitions is ambiguous: a plain reference is an error, and it must be written `Name@path`, for example `Demo.value@Var/B.lean`.
 - Values are trimmed, must not be empty, and are at most 2000 characters.
-- The complete grammar is in the module docstring of `lean4_explainer/l4del.py`.
+- The complete grammar is in `packages/l4del/src/lean4_explainer_l4del/grammar.py`.
+- Without the extension installed, `-- L4DEL:` lines are ordinary comments.
 
-### Placeholders
-
-Templates use `TODO_` placeholders. They are valid syntax, so a pasted template parses, and every `TODO_` left in a value is reported as a warning until it is replaced. The tool never writes into your source files.
-
-## Usage
-
-```
-pip install lean4-explainer
-lean4-explainer build --lean-root lean --out docs
-lean4-explainer build --lake-root . --out docs   # a Lake project: only the libraries named in the lakefile
-```
-
-This writes `docs/index.html`, one page per Lean file (`docs/Foo/Bar.lean.html`), one `index.html` per folder, and shared assets in `docs/_assets/`. Pages make no network requests.
-
-## What is listed
-
-- Declarations at column 0: `theorem`, `lemma`, `def`, `abbrev`, `structure`, `class`, `inductive`, `instance`, `axiom`, `opaque`, `example`.
-- Qualified names from `namespace` and `section` blocks.
-- A `/-- ... -/` doc comment directly above a declaration. If there is none, a plain `--` or `/- ... -/` comment directly above it (no blank line between) is used as its description.
-- Optional L4DEL notes: a `-- L4DEL: key: value` line comment directly above a declaration. Several directives may stack. A project that writes none gets the same output without any L4DEL markup.
-- Statement snippets only for declarations that have a description or an L4DEL note. This keeps full-tree output small.
-- The first `/-! ... -/` module doc in each file.
-- Whether a declaration's text contains the word `sorry`.
-
-## Built-in corpora and extras
-
-lean4-explainer knows eight Lean projects, each pinned to a commit, so you can see what it produces and link your own theorems to them:
-
-| Name | Project | Extra |
-|---|---|---|
-| `formal-conjectures` | [google-deepmind/formal-conjectures](https://github.com/google-deepmind/formal-conjectures) | `conjectures` |
-| `carleson` | [fpvandoorn/carleson](https://github.com/fpvandoorn/carleson) | `carleson` |
-| `flt` | [ImperialCollegeLondon/FLT](https://github.com/ImperialCollegeLondon/FLT) (Fermat's Last Theorem) | `lft` or `flt` |
-| `pfr` | [teorth/pfr](https://github.com/teorth/pfr) | `pfr` |
-| `compfiles` | [dwrensha/compfiles](https://github.com/dwrensha/compfiles) | `compfiles` |
-| `mil` | [Mathematics in Lean](https://github.com/leanprover-community/mathematics_in_lean) (tutorial) | `tutorials` |
-| `tpil` | [Theorem Proving in Lean 4](https://github.com/leanprover/theorem_proving_in_lean4) (tutorial) | `tutorials` |
-| `oai` | [openai/math](https://github.com/openai/math) | `oai` |
-
-`pip install lean4-explainer[all]` names all eight, `[tutorials]` the two tutorials, `[conjectures]` the conjectures project. The extras add no Python packages (PyPI does not allow extras that point at git repositories, and the sources are large). They are accepted names. The registry is part of the base package, and the sources are cloned on request, one shallow fetch of the pinned commit each:
-
-```
-lean4-explainer sources [NAME...]              # list names, repositories and pinned commits
-lean4-explainer fetch tutorials --yes          # download only
-lean4-explainer showcase --yes --out site      # download all and build one subsite each under a landing page
-lean4-explainer                                # same as showcase; prints what it will download, asks first
-```
-
-Without `--yes`, the commands print the plan and ask. When stdin is not a terminal they download nothing and exit with code 2. Each corpus is built from the libraries its `lakefile.toml` names, with its pinned toolchain and `mathlib` commit shown on the landing page. Output is one folder per corpus, about 880 MB for all eight, mostly openai/math.
+`TODO_` placeholders are valid syntax, so a pasted template parses, and every `TODO_` left in a value is a warning until it is replaced. The tool never writes into your source files.
 
 ## Lake projects
 
 Lean and Lake do not need to be installed. The explainer reads text and starts no processes.
 
 - `--lake-root DIR` reads `lakefile.toml` (or best-effort, `lakefile.lean`) and lists only the files of the libraries it declares. A library `A` takes `A.lean` and the folder `A/`, explicit `roots` replace that default, `A.*` and `A.+` globs take the folder, and a plain glob takes one module. `srcDir` is honored. This is a rule on file names, not Lake's import resolution: a file in a library folder is listed even if nothing imports it.
-- It also reads `lean-toolchain`, the `rev` of each `require`, and the commits in `lake-manifest.json`, and shows the toolchain and `mathlib` commit on the showcase landing page.
+- It also reads `lean-toolchain`, the `rev` of each `require`, and the commits in `lake-manifest.json`.
 - `--lean-root DIR` lists every `.lean` file under `DIR`. Either way it skips `lakefile.lean` at any depth, `lake-packages/` (Lake's older dependency directory), and hidden directories such as `.lake/`.
 - A library that is a test or example folder (for example `FLTTest`) is listed if the lakefile declares it. Add its name to `exclude`.
 
-### Tactic traces
+Tactic traces (the goal state after each tactic) are not in a lakefile. They come from elaborating the proof, which needs Lean and the project's dependencies built. They are not implemented.
 
-Tactic traces (the goal state after each tactic) are not in a lakefile. They come from elaborating the proof, which needs Lean and the project's dependencies built. lean4-explainer does not do that today, so the pages show the written proof text and the L4DEL `step` lines only. Traces are not implemented.
+## Built-in corpora and extras
 
-## Limits
+`pip install lean4-explainer[all]` adds eight Lean projects, each pinned to a commit, so you can see what the tool produces and link your own theorems to them. Each is its own small package (`lean4-explainer-<name>`) holding the pinned description, license, and license notes. The sources are fetched from GitHub on request, never bundled.
 
-- This is a text heuristic. Indented declarations, macro-generated declarations, and names created by `notation` or `syntax` are not listed.
-- `sorry` detection is textual. It does not follow dependencies and does not check axioms.
-- Lean is not run, so axiom and trust checks are UNKNOWN.
+| Name | Project | Extra | License |
+|---|---|---|---|
+| `formal-conjectures` | [google-deepmind/formal-conjectures](https://github.com/google-deepmind/formal-conjectures) | `conjectures` | Apache-2.0; other material CC-BY 4.0; Wikipedia, MathOverflow and OEIS content CC-BY-SA 4.0 |
+| `carleson` | [fpvandoorn/carleson](https://github.com/fpvandoorn/carleson) | `carleson` | Apache-2.0 |
+| `flt` | [ImperialCollegeLondon/FLT](https://github.com/ImperialCollegeLondon/FLT) (Fermat's Last Theorem) | `lft` or `flt` | Apache-2.0 |
+| `pfr` | [teorth/pfr](https://github.com/teorth/pfr) | `pfr` | Apache-2.0 |
+| `compfiles` | [dwrensha/compfiles](https://github.com/dwrensha/compfiles) | `compfiles` | Apache-2.0 |
+| `mil` | [Mathematics in Lean](https://github.com/leanprover-community/mathematics_in_lean) (tutorial) | `tutorials` | Apache-2.0 |
+| `tpil` | [Theorem Proving in Lean 4](https://github.com/leanprover/theorem_proving_in_lean4) (tutorial) | `tutorials` | Apache-2.0 |
+| `oai` | [openai/math](https://github.com/openai/math) | `oai` | Apache-2.0 |
+
+Licenses are those of each repository's `LICENSE` file at the pinned commit. Whether every file in a repository carries that license was not checked, except for formal-conjectures, whose README states the extra terms above.
+
+```
+lean4-explainer sources [NAME...]              # installed corpora, pinned commits, licenses
+lean4-explainer fetch tutorials --yes          # download only
+lean4-explainer showcase --yes --out site      # download and build one subsite each under a landing page
+lean4-explainer                                # same as showcase; prints what it will download, asks first
+```
+
+Without `--yes`, the commands print the plan and ask. When stdin is not a terminal they download nothing and exit with code 2. The showcase landing page shows each project's commit, Lean toolchain, `mathlib` commit, and license, and the license text is copied next to each subsite. Output is about 880 MB for all eight, mostly openai/math (which gets one source link per file instead of one per declaration to stay under the 1 GB Pages limit).
+
+## Extensions
+
+An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The two shipped extensions are `lean4-explainer-l4del` and `lean4-explainer-corpora`.
 
 ## Configuration
 
-Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types are errors.
+Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types are errors. Installed extensions can add keys (L4DEL adds `learning_path`).
 
 - `title`: site title.
 - `include`: list of glob patterns on paths relative to the lean root. When set, only matching files are listed (`--lake-root` fills this from the lakefile).
 - `exclude`: list of glob patterns on paths relative to the lean root. `lakefile.lean` and `lake-packages/` are skipped on top of these, at any depth.
 - `source_url`: template for source links, with `{path}`, `{line}`, and `{ref}`. `path` is relative to the lean root, so include `lean/` in the template if the repo layout needs it.
 - `source_ref`: value for `{ref}`.
-- `search`, `cross_links`, `learning_path`: booleans that switch those features on or off.
+- `source_links`: `"declaration"` (default, one link per declaration) or `"file"` (one per page, for very large trees).
+- `search`, `cross_links`: booleans that switch those features on or off.
 - `home`: relative URL of a landing page above this site. Adds an "All corpora" link to every page.
 - `byte_budget`: the build fails if the output exceeds this many bytes. The default is 1 GB, the GitHub Pages limit.
 
 ## Outputs
 
 - One page per Lean file, named `path/File.lean.html`, and one `index.html` per folder.
-- `glossary.html`, `search.html`, and `learning-path.html`.
-- `_assets/search/` holds the search index as plain script files, so search works from `file://` too. Search covers declarations that have a description or an L4DEL note. Every declaration is still listed on its file page, where browser find works. Indexing all 3.5 million declarations of the full openai/math tree would not fit GitHub Pages' 1 GB limit.
-- Pages that have not changed since the last build are reused. The cache lives beside the output directory, outside the published site, and can be moved with `--cache`. It is loaded through an allow-list of this package's own types. A cache file that refers to anything else is ignored and rebuilt, never run.
+- `search.html`. `_assets/search/` holds the search index as plain script files, so search works from `file://` too. Search covers declarations that have a description. Every declaration is still listed on its file page, where browser find works. Indexing all 3.5 million declarations of the full openai/math tree would not fit GitHub Pages' 1 GB limit.
+- Extension pages (L4DEL adds `glossary.html`, `annotate.html`, `learning-path.html`).
+- Pages that have not changed since the last build are reused. The cache lives beside the output directory, outside the published site, and can be moved with `--cache`. It is loaded through an allow-list of this package's own types and the types extensions declare. A cache file that refers to anything else is ignored and rebuilt, never run.
 
 ## Development
 
+The repository holds the core and the extensions as separate packages:
+
 ```
-pip install -e ".[test]"
-pytest
+pip install -e ".[test]" -e packages/l4del -e packages/corpora -e packages/corpus-flt   # and the other corpus-* packages
+pytest                      # core, with no extension active
+pytest packages/l4del       # L4DEL
+pytest packages/corpora     # registry, fetch, showcase
 ```
+
+Licensed under Apache-2.0. The built-in corpora keep their own licenses, listed above.

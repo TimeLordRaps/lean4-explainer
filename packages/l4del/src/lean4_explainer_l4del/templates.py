@@ -5,22 +5,28 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 
-from .graph import Location, resolve
-from .l4del import PLACEHOLDER
-from .scan import Declaration, LeanFile
+from lean4_explainer.objects import Location, resolve
+from lean4_explainer.scan import Declaration, LeanFile
+
+from .grammar import PLACEHOLDER, L4Notes
 
 _IDENT_RE = re.compile(r"[^\W\d][\w'.!?]*")
 _MAX_CANDIDATES = 5
 
 
+def notes_of(decl: Declaration) -> L4Notes:
+    return decl.ext.get("l4del") or L4Notes()
+
+
 def annotation_state(decl: Declaration) -> str:
     if "(" in decl.name:
         return "anonymous"
-    if any(d.severity == "error" for d in decl.l4.diagnostics):
+    notes = notes_of(decl)
+    if any(d.severity == "error" for d in notes.diagnostics):
         return "flagged"
-    if any(d.message.startswith("placeholder") for d in decl.l4.diagnostics):
+    if any(d.message.startswith("placeholder") for d in notes.diagnostics):
         return "flagged"
-    if decl.l4.is_empty:
+    if notes.is_empty:
         return "unannotated"
     return "annotated"
 

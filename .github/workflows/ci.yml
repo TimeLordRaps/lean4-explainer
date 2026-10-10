@@ -10,7 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  pytest:
+  core:
+    # the core alone, with no extension installed
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
@@ -27,3 +28,21 @@ jobs:
         run: python -m pip install -e ".[test]"
       - name: Test
         run: python -m pytest -vv -s --durations=10
+
+  extensions:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        package: [l4del, corpora]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e ".[test]" -e packages/${{ matrix.package }}
+      - name: Test
+        run: python -m pytest packages/${{ matrix.package }} -vv -s --durations=10

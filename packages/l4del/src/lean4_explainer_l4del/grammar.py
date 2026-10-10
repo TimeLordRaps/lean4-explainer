@@ -34,22 +34,14 @@ import unicodedata
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+from lean4_explainer.extensions import Diagnostic
+
 KEYS = ("title", "intuition", "step", "prereq", "see", "term")
 PLACEHOLDER = "TODO_"
 MAX_VALUE = 2000
 _BLANK = " \t"
 _DIRECTIVE_RE = re.compile(r"^(?P<key>[A-Za-z]+):(?P<value>.*)$")
 _NAME_RE = re.compile(r"^[^\s,:=()\[\]{}]+$")
-
-
-@dataclass(frozen=True)
-class Diagnostic:
-    severity: str
-    line: int
-    message: str
-
-    def __str__(self) -> str:
-        return f"{self.severity}: line {self.line}: {self.message}"
 
 
 @dataclass(frozen=True)

@@ -6,9 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from lean4_explainer.corpora import CORPORA
 from lean4_explainer.errors import ExplainerError
-from lean4_explainer.showcase import build_showcase, fetch_corpus
+from lean4_explainer_corpora import installed
+from lean4_explainer_corpora.showcase import build_showcase, fetch_corpus
+
+CORPORA = installed()
 
 
 def _git(cwd, *args):
@@ -28,6 +30,7 @@ def upstream(tmp_path):
     (repo / "Tools").mkdir()
     _git(repo, "init", "-q", "-b", "main")
     (repo / "lakefile.toml").write_text('name = "demo"\n\n[[lean_lib]]\nname = "Demo"\n', encoding="utf-8")
+    (repo / "LICENSE").write_text("Apache License\nVersion 2.0, January 2004\n", encoding="utf-8")
     (repo / "lean-toolchain").write_text("leanprover/lean4:v4.0.0\n", encoding="utf-8")
     (repo / "Demo.lean").write_text("import Demo.A\n", encoding="utf-8")
     (repo / "Demo" / "A.lean").write_text("/-- first -/\ntheorem a_fact : True := trivial\n", encoding="utf-8")
@@ -84,10 +87,24 @@ def test_showcase_builds_a_subsite_per_corpus_and_a_landing_page(upstream, tmp_p
     assert 'href="demo/index.html"' in landing
     assert "Demo corpus" in landing and "leanprover/lean4:v4.0.0" in landing
     assert corpus.commit[:12] in landing
-    assert "annotate.html" in landing  # one of the first links is the L4DEL guide
+    assert "#l4del-write-your-own-explanations" in landing  # the README's L4DEL section
+    assert "demo/annotate.html" not in landing  # no L4DEL extension here, so no guide page to link
     assert 'href="../index.html">All corpora<' in (out / "demo" / "index.html").read_text(encoding="utf-8")
     assert result.total_bytes > 0 and not result.over_budget
     assert (out / ".nojekyll").is_file()
+
+
+def test_showcase_copies_each_license_and_shows_it_on_the_landing_page(upstream, tmp_path):
+    corpus, base = upstream
+    corpus = replace(corpus, license="Apache-2.0", license_note="Parts are CC-BY-SA 4.0.")
+    out = tmp_path / "site"
+
+    build_showcase([corpus], tmp_path / "work", out, base_url=base)
+
+    assert "Apache License" in (out / "demo" / "LICENSE.txt").read_text(encoding="utf-8")
+    landing = (out / "index.html").read_text(encoding="utf-8")
+    assert "Apache-2.0" in landing and 'href="demo/LICENSE.txt"' in landing
+    assert "Parts are CC-BY-SA 4.0." in landing
 
 
 def test_showcase_without_a_lakefile_uses_the_corpus_include_patterns(upstream, tmp_path):

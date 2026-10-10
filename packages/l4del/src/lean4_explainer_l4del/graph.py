@@ -6,25 +6,9 @@ import heapq
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
-from .cache import Note
-from .objects import Objects, note_key, qualified_options, resolve_exact
+from lean4_explainer.objects import Location, Objects, note_key, qualified_options, resolve, resolve_exact
 
-Location = tuple[str, int]
-
-
-def resolve(
-    token: str,
-    scope: Sequence[str],
-    locations: Mapping[str, Location],
-    ambiguous: frozenset[str] = frozenset(),
-) -> str | None:
-    for depth in range(len(scope), -1, -1):
-        candidate = ".".join([*scope[:depth], token])
-        if candidate in ambiguous:
-            return None
-        if candidate in locations:
-            return candidate
-    return None
+from .model import Note
 
 
 @dataclass(frozen=True)

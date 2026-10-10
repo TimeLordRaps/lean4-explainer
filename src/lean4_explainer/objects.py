@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 
 Location = tuple[str, int]
@@ -126,6 +126,22 @@ def build_objects(by_name: Mapping[str, list[Copy]]) -> Objects:
 
 def plain_objects(locations: Mapping[str, Location]) -> Objects:
     return Objects(locations=dict(locations), copies={}, ambiguous=frozenset(), identical=0)
+
+
+def resolve(
+    token: str,
+    scope: Sequence[str],
+    locations: Mapping[str, Location],
+    ambiguous: frozenset[str] = frozenset(),
+) -> str | None:
+    """Resolve a name as Lean would from inside `scope`: the innermost namespace that declares it wins."""
+    for depth in range(len(scope), -1, -1):
+        candidate = ".".join([*scope[:depth], token])
+        if candidate in ambiguous:
+            return None
+        if candidate in locations:
+            return candidate
+    return None
 
 
 def resolve_exact(token: str, objects: Objects) -> str | None:

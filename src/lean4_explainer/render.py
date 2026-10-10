@@ -8,10 +8,9 @@ from dataclasses import dataclass, field
 from html import escape
 from urllib.parse import quote
 
-from .graph import PathStep, resolve
-from .objects import Objects, plain_objects, resolve_exact
+from .extensions import Extension
+from .objects import Objects, plain_objects, resolve, resolve_exact
 from .scan import Declaration, FileSummary, LeanFile
-from .templates import placeholder_block
 
 ASSET_DIR = "_assets"
 
@@ -43,7 +42,6 @@ ol.decls > li, ul.list > li { padding: 0.45rem 0; border-bottom: 1px solid var(-
 .flag { font-size: 0.75rem; padding: 0 0.4rem; border-radius: 4px; }
 .flag.sorry { color: var(--warn); background: var(--warn-bg); }
 .doc { white-space: pre-wrap; margin: 0.3rem 0; }
-.l4del { margin: 0.3rem 0; padding-left: 0.6rem; border-left: 3px solid var(--line); }
 pre { overflow-x: auto; margin: 0.4rem 0; padding: 0.5rem 0.6rem; font-size: 0.85rem; background: rgba(127, 127, 127, 0.08); border-radius: 4px; }
 [hidden] { display: none !important; }
 .title { font-style: italic; }
@@ -52,11 +50,8 @@ pre { overflow-x: auto; margin: 0.4rem 0; padding: 0.5rem 0.6rem; font-size: 0.8
 .refs { margin: 0.3rem 0; font-size: 0.9rem; }
 .warn { color: var(--warn); font-size: 0.9rem; margin: 0.3rem 0; }
 .src { font-size: 0.8rem; color: var(--muted); }
-.l4term { margin: 0.3rem 0; }
 a.term { text-decoration: underline dotted; }
 nav.top { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--muted); }
-dl.glossary dt { font-weight: 600; margin-top: 0.6rem; }
-dl.glossary dd { margin: 0 0 0.2rem 1rem; }
 """
 
 SITE_JS = """
@@ -139,24 +134,14 @@ class Context:
     source_url: str | None
     source_ref: str
     locations: Mapping[str, tuple[str, int]]
-    glossary: Mapping[str, tuple[str, str, tuple[str, int]]]
-    term_anchors: Mapping[str, str]
-    term_pattern: re.Pattern[str] | None
     cross_links: bool
     search: bool
-    learning_path: bool
     status: str = ""
     objects: Objects | None = None
     home: str | None = None
+    extensions: tuple[tuple[Extension, object], ...] = ()  # active extensions with their analysis of the tree
+    options: tuple[tuple[str, object], ...] = ()
     source_links: str = "declaration"
-
-
-def term_pattern(terms: Iterable[str]) -> re.Pattern[str] | None:
-    words = sorted(terms, key=len, reverse=True)
-    if not words:
-        return None
-    alternation = "|".join(re.escape(word) for word in words)
-    return re.compile(r"(?<![\w'])(" + alternation + r")(?![\w'])")
 
 
 def default_context() -> Context:
@@ -165,12 +150,8 @@ def default_context() -> Context:
         source_url=None,
         source_ref="main",
         locations={},
-        glossary={},
-        term_anchors={},
-        term_pattern=None,
         cross_links=True,
         search=True,
-        learning_path=True,
     )
 
 
@@ -188,7 +169,7 @@ def file_page(lean_file: LeanFile, ctx: Context | None = None) -> str:
         f'<p class="muted">{_stats(len(declarations), sorry, axioms)}</p>',
     ]
     if ctx.source_url and ctx.source_links == "file":
-        href = escape(_source_href(lean_file.path, 1, ctx), quote=True)
+        href = escape(source_href(lean_file.path, 1, ctx), quote=True)
         body.append(f'<p><a class="src" href="{href}">source</a></p>')
     if lean_file.module_doc:
         body.append(f'<div class="doc">{escape(lean_file.module_doc)}</div>')
@@ -199,7 +180,7 @@ def file_page(lean_file: LeanFile, ctx: Context | None = None) -> str:
         body.append("</ol>")
     else:
         body.append('<p class="muted">No declarations listed.</p>')
-    return _page(lean_file.path, len(dirs), body, ctx)
+    return page(lean_file.path, len(dirs), body, ctx)
 
 
 def folder_pages(summaries: list[FileSummary], ctx: Context) -> Iterator[tuple[tuple[str, ...], str]]:
@@ -258,7 +239,7 @@ def _folder_page(
                 f'<span class="muted">{summary.declarations} declarations</span></li>'
             )
         body.append("</ul>")
-    return _page(page_title, len(dirs), body, ctx)
+    return page(page_title, len(dirs), body, ctx)
 
 
 def _summary_list(folder: _Folder) -> str:
@@ -277,35 +258,31 @@ _MENTION_LIMIT = 25
 
 
 def _decl_item(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> str:
-    depth = len(dirs)
     head = f'<span class="kind">{escape(decl.kind)}</span> <code>{escape(decl.name)}</code>'
-    if decl.l4.title:
-        head += f' <span class="title">{escape(decl.l4.title)}</span>'
+    for ext, _ in ctx.extensions:
+        if ext.name in decl.ext:
+            head += ext.declaration_title(decl, decl.ext[ext.name])
     if decl.has_sorry:
         head += ' <span class="flag sorry">sorry</span>'
     head += f' <span class="ln">line {decl.line}</span>'
     if ctx.source_url and ctx.source_links == "declaration":
-        href = escape(_source_href(rel, decl.line, ctx), quote=True)
+        href = escape(source_href(rel, decl.line, ctx), quote=True)
         head += f' <a class="src" href="{href}">source</a>'
     parts = [f'<li id="L{decl.line}" data-filterable>{head}']
     if decl.description:
         parts.append(f'<div class="doc">{escape(decl.description)}</div>')
-    if decl.l4.intuition:
-        parts.append(f'<p class="intuition">{_highlight(decl.l4.intuition, ctx, depth)}</p>')
-    if decl.l4.steps:
-        items = "".join(f"<li>{_highlight(step, ctx, depth)}</li>" for step in decl.l4.steps)
-        parts.append(f'<ol class="steps">{items}</ol>')
-    if decl.l4.prereqs:
-        parts.append(_refs("Prerequisites", decl.l4.prereqs, None, dirs, ctx))
-    if decl.l4.see:
-        parts.append(_refs("See also", decl.l4.see, None, dirs, ctx))
+    before: list[str] = []
+    after: list[str] = []
+    for ext, analysis in ctx.extensions:
+        if ext.name in decl.ext:
+            top, bottom = ext.declaration_blocks(decl, decl.ext[ext.name], rel, dirs, ctx, analysis)
+            before.append(top)
+            after.append(bottom)
+    parts.extend(block for block in before if block)
     copies = _copies(decl, rel, dirs, ctx)
     if copies:
         parts.append(copies)
-    for word, definition in decl.l4.terms:
-        parts.append(f'<p class="l4term"><strong>{escape(word)}</strong>: {escape(definition)}</p>')
-    if decl.l4.diagnostics:
-        parts.append(_hint(decl, ctx))
+    parts.extend(block for block in after if block)
     if decl.statement:
         parts.append(f"<pre>{escape(decl.statement)}</pre>")
         if ctx.cross_links:
@@ -333,8 +310,8 @@ def _copies(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> str:
             how = "same statement, different proof or body"
         else:
             how = "different statement"
-        href = escape(_href(dirs, copy.rel, f"#L{copy.line}"), quote=True)
-        items.append(f'<a href="{href}">{escape(copy.rel)}:{copy.line}</a> ({how})')
+        link = escape(href(dirs, copy.rel, f"#L{copy.line}"), quote=True)
+        items.append(f'<a href="{link}">{escape(copy.rel)}:{copy.line}</a> ({how})')
     if decl.name in objects.ambiguous:
         label = "Distinct definitions of this name"
         tail = f" Qualify references as {escape(decl.name)}@path."
@@ -344,7 +321,7 @@ def _copies(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> str:
     return f'<p class="refs">{label}: ' + ", ".join(items) + "." + tail + "</p>"
 
 
-def _refs(label: str, tokens: Iterable[str], scope: list[str] | None, dirs: list[str], ctx: Context) -> str:
+def refs(label: str, tokens: Iterable[str], scope: list[str] | None, dirs: list[str], ctx: Context) -> str:
     objects = _objects(ctx)
     items = []
     for token in tokens:
@@ -356,8 +333,8 @@ def _refs(label: str, tokens: Iterable[str], scope: list[str] | None, dirs: list
             items.append(f'<span class="warn">{escape(token)}</span>')
             continue
         rel, line = ctx.locations[target]
-        href = escape(_href(dirs, rel, f"#L{line}"), quote=True)
-        items.append(f'<a href="{href}">{escape(target)}</a>')
+        link = escape(href(dirs, rel, f"#L{line}"), quote=True)
+        items.append(f'<a href="{link}">{escape(target)}</a>')
     return f'<p class="refs">{escape(label)}: ' + ", ".join(items) + "</p>"
 
 
@@ -370,30 +347,15 @@ def _mentions(decl: Declaration, dirs: list[str], ctx: Context) -> str:
             found.append(target)
             if len(found) == _MENTION_LIMIT:
                 break
-    return _refs("Mentions", found, [], dirs, ctx) if found else ""
+    return refs("Mentions", found, [], dirs, ctx) if found else ""
 
 
-def _highlight(text: str, ctx: Context, depth: int) -> str:
-    if ctx.term_pattern is None:
-        return escape(text)
-    pieces: list[str] = []
-    last = 0
-    for match in ctx.term_pattern.finditer(text):
-        term = match.group(1)
-        href = _up(depth) + f"glossary.html#{ctx.term_anchors[term]}"
-        pieces.append(escape(text[last : match.start()]))
-        pieces.append(f'<a class="term" href="{href}">{escape(term)}</a>')
-        last = match.end()
-    pieces.append(escape(text[last:]))
-    return "".join(pieces)
-
-
-def _source_href(rel: str, line: int, ctx: Context) -> str:
+def source_href(rel: str, line: int, ctx: Context) -> str:
     url = ctx.source_url or ""
     return url.replace("{path}", quote(rel)).replace("{line}", str(line)).replace("{ref}", ctx.source_ref)
 
 
-def _href(from_dirs: list[str], to_rel: str, anchor: str = "") -> str:
+def href(from_dirs: list[str], to_rel: str, anchor: str = "") -> str:
     parts = to_rel.split("/")
     to_dirs = parts[:-1]
     common = 0
@@ -404,105 +366,6 @@ def _href(from_dirs: list[str], to_rel: str, anchor: str = "") -> str:
     return "../" * (len(from_dirs) - common) + "/".join(segments) + anchor
 
 
-def glossary_page(ctx: Context) -> str:
-    body = ["<h1>Glossary</h1>"]
-    if ctx.glossary:
-        body.append('<dl class="glossary">')
-        for term in sorted(ctx.glossary, key=str.lower):
-            definition, decl_name, (rel, line) = ctx.glossary[term]
-            href = escape(_href([], rel, f"#L{line}"), quote=True)
-            body.append(
-                f'<dt id="{ctx.term_anchors[term]}">{escape(term)}</dt>'
-                f'<dd>{escape(definition)} <span class="muted">(<a href="{href}">{escape(decl_name)}</a>)</span></dd>'
-            )
-        body.append("</dl>")
-    else:
-        body.append('<p class="muted">No terms yet. Add a term: word = definition line to an L4DEL comment.</p>')
-    return _page("Glossary", 0, body, ctx)
-
-
-def learning_path_page(steps: list[PathStep], warnings: list[str], ctx: Context) -> str:
-    body = ["<h1>Learning path</h1>", '<p class="muted">Each declaration appears after its prerequisites.</p>']
-    if steps:
-        body.append('<ol class="path">')
-        for step in steps:
-            rel, line = step.location
-            href = escape(_href([], rel, f"#L{line}"), quote=True)
-            title = f' <span class="title">{escape(step.title)}</span>' if step.title else ""
-            after = ""
-            if step.prereqs:
-                after = ' <span class="muted">after ' + ", ".join(escape(p) for p in step.prereqs) + "</span>"
-            body.append(f'<li><a href="{href}">{escape(step.name)}</a>{title}{after}</li>')
-        body.append("</ol>")
-    else:
-        body.append('<p class="muted">No declarations have title or prerequisite notes yet.</p>')
-    if warnings:
-        body.append("<h2>Warnings</h2>")
-        body.append('<ul class="list">' + "".join(f'<li class="warn">{escape(w)}</li>' for w in warnings) + "</ul>")
-    return _page("Learning path", 0, body, ctx)
-
-
-_GUIDE_EXAMPLE = "\n".join(
-    [
-        "/-- Three items in two boxes put two items in one box. -/",
-        "-- L4DEL: title: Pigeonhole for three items in two boxes",
-        "-- L4DEL: intuition: Three items cannot all sit in different boxes when there are only two boxes.",
-        "-- L4DEL: step: Assume no box holds two items.",
-        "-- L4DEL: step: Then three items need three different boxes, which do not exist.",
-        "-- L4DEL: prereq: Demo.box_count",
-        "-- L4DEL: term: box = a container for one item",
-        "theorem pigeonhole_three_two : ...",
-    ]
-)
-
-
-def _hint(decl: Declaration, ctx: Context) -> str:
-    rows = [f'<p class="warn">{escape(str(d))}</p>' for d in decl.l4.diagnostics]
-    template = escape(placeholder_block(decl, ctx.locations, _objects(ctx).ambiguous))
-    rows.append(
-        '<details class="hint"><summary>Template to annotate this declaration</summary>'
-        f"<pre>{template}</pre></details>"
-    )
-    return "".join(rows)
-
-
-def guide_page(ctx: Context) -> str:
-    body = [
-        "<h1>Annotating with L4DEL</h1>",
-        '<p class="muted">lean4-explainer reads L4DEL from Lean line comments. An annotation is optional at first. '
-        "The tool checks every directive it finds, and for each declaration without a valid annotation it "
-        "prints a template to paste in.</p>",
-        "<h2>Workflow</h2>",
-        "<ol>"
-        "<li>Run <code>lean4-explainer check --lean-root lean</code> to see errors and warnings.</li>"
-        "<li>Run <code>lean4-explainer annotate --lean-root lean --file Demo/Basics.lean</code> "
-        "to print templates.</li>"
-        "<li>Paste a template directly above its declaration and replace every TODO_ value.</li>"
-        "<li>Run check again. A TODO_ value left behind is a warning, so the build reports it.</li>"
-        "</ol>",
-        "<h2>Directives</h2>",
-        "<ul>"
-        "<li><code>title</code>: a short heading. At most one.</li>"
-        "<li><code>intuition</code>: one plain sentence on why the result holds. At most one.</li>"
-        "<li><code>step</code>: one proof step, in order. Any number.</li>"
-        "<li><code>prereq</code>: comma-separated fully qualified names the proof depends on.</li>"
-        "<li><code>see</code>: comma-separated related declarations.</li>"
-        "<li><code>term</code>: <code>word = definition</code>. Each word is defined once in the project.</li>"
-        "</ul>",
-        "<h2>Rules</h2>",
-        "<p>Only line comments carry directives. A directive attaches to the next declaration. "
-        "Anonymous declarations cannot carry directives. Keys are case-sensitive. "
-        "The full grammar is in the module docstring of <code>lean4_explainer/l4del.py</code>.</p>",
-        "<h2>Same-named declarations</h2>",
-        "<p>Identical copies of a declaration count as one object, so a plain name refers to it. "
-        "Declarations that share a name but differ in code are distinct definitions. "
-        "Refer to one as <code>Name@path</code>, for example <code>Demo.value@Var/B.lean</code>.</p>",
-        "<h2>Example</h2>",
-        f"<pre>{escape(_GUIDE_EXAMPLE)}</pre>",
-    ]
-    return _page("L4DEL guide", 0, body, ctx)
-
-
 def search_page(ctx: Context) -> str:
     body = [
         "<h1>Search</h1>",
@@ -511,34 +374,34 @@ def search_page(ctx: Context) -> str:
         '<p class="muted">Matches qualified names that start with the query.</p>',
         f'<script src="{ASSET_DIR}/search/files.js"></script>',
     ]
-    return _page("Search", 0, body, ctx)
+    return page("Search", 0, body, ctx)
 
 
 def _stats(declarations: int, sorry: int, axioms: int) -> str:
     return f"{declarations} declarations, {sorry} contain sorry, {axioms} axioms"
 
 
-def _up(levels: int) -> str:
+def up_path(levels: int) -> str:
     return "../" * levels
 
 
 def _crumbs(dirs: list[str] | tuple[str, ...], tail: str) -> str:
-    items = [f'<a href="{_up(len(dirs))}index.html">lean</a>']
+    items = [f'<a href="{up_path(len(dirs))}index.html">lean</a>']
     for depth, name in enumerate(dirs, start=1):
-        items.append(f'<a href="{_up(len(dirs) - depth)}index.html">{escape(name)}</a>')
+        items.append(f'<a href="{up_path(len(dirs) - depth)}index.html">{escape(name)}</a>')
     if tail:
         items.append(f"<span>{escape(tail)}</span>")
     return '<nav class="crumbs">' + " / ".join(items) + "</nav>"
 
 
-def _page(title: str, depth: int, body: list[str], ctx: Context) -> str:
-    up = _up(depth)
+def page(title: str, depth: int, body: list[str], ctx: Context) -> str:
+    up = up_path(depth)
     links = [("All corpora", f"{up}{ctx.home}")] if ctx.home else []
-    links += [("Index", f"{up}index.html"), ("Glossary", f"{up}glossary.html"), ("L4DEL guide", f"{up}annotate.html")]
+    links.append(("Index", f"{up}index.html"))
+    for ext, _ in ctx.extensions:
+        links.extend(ext.nav_links(up, dict(ctx.options)))
     if ctx.search:
         links.append(("Search", f"{up}search.html"))
-    if ctx.learning_path:
-        links.append(("Learning path", f"{up}learning-path.html"))
     nav = '<nav class="top">' + " | ".join(f'<a href="{href}">{label}</a>' for label, href in links) + "</nav>"
     return "\n".join(
         [

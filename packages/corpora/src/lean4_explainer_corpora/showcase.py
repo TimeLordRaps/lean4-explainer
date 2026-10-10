@@ -9,12 +9,13 @@ from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 
-from .build import BuildSummary, build_site
-from .config import PAGES_LIMIT_BYTES, Config
-from .corpora import Corpus
-from .errors import ExplainerError
-from .lake import LakeProject, include_patterns, read_lake
-from .render import ASSET_DIR, SITE_CSS
+from lean4_explainer.build import BuildSummary, build_site
+from lean4_explainer.config import PAGES_LIMIT_BYTES, Config
+from lean4_explainer.errors import ExplainerError
+from lean4_explainer.lake import LakeProject, include_patterns, read_lake
+from lean4_explainer.render import ASSET_DIR, SITE_CSS
+
+from .registry import Corpus
 
 GITHUB = "https://github.com"
 _GIT_TIMEOUT_SECONDS = 1800
@@ -89,6 +90,7 @@ def build_showcase(
             byte_budget=byte_budget,
             home="../index.html",
         )
+        _copy_license(checkout, out_dir / corpus.name, corpus.lean_root)
         started = time.monotonic()
         summary = build_site(
             checkout / corpus.lean_root,
@@ -101,12 +103,25 @@ def build_showcase(
     (out_dir / ASSET_DIR).mkdir(parents=True, exist_ok=True)
     (out_dir / ASSET_DIR / "site.css").write_text(SITE_CSS, encoding="utf-8")
     (out_dir / ".nojekyll").write_text("", encoding="utf-8")
-    (out_dir / "index.html").write_text(_landing(items, link_out or []), encoding="utf-8")
+    guide = next(
+        (f"{i.corpus.name}/annotate.html" for i in items if (out_dir / i.corpus.name / "annotate.html").is_file()),
+        "",
+    )  # the L4DEL guide exists only when the L4DEL extension is installed
+    (out_dir / "index.html").write_text(_landing(items, link_out or [], guide), encoding="utf-8")
     return ShowcaseResult(tuple(items), _tree_bytes(out_dir), byte_budget)
 
 
-def _landing(items: list[ShowcaseItem], link_out: list[Corpus]) -> str:
-    guide = f"{items[0].corpus.name}/annotate.html" if items else ""
+def _copy_license(checkout: Path, target: Path, lean_root: str) -> None:
+    """Redistributing the pages carries the upstream license text along (Apache-2.0 section 4a)."""
+    for folder in (checkout, checkout / lean_root):
+        source = folder / "LICENSE"
+        if source.is_file():
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "LICENSE.txt").write_bytes(source.read_bytes())
+            return
+
+
+def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str) -> str:
     cards = []
     for item in items:
         corpus, summary, project = item.corpus, item.summary, item.project
@@ -121,7 +136,10 @@ def _landing(items: list[ShowcaseItem], link_out: list[Corpus]) -> str:
             f'<li><a href="{escape(corpus.name)}/index.html"><strong>{escape(corpus.title)}</strong></a> '
             f'<span class="muted">({escape(corpus.kind)})</span><br>{escape(corpus.blurb)}<br>'
             f'<span class="muted">{escape(", ".join(facts))}. {escape(", ".join(pins))}. '
-            f'Source: <a href="{GITHUB}/{escape(corpus.repo)}">{escape(corpus.repo)}</a></span></li>'
+            f'Source: <a href="{GITHUB}/{escape(corpus.repo)}">{escape(corpus.repo)}</a>. '
+            f'License: {escape(corpus.license)} (<a href="{escape(corpus.name)}/LICENSE.txt">text</a>).'
+            + (f"<br>{escape(corpus.license_note)}" if corpus.license_note else "")
+            + "</span></li>"
         )
     for corpus in link_out:
         cards.append(
@@ -144,7 +162,7 @@ def _landing(items: list[ShowcaseItem], link_out: list[Corpus]) -> str:
             "<p>What lean4-explainer produces, with no annotation, for the Lean projects below. "
             "To write your own explanations, start with the "
             + (f'<a href="{escape(guide)}">L4DEL guide</a>' if guide else "L4DEL guide")
-            + ' or <a href="https://github.com/TimeLordRaps/lean4-explainer#start-here-lean4-explainer-and-l4del-go-together">'
+            + ' or <a href="https://github.com/TimeLordRaps/lean4-explainer#l4del-write-your-own-explanations">'
             "the README</a>.</p>",
             '<p class="muted">Built from the source text only. Lean was not run, so axiom and trust checks are UNKNOWN '
             "and <code>sorry</code> detection is textual.</p>",

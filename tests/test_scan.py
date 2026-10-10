@@ -43,20 +43,8 @@ def test_sorry_flag_is_per_declaration():
     assert [(decl.name, decl.has_sorry) for decl in found] == [("a", True), ("b", False)]
 
 
-def test_doc_and_line_l4del_attach_to_next_declaration():
-    text = "/-- The main fact. -/\n-- L4DEL: intuition: Claim P holds.\ntheorem main : True := trivial\n"
-    decl = declarations(text)[0]
-    assert decl.doc == "The main fact."
-    assert decl.l4.intuition == "Claim P holds."
 
 
-def test_module_doc_and_line_directive():
-    text = "/-! Module overview. -/\n-- L4DEL: title: Scope note\ndef f : Nat := 0\n"
-    lean_file = parse_source(text, "x.lean")
-    assert lean_file.module_doc == "Module overview."
-    assert lean_file.declarations[0].l4.title == "Scope note"
-    assert lean_file.declarations[0].doc is None
-    assert lean_file.diagnostics == ()
 
 
 def test_statement_stops_at_assignment_and_marks_omitted_proof():
@@ -106,8 +94,3 @@ def test_doc_comment_takes_precedence_over_plain_comment():
 def test_consecutive_line_comments_join():
     decl = declarations("-- one\n-- two\ndef h : Nat := 0\n")[0]
     assert decl.comment == "one\ntwo"
-
-
-def test_l4del_is_absent_by_default():
-    decl = declarations("/-- Doc. -/\ntheorem t : True := trivial\n")[0]
-    assert decl.l4.is_empty
