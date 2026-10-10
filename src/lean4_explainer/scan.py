@@ -9,6 +9,7 @@ import textwrap
 from bisect import bisect_left, bisect_right
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -28,12 +29,15 @@ DECLARATION_KINDS = (
     "example",
 )
 
-_DECL_RE = re.compile(
-    r"^(?:@\[[^\]]*\]\s*)?"
-    r"(?:(?:private|protected|noncomputable|partial|unsafe|nonrec)\s+)*"
-    r"(?P<kind>" + "|".join(DECLARATION_KINDS) + r")\b"
-    r"(?:[ \t]+(?P<name>[^\s:(){}\[\]|]+))?"
-)
+@lru_cache(maxsize=16)
+def _decl_re(extra_kinds: tuple[str, ...] = ()) -> re.Pattern[str]:
+    kinds = "|".join(re.escape(kind) for kind in (*DECLARATION_KINDS, *extra_kinds))
+    return re.compile(
+        r"^(?:@\[[^\]]*\]\s*)?"
+        r"(?:(?:private|protected|noncomputable|partial|unsafe|nonrec)\s+)*"
+        r"(?P<kind>" + kinds + r")\b"
+        r"(?:[ \t]+(?P<name>[^\s:(){}\[\]|]+))?"
+    )
 _NAMESPACE_RE = re.compile(r"^namespace[ \t]+(?P<name>\S+)")
 _SECTION_RE = re.compile(r"^(?:noncomputable[ \t]+)?section\b")
 _END_RE = re.compile(r"^end\b")
@@ -103,7 +107,7 @@ def scan_file(path: Path, relative: str) -> LeanFile:
     return parse_source(text, relative)
 
 
-def parse_source(text: str, path: str, statements: bool = False, options: Mapping[str, Any] | None = None) -> LeanFile:
+def parse_source(text: str, path: str, statements: bool = False, options: Mapping[str, Any] | None = None, extra_kinds: tuple[str, ...] = ()) -> LeanFile:
     text = text.replace("\r\n", "\n")
     masked, comments = _mask(text)
     code = masked.split("\n")
@@ -129,7 +133,7 @@ def parse_source(text: str, path: str, statements: bool = False, options: Mappin
         if match:
             imports.append(match["name"])
 
-    heads = _declaration_heads(code)
+    heads = _declaration_heads(code, tuple(extra_kinds))
     bounds = [index for index, _, _ in heads[1:]] + [len(code)]
 
     payloads: dict[str, dict[int, Any]] = {}
@@ -190,14 +194,15 @@ def iter_lean_files(root: Path) -> list[tuple[str, Path]]:
     return sorted(found)
 
 
-def _declaration_heads(code: list[str]) -> list[tuple[int, str, str]]:
+def _declaration_heads(code: list[str], extra_kinds: tuple[str, ...] = ()) -> list[tuple[int, str, str]]:
+    decl_re = _decl_re(extra_kinds)
     heads: list[tuple[int, str, str]] = []
     scope: list[str] = []
     for index, line in enumerate(code):
         if line[:1] in _INDENTED:
             continue
         namespace = _NAMESPACE_RE.match(line)
-        decl = _DECL_RE.match(line)
+        decl = decl_re.match(line)
         if namespace:
             scope.append(namespace["name"])
         elif _SECTION_RE.match(line):

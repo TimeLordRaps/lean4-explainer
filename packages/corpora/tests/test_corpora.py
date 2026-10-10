@@ -108,3 +108,8 @@ def test_nothing_installed_says_how_to_install():
     finally:
         activate(None)
     assert "lean4-explainer[all]" in str(caught.value)
+
+
+def test_compfiles_lists_its_problem_statements():
+    assert installed()["compfiles"].extra_kinds == ("problem", "determine")
+    assert all(not c.extra_kinds for name, c in installed().items() if name != "compfiles")

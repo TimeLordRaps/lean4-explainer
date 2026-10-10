@@ -1,0 +1,89 @@
+# Sidecar L4DEL annotations for Mathematics in Lean (mil). The upstream sources are never modified.
+
+@file MIL/C02_Basics/S02_Proving_Identities_in_Algebraic_Structures.lean
+@decl MyRing.add_zero
+-- L4DEL: title: a + 0 = a in any ring, from commutativity and zero_add
+-- L4DEL: intuition: Swap the two summands, then use the left-identity law that is already available.
+-- L4DEL: step: The goal is a + 0 = a for an element a of a ring R.
+-- L4DEL: step: rw [add_comm] turns a + 0 into 0 + a.
+-- L4DEL: step: rw [zero_add] turns 0 + a into a, leaving a = a, which rw closes by rfl.
+-- L4DEL: step: The theorem lives in namespace MyRing so that it does not clash with the library's own add_zero; the #check lines after it show how the two names are told apart.
+-- L4DEL: term: namespace = a prefix that groups names, so that MyRing.add_zero and the library's add_zero are different declarations.
+
+@decl MyRing.mul_zero
+-- L4DEL: title: a * 0 = 0 via cancellation
+-- L4DEL: intuition: Show a*0 + a*0 equals a*0 + 0, then cancel one a*0 from the left.
+-- L4DEL: step: have h : a * 0 + a * 0 = a * 0 + 0 states the equation to be cancelled.
+-- L4DEL: step: Inside h, rw [← mul_add] rewrites a * 0 + a * 0 into a * (0 + 0), then two uses of add_zero remove the trailing + 0 on each side, so both sides agree.
+-- L4DEL: step: rw [add_left_cancel h] finishes the goal by cancelling the left summand.
+-- L4DEL: step: In this exercise file add_left_cancel is itself a sorry exercise, so this proof only stands once that exercise is solved; the solutions file proves it.
+-- L4DEL: see: MyRing.add_zero
+
+@decl MyRing.add_left_cancel
+-- L4DEL: title: Exercise: left cancellation of addition (sorry)
+-- L4DEL: intuition: If a + b = a + c then b = c; here the proof is left as a sorry for the reader.
+-- L4DEL: step: This declaration is an exercise: its body is sorry, so Lean accepts it only with a warning and nothing is proved.
+-- L4DEL: step: The statement takes h : a + b = a + c and asks for b = c in a ring R.
+-- L4DEL: step: The preceding theorem MyRing.neg_add_cancel_left, -a + (a + b) = b, is the natural tool for the exercise.
+-- L4DEL: see: MyRing.neg_add_cancel_left
+-- L4DEL: term: sorry = a placeholder proof; Lean accepts it but reports a warning, because nothing has actually been proved.
+
+@file MIL/C03_Logic/S01_Implication_and_the_Universal_Quantifier.lean
+@decl C03S01.my_lemma
+-- L4DEL: title: Exercise: a universally quantified statement (sorry)
+-- L4DEL: intuition: A statement of the form for-all-x-y-epsilon-then-implications is a function that takes numbers and proofs.
+-- L4DEL: step: This declaration is a stub: its body is sorry, so nothing is proved here.
+-- L4DEL: step: The statement says that for all real x, y, epsilon, if 0 < epsilon, epsilon <= 1, |x| < epsilon and |y| < epsilon then |x * y| < epsilon.
+-- L4DEL: step: The text after it applies my_lemma to a, b, delta and then to hypotheses h0, h1, ha, hb with #check, to show that instantiating a quantifier and discharging an implication are both just function application.
+-- L4DEL: see: C03S01.my_lemma4@MIL/C03_Logic/solutions/Solutions_S01_Implication_and_the_Universal_Quantifier.lean
+
+@file MIL/C03_Logic/solutions/Solutions_S01_Implication_and_the_Universal_Quantifier.lean
+@decl C03S01.my_lemma4
+-- L4DEL: title: Solution: |x*y| < epsilon by a calc chain
+-- L4DEL: intuition: Bound |x*y| by |x|*|y|, then by |x|*epsilon, then by 1*epsilon, which is epsilon.
+-- L4DEL: step: intro x y ε epos ele1 xlt ylt moves the quantified variables and hypotheses into the context.
+-- L4DEL: step: First calc step |x * y| = |x| * |y| is the library lemma abs_mul.
+-- L4DEL: step: Next |x| * |y| <= |x| * ε uses mul_le_mul, with linarith and abs_nonneg closing the side goals.
+-- L4DEL: step: Then |x| * ε < 1 * ε uses mul_lt_mul_of_pos_right and linarith, using |x| < ε <= 1 and 0 < ε.
+-- L4DEL: step: The last step 1 * ε = ε is one_mul.
+-- L4DEL: term: calc = a chain of equalities and inequalities, each step justified by its own proof, which Lean composes into one claim.
+
+@file MIL/C03_Logic/S06_Sequences_and_Convergence.lean
+@decl C03S06.ConvergesTo
+-- L4DEL: title: Convergence of a real sequence
+-- L4DEL: intuition: A sequence converges to a if, for every positive epsilon, all terms past some index N stay within epsilon of a.
+-- L4DEL: step: The definition is ConvergesTo (s : ℕ → ℝ) (a : ℝ) := ∀ ε > 0, ∃ N, ∀ n ≥ N, |s n - a| < ε.
+-- L4DEL: step: The alternation of quantifiers matters: N may depend on ε, and n ranges over every index at least N.
+-- L4DEL: see: C03S06.convergesTo_const
+-- L4DEL: term: epsilon-N definition = the formulation of a limit that quantifies over a tolerance epsilon and a cutoff index N, as used by ConvergesTo.
+
+@decl C03S06.convergesTo_const
+-- L4DEL: title: A constant sequence converges to its constant
+-- L4DEL: intuition: Every term equals a, so the distance to a is 0, which is below any positive epsilon.
+-- L4DEL: step: intro ε εpos fixes a positive tolerance.
+-- L4DEL: step: use 0 chooses the cutoff N = 0, since all indices work.
+-- L4DEL: step: intro n nge fixes an arbitrary index.
+-- L4DEL: step: rw [sub_self, abs_zero] turns |a - a| into 0, and apply εpos closes 0 < ε.
+-- L4DEL: prereq: C03S06.ConvergesTo
+
+@file MIL/C03_Logic/solutions/Solutions_S06_Sequences_and_Convergence.lean
+@decl C03S06.convergesTo_add
+-- L4DEL: title: The limit of a sum is the sum of the limits
+-- L4DEL: intuition: Give each sequence half of the tolerance epsilon and wait until both are within their half.
+-- L4DEL: step: intro ε εpos, then have ε2pos : 0 < ε / 2 to get half the tolerance.
+-- L4DEL: step: rcases cs (ε / 2) ε2pos and rcases ct (ε / 2) ε2pos extract cutoffs Ns and Nt with their bounds hs and ht.
+-- L4DEL: step: use max Ns Nt picks a cutoff past both; for n at least that, le_of_max_le_left and le_of_max_le_right give n ≥ Ns and n ≥ Nt.
+-- L4DEL: step: A calc chain bounds |s n + t n - (a + b)| = |s n - a + (t n - b)| ≤ |s n - a| + |t n - b| < ε/2 + ε/2 = ε, using abs_add_le and add_lt_add.
+-- L4DEL: step: The matching exercise file leaves the part after use max Ns Nt as sorry; this is the solutions file version.
+-- L4DEL: prereq: C03S06.ConvergesTo
+
+@file MIL/C04_Sets_and_Functions/solutions/Solutions_S02_Functions.lean
+@decl Cantor
+-- L4DEL: title: Cantor: no function from α to its power set is surjective
+-- L4DEL: intuition: Build the set of elements not in their own image; it cannot be anyone's image.
+-- L4DEL: step: intro f surjf assumes f : α → Set α is surjective, and the goal becomes a contradiction.
+-- L4DEL: step: let S := { i | i ∉ f i } defines the diagonal set, and rcases surjf S gives j with f j = S.
+-- L4DEL: step: h₁ shows j ∉ f j, by assuming j ∈ f j, rewriting with f j = S to get j ∉ f j, and contradiction.
+-- L4DEL: step: From h₁, j ∈ S holds by definition of S (h₂), while rewriting f j = S in h₁ gives j ∉ S (h₃).
+-- L4DEL: step: h₂ and h₃ contradict each other, which closes the goal.
+-- L4DEL: term: surjective = a function f is surjective when every element of its target equals f x for some x.

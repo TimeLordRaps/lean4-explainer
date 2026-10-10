@@ -94,3 +94,19 @@ def test_doc_comment_takes_precedence_over_plain_comment():
 def test_consecutive_line_comments_join():
     decl = declarations("-- one\n-- two\ndef h : Nat := 0\n")[0]
     assert decl.comment == "one\ntwo"
+
+
+def test_extra_kinds_list_a_project_specific_declaration_keyword():
+    source = "namespace P\n\nproblem p1 : True := trivial\n\ntheorem t : True := trivial\n"
+
+    plain = parse_source(source, "P.lean")
+    extra = parse_source(source, "P.lean", extra_kinds=("problem",))
+
+    assert [d.name for d in plain.declarations] == ["P.t"]
+    assert [(d.kind, d.name) for d in extra.declarations] == [("problem", "P.p1"), ("theorem", "P.t")]
+
+
+def test_extra_kinds_do_not_match_longer_words():
+    source = "problems : Nat := 1\nproblem_x : Nat := 2\n"
+
+    assert not parse_source(source, "P.lean", extra_kinds=("problem",)).declarations

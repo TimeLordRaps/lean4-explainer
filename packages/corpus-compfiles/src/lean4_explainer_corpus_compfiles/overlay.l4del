@@ -1,0 +1,90 @@
+# L4DEL overlay for the compfiles corpus (competition problems formalized in Lean). Sidecar notes; the upstream repository is untouched.
+# In compfiles a `problem` is the statement to prove, a `determine` is the answer data a solver must supply,
+# and `snip begin` ... `snip end` fence helper material that is stripped when problems are extracted.
+# Each note says whether the formal file contains a solution and whether `sorry` remains, as read in the pinned checkout.
+
+@file Compfiles/Imo1959P1.lean
+
+@decl Imo1959P1.imo1959_p1
+-- L4DEL: title: IMO 1959 Problem 1: an irreducible fraction
+-- L4DEL: intuition: The fraction (21n+4)/(14n+3) is in lowest terms for every natural number n.
+-- L4DEL: step: Problem: prove that (21n+4)/(14n+3) is irreducible for all natural n. The formalization states this as Nat.Coprime (21 * n + 4) (14 * n + 3), since Lean has no notion of an irreducible fraction.
+-- L4DEL: step: Solution (complete, no sorry): if k divides both numbers then it divides 3 * (14n+3) - 2 * (21n+4), and that difference equals 1, so k divides 1.
+-- L4DEL: step: The file says the solution is imported from the Mathlib Archive (solutionImportedFrom).
+-- L4DEL: term: Nat.Coprime = two natural numbers have no common divisor other than 1, equivalently their gcd is 1.
+
+@file Compfiles/Imo1962P1.lean
+
+@decl Imo1962P1.imo1962_p1
+-- L4DEL: title: IMO 1962 Problem 1: moving the last digit 6 to the front
+-- L4DEL: intuition: The smallest natural number ending in 6 whose value becomes four times larger when that 6 is moved to the front is 153846.
+-- L4DEL: step: Problem: find the smallest natural n whose last digit is 6 and such that moving that 6 to the front gives 4n. The statement is IsLeast {n | ProblemPredicate n} solution, where the answer solution is declared as 153846.
+-- L4DEL: step: Solution (complete, no sorry): write n = 10c + 6 so the condition becomes 6 * 10^(number of digits of c) + c = 4n.
+-- L4DEL: step: Cases on the digit count of c: zero to four digits are impossible, five digits forces c = 15384, and six or more digits give nothing smaller. A separate lemma checks that 153846 satisfies the condition.
+-- L4DEL: see: Imo1960P1.imo1960_p1
+
+@file Compfiles/Imo1964P1.lean
+
+@decl Imo1964P1.imo1964_p1a
+-- L4DEL: title: IMO 1964 Problem 1(a): when 7 divides 2^n - 1
+-- L4DEL: intuition: 2^n is congruent to 1 modulo 7 exactly when n is a multiple of 3.
+-- L4DEL: step: Problem part (a): find all natural n with 7 dividing 2^n - 1. The formal answer is the determined set solution_set = {n | n % 3 = 0}, and the statement is n in solution_set iff 2^n is congruent to 1 mod 7.
+-- L4DEL: step: Solution (complete, no sorry): if n = 3m then 2^n = 8^m, which is 1 mod 7.
+-- L4DEL: step: Conversely write n = 3q + r; since 2^3 = 1 mod 7 the power reduces to 2^r, and r = 1 or r = 2 gives 2 or 4, not 1.
+-- L4DEL: step: Part (b), that 7 never divides 2^n + 1, is the separate declaration imo1964_p1b in the same file, proved by the same residue argument.
+-- L4DEL: prereq: Imo1964P1.solution_set
+-- L4DEL: see: Imo1964P1.imo1964_p1b
+
+@file Compfiles/Imo1988P6.lean
+
+@decl Imo1988P6.imo1988_p6
+-- L4DEL: title: IMO 1988 Problem 6: Vieta jumping
+-- L4DEL: intuition: If ab+1 divides a^2+b^2 for natural numbers a and b, then the quotient is a perfect square.
+-- L4DEL: step: Problem: given natural a, b with (ab+1) dividing a^2 + b^2, show the quotient (a^2+b^2)/(ab+1) is a perfect square. The formal conclusion is exists d, d^2 = (a^2+b^2)/(ab+1).
+-- L4DEL: step: Solution (complete, no sorry): call the quotient k, so a^2 + b^2 = (ab+1)k. For fixed a this is a quadratic in b, whose other root is k*a - b.
+-- L4DEL: step: The file proves a general lemma, constant_descent_vieta_jumping, that runs a descent on such a hyperbola, and applies it with B x = k * x and C x = x * x - k.
+-- L4DEL: step: The base cases are b = 0 (then k = a^2) and a = b (then k is at most 1, so k is 0 or 1); the descent step produces a smaller solution.
+-- L4DEL: prereq: Imo1988P6.constant_descent_vieta_jumping
+-- L4DEL: term: Vieta jumping = a descent technique for integer solutions of a quadratic equation in two variables: given one solution, the second root of the quadratic (by Vieta's formulas) gives another, smaller solution, until a base case is reached.
+
+@file Compfiles/Imo2006P3.lean
+
+@decl Imo2006P3.imo2006_p3
+-- L4DEL: title: IMO 2006 Problem 3: the least constant M
+-- L4DEL: intuition: The least M with |ab(a^2-b^2) + bc(b^2-c^2) + ca(c^2-a^2)| at most M(a^2+b^2+c^2)^2 for all reals is 9 sqrt(2) / 32.
+-- L4DEL: step: Problem: determine the least real M such that the stated inequality holds for all real a, b, c. The statement is IsLeast of the set of such M with the determined answer solution = 9 * sqrt 2 / 32.
+-- L4DEL: step: Solution (complete, no sorry): substitute x = a - b, y = b - c, z = c - a, s = a + b + c, following Evan Chen's notes cited in the file.
+-- L4DEL: step: Part one (proof₁) shows the inequality holds for this M, using auxiliary inequalities such as lhs_ineq, mid_ineq and rhs_ineq.
+-- L4DEL: step: Part two (proof₂) shows every valid M is at least 9 sqrt(2) / 32 by plugging in a = 2 - 3 sqrt 2, b = 2, c = 2 + 3 sqrt 2, where the inequality is an equality.
+-- L4DEL: see: Imo2019P1.imo2019_p1
+
+@file Compfiles/Imo2019P1.lean
+
+@decl Imo2019P1.imo2019_p1
+-- L4DEL: title: IMO 2019 Problem 1: a functional equation on the integers
+-- L4DEL: intuition: The integer functions with f(2a) + 2f(b) = f(f(a+b)) are exactly the zero function and f(z) = 2z + c.
+-- L4DEL: step: Problem: determine all f from the integers to the integers with f(2a) + 2f(b) = f(f(a+b)) for all integers a, b. The formal answer is the determined set solution_set = zero function or z to 2z + c for some integer c, and the theorem says f satisfies the equation iff f is in that set.
+-- L4DEL: step: Solution (complete, no sorry): the reverse direction is a direct computation.
+-- L4DEL: step: Forward direction: g(z) = f(z) - f(0) is additive, hence linear g(z) = d * z (lemma additive_to_int_linear), so f(z) = d * z + f(0).
+-- L4DEL: step: Substituting back into the equation splits into d = 0, which forces f(0) = 0 and so f = 0, and d not 0, which ends with f(z) = 2z + f(0), so f(0) is the free constant.
+-- L4DEL: prereq: Imo2019P1.solution_set
+
+@file Compfiles/Imo2024P2.lean
+
+@decl Imo2024P2.imo2024_p2
+-- L4DEL: title: IMO 2024 Problem 2: eventually constant gcd
+-- L4DEL: intuition: The only pair of positive integers (a, b) for which gcd(a^n + b, b^n + a) is eventually constant is (1, 1).
+-- L4DEL: step: Problem: determine all pairs of positive integers (a, b) such that gcd(a^n + b, b^n + a) takes one constant value g for all n at least some N. The formal answer is solutionSet = {(1, 1)}, stated as membership in solutionSet iff such g and N exist.
+-- L4DEL: step: Solution (complete, no sorry; imported from the Mathlib Archive per the file header): for (1, 1) every term is gcd(2, 2) = 2, so g = 2 and N = 1 work.
+-- L4DEL: step: Conversely, the file works modulo ab+1: for exponents congruent to -1 modulo phi(ab+1) the terms vanish modulo ab+1, so ab+1 divides g and all large terms, hence all terms, which forces a = b = 1.
+-- L4DEL: prereq: Imo2024P2.solutionSet
+
+@file Compfiles/Imo2021P3.lean
+
+@decl Imo2021P3.imo2021_p3
+-- L4DEL: title: IMO 2021 Problem 3: three concurrent lines (unsolved here)
+-- L4DEL: intuition: A geometry statement about a triangle with a special interior point D; the formalization is stated but its proof is the single word sorry.
+-- L4DEL: step: Problem: in an acute triangle ABC with AB greater than AC, D is an interior point with angle DAB equal to angle CAD; E on segment AC and F on segment AB satisfy angle ADE = angle BCD and angle FDA = angle DBC; X lies on line AC with CX = BX; O1 and O2 are the circumcenters of triangles ADC and EXD. Prove that lines BC, EF and O1O2 are concurrent.
+-- L4DEL: step: Formal conclusion: E is not F, O1 is not O2, and the three lines BC, EF, O1O2 have a common point.
+-- L4DEL: step: Status: the proof body is sorry, so no solution is present. The file credits the statement as imported from IMOLean by jsm28.
+-- L4DEL: term: sorry = the Lean placeholder that lets a declaration compile without a proof; any theorem that uses it is not actually proved.

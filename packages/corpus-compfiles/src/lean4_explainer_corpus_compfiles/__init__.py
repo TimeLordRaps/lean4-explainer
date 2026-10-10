@@ -23,6 +23,7 @@ CORPUS = Corpus(
     branch='main',
     kind='competition',
     blurb='Formalized statements and solutions of olympiad-style problems.',
+    extra_kinds=("problem", "determine"),  # statements are `problem name : ...`, answers `determine name : ...`
     accent='#d7261e',
     theme_css=THEME,
     overlay=package_file(__file__, "overlay.l4del"),

@@ -98,3 +98,30 @@ def test_cli_build_reports_summary(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "1 declarations" in out
     assert "Lean not run" in out
+
+
+def test_extra_kinds_come_from_the_config_and_change_the_cache_key(tmp_path):
+    from lean4_explainer.config import Config
+
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "A.lean").write_text("problem p1 : True := trivial\n", encoding="utf-8")
+
+    plain = build_site(root, tmp_path / "o1", Config(), tmp_path / "idx")
+    extra = build_site(root, tmp_path / "o2", Config(extra_kinds=("problem",)), tmp_path / "idx")  # same cache dir
+
+    assert plain.declarations == 0 and extra.declarations == 1
+
+
+def test_extra_kinds_config_key_is_validated(tmp_path):
+    from lean4_explainer.config import load_config
+    from lean4_explainer.errors import ExplainerError
+
+    good = tmp_path / "ok.toml"
+    good.write_text('extra_kinds = ["problem"]\n', encoding="utf-8")
+    assert load_config(good).extra_kinds == ("problem",)
+    for bad in ('extra_kinds = ["has space"]\n', 'extra_kinds = [1]\n', 'extra_kinds = "problem"\n'):
+        path = tmp_path / "bad.toml"
+        path.write_text(bad, encoding="utf-8")
+        with pytest.raises(ExplainerError):
+            load_config(path)

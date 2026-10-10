@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,6 +18,7 @@ class Config:
     title: str = "Lean proofsite"
     exclude: tuple[str, ...] = ()
     include: tuple[str, ...] = ()
+    extra_kinds: tuple[str, ...] = ()  # more declaration keywords to list, such as a project's `problem`
     source_url: str | None = None
     source_ref: str = "main"
     search: bool = True
@@ -31,6 +33,7 @@ _TYPES: dict[str, type] = {
     "title": str,
     "exclude": list,
     "include": list,
+    "extra_kinds": list,
     "source_url": str,
     "source_ref": str,
     "search": bool,
@@ -62,10 +65,12 @@ def load_config(path: Path | None) -> Config:
         if key not in _TYPES:
             options[key] = value
             continue
-        if key in ("exclude", "include"):
+        if key in ("exclude", "include", "extra_kinds"):
             if not all(isinstance(item, str) for item in value):
                 raise ExplainerError(f"'{key}' must be a list of strings in {path}")
             value = tuple(value)
+        if key == "extra_kinds" and not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", kind) for kind in value):
+            raise ExplainerError(f"'extra_kinds' entries must be plain keywords in {path}")
         if key == "source_links" and value not in ("declaration", "file"):
             raise ExplainerError(f"'source_links' must be \"declaration\" or \"file\" in {path}")
         values[key] = value

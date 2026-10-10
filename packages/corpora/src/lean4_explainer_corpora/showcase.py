@@ -98,6 +98,7 @@ def build_showcase(
             title=corpus.title,
             include=include,
             exclude=corpus.exclude,
+            extra_kinds=corpus.extra_kinds,
             source_url=f"{GITHUB}/{corpus.repo}/blob/{{ref}}/{prefix}{{path}}#L{{line}}",
             source_ref=corpus.commit,
             source_links=corpus.source_links,

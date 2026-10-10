@@ -32,6 +32,7 @@ class Corpus:
     license_note: str = ""  # extra terms the repository states for part of its content
     accent: str = "#555555"  # card and link colour on the landing page
     theme_css: str = ""  # appended to this corpus's stylesheet (see themes.make_theme)
+    extra_kinds: tuple[str, ...] = ()  # declaration keywords beyond Lean's own, such as compfiles' `problem`
     overlay: str = ""  # path to an L4DEL sidecar overlay for this corpus (annotations kept outside the upstream sources)
     source_links: str = "declaration"  # "file" for corpora too large to carry a link per declaration
 
