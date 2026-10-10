@@ -16,7 +16,14 @@ It is also for people who write Lean and want others to understand it. You add s
 
 ## What a page shows
 
-For each theorem or definition:
+Every theorem and definition gets a **Reading**, written from its source:
+
+- **It says:** the statement in words. For example, `(∀ a b, f (2 * a) + 2 * (f b) = f (f (a + b))) ↔ f ∈ solution_set` becomes "for every a, b, f (2 * a) + 2 * (f b) equals f (f (a + b)) exactly when f is an element of solution_set".
+- **Given:** each variable and what kind of thing it is ("a function that takes ℤ and gives ℤ"), and each assumption in words.
+- **How the proof goes:** by induction, by contradiction, by cases, or in N steps. Then every step of the proof, with what it does: "Rewrite using …", "Split into two cases: …", "Finish: … is exactly what is needed".
+- **Results it uses**, each one a link, and the **symbols** in the statement explained (∑, ∣, ↑, ⌊x⌋, …).
+
+Where a project has added explanations of its own (or we have, in a separate overlay file), you also see:
 
 | You see | It means |
 |---|---|
@@ -45,7 +52,7 @@ You need Python 3.11 or newer. The tool is not on PyPI yet, so install it from a
 ```
 git clone https://github.com/TimeLordRaps/lean4-explainer
 cd lean4-explainer
-pip install -e . -e packages/l4del
+pip install -e . -e packages/reader -e packages/l4del
 lean4-explainer build --lean-root path/to/your/lean/files --out docs
 ```
 
@@ -82,12 +89,13 @@ The core is small and works alone. You add only what you want:
 | You want | Install | You get |
 |---|---|---|
 | A quick page of your Lean code | the core | The site from your declarations and comments |
+| A plain-English reading of every declaration | `packages/reader` | The Reading: claim in words, givens, every proof step explained |
 | Titles, intuition, steps, maps, glossary, learning path | `packages/l4del` | L4DEL |
 | Proof state after each tactic, and a trust badge | `packages/lean` | Needs Lean installed. It runs Lean on your files |
 | `explain#Name` links, what changed between versions | `packages/ecosystem` | Links and a changes page |
 | Ready-made example projects | `packages/corpora` and `packages/corpus-*` | Eight projects, pinned to exact versions |
 
-Once the packages are published these become `pip install lean4-explainer[l4del]`, `[lean]`, `[ecosystem]`, `[all]` and one extra per project (`conjectures`, `carleson`, `flt`, `pfr`, `compfiles`, `tutorials`, `oai`). They are not published yet, so use the checkout for now.
+Once the packages are published these become `pip install lean4-explainer[reader]`, `[l4del]`, `[lean]`, `[ecosystem]`, `[all]` and one extra per project (`conjectures`, `carleson`, `flt`, `pfr`, `compfiles`, `tutorials`, `oai`). They are not published yet, so use the checkout for now.
 
 ## Words you will meet
 
@@ -108,6 +116,8 @@ Two of the example projects are tutorials, so you can read them here and then do
 ## Honest limits
 
 - The tool reads your files as text. Without the Lean extension it does not run Lean, so it cannot say whether a proof is correct. The site says so on each page.
+- The Reading comes from patterns over the source. It says what each tactic does in general, not the exact goal left after it (the Lean extension shows that). Anything it does not recognize is shown as code, never guessed. Across all eight example projects about 3% of statements fall back to code.
+- The openai/math project is too big to publish twice (1.1 GB of source), so its pages fetch their file from GitHub, at the pinned commit, to make the Reading.
 - The explanations on the example projects were written for this site. They are not the authors' words, and the site says that too.
 - A few kinds of declaration (indented ones, ones made by macros) are not listed.
 

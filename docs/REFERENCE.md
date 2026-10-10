@@ -107,6 +107,10 @@ Rules:
 
 A file that does not elaborate shows trust UNKNOWN with Lean's reason, and a file where Lean reported errors says so on every badge. Nothing is guessed. Results are cached by file content, Lean version and `lake-manifest.json`. A Lake project that pins a Lean version you do not have makes elan download that toolchain on the first run. Each badge also lists the constants the statement and the proof use, with instances, coercions and auxiliary definitions counted but left out. This filtering is the expression-tree compression: it is a filter on the set of constants, not a compressed term. See `packages/lean/README.md` for the config keys.
 
+## Reader: a plain-English reading of every declaration
+
+`packages/reader` (the extra `reader`, also part of `all`) gives every declaration a Reading: the statement in words, what is given and assumed, the proof's shape, every tactic step with what it does (cases, `induction … with` arms and `calc` chains shown as structure), the results it uses (linked) and the symbols in the statement. `_assets/reader.js` writes it in the browser from the file's source, which each page carries as JSON. With `reader_source_url` set (the showcase sets it for openai/math), a page instead fetches its file from that pinned raw URL. It reads text only, so it says what a tactic does, not the goal it leaves. Over every declaration of the eight corpora (60,393 in the sweep, with a 1,500-file sample of openai/math) it read every header, raised no errors, fell back to code for 2.5% of statements and did not recognize 0.7% of tactic steps. Details and config keys: `packages/reader/README.md`.
+
 ## Ecosystem: links, diffs and a Lake facet
 
 `pip install lean4-explainer[ecosystem]` adds three things (details in `packages/ecosystem/README.md`):

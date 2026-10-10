@@ -232,8 +232,9 @@ def _build_site(
         if tree.cache.pages.get(rel) == page_key and target.is_file():
             pages_reused += 1
             continue
-        lean_file = parse_source(path.read_bytes().decode("utf-8-sig", errors="replace"), rel, options=dict(config.options), extra_kinds=config.extra_kinds)
-        written += _write(target, file_page(lean_file, ctx))
+        text = path.read_bytes().decode("utf-8-sig", errors="replace").replace("\r\n", "\n")
+        lean_file = parse_source(text, rel, options=dict(config.options), extra_kinds=config.extra_kinds)
+        written += _write(target, file_page(lean_file, ctx, text))
         tree.cache.pages[rel] = page_key
         pages_written += 1
 

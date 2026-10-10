@@ -290,3 +290,28 @@ def test_parse_hook_sees_the_site_options(tmp_path):
     build_site(root, tmp_path / "out", Config(options=(("flavor", "mint"),)), tmp_path / "idx")
 
     assert seen and all(item == ("A.lean", {"flavor": "mint"}) for item in seen)  # indexing and rendering both get them
+
+
+class FileLevelExtension(Extension):
+    name = "filelevel"
+
+    def file_blocks(self, lean_file, text, ctx, analysis):
+        return f'<div class="whole">{len(text)} chars of {lean_file.path}</div>'
+
+    def scripts(self, options):
+        return ("_assets/extra.js",)
+
+
+def test_extension_adds_a_file_level_block_with_the_source_text_and_page_scripts(tmp_path):
+    root = tmp_path / "lean"
+    (root / "Sub").mkdir(parents=True)
+    (root / "Sub" / "A.lean").write_text(SOURCE, encoding="utf-8")
+    extensions.activate([FileLevelExtension()])
+    try:
+        build_site(root, tmp_path / "docs")
+    finally:
+        extensions.activate([])
+    page = (tmp_path / "docs" / "Sub" / "A.lean.html").read_text(encoding="utf-8")
+    assert f'<div class="whole">{len(SOURCE.replace(chr(13), ""))} chars of Sub/A.lean</div>' in page
+    assert '<script src="../_assets/extra.js" defer></script>' in page
+    assert '<script src="../_assets/extra.js" defer></script>' in (tmp_path / "docs" / "Sub" / "index.html").read_text(encoding="utf-8")

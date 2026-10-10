@@ -32,6 +32,7 @@ ol.list > li { list-style: none; background: var(--panel); border: 1px solid var
 )
 
 GITHUB = "https://github.com"
+RAW = "https://raw.githubusercontent.com"
 _GIT_TIMEOUT_SECONDS = 1800
 
 
@@ -108,6 +109,9 @@ def build_showcase(
                 sorted(
                     [("theme_css", corpus.theme_css)] * bool(corpus.theme_css)
                     + [("overlay", corpus.overlay)] * bool(corpus.overlay and Path(corpus.overlay).is_file())
+                    # a tree too large to publish twice: its readings load the pinned source instead of carrying it
+                    + [("reader_source_url", f"{RAW}/{corpus.repo}/{{ref}}/{prefix}{{path}}")]
+                    * (corpus.source_links == "file")
                 )
             ),
         )

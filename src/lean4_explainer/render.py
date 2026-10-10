@@ -158,7 +158,7 @@ def default_context() -> Context:
     )
 
 
-def file_page(lean_file: LeanFile, ctx: Context | None = None) -> str:
+def file_page(lean_file: LeanFile, ctx: Context | None = None, text: str = "") -> str:
     if ctx is None:
         ctx = default_context()
     dirs = lean_file.path.split("/")[:-1]
@@ -183,6 +183,10 @@ def file_page(lean_file: LeanFile, ctx: Context | None = None) -> str:
         body.append("</ol>")
     else:
         body.append('<p class="muted">No declarations listed.</p>')
+    for ext, analysis in ctx.extensions:
+        block = ext.file_blocks(lean_file, text, ctx, analysis)
+        if block:
+            body.append(block)
     return page(lean_file.path, len(dirs), body, ctx)
 
 
@@ -422,6 +426,11 @@ def page(title: str, depth: int, body: list[str], ctx: Context) -> str:
             *body,
             "</main>",
             f'<script src="{up}{ASSET_DIR}/site.js"></script>',
+            *(
+                f'<script src="{escape(up + path, quote=True)}" defer></script>'
+                for ext, _ in ctx.extensions
+                for path in ext.scripts(dict(ctx.options))
+            ),
             "</body>",
             "</html>",
             "",

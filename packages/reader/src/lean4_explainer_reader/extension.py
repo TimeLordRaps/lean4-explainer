@@ -1,0 +1,89 @@
+"""The reader extension: a plain-English reading of every declaration, made from its source text.
+
+Every page stays small: it carries only the source (or where to fetch it), and reader.js writes the rest.
+On each file page, every declaration gets a "Reading": what the statement says in words, what is given and assumed,
+each proof step with what it does, the results it uses, and the symbols a newcomer may not know. The reading is
+written by `reader.js` in the browser from the file's source, which the page either carries (the default) or, for a
+tree too large to publish twice, loads from a pinned raw-source URL when the page opens.
+
+It reads text only. Lean is not run, so the reading says what each tactic does, not the goal it leaves.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from collections.abc import Mapping, Sequence
+from html import escape
+from pathlib import Path
+from typing import Any
+from urllib.parse import quote
+
+from lean4_explainer.extensions import Extension
+from lean4_explainer.render import Context
+
+__version__ = "0.1.0"
+
+SCRIPT = "_assets/reader.js"
+READER_JS = (Path(__file__).with_name("reader.js")).read_text(encoding="utf-8")
+_EMBED_LIMIT = 2_000_000  # characters of source per page; a bigger file gets no reading unless a source URL is set
+
+CSS = """
+#reader-note { font-size: 0.9rem; color: var(--muted); border-left: 3px solid var(--line); padding: 0.2rem 0.6rem; margin: 0.6rem 0; }
+#reader-note .reader-status:empty { display: none; }
+details.reading { margin: 0.45rem 0 0.2rem; }
+details.reading > summary { cursor: pointer; font-size: 0.9rem; color: var(--muted); }
+details.reading[open] > summary { margin-bottom: 0.3rem; }
+.rd { border-left: 3px solid var(--line); padding: 0.1rem 0 0.1rem 0.75rem; }
+.rd p { margin: 0.35rem 0; }
+.rd ul, .rd ol { margin: 0.25rem 0 0.4rem; padding-left: 1.4rem; }
+.rd li { margin: 0.18rem 0; }
+.rd code.rd-tac { background: var(--line); padding: 0 0.25rem; border-radius: 3px; margin-right: 0.3rem; }
+.rd .rd-case { font-weight: 600; }
+.rd ol.rd-calc { list-style: none; padding-left: 0.8rem; }
+.rd details { margin: 0.35rem 0; }
+.rd details > summary { cursor: pointer; color: var(--muted); font-size: 0.88rem; }
+.rd dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.15rem 0.8rem; margin: 0.3rem 0; }
+.rd dt { font-family: ui-monospace, monospace; }
+.rd dd { margin: 0; }
+.rd pre { overflow-x: auto; font-size: 0.85rem; }
+"""
+
+
+
+class ReaderExtension(Extension):
+    name = "reader"
+    version = __version__
+    config_keys = {"reader_source_url": str, "reader_embed_limit": int}
+
+    def fingerprint(self, options: Mapping[str, Any]) -> str:
+        digest = hashlib.sha256(READER_JS.encode("utf-8")).hexdigest()[:16]
+        return (
+            f"reader:{__version__}:{digest}:{options.get('reader_source_url', '')}:"
+            f"{options.get('reader_embed_limit', _EMBED_LIMIT)}"
+        )
+
+    def css(self, options: Mapping[str, Any]) -> str:
+        return CSS
+
+    def scripts(self, options: Mapping[str, Any]) -> Sequence[str]:
+        return (SCRIPT,)
+
+    def pages(self, ctx: Context, analysis: Any) -> Mapping[str, str]:
+        return {SCRIPT: READER_JS}
+
+    def file_blocks(self, lean_file: Any, text: str, ctx: Context, analysis: Any) -> str:
+        if not lean_file.declarations:
+            return ""
+        options = dict(ctx.options)
+        template = options.get("reader_source_url")
+        if template:
+            url = str(template).replace("{path}", quote(lean_file.path)).replace("{ref}", quote(ctx.source_ref))
+            return f'<div id="lean-source" data-src="{escape(url, quote=True)}" hidden></div>'
+        if not text or len(text) > int(options.get("reader_embed_limit", _EMBED_LIMIT)):
+            return ""
+        payload = json.dumps(text, ensure_ascii=False).replace("<", "\\u003c")
+        return f'<script type="application/json" id="lean-source">{payload}</script>'
+
+    def summary(self, analysis: Any) -> Sequence[str]:
+        return ("Reader: every file page carries a plain-English reading of its declarations (made in the browser).",)

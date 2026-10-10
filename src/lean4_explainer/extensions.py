@@ -13,7 +13,7 @@ Hooks run in this order for a build:
    cache. Its types must be listed in `cache_types`, because the cache is loaded through an allow-list.
 3. `analyze`: once per tree, with every file's summary and the name index. Returns an analysis object, which the
    later hooks receive.
-4. `declaration_title`, `declaration_blocks`, `pages`, `nav_links`, `css`, `status`: rendering.
+4. `declaration_title`, `declaration_blocks`, `file_blocks`, `scripts`, `pages`, `nav_links`, `css`, `status`: rendering.
 5. `summary`: lines printed after a build.
 6. `register_cli` / `run_cli`: extra subcommands.
 """
@@ -124,6 +124,14 @@ class Extension:
     def declaration_blocks(self, decl: Any, payload: Any, rel: str, dirs: list[str], ctx: Any, analysis: Any) -> tuple[str, str]:
         """HTML before and after the "also declared" block."""
         return "", ""
+
+    def file_blocks(self, lean_file: Any, text: str, ctx: Any, analysis: Any) -> str:
+        """HTML after a file page's declaration list. `text` is the file's source, empty when it is not at hand."""
+        return ""
+
+    def scripts(self, options: Mapping[str, Any]) -> Sequence[str]:
+        """Site-relative script paths (written through `pages`) that every page loads, deferred."""
+        return ()
 
     def pages(self, ctx: Any, analysis: Any) -> Mapping[str, str]:
         return {}

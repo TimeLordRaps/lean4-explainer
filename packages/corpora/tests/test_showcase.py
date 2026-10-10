@@ -202,3 +202,20 @@ def test_without_l4del_the_overlay_is_ignored_and_the_landing_does_not_claim_ann
 
     assert "A sidecar title" not in (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
     assert "sidecar overlay" not in (out / "index.html").read_text(encoding="utf-8")
+
+
+def test_with_the_reader_a_corpus_too_big_to_publish_twice_reads_from_its_pinned_raw_source(upstream, tmp_path):
+    reader = pytest.importorskip("lean4_explainer_reader")
+    from lean4_explainer import extensions
+
+    corpus, base = upstream
+    extensions.activate([reader.ReaderExtension()])
+    try:
+        build_showcase([replace(corpus, source_links="file")], tmp_path / "work", tmp_path / "big", base_url=base)
+        build_showcase([corpus], tmp_path / "work", tmp_path / "small", base_url=base)
+    finally:
+        extensions.activate(None)
+    big = (tmp_path / "big" / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    assert f'data-src="https://raw.githubusercontent.com/acme/demo/{corpus.commit}/Demo/A.lean"' in big
+    small = (tmp_path / "small" / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    assert '<script type="application/json" id="lean-source">' in small and "data-src" not in small
