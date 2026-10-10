@@ -112,7 +112,7 @@ def test_fetch_with_yes_fetches_each_corpus(tmp_path, monkeypatch, capsys):
     fetched = []
     monkeypatch.setattr(extension.showcase, "fetch_corpus", lambda corpus, work, **k: fetched.append(corpus.name) or work / corpus.name)
 
-    assert cli.main(["fetch", "lft", "pfr", "--yes", "--work", str(tmp_path)]) == 0
+    assert cli.main(["fetch", "flt", "pfr", "--yes", "--work", str(tmp_path)]) == 0
 
     assert fetched == ["flt", "pfr"]
 

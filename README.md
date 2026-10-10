@@ -112,7 +112,7 @@ Tactic traces (the goal state after each tactic) are not in a lakefile. They com
 |---|---|---|---|
 | `formal-conjectures` | [google-deepmind/formal-conjectures](https://github.com/google-deepmind/formal-conjectures) | `conjectures` | Apache-2.0; other material CC-BY 4.0; Wikipedia, MathOverflow and OEIS content CC-BY-SA 4.0 |
 | `carleson` | [fpvandoorn/carleson](https://github.com/fpvandoorn/carleson) | `carleson` | Apache-2.0 |
-| `flt` | [ImperialCollegeLondon/FLT](https://github.com/ImperialCollegeLondon/FLT) (Fermat's Last Theorem) | `lft` or `flt` | Apache-2.0 |
+| `flt` | [ImperialCollegeLondon/FLT](https://github.com/ImperialCollegeLondon/FLT) (Fermat's Last Theorem) | `flt` | Apache-2.0 |
 | `pfr` | [teorth/pfr](https://github.com/teorth/pfr) | `pfr` | Apache-2.0 |
 | `compfiles` | [dwrensha/compfiles](https://github.com/dwrensha/compfiles) | `compfiles` | Apache-2.0 |
 | `mil` | [Mathematics in Lean](https://github.com/leanprover-community/mathematics_in_lean) (tutorial) | `tutorials` | Apache-2.0 |

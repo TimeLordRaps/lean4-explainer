@@ -41,9 +41,9 @@ def test_two_of_the_corpora_are_tutorials():
     assert [c.name for c in select("tutorials")] == ["mil", "tpil"]
 
 
-def test_lft_and_flt_name_the_same_corpus():
-    assert [c.name for c in select("lft")] == ["flt"] == [c.name for c in select("flt")]
-
+def test_lft_is_not_an_extra():
+    with pytest.raises(ExplainerError):
+        select("lft")
 
 def test_conjectures_is_the_conjectures_repo_only():
     assert [c.name for c in select("conjectures")] == ["formal-conjectures"]

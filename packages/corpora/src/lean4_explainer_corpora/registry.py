@@ -1,6 +1,6 @@
 """A corpus is a Lean repository pinned to a commit. Each one is its own installable package.
 
-`pip install lean4-explainer[conjectures]` (or `[lft]`, `[carleson]`, `[pfr]`, `[compfiles]`, `[tutorials]`, `[oai]`,
+`pip install lean4-explainer[conjectures]` (or `[carleson]`, `[pfr]`, `[compfiles]`, `[tutorials]`, `[oai]`,
 `[all]`) installs the matching `lean4-explainer-<name>` packages. Each holds the pinned description of one
 repository: its commit, library roots, license and license notes. The sources are not bundled: `fetch` and
 `showcase` clone the pinned commit from GitHub, and say so before they do.
@@ -34,11 +34,10 @@ class Corpus:
 
 GROUP = "lean4_explainer.corpora"
 
-# pip extra -> corpus names. `lft` and `flt` both name the Fermat's Last Theorem project.
+# pip extra -> corpus names.
 EXTRAS: dict[str, tuple[str, ...]] = {
     "conjectures": ("formal-conjectures",),
     "carleson": ("carleson",),
-    "lft": ("flt",),
     "flt": ("flt",),
     "pfr": ("pfr",),
     "compfiles": ("compfiles",),

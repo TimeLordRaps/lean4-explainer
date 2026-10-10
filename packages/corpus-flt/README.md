@@ -7,7 +7,7 @@ Fermat's Last Theorem (FLT), as a lean4-explainer corpus.
 - License: Apache-2.0
 
 ```
-pip install lean4-explainer[lft]
+pip install lean4-explainer[flt]
 lean4-explainer showcase flt --yes
 ```
 

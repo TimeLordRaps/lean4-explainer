@@ -70,7 +70,7 @@ def main(argv: list[str] | None = None) -> int:
 def _list_extensions() -> int:
     installed = extensions()
     if not installed:
-        print("No extensions installed. Extras: lean4-explainer[l4del], [lft], [conjectures], [tutorials], [oai], [all].")
+        print("No extensions installed. Extras: lean4-explainer[l4del], [conjectures], [tutorials], [oai], [all].")
     for ext in installed:
         print(f"{ext.name} {ext.version}")
     return 0
