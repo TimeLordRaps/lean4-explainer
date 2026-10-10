@@ -74,7 +74,7 @@ def test_unknown_name_is_an_error_that_lists_the_choices():
 def test_core_pyproject_extras_match_the_registry_names():
     pyproject = Path(__file__).resolve().parents[3] / "pyproject.toml"
     declared = set(tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["optional-dependencies"])
-    assert declared - {"test", "l4del"} == set(EXTRAS)
+    assert declared - {"test", "l4del", "lean", "ecosystem"} == set(EXTRAS)  # the other extras are not corpora
 
 
 def test_every_extra_installs_the_packages_of_its_corpora():

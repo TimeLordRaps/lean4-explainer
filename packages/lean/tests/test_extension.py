@@ -76,6 +76,8 @@ def test_real_lean_gives_badges_traces_and_a_trust_page(tmp_path):
     assert "Tactic trace" in page and "induction n with" in page and "⊢ n + 0 = n" in page
     trust = (out / "trust.html").read_text(encoding="utf-8")
     assert "Depend on sorry (1)" in trust and "Demo.uses_sorry" in trust
+    link = re.search(r'href="([^"#]+)#L(\d+)"><code>Demo.uses_sorry', trust)
+    assert link and (out / link.group(1)).is_file() and link.group(2) == "8"  # the link lands on the declaration's page
     assert any("1 sorry" in line for line in summary.extension_lines)
 
 

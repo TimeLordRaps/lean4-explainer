@@ -9,6 +9,7 @@ The core is small and needs nothing else. Everything that adds weight is an exte
 | A quick explanation page of your Lean code | `pip install lean4-explainer` | The site, from declarations and standard Lean comments |
 | To write richer explanations in comments | `pip install lean4-explainer[l4del]` | **[L4DEL](#l4del-write-your-own-explanations)**: titles, intuition, proof steps, prerequisites, glossary, learning path, `check` and `annotate` |
 | Tactic traces and kernel trust badges | `pip install lean4-explainer[lean]` | **[Lean run](#lean-run-tactic-traces-and-trust-badges)**: goals before and after each tactic, and the axioms each declaration depends on. Needs `lean` on the PATH |
+| `explain#Name` chat links, version diffs, a Lake facet | `pip install lean4-explainer[ecosystem]` | **[Ecosystem](#ecosystem-links-diffs-and-a-lake-facet)** |
 | To see it on well-known Lean projects | `pip install lean4-explainer[all]` | Pinned descriptions of 8 projects, plus `sources`, `fetch` and `showcase` |
 
 **Jump to:** [L4DEL: write your own explanations](#l4del-write-your-own-explanations) | [Quick start](#quick-start) | [Lake projects](#lake-projects) | [Built-in corpora](#built-in-corpora-and-extras) | [Extensions](#extensions) | [Configuration](#configuration)
@@ -102,7 +103,15 @@ Rules:
 - a collapsible **tactic trace**: the goals before and after each tactic step.
 - a **Trust** page listing declarations that depend on `sorry` or on extra axioms.
 
-A file that does not elaborate shows trust UNKNOWN with Lean's reason, and a file where Lean reported errors says so on every badge. Nothing is guessed. Results are cached by file content, Lean version and `lake-manifest.json`. A Lake project that pins a Lean version you do not have makes elan download that toolchain on the first run. Not implemented: expression-tree compression, a Lake facet, `explain#Name` links, version diffs. See `packages/lean/README.md` for the config keys.
+A file that does not elaborate shows trust UNKNOWN with Lean's reason, and a file where Lean reported errors says so on every badge. Nothing is guessed. Results are cached by file content, Lean version and `lake-manifest.json`. A Lake project that pins a Lean version you do not have makes elan download that toolchain on the first run. Each badge also lists the constants the statement and the proof use, with instances, coercions and auxiliary definitions counted but left out. This filtering is the expression-tree compression: it is a filter on the set of constants, not a compressed term. See `packages/lean/README.md` for the config keys.
+
+## Ecosystem: links, diffs and a Lake facet
+
+`pip install lean4-explainer[ecosystem]` adds three things (details in `packages/ecosystem/README.md`):
+
+- `find.html#Foo.bar` jumps to a declaration, the target for an `explain#Foo.bar` chat link (a Zulip linkifier is described there).
+- `snapshot.json` on every site, and with `compare_to` set to an earlier snapshot, a `changes.html` listing statements changed, proofs changed, declarations added and removed. Digests are of the text, not of elaborated terms.
+- `lean4-explainer lake-facet` prints the lakefile snippet that adds `lake build :explain`.
 
 ## Lake projects
 
@@ -143,7 +152,7 @@ Without `--yes`, the commands print the plan and ask. When stdin is not a termin
 
 ## Extensions
 
-An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The shipped extensions are `lean4-explainer-l4del`, `lean4-explainer-lean` and `lean4-explainer-corpora`.
+An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The shipped extensions are `lean4-explainer-l4del`, `lean4-explainer-lean`, `lean4-explainer-ecosystem` and `lean4-explainer-corpora`.
 
 ## Configuration
 
@@ -171,10 +180,11 @@ Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types ar
 The repository holds the core and the extensions as separate packages:
 
 ```
-pip install -e ".[test]" -e packages/l4del -e packages/lean -e packages/corpora -e packages/corpus-flt   # and the other corpus-* packages
+pip install -e ".[test]" -e packages/l4del -e packages/lean -e packages/ecosystem -e packages/corpora -e packages/corpus-flt   # and the other corpus-* packages
 pytest                      # core, with no extension active
 pytest packages/l4del       # L4DEL
 pytest packages/lean        # Lean run (real-Lean tests are skipped when `lean` is missing)
+pytest packages/ecosystem   # find page, snapshots, Lake facet
 pytest packages/corpora     # registry, fetch, showcase
 ```
 

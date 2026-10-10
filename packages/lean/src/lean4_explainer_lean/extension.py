@@ -266,7 +266,8 @@ def _trust_page(ctx, analysis: Analysis) -> str:
             continue
         body.append(f'<h2>{heading} ({len(rows)})</h2><ol class="list">')
         for rel, d in rows[:_TRUST_ROWS]:
-            link = escape(href([], rel + ".html", f"#L{d.line}"), quote=True)
+            where = ctx.locations.get(d.name, (rel + ".html", d.line))[0]
+            link = escape(href([], where, f"#L{d.line}"), quote=True)
             note = "" if wanted == "sorry" else f' <span class="muted">{escape(F.classify(d.axioms)[1])}</span>'
             body.append(f'<li><a href="{link}"><code>{escape(d.name)}</code></a> <span class="ln">{escape(rel)}</span>{note}</li>')
         if len(rows) > _TRUST_ROWS:
