@@ -112,7 +112,8 @@ class Extension:
         return f"{self.name}:{self.version}"
 
     # -- rendering --
-    def css(self) -> str:
+    def css(self, options: Mapping[str, Any]) -> str:
+        """CSS appended to the shared stylesheet. `options` holds this site's extension config values."""
         return ""
 
     def declaration_title(self, decl: Any, payload: Any) -> str:

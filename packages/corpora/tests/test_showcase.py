@@ -159,3 +159,15 @@ def test_landing_page_escapes_titles(upstream, tmp_path):
 
     assert "<script>x" not in (out / "index.html").read_text(encoding="utf-8")
     assert isinstance(out, Path)
+
+
+def test_each_subsite_wears_its_corpus_theme_and_the_landing_card_its_accent(upstream, tmp_path):
+    corpus, base = upstream
+    corpus = replace(corpus, theme_css=".marker-theme { color: red; }\n", accent="#123456")
+    out = tmp_path / "site"
+
+    build_showcase([corpus], tmp_path / "work", out, base_url=base)
+
+    assert ".marker-theme { color: red; }" in (out / "demo" / "_assets" / "site.css").read_text(encoding="utf-8")
+    assert ".marker-theme" not in (out / "_assets" / "site.css").read_text(encoding="utf-8")  # the landing has its own look
+    assert 'style="--card: #123456"' in (out / "index.html").read_text(encoding="utf-8")

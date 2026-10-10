@@ -182,7 +182,7 @@ class L4delExtension(Extension):
         return f"l4del:{__version__}:learning_path={options.get('learning_path', True)}"
 
     # ---- rendering ----
-    def css(self) -> str:
+    def css(self, options: Mapping[str, Any]) -> str:
         return CSS
 
     def declaration_title(self, decl: Declaration, payload: L4Notes) -> str:

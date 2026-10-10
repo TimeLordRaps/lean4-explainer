@@ -16,6 +16,19 @@ from lean4_explainer.lake import LakeProject, include_patterns, read_lake
 from lean4_explainer.render import ASSET_DIR, SITE_CSS
 
 from .registry import Corpus
+from .themes import make_theme
+
+# The landing page is an atlas: ink on paper, each project a card in its own colour.
+LANDING_CSS = make_theme(
+    light=dict(fg="#1d1b16", bg="#f6f1e7", muted="#6e6656", line="#d9d0bd", warn="#8a3b00", panel="rgba(60,40,10,0.06)", accent="#7a4b12", **{"warn-bg": "#f6dfc2"}),
+    dark=dict(fg="#ece6d8", bg="#16140f", muted="#a39a86", line="#38332a", warn="#ffb46b", panel="rgba(255,240,210,0.06)", accent="#e0b36a", **{"warn-bg": "#3a2a18"}),
+    heading="Georgia, 'Times New Roman', serif",
+    extra="""
+h1 { font-size: 2.1rem; letter-spacing: 0.01em; }
+ol.list { counter-reset: none; padding: 0; }
+ol.list > li { list-style: none; background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--card, var(--accent)); border-radius: 6px; padding: 0.8rem 1rem; margin-bottom: 0.8rem; }
+""",
+)
 
 GITHUB = "https://github.com"
 _GIT_TIMEOUT_SECONDS = 1800
@@ -89,6 +102,7 @@ def build_showcase(
             source_links=corpus.source_links,
             byte_budget=byte_budget,
             home="../index.html",
+            options=(("theme_css", corpus.theme_css),) if corpus.theme_css else (),
         )
         _copy_license(checkout, out_dir / corpus.name, corpus.lean_root)
         started = time.monotonic()
@@ -101,7 +115,7 @@ def build_showcase(
         )
         items.append(ShowcaseItem(corpus, summary, project, time.monotonic() - started))
     (out_dir / ASSET_DIR).mkdir(parents=True, exist_ok=True)
-    (out_dir / ASSET_DIR / "site.css").write_text(SITE_CSS, encoding="utf-8")
+    (out_dir / ASSET_DIR / "site.css").write_text(SITE_CSS + LANDING_CSS, encoding="utf-8")
     (out_dir / ".nojekyll").write_text("", encoding="utf-8")
     guide = next(
         (f"{i.corpus.name}/annotate.html" for i in items if (out_dir / i.corpus.name / "annotate.html").is_file()),
@@ -133,7 +147,7 @@ def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str) -> s
         if mathlib:
             pins.append(f"mathlib {mathlib[:12]}")
         cards.append(
-            f'<li><a href="{escape(corpus.name)}/index.html"><strong>{escape(corpus.title)}</strong></a> '
+            f'<li style="--card: {escape(corpus.accent)}"><a href="{escape(corpus.name)}/index.html"><strong>{escape(corpus.title)}</strong></a> '
             f'<span class="muted">({escape(corpus.kind)})</span><br>{escape(corpus.blurb)}<br>'
             f'<span class="muted">{escape(", ".join(facts))}. {escape(", ".join(pins))}. '
             f'Source: <a href="{GITHUB}/{escape(corpus.repo)}">{escape(corpus.repo)}</a>. '

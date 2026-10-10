@@ -29,6 +29,8 @@ class Corpus:
     exclude: tuple[str, ...] = ()
     license: str = "Apache-2.0"  # SPDX id of the repository LICENSE file, read from the pinned checkout
     license_note: str = ""  # extra terms the repository states for part of its content
+    accent: str = "#555555"  # card and link colour on the landing page
+    theme_css: str = ""  # appended to this corpus's stylesheet (see themes.make_theme)
     source_links: str = "declaration"  # "file" for corpora too large to carry a link per declaration
 
 

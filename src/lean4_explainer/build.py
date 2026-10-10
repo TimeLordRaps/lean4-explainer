@@ -221,7 +221,7 @@ def _build_site(
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    written = _write(out_dir / ASSET_DIR / "site.css", SITE_CSS + "".join(ext.css() for ext, _ in tree.analyses))
+    written = _write(out_dir / ASSET_DIR / "site.css", SITE_CSS + "".join(ext.css(dict(config.options)) for ext, _ in tree.analyses))
     written += _write(out_dir / ASSET_DIR / "site.js", SITE_JS)
     written += _write(out_dir / ".nojekyll", "")
 

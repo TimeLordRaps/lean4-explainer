@@ -69,7 +69,7 @@ class TagExtension(Extension):
     def nav_links(self, up, options):
         return [("Tags", f"{up}tags.html")]
 
-    def css(self):
+    def css(self, options):
         return ".tag { color: red; }\n"
 
     def status(self, analysis):

@@ -12,7 +12,7 @@ from lean4_explainer.extensions import Extension
 
 from . import registry, showcase
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 _WORK_DEFAULT = ".lean4-explainer-work"
 _SITE_DEFAULT = "lean4-explainer-site"
 _DEFAULT_JOBS = max(1, min(8, os.cpu_count() or 1))
@@ -22,6 +22,13 @@ class CorporaExtension(Extension):
     name = "corpora"
     version = __version__
     default_command = "showcase"  # a bare `lean4-explainer` builds the showcase
+    config_keys = {"theme_css": str}  # a corpus theme: CSS appended to the site stylesheet
+
+    def css(self, options) -> str:
+        return str(options.get("theme_css", ""))
+
+    def fingerprint(self, options) -> str:
+        return f"{self.name}:{self.version}"
 
     def register_cli(self, commands: argparse._SubParsersAction) -> None:
         sources = commands.add_parser("sources", help="list the installed corpora and their pinned commits")
