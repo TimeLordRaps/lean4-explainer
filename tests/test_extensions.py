@@ -315,3 +315,20 @@ def test_extension_adds_a_file_level_block_with_the_source_text_and_page_scripts
     assert f'<div class="whole">{len(SOURCE.replace(chr(13), ""))} chars of Sub/A.lean</div>' in page
     assert '<script src="../_assets/extra.js" defer></script>' in page
     assert '<script src="../_assets/extra.js" defer></script>' in (tmp_path / "docs" / "Sub" / "index.html").read_text(encoding="utf-8")
+
+
+class BinaryPageExtension(Extension):
+    name = "binary"
+
+    def pages(self, ctx, analysis):
+        return {"_assets/font.woff2": b"\x00\x01wOF2\xff", "notes.html": "<p>text</p>"}
+
+
+def test_extension_pages_may_be_binary_files(tmp_path, lean):
+    extensions.activate([BinaryPageExtension()])
+    try:
+        build_site(lean, tmp_path / "docs")
+    finally:
+        extensions.activate([])
+    assert (tmp_path / "docs" / "_assets" / "font.woff2").read_bytes() == b"\x00\x01wOF2\xff"
+    assert (tmp_path / "docs" / "notes.html").read_text(encoding="utf-8") == "<p>text</p>"

@@ -24,8 +24,15 @@ from lean4_explainer.render import Context
 
 __version__ = "0.1.0"
 
+HERE = Path(__file__).parent
 SCRIPT = "_assets/reader.js"
-READER_JS = (Path(__file__).with_name("reader.js")).read_text(encoding="utf-8")
+LEAN2TEX = "_assets/lean2tex.js"
+READER_JS = (HERE / "reader.js").read_text(encoding="utf-8")
+LEAN2TEX_JS = (HERE / "lean2tex.js").read_text(encoding="utf-8")
+KATEX_DIR = HERE / "vendor" / "katex"
+KATEX = json.loads((KATEX_DIR / "VENDOR.json").read_text(encoding="utf-8"))
+# KaTeX (MIT) draws the formulas lean2tex writes; it goes into every site next to reader.js, so pages work offline
+KATEX_FILES = {f"_assets/katex/{'LICENSE.txt' if rel == 'LICENSE' else rel}": KATEX_DIR / rel for rel in KATEX["sha256"]}
 _EMBED_LIMIT = 2_000_000  # characters of source per page; a bigger file gets no reading unless a source URL is set
 
 CSS = """
@@ -47,6 +54,11 @@ details.reading[open] > summary { margin-bottom: 0.3rem; }
 .rd dt { font-family: ui-monospace, monospace; }
 .rd dd { margin: 0; }
 .rd pre { overflow-x: auto; font-size: 0.85rem; }
+.rd .rd-math { overflow-x: auto; overflow-y: hidden; padding: 0.15rem 0 0.25rem; }
+.rd .rd-math:not(.typeset) > code { display: block; }
+.rd .m.typeset .katex { font-size: 1.08em; }
+.rd .rd-math.typeset .katex-display { margin: 0.35rem 0; text-align: left; }
+.rd .rd-math.typeset .katex-display > .katex { text-align: left; }
 """
 
 
@@ -57,9 +69,9 @@ class ReaderExtension(Extension):
     config_keys = {"reader_source_url": str, "reader_embed_limit": int}
 
     def fingerprint(self, options: Mapping[str, Any]) -> str:
-        digest = hashlib.sha256(READER_JS.encode("utf-8")).hexdigest()[:16]
+        digest = hashlib.sha256((READER_JS + LEAN2TEX_JS).encode("utf-8")).hexdigest()[:16]
         return (
-            f"reader:{__version__}:{digest}:{options.get('reader_source_url', '')}:"
+            f"reader:{__version__}:{digest}:katex-{KATEX['version']}:{options.get('reader_source_url', '')}:"
             f"{options.get('reader_embed_limit', _EMBED_LIMIT)}"
         )
 
@@ -67,10 +79,10 @@ class ReaderExtension(Extension):
         return CSS
 
     def scripts(self, options: Mapping[str, Any]) -> Sequence[str]:
-        return (SCRIPT,)
+        return (LEAN2TEX, SCRIPT)  # deferred scripts run in order: the translator is there before the reader starts
 
-    def pages(self, ctx: Context, analysis: Any) -> Mapping[str, str]:
-        return {SCRIPT: READER_JS}
+    def pages(self, ctx: Context, analysis: Any) -> Mapping[str, str | bytes]:
+        return {SCRIPT: READER_JS, LEAN2TEX: LEAN2TEX_JS} | {path: source.read_bytes() for path, source in KATEX_FILES.items()}
 
     def file_blocks(self, lean_file: Any, text: str, ctx: Context, analysis: Any) -> str:
         if not lean_file.declarations:

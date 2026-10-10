@@ -18,6 +18,28 @@
     return "<code>" + esc(squash(s)) + "</code>";
   }
 
+  // Typeset mathematics: lean2tex turns a Lean term into LaTeX, and the page draws it with KaTeX. The Lean code stays
+  // inside as the fallback (no JavaScript for KaTeX, or a term lean2tex cannot read) and as the hover title.
+  let lean2tex = null;
+  function translator() {
+    if (!lean2tex) {
+      if (typeof module === "object" && module.exports) { try { lean2tex = require("./lean2tex.js"); } catch (e) { lean2tex = false; } }
+      else lean2tex = (typeof self !== "undefined" && self.Lean2TeX) || false;
+    }
+    return lean2tex || null;
+  }
+  function texOf(s, options) {
+    const t = translator();
+    return t ? t.toTex(String(s), options) : null;  // line breaks kept: they end `let` lines
+  }
+  function math(s, options) {
+    const tex = texOf(s, options);
+    return tex ? "<span class=\"m\" data-tex=\"" + esc(tex) + "\" title=\"Lean: " + esc(squash(s)) + "\">" + code(s) + "</span>" : code(s);
+  }
+  function displayMath(tex, s) {
+    return "<div class=\"rd-math\" data-tex=\"" + esc(tex) + "\" title=\"Lean: " + esc(squash(s)) + "\">" + code(s) + "</div>";
+  }
+
   // Blank out comments and string contents, keeping every newline and every code unit's position.
   function mask(text) {
     const out = [];
@@ -401,7 +423,7 @@
       const colon = scanTop(g, (i) => g[i] === ":" && g[i + 1] !== "=");
       if (colon >= 0) return names(g.slice(0, colon)) + " (" + typeWords(g.slice(colon + 1)) + ")";
       const rel = findRelation(g, g.length);
-      if (rel) return code(g.slice(0, rel.at)) + " " + (rel.op === "∈" ? "in" : rel.words) + " " + code(g.slice(rel.at + rel.op.length));
+      if (rel) return math(g.slice(0, rel.at)) + " " + (rel.op === "∈" ? "in" : rel.words) + " " + math(g.slice(rel.at + rel.op.length));
       return names(g);
     }).join(" and ");
   }
@@ -413,7 +435,7 @@
   function sayProp(s, depth) {
     depth = depth || 0;
     const lt = String(s).match(/^\s*let(?:I)?\s+([^\n;:=]*?)\s*(?::[^\n;=]*)?:=\s*([^\n;]*?)\s*(?:;|\n)([\s\S]*)$/);
-    if (lt && depth < 6) return "with " + code(lt[1]) + " standing for " + code(lt[2]) + ", " + sayProp(lt[3], depth + 1);
+    if (lt && depth < 6) return "with " + math(lt[1]) + " standing for " + math(lt[2]) + ", " + sayProp(lt[3], depth + 1);
     s = stripParens(squash(s));
     if (!s) return "";
     if (depth > 5) return code(s);
@@ -458,14 +480,14 @@
     }
     if (/^¬/.test(s)) return "it is not true that " + sayProp(s.slice(1), depth + 1);
     const mod = s.match(/^(.+?)≡(.+)\[(Z?MOD|PMOD|SMOD)\s+(.+)\]$/);
-    if (mod) return code(mod[1]) + " and " + code(mod[2]) + " leave the same remainder when divided by " + code(mod[4]);
+    if (mod) return math(mod[1]) + " and " + math(mod[2]) + " leave the same remainder when divided by " + math(mod[4]);
     const rel = findRelation(s, limit);
-    if (rel) return code(s.slice(0, rel.at)) + " " + rel.words + " " + code(s.slice(rel.at + rel.op.length));
+    if (rel) return math(s.slice(0, rel.at)) + " " + rel.words + " " + math(s.slice(rel.at + rel.op.length));
     if (s === "True") return "always true";
     if (s === "False") return "false: a contradiction";
     const pred = predicateWords(s);
     if (pred) return pred;
-    return code(s) + " holds";
+    return math(s) + " holds";
   }
 
   // ---------------------------------------------------------------- symbols a beginner may not know
@@ -920,7 +942,7 @@
     }
     let out = "<li><code class=\"rd-tac\">" + esc(step.text.length > 160 ? step.text.slice(0, 157) + "…" : step.text) + "</code> " + tacticWords(step.text.replace(/\s*(=>|\bwith)\s*$/, ""));
     if (step.calc) {
-      out += "<ol class=\"rd-calc\">" + step.calc.map((l) => "<li>" + code(l.claim) + (l.why ? " — " + l.why : "") + "</li>").join("") + "</ol>";
+      out += "<ol class=\"rd-calc\">" + step.calc.map((l) => "<li>" + math(l.claim, { calc: true }) + (l.why ? " — " + l.why : "") + "</li>").join("") + "</ol>";
     }
     if (step.children.length) out += stepsHtml(step.children);
     return out + "</li>";
@@ -1011,6 +1033,18 @@
   }
 
   // ---------------------------------------------------------------- one declaration
+  // The names a definition takes explicitly, in order: (z : Phase n) gives z; assumptions such as (h : 0 < n) are left out.
+  function explicitInputs(binders) {
+    const out = [];
+    for (const b of binders) {
+      if (b.bracket !== "(") continue;
+      const inner = squash(b.inner);
+      const c = inner.indexOf(":");
+      if (c >= 0 && looksLikeProp(inner.slice(c + 1), inner.slice(0, c).trim().split(" ")[0])) continue;
+      (c < 0 ? inner : inner.slice(0, c)).split(" ").forEach((n) => n && out.push(n));
+    }
+    return out;
+  }
   function readDeclaration(original, masked, links) {
     const h = splitHeader(masked) || splitHeader(original);
     if (!h) return null;
@@ -1031,6 +1065,8 @@
       out.push("<p class=\"rd-say\"><strong>Assumed without proof:</strong> " + sayProp(h.type) + ". Anything that uses it depends on this assumption.</p>");
     } else if (/^(theorem|lemma|problem|example)$/.test(h.kind) || isProof) {
       out.push("<p class=\"rd-say\"><strong>It says:</strong> " + (h.type ? sayProp(h.type) : "(no statement found)") + ".</p>");
+      const tex = h.type && texOf(h.type);
+      if (tex) out.push(displayMath(tex, h.type));
     } else if (h.kind === "determine") {
       out.push("<p class=\"rd-say\"><strong>The answer to find:</strong> " + code(h.name) + (h.type ? ", " + typeWords(h.type) : "") + ".</p>");
     } else if (h.kind === "structure" || h.kind === "class") {
@@ -1042,7 +1078,7 @@
     } else if (h.kind === "instance") {
       out.push("<p class=\"rd-say\"><strong>An instance:</strong> it tells Lean that " + code(h.type) + " holds or is available, so Lean can use it automatically.</p>");
     } else {
-      const inputs = h.binders.filter((b) => b.bracket === "(").map((b) => { const inner = squash(b.inner); const c = inner.indexOf(":"); return c < 0 ? inner : looksLikeProp(inner.slice(c + 1), inner.slice(0, c).trim().split(" ")[0]) ? "" : inner.slice(0, c); }).join(" ");
+      const inputs = explicitInputs(h.binders).join(" ");
       out.push("<p class=\"rd-say\"><strong>Defines</strong> " + code(h.name || "(unnamed)") + (h.type ? (inputs.trim() ? ": from " + names(inputs) + " it gives " : ": ") + typeWords(h.type) : "") + "." +
         (h.kind === "abbrev" ? " It is an abbreviation, so Lean unfolds it freely." : "") + "</p>");
     }
@@ -1062,12 +1098,15 @@
         out.push(stepsHtml(steps.length > 200 ? steps.slice(0, 200) : steps));
       }
     } else if (h.bodyKind === "term" && body) {
-      const label = /^(theorem|lemma|problem|example)$/.test(h.kind) || isProof ? "The proof" : "Its value";
-      out.push("<p class=\"rd-shape\"><strong>" + label + ":</strong> " + termWords(body.length > 600 ? body.slice(0, 600) : body) + "</p>");
+      const isValue = !(/^(theorem|lemma|problem|example)$/.test(h.kind) || isProof);
+      const t = isValue && translator();
+      const tex = t && t.definitionTex((h.name || "").split(".").pop(), explicitInputs(h.binders), body);
+      if (tex) out.push("<p class=\"rd-shape\"><strong>Its value:</strong></p>" + displayMath(tex, body));
+      else out.push("<p class=\"rd-shape\"><strong>" + (isValue ? "Its value" : "The proof") + ":</strong> " + termWords(body.length > 600 ? body.slice(0, 600) : body) + "</p>");
     } else if (h.bodyKind === "arms") {
       const arms = armsOf(h.body);
       if (/inductive/.test(h.kind)) out.push("<ul class=\"rd-arms\">" + arms.map((a) => "<li>" + code(a.pat) + "</li>").join("") + "</ul>");
-      else out.push("<p class=\"rd-shape\"><strong>Case by case:</strong></p><ul class=\"rd-arms\">" + arms.map((a) => "<li>when the input is " + code(a.pat) + ", the result is " + code(a.val) + "</li>").join("") + "</ul>");
+      else out.push("<p class=\"rd-shape\"><strong>Case by case:</strong></p><ul class=\"rd-arms\">" + arms.map((a) => "<li>when the input is " + math(a.pat) + ", the result is " + math(a.val) + "</li>").join("") + "</ul>");
     } else if (h.bodyKind === "where") {
       if (/^(structure|class)$/.test(h.kind)) {
         const fields = fieldsOf(h.body);
@@ -1179,12 +1218,50 @@
         const box = document.createElement("details");
         box.className = "reading";
         box.innerHTML = "<summary>Reading: what it says, step by step</summary>";
-        const fill = () => { if (!box.dataset.filled) { box.insertAdjacentHTML("beforeend", "<div class=\"rd\">" + html + "</div>"); box.dataset.filled = "1"; } };
+        const fill = () => {
+          if (box.dataset.filled) return;
+          box.insertAdjacentHTML("beforeend", "<div class=\"rd\">" + html + "</div>");
+          box.dataset.filled = "1";
+          typeset(box);
+        };
         if (eager) { fill(); box.open = true; } else box.addEventListener("toggle", fill);
-        li.appendChild(box);
+        li.insertBefore(box, li.querySelector(":scope > details.depmap"));  // the reading comes before the map
       });
       status(eager ? "" : "Open any “Reading” to see it.");
     }).catch((e) => status("Could not load the source (" + e.message + "). The source links still work."));
+  }
+
+  // KaTeX ships with the site (in _assets/katex next to this script) and loads the first time a reading has mathematics.
+  const ASSETS = typeof document !== "undefined" && document.currentScript ? document.currentScript.src.replace(/[^/]*$/, "") : "";
+  let katexLoad = null;
+  function loadKatex() {
+    if (!katexLoad) {
+      katexLoad = new Promise((resolve, reject) => {
+        if (self.katex) { resolve(self.katex); return; }
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = ASSETS + "katex/katex.min.css";
+        document.head.appendChild(css);
+        const js = document.createElement("script");
+        js.src = ASSETS + "katex/katex.min.js";
+        js.onload = () => (self.katex ? resolve(self.katex) : reject(new Error("no katex")));
+        js.onerror = () => reject(new Error("KaTeX did not load"));
+        document.head.appendChild(js);
+      });
+    }
+    return katexLoad;
+  }
+  function typeset(root) {
+    const spots = root.querySelectorAll("[data-tex]");
+    if (!spots.length) return;
+    loadKatex().then((katex) => {
+      spots.forEach((el) => {
+        try {
+          katex.render(el.getAttribute("data-tex"), el, { displayMode: el.tagName === "DIV", throwOnError: false, strict: "ignore" });
+          el.classList.add("typeset");
+        } catch (e) { /* the Lean code stays */ }
+      });
+    }).catch(() => { /* without KaTeX the Lean code stays */ });
   }
 
   const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn };

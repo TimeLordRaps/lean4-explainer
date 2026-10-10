@@ -339,8 +339,8 @@ def _tree_bytes(root: Path) -> int:
     return total
 
 
-def _write(path: Path, text: str) -> int:
-    data = text.encode("utf-8")
+def _write(path: Path, text: str | bytes) -> int:
+    data = text if isinstance(text, bytes) else text.encode("utf-8")
     try:
         path.write_bytes(data)
     except FileNotFoundError:

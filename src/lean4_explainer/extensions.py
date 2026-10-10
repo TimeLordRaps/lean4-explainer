@@ -133,7 +133,8 @@ class Extension:
         """Site-relative script paths (written through `pages`) that every page loads, deferred."""
         return ()
 
-    def pages(self, ctx: Any, analysis: Any) -> Mapping[str, str]:
+    def pages(self, ctx: Any, analysis: Any) -> Mapping[str, str | bytes]:
+        """Site-relative path -> page or asset. Text is written as UTF-8; bytes (fonts, images) as they are."""
         return {}
 
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
