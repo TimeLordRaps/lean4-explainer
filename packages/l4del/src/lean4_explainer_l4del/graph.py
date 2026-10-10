@@ -119,3 +119,25 @@ def unresolved_links(notes: Sequence[Note], objects: Objects) -> list[str]:
             elif resolve_exact(token, objects) is None:
                 issues.append(f"warning: {note.rel}:{note.line}: unresolved reference {token}")
     return issues
+
+
+def build_links(notes: Sequence[Note], objects: Objects) -> tuple[dict[str, tuple[str, ...]], dict[str, tuple[str, ...]]]:
+    """Resolved `prereq` edges (declaration -> what it builds on) and `see` edges (both directions), by object key."""
+    prereqs: dict[str, list[str]] = {}
+    sees: dict[str, list[str]] = {}
+    for note in notes:
+        key = note_key(note.name, note.rel, objects)
+        for token in note.prereqs:
+            target = resolve_exact(token, objects)
+            if target is not None and target != key and target not in prereqs.setdefault(key, []):
+                prereqs[key].append(target)
+        for token in note.see:
+            target = resolve_exact(token, objects)
+            if target is not None and target != key:
+                for a, b in ((key, target), (target, key)):
+                    if b not in sees.setdefault(a, []):
+                        sees[a].append(b)
+    return (
+        {k: tuple(v) for k, v in prereqs.items()},
+        {k: tuple(v) for k, v in sees.items()},
+    )
