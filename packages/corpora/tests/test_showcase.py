@@ -171,3 +171,34 @@ def test_each_subsite_wears_its_corpus_theme_and_the_landing_card_its_accent(ups
     assert ".marker-theme { color: red; }" in (out / "demo" / "_assets" / "site.css").read_text(encoding="utf-8")
     assert ".marker-theme" not in (out / "_assets" / "site.css").read_text(encoding="utf-8")  # the landing has its own look
     assert 'style="--card: #123456"' in (out / "index.html").read_text(encoding="utf-8")
+
+
+def test_a_corpus_overlay_annotates_the_subsite_and_the_landing_says_who_wrote_it(upstream, tmp_path):
+    from lean4_explainer import extensions
+    from lean4_explainer_l4del import L4delExtension
+
+    corpus, base = upstream
+    overlay = tmp_path / "demo.l4del"
+    overlay.write_text("@file Demo/A.lean\n@decl a_fact\n-- L4DEL: title: A sidecar title\n", encoding="utf-8")
+    corpus = replace(corpus, overlay=str(overlay))
+    extensions.activate([L4delExtension()])
+    out = tmp_path / "site"
+
+    build_site_result = build_showcase([corpus], tmp_path / "work", out, base_url=base)
+
+    assert "A sidecar title" in (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    landing = (out / "index.html").read_text(encoding="utf-8")
+    assert "sidecar overlay" in landing and "did not write these explanations" in landing
+    assert build_site_result.total_bytes > 0
+
+
+def test_without_l4del_the_overlay_is_ignored_and_the_landing_does_not_claim_annotations(upstream, tmp_path):
+    corpus, base = upstream
+    overlay = tmp_path / "demo.l4del"
+    overlay.write_text("@file Demo/A.lean\n@decl a_fact\n-- L4DEL: title: A sidecar title\n", encoding="utf-8")
+    out = tmp_path / "site"
+
+    build_showcase([replace(corpus, overlay=str(overlay))], tmp_path / "work", out, base_url=base)
+
+    assert "A sidecar title" not in (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    assert "sidecar overlay" not in (out / "index.html").read_text(encoding="utf-8")

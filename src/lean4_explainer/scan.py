@@ -7,6 +7,7 @@ import os
 import re
 import textwrap
 from bisect import bisect_left, bisect_right
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -102,7 +103,7 @@ def scan_file(path: Path, relative: str) -> LeanFile:
     return parse_source(text, relative)
 
 
-def parse_source(text: str, path: str, statements: bool = False) -> LeanFile:
+def parse_source(text: str, path: str, statements: bool = False, options: Mapping[str, Any] | None = None) -> LeanFile:
     text = text.replace("\r\n", "\n")
     masked, comments = _mask(text)
     code = masked.split("\n")
@@ -134,7 +135,7 @@ def parse_source(text: str, path: str, statements: bool = False) -> LeanFile:
     payloads: dict[str, dict[int, Any]] = {}
     file_diagnostics: dict[str, tuple[Diagnostic, ...]] = {}
     if active:
-        view = SourceView(path, code, comments, tuple(Head(*head) for head in heads))
+        view = SourceView(path, code, comments, tuple(Head(*head) for head in heads), dict(options or {}))
         for ext in active:
             result = ext.parse(view)
             if result is not None:

@@ -106,7 +106,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
     for rel in stale:
         del cache.files[rel]
         cache.pages.pop(rel, None)
-    jobs_list = [(rel, str(path), cache.files[rel].sha if rel in cache.files else "") for rel, path in sources]
+    jobs_list = [(rel, str(path), cache.files[rel].sha if rel in cache.files else "", config.options) for rel, path in sources]
     if jobs > 1 and len(jobs_list) > 1:
         with ProcessPoolExecutor(max_workers=jobs) as pool:
             refreshed = list(pool.map(_refresh_file, jobs_list, chunksize=64))
@@ -232,7 +232,7 @@ def _build_site(
         if tree.cache.pages.get(rel) == page_key and target.is_file():
             pages_reused += 1
             continue
-        lean_file = parse_source(path.read_bytes().decode("utf-8-sig", errors="replace"), rel)
+        lean_file = parse_source(path.read_bytes().decode("utf-8-sig", errors="replace"), rel, options=dict(config.options))
         written += _write(target, file_page(lean_file, ctx))
         tree.cache.pages[rel] = page_key
         pages_written += 1
@@ -311,14 +311,14 @@ def _index_of(lean_file: LeanFile, sha: str) -> FileIndex:
     )
 
 
-def _refresh_file(job: tuple[str, str, str]) -> tuple[str, str, FileIndex | None]:
+def _refresh_file(job: tuple[str, str, str, tuple[tuple[str, object], ...]]) -> tuple[str, str, FileIndex | None]:
     """Hash a file; index it only if its hash differs from the cached one. Runs in worker processes."""
-    rel, path, known = job
+    rel, path, known, options = job
     data = Path(path).read_bytes()
     sha = hashlib.sha256(data).hexdigest()
     if sha == known:
         return rel, sha, None
-    return rel, sha, _index_of(parse_source(data.decode("utf-8-sig", errors="replace"), rel), sha)
+    return rel, sha, _index_of(parse_source(data.decode("utf-8-sig", errors="replace"), rel, options=dict(options)), sha)
 
 
 def _fingerprint(config: Config) -> str:

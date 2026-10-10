@@ -27,6 +27,7 @@ from lean4_explainer.scan import Declaration, parse_source
 from .grammar import L4Notes, parse_l4del
 from .graph import PathStep, build_glossary, build_learning_path, merge_notes, unresolved_links
 from .model import FileSummary, Note
+from .overlay import load_overlay
 from .templates import annotation_report, annotation_state, notes_of, placeholder_block
 
 __version__ = "0.1.0"
@@ -76,7 +77,7 @@ class L4delExtension(Extension):
     name = "l4del"
     version = __version__
     cache_types = frozenset({(FileSummary.__module__, "FileSummary"), (Note.__module__, "Note")})
-    config_keys = {"learning_path": bool}
+    config_keys = {"learning_path": bool, "overlay": str}  # overlay: a sidecar file of annotations (see overlay.py)
 
     # ---- parsing and indexing ----
     def hides_comment(self, body: str) -> bool:
@@ -111,7 +112,16 @@ class L4delExtension(Extension):
                 diagnostics.append(Diagnostic("error", line, "anonymous declarations cannot carry L4DEL"))
             else:
                 directives_by_head.setdefault(following.index, []).append((line, rest))
-        return ParseResult({index: parse_l4del(items) for index, items in directives_by_head.items()}, diagnostics)
+        payloads = {index: parse_l4del(items) for index, items in directives_by_head.items()}
+        overlay_path = view.options.get("overlay")
+        entries = load_overlay(str(overlay_path)).files.get(view.path) if overlay_path else None
+        for name, items in (entries or {}).items():
+            head = next((h for h in view.heads if h.name == name), None)
+            if head is None:
+                diagnostics.append(Diagnostic("warning", 1, f"overlay: no declaration named {name} in this file (is the overlay out of date?)"))
+            elif head.index not in payloads:  # an annotation in the source wins over the overlay
+                payloads[head.index] = parse_l4del([(head.index + 1, rest) for _, rest in items])
+        return ParseResult(payloads, diagnostics)
 
     def index_file(self, path: str, declarations: Sequence[Declaration], diagnostics: Sequence[Diagnostic]) -> FileSummary:
         named = [decl for decl in declarations if "(" not in decl.name]
@@ -179,7 +189,9 @@ class L4delExtension(Extension):
         return analysis.issues
 
     def fingerprint(self, options: Mapping[str, Any]) -> str:
-        return f"l4del:{__version__}:learning_path={options.get('learning_path', True)}"
+        path = options.get("overlay")
+        overlay = load_overlay(str(path)).digest[:16] if path else ""
+        return f"l4del:{__version__}:learning_path={options.get('learning_path', True)}:overlay={overlay}"
 
     # ---- rendering ----
     def css(self, options: Mapping[str, Any]) -> str:

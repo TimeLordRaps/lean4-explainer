@@ -42,7 +42,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install Lean (the Lean-run tests are skipped without it)
+        if: runner.os == 'Linux' && (matrix.package == 'lean' || matrix.package == 'ecosystem')
+        run: |
+          curl -sSfL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.34.1
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Install
-        run: python -m pip install -e ".[test]" -e packages/${{ matrix.package }}
+        run: python -m pip install -e ".[test]" -e packages/l4del -e packages/${{ matrix.package }}
       - name: Test
         run: python -m pytest packages/${{ matrix.package }} -vv -s --durations=10

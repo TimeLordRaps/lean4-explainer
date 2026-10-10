@@ -270,3 +270,23 @@ def test_notice_says_lean_was_not_run_unless_an_extension_runs_it(tmp_path, caps
     ran = (tmp_path / "ran" / "index.html").read_text(encoding="utf-8")
     assert "Lean was not run" not in ran and "Trust page" in ran
     assert "Lean not run" not in capsys.readouterr().out
+
+
+def test_parse_hook_sees_the_site_options(tmp_path):
+    seen = []
+
+    class Spy(Extension):
+        name = "spy"
+        version = "1"
+        config_keys = {"flavor": str}
+
+        def parse(self, view):
+            seen.append((view.path, dict(view.options)))
+
+    extensions.activate([Spy()])
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "A.lean").write_text("def x : Nat := 1\n", encoding="utf-8")
+    build_site(root, tmp_path / "out", Config(options=(("flavor", "mint"),)), tmp_path / "idx")
+
+    assert seen and all(item == ("A.lean", {"flavor": "mint"}) for item in seen)  # indexing and rendering both get them

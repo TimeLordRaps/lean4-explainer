@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from importlib import metadata
 from typing import Any
@@ -53,6 +53,7 @@ class SourceView:
     code: Sequence[str]
     comments: Sequence[Comment]
     heads: Sequence[Head]
+    options: Mapping[str, Any] = field(default_factory=dict)  # this site's extension config values
 
     def has_code(self, first: int, stop: int) -> bool:
         """True when a line in code[first:stop] is code; blank lines, attributes and set_option lines are not."""

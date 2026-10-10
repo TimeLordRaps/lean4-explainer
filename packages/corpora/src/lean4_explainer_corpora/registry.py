@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from importlib import metadata
+from pathlib import Path
 
 from lean4_explainer.errors import ExplainerError
 
@@ -31,7 +32,14 @@ class Corpus:
     license_note: str = ""  # extra terms the repository states for part of its content
     accent: str = "#555555"  # card and link colour on the landing page
     theme_css: str = ""  # appended to this corpus's stylesheet (see themes.make_theme)
+    overlay: str = ""  # path to an L4DEL sidecar overlay for this corpus (annotations kept outside the upstream sources)
     source_links: str = "declaration"  # "file" for corpora too large to carry a link per declaration
+
+
+def package_file(module_file: str, name: str) -> str:
+    """Path of a data file that sits beside a corpus package's __init__.py, or "" when it is absent."""
+    path = Path(module_file).with_name(name)
+    return str(path) if path.is_file() else ""
 
 
 GROUP = "lean4_explainer.corpora"

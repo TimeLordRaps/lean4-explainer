@@ -12,6 +12,7 @@ from pathlib import Path
 from lean4_explainer.build import BuildSummary, build_site
 from lean4_explainer.config import PAGES_LIMIT_BYTES, Config
 from lean4_explainer.errors import ExplainerError
+from lean4_explainer.extensions import extensions
 from lean4_explainer.lake import LakeProject, include_patterns, read_lake
 from lean4_explainer.render import ASSET_DIR, SITE_CSS
 
@@ -102,7 +103,12 @@ def build_showcase(
             source_links=corpus.source_links,
             byte_budget=byte_budget,
             home="../index.html",
-            options=(("theme_css", corpus.theme_css),) if corpus.theme_css else (),
+            options=tuple(
+                sorted(
+                    [("theme_css", corpus.theme_css)] * bool(corpus.theme_css)
+                    + [("overlay", corpus.overlay)] * bool(corpus.overlay and Path(corpus.overlay).is_file())
+                )
+            ),
         )
         _copy_license(checkout, out_dir / corpus.name, corpus.lean_root)
         started = time.monotonic()
@@ -121,7 +127,10 @@ def build_showcase(
         (f"{i.corpus.name}/annotate.html" for i in items if (out_dir / i.corpus.name / "annotate.html").is_file()),
         "",
     )  # the L4DEL guide exists only when the L4DEL extension is installed
-    (out_dir / "index.html").write_text(_landing(items, link_out or [], guide), encoding="utf-8")
+    annotated = {
+        i.corpus.name for i in items if i.corpus.overlay and Path(i.corpus.overlay).is_file()
+    } if any(ext.name == "l4del" for ext in extensions()) else set()
+    (out_dir / "index.html").write_text(_landing(items, link_out or [], guide, annotated), encoding="utf-8")
     return ShowcaseResult(tuple(items), _tree_bytes(out_dir), byte_budget)
 
 
@@ -135,7 +144,7 @@ def _copy_license(checkout: Path, target: Path, lean_root: str) -> None:
             return
 
 
-def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str) -> str:
+def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str, annotated: set[str] = frozenset()) -> str:  # type: ignore[assignment]
     cards = []
     for item in items:
         corpus, summary, project = item.corpus, item.summary, item.project
@@ -153,6 +162,12 @@ def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str) -> s
             f'Source: <a href="{GITHUB}/{escape(corpus.repo)}">{escape(corpus.repo)}</a>. '
             f'License: {escape(corpus.license)} (<a href="{escape(corpus.name)}/LICENSE.txt">text</a>).'
             + (f"<br>{escape(corpus.license_note)}" if corpus.license_note else "")
+            + (
+                "<br>Selected declarations are explained with L4DEL from a sidecar overlay kept in lean4-explainer; "
+                "the upstream authors did not write these explanations and their sources are unchanged."
+                if corpus.name in annotated
+                else ""
+            )
             + "</span></li>"
         )
     for corpus in link_out:

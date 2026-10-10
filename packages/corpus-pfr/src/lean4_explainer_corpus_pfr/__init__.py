@@ -1,6 +1,6 @@
 """Polynomial Freiman-Ruzsa (PFR): the pinned source description lean4-explainer builds a site from."""
 
-from lean4_explainer_corpora.registry import Corpus
+from lean4_explainer_corpora.registry import Corpus, package_file
 from lean4_explainer_corpora.themes import make_theme, svg  # noqa: F401
 
 THEME = make_theme(
@@ -23,4 +23,5 @@ CORPUS = Corpus(
     blurb='The formalization of the polynomial Freiman-Ruzsa conjecture over characteristic 2.',
     accent='#2f6fdb',
     theme_css=THEME,
+    overlay=package_file(__file__, "overlay.l4del"),
 )

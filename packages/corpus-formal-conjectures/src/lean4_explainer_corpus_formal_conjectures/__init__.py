@@ -1,6 +1,6 @@
 """Formal Conjectures: the pinned source description lean4-explainer builds a site from."""
 
-from lean4_explainer_corpora.registry import Corpus
+from lean4_explainer_corpora.registry import Corpus, package_file
 from lean4_explainer_corpora.themes import make_theme, svg  # noqa: F401
 
 THEME = make_theme(
@@ -29,4 +29,5 @@ CORPUS = Corpus(
  'that content.'),
     accent='#f2b134',
     theme_css=THEME,
+    overlay=package_file(__file__, "overlay.l4del"),
 )
