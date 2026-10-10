@@ -71,6 +71,8 @@ def test_real_lean_gives_badges_traces_and_a_trust_page(tmp_path):
     assert "depends on sorry" in page  # Demo.uses_sorry
     assert "standard axioms: Classical.choice, Quot.sound, propext" in page.replace("propext, Classical.choice, Quot.sound", "Classical.choice, Quot.sound, propext")
     assert "no axioms" in page  # Demo.plain
+    assert "Statement uses:" in page and "Proof uses:" in page and "Classical.em" in page
+    assert "left out" in page  # instances and coercions are counted, not listed
     assert "Tactic trace" in page and "induction n with" in page and "⊢ n + 0 = n" in page
     trust = (out / "trust.html").read_text(encoding="utf-8")
     assert "Depend on sorry (1)" in trust and "Demo.uses_sorry" in trust

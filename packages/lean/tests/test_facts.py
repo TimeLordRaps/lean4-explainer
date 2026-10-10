@@ -27,7 +27,7 @@ def test_steps_go_to_the_declaration_they_sit_in_and_nested_nodes_collapse():
             _line(kind="tactic", line=2, column=2, tactic="induction n with", before=["g"], after=[]),
             _line(kind="tactic", line=1, column=40, tactic="by", before=["g"], after=[]),
             _line(kind="tactic", line=7, column=2, tactic="sorry", before=["h"], after=[]),
-            _line(kind="decl", name="a", axioms=["propext"]),
+            _line(kind="decl", name="a", axioms=["propext"], statement_uses=["Nat"], proof_uses=["Eq.refl"], hidden=3),
             _line(kind="decl", name="b", axioms=["sorryAx"]),
             _line(kind="decl", name="gone", axioms=None),
             _line(kind="message", severity="error", line=9, text="boom\nmore"),
@@ -41,6 +41,8 @@ def test_steps_go_to_the_declaration_they_sit_in_and_nested_nodes_collapse():
     assert [s.tactic for s in a.steps] == ["induction n with"]  # innermost node, and `by` is dropped
     assert [s.tactic for s in b.steps] == ["sorry"]
     assert a.axioms == ("propext",) and gone.axioms is None
+    assert (a.statement_uses, a.proof_uses, a.hidden) == (("Nat",), ("Eq.refl",), 3)
+    assert gone.statement_uses == () and gone.hidden == 0
     assert got.errors == ("line 9: boom",)
 
 

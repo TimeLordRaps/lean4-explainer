@@ -4,7 +4,8 @@ open Lean Elab Meta
 /-!
 Elaborates one Lean file and prints one JSON object per line:
   {"kind":"tactic", line, column, tactic, before, after}   goal states around each tactic step
-  {"kind":"decl", name, axioms}                           kernel axioms a declaration depends on (null: no such constant)
+  {"kind":"decl", name, axioms, statement_uses, proof_uses, hidden}  kernel axioms; constants used in its type and in its proof/value, with instances,
+                                                          coercions and auxiliary definitions left out (counted in `hidden`)
   {"kind":"message", severity, line, text}                errors and warnings Lean reported
 Usage: lean --run Probe.lean FILE NAMES_FILE   (NAMES_FILE lists one declaration name per line)
 -/
@@ -60,8 +61,28 @@ unsafe def main (args : List String) : IO UInt32 := do
   for n in names do
     let nm := n.toName
     if env.contains nm then
-      let (axs, _) ← Core.CoreM.toIO (collectAxioms nm) { fileName := path, fileMap := ictx.fileMap } { env }
-      IO.println (Json.mkObj [("kind", "decl"), ("name", n), ("axioms", toJson (axs.map toString))]).compress
+      let act : CoreM (Array Name × Array Name × Array Name × Nat) := do
+        let axs ← collectAxioms nm
+        let ci ← getConstInfo nm
+        let valueUsed : Array Name := match ci with
+          | .thmInfo t => t.value.getUsedConstants
+          | .defnInfo d => d.value.getUsedConstants
+          | .opaqueInfo d => d.value.getUsedConstants
+          | _ => #[]
+        let mut stmt : Array Name := #[]
+        let mut proof : Array Name := #[]
+        let mut hidden := 0
+        for (u, inType) in (ci.type.getUsedConstants.map (·, true)) ++ (valueUsed.map (·, false)) do
+          if u == nm || stmt.contains u || proof.contains u then continue
+          let noise ← pure (u.isInternal || isAuxRecursor (← getEnv) u || isNoConfusion (← getEnv) u
+            || Lean.Meta.isInstanceCore (← getEnv) u || (← Lean.Meta.getCoeFnInfo? u).isSome)
+          if noise then hidden := hidden + 1
+          else if inType then stmt := stmt.push u else proof := proof.push u
+        return (axs, stmt, proof, hidden)
+      let ((axs, stmt, proof, hidden), _) ← Core.CoreM.toIO act { fileName := path, fileMap := ictx.fileMap } { env }
+      IO.println (Json.mkObj [("kind", "decl"), ("name", n), ("axioms", toJson (axs.map toString)),
+        ("statement_uses", toJson (stmt.map toString)), ("proof_uses", toJson (proof.map toString)),
+        ("hidden", hidden)]).compress
     else
       IO.println (Json.mkObj [("kind", "decl"), ("name", n), ("axioms", Json.null)]).compress
   return 0

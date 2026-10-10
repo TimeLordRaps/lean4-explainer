@@ -139,7 +139,7 @@ class LeanExtension(Extension):
         kind, label = F.classify(found.axioms)
         if file_facts.errors:
             label += f" (Lean reported {len(file_facts.errors)} error(s) in this file)"
-        return _badge(kind, label), _trace(found, analysis.max_steps)
+        return _badge(kind, label) + _uses(found, ctx, dirs), _trace(found, analysis.max_steps)
 
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
         return [("Trust", f"{up}trust.html")]
@@ -173,6 +173,30 @@ def _manifest(project: Path | None) -> bytes:
 
 def _badge(kind: str, label: str) -> str:
     return f'<p><span class="trust trust-{kind}">{escape(label)}</span></p>'
+
+
+_USES_LIMIT = 20
+
+
+def _uses(found: F.DeclFacts, ctx, dirs: list[str]) -> str:
+    """The constants the kernel term mentions. Names that are declared in this site link to it."""
+    rows = []
+    for label, names in (("Statement uses", found.statement_uses), ("Proof uses", found.proof_uses)):
+        if not names:
+            continue
+        items = []
+        for name in names[:_USES_LIMIT]:
+            where = ctx.locations.get(name)
+            if where is None:
+                items.append(f"<code>{escape(name)}</code>")
+            else:
+                link = escape(href(dirs, where[0], f"#L{where[1]}"), quote=True)
+                items.append(f'<a href="{link}">{escape(name)}</a>')
+        more = f" and {len(names) - _USES_LIMIT} more" if len(names) > _USES_LIMIT else ""
+        rows.append(f'<p class="refs">{label}: ' + ", ".join(items) + more + "</p>")
+    if rows and found.hidden:
+        rows.append(f'<p class="refs muted">{found.hidden} instances, coercions and auxiliary constants left out.</p>')
+    return "".join(rows)
 
 
 def _trace(found: F.DeclFacts, limit: int) -> str:

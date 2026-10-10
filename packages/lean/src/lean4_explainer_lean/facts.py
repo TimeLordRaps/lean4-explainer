@@ -25,6 +25,9 @@ class DeclFacts:
     line: int
     axioms: tuple[str, ...] | None  # None: Lean has no constant of this name
     steps: tuple[Step, ...] = ()
+    statement_uses: tuple[str, ...] = ()  # constants in the type, kernel terms with instances and coercions left out
+    proof_uses: tuple[str, ...] = ()  # constants in the proof or value, with the same filter
+    hidden: int = 0  # how many instances, coercions and auxiliary constants were left out
 
 
 @dataclass(frozen=True)
@@ -56,6 +59,7 @@ def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
     """Read the probe's JSON lines. `declarations` are (name, 1-based line) pairs from the text scan."""
     steps: dict[tuple[int, int], Step] = {}
     axioms: dict[str, tuple[str, ...] | None] = {}
+    uses: dict[str, tuple[tuple[str, ...], tuple[str, ...], int]] = {}
     errors: list[str] = []
     for raw in output.splitlines():
         if not raw.startswith("{"):
@@ -81,6 +85,11 @@ def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
                 steps[key] = step
         elif kind == "decl":
             axioms[item["name"]] = None if item["axioms"] is None else tuple(item["axioms"])
+            uses[item["name"]] = (
+                tuple(item.get("statement_uses", ())),
+                tuple(item.get("proof_uses", ())),
+                int(item.get("hidden", 0)),
+            )
         elif kind == "message" and item.get("severity") == "error":
             errors.append(f"line {item['line']}: {item['text'].splitlines()[0] if item['text'] else ''}")
     ordered = sorted(declarations, key=lambda d: d[1])
@@ -91,7 +100,8 @@ def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
         if slot >= 0:
             grouped[slot].append(steps[key])
     decls = tuple(
-        DeclFacts(name, line, axioms.get(name), tuple(grouped[i])) for i, (name, line) in enumerate(ordered)
+        DeclFacts(name, line, axioms.get(name), tuple(grouped[i]), *uses.get(name, ((), (), 0)))
+        for i, (name, line) in enumerate(ordered)
     )
     return FileFacts("ok", errors=tuple(errors), decls=decls)
 
@@ -112,6 +122,9 @@ def to_json(facts: FileFacts) -> str:
                     "line": d.line,
                     "axioms": None if d.axioms is None else list(d.axioms),
                     "steps": [[s.line, s.column, s.tactic, list(s.before), list(s.after)] for s in d.steps],
+                    "statement_uses": list(d.statement_uses),
+                    "proof_uses": list(d.proof_uses),
+                    "hidden": d.hidden,
                 }
                 for d in facts.decls
             ],
@@ -132,6 +145,9 @@ def from_json(text: str) -> FileFacts:
                 d["line"],
                 None if d["axioms"] is None else tuple(d["axioms"]),
                 tuple(Step(s[0], s[1], s[2], tuple(s[3]), tuple(s[4])) for s in d["steps"]),
+                tuple(d["statement_uses"]),
+                tuple(d["proof_uses"]),
+                d["hidden"],
             )
             for d in raw["decls"]
         ),
