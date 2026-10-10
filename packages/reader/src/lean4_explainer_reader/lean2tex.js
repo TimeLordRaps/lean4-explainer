@@ -513,7 +513,7 @@
   // Attach a subscript or superscript. TeX allows one of each per base, so `(z n).1` is {z_n}_1 and `x⁻¹ ^ k` is (x^{-1})^k.
   function script(base, mark, s) {
     const clash = trailingScripts(base).indexOf(mark) >= 0;
-    return (clash ? (mark === "^" ? "\\left(" + base + "\\right)" : "{" + base + "}") : base) + mark + "{" + s + "}";
+    return (clash ? (mark === "^" ? parens(base) : "{" + base + "}") : base) + mark + "{" + s + "}";
   }
 
   const PREC = { quant: 0, fun: 0, ite: 0, big: 67, integral: 60, neg: 75, not: 40, mod: 50, asym: 50 };
@@ -528,7 +528,7 @@
     return n;
   }
   function wrap(n, min) {
-    return precOf(bare(n)) < min ? "\\left(" + tex(bare(n)) + "\\right)" : tex(n);
+    return precOf(bare(n)) < min ? parens(tex(bare(n))) : tex(n);
   }
   const ATOMS = ["id", "num", "sym", "abs", "norm", "floor", "ceil", "setLit", "setOf", "setImage", "anon", "tuple", "list", "vec", "matrix", "sqrt", "card", "sub", "answer"];
   function atomic(n) {
@@ -544,7 +544,7 @@
   function groupTex(n) {
     // an argument written next to a function or as an exponent base: parenthesize anything not atomic
     const b = bare(n);
-    return atomic(b) ? tex(b) : "\\left(" + tex(b) + "\\right)";
+    return atomic(b) ? tex(b) : parens(tex(b));
   }
   const INDEX_FUNCS = /^[a-eu-zA-Z]$/;
   const INDEX_ARGS = /^([i-n]|[i-n]\s*[+-]\s*\d|\d+)$/;
@@ -552,7 +552,7 @@
   // Mathlib functions with a mathematical notation of their own; keyed by the last part of the name.
   const SPECIAL = {
     sqrt: (a) => a.length === 1 && "\\sqrt{" + argTex(a[0]) + "}",
-    exp: (a) => a.length === 1 && (atomic(a[0]) ? "e^{" + argTex(a[0]) + "}" : "\\exp\\left(" + argTex(a[0]) + "\\right)"),
+    exp: (a) => a.length === 1 && (atomic(a[0]) ? "e^{" + argTex(a[0]) + "}" : "\\exp" + parens(argTex(a[0]))),
     log: (a) => a.length === 1 && "\\log " + groupTex(a[0]),
     logb: (a) => a.length === 2 && "\\log_{" + argTex(a[0]) + "} " + groupTex(a[1]),
     sin: (a) => a.length === 1 && "\\sin " + groupTex(a[0]),
@@ -570,14 +570,14 @@
     norm: (a) => a.length === 1 && "\\lVert " + argTex(a[0]) + " \\rVert",
     choose: (a) => a.length === 2 && "\\binom{" + argTex(a[0]) + "}{" + argTex(a[1]) + "}",
     factorial: (a) => a.length === 1 && groupTex(a[0]) + "!",
-    gcd: (a) => a.length === 2 && "\\gcd\\left(" + argTex(a[0]) + ", " + argTex(a[1]) + "\\right)",
-    lcm: (a) => a.length === 2 && "\\operatorname{lcm}\\left(" + argTex(a[0]) + ", " + argTex(a[1]) + "\\right)",
-    max: (a) => a.length === 2 && "\\max\\left(" + argTex(a[0]) + ", " + argTex(a[1]) + "\\right)",
-    min: (a) => a.length === 2 && "\\min\\left(" + argTex(a[0]) + ", " + argTex(a[1]) + "\\right)",
+    gcd: (a) => a.length === 2 && "\\gcd" + parens(argTex(a[0]) + ", " + argTex(a[1])),
+    lcm: (a) => a.length === 2 && "\\operatorname{lcm}" + parens(argTex(a[0]) + ", " + argTex(a[1])),
+    max: (a) => a.length === 2 && "\\max" + parens(argTex(a[0]) + ", " + argTex(a[1])),
+    min: (a) => a.length === 2 && "\\min" + parens(argTex(a[0]) + ", " + argTex(a[1])),
     floor: (a) => a.length === 1 && "\\lfloor " + argTex(a[0]) + " \\rfloor",
     ceil: (a) => a.length === 1 && "\\lceil " + argTex(a[0]) + " \\rceil",
-    deriv: (a) => a.length === 1 ? groupTex(a[0]) + "'" : a.length === 2 && groupTex(a[0]) + "'\\left(" + argTex(a[1]) + "\\right)",
-    iteratedDeriv: (a) => a.length >= 2 && groupTex(a[1]) + "^{(" + argTex(a[0]) + ")}" + (a[2] ? "\\left(" + argTex(a[2]) + "\\right)" : ""),
+    deriv: (a) => a.length === 1 ? groupTex(a[0]) + "'" : a.length === 2 && groupTex(a[0]) + "'" + parens(argTex(a[1])),
+    iteratedDeriv: (a) => a.length >= 2 && groupTex(a[1]) + "^{(" + argTex(a[0]) + ")}" + (a[2] ? parens(argTex(a[2])) : ""),
     card: (a) => a.length === 1 && "\\lvert " + argTex(a[0]) + " \\rvert",
     ncard: (a) => a.length === 1 && "\\lvert " + argTex(a[0]) + " \\rvert",
     encard: (a) => a.length === 1 && "\\lvert " + argTex(a[0]) + " \\rvert",
@@ -593,11 +593,11 @@
     succ: (a) => a.length === 1 && groupTex(a[0]) + " + 1",
     re: (a) => a.length === 1 && "\\operatorname{Re} " + groupTex(a[0]),
     im: (a) => a.length === 1 && "\\operatorname{Im} " + groupTex(a[0]),
-    eval: (a) => a.length === 2 && groupTex(a[1]) + "\\left(" + argTex(a[0]) + "\\right)",
+    eval: (a) => a.length === 2 && groupTex(a[1]) + parens(argTex(a[0])),
     degree: (a) => a.length === 1 && "\\deg " + groupTex(a[0]),
     natDegree: (a) => a.length === 1 && "\\deg " + groupTex(a[0]),
     rpow: (a) => a.length === 2 && script(groupTex(a[0]), "^", argTex(a[1])),
-    dist: (a) => a.length === 2 && "\\operatorname{dist}\\left(" + argTex(a[0]) + ", " + argTex(a[1]) + "\\right)",
+    dist: (a) => a.length === 2 && "\\operatorname{dist}" + parens(argTex(a[0]) + ", " + argTex(a[1])),
     inner: (a) => a.length >= 2 && "\\langle " + argTex(a[a.length - 2]) + ", " + argTex(a[a.length - 1]) + " \\rangle",
     sum: (a) => a.length === 2 && bigFromLambda("\\sum", a[0], a[1]),
     prod: (a) => a.length === 2 && bigFromLambda("\\prod", a[0], a[1]),
@@ -743,11 +743,11 @@
       case "sorry": return "\\text{sorry}";
       case "answer": return "\\boxed{" + (bare(n.e).t === "sorry" ? "\\,?\\," : tex(bare(n.e))) + "}";
       case "unit": return "()";
-      case "paren": return atomic(n.e) ? tex(bare(n.e)) : "\\left(" + tex(bare(n.e)) + "\\right)";
+      case "paren": return atomic(n.e) ? tex(bare(n.e)) : parens(tex(bare(n.e)));
       case "ascr": return tex(n.e);
       case "cast": return tex(n.e);
-      case "tuple": return "\\left(" + n.items.map((x) => tex(bare(x))).join(", ") + "\\right)";
-      case "vec": return "\\left(" + n.items.map((x) => tex(bare(x))).join(", ") + "\\right)";
+      case "tuple": return parens(n.items.map((x) => tex(bare(x))).join(", "));
+      case "vec": return parens(n.items.map((x) => tex(bare(x))).join(", "));
       case "matrix": return "\\begin{pmatrix} " + n.rows.map((r) => r.map((x) => tex(bare(x))).join(" & ")).join(" \\\\ ") + " \\end{pmatrix}";
       case "anon": return "\\langle " + n.items.map((x) => tex(bare(x))).join(", ") + " \\rangle";
       case "list": return "[" + n.items.map((x) => tex(bare(x))).join(", ") + "]";
@@ -777,14 +777,14 @@
         if (special) return special;
         const pred = predTex(f, n.e);
         if (pred) return pred;
-        return operatorTex(f) + "\\left(" + tex(bare(n.e)) + "\\right)";
+        return operatorTex(f) + parens(tex(bare(n.e)));
       }
       case "mod": return wrap(n.a, 51) + " \\equiv " + wrap(n.b, 51) + " \\pmod{" + tex(bare(n.n)) + "}";
       case "asym": {
         const a = sideTex(n.a), b = sideTex(n.b);
         if (n.op === "~[") return a + " \\sim " + b;
         if (n.op === "=ᶠ[") return a + " = " + b + " \\text{ eventually}";
-        return a + " = " + { "=O[": "O", "=o[": "o", "=Θ[": "\\Theta" }[n.op] + "\\left(" + b + "\\right)";
+        return a + " = " + { "=O[": "O", "=o[": "o", "=Θ[": "\\Theta" }[n.op] + parens(b);
       }
       case "bin": return binTex(n);
       case "app": return appTex(n);
@@ -804,7 +804,7 @@
         let lim = "";
         if (n.b.lo && n.b.hi) lim = "_{" + tex(bare(n.b.lo)) + "}^{" + tex(bare(n.b.hi)) + "}";
         else if (n.b.bound) lim = "_{" + tex(bare(n.b.bound)) + "}";
-        const d = n.measure ? "\\, d" + groupTex(n.measure) + "\\left(" + v + "\\right)" : "\\, d" + v;
+        const d = n.measure ? "\\, d" + groupTex(n.measure) + parens(v) : "\\, d" + v;
         return "\\int" + lim + " " + wrap(n.body, 61) + d;
       }
     }
@@ -825,8 +825,8 @@
     }
     if (n.op === "<|" || n.op === "$") return appTex({ t: "app", f: n.a, args: [n.b] });
     if (n.op === "|>") return appTex({ t: "app", f: n.b, args: [n.a] });
-    if (n.op === "''") return groupTex(n.a) + "\\left(" + tex(bare(n.b)) + "\\right)";
-    if (n.op === "⁻¹'") return script(groupTex(n.a), "^", "-1") + "\\left(" + tex(bare(n.b)) + "\\right)";
+    if (n.op === "''") return groupTex(n.a) + parens(tex(bare(n.b)));
+    if (n.op === "⁻¹'") return script(groupTex(n.a), "^", "-1") + parens(tex(bare(n.b)));
     if (n.op === "≪" || n.op === "≫") return sideTex(n.a) + " " + REL[n.op] + " " + sideTex(n.b);
     const right = bare(n.b);
     // ∀, ∑, fun… written without brackets on the right reach to the end of their group, so they need none here;
@@ -840,12 +840,18 @@
       const shortLeft = /^(\d+(\.\d+)?|[A-Za-z]'*(_\{[^{}]*\})?|\\[a-zA-Z]+)$/.test(a) ||
         (bare(n.a).t === "bin" && bare(n.a).op === "*" && a.indexOf("\\cdot") < 0);  // n(n + 1)(2n + 1)
       const joinable = ["id", "app", "abs", "norm", "sqrt", "big", "integral", "sub", "post", "sym", "field", "floor", "ceil"].indexOf(right.t) >= 0 ||
-        /^\\left\(/.test(b);
+        /^(\\left)?\(/.test(b);
       return a + (shortLeft && joinable && !/^[0-9-]/.test(b) ? " " : " \\cdot ") + b;
     }
     return a + " " + (REL[n.op] || texText(n.op)) + " " + b;
   }
 
+  // \left( … \right) is an "inner" atom in TeX: after a name or a factor it leaves a thin gap ("P (n, k)").
+  // Plain parentheses read right; \left and \right only grow them around something tall.
+  const TALL = /\\(?:frac|dfrac|tfrac|binom|sum|prod|int|oint|bigcup|bigcap|sqrt|begin|left|lim|limsup|liminf|underbrace|overbrace|substack)(?![a-zA-Z])|\\(?:sup|inf|max|min)_/;
+  function parens(s) {
+    return TALL.test(s) ? "\\left(" + s + "\\right)" : "(" + s + ")";
+  }
   function appTex(n) {
     let f = bare(n.f);
     let args = n.args;
@@ -861,9 +867,9 @@
       // a sequence indexed by a variable: z j -> z_j
       if (args.length === 1 && INDEX_FUNCS.test(name) && INDEX_ARGS.test(squashTex(args[0]))) return name + "_{" + tex(bare(args[0])) + "}";
       const head = Array.from(last).length === 1 || /^\\[a-zA-Z]+$/.test(name) || /_\{\d+\}$/.test(name) ? name : operatorTex(last);
-      return head + "\\left(" + args.map((x) => tex(bare(x))).join(", ") + "\\right)";
+      return head + parens(args.map((x) => tex(bare(x))).join(", "));
     }
-    return groupTex(f) + "\\left(" + args.map((x) => tex(bare(x))).join(", ") + "\\right)";
+    return groupTex(f) + parens(args.map((x) => tex(bare(x))).join(", "));
   }
   function squashTex(n) {
     const b = bare(n);
@@ -910,8 +916,9 @@
       hole = "\\_";
     }
   }
-  // `f(x, y) = body` for a definition with explicit arguments, or `f = body`; a value written `fun n => …` gives `f(n) = …`
-  function definitionTex(name, args, body) {
+  // `f(x, y) = body` for a definition with explicit arguments, or `f = body`; a value written `fun n => …` gives `f(n) = …`.
+  // `relation` replaces the `=`: a statement is defined with `\iff`.
+  function definitionTex(name, args, body, relation) {
     if (!name) return null;
     try {
       return withLets(body, (tree) => {
@@ -921,7 +928,7 @@
           tree = bare(tree).body;
         }
         const head = inputs.length ? appTex({ t: "app", f: { t: "id", v: name }, args: inputs.map((a) => ({ t: "id", v: a })) }) : opName(name);
-        return head + " = " + tex(tree);
+        return head + " " + (relation || "=") + " " + tex(tree);
       });
     } catch (e) {
       return null;

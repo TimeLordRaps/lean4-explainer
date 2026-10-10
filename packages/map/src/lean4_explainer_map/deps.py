@@ -234,9 +234,13 @@ def candidates(name: str, namespace: Sequence[str], opens: Sequence[str]) -> Ite
 
 def visible_files(imports: Mapping[str, Sequence[str]]) -> dict[str, frozenset[str]]:
     """For each file, itself and every project file it imports, directly or not. Modules outside the project are
-    skipped; a project file with no declarations is not indexed, so what it imports is not followed through it."""
+    skipped. Only the files in `imports` are followed: give it every file, including ones that only import."""
     module_of = {rel.removesuffix(".lean").replace("/", "."): rel for rel in imports}
-    direct = {rel: [module_of[m] for m in modules if m in module_of] for rel, modules in imports.items()}
+    return reachable({rel: [module_of[m] for m in modules if m in module_of] for rel, modules in imports.items()})
+
+
+def reachable(direct: Mapping[str, Sequence[str]]) -> dict[str, frozenset[str]]:
+    """For each file, itself and every file reachable from it through `direct` (file -> the files it imports)."""
     seen: dict[str, frozenset[str]] = {}
     for start in direct:
         if start in seen:

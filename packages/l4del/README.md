@@ -3,7 +3,7 @@
 L4DEL (Lean4 Domain Explanation Language) for [lean4-explainer](https://github.com/TimeLordRaps/lean4-explainer).
 
 L4DEL is a set of `-- L4DEL: key: value` line comments that add titles, intuition, proof steps, prerequisites, related
-declarations and glossary terms to a declaration. This package adds them to the generated site, plus a glossary, a
+declarations and glossary terms to a declaration. This package adds them to the generated site (the terms to its glossary page), plus a
 learning path ordered by prerequisites, an annotation guide, and the `check` and `annotate` commands.
 
 ```

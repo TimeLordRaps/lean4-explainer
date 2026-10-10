@@ -12,7 +12,7 @@ from lean4_explainer.extensions import Extension
 
 from . import registry, showcase
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 _WORK_DEFAULT = ".lean4-explainer-work"
 _SITE_DEFAULT = "lean4-explainer-site"
 _DEFAULT_JOBS = max(1, min(8, os.cpu_count() or 1))
@@ -76,7 +76,10 @@ def _confirmed(args, plan: str) -> bool:
     if args.yes:
         return True
     if sys.stdin is not None and sys.stdin.isatty():
-        return input("Proceed? [y/N] ").strip().lower() in ("y", "yes")
+        try:
+            return input("Proceed? [y/N] ").strip().lower() in ("y", "yes")
+        except EOFError:  # Windows calls NUL a terminal: `< /dev/null` gets here
+            print()
     print("Nothing was downloaded. Re-run with --yes to proceed.")
     return False
 

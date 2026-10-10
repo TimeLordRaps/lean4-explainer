@@ -10,7 +10,7 @@ lean4-explainer turns that pile into a website you can browse like a guided tour
 
 ## Who is this for?
 
-Someone who loves math and is curious about Lean. You do not need to know Lean, and you do not need to install it to read the site. If you have seen calculus or differential equations in high school, you have the background for most of the pages. When a word is new, the site has a glossary.
+Someone who loves math and is curious about Lean. You do not need to know Lean, and you do not need to install it to read the site. If you have seen calculus or differential equations in high school, you have the background for most of the pages. When a word is new, look it up in the **Glossary**, linked from every page: it has every definition in the project, every type, property, symbol and tactic the Reading explains, and Lean's own words.
 
 It is also for people who write Lean and want others to understand it. You add short comments above your theorems, and the site does the rest.
 
@@ -19,10 +19,12 @@ It is also for people who write Lean and want others to understand it. You add s
 Every theorem and definition gets a **Reading**, written from its source:
 
 - **It says:** the statement in words. For example, `(∀ a b, f (2 * a) + 2 * (f b) = f (f (a + b))) ↔ f ∈ solution_set` becomes "for every a, b, f (2 * a) + 2 * (f b) equals f (f (a + b)) exactly when f is an element of solution_set". Below the words, the statement is typeset as a formula, the way a textbook would print it.
-- **Its value:** a definition as a formula. `Real.pi * ∑ j, Complex.normSq (z j)` shows as π ∑ⱼ |zⱼ|².
+- **Its value:** a definition as a formula. `Real.pi * ∑ j, Complex.normSq (z j)` shows as π ∑ⱼ |zⱼ|². A definition that is a statement says what it means: "IsSumDistinctSet A N means: A is a subset of [1, N], and …".
 - **Given:** each variable and what kind of thing it is ("a function that takes ℤ and gives ℤ"), and each assumption in words.
 - **How the proof goes:** by induction, by contradiction, by cases, or in N steps. Then every step of the proof, with what it does: "Rewrite using …", "Split into two cases: …", "Finish: … is exactly what is needed".
 - **Results it uses**, each one a link, and the **symbols** in the statement explained (∑, ∣, ↑, ⌊x⌋, …).
+
+The authors' own doc comments are shown the way they wrote them, as Markdown with formulas typeset. Each file page also lists what the file imports and which files import it, so a file that only gathers other files says so.
 
 Where a project has added explanations of its own (or we have, in a separate overlay file), you also see:
 
@@ -31,7 +33,7 @@ Where a project has added explanations of its own (or we have, in a separate ove
 | A title and one-sentence **intuition** | Why this is true, in plain words |
 | Numbered **proof steps** | The shape of the argument |
 | **Prerequisites** | What you should understand first |
-| **Glossary** words | A defined word links to its meaning |
+| **Glossary** words | A word the explanations define links to its meaning in the Glossary |
 | The **statement** and a link to the real source | The exact Lean, when you want it |
 
 ## How relationships show up
@@ -110,6 +112,8 @@ Once the packages are published these become `pip install lean4-explainer[reader
 - **Declaration:** any named thing in Lean: a theorem, a definition, and so on.
 - **Kernel:** the small core of Lean that finally accepts or rejects a proof. The trust badge comes from asking it.
 
+Every site's **Glossary** has these and the rest: the project's own definitions (with the first paragraph of each one's description, formulas typeset), the words its explanations define, every type, property, symbol and tactic the Reading explains, and more of Lean's own words (`namespace`, `open`, `⟨ ⟩`, `·`, …).
+
 ## Where to learn Lean itself
 
 Two of the example projects are tutorials, so you can read them here and then do them for real: [Mathematics in Lean](https://github.com/leanprover-community/mathematics_in_lean) and [Theorem Proving in Lean 4](https://github.com/leanprover/theorem_proving_in_lean4).
@@ -119,7 +123,9 @@ Two of the example projects are tutorials, so you can read them here and then do
 - The tool reads your files as text. Without the Lean extension it does not run Lean, so it cannot say whether a proof is correct. The site says so on each page.
 - The Reading comes from patterns over the source. It says what each tactic does in general, not the exact goal left after it (the Lean extension shows that). Anything it does not recognize is shown as code, never guessed. Across all eight example projects about 3% of statements fall back to code.
 - The map reads names, not types. It follows Lean's rules for namespaces, `open`, imports and local names, but it misses a result reached as a field of a value (`P.freyCurve`) and names built by macros. It is left out for openai/math, whose pages would not fit in GitHub Pages' size limit with it.
-- The openai/math project is too big to publish twice (1.1 GB of source), so its pages fetch their file from GitHub, at the pinned commit, to make the Reading.
+- The openai/math project is too big to publish twice (1.1 GB of source), so its pages fetch their file from GitHub, at the pinned commit, to make the Reading. Its glossary lists only the definitions that have a description (about 25,000 of 1.3 million).
+- The glossary lists definitions, not theorems: theorems are results, and each one is on its file page.
+- Doc comments are drawn as Markdown, with their formulas typeset. Tables and a few rarer forms show as written, and so does a formula whose TeX has a mistake in it.
 - The explanations on the example projects were written for this site. They are not the authors' words, and the site says that too.
 - A few kinds of declaration (indented ones, ones made by macros) are not listed.
 

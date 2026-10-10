@@ -105,6 +105,8 @@ def build_showcase(
             source_links=corpus.source_links,
             byte_budget=byte_budget,
             home="../index.html",
+            glossary=corpus.glossary,
+            imports=corpus.imports,
             options=tuple(
                 sorted(
                     [("theme_css", corpus.theme_css)] * bool(corpus.theme_css)

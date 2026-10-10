@@ -1,7 +1,7 @@
 """The L4DEL extension: reads `-- L4DEL: key: value` comments and adds the explanation layer to the site.
 
 Adds, on top of the core site: titles, intuition, proof steps, prerequisite and see-also links on declarations;
-a glossary; a learning path ordered by prerequisites; an annotation guide; and the `check` and `annotate`
+the terms of the glossary page; a learning path ordered by prerequisites; an annotation guide; and the `check` and `annotate`
 commands. Without this package the core site is built from standard Lean comments only.
 """
 
@@ -19,7 +19,7 @@ from typing import Any
 from lean4_explainer.build import check_tree
 from lean4_explainer.config import load_config
 from lean4_explainer.errors import ExplainerError
-from lean4_explainer.extensions import Diagnostic, Extension, ParseResult, SourceView
+from lean4_explainer.extensions import Diagnostic, Extension, GlossaryEntry, GlossarySection, ParseResult, SourceView
 from lean4_explainer.objects import Objects
 from lean4_explainer.render import Context, href, page, refs, up_path
 from lean4_explainer.scan import Declaration, parse_source
@@ -30,7 +30,7 @@ from .model import FileSummary, Note
 from .overlay import load_overlay
 from .templates import annotation_report, annotation_state, notes_of, placeholder_block
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 _PREFIX = "L4DEL:"
 _CARRIER_RE = re.compile(r"^[ \t]*L4DEL:(?P<rest>.*)$")
@@ -39,8 +39,6 @@ _WARNING_PREVIEW = 20
 CSS = """
 .l4del { margin: 0.3rem 0; padding-left: 0.6rem; border-left: 3px solid var(--line); }
 .l4term { margin: 0.3rem 0; }
-dl.glossary dt { font-weight: 600; margin-top: 0.6rem; }
-dl.glossary dd { margin: 0 0 0.2rem 1rem; }
 """
 
 _GUIDE_EXAMPLE = "\n".join(
@@ -87,6 +85,9 @@ class L4delExtension(Extension):
 
     def is_described(self, payload: Any) -> bool:
         return not payload.is_empty
+
+    def describe(self, payload: Any) -> str:
+        return payload.intuition or payload.title or ""
 
     def parse(self, view: SourceView) -> ParseResult:
         diagnostics: list[Diagnostic] = []
@@ -228,19 +229,24 @@ class L4delExtension(Extension):
         return "".join(top), "".join(bottom)
 
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
-        links = [("Glossary", f"{up}glossary.html"), ("L4DEL guide", f"{up}annotate.html")]
+        links = [("L4DEL guide", f"{up}annotate.html")]  # the core links its glossary page, which lists the terms
         if options.get("learning_path", True):
             links.append(("Learning path", f"{up}learning-path.html"))
         return links
 
     def pages(self, ctx: Context, analysis: Analysis) -> Mapping[str, str]:
-        found = {
-            "glossary.html": _glossary_page(ctx, analysis),
-            "annotate.html": _guide_page(ctx),
-        }
+        found = {"annotate.html": _guide_page(ctx)}
         if dict(ctx.options).get("learning_path", True):
             found["learning-path.html"] = _learning_path_page(analysis.steps, list(analysis.graph_issues), ctx)
         return found
+
+    def glossary(self, ctx: Context, analysis: Analysis) -> Sequence[GlossarySection]:
+        entries = tuple(
+            GlossaryEntry(term=term, meaning=escape(definition), where=(rel, line, decl_name), anchor=analysis.anchors[term])
+            for term, (definition, decl_name, (rel, line)) in analysis.terms.items()
+        )
+        intro = "Words defined in the explanations on this site (L4DEL term lines). Where they appear, they link here."
+        return (GlossarySection(key="l4del", title="Terms from the explanations", entries=entries, intro=intro),)
 
     def status(self, analysis: Analysis) -> str:
         return (
@@ -349,23 +355,6 @@ def _hint(decl: Declaration, payload: L4Notes, ctx: Context) -> str:
         f"<pre>{template}</pre></details>"
     )
     return "".join(rows)
-
-
-def _glossary_page(ctx: Context, analysis: Analysis) -> str:
-    body = ["<h1>Glossary</h1>"]
-    if analysis.terms:
-        body.append('<dl class="glossary">')
-        for term in sorted(analysis.terms, key=str.lower):
-            definition, decl_name, (rel, line) = analysis.terms[term]
-            link = escape(href([], rel, f"#L{line}"), quote=True)
-            body.append(
-                f'<dt id="{analysis.anchors[term]}">{escape(term)}</dt>'
-                f'<dd>{escape(definition)} <span class="muted">(<a href="{link}">{escape(decl_name)}</a>)</span></dd>'
-            )
-        body.append("</dl>")
-    else:
-        body.append('<p class="muted">No terms yet. Add a term: word = definition line to an L4DEL comment.</p>')
-    return page("Glossary", 0, body, ctx)
 
 
 def _learning_path_page(steps: list[PathStep], warnings: list[str], ctx: Context) -> str:

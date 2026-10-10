@@ -8,12 +8,14 @@ Hooks run in this order for a build:
 
 1. `parse`: per file, in worker processes. May read the comments and declaration heads, and returns one payload
    per declaration plus file-level diagnostics. `hides_comment` keeps an extension's own comment syntax out of
-   the plain-comment descriptions.
+   the plain-comment descriptions. `is_described` and `describe` say whether a payload explains its declaration,
+   and in a line of plain text how (the glossary shows that line for a definition with no comment of its own).
 2. `index_file`: per file, in worker processes. Returns a small picklable summary that is kept in the incremental
    cache. Its types must be listed in `cache_types`, because the cache is loaded through an allow-list.
 3. `analyze`: once per tree, with every file's summary and the name index. Returns an analysis object, which the
    later hooks receive.
 4. `declaration_title`, `declaration_blocks`, `file_blocks`, `scripts`, `pages`, `nav_links`, `css`, `status`: rendering.
+   `glossary`: sections of words for the glossary page, which the core writes.
 5. `summary`: lines printed after a build.
 6. `register_cli` / `run_cli`: extra subcommands.
 """
@@ -79,6 +81,23 @@ class ParseResult:
     diagnostics: Sequence[Diagnostic] = ()
 
 
+@dataclass(frozen=True)
+class GlossaryEntry:
+    term: str  # the word as a reader meets it, plain text
+    meaning: str  # HTML: the extension escapes its own text
+    example: str = ""  # Lean text that shows the word in use
+    where: tuple[str, int, str] | None = None  # (file, line, link text) of where the word is defined
+    anchor: str = ""  # id that other pages link to, unique on the glossary page; empty for none
+
+
+@dataclass(frozen=True)
+class GlossarySection:
+    key: str  # the heading's id is "g-" + key
+    title: str
+    entries: Sequence[GlossaryEntry]
+    intro: str = ""  # plain text under the heading
+
+
 class Extension:
     name = ""
     version = ""
@@ -95,6 +114,10 @@ class Extension:
 
     def is_described(self, payload: Any) -> bool:
         return False
+
+    def describe(self, payload: Any) -> str:
+        """One line of plain text saying what the declaration is, or "" (worker processes)."""
+        return ""
 
     def index_file(self, path: str, declarations: Sequence[Any], diagnostics: Sequence[Diagnostic]) -> Any:
         return None
@@ -138,6 +161,10 @@ class Extension:
         return {}
 
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
+        return ()
+
+    def glossary(self, ctx: Any, analysis: Any) -> Sequence[GlossarySection]:
+        """Sections for the glossary page, after the project's own definitions. Empty sections are left out."""
         return ()
 
     def status(self, analysis: Any) -> str:

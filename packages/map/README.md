@@ -20,6 +20,8 @@ The links are read from the code, not from annotations. A declaration uses anoth
 
 Names in comments and strings never count. Names from libraries such as Mathlib do not resolve, so the map shows the project's own structure.
 
+A name resolves only to a declaration in a file that the using file imports, directly or through other files, as in Lean. That includes files that do nothing but import: formal-conjectures' problem files import `FormalConjecturesUtil`, which only gathers imports, and see the definitions behind it. The import graph comes from the core (lean4-explainer 0.3.0).
+
 Lean is not run, so two kinds of use are missed:
 
 - a project name reached as a field of a value (`P.freyCurve` with `P : FreyPackage`), which needs the type of `P`;

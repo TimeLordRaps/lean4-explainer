@@ -30,7 +30,7 @@ def test_statement_shown_only_for_described_declarations():
 
 def test_plain_comment_appears_as_description():
     html = file_page(parse_source("-- Adds one.\ndef inc (n : Nat) : Nat := n + 1\n", "a.lean"))
-    assert '<div class="doc">Adds one.</div>' in html
+    assert '<div class="doc plain">Adds one.</div>' in html
 
 
 def test_build_writes_pages_for_files_and_folders(tmp_path):

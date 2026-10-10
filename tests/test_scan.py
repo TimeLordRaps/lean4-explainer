@@ -112,6 +112,12 @@ def test_extra_kinds_list_a_project_specific_declaration_keyword():
     assert [(d.kind, d.name) for d in extra.declarations] == [("problem", "P.p1"), ("theorem", "P.t")]
 
 
+def test_class_inductive_is_one_kind_and_keeps_its_name():
+    # Carleson's `class inductive CoveredByBalls …` was listed as a class named `inductive`
+    found = declarations("class inductive Covered (n : Nat) : Prop where\n  | mk : Covered n\n\nclass  inductive  Two : Prop\n  | a\n\nclass inductiveish : Type\n")
+    assert [(d.kind, d.name) for d in found] == [("class inductive", "Covered"), ("class inductive", "Two"), ("class", "inductiveish")]
+
+
 def test_extra_kinds_do_not_match_longer_words():
     source = "problems : Nat := 1\nproblem_x : Nat := 2\n"
 

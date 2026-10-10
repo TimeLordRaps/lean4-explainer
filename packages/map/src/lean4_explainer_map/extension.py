@@ -22,9 +22,9 @@ from typing import Any
 from lean4_explainer.extensions import Extension, ParseResult, SourceView
 from lean4_explainer.render import Context, href, page
 
-from .deps import Resolver, bound_in, declaration_end, imports_in, names_in, opens_in, reverse, variables_in, visible_files
+from .deps import Resolver, bound_in, declaration_end, imports_in, names_in, opens_in, reverse, variables_in, reachable, visible_files
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 HERE = Path(__file__).parent
 SCRIPT = "_assets/map.js"
@@ -105,7 +105,11 @@ class MapExtension(Extension):
         if not options.get("map_dependencies", True):
             return Graph(enabled=False, digest="off")
         present = {rel: summary for rel, summary in summaries.items() if summary}
-        visible = visible_files({rel: summary[0] for rel, summary in present.items()})
+        modules = getattr(objects, "modules", None)  # the core's import graph: every file, also ones that only import
+        if modules is not None and modules.local:
+            visible = reachable(modules.local)
+        else:
+            visible = visible_files({rel: summary[0] for rel, summary in present.items()})
         resolver = Resolver(objects.locations, visible, getattr(objects, "copies", None))
         uses: dict[str, list[str]] = {}
         copy_uses: dict[tuple[str, str], list[str]] = {}

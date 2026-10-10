@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .errors import ExplainerError
 from .extensions import config_keys
+from .imports import SCOPES
 
 PAGES_LIMIT_BYTES = 1_000_000_000
 
@@ -26,6 +27,8 @@ class Config:
     byte_budget: int = PAGES_LIMIT_BYTES
     source_links: str = "declaration"  # "declaration": one link per declaration; "file": one per page
     home: str | None = None  # relative URL of a landing page above this site, when it is one of several
+    glossary: str = "all"  # the project's definitions in the glossary: "all", "described" (with a description) or "none"
+    imports: str = "all"  # imports on file pages: "all", "import-only" (files that only import) or "none"
     options: tuple[tuple[str, object], ...] = ()  # keys that installed extensions declared, sorted
 
 
@@ -41,7 +44,11 @@ _TYPES: dict[str, type] = {
     "byte_budget": int,
     "source_links": str,
     "home": str,
+    "glossary": str,
+    "imports": str,
 }
+GLOSSARY_SCOPES = ("all", "described", "none")
+IMPORT_SCOPES = SCOPES
 
 
 def load_config(path: Path | None) -> Config:
@@ -73,5 +80,9 @@ def load_config(path: Path | None) -> Config:
             raise ExplainerError(f"'extra_kinds' entries must be plain keywords in {path}")
         if key == "source_links" and value not in ("declaration", "file"):
             raise ExplainerError(f"'source_links' must be \"declaration\" or \"file\" in {path}")
+        if key == "glossary" and value not in GLOSSARY_SCOPES:
+            raise ExplainerError(f"'glossary' must be \"all\", \"described\" or \"none\" in {path}")
+        if key == "imports" and value not in IMPORT_SCOPES:
+            raise ExplainerError(f"'imports' must be \"all\", \"import-only\" or \"none\" in {path}")
         values[key] = value
     return Config(**values, options=tuple(sorted(options.items())))

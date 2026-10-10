@@ -239,3 +239,50 @@ def test_a_corpus_carries_its_own_extension_settings_into_its_build(upstream, tm
 def test_the_oai_corpus_leaves_out_the_map_to_stay_inside_the_pages_limit():
     assert ("map_dependencies", False) in CORPORA["oai"].options
     assert all(("map_dependencies", False) not in c.options for name, c in CORPORA.items() if name != "oai")
+
+
+def test_a_corpus_chooses_how_much_of_itself_its_glossary_lists(upstream, tmp_path, monkeypatch):
+    from lean4_explainer_corpora import showcase
+
+    corpus, base = upstream
+    seen = []
+    real = showcase.build_site
+
+    def spy(root, out, config, cache, jobs=1):
+        seen.append(config.glossary)
+        return real(root, out, config, cache, jobs=jobs)
+
+    monkeypatch.setattr(showcase, "build_site", spy)
+    build_showcase([replace(corpus, glossary="described")], tmp_path / "work", tmp_path / "described", base_url=base)
+    build_showcase([corpus], tmp_path / "work", tmp_path / "all", base_url=base)
+    assert seen == ["described", "all"]
+    assert (tmp_path / "all" / "demo" / "glossary.html").is_file()
+
+
+def test_a_corpus_chooses_where_file_pages_list_imports(upstream, tmp_path, monkeypatch):
+    from lean4_explainer_corpora import showcase
+
+    corpus, base = upstream
+    seen = []
+    real = showcase.build_site
+
+    def spy(root, out, config, cache, jobs=1):
+        seen.append(config.imports)
+        return real(root, out, config, cache, jobs=jobs)
+
+    monkeypatch.setattr(showcase, "build_site", spy)
+    build_showcase([replace(corpus, imports="import-only")], tmp_path / "work", tmp_path / "only", base_url=base)
+    build_showcase([corpus], tmp_path / "work", tmp_path / "all", base_url=base)
+    assert seen == ["import-only", "all"]
+
+
+def test_the_oai_pages_list_imports_only_where_a_file_does_nothing_else():
+    # openai/math: 336,022 imports in 122,875 files; lists on every page would not fit in the Pages limit
+    assert CORPORA["oai"].imports == "import-only"
+    assert all(c.imports == "all" for name, c in CORPORA.items() if name != "oai")
+
+
+def test_the_oai_glossary_lists_only_described_definitions_to_stay_inside_the_pages_limit():
+    # 1,286,783 definitions in openai/math, 24,695 of them described (counted at the pinned commit, 2026-10-10)
+    assert CORPORA["oai"].glossary == "described"
+    assert all(c.glossary == "all" for name, c in CORPORA.items() if name != "oai")

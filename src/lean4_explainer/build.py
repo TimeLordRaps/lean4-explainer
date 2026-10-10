@@ -8,13 +8,15 @@ import hashlib
 import os
 from array import array
 from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from .cache import Cache, FileIndex, load_cache, save_cache
-from .config import Config
+from .config import GLOSSARY_SCOPES, IMPORT_SCOPES, Config
 from .errors import ExplainerError
 from .extensions import Extension, extensions
+from .glossary import VOCABULARY_KINDS, glossary_pages, record
+from .imports import modules
 from .objects import Copy, Objects, index_objects
 from .render import (
     ASSET_DIR,
@@ -25,7 +27,7 @@ from .render import (
     folder_pages,
     search_page,
 )
-from .scan import FileSummary, LeanFile, iter_lean_files, parse_source
+from .scan import Declaration, FileSummary, LeanFile, iter_lean_files, parse_source
 from .search import write_search
 from .version import __version__
 
@@ -38,7 +40,7 @@ __all__ = [
     "collect_tree",
 ]
 
-CACHE_FORMAT = 7
+CACHE_FORMAT = 9
 # Lake's build configuration and its older dependency directory are not library source. Always skipped,
 # at the root and in any subdirectory, on top of the user's exclude patterns. Hidden directories (.lake)
 # are already skipped by the scanner.
@@ -91,6 +93,10 @@ def default_cache_dir(out_dir: Path) -> Path:
 def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1) -> TreeIndex:
     if not lean_root.is_dir():
         raise ExplainerError(f"lean root is not a directory: {lean_root}")
+    if config.glossary not in GLOSSARY_SCOPES:
+        raise ExplainerError(f"glossary must be one of {', '.join(GLOSSARY_SCOPES)}, not {config.glossary!r}")
+    if config.imports not in IMPORT_SCOPES:
+        raise ExplainerError(f"imports must be one of {', '.join(IMPORT_SCOPES)}, not {config.imports!r}")
     patterns = (*config.exclude, *_LAKE_EXCLUDE)
     sources = [
         (rel, path)
@@ -106,7 +112,10 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
     for rel in stale:
         del cache.files[rel]
         cache.pages.pop(rel, None)
-    jobs_list = [(rel, str(path), cache.files[rel].sha if rel in cache.files else "", config.options, config.extra_kinds) for rel, path in sources]
+    jobs_list = [
+        (rel, str(path), cache.files[rel].sha if rel in cache.files else "", config.options, config.extra_kinds, config.glossary)
+        for rel, path in sources
+    ]
     if jobs > 1 and len(jobs_list) > 1:
         with ProcessPoolExecutor(max_workers=jobs) as pool:
             refreshed = list(pool.map(_refresh_file, jobs_list, chunksize=64))
@@ -123,7 +132,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
     described: set[str] = set()
     for file_ord, rel in enumerate(rels):
         entry = cache.files[rel]
-        summaries.append(FileSummary(rel, entry.declarations, entry.sorry, entry.axioms))
+        summaries.append(FileSummary(rel, entry.declarations, entry.sorry, entry.axioms, len(entry.imports), entry.import_only))
         names = entry.names.split("\n") if entry.names else []
         if len(names) > _SLOT_MASK:
             raise ExplainerError(f"too many declarations in {rel}")
@@ -145,7 +154,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
         slot = ref & _SLOT_MASK
         return Copy(rel, entry.lines[slot], entry.codes[slot], entry.headers[slot])
 
-    objects = index_objects(first, extra, copy_at)
+    objects = replace(index_objects(first, extra, copy_at), modules=modules({rel: cache.files[rel].imports for rel in rels}))
     issues.extend(objects.issues)
     options = {**dict(config.options), "_root": str(lean_root)}  # `_root`: where the sources are, for extensions that read them
     analyses: list[tuple[Extension, object]] = []
@@ -200,6 +209,7 @@ def _build_site(
     for rel, _ in tree.sources:
         entry = tree.cache.files[rel]
         digest.update(rel.encode("utf-8") + b"\0" + entry.names.encode("utf-8") + b"\0" + entry.lines.tobytes())
+        digest.update(b"\0".join(name.encode("utf-8") for name in entry.imports) + b"\1")  # a page lists who imports it
     for ext, analysis in tree.analyses:
         digest.update(repr((ext.name, ext.fingerprint(dict(config.options)), analysis)).encode("utf-8"))
     for name in sorted(tree.objects.copies):
@@ -218,6 +228,7 @@ def _build_site(
         options=config.options,
         home=config.home,
         source_links=config.source_links,
+        imports=config.imports,
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -243,6 +254,15 @@ def _build_site(
     for ext, analysis in tree.analyses:
         for name, html in ext.pages(ctx, analysis).items():
             written += _write(out_dir / name, html)
+    # after the extensions' pages: the glossary is the core's, whatever an older extension writes
+    sections = [section for ext, analysis in tree.analyses for section in ext.glossary(ctx, analysis)]
+    records = ((rel, item) for rel, _ in tree.sources for item in tree.cache.files[rel].vocabulary)
+    glossary = glossary_pages(ctx, records, sections, config.glossary)
+    for old in out_dir.glob("glossary-*.html"):  # letter pages of an earlier, bigger build
+        if old.name not in glossary:
+            old.unlink()
+    for name, html in glossary.items():
+        written += _write(out_dir / name, html)
     search_entries = 0
     if config.search:
         written += _write(out_dir / "search.html", search_page(ctx))
@@ -283,9 +303,14 @@ def check_tree(
     return collect_tree(lean_root, config, cache_dir or lean_root.parent / ".lean4-explainer-check", jobs)
 
 
-def _index_of(lean_file: LeanFile, sha: str) -> FileIndex:
+def _index_of(lean_file: LeanFile, sha: str, glossary: str = "all") -> FileIndex:
     named = [decl for decl in lean_file.declarations if "(" not in decl.name]
     active = extensions()
+    described = [
+        decl for decl in named
+        if decl.description or any(ext.is_described(decl.ext[ext.name]) for ext in active if ext.name in decl.ext)
+    ]
+    listed = {"all": named, "described": described, "none": []}[glossary]
     summaries: list[tuple[str, object]] = []
     diagnostics: list[str] = []
     for ext in active:
@@ -303,23 +328,34 @@ def _index_of(lean_file: LeanFile, sha: str) -> FileIndex:
         codes=array("Q", (decl.code_digest for decl in named)),
         headers=array("Q", (decl.header_digest for decl in named)),
         diagnostics=tuple(diagnostics),
-        described="\n".join(
-            decl.name
-            for decl in named
-            if decl.description or any(ext.is_described(decl.ext[ext.name]) for ext in active if ext.name in decl.ext)
-        ),
+        described="\n".join(decl.name for decl in described),
         ext=tuple(summaries),
+        vocabulary=tuple(record(decl, _describe(decl, active)) for decl in listed if decl.kind in VOCABULARY_KINDS),
+        imports=lean_file.imports,
+        import_only=lean_file.import_only,
     )
 
 
-def _refresh_file(job: tuple[str, str, str, tuple[tuple[str, object], ...], tuple[str, ...]]) -> tuple[str, str, FileIndex | None]:
+def _describe(decl: Declaration, active: tuple[Extension, ...]) -> str:
+    """The first extension's one-line description of a declaration, for one with no comment of its own."""
+    return next((text for ext in active if ext.name in decl.ext for text in (ext.describe(decl.ext[ext.name]),) if text), "")
+
+
+def _refresh_file(job: tuple[str, str, str, tuple[tuple[str, object], ...], tuple[str, ...], str]) -> tuple[str, str, FileIndex | None]:
     """Hash a file; index it only if its hash differs from the cached one. Runs in worker processes."""
-    rel, path, known, options, extra_kinds = job
+    rel, path, known, options, extra_kinds, glossary = job
     data = Path(path).read_bytes()
     sha = hashlib.sha256(data).hexdigest()
     if sha == known:
         return rel, sha, None
-    return rel, sha, _index_of(parse_source(data.decode("utf-8-sig", errors="replace"), rel, options=dict(options), extra_kinds=extra_kinds), sha)
+    lean_file = parse_source(
+        data.decode("utf-8-sig", errors="replace"),
+        rel,
+        options=dict(options),
+        extra_kinds=extra_kinds,
+        statement_kinds=VOCABULARY_KINDS if glossary == "all" else (),  # an undescribed definition shows its signature
+    )
+    return rel, sha, _index_of(lean_file, sha, glossary)
 
 
 def _fingerprint(config: Config) -> str:

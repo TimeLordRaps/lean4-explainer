@@ -117,6 +117,25 @@ def test_fetch_with_yes_fetches_each_corpus(tmp_path, monkeypatch, capsys):
     assert fetched == ["flt", "pfr"]
 
 
+def test_a_console_that_ends_at_once_is_a_no_not_a_crash(tmp_path, monkeypatch, capsys):
+    # on Windows, stdin from NUL (`< /dev/null`, a scheduled task) says it is a terminal, then input() hits its end
+    monkeypatch.setattr(extension.showcase, "build_showcase", lambda *a, **k: (_ for _ in ()).throw(AssertionError("downloaded")))
+    monkeypatch.setattr("sys.stdin", _EmptyTty())
+
+    code = cli.main(["showcase", "pfr", "--out", str(tmp_path / "site"), "--work", str(tmp_path / "work")])
+
+    assert code == 2
+    assert "--yes" in capsys.readouterr().out
+
+
 class _NotATty:
     def isatty(self):
         return False
+
+
+class _EmptyTty:
+    def isatty(self):
+        return True
+
+    def readline(self):
+        return ""

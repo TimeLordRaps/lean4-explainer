@@ -164,15 +164,16 @@
     t = stripParens(squash(t));
     if (TYPES[t]) return TYPES[t];
     if (/^(Type|Sort)\b/.test(t)) return TYPES["Type"];
-    for (const [re, say] of TYPE_FORMS) {
-      const m = t.match(re);
-      if (m) return say(m, t);
-    }
+    // Top-level → and × first: `Fin 4 → ℝ × ℝ` is a function, not a `Fin` of "4 → ℝ × ℝ".
     const arrows = splitTop(t, "→");
     if (arrows.length > 1 && arrows.every((p) => p.trim()))
       return "a function that takes " + arrows.slice(0, -1).map((p) => code(p)).join(", then ") + " and gives " + code(arrows[arrows.length - 1]);
     const pair = splitTop(t, "×");
-    if (pair.length > 1) return "a pair (" + pair.map((p) => code(p)).join(", ") + ")";
+    if (pair.length > 1 && pair.every((p) => p.trim())) return "a pair (" + pair.map((p) => code(p)).join(", ") + ")";
+    for (const [re, say] of TYPE_FORMS) {
+      const m = t.match(re);
+      if (m) return say(m, t);
+    }
     return "a value of type " + code(t);
   }
 
@@ -432,9 +433,14 @@
     return parts.map((p) => code(p)).join(", ");
   }
 
+  // `let x := v; body` (or a new line for the `;`): x, v and the body.
+  const LET_RE = /^\s*let(?:I)?\s+([^\n;:=]*?)\s*(?::[^\n;=]*)?:=\s*([^\n;]*?)\s*(?:;|\n)([\s\S]*)$/;
+  // `open Foo in term` only makes Foo's names short inside the term.
+  const OPEN_IN = /^\s*open\s+(?:scoped\s+)?[^\n()]*?(?:\([^)]*\)\s*)?\bin\s+/;
+
   function sayProp(s, depth) {
     depth = depth || 0;
-    const lt = String(s).match(/^\s*let(?:I)?\s+([^\n;:=]*?)\s*(?::[^\n;=]*)?:=\s*([^\n;]*?)\s*(?:;|\n)([\s\S]*)$/);
+    const lt = String(s).match(LET_RE);
     if (lt && depth < 6) return "with " + math(lt[1]) + " standing for " + math(lt[2]) + ", " + sayProp(lt[3], depth + 1);
     s = stripParens(squash(s));
     if (!s) return "";
@@ -976,7 +982,71 @@
   }
 
   // ---------------------------------------------------------------- term proofs and definitions
-  function termWords(t) {
+  // Pieces that cannot be arguments of a function: keywords, operators (⊆, +, ∑, <|), the end of a binder list ("x,").
+  const TERM_KEYWORDS = new Set(["fun", "λ", "match", "with", "if", "then", "else", "let", "letI", "have", "haveI", "show", "from", "by", "do", "open", "in", "where", "calc"]);
+  const OPERATOR = /^[^\p{L}\p{N}_?([{⟨⦃«@.'"`]+$/u;
+  function notAnArgument(a) {
+    return TERM_KEYWORDS.has(a) || OPERATOR.test(a) || /[,;]$/.test(a) || /^\|>/.test(a);
+  }
+  // The pieces of an application `f a (b c) ⟨d, e⟩`. What touches without a space is one piece (`xs[i]`, `(f x).2`,
+  // `![…]`); a `fun` or a `by`, and what follows `<|`, run to the end as one argument.
+  function appArgs(s) {
+    const args = [];
+    let i = 0;
+    while (i < s.length) {
+      const from = i;
+      while (s[i] === " ") i++;
+      if (i >= s.length) break;
+      let j = i;
+      if (OPEN.indexOf(s[i]) >= 0) { const m = matching(s, i); j = m < 0 ? s.length : m + 1; }
+      else while (j < s.length && s[j] !== " " && OPEN.indexOf(s[j]) < 0) j++;
+      const piece = s.slice(i, j);
+      if (args.length && i === from) args[args.length - 1] += piece;
+      else if (args.length && /^(fun|λ|by)$/.test(piece)) { args.push(s.slice(i).trim()); break; }
+      else if (args.length && /^(<\||\$)$/.test(piece)) { if (s.slice(j).trim()) args.push(s.slice(j).trim()); break; }
+      else args.push(piece);
+      i = j;
+    }
+    return args;
+  }
+  function lowerFirst(s) {
+    return s[0] === "<" ? s : s.charAt(0).toLowerCase() + s.slice(1);
+  }
+  function termCode(s, value) {
+    s = squash(s);
+    return value && s.length <= 140 ? math(s) : code(short(s));
+  }
+  // `match x with | p => v | …`: each case in turn.
+  function matchWords(t, value) {
+    const w = scanTop(t, (i) => startsWord(t, i, "with"));
+    if (w < 0) return null;
+    const arms = splitTop(t.slice(w + 4).trim().replace(/^\|/, ""), " | ").map((a) => {
+      const at = scanTop(a, (i) => a.substr(i, 2) === "=>" || a[i] === "↦");
+      return at < 0 ? null : { pat: a.slice(0, at).trim(), val: a.slice(at + (a[at] === "↦" ? 1 : 2)).trim() };
+    });
+    if (!arms.length || arms.length > 12 || arms.some((a) => !a || !a.pat || !a.val || /\bmatch\b/.test(a.val))) return null;
+    return "Case by case on " + code(t.slice(5, w)) + ": " +
+      arms.map((a) => "when it is " + math(a.pat) + ", " + (value ? "the result is " : "use ") + termCode(a.val, value)).join("; ") + ".";
+  }
+  // `if c then a else b`, with `if h : c` naming the condition.
+  function ifWords(t, value) {
+    let depth = 0, then = -1, other = -1;
+    scanTop(t, (i) => {
+      if (startsWord(t, i, "if")) { if (i > 0) depth++; }
+      else if (startsWord(t, i, "then")) { if (then < 0 && depth === 0) then = i; }
+      else if (startsWord(t, i, "else")) { if (depth === 0) { other = i; return true; } depth--; }
+      return false;
+    });
+    if (then < 0 || other < then) return null;
+    const cond = t.slice(2, then).trim().replace(/^[\w'₀-₉]+\s*:(?!=)\s*/, "");
+    const say = value ? "it is " : "use ";
+    return "If " + sayProp(cond) + ", " + say + termCode(t.slice(then + 4, other), value) + "; otherwise " + say + termCode(t.slice(other + 4), value) + ".";
+  }
+  function termWords(t, value) {
+    const opened = String(t).match(OPEN_IN);
+    if (opened) return termWords(String(t).slice(opened[0].length), value);
+    const lt = String(t).match(LET_RE);
+    if (lt) return "With " + math(lt[1]) + " standing for " + termCode(lt[2], value) + ", " + lowerFirst(termWords(lt[3], value));
     t = stripParens(squash(t));
     if (!t) return "";
     if (/^(fun|λ)\b/.test(t)) {
@@ -988,9 +1058,37 @@
     if (/^(absurd|False\.elim|nomatch)/.test(t)) return "This case cannot happen: " + code(t) + ".";
     const cong = t.match(/^congrArg\s+(\S+|\([^)]*\))\s+(\S+)$/);
     if (cong) return "Apply " + code(cong[1]) + " to both sides of " + code(cong[2]) + ".";
-    const args = glueCalls(headArgs(t));
-    if (args.length > 1) return "Apply " + code(short(args[0])) + " to " + args.slice(1).map((a) => code(short(a))).join(", ") + ".";
-    return "It is " + code(short(t)) + ".";
+    if (/^match\b/.test(t)) { const w = matchWords(t, value); if (w) return w; }
+    if (/^if\b/.test(t)) { const w = ifWords(t, value); if (w) return w; }
+    const args = glueCalls(appArgs(t));
+    if (args.length > 1 && !args.some(notAnArgument)) return "Apply " + code(short(args[0])) + " to " + args.slice(1).map((a) => code(short(a))).join(", ") + ".";
+    const rw = splitTop(t, "▸");
+    if (rw.length === 2 && rw[0].trim() && rw[1].trim()) return "Use " + code(short(rw[1])) + ", rewritten with " + code(short(rw[0])) + " (▸).";
+    return "It is " + termCode(t, value) + ".";
+  }
+  // A definition whose value is a statement (`def IsGood (n : ℕ) : Prop := …`): what `IsGood n` means, in words, and as
+  // a formula when one can be drawn.
+  function propMeaning(h, body) {
+    const type = squash(h.type);
+    let rest = String(body);
+    const opened = rest.match(OPEN_IN);
+    if (opened) rest = rest.slice(opened[0].length);
+    const inputs = explicitInputs(h.binders);
+    if (type !== "Prop") {
+      if (!/(→|->)\s*Prop$/.test(type)) return null;
+      const f = squash(rest).match(/^(?:fun|λ)\s+([^=↦]*?)\s*(?:=>|↦)\s*([\s\S]*)$/);
+      if (!f) return null;
+      const vars = f[1].replace(/\(([^():]*):[^()]*\)/g, " $1 ").replace(/:.*$/, "").split(" ").filter(Boolean);
+      if (!vars.length || vars.some((v) => v === "_" || !/^[^\s,:()⟨⟩{}[\]⦃⦄|]+$/.test(v))) return null;
+      inputs.push(...vars);
+      rest = f[2];
+    }
+    const said = squash(rest);
+    if (!said || /^(sorry|match|if)\b/.test(said)) return null;
+    const name = (h.name || "").split(".").pop();
+    const t = translator();
+    const tex = t && t.definitionTex(name, explicitInputs(h.binders), body.replace(OPEN_IN, ""), "\\iff");
+    return "<p class=\"rd-say\"><strong>" + code([name].concat(inputs).join(" ")) + " means:</strong> " + sayProp(rest) + ".</p>" + (tex ? displayMath(tex, body) : "");
   }
   function glueCalls(args) {
     const out = [];
@@ -1099,10 +1197,12 @@
       }
     } else if (h.bodyKind === "term" && body) {
       const isValue = !(/^(theorem|lemma|problem|example)$/.test(h.kind) || isProof);
-      const t = isValue && translator();
-      const tex = t && t.definitionTex((h.name || "").split(".").pop(), explicitInputs(h.binders), body);
-      if (tex) out.push("<p class=\"rd-shape\"><strong>Its value:</strong></p>" + displayMath(tex, body));
-      else out.push("<p class=\"rd-shape\"><strong>" + (isValue ? "Its value" : "The proof") + ":</strong> " + termWords(body.length > 600 ? body.slice(0, 600) : body) + "</p>");
+      const meaning = isValue && propMeaning(h, body);
+      const t = isValue && !meaning && translator();
+      const tex = t && t.definitionTex((h.name || "").split(".").pop(), explicitInputs(h.binders), body.replace(OPEN_IN, ""));
+      if (meaning) out.push(meaning);
+      else if (tex) out.push("<p class=\"rd-shape\"><strong>Its value:</strong></p>" + displayMath(tex, body));
+      else out.push("<p class=\"rd-shape\"><strong>" + (isValue ? "Its value" : "The proof") + ":</strong> " + termWords(body.length > 600 ? body.slice(0, 600) : body, isValue) + "</p>");
     } else if (h.bodyKind === "arms") {
       const arms = armsOf(h.body);
       if (/inductive/.test(h.kind)) out.push("<ul class=\"rd-arms\">" + arms.map((a) => "<li>" + code(a.pat) + "</li>").join("") + "</ul>");
@@ -1189,6 +1289,7 @@
 
   // ---------------------------------------------------------------- the browser side
   function boot() {
+    drawDocs(document);  // descriptions on file pages, gists on the glossary: every page, source or not
     const holder = document.getElementById("lean-source");
     const list = document.querySelector("ol.decls");
     if (!holder || !list) return;
@@ -1252,19 +1353,67 @@
     return katexLoad;
   }
   function typeset(root) {
-    const spots = root.querySelectorAll("[data-tex]");
+    const spots = root.querySelectorAll("[data-tex]:not(.typeset)");
     if (!spots.length) return;
     loadKatex().then((katex) => {
       spots.forEach((el) => {
         try {
-          katex.render(el.getAttribute("data-tex"), el, { displayMode: el.tagName === "DIV", throwOnError: false, strict: "ignore" });
+          // TeX an author wrote may use macros KaTeX lacks: then their text stays, instead of KaTeX's red error
+          const display = el.tagName === "DIV" || el.hasAttribute("data-display");
+          if (el.hasAttribute("data-doc")) el.innerHTML = docTex(katex, el.getAttribute("data-tex"), display);
+          else katex.render(el.getAttribute("data-tex"), el, { displayMode: display, throwOnError: false, strict: "ignore" });
           el.classList.add("typeset");
         } catch (e) { /* the Lean code stays */ }
       });
     }).catch(() => { /* without KaTeX the Lean code stays */ });
   }
 
-  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn };
+  // Doc comments: the core draws their Markdown and marks each $…$ or $$…$$ as <span class="tex">, written as the
+  // author wrote it. The reader typesets those. TeX an author wrote may use macros KaTeX lacks: then it stays as
+  // written, never KaTeX's red error. PROJECT_MACROS are the project's own (from its blueprint), filled in when the
+  // site is written.
+  const PROJECT_MACROS = {};
+  const DOC_MACROS = Object.assign({ "\\sp": "^", "\\sb": "_" }, PROJECT_MACROS);  // plain TeX's names for ^ and _
+  // What to try when KaTeX refuses the TeX as written: Markdown escapes left in it (`\\#` for \#, `\*` for *), and a
+  // command as a sub- or superscript (`f_\max`), which TeX takes and KaTeX wants in braces.
+  function docTexTries(tex) {
+    const tries = [tex];
+    const unescaped = tex.replace(/\\\\(?=[#$%&_{}])/g, "\\").replace(/\\\*/g, "*");
+    if (unescaped !== tex) tries.push(unescaped);
+    const last = tries[tries.length - 1];
+    const braced = last.replace(/([_^])\s*(\\[A-Za-z]+)/g, "$1{$2}");
+    if (braced !== last) tries.push(braced);
+    return tries;
+  }
+  function docTex(katex, tex, display) {
+    let failure = null;
+    for (const t of docTexTries(tex)) {
+      try {
+        return katex.renderToString(t, { displayMode: display, throwOnError: true, strict: "ignore", macros: Object.assign({}, DOC_MACROS) });
+      } catch (e) { failure = failure || e; }
+    }
+    throw failure;
+  }
+  function drawDocs(root) {
+    let drew = false;
+    root.querySelectorAll(".tex:not(.m)").forEach((el) => {
+      const text = el.textContent;
+      const display = text.startsWith("$$") && text.endsWith("$$") && text.length > 4;
+      const tex = (display ? text.slice(2, -2) : text.slice(1, -1)).trim();
+      if (!tex) return;
+      el.classList.add("m");
+      el.setAttribute("data-tex", tex);
+      el.setAttribute("data-doc", "");
+      if (display) el.setAttribute("data-display", "");
+      el.title = "TeX: " + tex;
+      drew = true;
+    });
+    if (drew) typeset(root);
+  }
+
+  // `tables`: what tools/vocabulary.cjs turns into the glossary's sections (vocabulary.json)
+  const tables = { TYPES, TYPE_FORMS, CLASSES, PREDICATES, SYMBOLS, TACTICS };
+  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docTex, docTexTries, tables, DOC_MACROS };
   if (typeof module === "object" && module.exports) module.exports = api;
   else if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

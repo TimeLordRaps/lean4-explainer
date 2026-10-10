@@ -7,6 +7,12 @@ written by `reader.js` in the browser from the file's source, which the page eit
 tree too large to publish twice, loads from a pinned raw-source URL when the page opens.
 
 It reads text only. Lean is not run, so the reading says what each tactic does, not the goal it leaves.
+
+The glossary page gets every word the reader explains (types, classes, properties, symbols, tactics) from
+`vocabulary.json`, which `tools/vocabulary.cjs` makes from the tables in reader.js.
+
+The formulas in doc comments (which the core marks) are typeset too, with the project's own TeX macros when it has a
+blueprint (`macros.py`).
 """
 
 from __future__ import annotations
@@ -19,10 +25,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from lean4_explainer.extensions import Extension
+from lean4_explainer.extensions import Extension, GlossaryEntry, GlossarySection
 from lean4_explainer.render import Context
 
-__version__ = "0.1.0"
+from .macros import blueprint_macros
+
+__version__ = "0.2.0"
 
 HERE = Path(__file__).parent
 SCRIPT = "_assets/reader.js"
@@ -31,6 +39,7 @@ READER_JS = (HERE / "reader.js").read_text(encoding="utf-8")
 LEAN2TEX_JS = (HERE / "lean2tex.js").read_text(encoding="utf-8")
 KATEX_DIR = HERE / "vendor" / "katex"
 KATEX = json.loads((KATEX_DIR / "VENDOR.json").read_text(encoding="utf-8"))
+VOCABULARY = json.loads((HERE / "vocabulary.json").read_text(encoding="utf-8"))
 # KaTeX (MIT) draws the formulas lean2tex writes; it goes into every site next to reader.js, so pages work offline
 KATEX_FILES = {f"_assets/katex/{'LICENSE.txt' if rel == 'LICENSE' else rel}": KATEX_DIR / rel for rel in KATEX["sha256"]}
 _EMBED_LIMIT = 2_000_000  # characters of source per page; a bigger file gets no reading unless a source URL is set
@@ -59,6 +68,7 @@ details.reading[open] > summary { margin-bottom: 0.3rem; }
 .rd .m.typeset .katex { font-size: 1.08em; }
 .rd .rd-math.typeset .katex-display { margin: 0.35rem 0; text-align: left; }
 .rd .rd-math.typeset .katex-display > .katex { text-align: left; }
+.doc .m.typeset .katex, dl.glossary .m.typeset .katex { font-size: 1.05em; }
 """
 
 
@@ -66,7 +76,7 @@ details.reading[open] > summary { margin-bottom: 0.3rem; }
 class ReaderExtension(Extension):
     name = "reader"
     version = __version__
-    config_keys = {"reader_source_url": str, "reader_embed_limit": int}
+    config_keys = {"reader_source_url": str, "reader_embed_limit": int, "reader_blueprint_macros": bool}
 
     def fingerprint(self, options: Mapping[str, Any]) -> str:
         digest = hashlib.sha256((READER_JS + LEAN2TEX_JS).encode("utf-8")).hexdigest()[:16]
@@ -75,6 +85,12 @@ class ReaderExtension(Extension):
             f"{options.get('reader_embed_limit', _EMBED_LIMIT)}"
         )
 
+    def analyze(self, objects: Any, summaries: Mapping[str, Any], options: Mapping[str, Any]) -> Any:
+        root = options.get("_root")
+        if not root or not options.get("reader_blueprint_macros", True):
+            return {"macros": {}}
+        return {"macros": blueprint_macros(Path(str(root)))}
+
     def css(self, options: Mapping[str, Any]) -> str:
         return CSS
 
@@ -82,7 +98,7 @@ class ReaderExtension(Extension):
         return (LEAN2TEX, SCRIPT)  # deferred scripts run in order: the translator is there before the reader starts
 
     def pages(self, ctx: Context, analysis: Any) -> Mapping[str, str | bytes]:
-        return {SCRIPT: READER_JS, LEAN2TEX: LEAN2TEX_JS} | {path: source.read_bytes() for path, source in KATEX_FILES.items()}
+        return {SCRIPT: reader_js(_macros(analysis)), LEAN2TEX: LEAN2TEX_JS} | {path: source.read_bytes() for path, source in KATEX_FILES.items()}
 
     def file_blocks(self, lean_file: Any, text: str, ctx: Context, analysis: Any) -> str:
         if not lean_file.declarations:
@@ -97,5 +113,35 @@ class ReaderExtension(Extension):
         payload = json.dumps(text, ensure_ascii=False).replace("<", "\\u003c")
         return f'<script type="application/json" id="lean-source">{payload}</script>'
 
+    def glossary(self, ctx: Context, analysis: Any) -> Sequence[GlossarySection]:
+        return tuple(
+            GlossarySection(
+                key=section["key"],
+                title=section["title"],
+                intro=section["intro"],
+                entries=tuple(
+                    GlossaryEntry(term=e["term"], meaning=e["meaning"], example=e["example"], anchor=e["anchor"])
+                    for e in section["entries"]
+                ),
+            )
+            for section in VOCABULARY["sections"]
+        )
+
     def summary(self, analysis: Any) -> Sequence[str]:
-        return ("Reader: every file page carries a plain-English reading of its declarations (made in the browser).",)
+        lines = ["Reader: every file page carries a plain-English reading of its declarations (made in the browser)."]
+        if _macros(analysis):
+            lines.append(f"Reader: {len(_macros(analysis))} TeX macros from the project's blueprint.")
+        return tuple(lines)
+
+
+_MACROS_MARK = "const PROJECT_MACROS = {};"
+
+
+def reader_js(macros: Mapping[str, str]) -> str:
+    """reader.js with the project's TeX macros in it."""
+    assert READER_JS.count(_MACROS_MARK) == 1
+    return READER_JS.replace(_MACROS_MARK, f"const PROJECT_MACROS = {json.dumps(dict(macros), ensure_ascii=True)};")
+
+
+def _macros(analysis: Any) -> Mapping[str, str]:
+    return analysis.get("macros", {}) if isinstance(analysis, dict) else {}

@@ -30,4 +30,8 @@ CORPUS = Corpus(
     overlay=package_file(__file__, "overlay.l4del"),
     # 1.1 GB of Lean: per-declaration maps would not fit in the Pages size limit beside the pages themselves
     options=(("map_dependencies", False),),
+    # its 1,286,783 definitions would not fit either: the glossary lists the 24,695 with a description
+    glossary="described",
+    # and its 336,022 imports: only a file that does nothing but import lists them (and what imports it)
+    imports="import-only",
 )

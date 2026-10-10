@@ -278,9 +278,9 @@ TEX_CASES = {
     # the definition that started it: BallPacking's capacity
     "Real.pi * ∑ j, Complex.normSq (z j)": r"\pi \sum_{j} \lvert z_{j} \rvert^{2}",
     "∑ i ∈ Finset.range (n + 1), i ^ 2 = n * (n + 1) * (2 * n + 1) / 6":
-        r"\sum_{i=0}^{n} i^{2} = \frac{n \left(n + 1\right) \left(2 n + 1\right)}{6}",
+        r"\sum_{i=0}^{n} i^{2} = \frac{n (n + 1) (2 n + 1)}{6}",
     "∀ ε > 0, ∃ δ > 0, ∀ x, |x - a| < δ → |f x - f a| < ε":
-        r"\forall \varepsilon > 0,\ \exists \delta > 0,\ \forall x,\ \lvert x - a \rvert < \delta \to \lvert f\left(x\right) - f\left(a\right) \rvert < \varepsilon",
+        r"\forall \varepsilon > 0,\ \exists \delta > 0,\ \forall x,\ \lvert x - a \rvert < \delta \to \lvert f(x) - f(a) \rvert < \varepsilon",
     "(n.choose k : ℝ) / 2 ^ n": r"\frac{\binom{n}{k}}{2^{n}}",
     "{p : ℕ | p.Prime}": r"\{p \in \mathbb{N} \mid p \text{ prime}\}",
     "∫ x in (0 : ℝ)..1, x ^ 2": r"\int_{0}^{1} x^{2}\, dx",
@@ -290,32 +290,34 @@ TEX_CASES = {
     "Real.sqrt (x ^ 2 + y ^ 2)": r"\sqrt{x^{2} + y^{2}}",
     "if x < 0 then -x else x": r"\begin{cases} -x & \text{if } x < 0 \\ x & \text{otherwise} \end{cases}",
     "(∑ j, a j) * 2": r"\left(\sum_{j} a_{j}\right) \cdot 2",
-    "a - (b - c)": r"a - \left(b - c\right)",
+    "a - (b - c)": r"a - (b - c)",
     "(a + b) / (c - d)": r"\frac{a + b}{c - d}",
     "↑n + 1": "n + 1",
     "s.card": r"\lvert s \rvert",
     # notation found by running it over the eight example projects
     "∀ᶠ n : ℕ in atTop, (F n : ℝ) ≤ n ^ 2": r"\text{for all large enough } n,\ F_{n} \le n^{2}",
     "∃ᶠ m in Filter.atTop, m.Prime": r"\text{for infinitely many } m,\ m \text{ prime}",
-    "∀ᵐ x ∂volume, f x = 0": r"\text{for almost every } x,\ f\left(x\right) = 0",
+    "∀ᵐ x ∂volume, f x = 0": r"\text{for almost every } x,\ f(x) = 0",
     "∀ᵉ (c₁ > 0) (c₂ > 0), c₁ * c₂ > 0": r"\forall c_{1} > 0, c_{2} > 0,\ c_{1} c_{2} > 0",
     "∀ (k : ℕ) (hk : 2 ≤ k), 0 < k": r"\forall k \in \mathbb{N}, 2 \le k,\ 0 < k",
-    "∃ L : AffineSubspace ℝ ℝ², IsLine L": r"\exists L,\ \operatorname{IsLine}\left(L\right)",
+    "∃ L : AffineSubspace ℝ ℝ², IsLine L": r"\exists L,\ \operatorname{IsLine}(L)",
     "(fun n : ℕ => (F n : ℝ)) ~[atTop] (fun n : ℕ => (n.choose (n / 2) : ℝ))": r"F_{n} \sim \binom{n}{\frac{n}{2}}",
-    "f =O[atTop] fun n ↦ (n : ℝ) ^ 2": r"f = O\left(n^{2}\right)",
+    "f =O[atTop] fun n ↦ (n : ℝ) ^ 2": r"f = O(n^{2})",
     "(fun n => (H n : ℝ)) ≪ (fun n : ℕ => (n : ℝ) ^ (3 / 2 : ℝ))": r"H_{n} \ll n^{\frac{3}{2}}",
     "answer(sorry) ↔ ∀ n > 1, n.Prime": r"\boxed{\,?\,} \iff \forall n > 1,\ n \text{ prime}",
-    "IsGood {p ^ 2 | (p : ℕ) (_ : p.Prime)}": r"\operatorname{IsGood}\left(\{p^{2} \mid p \in \mathbb{N}, p \text{ prime}\}\right)",
-    "(SimpleGraph.completeGraph (Fin 6)).edgeSet.ncard = 15": r"\lvert \operatorname{edgeSet}\left(\operatorname{completeGraph}\left(\operatorname{Fin}\left(6\right)\right)\right) \rvert = 15",
+    "IsGood {p ^ 2 | (p : ℕ) (_ : p.Prime)}": r"\operatorname{IsGood}(\{p^{2} \mid p \in \mathbb{N}, p \text{ prime}\})",
+    "(SimpleGraph.completeGraph (Fin 6)).edgeSet.ncard = 15": r"\lvert \operatorname{edgeSet}(\operatorname{completeGraph}(\operatorname{Fin}(6))) \rvert = 15",
     "Tendsto (fun n => 1 / (n : ℝ)) atTop (𝓝 0)": r"\lim_{n \to \infty} \frac{1}{n} = 0",
-    "∀ f : ℕ+ → ℕ+, f 1 = 1": r"\forall f \colon \mathbb{N}^{+} \to \mathbb{N}^{+},\ f\left(1\right) = 1",
+    "∀ f : ℕ+ → ℕ+, f 1 = 1": r"\forall f \colon \mathbb{N}^{+} \to \mathbb{N}^{+},\ f(1) = 1",
     "let m := n + 1\nn < m": r"n < m \quad \text{where } m = n + 1",
-    "x⁻¹ ^ (k + 1)": r"\left(x^{-1}\right)^{k + 1}",
+    "x⁻¹ ^ (k + 1)": r"(x^{-1})^{k + 1}",
     # one subscript and one superscript per base (KaTeX rejected these before)
     "(z n).1 + (z n).2": r"{z_{n}}_{1} + {z_{n}}_{2}",
-    "g⁻¹⁻¹": r"\left(g^{-1}\right)^{-1}",
+    "g⁻¹⁻¹": r"(g^{-1})^{-1}",
     "hp₀₁": r"\mathrm{hp}_{01}",
-    "v₀ n": r"v_{0}\left(n\right)",
+    "v₀ n": r"v_{0}(n)",
+    "P n k = 2": r"P(n, k) = 2",
+    "f (a / b)": r"f\left(\frac{a}{b}\right)",
 }
 # what it cannot read is left to the Lean code, never guessed
 TEX_DECLINES = ["by simp", "match n with | 0 => 1 | _ => 2", "f x y )", "⟨a, b", "let ⟨a, b⟩ := p\na"]
@@ -372,13 +374,86 @@ def test_a_definition_shows_its_value_as_a_formula(tmp_path):
         "  omega\n"
     )
     out = _readings(tmp_path, text, [[1, "capacity"], [3, "square"], [5, "t"]])
-    assert r'data-tex="\operatorname{capacity}\left(z\right) = \pi \sum_{j} \lvert z_{j} \rvert^{2}"' in out[1]
+    assert r'data-tex="\operatorname{capacity}(z) = \pi \sum_{j} \lvert z_{j} \rvert^{2}"' in out[1]
     assert "Apply" not in _text(out[1])  # the old reading: "Apply Real.pi to *, ∑, j,, …"
-    assert r'data-tex="\operatorname{square}\left(n\right) = n^{2}"' in out[3]
+    assert r'data-tex="\operatorname{square}(n) = n^{2}"' in out[3]
     statement = out[5]
     assert 'class="rd-math" data-tex="0 &lt; 2 n"' in statement  # the statement, displayed
     assert '<span class="m" data-tex="2 n" title="Lean: 2 * n"><code>2 * n</code></span>' in statement  # and inside the words
     assert "It says: 0 is less than 2 * n" in _text(statement)  # the Lean code is the fallback text
+
+
+# Terms that are not a function applied to arguments. The old reading split each of them at its spaces and said
+# "Apply A to ⊆, Finset.Icc, 1, N, ∧, …" (formal-conjectures' Erdős 1, from a user's screenshot); a sweep of all eight
+# corpora found 1,615 such readings, in every corpus.
+NOT_APPLICATIONS = (
+    "def IsSumDistinctSet (A : Finset ℕ) (N : ℕ) : Prop :=\n"  # 1
+    "  A ⊆ Finset.Icc 1 N ∧ (fun (⟨S, _⟩ : A.powerset) => S.sum id).Injective\n"
+    "\n"
+    "def Good : ℕ → Prop := fun n => n.Prime ∧ n % 4 = 1\n"  # 4
+    "\n"
+    "def seq (n : ℕ) : List ℤ :=\n"  # 6
+    "  match n with\n"
+    "  | 0 => []\n"
+    "  | n + 1 => seq n ++ [k (seq n)]\n"
+    "\n"
+    "def pick (p : ℕ) : ℕ :=\n"  # 11
+    "  if p.Prime then p else 0\n"
+    "\n"
+    "def total (s : Finset ℕ) : ℕ :=\n"  # 14
+    "  open scoped Classical in ∑ i ∈ s, (if i ∈ t then i else 0)\n"
+    "\n"
+    "def corners : Fin 4 → ℝ × ℝ := ![(0, 0), (1, 0), (1, 1), (0, 1)]\n"  # 17
+    "\n"
+    "theorem symm' (a b : ℕ) (h : a = b) : b = a :=\n"  # 19
+    "  h ▸ rfl\n"
+    "\n"
+    "theorem step (n : ℕ) : n ≤ n + 1 :=\n"  # 22
+    "  Nat.le_of_lt <| Nat.lt_succ_self n\n"
+    "\n"
+    "theorem sums (f : ℕ → ℝ) : True :=\n"  # 25
+    "  not_summable_iff (f := fun m : ℕ => f m) fun _ => le_refl _\n"
+    "\n"
+    "theorem plain (a b : ℕ) (h : a ≤ b) : a ≤ b + 1 :=\n"  # 28
+    "  Nat.le_succ_of_le h\n"
+    "\n"
+    "theorem either (p : ℕ) : 0 ≤ p :=\n"  # 31
+    "  if h : p.Prime then Nat.zero_le p else Nat.zero_le _\n"
+    "\n"
+    "def tricky (A : Finset ℕ) : ℕ := A.card + (fun (⟨S, _⟩ : A.powerset) => S.card) ⟨∅, by simp⟩\n"  # 34
+)
+
+
+@needs_node
+def test_a_term_that_is_not_an_application_is_not_read_as_one(tmp_path):
+    lines = {"IsSumDistinctSet": 1, "Good": 4, "seq": 6, "pick": 11, "total": 14, "corners": 17, "symm'": 19, "step": 22, "sums": 25, "plain": 28, "either": 31, "tricky": 34}
+    import re
+
+    got = _readings(tmp_path, NOT_APPLICATIONS, [[line, name] for name, line in lines.items()])
+    out = {name: _text(re.sub(r"(</[^>]+>)+(?=[.,;:])", "", got[line])) for name, line in lines.items()}  # "<code>N</code>, and" reads "N, and"
+    for name in ("IsSumDistinctSet", "Good", "seq", "pick", "total", "corners", "symm'"):
+        assert "Apply" not in out[name], (name, out[name])
+    # A definition whose value is a statement: what it means, in words, under its name and inputs.
+    assert "IsSumDistinctSet A N means: A is a subset of Finset.Icc 1 N, and" in out["IsSumDistinctSet"]
+    assert "Good n means:" in out["Good"]
+    assert "Its value" not in out["Good"]
+    # match and if: case by case.
+    assert "Case by case on n: when it is 0, the result is []; when it is n + 1, the result is seq n ++ [k (seq n)]." in out["seq"]
+    assert 'class="rd-math" data-tex=' in got[lines["pick"]]  # lean2tex draws this `if` as a formula
+    assert "The proof: If p is a prime number, use Nat.zero_le p; otherwise use Nat.zero_le _." in out["either"]
+    # `open … in` only scopes names: the reading is of the term after it.
+    formula = re.search(r'class="rd-math" data-tex="([^"]*)"', got[lines["total"]])
+    assert formula and formula.group(1).startswith(r"\operatorname{total}(s) = ") and "open" not in formula.group(1)
+    # A type with a top-level arrow is a function type, whatever its first word: not "a number from 0 up to 4 → ℝ × ℝ − 1".
+    assert "Defines corners: a function that takes Fin 4 and gives ℝ × ℝ." in out["corners"]
+    # A value lean2tex cannot draw is shown as written.
+    assert "Its value: It is A.card + (fun (⟨S, _⟩ : A.powerset) => S.card) ⟨∅, by simp⟩." in out["tricky"]
+    assert "The proof: Use rfl, rewritten with h (▸)." in out["symm'"]
+    # What follows `<|`, and a `fun` given last, are one argument each.
+    assert "The proof: Apply Nat.le_of_lt to Nat.lt_succ_self n." in out["step"]
+    assert "The proof: Apply not_summable_iff to (f := fun m : ℕ => f m), fun _ => le_refl _." in out["sums"]
+    # An application is still read as one.
+    assert "The proof: Apply Nat.le_succ_of_le to h." in out["plain"]
 
 
 @needs_node
@@ -433,3 +508,189 @@ def test_the_vendored_katex_is_the_published_release():
     assert set(KATEX["sha256"]) == {p.relative_to(KATEX_DIR).as_posix() for p in KATEX_DIR.rglob("*") if p.is_file()} - {"VENDOR.json"}
     for rel, digest in KATEX["sha256"].items():
         assert hashlib.sha256((KATEX_DIR / rel).read_bytes()).hexdigest() == digest, rel
+
+
+# ---------------------------------------------------------------- the reader's words in the glossary
+VOCABULARY_FILE = Path(__file__).resolve().parents[1] / "src" / "lean4_explainer_reader" / "vocabulary.json"
+GENERATOR = Path(__file__).resolve().parents[1] / "tools" / "vocabulary.cjs"
+READER_FILE = Path(__file__).resolve().parents[1] / "src" / "lean4_explainer_reader" / "reader.js"
+
+
+def _glossary_section(html, key):
+    import re
+
+    match = re.search(rf'<h2 id="g-{key}">(.*?)(?=<h2 |</main>)', html, re.S)
+    assert match, key
+    return match.group(1)
+
+
+def test_the_glossary_lists_the_words_the_reader_explains(tmp_path):
+    _, out = _build(tmp_path)
+    html = (out / "glossary.html").read_text(encoding="utf-8")
+    tactics = _glossary_section(html, "reader-tactics")
+    assert '<dt id="r-tactics-rw">rw</dt><dd><code>rw [h]</code> — Rewrite using <code>h</code>.</dd>' in tactics
+    # with no argument the general meaning reads best, and an example would only repeat the word
+    assert "<dt id=\"r-tactics-simp\">simp</dt><dd>Simplify with Lean's standard simplification rules.</dd>" in tactics
+    properties = _glossary_section(html, "reader-properties")
+    assert "<code>Injective f</code> — <code>f</code> is injective: different inputs always give different outputs" in properties
+    assert "ℕ, Nat" in _glossary_section(html, "reader-types")
+    assert "<code>[Field K]</code> — <code>K</code> is a field" in _glossary_section(html, "reader-classes")
+    assert "the norm (length) of x" in _glossary_section(html, "reader-symbols")
+
+
+def test_the_vocabulary_uses_only_plain_markup_and_unique_anchors():
+    import re
+
+    data = json.loads(VOCABULARY_FILE.read_text(encoding="utf-8"))
+    anchors = [e["anchor"] for s in data["sections"] for e in s["entries"]]
+    assert len(anchors) == len(set(anchors))
+    for section in data["sections"]:
+        assert section["entries"], section["key"]
+        for entry in section["entries"]:
+            tags = re.findall(r"<(/?)([a-z]+)([^>]*)>", entry["meaning"])
+            assert {name for _, name, _ in tags} <= {"code", "strong", "em"}, entry
+            assert all(not attrs for _, _, attrs in tags), entry
+            assert not re.search(r"<code></code>|<code>\?</code>|undefined|NaN", entry["meaning"]), entry
+
+
+@needs_node
+def test_the_vocabulary_is_generated_from_reader_js_and_covers_every_table(tmp_path):
+    done = subprocess.run([str(NODE), str(GENERATOR)], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    assert done.returncode == 0, done.stderr
+    fresh = json.loads(done.stdout)
+    # the committed file is what the generator makes from the current reader.js: regenerate it after changing a table
+    assert fresh == json.loads(VOCABULARY_FILE.read_text(encoding="utf-8"))
+    # every entry of every table has a glossary entry
+    count = tmp_path / "count.cjs"
+    count.write_text(
+        f"const R = require({json.dumps(str(READER_FILE))});\n"
+        "const t = R.tables;\n"
+        "process.stdout.write(JSON.stringify({classes: Object.keys(t.CLASSES), properties: Object.keys(t.PREDICATES),\n"
+        "  tactics: Object.keys(t.TACTICS), symbols: t.SYMBOLS.map((s) => s[1]), types: Object.keys(t.TYPES), forms: t.TYPE_FORMS.length}));\n",
+        encoding="utf-8",
+    )
+    done = subprocess.run([str(NODE), str(count)], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    assert done.returncode == 0, done.stderr
+    tables = json.loads(done.stdout)
+    terms = {s["key"]: [e["term"] for e in s["entries"]] for s in fresh["sections"]}
+    assert sorted(terms["reader-classes"]) == sorted(tables["classes"])
+    assert sorted(terms["reader-properties"]) == sorted(tables["properties"])
+    assert sorted(terms["reader-tactics"]) == sorted(tables["tactics"])
+    assert sorted(terms["reader-symbols"]) == sorted(tables["symbols"])
+    listed_types = {name for term in terms["reader-types"] for name in term.split(", ")}
+    assert set(tables["types"]) <= listed_types
+    assert len(fresh["forms"]) == tables["forms"]  # each TYPE_FORMS pattern was matched by a sample
+
+
+DOC_TEX = (
+    "const R = require(process.argv[2]);\n"
+    "const katex = require(process.argv[3]);\n"
+    "const cases = JSON.parse(require('fs').readFileSync(process.argv[4], 'utf8'));\n"
+    "const out = {};\n"
+    "for (const tex of cases) {\n"
+    "  let plain = null, drawn = null, error = null;\n"
+    "  try { plain = katex.renderToString(tex, { throwOnError: true, strict: 'ignore' }); } catch (e) { plain = null; }\n"
+    "  try { drawn = R.docTex(katex, tex, false); } catch (e) { error = e.message; }\n"
+    "  out[tex] = [plain, drawn, error];\n"
+    "}\n"
+    "process.stdout.write(JSON.stringify(out));\n"
+)
+
+
+def _doc_tex(tmp_path, reader_js, cases):
+    (tmp_path / "reader.cjs").write_text(reader_js, encoding="utf-8")
+    (tmp_path / "lean2tex.js").write_text(LEAN2TEX_JS, encoding="utf-8")
+    listing = tmp_path / "doc-cases.json"
+    listing.write_text(json.dumps(cases, ensure_ascii=False), encoding="utf-8")
+    return _node(tmp_path, DOC_TEX, tmp_path / "reader.cjs", KATEX_DIR / "katex.min.js", listing)
+
+
+@needs_node
+def test_doc_tex_draws_what_tex_takes_and_katex_alone_does_not(tmp_path):
+    # each of these stayed raw in the doc comment sweep over the pinned projects (formal-conjectures, Erdős problems)
+    repaired = [
+        r"f_\max(n)",  # 694.lean: a command as a subscript
+        r"\max_{n\leq x}\frac{f_\max(n)}{f_\min(n)}",
+        r"\omega\sp{\omega }",  # 590.lean: plain TeX's \sp and \sb
+        r"B\sb{2}",
+        r"p_n\\# + m",  # FortuneConjecture.lean: a Markdown escape left in the TeX
+        r"w \in \Sigma^\*",  # CernyConjecture.lean
+    ]
+    broken = [r"2K^{11", r"\mathbb^2", r"n!\pmd m!=x^p"]  # the author's TeX is wrong: it stays as written
+    valid = [r"\begin{aligned} a &= b \\ c &= d \end{aligned}", r"\{1, \dots, N\}", r"x^\alpha_\beta"]
+    got = _doc_tex(tmp_path, READER_JS, repaired + broken + valid)
+    for tex in repaired:
+        plain, drawn, error = got[tex]
+        assert plain is None and drawn and error is None, tex
+    for tex in broken:
+        assert got[tex][1] is None and got[tex][2], tex
+    for tex in valid:  # TeX that KaTeX takes as written is drawn exactly as written
+        plain, drawn, error = got[tex]
+        assert drawn == plain and plain, tex
+
+
+def test_the_reader_typesets_the_formulas_the_core_marks():
+    draw = READER_JS[READER_JS.index("function drawDocs(root) {") :]
+    draw = draw[: draw.index("\n  }\n") + 4]
+    assert 'querySelectorAll(".tex:not(.m)")' in draw and "data-doc" in draw and "typeset(root)" in draw
+    assert "docPieces" not in READER_JS  # the core finds the formulas now: one dollar rule, in one place
+
+
+BLUEPRINT = r"""
+% comment: \newcommand{\ignored}{x}
+\newcommand{\bbH}{\mathbb{H}}
+\newcommand*{\bbI}{\mathbb{I}}
+\newcommand{\abs}[1]{\left\lvert #1\right\rvert}
+\renewcommand\epsilon{\varepsilon}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\def\pair#1#2{\langle #1, #2\rangle}
+\newcommand{\opt}[2][x]{#1 + #2}
+\newcommand{\pct}{50\%}
+\providecommand{\bbH}{\mathbb{W}}
+\newcommand{\inner}{\makeatletter\foo@bar}
+"""
+
+
+def test_blueprint_macros_are_read_as_katex_takes_them():
+    from lean4_explainer_reader.macros import parse_macros
+
+    assert parse_macros(BLUEPRINT) == {
+        r"\bbH": r"\mathbb{H}",
+        r"\bbI": r"\mathbb{I}",
+        r"\abs": r"\left\lvert #1\right\rvert",
+        r"\epsilon": r"\varepsilon",
+        r"\dist": r"\operatorname{dist}",
+        r"\argmax": r"\operatorname*{arg\,max}",
+        r"\pair": r"\langle #1, #2\rangle",
+        r"\pct": r"50\%",
+    }  # no \ignored (a comment), no \opt (an optional argument), \providecommand keeps the first, no internals
+
+
+@needs_node
+def test_a_site_typesets_doc_tex_with_its_blueprints_macros(tmp_path):
+    src = tmp_path / "proj"
+    (src / "blueprint" / "src" / "macros").mkdir(parents=True)
+    (src / "blueprint" / "src" / "macros" / "common.tex").write_text(BLUEPRINT, encoding="utf-8")
+    (src / "blueprint" / "src" / "macros" / "web.tex").write_text(r"\newcommand{\bbI}{\mathbf{I}}", encoding="utf-8")
+    (src / "Ent.lean").write_text("/-- Entropy $\\bbH[X] - \\bbI[X : Y] \\le \\abs{x}$. -/\ndef ent : Nat := 1\n", encoding="utf-8")
+    summary = build_site(src, tmp_path / "out", Config(), tmp_path / "idx", jobs=1)
+    assert not summary.errors
+    page = (tmp_path / "out" / "Ent.lean.html").read_text(encoding="utf-8")
+    assert '<span class="tex">$\\bbH[X] - \\bbI[X : Y] \\le \\abs{x}$</span>' in page
+    written = (tmp_path / "out" / "_assets" / "reader.js").read_text(encoding="utf-8")
+    assert '"\\\\bbI": "\\\\mathbf{I}"' in written  # web.tex has the last word
+    got = _doc_tex(tmp_path, written, [r"\bbH[X] - \bbI[X : Y] \le \abs{x}", r"\dist(x, y)"])
+    for tex, (_plain, drawn, error) in got.items():
+        assert drawn and error is None, (tex, error)
+    assert "mathbf" in got[r"\bbH[X] - \bbI[X : Y] \le \abs{x}"][1]  # web.tex's \bbI: drawn bold
+    # off by config: the site's reader.js has no project macros
+    off = build_site(src, tmp_path / "off", Config(options=(("reader_blueprint_macros", False),)), tmp_path / "idx2", jobs=1)
+    assert not off.errors
+    assert "const PROJECT_MACROS = {};" in (tmp_path / "off" / "_assets" / "reader.js").read_text(encoding="utf-8")
+
+
+def test_the_reader_draws_doc_text_on_every_page_it_loads_on():
+    # the glossary has no source to read, so drawing the docs must not wait for one
+    boot = READER_JS[READER_JS.index("function boot() {") :]
+    assert boot.index("drawDocs(document)") < boot.index('document.getElementById("lean-source")')

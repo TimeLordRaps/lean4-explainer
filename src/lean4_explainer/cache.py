@@ -23,6 +23,9 @@ class FileIndex:
     diagnostics: tuple[str, ...]
     described: str = ""  # newline-joined names of declarations with a description (comment or extension note)
     ext: tuple[tuple[str, object], ...] = ()  # (extension name, that extension's summary of the file)
+    vocabulary: tuple[tuple[str, str, int, str, str], ...] = ()  # glossary records: (name, kind, line, gist, signature)
+    imports: tuple[str, ...] = ()  # the modules the file imports, as written
+    import_only: bool = False  # nothing but imports
 
 
 @dataclass

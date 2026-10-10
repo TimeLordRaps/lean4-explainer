@@ -9,6 +9,8 @@ from html import escape
 from urllib.parse import quote
 
 from .extensions import Extension
+from .imports import docs_url
+from .markdown import doc_html
 from .objects import Objects, plain_objects, resolve, resolve_exact
 from .scan import Declaration, FileSummary, LeanFile
 
@@ -44,7 +46,16 @@ ol.decls > li, ul.list > li { padding: 0.45rem 0; border-bottom: 1px solid var(-
 .kind { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
 .flag { font-size: 0.75rem; padding: 0 0.4rem; border-radius: 4px; }
 .flag.sorry { color: var(--warn); background: var(--warn-bg); }
-.doc { white-space: pre-wrap; margin: 0.3rem 0; }
+.doc { margin: 0.3rem 0; overflow-wrap: anywhere; }
+.doc.plain { white-space: pre-wrap; }
+.doc > :first-child { margin-top: 0; }
+.doc > :last-child { margin-bottom: 0; }
+.doc p, .doc ul, .doc ol, .doc blockquote { margin: 0.35rem 0; }
+.doc ul, .doc ol { padding-left: 1.4rem; }
+.doc h3, .doc h4, .doc h5, .doc h6 { font-size: 1rem; margin: 0.7rem 0 0.25rem; }
+.doc h3 { font-size: 1.08rem; }
+.doc blockquote { margin-left: 0; padding-left: 0.7rem; border-left: 3px solid var(--line); color: var(--muted); }
+.doc hr { border: 0; border-top: 1px solid var(--line); }
 pre { overflow-x: auto; margin: 0.4rem 0; padding: 0.5rem 0.6rem; font-size: 0.85rem; background: rgba(127, 127, 127, 0.08); border-radius: 4px; }
 [hidden] { display: none !important; }
 .title { font-style: italic; }
@@ -55,6 +66,16 @@ pre { overflow-x: auto; margin: 0.4rem 0; padding: 0.5rem 0.6rem; font-size: 0.8
 .src { font-size: 0.8rem; color: var(--muted); }
 a.term { text-decoration: underline dotted; }
 nav.top { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--muted); }
+nav.toc, p.letters { font-size: 0.9rem; color: var(--muted); }
+dl.glossary { margin: 0.4rem 0; }
+dl.glossary dt { font-weight: 600; margin-top: 0.6rem; }
+dl.glossary dt .kind { font-weight: normal; margin-left: 0.3rem; }
+dl.glossary dd { margin: 0 0 0.2rem 1rem; }
+dl.glossary dd code { white-space: pre-wrap; }
+details.imports, details.imported-by, section.imports { margin: 0.4rem 0; font-size: 0.9rem; }
+details.imports > summary, details.imported-by > summary { cursor: pointer; color: var(--muted); }
+details.imports ul.list, details.imported-by ul.list, section.imports ul.list { margin: 0.2rem 0 0.4rem; }
+details.imports ul.list > li, details.imported-by ul.list > li, section.imports ul.list > li { padding: 0.15rem 0; }
 """
 
 SITE_JS = """
@@ -145,6 +166,7 @@ class Context:
     extensions: tuple[tuple[Extension, object], ...] = ()  # active extensions with their analysis of the tree
     options: tuple[tuple[str, object], ...] = ()
     source_links: str = "declaration"
+    imports: str = "all"  # what file pages show of the import graph: "all", "import-only" or "none"
 
 
 def default_context() -> Context:
@@ -175,19 +197,51 @@ def file_page(lean_file: LeanFile, ctx: Context | None = None, text: str = "") -
         href = escape(source_href(lean_file.path, 1, ctx), quote=True)
         body.append(f'<p><a class="src" href="{href}">source</a></p>')
     if lean_file.module_doc:
-        body.append(f'<div class="doc">{escape(lean_file.module_doc)}</div>')
+        body.append(f'<div class="doc">{doc_html(lean_file.module_doc)}</div>')
+    shown = ctx.imports == "all" or (ctx.imports == "import-only" and lean_file.import_only)
+    if shown:
+        body.extend(_import_blocks(lean_file, dirs, ctx))
     if declarations:
         body.append(_FILTER_HTML)
         body.append('<ol class="decls">')
         body.extend(_decl_item(decl, lean_file.path, dirs, ctx) for decl in declarations)
         body.append("</ol>")
-    else:
+    elif not (shown and lean_file.import_only):
         body.append('<p class="muted">No declarations listed.</p>')
     for ext, analysis in ctx.extensions:
         block = ext.file_blocks(lean_file, text, ctx, analysis)
         if block:
             body.append(block)
     return page(lean_file.path, len(dirs), body, ctx)
+
+
+def _import_blocks(lean_file: LeanFile, dirs: list[str], ctx: Context) -> list[str]:
+    """What the file imports (linked: a project file to its page, a library module to its documentation) and the
+    project files that import it. A file that only imports gets the list open, with a sentence saying so."""
+    modules = ctx.objects.modules if ctx.objects is not None else None
+    blocks = []
+    if lean_file.imports:
+        items = []
+        for name in lean_file.imports:
+            target = modules.file_of(name) if modules is not None else None
+            url = href(dirs, target) if target and target != lean_file.path else docs_url(name)
+            label = f'<a href="{escape(url, quote=True)}">{escape(name)}</a>' if url else f"<code>{escape(name)}</code>"
+            items.append(f"<li>{label}</li>")
+        count = len(lean_file.imports)
+        if lean_file.import_only:
+            gathered = "the import below" if count == 1 else f"the {count} imports below"
+            blocks.append(
+                f'<p>This file declares nothing itself. It gathers {gathered}, so a file that imports it gets all of them.</p>'
+            )
+            blocks.append(f'<section class="imports"><h2>Imports</h2><ul class="list">{"".join(items)}</ul></section>')
+        else:
+            blocks.append(f'<details class="imports"><summary>Imports ({count})</summary><ul class="list">{"".join(items)}</ul></details>')
+    users = modules.imported_by.get(lean_file.path, ()) if modules is not None else ()
+    if users:
+        items = "".join(f'<li><a href="{escape(href(dirs, rel), quote=True)}">{escape(rel)}</a></li>' for rel in users)
+        noun = "file" if len(users) == 1 else "files"
+        blocks.append(f'<details class="imported-by"><summary>Imported by {len(users)} {noun}</summary><ul class="list">{items}</ul></details>')
+    return blocks
 
 
 def folder_pages(summaries: list[FileSummary], ctx: Context) -> Iterator[tuple[tuple[str, ...], str]]:
@@ -243,10 +297,16 @@ def _folder_page(
             name = summary.path.split("/")[-1]
             body.append(
                 f'<li data-filterable><a href="{quote(name)}.html">{escape(name)}</a> '
-                f'<span class="muted">{summary.declarations} declarations</span></li>'
+                f'<span class="muted">{_file_note(summary)}</span></li>'
             )
         body.append("</ul>")
     return page(page_title, len(dirs), body, ctx)
+
+
+def _file_note(summary: FileSummary) -> str:
+    if summary.import_only:
+        return f"{summary.imports} import{'' if summary.imports == 1 else 's'}, no declarations"
+    return f"{summary.declarations} declarations"
 
 
 def _summary_list(folder: _Folder) -> str:
@@ -276,8 +336,10 @@ def _decl_item(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> st
         href = escape(source_href(rel, decl.line, ctx), quote=True)
         head += f' <a class="src" href="{href}">source</a>'
     parts = [f'<li id="L{decl.line}" data-filterable>{head}']
-    if decl.description:
-        parts.append(f'<div class="doc">{escape(decl.description)}</div>')
+    if decl.doc:  # a doc comment is Markdown; a plain comment above a declaration is shown as written
+        parts.append(f'<div class="doc">{doc_html(decl.doc)}</div>')
+    elif decl.comment:
+        parts.append(f'<div class="doc plain">{escape(decl.comment)}</div>')
     before: list[str] = []
     after: list[str] = []
     for ext, analysis in ctx.extensions:
@@ -405,6 +467,7 @@ def page(title: str, depth: int, body: list[str], ctx: Context) -> str:
     up = up_path(depth)
     links = [("All corpora", f"{up}{ctx.home}")] if ctx.home else []
     links.append(("Index", f"{up}index.html"))
+    links.append(("Glossary", f"{up}glossary.html"))  # every build writes it
     for ext, _ in ctx.extensions:
         links.extend(ext.nav_links(up, dict(ctx.options)))
     if ctx.search:

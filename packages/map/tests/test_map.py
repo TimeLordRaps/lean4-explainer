@@ -206,6 +206,19 @@ def test_a_file_sees_only_what_it_imports_directly_or_through_others(tmp_path):
     assert users == {"far"}  # through P.Mid; P.Apart imports neither, so its `Kc` is something else
 
 
+def test_a_file_sees_through_a_file_that_only_imports(tmp_path):
+    # formal-conjectures: 1,469 problem files `import FormalConjecturesUtil`, a file with no declarations of its own
+    src = tmp_path / "src"
+    (src / "P").mkdir(parents=True)
+    (src / "P" / "Def.lean").write_text("module\n\ndef Kc : ℕ := 7\n", encoding="utf-8")
+    (src / "Hub.lean").write_text("module\n\npublic import P.Def\npublic import Mathlib\n\n/-! # Standard imports -/\n", encoding="utf-8")
+    (src / "Problem.lean").write_text("import Hub\n\ntheorem problem : Kc = 7 := rfl\n", encoding="utf-8")
+    (src / "Apart.lean").write_text("import Mathlib\n\ntheorem apart : Kc = 7 := rfl\n", encoding="utf-8")
+    build_site(src, tmp_path / "out", Config(), tmp_path / "idx", jobs=1)
+    data = _data((tmp_path / "out" / "P" / "Def.lean.html").read_text(encoding="utf-8"))
+    assert {user for target, user, _ in _edges(data)[3] if target == "Kc"} == {"problem"}
+
+
 def test_a_file_sees_its_own_copy_of_a_declaration_that_is_identical_elsewhere(tmp_path):
     # tutorials ship each exercise twice (exercise and solution): the copies fold into one key, located at the first
     src = tmp_path / "src"

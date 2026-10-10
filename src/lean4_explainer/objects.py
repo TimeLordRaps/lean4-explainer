@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from .imports import Modules
 
 Location = tuple[str, int]
 
@@ -23,6 +25,7 @@ class Objects:
     ambiguous: frozenset[str]
     identical: int
     issues: tuple[str, ...] = ()
+    modules: Modules = field(default_factory=Modules)  # what each file imports, for pages and extensions
 
     @property
     def variant(self) -> int:

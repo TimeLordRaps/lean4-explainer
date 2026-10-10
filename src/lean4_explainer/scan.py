@@ -7,7 +7,7 @@ import os
 import re
 import textwrap
 from bisect import bisect_left, bisect_right
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -35,7 +35,7 @@ def _decl_re(extra_kinds: tuple[str, ...] = ()) -> re.Pattern[str]:
     return re.compile(
         r"^(?:@\[[^\]]*\]\s*)?"
         r"(?:(?:private|protected|noncomputable|partial|unsafe|nonrec)\s+)*"
-        r"(?P<kind>" + kinds + r")\b"
+        r"(?P<kind>class[ \t]+inductive|" + kinds + r")\b"  # before `class`, or a class inductive's name is lost
         r"(?:[ \t]+(?P<name>[^\s:(){}\[\]|]+))?"
     )
 _NAMESPACE_RE = re.compile(r"^namespace[ \t]+(?P<name>\S+)")
@@ -43,6 +43,7 @@ _SECTION_RE = re.compile(r"^(?:noncomputable[ \t]+)?section\b")
 _END_RE = re.compile(r"^end\b")
 # `import A B`, and the module system's `public import A`, `meta import A`, `import all A`
 _IMPORT_RE = re.compile(r"^(?:(?:public|private|meta)[ \t]+)*import[ \t]+(?:all[ \t]+)?(?P<names>[^\n]*)")
+_HEADER_RE = re.compile(r"^(?:module|prelude)[ \t]*$")
 _SORRY_RE = re.compile(r"\bsorry\b")
 _STATEMENT_END_RE = re.compile(r":=|\bwhere\b")
 _TOKEN_RE = re.compile(r"/-|--|\"|'")
@@ -80,6 +81,7 @@ class LeanFile:
     imports: tuple[str, ...]
     declarations: tuple[Declaration, ...]
     diagnostics: dict[str, tuple[Diagnostic, ...]] = field(default_factory=dict)  # by extension name
+    import_only: bool = False  # nothing but imports (and `module`, `prelude`, comments): the file gathers other files
 
 
 @dataclass(frozen=True)
@@ -88,6 +90,8 @@ class FileSummary:
     declarations: int
     sorry: int
     axioms: int
+    imports: int = 0
+    import_only: bool = False
 
 
 def summarize(lean_file: LeanFile) -> FileSummary:
@@ -97,6 +101,8 @@ def summarize(lean_file: LeanFile) -> FileSummary:
         declarations=len(declarations),
         sorry=sum(decl.has_sorry for decl in declarations),
         axioms=sum(decl.kind == "axiom" for decl in declarations),
+        imports=len(lean_file.imports),
+        import_only=lean_file.import_only,
     )
 
 
@@ -108,7 +114,14 @@ def scan_file(path: Path, relative: str) -> LeanFile:
     return parse_source(text, relative)
 
 
-def parse_source(text: str, path: str, statements: bool = False, options: Mapping[str, Any] | None = None, extra_kinds: tuple[str, ...] = ()) -> LeanFile:
+def parse_source(
+    text: str,
+    path: str,
+    statements: bool = False,
+    options: Mapping[str, Any] | None = None,
+    extra_kinds: tuple[str, ...] = (),
+    statement_kinds: Collection[str] = (),  # kinds that get a statement even without a description
+) -> LeanFile:
     text = text.replace("\r\n", "\n")
     masked, comments = _mask(text)
     code = masked.split("\n")
@@ -133,6 +146,8 @@ def parse_source(text: str, path: str, statements: bool = False, options: Mappin
         match = _IMPORT_RE.match(line)
         if match:
             imports.extend(match["names"].split())  # comments are already blanked out of `code`
+    imports = list(dict.fromkeys(imports))
+    import_only = bool(imports) and all(not line.strip() or _IMPORT_RE.match(line) or _HEADER_RE.match(line) for line in code)
 
     heads = _declaration_heads(code, tuple(extra_kinds))
     bounds = [index for index, _, _ in heads[1:]] + [len(code)]
@@ -167,7 +182,7 @@ def parse_source(text: str, path: str, statements: bool = False, options: Mappin
                 line=index + 1,
                 doc=doc_text or None,
                 comment=comment,
-                statement=_statement(source, code, index, bound) if described or statements else "",
+                statement=_statement(source, code, index, bound) if described or statements or kind in statement_kinds else "",
                 has_sorry=at < len(sorry_lines) and sorry_lines[at] < bound,
                 code_digest=code_digest,
                 header_digest=header_digest,
@@ -181,6 +196,7 @@ def parse_source(text: str, path: str, statements: bool = False, options: Mappin
         imports=tuple(imports),
         declarations=tuple(declarations),
         diagnostics=file_diagnostics,
+        import_only=import_only,
     )
 
 
@@ -214,7 +230,7 @@ def _declaration_heads(code: list[str], extra_kinds: tuple[str, ...] = ()) -> li
         elif decl:
             local = decl["name"] or f"({decl['kind']} at line {index + 1})"
             qualified = ".".join(part for part in [*scope, local] if part)
-            heads.append((index, decl["kind"], qualified))
+            heads.append((index, " ".join(decl["kind"].split()), qualified))
     return heads
 
 

@@ -42,6 +42,19 @@ lean4-explainer build --lake-root . --out docs
 - A `/-- ... -/` doc comment directly above a declaration. If there is none, a plain `--` or `/- ... -/` comment directly above it (no blank line between) is used as its description.
 - Statement snippets only for declarations that have a description. This keeps full-tree output small.
 - The first `/-! ... -/` module doc in each file.
+- Each file's imports, and the project files that import it (see `imports` below).
+
+### Doc comments
+
+Doc comments and module docs are Markdown with TeX in them, as doc-gen4 shows them, and the site draws them the same way: paragraphs, headings (`#` becomes a small heading under the declaration), bullet and numbered lists (nested too), quotes, rules, fenced code blocks, `` `code` ``, `*emphasis*`, `**strong**`, links and bare URLs. A link is made only to an `http`, `https` or `mailto` URL or a relative one; `[x](javascript:…)` stays text. Everything else is escaped. Tables, indented code blocks, reference-style links and HTML are not drawn: they show as written. A plain comment used as a description is shown as written, not as Markdown.
+
+Formulas stay as their TeX, inside `<span class="tex">`, for the reader extension to typeset (without it they show as `$…$`). The rules, so that formulas are found and prices are not:
+
+- `$…$` and `$$…$$`. A formula may run over a line break but not over a blank line, and a line inside an open `$$` that starts with `- ` or `#` stays part of it.
+- A `$` inside braces does not close the formula (`$\max\{m \mid \textrm{$m$ prime}\}$` is one formula).
+- A `$` just before a digit does not close one: "$100 for a proof and $1000 for a disproof" is text.
+- A space just inside the dollars (`$A ⊆ ℕ $`) is allowed when the inside looks like TeX (a backslash, `^`, `_`, `=`, braces or a math symbol); "I have $ and you have $" stays text.
+- `\$` is a dollar, and inside `` `code` `` nothing is a formula.
 - Whether a declaration's text contains the word `sorry`.
 - Same-named declarations: identical copies are one object; distinct definitions are listed with their files.
 
@@ -66,7 +79,7 @@ Whenever a declaration has no valid L4DEL, the tool says what is missing and pri
 3. **Paste** a template directly above its declaration, then replace every `TODO_` value.
 4. **Build** with `lean4-explainer build --lean-root lean --out docs`. A `TODO_` left in a value is a warning, so the build reports it.
 
-The generated site gets an L4DEL guide page (`annotate.html`), a glossary, and a learning path ordered by prerequisites.
+The generated site gets an L4DEL guide page (`annotate.html`), its `term` lines in the glossary (`glossary.html#t0`, …), and a learning path ordered by prerequisites.
 
 ### The directive grammar
 
@@ -109,7 +122,7 @@ A file that does not elaborate shows trust UNKNOWN with Lean's reason, and a fil
 
 ## Reader: a plain-English reading of every declaration
 
-`packages/reader` (the extra `reader`, also part of `all`) gives every declaration a Reading: the statement in words, what is given and assumed, the proof's shape, every tactic step with what it does (cases, `induction … with` arms and `calc` chains shown as structure), the results it uses (linked) and the symbols in the statement. `_assets/reader.js` writes it in the browser from the file's source, which each page carries as JSON. With `reader_source_url` set (the showcase sets it for openai/math), a page instead fetches its file from that pinned raw URL. It reads text only, so it says what a tactic does, not the goal it leaves. Over every declaration of the eight corpora (60,393 in the sweep, with a 1,500-file sample of openai/math) it read every header, raised no errors, fell back to code for 2.5% of statements and did not recognize 0.7% of tactic steps. Details and config keys: `packages/reader/README.md`.
+`packages/reader` (the extra `reader`, also part of `all`) gives every declaration a Reading: the statement in words, what is given and assumed, the proof's shape, every tactic step with what it does (cases, `induction … with` arms and `calc` chains shown as structure), the results it uses (linked) and the symbols in the statement. `_assets/reader.js` writes it in the browser from the file's source, which each page carries as JSON. With `reader_source_url` set (the showcase sets it for openai/math), a page instead fetches its file from that pinned raw URL. It reads text only, so it says what a tactic does, not the goal it leaves. Over every declaration of the eight corpora (60,393 in the sweep, with a 1,500-file sample of openai/math) it read every header, raised no errors, fell back to code for 2.5% of statements and did not recognize 0.7% of tactic steps. It also puts every word it explains in the glossary, and typesets the formulas the core marks in doc comments (on file pages and in the glossary), with the project's own TeX macros when it has a blueprint. Over the doc comments of seven of the corpora (19,460 formulas) it draws all but 6, which have errors in their TeX and stay as written. Details and config keys: `packages/reader/README.md`.
 
 ## Ecosystem: links, diffs and a Lake facet
 
@@ -158,7 +171,7 @@ Without `--yes`, the commands print the plan and ask. When stdin is not a termin
 
 ## Extensions
 
-An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The shipped extensions are `lean4-explainer-l4del`, `lean4-explainer-lean`, `lean4-explainer-ecosystem` and `lean4-explainer-corpora`.
+An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding sections to the glossary (`glossary`, with `GlossarySection` and `GlossaryEntry`) and a one-line description of a declaration for it (`describe`), adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The shipped extensions are `lean4-explainer-l4del`, `lean4-explainer-lean`, `lean4-explainer-ecosystem` and `lean4-explainer-corpora`.
 
 ## Configuration
 
@@ -173,12 +186,18 @@ Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types ar
 - `search`, `cross_links`: booleans that switch those features on or off.
 - `home`: relative URL of a landing page above this site. Adds an "All corpora" link to every page.
 - `byte_budget`: the build fails if the output exceeds this many bytes. The default is 1 GB, the GitHub Pages limit.
+- `glossary`: which of the project's definitions the glossary lists: `"all"` (default), `"described"` (only those with a doc comment, a plain comment or an extension's note; the showcase uses this for openai/math) or `"none"`.
+- `imports`: where file pages list imports: `"all"` (default), `"import-only"` (only on files that do nothing but import; the showcase uses this for openai/math, whose 336,022 imports would not fit) or `"none"`.
 
 ## Outputs
 
-- One page per Lean file, named `path/File.lean.html`, and one `index.html` per folder.
+- One page per Lean file, named `path/File.lean.html`, and one `index.html` per folder. A file page lists the file's imports, folded: a project file links to its page, a module of Mathlib or a library it depends on (Init, Std, Lean, Batteries, Aesop, Qq, Plausible, ProofWidgets, LeanSearchClient) links to its page in the [Mathlib documentation](https://leanprover-community.github.io/mathlib4_docs/), anything else is named. It also lists the project files that import it. A file that only gathers imports (nothing but `import` lines, `module`, `prelude` and comments, like formal-conjectures' `FormalConjecturesUtil.lean`, which 1,469 problem files import) says so, shows its imports open instead of "No declarations listed", and its folder lists it as "18 imports, no declarations". The documentation links go to the current Mathlib documentation, so a module renamed since a project's pinned Mathlib may be missing there.
 - `search.html`. `_assets/search/` holds the search index as plain script files, so search works from `file://` too. Search covers declarations that have a description. Every declaration is still listed on its file page, where browser find works. Indexing all 3.5 million declarations of the full openai/math tree would not fit GitHub Pages' 1 GB limit.
-- Extension pages. L4DEL adds `glossary.html`, `annotate.html` and `learning-path.html`. The map extension (`packages/map`) adds `map.html`, with the project's folders and any one file with the files around it. It also gives every declaration a "Map" of what it builds on and what uses it, two steps each way, drawn when opened. Its links are read from the code by Lean's name rules (namespaces, `open`, imports, local names; see `packages/map/README.md`), and L4DEL `prereq` links are added as dashed arrows. Set `map_dependencies = false` to leave it out.
+- `glossary.html`, linked from every page. Its sections, with a filter box and a list of contents:
+  - **Defined in this project**: every `def`, `abbrev`, `structure`, `class`, `class inductive`, `inductive` and `opaque` (theorems, instances and examples are results, not words), under its own name (the last part of the full name), with the first paragraph of its description, or its declaration line when it has none, and a link to it. Identical copies in several files are one entry. More than 2,000 entries go on one page per first letter, `glossary-a.html` … `glossary-other.html`; up to that, a long list gets letter headings. The entries come from the incremental cache, so a rebuild that reuses every file still lists them all.
+  - One section per extension that adds words (the `glossary` hook): L4DEL's `term` lines (the term links in explanations point here), and the reader's types, structures, properties, symbols and tactics.
+  - **Lean words**: the language itself (`theorem`, `sorry`, `:=`, `namespace`, `⟨ ⟩`, `·`, …), including all of the README's "Words you will meet".
+- Extension pages. L4DEL adds `annotate.html` and `learning-path.html`. The map extension (`packages/map`) adds `map.html`, with the project's folders and any one file with the files around it. It also gives every declaration a "Map" of what it builds on and what uses it, two steps each way, drawn when opened. Its links are read from the code by Lean's name rules (namespaces, `open`, imports, local names; see `packages/map/README.md`), and L4DEL `prereq` links are added as dashed arrows. Imports are followed through files that only import (from the core's import graph): in formal-conjectures that more than doubled the links, from 6,077 to 12,707. Set `map_dependencies = false` to leave it out.
 - Pages that have not changed since the last build are reused. The cache lives beside the output directory, outside the published site, and can be moved with `--cache`. It is loaded through an allow-list of this package's own types and the types extensions declare. A cache file that refers to anything else is ignored and rebuilt, never run.
 
 ## Development

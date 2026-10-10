@@ -158,6 +158,59 @@ def test_glossary_terms_are_linked_in_intuition(tmp_path):
     assert '<a class="term" href="glossary.html#t0">empty set</a>' in html
 
 
+def test_terms_join_the_core_glossary_and_every_term_link_lands(tmp_path):
+    import re
+
+    lean = tmp_path / "lean"
+    _tree(
+        lean,
+        {
+            "A.lean": "-- L4DEL: term: empty set = a set with no members\n-- L4DEL: term: Box = where <balls> go\n"
+            "theorem s : True := trivial\n\n"
+            "-- L4DEL: intuition: An empty set is a Box with no members.\ntheorem t : True := trivial\n\n"
+            "-- L4DEL: title: Halving\n-- L4DEL: intuition: Cut a number in two, rounding down.\ndef half (n : Nat) : Nat := n / 2\n"
+        },
+    )
+    out = tmp_path / "docs"
+    build_site(lean, out)
+
+    glossary = (out / "glossary.html").read_text(encoding="utf-8")
+    section = re.search(r'<h2 id="g-l4del">(.*?)(?=<h2 )', glossary, re.S).group(1)
+    assert "Terms from the explanations" in section
+    assert (
+        '<dt id="t0">Box</dt><dd>where &lt;balls&gt; go <span class="muted">· <a class="where" href="A.lean.html#L3">s</a></span></dd>'
+        in section
+    )
+    assert '<dt id="t1">empty set</dt>' in section
+    # every term link on every page lands on an entry of the glossary
+    ids = set(re.findall(r' id="([^"]+)"', glossary))
+    pages = [page.read_text(encoding="utf-8") for page in out.rglob("*.html")]
+    links = {anchor for html in pages for anchor in re.findall(r'href="(?:\.\./)*glossary\.html#([^"]+)"', html)}
+    assert links == {"t0", "t1"}
+    assert links <= ids
+    # the core writes the page and its nav link: one link, not two
+    nav = re.search(r'<nav class="top">(.*?)</nav>', (out / "A.lean.html").read_text(encoding="utf-8")).group(1)
+    assert nav.count(">Glossary<") == 1
+    # a definition explained only in L4DEL is listed with its explanation, not with its signature
+    project = re.search(r'<h2 id="g-project">(.*?)(?=<h2 )', glossary, re.S).group(1)
+    assert "Cut a number in two, rounding down." in project
+    assert "<code>def half" not in project
+
+
+def test_l4del_leaves_the_glossary_page_to_the_core(tmp_path):
+    from lean4_explainer.build import collect_tree
+    from lean4_explainer.render import default_context
+
+    lean = tmp_path / "lean"
+    _tree(lean, {"A.lean": "-- L4DEL: term: box = a box\ntheorem s : True := trivial\n"})
+    tree = collect_tree(lean, Config(), tmp_path / "cache")
+    ((ext, analysis),) = tree.analyses
+    assert "glossary.html" not in ext.pages(default_context(), analysis)
+    assert "Glossary" not in [label for label, _ in ext.nav_links("", {})]
+    (section,) = ext.glossary(default_context(), analysis)
+    assert [(e.term, e.anchor, e.where) for e in section.entries] == [("box", "t0", ("A.lean", 2, "s"))]
+
+
 def test_statement_mentions_link_to_declarations(make_context):
     text = "theorem helper : True := trivial\n\n/-- Uses the helper. -/\ntheorem user (h : helper) : True := trivial\n"
     ctx = make_context(locations={"helper": ("a.lean", 1), "user": ("a.lean", 4)})
