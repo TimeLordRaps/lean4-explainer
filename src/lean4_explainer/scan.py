@@ -41,7 +41,8 @@ def _decl_re(extra_kinds: tuple[str, ...] = ()) -> re.Pattern[str]:
 _NAMESPACE_RE = re.compile(r"^namespace[ \t]+(?P<name>\S+)")
 _SECTION_RE = re.compile(r"^(?:noncomputable[ \t]+)?section\b")
 _END_RE = re.compile(r"^end\b")
-_IMPORT_RE = re.compile(r"^import[ \t]+(?P<name>\S+)")
+# `import A B`, and the module system's `public import A`, `meta import A`, `import all A`
+_IMPORT_RE = re.compile(r"^(?:(?:public|private|meta)[ \t]+)*import[ \t]+(?:all[ \t]+)?(?P<names>[^\n]*)")
 _SORRY_RE = re.compile(r"\bsorry\b")
 _STATEMENT_END_RE = re.compile(r":=|\bwhere\b")
 _TOKEN_RE = re.compile(r"/-|--|\"|'")
@@ -131,7 +132,7 @@ def parse_source(text: str, path: str, statements: bool = False, options: Mappin
     for line in code:
         match = _IMPORT_RE.match(line)
         if match:
-            imports.append(match["name"])
+            imports.extend(match["names"].split())  # comments are already blanked out of `code`
 
     heads = _declaration_heads(code, tuple(extra_kinds))
     bounds = [index for index, _, _ in heads[1:]] + [len(code)]

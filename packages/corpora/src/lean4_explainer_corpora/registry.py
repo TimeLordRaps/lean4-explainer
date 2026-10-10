@@ -35,6 +35,7 @@ class Corpus:
     extra_kinds: tuple[str, ...] = ()  # declaration keywords beyond Lean's own, such as compfiles' `problem`
     overlay: str = ""  # path to an L4DEL sidecar overlay for this corpus (annotations kept outside the upstream sources)
     source_links: str = "declaration"  # "file" for corpora too large to carry a link per declaration
+    options: tuple[tuple[str, object], ...] = ()  # extension settings for this corpus, such as ("map_dependencies", False)
 
 
 def package_file(module_file: str, name: str) -> str:

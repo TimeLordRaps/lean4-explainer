@@ -112,6 +112,7 @@ def build_showcase(
                     # a tree too large to publish twice: its readings load the pinned source instead of carrying it
                     + [("reader_source_url", f"{RAW}/{corpus.repo}/{{ref}}/{prefix}{{path}}")]
                     * (corpus.source_links == "file")
+                    + list(corpus.options)
                 )
             ),
         )

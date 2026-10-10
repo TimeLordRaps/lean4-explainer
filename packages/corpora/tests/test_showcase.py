@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from lean4_explainer.errors import ExplainerError
-from lean4_explainer_corpora import installed
+from lean4_explainer_corpora import CorporaExtension, installed
 from lean4_explainer_corpora.showcase import build_showcase, fetch_corpus
 
 CORPORA = installed()
@@ -219,3 +219,23 @@ def test_with_the_reader_a_corpus_too_big_to_publish_twice_reads_from_its_pinned
     assert f'data-src="https://raw.githubusercontent.com/acme/demo/{corpus.commit}/Demo/A.lean"' in big
     small = (tmp_path / "small" / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
     assert '<script type="application/json" id="lean-source">' in small and "data-src" not in small
+
+
+def test_a_corpus_carries_its_own_extension_settings_into_its_build(upstream, tmp_path):
+    map_ext = pytest.importorskip("lean4_explainer_map")
+    from lean4_explainer import extensions
+
+    corpus, base = upstream
+    extensions.activate([map_ext.MapExtension()])
+    try:
+        build_showcase([corpus], tmp_path / "work", tmp_path / "on", base_url=base)
+        build_showcase([replace(corpus, options=(("map_dependencies", False),))], tmp_path / "work", tmp_path / "off", base_url=base)
+    finally:
+        extensions.activate([CorporaExtension()])
+    assert (tmp_path / "on" / "demo" / "map.html").is_file()
+    assert not (tmp_path / "off" / "demo" / "map.html").exists()
+
+
+def test_the_oai_corpus_leaves_out_the_map_to_stay_inside_the_pages_limit():
+    assert ("map_dependencies", False) in CORPORA["oai"].options
+    assert all(("map_dependencies", False) not in c.options for name, c in CORPORA.items() if name != "oai")

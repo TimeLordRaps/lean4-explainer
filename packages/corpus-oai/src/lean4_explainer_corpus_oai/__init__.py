@@ -28,4 +28,6 @@ CORPUS = Corpus(
     accent='#2aa198',
     theme_css=THEME,
     overlay=package_file(__file__, "overlay.l4del"),
+    # 1.1 GB of Lean: per-declaration maps would not fit in the Pages size limit beside the pages themselves
+    options=(("map_dependencies", False),),
 )

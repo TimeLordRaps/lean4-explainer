@@ -20,19 +20,17 @@ from lean4_explainer.build import check_tree
 from lean4_explainer.config import load_config
 from lean4_explainer.errors import ExplainerError
 from lean4_explainer.extensions import Diagnostic, Extension, ParseResult, SourceView
-from lean4_explainer.objects import Objects, note_key
+from lean4_explainer.objects import Objects
 from lean4_explainer.render import Context, href, page, refs, up_path
 from lean4_explainer.scan import Declaration, parse_source
 
 from .grammar import L4Notes, parse_l4del
-from .drawing import CSS as MAP_CSS
-from .drawing import map_svg, neighborhood_svg
 from .graph import PathStep, build_glossary, build_learning_path, build_links, merge_notes, unresolved_links
 from .model import FileSummary, Note
 from .overlay import load_overlay
 from .templates import annotation_report, annotation_state, notes_of, placeholder_block
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 _PREFIX = "L4DEL:"
 _CARRIER_RE = re.compile(r"^[ \t]*L4DEL:(?P<rest>.*)$")
@@ -202,7 +200,7 @@ class L4delExtension(Extension):
 
     # ---- rendering ----
     def css(self, options: Mapping[str, Any]) -> str:
-        return CSS + MAP_CSS
+        return CSS
 
     def declaration_title(self, decl: Declaration, payload: L4Notes) -> str:
         return f' <span class="title">{escape(payload.title)}</span>' if payload.title else ""
@@ -221,7 +219,6 @@ class L4delExtension(Extension):
             top.append(refs("Prerequisites", payload.prereqs, None, dirs, ctx))
         if payload.see:
             top.append(refs("See also", payload.see, None, dirs, ctx))
-        top.append(_neighborhood(decl, rel, dirs, ctx, analysis))
         bottom = [
             f'<p class="l4term"><strong>{escape(word)}</strong>: {escape(definition)}</p>'
             for word, definition in payload.terms
@@ -231,7 +228,7 @@ class L4delExtension(Extension):
         return "".join(top), "".join(bottom)
 
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
-        links = [("Glossary", f"{up}glossary.html"), ("Map", f"{up}map.html"), ("L4DEL guide", f"{up}annotate.html")]
+        links = [("Glossary", f"{up}glossary.html"), ("L4DEL guide", f"{up}annotate.html")]
         if options.get("learning_path", True):
             links.append(("Learning path", f"{up}learning-path.html"))
         return links
@@ -239,7 +236,6 @@ class L4delExtension(Extension):
     def pages(self, ctx: Context, analysis: Analysis) -> Mapping[str, str]:
         found = {
             "glossary.html": _glossary_page(ctx, analysis),
-            "map.html": _map_page(ctx, analysis),
             "annotate.html": _guide_page(ctx),
         }
         if dict(ctx.options).get("learning_path", True):
@@ -353,86 +349,6 @@ def _hint(decl: Declaration, payload: L4Notes, ctx: Context) -> str:
         f"<pre>{template}</pre></details>"
     )
     return "".join(rows)
-
-
-def _label(key: str) -> str:
-    return key.split("@", 1)[0]
-
-
-def _linker(ctx: Context, dirs: list[str]):
-    def link(key: str) -> str | None:
-        spot = ctx.locations.get(key)
-        return href(dirs, spot[0], f"#L{spot[1]}") if spot else None
-
-    return link
-
-
-def _neighborhood(decl: Declaration, rel: str, dirs: list[str], ctx: Context, analysis: Analysis) -> str:
-    objects = ctx.objects
-    if objects is None:
-        return ""
-    key = note_key(decl.name, rel, objects)
-    builds_on = [t for t in analysis.prereqs.get(key, ()) if t in ctx.locations]
-    used_by = sorted(
-        (k for k, targets in analysis.prereqs.items() if key in targets and k in ctx.locations),
-        key=lambda k: ctx.locations[k],
-    )
-    related = [t for t in analysis.sees.get(key, ()) if t in ctx.locations and t not in builds_on and t not in used_by]
-    if not (builds_on or used_by or related):
-        return ""
-    svg = neighborhood_svg(key, builds_on, used_by, related, _label, _linker(ctx, dirs))
-    return (
-        f'<details class="relmapbox" open><summary>Map: what this builds on and what builds on it</summary>{svg}'
-        '<p class="maplegend">Left: builds on. Right: used by. Dashed, below: related. Boxes are links.</p></details>'
-    )
-
-
-# the whole-project map stays readable: at most this many declarations, largest connected groups first
-MAP_LIMIT = 120
-
-
-def _map_page(ctx: Context, analysis: Analysis) -> str:
-    body = ["<h1>Map</h1>"]
-    nodes = set(analysis.prereqs) | {t for ts in analysis.prereqs.values() for t in ts} | set(analysis.sees)
-    nodes = {n for n in nodes if n in ctx.locations}
-    if not nodes:
-        body.append('<p class="muted">Nothing is connected yet. Add <code>prereq</code> or <code>see</code> lines to draw it.</p>')
-        return page("Map", 0, body, ctx)
-    neighbours: dict[str, set[str]] = {n: set() for n in nodes}
-    for k, targets in [*analysis.prereqs.items(), *analysis.sees.items()]:
-        for t in targets:
-            if k in nodes and t in nodes:
-                neighbours[k].add(t)
-                neighbours[t].add(k)
-    groups, seen = [], set()
-    for start in sorted(nodes):
-        if start in seen:
-            continue
-        group, stack = [], [start]
-        seen.add(start)
-        while stack:
-            n = stack.pop()
-            group.append(n)
-            for m in neighbours[n]:
-                if m not in seen:
-                    seen.add(m)
-                    stack.append(m)
-        groups.append(sorted(group, key=lambda n: ctx.locations[n]))
-    groups.sort(key=lambda g: (-len(g), ctx.locations[g[0]]))
-    chosen: list[str] = []
-    for group in groups:
-        if len(chosen) + len(group) > MAP_LIMIT and chosen:
-            continue
-        chosen.extend(group)
-    left_out = len(nodes) - len(chosen)
-    body.append(
-        '<p class="muted">Each box is a declaration with an L4DEL link. An arrow points from something to what builds on it, '
-        "so the foundations are at the left. Dashed lines join related declarations. Boxes are links.</p>"
-    )
-    if left_out:
-        body.append(f'<p class="muted">Showing the {len(chosen)} declarations in the largest groups; {left_out} more are connected but not drawn.</p>')
-    body.append(map_svg(analysis.prereqs, analysis.sees, chosen, _label, _linker(ctx, [])))
-    return page("Map", 0, body, ctx)
 
 
 def _glossary_page(ctx: Context, analysis: Analysis) -> str:

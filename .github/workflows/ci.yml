@@ -36,7 +36,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        package: [l4del, lean, ecosystem, corpora, reader]
+        package: [l4del, lean, ecosystem, corpora, reader, map]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -52,9 +52,9 @@ jobs:
       - name: Install the corpus packages (the corpora tests need them)
         if: matrix.package == 'corpora'
         shell: bash
-        run: python -m pip install -e packages/reader $(for d in packages/corpus-*; do printf -- "-e %s " "$d"; done)
-      - name: Check node is there (the reader's script tests run under it)
-        if: matrix.package == 'reader'
+        run: python -m pip install -e packages/reader -e packages/map $(for d in packages/corpus-*; do printf -- "-e %s " "$d"; done)
+      - name: Check node is there (the reader's and the map's script tests run under it)
+        if: matrix.package == 'reader' || matrix.package == 'map'
         run: node --version
       - name: Test
         run: python -m pytest packages/${{ matrix.package }} -vv -s --durations=10

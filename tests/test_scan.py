@@ -73,6 +73,12 @@ def test_imports_are_recorded():
     assert lean_file.imports == ("Mathlib.Logic.Basic", "Foo")
 
 
+def test_module_system_imports_and_several_per_line_are_recorded():
+    # most of the pinned corpora use Lean's module system: `module`, then `public import`, `meta import`, `import all`
+    text = "module\n\npublic import A.B\npublic meta import C\nimport all D\nimport E F\nprivate import G\n\ndef x := 1\n"
+    assert parse_source(text, "x.lean").imports == ("A.B", "C", "D", "E", "F", "G")
+
+
 def test_plain_comment_is_used_when_no_doc_comment():
     decl = declarations("-- Adds one.\ndef inc (n : Nat) : Nat := n + 1\n")[0]
     assert decl.comment == "Adds one."
