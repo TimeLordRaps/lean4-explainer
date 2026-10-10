@@ -204,6 +204,83 @@ def test_without_l4del_the_overlay_is_ignored_and_the_landing_does_not_claim_ann
     assert "sidecar overlay" not in (out / "index.html").read_text(encoding="utf-8")
 
 
+def _edges(path, commit):
+    path.write_text(
+        "[[edge]]\n"
+        'id = "demo-edge"\n'
+        'kind = "strengthens"\n'
+        'from = ["a_fact"]\n'
+        'to = "tool_fact"\n'
+        "hypotheses = []\n"
+        'conclusion = "True"\n'
+        f'commit = "{commit}"\n'
+        'status = "argued"\n'
+        'origin = "a test"\n'
+        'argument = "trivial"\n',
+        encoding="utf-8",
+    )
+    return str(path)
+
+
+def test_a_corpus_with_implication_edges_shows_them_and_the_landing_says_who_curated_them(upstream, tmp_path):
+    implications = pytest.importorskip("lean4_explainer_implications")
+    from lean4_explainer import extensions
+
+    corpus, base = upstream
+    corpus = replace(corpus, lake=False, include=("Demo/*", "Tools/*"), implications=_edges(tmp_path / "edges.toml", corpus.commit))
+    extensions.activate([implications.ImplicationsExtension()])
+    out = tmp_path / "site"
+    try:
+        build_showcase([corpus], tmp_path / "work", out, base_url=base)
+    finally:
+        extensions.activate([CorporaExtension()])
+
+    page = (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    assert "strengthens" in page and "implications.html#demo-edge" in page
+    assert 'class="imp imp-stale"' not in page  # read at the commit this site shows
+    assert (out / "demo" / "implications.html").is_file()
+    landing = (out / "index.html").read_text(encoding="utf-8")
+    assert 'href="demo/implications.html"' in landing and "not by the upstream authors" in landing
+
+
+def test_an_edge_read_at_another_commit_than_the_corpus_pin_shows_as_stale(upstream, tmp_path):
+    implications = pytest.importorskip("lean4_explainer_implications")
+    from lean4_explainer import extensions
+
+    corpus, base = upstream
+    corpus = replace(corpus, lake=False, include=("Demo/*", "Tools/*"), implications=_edges(tmp_path / "edges.toml", "0" * 40))
+    extensions.activate([implications.ImplicationsExtension()])
+    try:
+        build_showcase([corpus], tmp_path / "work", tmp_path / "site", base_url=base)
+    finally:
+        extensions.activate([CorporaExtension()])
+
+    assert 'class="imp imp-stale"' in (tmp_path / "site" / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+
+
+def test_without_the_implications_extension_the_landing_does_not_claim_edges(upstream, tmp_path):
+    corpus, base = upstream
+    corpus = replace(corpus, lake=False, include=("Demo/*", "Tools/*"), implications=_edges(tmp_path / "edges.toml", corpus.commit))
+
+    build_showcase([corpus], tmp_path / "work", tmp_path / "site", base_url=base)
+
+    assert not (tmp_path / "site" / "demo" / "implications.html").exists()
+    assert "implications.html" not in (tmp_path / "site" / "index.html").read_text(encoding="utf-8")
+
+
+def test_the_oai_implication_edges_are_contracts_read_at_its_pin():
+    edges = pytest.importorskip("lean4_explainer_implications.edges")
+    oai = CORPORA["oai"]
+
+    found = edges.load(Path(oai.implications).read_text(encoding="utf-8"))
+
+    assert found.problems == ()
+    assert found.edges, "the oai sidecar holds at least one edge"
+    assert all(edge.commit == oai.commit for edge in found.edges)
+    assert all(edge.status != "proved" for edge in found.edges)  # nothing here has a Lean bridge yet
+    assert all(c.implications == "" for name, c in CORPORA.items() if name != "oai")
+
+
 def test_with_the_reader_a_corpus_too_big_to_publish_twice_reads_from_its_pinned_raw_source(upstream, tmp_path):
     reader = pytest.importorskip("lean4_explainer_reader")
     from lean4_explainer import extensions

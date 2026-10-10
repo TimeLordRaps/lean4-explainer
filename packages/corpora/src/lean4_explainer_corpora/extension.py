@@ -12,10 +12,11 @@ from lean4_explainer.extensions import Extension
 
 from . import registry, showcase
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 _WORK_DEFAULT = ".lean4-explainer-work"
 _SITE_DEFAULT = "lean4-explainer-site"
 _DEFAULT_JOBS = max(1, min(8, os.cpu_count() or 1))
+_WARNING_PREVIEW = 20  # per corpus, as `build` shows them
 
 
 class CorporaExtension(Extension):
@@ -113,14 +114,27 @@ def _showcase(args) -> int:
     except (ExplainerError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
+    errors = 0
     for item in result.items:
         s = item.summary
         print(
             f"{item.corpus.name}: {s.files} files, {s.declarations} declarations, {s.sorry} containing sorry, "
             f"{s.total_bytes / 1e6:.1f} MB in {item.seconds:.0f}s"
         )
+        # as `build` reports them: every error, the first few warnings
+        for message in s.errors:
+            print(f"{item.corpus.name}: {message}", file=sys.stderr)
+        for message in s.warnings[:_WARNING_PREVIEW]:
+            print(f"{item.corpus.name}: {message}")
+        if len(s.warnings) > _WARNING_PREVIEW:
+            print(f"{item.corpus.name}: warning: {len(s.warnings) - _WARNING_PREVIEW} more not shown")
+        errors += len(s.errors)
     print(f"wrote {args.out} ({result.total_bytes / 1e6:.1f} MB). Lean not run; axiom and trust checks UNKNOWN.")
+    failed = 0
+    if errors:
+        print(f"error: {errors} build error(s): the site was written, but should not be published as it is", file=sys.stderr)
+        failed = 1
     if result.over_budget:
         print(f"error: output is {result.total_bytes} bytes, over the {result.byte_budget} byte budget", file=sys.stderr)
-        return 1
-    return 0
+        failed = 1
+    return failed

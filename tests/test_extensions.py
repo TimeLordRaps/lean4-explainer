@@ -292,6 +292,70 @@ def test_parse_hook_sees_the_site_options(tmp_path):
     assert seen and all(item == ("A.lean", {"flavor": "mint"}) for item in seen)  # indexing and rendering both get them
 
 
+def test_an_extension_can_add_blocks_to_declarations_it_did_not_parse(tmp_path):
+    # an extension whose knowledge comes from outside the sources (a sidecar file) has no parse payload to carry
+    seen = []
+
+    class Everywhere(Extension):
+        name = "everywhere"
+        version = "1"
+        every_declaration = True
+
+        def declaration_blocks(self, decl, payload, rel, dirs, ctx, analysis):
+            seen.append((decl.name, payload))
+            return "", f'<p class="ev">{decl.name}</p>' if decl.name == "y" else ""
+
+    class OnlyParsed(Extension):
+        name = "onlyparsed"
+        version = "1"
+
+        def declaration_blocks(self, decl, payload, rel, dirs, ctx, analysis):
+            raise AssertionError("no payload: not called")
+
+    extensions.activate([Everywhere(), OnlyParsed()])
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "A.lean").write_text("def x : Nat := 1\n\ndef y : Nat := 2\n", encoding="utf-8")
+    try:
+        build_site(root, tmp_path / "out", Config(), tmp_path / "idx")
+    finally:
+        extensions.activate([])
+
+    assert sorted(seen) == [("x", None), ("y", None)]
+    page = (tmp_path / "out" / "A.lean.html").read_text(encoding="utf-8")
+    assert page.count('<p class="ev">') == 1 and '<p class="ev">y</p>' in page
+
+
+def test_review_sees_every_extensions_analysis_whatever_the_order(tmp_path):
+    class Asker(Extension):  # analyzed first: its name sorts first
+        name = "a-asker"
+        version = "1"
+
+        def analyze(self, objects, summaries, options):
+            return "asks"
+
+        def review(self, analysis, analyses):
+            found = dict((ext.name, a) for ext, a in analyses)
+            return [f"warning: {analysis} and {found.get('z-knower')}"]
+
+    class Knower(Extension):
+        name = "z-knower"
+        version = "1"
+
+        def analyze(self, objects, summaries, options):
+            return "knows"
+
+    extensions.activate([Asker(), Knower()])
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "A.lean").write_text("def x : Nat := 1\n", encoding="utf-8")
+    try:
+        summary = build_site(root, tmp_path / "out", Config(), tmp_path / "idx")
+    finally:
+        extensions.activate([])
+    assert "warning: asks and knows" in summary.warnings
+
+
 class FileLevelExtension(Extension):
     name = "filelevel"
 

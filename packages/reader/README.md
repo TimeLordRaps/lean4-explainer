@@ -48,7 +48,7 @@ Run it after changing a table. A test checks the file is up to date and that eve
 
 ## What it does not do
 
-It reads text. Lean is not run, so a reading says what each tactic does in general, not the goal it leaves. For real goals after every step, install the Lean extension (`packages/lean`). The words for a statement come from patterns over common notation (quantifiers, connectives, relations, and predicates such as `Injective`, `Prime` and `Tendsto`). Anything it does not recognize is shown as code, never guessed.
+It reads text. Lean is not run, so a reading says what each tactic does in general, not the goal it leaves. For real goals after every step, install the Lean extension (`packages/lean`): when the same build runs Lean, each step of the Reading gets a "goals" link that opens the tactic trace at that step, and each trace step an "in words" link back. Steps are joined by source line, and by tactic where a line holds several. The words for a statement come from patterns over common notation (quantifiers, connectives, relations, and predicates such as `Injective`, `Prime` and `Tendsto`). Anything it does not recognize is shown as code, never guessed.
 
 ## Config keys
 

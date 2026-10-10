@@ -657,8 +657,9 @@
   }
 
   // ---------------------------------------------------------------- proofs: tactic steps
-  function linesOf(text) {
-    return text.split("\n").map((raw) => ({ indent: raw.length - raw.replace(/^\s+/, "").length, text: raw.trim() }));
+  // `first`: the source line of the text's first line, so each row knows its own (the key a Lean trace is joined on).
+  function linesOf(text, first) {
+    return text.split("\n").map((raw, k) => ({ indent: raw.length - raw.replace(/^\s+/, "").length, text: raw.trim(), line: first ? first + k : 0 }));
   }
 
   function rwRules(args) {
@@ -880,21 +881,22 @@
     let i = 0;
     while (i < rows.length) {
       const base = rows[i].indent;
+      const line = rows[i].line;
       let text = rows[i].text;
       let j = i + 1;
       const deeper = [];
       while (j < rows.length && rows[j].indent > base) { deeper.push(rows[j]); j++; }
       if (/(^|\s)calc\b/.test(text)) {
         while (j < rows.length && rows[j].indent === base && /^_\s/.test(rows[j].text)) {
-          deeper.push({ indent: base + 2, text: rows[j].text });
+          deeper.push({ indent: base + 2, text: rows[j].text, line: rows[j].line });
           j++;
           while (j < rows.length && rows[j].indent > base) { deeper.push(rows[j]); j++; }
         }
       }
       const arm = text.match(/^\|\s*([\s\S]*?)\s*=>\s*([\s\S]*)$/);
       if (arm) {
-        const inner = (arm[2] ? [{ indent: base + 2, text: arm[2] }] : []).concat(deeper);
-        steps.push({ text: "|", arm: arm[1], children: depth < 6 ? tacticSteps(inner, depth + 1) : [] });
+        const inner = (arm[2] ? [{ indent: base + 2, text: arm[2], line }] : []).concat(deeper);
+        steps.push({ text: "|", arm: arm[1], line, children: depth < 6 ? tacticSteps(inner, depth + 1) : [] });
         i = j;
         continue;
       }
@@ -902,21 +904,21 @@
       const opens = bullet || /(\bby|\bwith|=>|\bdo|\bcalc|\bconv\b.*)$/.test(text) || /^(case|next|focus|calc|conv)\b/.test(text);
       let children = [];
       if (bullet) {
-        const inner = [{ indent: base + 2, text: bullet[1] }].concat(deeper);
+        const inner = [{ indent: base + 2, text: bullet[1], line }].concat(deeper);
         children = depth < 6 ? tacticSteps(inner, depth + 1) : [];
-        steps.push({ text: "·", bullet: true, children });
+        steps.push({ text: "·", bullet: true, line, children });
       } else if (opens && deeper.length && depth < 6) {
         if (/^calc\b/.test(text) || /\bcalc$/.test(text)) {
           const first = text.replace(/^.*?\bcalc\b\s*/, "");
-          const calcRows = (first ? [{ indent: base + 2, text: first }] : []).concat(deeper);
-          steps.push({ text: text.replace(/\s*calc\b.*$/, " calc").trim(), calc: calcLinks(calcRows), children: [] });
+          const calcRows = (first ? [{ indent: base + 2, text: first, line }] : []).concat(deeper);
+          steps.push({ text: text.replace(/\s*calc\b.*$/, " calc").trim(), calc: calcLinks(calcRows), line, children: [] });
         } else {
-          steps.push({ text, children: tacticSteps(deeper, depth + 1) });
+          steps.push({ text, line, children: tacticSteps(deeper, depth + 1) });
         }
       } else {
         for (const row of deeper) text += " " + row.text;
-        if (/^calc\b/.test(text)) steps.push({ text: "calc", calc: calcLinks([{ indent: base + 2, text: text.slice(4) }]), children: [] });
-        else steps.push({ text, children: [] });
+        if (/^calc\b/.test(text)) steps.push({ text: "calc", calc: calcLinks([{ indent: base + 2, text: text.slice(4) }]), line, children: [] });
+        else steps.push({ text, line, children: [] });
       }
       i = j;
     }
@@ -939,14 +941,15 @@
   }
 
   function stepHtml(step, counter) {
+    const li = step.line ? "<li data-line=\"" + step.line + "\">" : "<li>";
     if (step.arm !== undefined) {
-      return "<li><span class=\"rd-case\">" + armWords(step.arm) + "</span>" + (step.children.length ? stepsHtml(step.children) : "") + "</li>";
+      return li + "<span class=\"rd-case\">" + armWords(step.arm) + "</span>" + (step.children.length ? stepsHtml(step.children) : "") + "</li>";
     }
     if (step.bullet) {
       counter.n++;
-      return "<li><span class=\"rd-case\">Case " + counter.n + ":</span>" + stepsHtml(step.children) + "</li>";
+      return li + "<span class=\"rd-case\">Case " + counter.n + ":</span>" + stepsHtml(step.children) + "</li>";
     }
-    let out = "<li><code class=\"rd-tac\">" + esc(step.text.length > 160 ? step.text.slice(0, 157) + "…" : step.text) + "</code> " + tacticWords(step.text.replace(/\s*(=>|\bwith)\s*$/, ""));
+    let out = li + "<code class=\"rd-tac\">" + esc(step.text.length > 160 ? step.text.slice(0, 157) + "…" : step.text) + "</code> " + tacticWords(step.text.replace(/\s*(=>|\bwith)\s*$/, ""));
     if (step.calc) {
       out += "<ol class=\"rd-calc\">" + step.calc.map((l) => "<li>" + math(l.claim, { calc: true }) + (l.why ? " — " + l.why : "") + "</li>").join("") + "</ol>";
     }
@@ -1143,9 +1146,12 @@
     }
     return out;
   }
-  function readDeclaration(original, masked, links) {
-    const h = splitHeader(masked) || splitHeader(original);
+  // `startLine`: the source line the declaration starts on, when known; each proof step then carries its own line.
+  function readDeclaration(original, masked, links, startLine) {
+    const fromMasked = splitHeader(masked);
+    const h = fromMasked || splitHeader(original);
     if (!h) return null;
+    const text = fromMasked ? masked : original;  // the body is the end of this text
     const out = [];
     const given = givenItems(h.binders);
     const used = new Set();
@@ -1184,9 +1190,10 @@
 
     const body = h.body.replace(/^\s+/, "");
     if (h.bodyKind === "term" && /^by\b/.test(body)) {
+      const at = text.length - h.body.length + h.body.indexOf("by") + 2;
       const after = h.body.slice(h.body.indexOf("by") + 2);
       const firstLine = after.split("\n")[0];
-      const lines = linesOf(after);
+      const lines = linesOf(after, startLine ? startLine + text.slice(0, at).split("\n").length - 1 : 0);
       if (firstLine.trim()) lines[0].indent = 1e6; // a tactic on the `by` line itself
       const rows = lines.filter((l) => l.text);
       if (rows.length && rows[0].indent === 1e6) rows[0].indent = rows.length > 1 ? Math.min.apply(null, rows.slice(1).map((r) => r.indent)) : 2;
@@ -1281,10 +1288,52 @@
     const byLine = new Map();
     for (const span of spans(text, declarations.map((d) => d[0]))) {
       let html = null;
-      try { html = readDeclaration(span.original, span.masked, links); } catch (e) { html = null; }
+      try { html = readDeclaration(span.original, span.masked, links, span.line); } catch (e) { html = null; }
       byLine.set(span.line, html);
     }
     return byLine;
+  }
+
+  // A Lean run (the lean extension) puts a tactic trace on the page: each step `L<line>-step<k>` with `data-line`, the
+  // source line of its tactic. A reading step carries the same line. For each reading step [line, tactic]: the id of
+  // the trace step on that line with the same tactic, else the first on that line, else null.
+  function traceLinks(reading, trace) {
+    return reading.map(([line, tactic]) => {
+      const here = trace.filter((t) => t[1] === line);
+      const same = here.find((t) => squash(t[2]).slice(0, 40) === squash(tactic).slice(0, 40));
+      return (same || here[0] || [null])[0];
+    });
+  }
+  function linkTrace(li) {
+    const trace = li.querySelector("details.trace");
+    if (!trace) return;
+    const steps = Array.prototype.map.call(trace.querySelectorAll("li[data-line]"), (t) => {
+      const c = t.querySelector(":scope > code");
+      return [t.id, t.getAttribute("data-line"), c ? c.textContent : ""];
+    });
+    const rows = Array.prototype.filter.call(li.querySelectorAll(".rd-steps li[data-line]"), (r) => r.querySelector(":scope > code.rd-tac"));
+    const ids = traceLinks(rows.map((r) => [r.getAttribute("data-line"), r.querySelector(":scope > code.rd-tac").textContent]), steps);
+    const reading = li.querySelector("details.reading");
+    rows.forEach((r, k) => {
+      const target = ids[k] && document.getElementById(ids[k]);
+      if (!target) return;
+      r.id = r.id || ids[k] + "-words";
+      const goals = document.createElement("a");
+      goals.className = "rd-goals";
+      goals.href = "#" + ids[k];
+      goals.textContent = "goals";
+      goals.addEventListener("click", () => { trace.open = true; });
+      r.querySelector(":scope > code.rd-tac").after(goals);
+      if (!target.querySelector(":scope > .rd-words")) {
+        const words = document.createElement("a");
+        words.className = "rd-words";
+        words.href = "#" + r.id;
+        words.textContent = "in words";
+        words.addEventListener("click", () => { if (reading) reading.open = true; });
+        const c = target.querySelector(":scope > code");
+        if (c) c.after(words); else target.prepend(words);
+      }
+    });
   }
 
   // ---------------------------------------------------------------- the browser side
@@ -1296,9 +1345,13 @@
     const source = holder.getAttribute("data-src");
     const note = document.createElement("div");
     note.id = "reader-note";
+    const traced = !!document.querySelector("details.trace");  // the lean extension ran: its tactic traces are on the page
     note.innerHTML = "<strong>Readings.</strong> Each declaration has a reading: what it says in words, what it assumes, " +
-      "and what each proof step does. It is made from the source text; Lean was not run, so it does not show the goal " +
-      "left after each step." + (source ? " This page loads its source from the pinned commit on GitHub to make them." : "") +
+      "and what each proof step does. It is made from the source text" +
+      (traced ? ". Lean was also run for this site: a step's “goals” link opens the goals Lean shows before and after it, " +
+        "and each step of a tactic trace links back to its words."
+        : "; Lean was not run, so it does not show the goal left after each step.") +
+      (source ? " This page loads its source from the pinned commit on GitHub to make them." : "") +
       " <span class=\"reader-status\"></span>";
     list.parentNode.insertBefore(note, list);
     const items = Array.prototype.slice.call(list.children).filter((li) => /^L\d+$/.test(li.id));
@@ -1324,9 +1377,14 @@
           box.insertAdjacentHTML("beforeend", "<div class=\"rd\">" + html + "</div>");
           box.dataset.filled = "1";
           typeset(box);
+          linkTrace(li);
         };
-        if (eager) { fill(); box.open = true; } else box.addEventListener("toggle", fill);
+        // in the declaration first: linkTrace finds the reading's steps there
         li.insertBefore(box, li.querySelector(":scope > details.depmap"));  // the reading comes before the map
+        if (eager) { fill(); box.open = true; } else box.addEventListener("toggle", fill);
+        // a trace opened first gets its "in words" links too: opening it fills the reading, which stays closed
+        const trace = li.querySelector("details.trace");
+        if (trace && !eager) trace.addEventListener("toggle", fill);
       });
       status(eager ? "" : "Open any “Reading” to see it.");
     }).catch((e) => status("Could not load the source (" + e.message + "). The source links still work."));
@@ -1413,7 +1471,7 @@
 
   // `tables`: what tools/vocabulary.cjs turns into the glossary's sections (vocabulary.json)
   const tables = { TYPES, TYPE_FORMS, CLASSES, PREDICATES, SYMBOLS, TACTICS };
-  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docTex, docTexTries, tables, DOC_MACROS };
+  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docTex, docTexTries, tables, DOC_MACROS, traceLinks };
   if (typeof module === "object" && module.exports) module.exports = api;
   else if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

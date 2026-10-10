@@ -3,8 +3,9 @@
 Runs Lean over a project and adds to a [lean4-explainer](https://github.com/TimeLordRaps/lean4-explainer) site:
 
 - **Trust badges** from the kernel: for each declaration, the axioms it depends on, as Lean's `collectAxioms` reports them. No axioms, standard axioms (`propext`, `Classical.choice`, `Quot.sound`), extra axioms, or `sorryAx`.
-- **Tactic traces**: for each tactic step, the goals before and after.
-- A **Trust** page listing declarations that depend on `sorry` or on axioms beyond the standard three.
+- **Tactic traces**: for each tactic step, the goals before and after. Each step has an anchor, `#L<line>-step<k>` (the declaration's line and the step's number), and a link to the tactic's line in the source. With the reader (`packages/reader`) on the same page, each step links to the same step of the Reading ("in words") and back ("goals").
+- A **Trust** page listing declarations that depend on `sorry` or on axioms beyond the standard three, with a legend of the badges (`trust.html#badges`). Every badge links to it.
+- An answer to other extensions about what the kernel said of a declaration (`kernel_trust`). The implications extension uses it to check an edge's bridge.
 
 ```
 pip install lean4-explainer[lean]

@@ -36,14 +36,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        package: [l4del, lean, ecosystem, corpora, reader, map]
+        package: [l4del, lean, ecosystem, corpora, reader, map, implications]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install Lean (the Lean-run tests are skipped without it)
-        if: runner.os == 'Linux' && (matrix.package == 'lean' || matrix.package == 'ecosystem')
+        if: runner.os == 'Linux' && (matrix.package == 'lean' || matrix.package == 'ecosystem' || matrix.package == 'implications')
         run: |
           curl -sSfL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.34.1
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
@@ -52,7 +52,10 @@ jobs:
       - name: Install the corpus packages (the corpora tests need them)
         if: matrix.package == 'corpora'
         shell: bash
-        run: python -m pip install -e packages/reader -e packages/map $(for d in packages/corpus-*; do printf -- "-e %s " "$d"; done)
+        run: python -m pip install -e packages/reader -e packages/map -e packages/implications $(for d in packages/corpus-*; do printf -- "-e %s " "$d"; done)
+      - name: Install the Lean extension (an edge's bridge is checked by the kernel when Lean runs)
+        if: matrix.package == 'implications'
+        run: python -m pip install -e packages/lean
       - name: Check node is there (the reader's and the map's script tests run under it)
         if: matrix.package == 'reader' || matrix.package == 'map'
         run: node --version

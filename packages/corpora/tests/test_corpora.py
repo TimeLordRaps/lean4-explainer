@@ -74,7 +74,7 @@ def test_unknown_name_is_an_error_that_lists_the_choices():
 def test_core_pyproject_extras_match_the_registry_names():
     pyproject = Path(__file__).resolve().parents[3] / "pyproject.toml"
     declared = set(tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["optional-dependencies"])
-    assert declared - {"test", "l4del", "lean", "ecosystem", "reader", "map"} == set(EXTRAS)  # the other extras are not corpora
+    assert declared - {"test", "l4del", "lean", "ecosystem", "reader", "map", "implications"} == set(EXTRAS)  # the other extras are not corpora
 
 
 def test_every_extra_installs_the_packages_of_its_corpora():
@@ -86,8 +86,9 @@ def test_every_extra_installs_the_packages_of_its_corpora():
     assert extras["l4del"] == ["lean4-explainer-l4del>=0.3.0"]  # the version that leaves the map and the glossary page to others
     # 0.2.0 follows imports through files that only import (the core's import graph, core 0.3.0)
     assert extras["map"] == ["lean4-explainer-map>=0.2.0"] and "lean4-explainer-map>=0.2.0" in extras["all"]
-    # 0.2.0 lists imports only on files that only import (the corpora's `imports`, corpora 0.3.0)
-    assert extras["oai"] == ["lean4-explainer-oai>=0.2.0"] and "lean4-explainer-oai>=0.2.0" in extras["all"]
+    # 0.3.0 carries its implication edges (the corpora's `implications`, corpora 0.4.0)
+    assert extras["oai"] == ["lean4-explainer-oai>=0.3.0"] and "lean4-explainer-oai>=0.3.0" in extras["all"]
+    assert extras["implications"] == ["lean4-explainer-implications>=0.1.0"] and "lean4-explainer-implications>=0.1.0" in extras["all"]
 
 
 def test_an_uninstalled_corpus_names_the_extra_that_installs_it():

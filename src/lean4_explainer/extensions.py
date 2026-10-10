@@ -13,7 +13,8 @@ Hooks run in this order for a build:
 2. `index_file`: per file, in worker processes. Returns a small picklable summary that is kept in the incremental
    cache. Its types must be listed in `cache_types`, because the cache is loaded through an allow-list.
 3. `analyze`: once per tree, with every file's summary and the name index. Returns an analysis object, which the
-   later hooks receive.
+   later hooks receive. `review` then runs once all have analyzed, for issues that need another extension's
+   analysis; `kernel_trust` is how an extension that runs Lean answers what the kernel says of a declaration.
 4. `declaration_title`, `declaration_blocks`, `file_blocks`, `scripts`, `pages`, `nav_links`, `css`, `status`: rendering.
    `glossary`: sections of words for the glossary page, which the core writes.
 5. `summary`: lines printed after a build.
@@ -102,6 +103,7 @@ class Extension:
     name = ""
     version = ""
     runs_lean = False  # True for an extension that elaborates the sources with Lean, so the site may show kernel facts
+    every_declaration = False  # True: `declaration_blocks` runs for declarations `parse` gave no payload (payload None)
     cache_types: frozenset[tuple[str, str]] = frozenset()  # (module, class) names allowed in cache payloads
     config_keys: Mapping[str, type] = {}  # extra keys accepted in lean4-explainer.toml
 
@@ -130,6 +132,11 @@ class Extension:
         return None
 
     def analysis_issues(self, analysis: Any) -> Sequence[str]:
+        return ()
+
+    def review(self, analysis: Any, analyses: Sequence[tuple[Extension, Any]]) -> Sequence[str]:
+        """Issues that need another extension's analysis, as "error: …" or "warning: …". Runs once every active
+        extension has analyzed the tree; `analyses` is each (extension, analysis), this one included."""
         return ()
 
     def fingerprint(self, options: Mapping[str, Any]) -> str:
@@ -169,6 +176,12 @@ class Extension:
 
     def status(self, analysis: Any) -> str:
         return ""
+
+    def kernel_trust(self, analysis: Any, name: str, rel: str, line: int) -> tuple[str, str] | None:
+        """For an extension that runs Lean: what the kernel says about one declaration, as (kind, label), kind one of
+        "none", "standard", "extra", "sorry" and "unknown". None: this extension has no kernel facts. Other extensions
+        ask through `ctx.extensions` when they render."""
+        return None
 
     def summary(self, analysis: Any) -> Sequence[str]:
         return ()

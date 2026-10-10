@@ -456,6 +456,74 @@ def test_a_term_that_is_not_an_application_is_not_read_as_one(tmp_path):
     assert "The proof: Apply Nat.le_succ_of_le to h." in out["plain"]
 
 
+TRACED = (
+    "-- a comment\n"  # 1
+    "theorem two (a b : ℕ) (h : a = b) : b = a ∧ True := by\n"  # 2
+    "  constructor\n"  # 3
+    "  · exact h.symm\n"  # 4
+    "  · trivial\n"  # 5
+    "\n"
+    "theorem one : 1 = 1 := by rfl\n"  # 7
+    "\n"
+    "theorem three (n : ℕ) : n + 0 = n := by\n"  # 9
+    "  induction n with\n"  # 10
+    "  | zero => rfl\n"  # 11
+    "  | succ k ih =>\n"  # 12
+    "    simp\n"  # 13
+)
+
+
+@needs_node
+def test_each_step_of_a_reading_carries_the_source_line_of_its_tactic(tmp_path):
+    # the Lean extension's trace keeps the same line for each step: the two are joined on it in the browser
+    import re
+
+    got = _readings(tmp_path, TRACED, [[2, "two"], [7, "one"], [9, "three"]])
+    steps = [(int(line), tactic) for html in got.values() for line, tactic in re.findall(r'<li data-line="(\d+)"><code class="rd-tac">([^<]*)</code>', html)]
+    assert steps == [(3, "constructor"), (4, "exact h.symm"), (5, "trivial"), (7, "rfl"), (10, "induction n with"), (11, "rfl"), (13, "simp")]
+    lines = TRACED.split("\n")
+    assert all(tactic.split(" ")[0] in lines[line - 1] for line, tactic in steps)
+    assert '<li data-line="4"><span class="rd-case">Case 1:' in got[2]  # cases and arms carry their line too
+    assert '<li data-line="12"><span class="rd-case">Step case' in got[9]
+
+
+@needs_node
+def test_a_reading_step_joins_the_trace_step_on_its_line(tmp_path):
+    driver = (
+        "const R = require(process.argv[2]);\n"
+        "const reading = [['10', 'induction n with'], ['11', 'rfl'], ['13', 'simp'], ['20', 'omega']];\n"
+        "const trace = [['L9-step1', '10', 'induction n with'], ['L9-step2', '11', '| zero =>'], ['L9-step3', '11', 'rfl'], ['L9-step4', '12', '| succ k ih =>'], ['L9-step5', '13', 'simp']];\n"
+        "process.stdout.write(JSON.stringify(R.traceLinks(reading, trace)));\n"
+    )
+    reader = tmp_path / "reader.cjs"
+    reader.write_text(READER_JS, encoding="utf-8")
+    assert _node(tmp_path, driver, reader) == ["L9-step1", "L9-step3", "L9-step5", None]  # same line, same tactic first
+
+
+def test_a_page_with_a_lean_trace_links_readings_to_goals():
+    boot = READER_JS[READER_JS.index("function boot() {") :]
+    assert 'document.querySelector("details.trace")' in boot  # the note says goals are linked, not "Lean was not run"
+    fill = boot[boot.index("const fill = () => {") :]
+    assert "linkTrace(li)" in fill[: fill.index("};")]  # a lazily filled reading links when it is filled
+
+
+def test_a_reading_filled_at_once_is_in_its_declaration_before_it_links_to_the_trace():
+    # found in Edge, 2026-10-10: on a page of 40 or fewer declarations the reading was filled (and linkTrace looked for
+    # its steps inside the declaration) before it was put in the declaration, so no step got a "goals" link
+    boot = READER_JS[READER_JS.index("function boot() {") :]
+    assert boot.index("li.insertBefore(box") < boot.index("if (eager) { fill();")
+
+
+def test_on_a_long_page_opening_a_trace_fills_its_reading_so_the_steps_link_back():
+    # more than 40 declarations: readings fill when opened. A trace opened first must still get its "in words" links,
+    # so opening it fills the reading too (left closed); "in words" then opens the reading at that step.
+    boot = READER_JS[READER_JS.index("function boot() {") :]
+    lazy = boot[boot.index("if (eager)") :]
+    lazy = lazy[: lazy.index("\n")]
+    assert 'box.addEventListener("toggle", fill)' in lazy
+    assert 'trace.addEventListener("toggle", fill)' in boot
+
+
 @needs_node
 def test_every_formula_on_the_demo_page_parses_in_katex(tmp_path, demo):
     import html

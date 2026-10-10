@@ -343,8 +343,8 @@ def _decl_item(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> st
     before: list[str] = []
     after: list[str] = []
     for ext, analysis in ctx.extensions:
-        if ext.name in decl.ext:
-            top, bottom = ext.declaration_blocks(decl, decl.ext[ext.name], rel, dirs, ctx, analysis)
+        if ext.name in decl.ext or ext.every_declaration:
+            top, bottom = ext.declaration_blocks(decl, decl.ext.get(ext.name), rel, dirs, ctx, analysis)
             before.append(top)
             after.append(bottom)
     parts.extend(block for block in before if block)

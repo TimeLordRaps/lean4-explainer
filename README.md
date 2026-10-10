@@ -38,14 +38,15 @@ Where a project has added explanations of its own (or we have, in a separate ove
 
 ## How relationships show up
 
-Math is a web of results leaning on each other. The site shows that web in four ways:
+Math is a web of results leaning on each other. The site shows that web in five ways:
 
 1. **The map on each declaration.** Open "Map" under any result to see what it builds on (left) and what uses it (right), two steps each way. The links are read from the code itself, so every project has them, explained or not. Every box is a link, and the map wears the project's own colours.
 2. **The project map** (`map.html`). The folders and how they use each other, and any one file with the files around it.
 3. **The learning path** (`learning-path.html`). One reading order where nothing appears before the things it needs (from L4DEL `prereq` lines).
 4. **Link lists** under each declaration: Prerequisites, See also, and the results it uses.
+5. **Implication edges** (`implications.html`, with the optional implications extension). Some links are not in the code at all: one result could give another even though the published proof goes a different way. An edge says so, and since that is a claim, it keeps the exact hypotheses, the conclusion, the commit it was read at, and how far it has been checked (suggested, argued in words, or proved in Lean and checked by the kernel). Edges are kept apart from the links read from the code, so the map never mixes the two.
 
-With the optional Lean extension, each declaration also lists the definitions and lemmas its statement and its proof use, taken from Lean itself.
+With the optional Lean extension, each declaration also lists the definitions and lemmas its statement and its proof use, taken from Lean itself. Its tactic trace and the Reading are joined: each step of the Reading has a "goals" link to what Lean had left to prove at that step, and each step of the trace has an "in words" link back.
 
 ## Try it on your own computer
 
@@ -94,11 +95,12 @@ The core is small and works alone. You add only what you want:
 | A plain-English reading of every declaration | `packages/reader` | The Reading: claim in words and as a typeset formula, givens, every proof step explained |
 | What builds on what | `packages/map` | A map on every declaration and a project map, read from the code |
 | Titles, intuition, steps, glossary, learning path | `packages/l4del` | L4DEL |
+| Claims that one result gives another, each with its contract | `packages/implications` | Implication edges on the declarations they connect, and a page of them |
 | Proof state after each tactic, and a trust badge | `packages/lean` | Needs Lean installed. It runs Lean on your files |
 | `explain#Name` links, what changed between versions | `packages/ecosystem` | Links and a changes page |
 | Ready-made example projects | `packages/corpora` and `packages/corpus-*` | Eight projects, pinned to exact versions |
 
-Once the packages are published these become `pip install lean4-explainer[reader]`, `[map]`, `[l4del]`, `[lean]`, `[ecosystem]`, `[all]` and one extra per project (`conjectures`, `carleson`, `flt`, `pfr`, `compfiles`, `tutorials`, `oai`). They are not published yet, so use the checkout for now.
+Once the packages are published these become `pip install lean4-explainer[reader]`, `[map]`, `[l4del]`, `[lean]`, `[implications]`, `[ecosystem]`, `[all]` and one extra per project (`conjectures`, `carleson`, `flt`, `pfr`, `compfiles`, `tutorials`, `oai`). They are not published yet, so use the checkout for now.
 
 ## Words you will meet
 

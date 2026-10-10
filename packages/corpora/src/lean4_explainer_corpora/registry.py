@@ -38,6 +38,7 @@ class Corpus:
     options: tuple[tuple[str, object], ...] = ()  # extension settings for this corpus, such as ("map_dependencies", False)
     glossary: str = "all"  # how much of the project its glossary lists: "all", or "described" for a corpus too big for all
     imports: str = "all"  # where file pages list imports: "all", or "import-only" for a corpus too big for all
+    implications: str = ""  # path to a sidecar TOML of curated implication edges (see lean4-explainer-implications)
 
 
 def package_file(module_file: str, name: str) -> str:

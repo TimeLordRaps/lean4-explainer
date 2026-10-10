@@ -18,12 +18,12 @@ from pathlib import Path
 from typing import Any
 
 from lean4_explainer.extensions import Extension, ParseResult, SourceView
-from lean4_explainer.render import href, page
+from lean4_explainer.render import href, page, source_href
 
 from . import facts as F
 from . import runner
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 _DEFAULT_TIMEOUT = 300
 _DEFAULT_STEPS = 200
 _MAX_JOBS = 4
@@ -39,6 +39,9 @@ details.trace summary { cursor: pointer; font-size: 0.85rem; color: var(--muted)
 details.trace ol { padding-left: 1.2rem; }
 details.trace pre { margin: 0.2rem 0; }
 .goal-label { font-size: 0.75rem; color: var(--muted); }
+.trust-more, .rd-goals, .rd-words { font-size: 0.75rem; margin-left: 0.4rem; }
+dl.badges dt { font-weight: 600; margin-top: 0.4rem; }
+dl.badges dd { margin-left: 1rem; }
 """
 
 
@@ -132,14 +135,29 @@ class LeanExtension(Extension):
         if file_facts is None:
             return "", ""
         if file_facts.status != "ok":
-            return _badge("unknown", f"trust unknown: {file_facts.reason}"), ""
+            return _badge("unknown", f"trust unknown: {file_facts.reason}", dirs), ""
         found = file_facts.find(decl.name, decl.line)
         if found is None:
-            return _badge("unknown", "trust unknown: not checked (anonymous declaration)"), ""
+            return _badge("unknown", "trust unknown: not checked (anonymous declaration)", dirs), ""
         kind, label = F.classify(found.axioms)
         if file_facts.errors:
             label += f" (Lean reported {len(file_facts.errors)} error(s) in this file)"
-        return _badge(kind, label) + _uses(found, ctx, dirs), _trace(found, analysis.max_steps)
+        return _badge(kind, label, dirs) + _uses(found, ctx, dirs), _trace(found, analysis.max_steps, rel, ctx)
+
+    def kernel_trust(self, analysis: Analysis, name: str, rel: str, line: int) -> tuple[str, str] | None:
+        """What the kernel says about one declaration: (kind, label) as `facts.classify` gives them, or None."""
+        file_facts = analysis.files.get(rel)
+        if file_facts is None:
+            return None
+        if file_facts.status != "ok":
+            return "unknown", f"trust unknown: {file_facts.reason}"
+        found = file_facts.find(name, line)
+        if found is None:
+            return "unknown", "trust unknown: not checked"
+        kind, label = F.classify(found.axioms)
+        if file_facts.errors:
+            kind, label = "unknown" if kind in ("none", "standard") else kind, label + f" (Lean reported {len(file_facts.errors)} error(s) in this file)"
+        return kind, label
 
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
         return [("Trust", f"{up}trust.html")]
@@ -171,8 +189,18 @@ def _manifest(project: Path | None) -> bytes:
     return blob
 
 
-def _badge(kind: str, label: str) -> str:
-    return f'<p><span class="trust trust-{kind}">{escape(label)}</span></p>'
+BADGES = (
+    ("no axioms", "Lean's kernel checked the proof, and it rests on nothing but Lean's rules."),
+    ("standard axioms", "Checked by the kernel, using only propext, Classical.choice or Quot.sound: the three axioms nearly all of mathematics in Lean uses."),
+    ("extra axioms", "Checked by the kernel, but it assumes something the project declared with `axiom`. It is only as true as those assumptions."),
+    ("depends on sorry", "Not proved: somewhere in it, or in something it uses, a proof was left out (`sorry`)."),
+    ("trust unknown", "Lean did not check it: Lean was not run, the file did not elaborate, or Lean has no constant by that name."),
+)
+
+
+def _badge(kind: str, label: str, dirs: list[str]) -> str:
+    more = escape("../" * len(dirs) + "trust.html#badges", quote=True)
+    return f'<p><span class="trust trust-{kind}">{escape(label)}</span> <a class="trust-more" href="{more}">what this means</a></p>'
 
 
 _USES_LIMIT = 20
@@ -199,15 +227,22 @@ def _uses(found: F.DeclFacts, ctx, dirs: list[str]) -> str:
     return "".join(rows)
 
 
-def _trace(found: F.DeclFacts, limit: int) -> str:
+def _trace(found: F.DeclFacts, limit: int, rel: str, ctx) -> str:
+    """Each step is `L<declaration line>-step<k>`, with `data-line` the source line of its tactic: the reader joins its
+    plain-English steps to these on that line."""
     if not found.steps:
         return ""
     items = []
-    for step in found.steps[:limit]:
+    for k, step in enumerate(found.steps[:limit], 1):
         before = "".join(f"<pre>{escape(g)}</pre>" for g in step.before) or '<p class="muted">no goals</p>'
         after = "".join(f"<pre>{escape(g)}</pre>" for g in step.after) or '<p class="muted">no goals remain</p>'
+        where = f"line {step.line}"
+        if ctx.source_url:
+            where = f'<a class="ln" href="{escape(source_href(rel, step.line, ctx), quote=True)}">{where}</a>'
+        else:
+            where = f'<span class="ln">{where}</span>'
         items.append(
-            f'<li><code>{escape(step.tactic)}</code> <span class="ln">line {step.line}</span>'
+            f'<li id="L{found.line}-step{k}" data-line="{step.line}"><code>{escape(step.tactic)}</code> {where}'
             f'<div class="goal-label">before</div>{before}<div class="goal-label">after</div>{after}</li>'
         )
     more = f" (first {limit} of {len(found.steps)})" if len(found.steps) > limit else ""
@@ -242,6 +277,7 @@ def _trust_page(ctx, analysis: Analysis) -> str:
         "depends on, as Lean's collectAxioms reports them. Standard axioms are propext, Classical.choice and Quot.sound.</p>"
     )
     body.append('<dl class="summary">' + "".join(f"<dt>{escape(k)}</dt><dd>{n}</dd>" for k, n in _tally(analysis).items()) + "</dl>")
+    body.append('<h2 id="badges">What the badges mean</h2><dl class="badges">' + "".join(f"<dt>{escape(k)}</dt><dd>{escape(v)}</dd>" for k, v in BADGES) + "</dl>")
     failed = [(rel, f) for rel, f in analysis.files.items() if f.status == "failed"]
     if failed:
         body.append('<h2>Files Lean could not elaborate</h2><ul class="list">')

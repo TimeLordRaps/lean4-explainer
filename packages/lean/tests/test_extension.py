@@ -82,6 +82,31 @@ def test_real_lean_gives_badges_traces_and_a_trust_page(tmp_path):
 
 
 @needs_lean
+def test_each_trace_step_has_an_anchor_its_source_line_and_a_link_to_it(tmp_path):
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "Demo.lean").write_text(SAMPLE, encoding="utf-8")
+    config = Config(source_url="https://example.org/src/{ref}/{path}#L{line}", source_ref="abc123", options=(("lean_cache", str(tmp_path / "cache")),))
+    build_site(root, tmp_path / "out", config, tmp_path / "idx")
+
+    page = (tmp_path / "out" / "Demo.lean.html").read_text(encoding="utf-8")
+    trace = page[page.index('<details class="trace">') :]
+    trace = trace[: trace.index("</details>")]
+    steps = re.findall(r'<li id="L3-step(\d+)" data-line="(\d+)"><code>([^<]*)</code> <a class="ln" href="([^"]*)">line (\d+)</a>', trace)
+    assert steps, trace[:600]
+    lines = SAMPLE.split("\n")
+    for k, (index, line, tactic, link, shown) in enumerate(steps, 1):
+        assert int(index) == k and line == shown  # anchors in order; the line shown is the line kept
+        assert tactic.split(" ")[0].replace("&gt;", ">") in lines[int(line) - 1]  # the tactic is on that source line: the key the reader joins on
+        assert link == f"https://example.org/src/abc123/Demo.lean#L{line}"
+    assert [s[2] for s in steps][:1] == ["induction n with"] and steps[0][1] == "4"
+    # a badge links to what the badges mean
+    assert '<span class="trust trust-standard">standard axioms: propext</span> <a class="trust-more" href="trust.html#badges">' in page
+    trust = (tmp_path / "out" / "trust.html").read_text(encoding="utf-8")
+    assert '<h2 id="badges">What the badges mean</h2>' in trust and "<dt>depends on sorry</dt>" in trust
+
+
+@needs_lean
 def test_second_build_reuses_cached_results(tmp_path):
     first, _ = _site(tmp_path, SAMPLE)
     (tmp_path / "out2").mkdir()

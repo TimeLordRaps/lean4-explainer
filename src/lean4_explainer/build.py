@@ -163,6 +163,8 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
         analysis = ext.analyze(objects, per_file, options)
         analyses.append((ext, analysis))
         issues.extend(ext.analysis_issues(analysis))
+    for ext, analysis in analyses:  # issues that need what another extension found, such as a proof Lean checked
+        issues.extend(ext.review(analysis, tuple(analyses)))
     return TreeIndex(
         sources=sources,
         cache=cache,
@@ -225,7 +227,7 @@ def _build_site(
         status=" ".join(filter(None, (ext.status(analysis) for ext, analysis in tree.analyses))),
         objects=tree.objects,
         extensions=tuple(tree.analyses),
-        options=config.options,
+        options=config.options + (("_root", str(lean_root)),),  # as `analyze` gets them: `_root` is where the sources are
         home=config.home,
         source_links=config.source_links,
         imports=config.imports,

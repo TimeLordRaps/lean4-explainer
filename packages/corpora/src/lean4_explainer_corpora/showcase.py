@@ -111,6 +111,9 @@ def build_showcase(
                 sorted(
                     [("theme_css", corpus.theme_css)] * bool(corpus.theme_css)
                     + [("overlay", corpus.overlay)] * bool(corpus.overlay and Path(corpus.overlay).is_file())
+                    # the edges were read at a commit: the site's pin is what they are checked against for staleness
+                    + [("implications_file", corpus.implications), ("implications_commit", corpus.commit)]
+                    * bool(corpus.implications and Path(corpus.implications).is_file())
                     # a tree too large to publish twice: its readings load the pinned source instead of carrying it
                     + [("reader_source_url", f"{RAW}/{corpus.repo}/{{ref}}/{prefix}{{path}}")]
                     * (corpus.source_links == "file")
@@ -138,7 +141,8 @@ def build_showcase(
     annotated = {
         i.corpus.name for i in items if i.corpus.overlay and Path(i.corpus.overlay).is_file()
     } if any(ext.name == "l4del" for ext in extensions()) else set()
-    (out_dir / "index.html").write_text(_landing(items, link_out or [], guide, annotated), encoding="utf-8")
+    curated = {i.corpus.name for i in items if (out_dir / i.corpus.name / "implications.html").is_file()}
+    (out_dir / "index.html").write_text(_landing(items, link_out or [], guide, annotated, curated), encoding="utf-8")
     return ShowcaseResult(tuple(items), _tree_bytes(out_dir), byte_budget)
 
 
@@ -152,7 +156,13 @@ def _copy_license(checkout: Path, target: Path, lean_root: str) -> None:
             return
 
 
-def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str, annotated: set[str] = frozenset()) -> str:  # type: ignore[assignment]
+def _landing(
+    items: list[ShowcaseItem],
+    link_out: list[Corpus],
+    guide: str,
+    annotated: set[str] = frozenset(),  # type: ignore[assignment]
+    curated: set[str] = frozenset(),  # type: ignore[assignment]
+) -> str:
     cards = []
     for item in items:
         corpus, summary, project = item.corpus, item.summary, item.project
@@ -174,6 +184,13 @@ def _landing(items: list[ShowcaseItem], link_out: list[Corpus], guide: str, anno
                 "<br>Selected declarations are explained with L4DEL from a sidecar overlay kept in lean4-explainer; "
                 "the upstream authors did not write these explanations and their sources are unchanged."
                 if corpus.name in annotated
+                else ""
+            )
+            + (
+                f'<br><a href="{escape(corpus.name)}/implications.html">Implication edges</a>: curated claims about what '
+                "one result could establish about another, each with its contract and how far it is checked; kept in "
+                "lean4-explainer, not by the upstream authors."
+                if corpus.name in curated
                 else ""
             )
             + "</span></li>"

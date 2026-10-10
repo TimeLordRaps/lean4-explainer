@@ -1,0 +1,44 @@
+# Curated implication edges for openai/math, kept in lean4-explainer beside the pinned sources (never in them).
+# The upstream authors did not write these. Format and statuses: packages/implications/README.md.
+#
+# Four edges were suggested together (ChatGPT, relayed by the lean4-explainer maintainer, 2026-10-10). Two are here.
+# The other two are not, because no declarations at this commit could be identified for them:
+#   "The generalized sine-series criterion gives the rotation regularity threshold" (specializes-to)
+#   "The hitting matrices yield the direct recurrence evaluator" (supports-construction)
+# Searched: the Lean sources, lean/docs, CONTENTS.md and overview.tex at fd4aeeb2 for sine-series, rotation
+# regularity, hitting matrices and recurrence evaluators; the preprint PDFs were not searched. The nearest text is the
+# matrix hitting point papers (OAI/Algebra/FormulaHitting, OAI/Computability/RationalHitting), which name no
+# recurrence evaluator. Name the declarations, and they can become candidates or edges.
+#
+# openai/math restates each result under the same name in ComparatorChallenges/, with `sorry`, as the challenge its
+# comparator checks the proof against (e.g. ComparatorChallenges/SingleFold.json names OAI.NumberTheory.SingleFold.Main
+# as the solution). So every name here carries @path: the copy in OAI/, where it is proved.
+
+[[edge]]
+id = "seven-eighths-gives-an-explicit-real-zero-gap"
+kind = "strengthens"
+from = ["OAI.DirichletCharacter.LFunction_ne_zero_of_seven_eighths_lt_re@OAI/NumberTheory/DirichletL/Nonvanishing.lean"]
+to = "OAI.SiegelZeros.WeightedTorusJets.exists_absolute_real_zero_gap@OAI/NumberTheory/SiegelZeros/Conclusions/Theorem.lean"
+hypotheses = [
+  "(q : ℕ) [NeZero q] (hq : 3 ≤ q)",
+  "(χ : DirichletCharacter ℂ q)",
+  "(β : ℝ) (hβ : β < 1)",
+  "(hzero : χ.LFunction (β : ℂ) = 0)",
+]
+conclusion = "Real.log 3 / 8 ≤ (1 - β) * Real.log (q : ℝ)"
+commit = "fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb"
+status = "argued"
+origin = "Suggested by ChatGPT as “7/8 nonvanishing supplies an explicit real-zero constant”, relayed by the lean4-explainer maintainer, 2026-10-10."
+argument = """Suppose 7/8 < β. Take s = β: its real part is β > 7/8, and s ≠ 1 because β < 1, so the pole exception ¬(χ = 1 ∧ s = 1) holds whatever χ is. The source theorem then gives χ.LFunction β ≠ 0, against hzero. So β ≤ 7/8, and 1 − β ≥ 1/8 > 0. Since q ≥ 3, log q ≥ log 3 > 0. Multiplying, (1 − β) · log q ≥ (1/8) · log q ≥ (log 3)/8. This is the target's statement with c = (log 3)/8 ≈ 0.137 > 0, and it uses none of the target's hypotheses that χ is primitive, that χ ≠ 1, that χ is real-valued, or that 0 < β. Argued by Claude (Opus 5.5), 2026-10-10; not checked in Lean."""
+note = "The target gives no value of c: “No explicit value of $c$ is given.” (lean/docs/003.md, line 16). Its released proof applies SiegelZerosAwei.W50.uniform_exclusion_of_local_isolated_bezout. A Lean bridge would need Mathlib at the commit openai/math pins (d13f23b7) and a build of both files; it has not been written."
+
+[[candidate]]
+id = "fluid-halting-with-single-fold"
+kind = "composes-with"
+from = [
+  "OAI.BalancedTransport.balanced_three_stack_realization@OAI/MathematicalPhysics/NavierStokes/BalancedTransport/MainResult.lean",
+  "OAI.SingleFold.main@OAI/NumberTheory/SingleFold/Main.lean",
+]
+phrase = "Fluid halting detection plus single-fold representation"
+origin = "Suggested by ChatGPT, relayed by the lean4-explainer maintainer, 2026-10-10."
+missing = "A stated conclusion, and the link between two models of computation. The fluid theorem says the particle that starts at fixedLabel reaches the observer exactly when Halts M w, for a FiniteMachine M and an input w. SingleFold.main gives every set of natural-number tuples that is REPred (Mathlib's recursively enumerable) a polynomial with exactly one witness on each member and none off it. Composing them needs an encoding of (M, w) as a tuple of natural numbers and a proof that Halts is REPred under it; neither file states one (the fluid proof uses an inputCode internally). With both, the composite would read: the particle reaches the observer exactly when one integer polynomial in the encoded (M, w) has a natural-number solution, and that solution is unique."

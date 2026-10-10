@@ -108,6 +108,45 @@ def test_showcase_with_yes_builds_and_reports(tmp_path, monkeypatch, capsys):
     assert "over" in capsys.readouterr().err
 
 
+def _summary(errors=(), warnings=()):
+    from lean4_explainer.build import BuildSummary
+
+    return BuildSummary(
+        files=1, declarations=1, sorry=0, axioms=0, pages_written=1, pages_reused=0, bytes_written=10, total_bytes=10,
+        byte_budget=1000, search_entries=0, errors=tuple(errors), warnings=tuple(warnings), identical_names=0, variant_names=0,
+    )
+
+
+def test_showcase_reports_each_corpus_build_errors_and_fails(tmp_path, monkeypatch, capsys):
+    # found 2026-10-10: an edge naming an ambiguous declaration was an error the showcase neither printed nor failed on,
+    # so a broken site would have been published
+    from lean4_explainer_corpora.registry import installed
+    from lean4_explainer_corpora.showcase import ShowcaseItem
+
+    pfr = installed()["pfr"]
+    bad = _summary(errors=["error: implications: edge 'x': no declaration named Foo in this site"], warnings=["warning: stale"])
+    monkeypatch.setattr(extension.showcase, "build_showcase", lambda *a, **k: ShowcaseResult((ShowcaseItem(pfr, bad, None, 1.0),), 10, 1000))
+
+    code = cli.main(["showcase", "pfr", "--yes", "--out", str(tmp_path / "s"), "--work", str(tmp_path / "w")])
+
+    captured = capsys.readouterr()
+    assert code == 1
+    assert "pfr: error: implications: edge 'x': no declaration named Foo" in captured.err
+    assert "pfr: warning: stale" in captured.out
+    assert "1 build error" in captured.err
+
+
+def test_showcase_without_build_errors_succeeds(tmp_path, monkeypatch, capsys):
+    from lean4_explainer_corpora.registry import installed
+    from lean4_explainer_corpora.showcase import ShowcaseItem
+
+    pfr = installed()["pfr"]
+    monkeypatch.setattr(extension.showcase, "build_showcase", lambda *a, **k: ShowcaseResult((ShowcaseItem(pfr, _summary(), None, 1.0),), 10, 1000))
+
+    assert cli.main(["showcase", "pfr", "--yes", "--out", str(tmp_path / "s"), "--work", str(tmp_path / "w")]) == 0
+    assert "error" not in capsys.readouterr().err
+
+
 def test_fetch_with_yes_fetches_each_corpus(tmp_path, monkeypatch, capsys):
     fetched = []
     monkeypatch.setattr(extension.showcase, "fetch_corpus", lambda corpus, work, **k: fetched.append(corpus.name) or work / corpus.name)
