@@ -249,3 +249,24 @@ def test_a_broken_extension_does_not_stop_discovery(monkeypatch, capsys):
         extensions.activate([])
     assert "broken" in capsys.readouterr().err
 
+
+
+def test_notice_says_lean_was_not_run_unless_an_extension_runs_it(tmp_path, capsys):
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "A.lean").write_text("def x : Nat := 1\n", encoding="utf-8")
+
+    cli.main(["build", "--lean-root", str(root), "--out", str(tmp_path / "plain")])
+    plain = (tmp_path / "plain" / "index.html").read_text(encoding="utf-8")
+    assert "Lean was not run" in plain and "Lean not run" in capsys.readouterr().out
+
+    class Runner(Extension):
+        name = "runner"
+        version = "1"
+        runs_lean = True
+
+    extensions.activate([Runner()])
+    cli.main(["build", "--lean-root", str(root), "--out", str(tmp_path / "ran")])
+    ran = (tmp_path / "ran" / "index.html").read_text(encoding="utf-8")
+    assert "Lean was not run" not in ran and "Trust page" in ran
+    assert "Lean not run" not in capsys.readouterr().out

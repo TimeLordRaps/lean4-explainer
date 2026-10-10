@@ -8,6 +8,7 @@ The core is small and needs nothing else. Everything that adds weight is an exte
 |---|---|---|
 | A quick explanation page of your Lean code | `pip install lean4-explainer` | The site, from declarations and standard Lean comments |
 | To write richer explanations in comments | `pip install lean4-explainer[l4del]` | **[L4DEL](#l4del-write-your-own-explanations)**: titles, intuition, proof steps, prerequisites, glossary, learning path, `check` and `annotate` |
+| Tactic traces and kernel trust badges | `pip install lean4-explainer[lean]` | **[Lean run](#lean-run-tactic-traces-and-trust-badges)**: goals before and after each tactic, and the axioms each declaration depends on. Needs `lean` on the PATH |
 | To see it on well-known Lean projects | `pip install lean4-explainer[all]` | Pinned descriptions of 8 projects, plus `sources`, `fetch` and `showcase` |
 
 **Jump to:** [L4DEL: write your own explanations](#l4del-write-your-own-explanations) | [Quick start](#quick-start) | [Lake projects](#lake-projects) | [Built-in corpora](#built-in-corpora-and-extras) | [Extensions](#extensions) | [Configuration](#configuration)
@@ -45,7 +46,7 @@ lean4-explainer build --lake-root . --out docs
 
 - This is a text heuristic. Indented declarations, macro-generated declarations, and names created by `notation` or `syntax` are not listed.
 - `sorry` detection is textual. It does not follow dependencies and does not check axioms.
-- Lean is not run, so axiom and trust checks are UNKNOWN. Tactic traces, trust badges from kernel terms, expression-tree compression, a Lake facet, `explain#Name` links and version diffs all need a Lean run and are not implemented.
+- Without the Lean extension, Lean is not run, so axiom and trust checks are UNKNOWN.
 
 ## L4DEL: write your own explanations
 
@@ -93,6 +94,16 @@ Rules:
 
 `TODO_` placeholders are valid syntax, so a pasted template parses, and every `TODO_` left in a value is a warning until it is replaced. The tool never writes into your source files.
 
+## Lean run: tactic traces and trust badges
+
+`pip install lean4-explainer[lean]` adds an extension that elaborates each file with Lean (`lean` on the PATH; inside a Lake project it runs through `lake env`, so build the dependencies first). Every declaration then gets:
+
+- a **trust badge** from the kernel: no axioms, standard axioms (`propext`, `Classical.choice`, `Quot.sound`), extra axioms (named), or `sorry`. This is `collectAxioms`, not a text search.
+- a collapsible **tactic trace**: the goals before and after each tactic step.
+- a **Trust** page listing declarations that depend on `sorry` or on extra axioms.
+
+A file that does not elaborate shows trust UNKNOWN with Lean's reason, and a file where Lean reported errors says so on every badge. Nothing is guessed. Results are cached by file content, Lean version and `lake-manifest.json`. A Lake project that pins a Lean version you do not have makes elan download that toolchain on the first run. Not implemented: expression-tree compression, a Lake facet, `explain#Name` links, version diffs. See `packages/lean/README.md` for the config keys.
+
 ## Lake projects
 
 Lean and Lake do not need to be installed. The explainer reads text and starts no processes.
@@ -102,7 +113,7 @@ Lean and Lake do not need to be installed. The explainer reads text and starts n
 - `--lean-root DIR` lists every `.lean` file under `DIR`. Either way it skips `lakefile.lean` at any depth, `lake-packages/` (Lake's older dependency directory), and hidden directories such as `.lake/`.
 - A library that is a test or example folder (for example `FLTTest`) is listed if the lakefile declares it. Add its name to `exclude`.
 
-Tactic traces (the goal state after each tactic) are not in a lakefile. They come from elaborating the proof, which needs Lean and the project's dependencies built. They are not implemented.
+Tactic traces (the goal state after each tactic) are not in a lakefile; they come from the [Lean run](#lean-run-tactic-traces-and-trust-badges) extension.
 
 ## Built-in corpora and extras
 
@@ -132,7 +143,7 @@ Without `--yes`, the commands print the plan and ask. When stdin is not a termin
 
 ## Extensions
 
-An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The two shipped extensions are `lean4-explainer-l4del` and `lean4-explainer-corpora`.
+An extension is an installed package that exposes an `Extension` subclass through the entry-point group `lean4_explainer.extensions`. Every hook is optional: parsing comments, indexing a file, analyzing the whole tree, adding blocks, pages, navigation links and CSS, adding command-line commands and config keys. See `src/lean4_explainer/extensions.py`. `lean4-explainer extensions` lists what is installed. The shipped extensions are `lean4-explainer-l4del`, `lean4-explainer-lean` and `lean4-explainer-corpora`.
 
 ## Configuration
 
@@ -160,9 +171,10 @@ Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types ar
 The repository holds the core and the extensions as separate packages:
 
 ```
-pip install -e ".[test]" -e packages/l4del -e packages/corpora -e packages/corpus-flt   # and the other corpus-* packages
+pip install -e ".[test]" -e packages/l4del -e packages/lean -e packages/corpora -e packages/corpus-flt   # and the other corpus-* packages
 pytest                      # core, with no extension active
 pytest packages/l4del       # L4DEL
+pytest packages/lean        # Lean run (real-Lean tests are skipped when `lean` is missing)
 pytest packages/corpora     # registry, fetch, showcase
 ```
 

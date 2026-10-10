@@ -81,6 +81,7 @@ class ParseResult:
 class Extension:
     name = ""
     version = ""
+    runs_lean = False  # True for an extension that elaborates the sources with Lean, so the site may show kernel facts
     cache_types: frozenset[tuple[str, str]] = frozenset()  # (module, class) names allowed in cache payloads
     config_keys: Mapping[str, type] = {}  # extra keys accepted in lean4-explainer.toml
 

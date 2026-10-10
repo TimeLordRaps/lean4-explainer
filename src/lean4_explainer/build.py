@@ -147,7 +147,7 @@ def collect_tree(lean_root: Path, config: Config, cache_dir: Path, jobs: int = 1
 
     objects = index_objects(first, extra, copy_at)
     issues.extend(objects.issues)
-    options = dict(config.options)
+    options = {**dict(config.options), "_root": str(lean_root)}  # `_root`: where the sources are, for extensions that read them
     analyses: list[tuple[Extension, object]] = []
     for ext in active:
         per_file = {rel: dict(cache.files[rel].ext).get(ext.name) for rel in rels}

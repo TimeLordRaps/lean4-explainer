@@ -102,8 +102,8 @@ def _build(args) -> int:
     )
     print(
         f"{summary.files} files, {summary.declarations} declarations, {summary.sorry} containing sorry, "
-        f"{summary.axioms} axioms; {summary.search_entries} search entries. "
-        "Lean not run; axiom and trust checks UNKNOWN."
+        f"{summary.axioms} axioms; {summary.search_entries} search entries."
+        + ("" if any(ext.runs_lean for ext in extensions()) else " Lean not run; axiom and trust checks UNKNOWN.")
     )
     for line in summary.extension_lines:
         print(line)
