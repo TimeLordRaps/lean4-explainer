@@ -1,0 +1,37 @@
+name: Build lean4-explainer proofsite
+description: Build a static Lean proofsite with lean4-explainer.
+inputs:
+  lean-root:
+    description: Directory containing the .lean files.
+    required: true
+  out:
+    description: Output directory for the site.
+    default: docs
+  config:
+    description: Optional path to a lean4-explainer.toml file.
+    default: ""
+  package-spec:
+    description: pip requirement for lean4-explainer (PyPI name or git URL).
+    default: lean4-explainer
+  python-version:
+    description: Python version to use.
+    default: "3.12"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - shell: bash
+      env:
+        PACKAGE_SPEC: ${{ inputs.package-spec }}
+      run: python -m pip install "$PACKAGE_SPEC"
+    - shell: bash
+      env:
+        LEAN_ROOT: ${{ inputs.lean-root }}
+        OUT: ${{ inputs.out }}
+        CONFIG: ${{ inputs.config }}
+      run: |
+        args=(build --lean-root "$LEAN_ROOT" --out "$OUT")
+        if [ -n "$CONFIG" ]; then args+=(--config "$CONFIG"); fi
+        lean4-explainer "${args[@]}"
