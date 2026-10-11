@@ -20,6 +20,8 @@ The Lean side of the implication pipeline. Everything is read from Lean's own en
                                            looking through the auxiliary declarations Lean makes for one proof)
   axioms                                   every axiom the declaration depends on (memoized, like `collectAxioms`)
   doc                                      the start of its doc string, if any
+  projection                               for a structure's field: the structure, the field, its index, and
+                                           whether the structure is a class (Lean's projection info); else null
 
 `attempt` runs bounded derivations. The sources are local hypotheses (`source1 : S₁`), never the released proofs,
 so a derivation depends on what the sources state and nothing else of theirs. A found proof is added through the
@@ -244,10 +246,16 @@ def describe (cfg : Cfg) (memo : Memo) (ci : ConstantInfo) (moduleName : Name) :
     | some r => Json.mkObj [("line", toJson r.range.pos.line), ("column", toJson r.range.pos.column),
         ("end_line", toJson r.range.endPos.line)]
     | none => Json.null
+  -- a structure's field: what every object of the structure carries by its definition
+  let projection := match env.getProjectionFnInfo? n with
+    | some info => Json.mkObj [("structure", toJson info.ctorName.getPrefix.toString),
+        ("field", toJson (match n with | .str _ s => s | _ => n.toString)), ("index", toJson info.i),
+        ("class", toJson info.fromClass)]
+    | none => Json.null
   return Json.mkObj [
     ("name", toJson n.toString), ("user_name", toJson (privateToUserName n).toString),
     ("private", toJson (isPrivateName n)), ("kind", toJson (kindName ci)), ("module", toJson moduleName.toString),
-    ("levels", toJson (ci.levelParams.map Name.toString)), ("range", rangeJson),
+    ("levels", toJson (ci.levelParams.map Name.toString)), ("range", rangeJson), ("projection", projection),
     ("prop", toJson isPropType), ("instance", toJson isInst),
     ("type", toJson typeStr), ("type_hash", toJson (toString (hash ci.type))),
     ("binders", Json.arr binders), ("conclusion", toJson conclusion), ("conclusion_head", toJson head),

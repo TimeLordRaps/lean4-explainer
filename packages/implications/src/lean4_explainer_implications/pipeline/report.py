@@ -26,17 +26,21 @@ def _rows(path: Path) -> list[dict]:
 
 def coverage(run: Path, layer: str, index: dict | None) -> dict:
     """How many families and areas each stage reached in a layer: with a statement (not one Lean generated), in an
-    attempt, in a checked derivation, in a connection of the catalogue."""
+    attempt, in a checked derivation, in one that was then checked on the released theorems, in a connection of the
+    catalogue found in this layer."""
     decls = {d["key"]: d for d in _declarations(run, layer)}
     results = _rows(run / layer / "results.jsonl")
+    applied = {r["derivation"] for r in _rows(run / "instantiation" / "results.jsonl") if r.get("status") == "checked-instantiated"}
     keys = lambda r: (r.get("source_keys") or []) + ([r["target_key"]] if r.get("target_key") else [])  # noqa: E731
     stages = {
         "statements": [d for d in decls.values() if is_statement(d) and not generated(d)],
         "attempted": [decls[k] for r in results for k in keys(r) if k in decls],
         "checked": [decls[k] for r in results if r.get("status") in CHECKED for k in keys(r) if k in decls],
+        "instantiated": [decls[k] for r in results if r.get("status") in CHECKED and r.get("id") in applied for k in keys(r) if k in decls],
     }
     by_family = {d.get("family", ""): d.get("area", "") for d in decls.values()}
-    conn = {f for i in (index or {}).get("implications", []) if i.get("group") == "connection" for f in i.get("families", [])}
+    conn = {f for i in (index or {}).get("implications", []) if i.get("group") == "connection" and i.get("layer") == layer
+            for f in i.get("families", [])}
     out = {}
     for what in ("family", "area"):
         counts = {stage: len({d.get(what, "") for d in ds} - {""}) for stage, ds in stages.items()}
@@ -118,7 +122,9 @@ def markdown(data: dict) -> str:
                       f"(sizes {ex['environments']}); {len(ex.get('clashes', []))} pairs of modules declare the same name and were kept apart ({len(ex.get('moved_on_import', []))} more moved when an import failed), {len(ex['splits'])} batches split for other import failures",
                       f"- declarations {ex['declarations']}: " + ", ".join(f"{k} {v}" for k, v in sorted(ex["by_role"].items())),
                       f"- statements (theorems whose type is a proposition) {ex['statements']}; with sorry {ex['with_sorry']}; unreadable {ex['unreadable']}",
-                      f"- extraction took {ex['seconds']} s"]
+                      f"- extraction took {ex['seconds']} s"] + ([f"- extracted under rule set `{ex['policy']}`"] if ex.get("policy") else []) + (
+                [f"- {len(ex['modules_added'])} more modules extracted because they declare a theorem a challenge lists: "
+                 + ", ".join(f"`{m}`" for m in ex["modules_added"])] if ex.get("modules_added") else [])
             for f in ex.get("modules_failed", []):
                 lines.append(f"- failed to import: `{f['module']}`: {f['error'][:200]}")
             lines.append("")

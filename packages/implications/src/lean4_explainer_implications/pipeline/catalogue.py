@@ -12,8 +12,8 @@ Checked results that add nothing are grouped, not counted as connections: a stat
 statement, a source passed through unchanged (the same proposition up to unfolding definitions), a lemma Lean
 generated (it has no source position), two forms of one result its challenge lists together or a composition of
 statements from one challenge file, a route the released proof already takes, a source
-whose released proof already uses the target, the second direction of an equivalence, and a derived statement
-another result already gives. Where a composition and a derivation of a named result give the same statement, the
+whose released proof already uses the target, the second direction of an equivalence, a source that is a structure's
+field (extraction records Lean's projection info), and a derived statement another result already gives. Where a composition and a derivation of a named result give the same statement, the
 named one is kept.
 """
 
@@ -164,6 +164,11 @@ def build(
                     todo.append(u)
         return seen
 
+    all_results = results
+    # each row of the instantiate stage applies one checked derivation to the released theorems: it changes that
+    # derivation's state and is not a result of its own
+    applied = {r["derivation"]: r for r in results if r.get("derivation")}
+    results = [r for r in results if not r.get("derivation")]
     derivations = CHECKED + ("instantiation-circular",)
     checked = [r for r in results if r.get("status") in derivations]
     rejected = [r for r in results if r.get("status") == "rejected"]
@@ -177,11 +182,13 @@ def build(
             by_type[d["type_hash"]].append(d["key"])
     for r in sorted(checked, key=lambda r: (r.get("rule") == "compose", len(r["source_keys"]), r["id"])):
         srcs, tgt = list(r["source_keys"]), r.get("target_key", "")
+        inst = applied.get(r["id"])
+        status = inst["status"] if inst and inst.get("status") in ("checked-instantiated", "instantiation-circular") else r["status"]
         sd = [by_key[k] for k in srcs if k in by_key]
         td = by_key.get(tgt)
         group, why = "connection", ""
         restates = [k for k in by_type.get(r.get("statement_hash", ""), []) if k not in srcs] if not tgt else []
-        if r["status"] == "instantiation-circular":
+        if status == "instantiation-circular":
             group, why = "source uses the target", "a source's released proof already uses the target, so applied to the released theorems the route is circular"
         elif any(generated(x) for x in sd + ([td] if td else [])):
             group, why = "generated", "a source or the target is a lemma Lean generated (a constructor's injectivity, an equation lemma), not a stated result"
@@ -198,6 +205,9 @@ def build(
         elif td is not None and len(sd) == 1 and ((tgt,), srcs[0]) in pairs and srcs[0] > tgt:
             # both directions were checked: list the pair once, as an equivalence
             group, why = "reverse direction", "the other direction is listed too: the two statements are equivalent"
+        elif field := next((s["projection"] for s in sd if s.get("projection")), None):
+            group, why = "structure field", (f"a source is the field `{field['field']}` of `{field['structure']}`: a fact every "
+                                             f"`{field['structure']}` carries by its definition, so the derivation applies to what that structure requires")
         h = r.get("statement_hash", "")
         if group == "connection" and h:
             if h in by_statement:
@@ -206,14 +216,18 @@ def build(
                 by_statement[h] = r["id"]
         family = (td or (sd[0] if sd else {})).get("family", "")
         implications.append({
-            "id": r["id"], "state": "checked-instantiated" if r["status"] == "checked-instantiated" else "checked-derivation",
+            "id": r["id"], "state": "checked-instantiated" if status == "checked-instantiated" else "checked-derivation",
             "restates": restates,
             "rules": rules_used(r), "directions": directions(r), "group": group, "group_reason": why,
             "sources": srcs, "target": tgt, "family": family,
             "families": sorted({x.get("family", "") for x in sd + ([td] if td else []) if x.get("family")}),
             "statement": r.get("statement", ""), "derived": r.get("derived", ""), "used": r.get("used", []),
             "steps": r.get("steps", []), "substitutions": r.get("substitutions", []), "proof": r.get("proof", ""),
-            "axioms": r.get("axioms", []), "instantiated_axioms": r.get("instantiated_axioms", []),
+            "axioms": r.get("axioms", []), "instantiated_axioms": r.get("instantiated_axioms") or (inst or {}).get("instantiated_axioms", []),
+            "instantiation": None if inst is None else {
+                "id": inst["id"], "status": inst.get("status", ""), "reason": _short(inst.get("reason", ""), 300),
+                "environment": {"id": inst.get("env_id", ""), "modules": inst.get("env_modules", 0)},
+                "cost": {"ms": inst.get("ms", 0), "heartbeats_thousands": inst.get("heartbeats", 0)}},
             "match": r.get("match", ""), "shared": r.get("shared", []),
             "environment": {"id": r.get("env_id", ""), "modules": r.get("env_modules", 0), "layer": r.get("layer", "")},
             "cost": {"ms": r.get("ms", 0), "heartbeats_thousands": r.get("heartbeats", 0)},
@@ -248,6 +262,7 @@ def build(
         "checked": len(implications),
         "checked_by_group": dict(Counter(i["group"] for i in implications)),
         "checked_by_state": dict(Counter(i["state"] for i in implications)),
+        "instantiation": dict(Counter(r.get("status", "") for r in applied.values())),
         "connections": sum(i["group"] == "connection" for i in implications),
         "dependencies": sum(len(d["uses"]) for d in dependencies),
         "unresolved": len(unresolved_rows),
@@ -256,7 +271,7 @@ def build(
         "rejected_by_reason": dict(Counter(_reason_kind(r["reason"]) for r in rejected_rows)),
     }
     # the rule set the results were checked under, as they record it, not the one current when this was assembled
-    policies = sorted({r["policy"] for r in results if r.get("policy")})
+    policies = sorted({r["policy"] for r in all_results if r.get("policy")})
     if policies:
         header = {**header, "policy": ", ".join(policies)}
     return {"format": FORMAT, **header, "counts": counts, "theorems": theorems, "implications": implications,
@@ -298,6 +313,9 @@ def write(cat: dict, out: Path) -> dict[str, int]:
         text = json.dumps(s, ensure_ascii=False, separators=(",", ":"))
         (out / "shards" / f"{name}.json").write_text(text, encoding="utf-8")
         sizes[f"shards/{name}.json"] = len(text.encode())
+    for old in (out / "shards").glob("*.json"):  # a family with no entries now must not leave its shard to be published
+        if f"shards/{old.name}" not in sizes:
+            old.unlink()
     text = json.dumps(index, ensure_ascii=False, separators=(",", ":"))
     (out / "index.json").write_text(text, encoding="utf-8")
     sizes["index.json"] = len(text.encode())

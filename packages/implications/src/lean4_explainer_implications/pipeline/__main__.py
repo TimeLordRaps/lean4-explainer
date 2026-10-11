@@ -163,8 +163,8 @@ def main(argv: list[str] | None = None) -> int:
             print("extract: the corpus commit is unknown: pass --revision", file=sys.stderr)
             return 2
         identity = X.Identity(args.repo, revision, args.path_prefix)
-        env = {"toolchain": W.toolchain_version(ws), "mathlib": _mathlib(ws), "corpus_repo": args.repo, "corpus_revision": revision,
-               "extract_policy": A.policy()}
+        # the rule set goes in the layer's extract.json: layers of one run can be extracted under different ones
+        env = {"toolchain": W.toolchain_version(ws), "mathlib": _mathlib(ws), "corpus_repo": args.repo, "corpus_revision": revision}
         (run / "environment.json").write_text(json.dumps(env, indent=1), encoding="utf-8")
         summary = S.extract_layer(ws, identity, _modules(args), run, args.layer, args.batch_size, log=_log, commit_gb=gb)
         print(json.dumps({k: v for k, v in summary.items() if k != "batches"}), flush=True)
@@ -196,7 +196,12 @@ def main(argv: list[str] | None = None) -> int:
         if args.edges:
             rec = _record_path(Path(args.edges), "")
             contracts = list((json.loads(rec.read_text(encoding="utf-8"))["edges"] if rec.is_file() else {}).values())
-        header = {"environment": env, "layers": args.layers.split(","), "policy": A.policy(),
+        extraction = {}
+        for layer in args.layers.split(","):
+            ex = json.loads((run / layer / "extract.json").read_text(encoding="utf-8")) if (run / layer / "extract.json").is_file() else {}
+            if ex.get("policy") or env.get("policy"):  # older runs kept one extraction rule set in environment.json
+                extraction[layer] = ex.get("policy") or env["policy"]
+        header = {"environment": env, "layers": args.layers.split(","), "policy": A.policy(), "extraction": extraction,
                   "provenance": "Recorded: each checked entry was checked by Lean's kernel when the pipeline ran, in the environment "
                                 "named; a site build that shows the catalogue does not run Lean again."}
         cat = K.build(decls, results, header, contracts)

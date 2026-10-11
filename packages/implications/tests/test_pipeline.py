@@ -45,6 +45,7 @@ def corpus(tmp_path_factory):
     run = root / "run"
     summary = S.extract_layer(ws, X.Identity("test/fixture", REV, ""), ["ImplicationsFixture"], run, "fixture", log=print, commit_gb=0)
     assert summary["modules_extracted"] == 1 and not summary["modules_failed"], summary
+    assert summary["policy"] == A.policy()  # each layer records the rule set it was extracted under
     decls = {d["name"]: d for d in S.read_declarations(run, "fixture")}
     return ws, run, decls
 
@@ -79,6 +80,16 @@ def test_extraction_reads_types_binders_and_proof_terms(corpus):
     # a corpus definition at the head is unfolded for the search: `size n` is `n * n + 1`, still an order statement
     assert decls["Fx.size_pos"]["norm"]["conclusion_head"] == "LE.le"
     assert decls["Fx.exists_fine"]["norm"]["exists"]["witness_type"] == "Nat"
+
+
+@needs_lean
+def test_extraction_records_which_declarations_are_a_structure_fields_projection(corpus):
+    # TD-16: a composition through a structure's field applies a theorem to that structure's objects; the catalogue
+    # can group it only if extraction says, from Lean's environment, that the source is a projection
+    _, _, decls = corpus
+    assert decls["Fx.Fine.pos"]["projection"] == {"structure": "Fx.Fine", "field": "pos", "index": 0, "class": False}
+    assert decls["Fx.Good.big"]["projection"]["structure"] == "Fx.Good"
+    assert decls["Fx.fine_of_two"]["projection"] is None and decls["Fx.size"]["projection"] is None
 
 
 # ---- attempts: what must succeed ----
@@ -438,6 +449,25 @@ def test_compositions_inside_one_challenge_and_generated_lemmas_are_not_connecti
     assert groups == {"1": "one challenge", "2": "connection", "3": "generated", "4": "generated"}
 
 
+def test_a_derivation_through_a_structures_field_is_not_a_connection():
+    # TD-16, found 2026-10-10 on openai/math: `TriCylinder.convex : ∀ self, Convex ℝ self.base` composed with a
+    # general convexity theorem of another challenge is checked and new, but says only that the theorem applies to
+    # what the structure requires; 10 of the 24 connections looked like this
+    at = {"line": 3}
+    field = {"structure": "T", "field": "convex", "index": 1, "class": False}
+    decls = [dict(_decl("T.convex", "P", [], challenge="X"), range=at, projection=field),
+             dict(_decl("g", "Q", [], challenge="Y"), range=at, projection=None),
+             dict(_decl("h", "R", [], challenge="Z"), range=at), dict(_decl("t", "S", [], challenge="Z"), range=at)]
+    row = lambda i, srcs, tgt="", rule="compose": {"id": i, "status": "checked", "rule": rule, "source_keys": srcs, "target_key": tgt,  # noqa: E731
+                                                   "sources": srcs, "statement_hash": i, "statement": i}
+    results = [row("1", ["T.convex", "g"]), row("2", ["g", "h"]), row("3", ["T.convex"], "t", rule="target"), row("4", ["g", "T.convex"])]
+    cat = K.build(decls, results, {})
+    got = {i["id"]: i for i in cat["implications"]}
+    assert {k: v["group"] for k, v in got.items()} == {"1": "structure field", "2": "connection", "3": "structure field", "4": "structure field"}
+    assert "`convex`" in got["1"]["group_reason"] and "`T`" in got["1"]["group_reason"]
+    assert cat["counts"]["connections"] == 1
+
+
 def test_the_index_names_only_theorems_that_checked_entries_name(tmp_path):
     # found 2026-10-10 on openai/math: 13,396 theorem entries (9.5 MB) in an index of 518 checked entries, against a
     # site with about 25 MB left of GitHub Pages' 1 GB; unresolved rows keep their keys, in their family's shard
@@ -451,6 +481,19 @@ def test_the_index_names_only_theorems_that_checked_entries_name(tmp_path):
     assert [(r["sources"], r["target"]) for r in shard["unresolved"]] == [(["u"], "v")]
 
 
+def test_rewriting_a_catalogue_leaves_no_shard_its_index_does_not_name(tmp_path):
+    # the shipped catalogue is rewritten in place: a family that no longer has entries must not leave its old shard to
+    # be published beside the new index
+    row = {"id": "1", "status": "checked", "rule": "target", "source_keys": ["a"], "target_key": "b", "sources": ["a"], "statement": "b"}
+    K.write(K.build([_decl("a", "P", [], family="Old.One"), _decl("b", "P", [], family="Old.One")], [row], {}), tmp_path)
+    (tmp_path / "shards" / "notes.txt").write_text("not the writer's", encoding="utf-8")
+    sizes = K.write(K.build([_decl("a", "P", [], family="New.Two"), _decl("b", "P", [], family="New.Two")], [row], {}), tmp_path)
+    index = json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))
+    on_disk = {p.name for p in (tmp_path / "shards").glob("*.json")}
+    assert on_disk == {f"{n}.json" for n in index["shards"]} == {k.split("/")[1] for k in sizes if k.startswith("shards/")}
+    assert (tmp_path / "shards" / "notes.txt").is_file()  # only shard files are the writer's to remove
+
+
 def test_the_report_counts_the_families_and_areas_each_stage_reached(tmp_path):
     from lean4_explainer_implications.pipeline import report as R
 
@@ -460,14 +503,23 @@ def test_the_report_counts_the_families_and_areas_each_stage_reached(tmp_path):
     (tmp_path / "statements").mkdir()
     (tmp_path / "statements" / "declarations.jsonl").write_text("".join(json.dumps(d) + "\n" for d in decls), encoding="utf-8")
     results = [{"id": "1", "status": "checked", "source_keys": ["a"], "target_key": "b"},
-               {"id": "2", "status": "no-proof", "source_keys": ["c"], "target_key": "a"}]
+               {"id": "2", "status": "no-proof", "source_keys": ["c"], "target_key": "a"},
+               {"id": "3", "status": "checked", "source_keys": ["c"], "target_key": "d"}]
     (tmp_path / "statements" / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in results), encoding="utf-8")
-    index = {"implications": [{"id": "1", "group": "connection", "families": ["F1"]}]}
+    # applied to the released theorems: 1 checked, 3 ran out of budget (which establishes nothing)
+    (tmp_path / "instantiation").mkdir()
+    applied = [{"id": "i1", "derivation": "1", "status": "checked-instantiated"}, {"id": "i3", "derivation": "3", "status": "budget"}]
+    (tmp_path / "instantiation" / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in applied), encoding="utf-8")
+    # found 2026-10-10: a layer's connections were counted from the whole catalogue, so the solutions layer, which
+    # attempted nothing, reported the statements layer's 27 families
+    index = {"implications": [{"id": "1", "group": "connection", "families": ["F1"], "layer": "statements"},
+                              {"id": "x", "group": "connection", "families": ["F3"], "layer": "solutions"}]}
     cov = R.coverage(tmp_path, "statements", index)
-    assert cov["families"] == {"statements": 3, "attempted": 2, "checked": 1, "connections": 1}
-    assert cov["areas"] == {"statements": 2, "attempted": 2, "checked": 1, "connections": 1}
-    assert "families: statements 3, attempted 2, checked 1, connections 1" in R.markdown(
+    assert cov["families"] == {"statements": 3, "attempted": 3, "checked": 3, "instantiated": 1, "connections": 1}
+    assert cov["areas"] == {"statements": 2, "attempted": 2, "checked": 2, "instantiated": 1, "connections": 1}
+    assert "families: statements 3, attempted 3, checked 3, instantiated 1, connections 1" in R.markdown(
         {"builds": {}, "layers": {}, "catalogue": {}, "contracts": {}, "coverage": {"statements": cov}})
+    assert R.coverage(tmp_path, "solutions", index)["families"]["connections"] == 1  # its own, F3; not F1 as well
 
 
 def test_modules_that_declare_the_same_name_go_to_separate_environments(tmp_path, monkeypatch):
@@ -533,6 +585,15 @@ def test_the_catalogue_names_the_rule_set_its_results_were_checked_under():
     assert "rules-1:ccc" not in page.split("extract")[0]  # the extraction's rule set only where it is named as such
     md = R.markdown({"environment": {"policy": "rules-1:ccc"}, "builds": {}, "layers": {}, "catalogue": {}, "contracts": {}})
     assert "- policy:" not in md and "rules-1:ccc" in md.split("extract")[1]
+    # each layer names the rule set it was extracted under: two layers can differ, so the run-wide record does not
+    cat = K.build(decls, [row], {"extraction": {"statements": "rules-1:ddd", "solutions": "rules-1:aaa"}, "environment": {}})
+    page = "".join(CS.catalogue_body(cat))
+    assert page.index("extracted under") < page.index("rules-1:ddd") and "statements" in page.split("extracted under")[1]
+    layer = {"extract": {"policy": "rules-1:ddd", "modules_requested": 1, "modules_added": ["S.Gauss"], "modules_extracted": 2, "environments": [2], "splits": [],
+                         "declarations": 1, "by_role": {}, "statements": 1, "with_sorry": 0, "unreadable": 0, "seconds": 1}}
+    md = R.markdown({"environment": {}, "builds": {}, "layers": {"statements": layer}, "catalogue": {}, "contracts": {}})
+    assert "- extracted under rule set `rules-1:ddd`" in md
+    assert "- 1 more modules extracted because they declare a theorem a challenge lists: `S.Gauss`" in md
 
 
 def test_unresolved_reasons_that_differ_only_in_lean_internal_ids_are_one_group():
@@ -542,3 +603,90 @@ def test_unresolved_reasons_that_differ_only_in_lean_internal_ids_are_one_group(
     assert K.summarize_unresolved(rows) == [
         {"status": "error", "reason": "unknown free variable `_fvar.…`", "count": 3},
         {"status": "no-proof", "reason": "no derivation within the rules and depth", "count": 1}]
+
+
+def test_a_released_theorem_is_extracted_from_the_module_that_declares_it(tmp_path, monkeypatch):
+    # found 2026-10-10 on openai/math: ProductSpaces.Main proves one of its four released theorems; the other three are
+    # declared in GaussianBounds and WeakNullity, which it imports, and extracting Main alone missed them
+    from lean4_explainer_implications.pipeline import lean as L
+
+    corpus = tmp_path / "corpus"
+    (corpus / "S").mkdir(parents=True)
+    (corpus / "ComparatorChallenges").mkdir()
+    (corpus / "S" / "Main.lean").write_text("import S.Gauss\nimport S.Util\n", encoding="utf-8")
+    (corpus / "S" / "Gauss.lean").write_text("", encoding="utf-8")
+    (corpus / "S" / "Util.lean").write_text("", encoding="utf-8")
+    (corpus / "ComparatorChallenges" / "T.json").write_text(json.dumps({"theorem_names": ["T.main", "T.other"]}), encoding="utf-8")
+    declared = {"S.Main": ["T.main", "S.x"], "S.Gauss": ["T.other"], "S.Util": ["S.u"]}
+    runs = []
+
+    def fake_run(env, cwd, args, timeout, log=print, **kw):
+        if args[0] == "names":
+            Path(args[1]).write_text("".join(json.dumps({"module": m, "names": ns}) + "\n" for m, ns in declared.items()), encoding="utf-8")
+            return L.LeanRun(0, "", "", 1.0)
+        runs.append(sorted(Path(args[-1][1:]).read_text(encoding="utf-8").split()))
+        Path(args[1]).write_text("", encoding="utf-8")
+        return L.LeanRun(0, json.dumps({"declarations": 0, "failed": 0, "import_ms": 1, "extract_ms": 1}), "", 1.0)
+
+    monkeypatch.setattr(L, "run", fake_run)
+    ws = W.Workspace(tmp_path / "ws", corpus, ("S", "ComparatorChallenges"))
+    record = X.run_extraction(ws, ["S.Main"], tmp_path / "out", log=print)
+    assert runs == [["S.Gauss", "S.Main"]] and record.added == ["S.Gauss"]
+
+
+def test_an_instantiation_upgrades_the_derivation_it_applies_and_is_not_listed_again():
+    # found 2026-10-10: the instantiate stage writes its own rows, each naming the derivation it applies; read as more
+    # results they would list each derivation twice, and leave the derivation's own state unchanged
+    decls = [_decl(k, "P", [], challenge=c) for k, c in (("a", "X"), ("b", "Y"), ("c", "Z"), ("d", "W"))]
+    row = lambda i, s, t, **kw: {"id": i, "status": "checked", "rule": "target", "source_keys": s, "target_key": t, "sources": s,  # noqa: E731
+                                  "statement": i, "statement_hash": i, **kw}
+    results = [row("1", ["a"], "b"), row("2", ["c"], "d"), row("3", ["b"], "c"),
+               {**row("i1", ["a"], "b"), "status": "checked-instantiated", "derivation": "1", "instantiated_axioms": ["propext"], "env_modules": 2},
+               {**row("i2", ["c"], "d"), "status": "budget", "derivation": "2", "reason": "wall-clock limit of 10000 ms"},
+               {**row("i3", ["b"], "c"), "status": "instantiation-circular", "derivation": "3"}]
+    cat = K.build(decls, results, {})
+    got = {i["id"]: i for i in cat["implications"]}
+    assert sorted(got) == ["1", "2", "3"]
+    assert got["1"]["state"] == "checked-instantiated" and got["1"]["instantiated_axioms"] == ["propext"]
+    assert got["2"]["state"] == "checked-derivation" and got["2"]["instantiation"]["status"] == "budget"
+    assert got["3"]["group"] == "source uses the target"
+    assert cat["counts"]["instantiation"] == {"checked-instantiated": 1, "budget": 1, "instantiation-circular": 1}
+    assert not cat["unresolved"]
+
+
+def test_the_page_says_what_applying_a_derivation_to_the_released_theorems_established():
+    # an attempt that ran out of time, errs or finds no proof establishes nothing either way: the page must not read it
+    # as the implication failing for the released theorems
+    from lean4_explainer_implications import catalogue_site as CS
+
+    labels = json.loads(CS.script().split("var LABELS = ", 1)[1].split(";\n", 1)[0])["instantiation"]
+    assert set(labels) == {"checked-instantiated", "instantiation-circular", "budget", "error", "no-proof", "audit-failed"}
+    for status in ("budget", "error", "no-proof", "audit-failed"):
+        assert labels[status].startswith("not established"), status
+    for label in labels.values():
+        assert not any(w in label.lower() for w in ("false", "refut", "disprov", "fails for")), label
+    assert "d.instantiation" in CS.script()
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_the_catalogue_page_script_parses(tmp_path):
+    # the script is JavaScript kept in a Python string: nothing else parses it before a browser does
+    import subprocess
+
+    from lean4_explainer_implications import catalogue_site as CS
+
+    node = shutil.which("node") or "node"
+
+    def parses(source: str) -> bool:
+        path = tmp_path / "catalogue.js"
+        path.write_text(source, encoding="utf-8")
+        return subprocess.run([node, "--check", str(path)], capture_output=True, timeout=60).returncode == 0
+
+    script = CS.script()
+    good = parses(script)
+    assert good
+    # the check can fail: an unbalanced parenthesis in the same expression is rejected
+    marker = '"<dt>Applied to the released theorems</dt><dd>" +'
+    assert marker in script
+    broken = parses(script.replace(marker, marker[:-1] + ") +", 1))
+    assert not broken

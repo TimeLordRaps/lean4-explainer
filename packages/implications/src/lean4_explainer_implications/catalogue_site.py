@@ -23,11 +23,22 @@ GROUP_LABELS = {
     "in the released proof": "the released proof already goes this way",
     "source uses the target": "the source's released proof uses the target",
     "reverse direction": "other direction of an equivalence",
+    "structure field": "through a structure's field (what its objects carry by definition)",
     "duplicate": "derives a statement already listed",
 }
 STATE_LABELS = {
     "checked-instantiated": "kernel-checked, applied to the released theorems",
     "checked-derivation": "kernel-checked, sources as hypotheses",
+}
+# what applying a checked derivation to the released theorems established: a run that ends without a proof establishes
+# nothing either way, and says so
+INSTANTIATION_LABELS = {
+    "checked-instantiated": "checked: the derivation applied to the released theorems, each from the module that proves it",
+    "instantiation-circular": "circular: the released proof of a source already uses the target",
+    "budget": "not established: the attempt ran out of its time or heartbeat budget",
+    "error": "not established: Lean stopped with an error",
+    "no-proof": "not established: no proof was found within the rules",
+    "audit-failed": "not established: the proof found did not pass the audit",
 }
 
 
@@ -98,7 +109,7 @@ def theorem_block(entries: list[tuple[str, dict]], here_keys: set[str], link: Ca
             more = f'<li class="muted">and {len(rows) - limit} more in the catalogue</li>' if len(rows) > limit else ""
             parts.append(f"<p class=\"refs\"><em>{title}</em></p><ul>{''.join(item(direction, r) for r in rows[:limit])}{more}</ul>")
     if routine:
-        parts.append(f'<p class="muted">{sum(routine.values())} more checked entries are routine (the same statement, a restatement, a generated lemma, one challenge file, a route the '
+        parts.append(f'<p class="muted">{sum(routine.values())} more checked entries are routine (the same statement, a restatement, a generated lemma, one challenge file, a field of a structure, a route the '
                      f'released proof already takes, a duplicate): <a href="{escape(cat, quote=True)}?theorem={escape(next(iter(sorted(here_keys))), quote=True)}">in the catalogue</a>.</p>')
     return (f'<div class="implications"><p class="refs"><strong>Checked implications</strong> <span class="muted">(found by the '
             f'pipeline and checked by Lean\'s kernel when it ran; a recorded result, not checked again in this build: '
@@ -116,8 +127,11 @@ def catalogue_body(index: dict) -> list[str]:
     c = index.get("counts", {})
     env = index.get("environment", {})
     groups = ", ".join(f"{escape(GROUP_LABELS.get(g) or g)} {n}" for g, n in sorted(c.get("checked_by_group", {}).items()))
-    at_extraction = env.get("extract_policy") or env.get("policy")  # older runs wrote the extraction's rule set as "policy"
-    extracted = f" (declarations extracted under {escape(str(at_extraction))})" if at_extraction and at_extraction != index.get("policy") else ""
+    by_layer = index.get("extraction") or {}
+    if not by_layer and (env.get("extract_policy") or env.get("policy")):  # older catalogues kept one, in the environment
+        by_layer = {"": env.get("extract_policy") or env.get("policy")}
+    named = "; ".join(escape(str(p)) + (f" ({escape(layer)})" if layer else "") for layer, p in sorted(by_layer.items()) if p != index.get("policy"))
+    extracted = f" (declarations extracted under {named})" if named else ""
     return [
         "<h1>Checked implications</h1>",
         "<p>What the discovery pipeline found and Lean's kernel checked: from the source statements, as hypotheses, a derivation "
@@ -258,6 +272,10 @@ SCRIPT = r"""
         "<dt>Steps</dt><dd><ol>" + (d.steps || []).map(stepText).join("") + "</ol></dd>" +
         (d.group !== "connection" ? "<dt>Grouped</dt><dd>" + esc(d.group_reason) + "</dd>" : "") +
         "<dt>Axioms</dt><dd>" + esc((d.axioms || []).join(", ") || "none") + (d.instantiated_axioms && d.instantiated_axioms.length ? "; applied to the released theorems: " + esc(d.instantiated_axioms.join(", ")) : "") + "</dd>" +
+        (d.instantiation ? "<dt>Applied to the released theorems</dt><dd>" + esc(LABELS.instantiation[d.instantiation.status] || "not established (" + d.instantiation.status + ")") +
+          (d.instantiation.reason ? " <span class=\"muted\">(" + esc(d.instantiation.reason) + ")</span>" : "") +
+          "; environment <code>" + esc(d.instantiation.environment.id) + "</code>, " + esc(d.instantiation.environment.modules) + " modules imported; " +
+          esc(d.instantiation.cost.ms) + " ms, " + esc(d.instantiation.cost.heartbeats_thousands) + "k heartbeats</dd>" : "") +
         "<dt>Found by</dt><dd>" + esc(d.match) + (d.shared && d.shared.length ? " <span class=\"muted\">(shared constants: " + esc(d.shared.slice(0, 8).join(", ")) + ")</span>" : "") + "</dd>" +
         "<dt>Environment</dt><dd><code>" + esc(d.environment.id) + "</code>, " + esc(d.environment.modules) + " modules imported, layer " + esc(d.environment.layer) +
         "; " + esc(d.cost.ms) + " ms, " + esc(d.cost.heartbeats_thousands) + "k heartbeats</dd>" +
@@ -330,7 +348,7 @@ SCRIPT = r"""
 
 
 def script() -> str:
-    return SCRIPT.replace("%LABELS%", json.dumps({"group": GROUP_LABELS, "state": STATE_LABELS}, ensure_ascii=False))
+    return SCRIPT.replace("%LABELS%", json.dumps({"group": GROUP_LABELS, "state": STATE_LABELS, "instantiation": INSTANTIATION_LABELS}, ensure_ascii=False))
 
 
 CSS = """

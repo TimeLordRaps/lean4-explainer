@@ -51,6 +51,7 @@ class Batch:
 class ExtractRecord:
     batches: list[Batch] = field(default_factory=list)
     clashes: list[dict] = field(default_factory=list)  # pairs of modules found to declare the same name, before importing
+    added: list[str] = field(default_factory=list)  # modules extracted because they declare a theorem a challenge lists
 
     @property
     def environments(self) -> list[list[str]]:
@@ -125,6 +126,14 @@ def run_extraction(ws: Workspace, modules: Sequence[str], out_dir: Path, batch_s
     out_dir.mkdir(parents=True, exist_ok=True)
     record = ExtractRecord()
     names = declared_names(ws, sorted({c for m in modules for c in closure(ws, [m])} | set(modules)), out_dir, log)
+    # a solution module often proves its released theorems in modules it imports: extract those too (the challenge
+    # specifications name the theorems; the challenge copies themselves are the statements layer)
+    _, released = challenge_roles(ws.corpus_root)
+    record.added = sorted(m for m, ns in names.items()
+                          if m not in modules and not m.startswith("ComparatorChallenges.") and any(n in released for n in ns))
+    if record.added:
+        log(f"extract: {len(record.added)} more modules declare theorems the challenges list: {', '.join(record.added[:8])}")
+        modules = [*modules, *record.added]
     graph = clash_graph(ws, modules, names) if names else {}
     pairs = sorted({tuple(sorted((a, b))) + (n,) for a, others in graph.items() for b, n in others.items()})
     record.clashes = [{"modules": [a, b], "name": n} for a, b, n in pairs]

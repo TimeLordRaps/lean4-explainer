@@ -29,7 +29,7 @@ from lean4_explainer.render import href, page, source_href
 from . import catalogue_site as CS
 from . import edges as E
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 DEFAULT_FILE = "implications.toml"
 STATE_LABELS = {
     "proposed": "proposed",

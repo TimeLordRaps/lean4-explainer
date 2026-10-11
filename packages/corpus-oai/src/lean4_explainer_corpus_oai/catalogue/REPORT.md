@@ -6,22 +6,38 @@
 - mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612`
 - corpus_repo: `openai/math`
 - corpus_revision: `fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb`
-- declarations extracted under rule set: `rules-1:e90530fde8cbabe9`
 
 ## Builds
 
 | build | modules | seconds | stopped |
 |---|---|---|---|
 | build-challenges | built 416, replayed 69 | 7457.8 | — |
+| build-instantiation-a | built 22, replayed 1 | 482.3 | — |
 | build-probe | built 2 | 42.9 | — |
 
+
+## Layer `instantiation`
+
+Instantiation: 100 checked derivations, 9 applied to the released theorems, 91 blocked; outcomes checked-instantiated 9
+
+- blocked: solution not built (91)
+
+## Layer `solutions`
+
+- modules requested 2, extracted 4, in 1 environments (sizes [4]); 0 pairs of modules declare the same name and were kept apart (0 more moved when an import failed), 0 batches split for other import failures
+- declarations 121: helper 116, released 5
+- statements (theorems whose type is a proposition) 92; with sorry 0; unreadable 0
+- extraction took 36.9 s
+- extracted under rule set `rules-1:2417946e30d8228a`
+- 2 more modules extracted because they declare a theorem a challenge lists: `OAI.Analysis.ProductSpaces.GaussianBounds`, `OAI.Analysis.ProductSpaces.WeakNullity`
 
 ## Layer `statements`
 
 - modules requested 415, extracted 415, in 6 environments (sizes [353, 52, 7, 1, 1, 1]); 79 pairs of modules declare the same name and were kept apart (0 more moved when an import failed), 0 batches split for other import failures
 - declarations 18869: challenge-other 5927, interface 12406, statement 536
 - statements (theorems whose type is a proposition) 4672; with sorry 577; unreadable 0
-- extraction took 256.8 s
+- extraction took 280.5 s
+- extracted under rule set `rules-1:2417946e30d8228a`
 
 Discovery: policy `rules-1:c88d27fdc5e2730d`, budget {"heartbeats": 200000, "ms": 10000, "depth": 2, "discharge_heartbeats": 20000, "dischargers": ["omega", "norm_num", "positivity", "linarith"], "bound_closers": ["linarith", "nlinarith", "omega"]}, bounds {"per_target": 6, "per_link": 3, "per_compose": 4, "rare_df": 25, "min_shared": 1}
 
@@ -39,17 +55,23 @@ Discovery: policy `rules-1:c88d27fdc5e2730d`, budget {"heartbeats": 200000, "ms"
 
 ## Catalogue
 
-- checked implications 100: connection 24, duplicate 3, one challenge 67, restatement 3, reverse direction 1, same statement 2
-- by state: checked-derivation 100
-- connections (checked, not grouped as routine) 24
-- proof dependencies (from elaborated proof terms) 0
+- checked implications 100: connection 14, one challenge 67, restatement 3, reverse direction 1, same statement 2, structure field 13
+- by state: checked-derivation 91, checked-instantiated 9
+- connections (checked, not grouped as routine) 14
+- proof dependencies (from elaborated proof terms) 374
 - unresolved attempts 3719: audit-failed 6, budget 198, error 87, no-proof 3428
-- size: 2555935 bytes in 305 files
+- size: 2636629 bytes in 305 files
 
 ## Coverage
 
-- `statements` families: statements 370, attempted 312, checked 38, connections 27
-- `statements` areas: statements 22, attempted 22, checked 12, connections 9
+- `solutions` families: statements 2, attempted 0, checked 0, instantiated 0, connections 0
+- `solutions` areas: statements 2, attempted 0, checked 0, instantiated 0, connections 0
+- `statements` families: statements 370, attempted 312, checked 38, instantiated 2, connections 15
+- `statements` areas: statements 22, attempted 22, checked 12, instantiated 2, connections 7
+
+## Released theorems against their challenge statements
+
+- 5 released theorems built and compared with their ComparatorChallenges copy: 5 the same expression
 
 ## Curated contracts
 

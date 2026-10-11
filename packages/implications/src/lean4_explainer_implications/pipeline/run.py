@@ -50,7 +50,8 @@ def extract_layer(ws: Workspace, identity: X.Identity, modules: list[str], run: 
             handle.write(json.dumps(d, ensure_ascii=False) + "\n")
     extracted = {m for env in record.environments for m in env}
     summary = {
-        "layer": layer, "modules_requested": len(modules), "modules_extracted": len(extracted),
+        "layer": layer, "policy": A.policy(), "modules_requested": len(modules), "modules_added": record.added,
+        "modules_extracted": len(extracted),
         "modules_failed": [{"module": m, "error": e[-500:]} for m, e in record.failed_modules()],
         "environments": [len(e) for e in record.environments],
         "splits": [{"modules": len(b.modules), "error": b.error[-300:]} for b in record.batches if b.status == "split"],
