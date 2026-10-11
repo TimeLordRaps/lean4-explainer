@@ -1,5 +1,9 @@
+import os
 import re
 import shutil
+import subprocess
+import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -139,3 +143,34 @@ def test_changing_a_file_changes_the_answer(tmp_path):
 def test_probe_digest_tracks_the_probe_source():
     assert len(runner.probe_digest()) == 16 and Path(runner.PROBE).is_file()
     assert extension.LeanExtension().fingerprint({}).count(":") == 3
+
+
+def _alive(pid: int) -> bool:
+    if os.name == "nt":
+        out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"], capture_output=True, text=True).stdout
+        return f'"{pid}"' in out
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    return True
+
+
+def test_a_probe_that_times_out_is_stopped_with_every_process_it_started(tmp_path):
+    # `lake env lean` starts lean, and elan's `lean` starts the toolchain's: stopping only the first process on a timeout
+    # leaves the real one running and holding the pipes, so the run waits for it (seen in the implications pipeline:
+    # a 3 s timeout took 60 s, 2026-10-10; TD-17)
+    pid_file = tmp_path / "grandchild.pid"
+    proxy = ("import subprocess, sys, time; "
+             "p = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)']); "
+             f"open({str(pid_file)!r}, 'w').write(str(p.pid)); time.sleep(60)")
+    tc = runner.Toolchain((sys.executable, "-c", proxy), None, "test", "x")
+    began = time.monotonic()
+    code, _, err = runner.run_probe(tc, tmp_path / "A.lean", ["A.a"], 3)
+    assert code == -1 and "timed out" in err
+    assert time.monotonic() - began < 20, "the probe waited for its process tree to end by itself"
+    grandchild = int(pid_file.read_text())
+    deadline = time.monotonic() + 10
+    while _alive(grandchild) and time.monotonic() < deadline:
+        time.sleep(0.2)
+    assert not _alive(grandchild), f"process {grandchild} outlived the timeout"

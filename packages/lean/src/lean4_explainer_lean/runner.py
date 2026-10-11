@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import os
 import shutil
+import signal
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -69,20 +70,38 @@ def run_probe(tc: Toolchain, path: Path, names: list[str], timeout: int) -> tupl
         handle.write("\n".join(names))
         names_path = handle.name
     try:
-        done = subprocess.run(
-            [*tc.prefix, "--run", str(PROBE), str(path.resolve()), names_path],
-            cwd=tc.cwd,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=timeout,
-        )
-        return done.returncode, done.stdout, done.stderr
-    except subprocess.TimeoutExpired:
-        return -1, "", f"timed out after {timeout}s"
+        proc = _start([*tc.prefix, "--run", str(PROBE), str(path.resolve()), names_path], tc.cwd)
+        try:
+            out, err = proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            _stop_tree(proc)
+            try:
+                proc.communicate(timeout=30)
+            except subprocess.TimeoutExpired:
+                pass
+            return -1, "", f"timed out after {timeout}s"
+        return proc.returncode, out, err
     finally:
         Path(names_path).unlink(missing_ok=True)
+
+
+def _start(args: list[str], cwd: Path | None) -> subprocess.Popen:
+    """Start a process in its own group, so that a timeout can stop it with everything it started: `lake env lean`
+    starts lean, and elan's `lean` starts the toolchain's."""
+    group = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
+    return subprocess.Popen(args, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
+                            errors="replace", **group)
+
+
+def _stop_tree(proc: subprocess.Popen) -> None:
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/T", "/F", "/PID", str(proc.pid)], capture_output=True)
+    else:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    proc.kill()
 
 
 def cache_dir(explicit: str = "") -> Path:
