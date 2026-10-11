@@ -1,6 +1,7 @@
 import json
 import re
 import shutil
+from pathlib import Path
 
 import pytest
 
@@ -285,3 +286,121 @@ def test_with_lean_run_a_bridge_is_checked_by_the_kernel(tmp_path):
     # a bridge that depends on sorry fails the edge, and the build says so
     summary, out = _site(tmp_path, source=DEMO.replace("theorem bridge (x : Nat) (h : 7 < x) : 1 ≤ x := pos_of_gt x h", "theorem bridge (x : Nat) (h : 7 < x) : 1 ≤ x := sorry"), lean_cache=str(tmp_path / "cache"))
     assert any("gap-proved" in w and "depends on sorry" in w for w in summary.warnings), summary.warnings
+
+
+# ---- recorded checks and the discovered catalogue on the site ----
+
+
+def _recorded_site(tmp_path, record_change=None, bridge_change=None, checkout=lambda data: data):
+    """The fixture as a site, with a bridge file, a recorded check of it and a small catalogue (no Lean run here). The
+    record is made from the files as git stores them (LF); `checkout` is what the site's checkout has on disk."""
+    from lean4_explainer_implications.pipeline import catalogue as K
+
+    lean = Path(__file__).resolve().parent / "lean"
+    root = tmp_path / "src"
+    root.mkdir(exist_ok=True)
+    fixture = (lean / "ImplicationsFixture.lean").read_bytes().replace(b"\r\n", b"\n")
+    (root / "ImplicationsFixture.lean").write_bytes(checkout(fixture))
+    side = tmp_path / "side"
+    (side / "bridges").mkdir(parents=True, exist_ok=True)
+    bridge = (lean / "bridges" / "Good.lean").read_bytes().replace(b"\r\n", b"\n")
+    (side / "bridges" / "Good.lean").write_bytes(checkout(bridge_change(bridge) if bridge_change else bridge))
+    (side / "implications.toml").write_text((lean / "edges.toml").read_text(encoding="utf-8"), encoding="utf-8")
+    found = E.load((side / "implications.toml").read_text(encoding="utf-8"))
+    assert not found.problems, found.problems
+    sha = E.content_sha256(bridge)  # the file as it was checked
+    fixture_sha = E.content_sha256(fixture)
+    records = {}
+    for e in found.edges:
+        records[e.id] = {"status": "checked", "fingerprint": E.fingerprint(e, sha), "corpus_revision": "abcdef1234", "checked_at": "2026-10-10T00:00:00Z",
+                         "inputs": {"ImplicationsFixture.lean": fixture_sha}, "toolchain": "Lean (version 4.34.1)", "mathlib": "", "axioms": [],
+                         "expected": "∀ (source1 : …), …", "environment": "e1", "imports": ["ImplicationsFixture"], "bridge_sha256": sha, "command": "test",
+                         "target_conclusion": "1 ≤ Fx.size n", "contract_conclusion": "n + 1 ≤ Fx.size n", "target_only_hypotheses": []}
+        records[e.id].update((record_change or {}).get(e.id, {}))
+    (side / "implications.verified.json").write_text(json.dumps({"format": 1, "edges": records}), encoding="utf-8")
+
+    def key(n):
+        return f"test/fixture@abcdef123456:ImplicationsFixture:{n}"
+
+    def decl(n, line):
+        return {"key": key(n), "name": n, "module": "ImplicationsFixture", "path": "ImplicationsFixture.lean", "range": {"line": line},
+                "role": "statement", "kind": "theorem", "prop": True, "family": "Fixture", "type": n, "type_hash": n,
+                "norm": {"conclusion_head": "Fx.Fine", "hyp_heads": [], "uses": []}}
+
+    decls = [decl("Fx.good_of_two", 15), decl("Fx.fine_of_good", 18), decl("Fx.fine_of_two", 21), decl("Fx.size_pos", 39)]
+    results = [{"id": "a1", "status": "checked-instantiated", "rule": "target", "source_keys": [key("Fx.good_of_two"), key("Fx.fine_of_good")],
+                "target_key": key("Fx.fine_of_two"), "sources": ["Fx.good_of_two", "Fx.fine_of_good"], "statement": "∀ (n : Nat), 2 ≤ n → Fx.Fine n",
+                "derived": "(∀ n, 2 ≤ n → Fx.Good n) → (∀ n, Fx.Good n → Fx.Fine n) → ∀ (n : Nat), 2 ≤ n → Fx.Fine n", "statement_hash": "h1",
+                "used": [True, True], "steps": [{"step": "apply", "fact": "source 2", "substitutions": [{"variable": "n", "value": "n"}]}], "layer": "fixture"},
+               {"id": "a2", "status": "no-proof", "rule": "target", "source_keys": [key("Fx.size_pos")], "target_key": key("Fx.fine_of_two"),
+                "reason": "no derivation within the rules and depth"}]
+    cat = K.build(decls, results, {"provenance": "Recorded in a test.", "environment": {"policy": "rules-1:test"}})
+    K.write(cat, side / "catalogue")
+    opts = {"implications_file": str(side / "implications.toml"), "implications_commit": "abcdef1234"}
+    summary = build_site(root, tmp_path / "out", Config(options=tuple(sorted(opts.items()))), tmp_path / "idx", jobs=1)
+    return summary, tmp_path / "out"
+
+
+def test_a_recorded_check_shows_with_its_provenance_and_the_exact_contract(tmp_path):
+    summary, out = _recorded_site(tmp_path)
+    assert not summary.errors, summary.errors
+    index = (out / "implications.html").read_text(encoding="utf-8")
+    chain = index[index.index('id="chain"') :]
+    chain = chain[: chain.index("</article>")]
+    assert "kernel-checked (recorded)" in chain and "This build did not run Lean" in chain
+    assert "The exact contract, as Lean states it" in chain and "Recorded check" in chain
+    assert 'href="implications/bridges/Good.lean.html#L5"' in chain  # the bridge, on its own page, at its line
+    size = index[index.index('id="size-bound"') :]
+    assert "What it adds to the target" in size and "a lower bound that grows with n" in size
+    assert "Hypotheses the target has" not in size and "<code>n + 1 ≤ Fx.size n</code>" in size
+    bridge = (out / "implications" / "bridges" / "Good.lean.html").read_text(encoding="utf-8")
+    assert 'id="L5"' in bridge and "theorem bridge_good" in bridge
+    data = json.loads((out / "implications.json").read_text(encoding="utf-8"))
+    v = data["edges"][0]["verification"]
+    assert v["state"] == "kernel-checked" and v["provenance"] == "recorded" and v["record"]["checked_at"] == "2026-10-10T00:00:00Z"
+
+
+def test_a_changed_bridge_file_makes_the_recorded_check_stale(tmp_path):
+    summary, out = _recorded_site(tmp_path, bridge_change=lambda data: data.replace(b"fun n h => source2 n (source1 n h)", b"fun n h => source2 _ (source1 _ h)"))
+    assert any("chain" in w and "changed since" in w for w in summary.warnings), summary.warnings
+    index = (out / "implications.html").read_text(encoding="utf-8")
+    chain = index[index.index('id="chain"') :]
+    assert '<span class="imp imp-stale">check is stale</span>' in chain[: chain.index("</article>")]
+
+
+def test_a_record_made_on_one_checkout_holds_on_another_with_other_line_endings(tmp_path):
+    # found 2026-10-10: the record was made on Windows (core.autocrlf, CRLF) and Pages builds on Linux (LF); the same
+    # commit must not read as changed
+    summary, out = _recorded_site(tmp_path, checkout=lambda data: data.replace(b"\n", b"\r\n"))
+    assert not [w for w in summary.warnings if "stale" in w or "changed since" in w or "differ" in w], summary.warnings
+    data = json.loads((out / "implications.json").read_text(encoding="utf-8"))
+    assert {e["id"]: e["verification"]["state"] for e in data["edges"]} == {"chain": "kernel-checked", "size-bound": "kernel-checked"}
+
+
+def test_a_failed_record_fails_the_edge(tmp_path):
+    summary, out = _recorded_site(tmp_path, record_change={"chain": {"status": "mismatch", "reason": "type mismatch"}})
+    assert any("chain" in w and "failed (mismatch)" in w for w in summary.warnings), summary.warnings
+
+
+def test_the_catalogue_is_searchable_and_on_the_theorem_pages(tmp_path):
+    summary, out = _recorded_site(tmp_path)
+    assert not summary.errors, summary.errors
+    page = (out / "implications" / "catalogue.html").read_text(encoding="utf-8")
+    assert "Provenance." in page and "Recorded in a test." in page and 'src="catalogue.js"' in page
+    data = json.loads((out / "implications" / "catalogue" / "index.json").read_text(encoding="utf-8"))
+    t = data["theorems"]["test/fixture@abcdef123456:ImplicationsFixture:Fx.fine_of_two"]
+    assert t["page"] == "../ImplicationsFixture.lean.html#L19"
+    assert [i["id"] for i in data["implications"]] == ["a1"] and data["implications"][0]["layer"] == "fixture"
+    shard = data["implications"][0]["shard"]
+    assert (out / "implications" / "catalogue" / "shards" / f"{shard}.json").is_file()
+    assert (out / "implications" / "catalogue.js").is_file()
+    notes = (out / "implications" / "notes.html").read_text(encoding="utf-8")
+    assert "Unresolved attempts (1)" in notes and "never false" in notes
+    fixture = (out / "ImplicationsFixture.lean.html").read_text(encoding="utf-8")
+    target = fixture[fixture.index('id="L19"') : fixture.index('id="L22"')]
+    assert "Checked implications" in target and "Follows from" in target and "implications/catalogue.html#a1" in target
+    assert "kernel-checked (recorded)" in target  # the curated edge's badge says where its check comes from
+    assert 'href="implications/notes.html"' in (out / "implications.html").read_text(encoding="utf-8")
+    source = fixture[fixture.index('id="L13"') : fixture.index('id="L16"')]
+    assert "Gives" in source and "together with" in source
+    assert "Checked implications" not in fixture[fixture.index('id="L37"') :]  # size_pos: only an unresolved attempt

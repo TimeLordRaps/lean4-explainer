@@ -86,9 +86,10 @@ def test_every_extra_installs_the_packages_of_its_corpora():
     assert extras["l4del"] == ["lean4-explainer-l4del>=0.3.0"]  # the version that leaves the map and the glossary page to others
     # 0.2.0 follows imports through files that only import (the core's import graph, core 0.3.0)
     assert extras["map"] == ["lean4-explainer-map>=0.2.0"] and "lean4-explainer-map>=0.2.0" in extras["all"]
-    # 0.3.0 carries its implication edges (the corpora's `implications`, corpora 0.4.0)
-    assert extras["oai"] == ["lean4-explainer-oai>=0.3.0"] and "lean4-explainer-oai>=0.3.0" in extras["all"]
-    assert extras["implications"] == ["lean4-explainer-implications>=0.1.0"] and "lean4-explainer-implications>=0.1.0" in extras["all"]
+    # 0.4.0 carries the proved edge's bridge, its verification record and the discovered catalogue
+    assert extras["oai"] == ["lean4-explainer-oai>=0.4.0"] and "lean4-explainer-oai>=0.4.0" in extras["all"]
+    # 0.2.0 checks verification records against the files and shows the catalogue; 0.1.0 would show neither
+    assert extras["implications"] == ["lean4-explainer-implications>=0.2.0"] and "lean4-explainer-implications>=0.2.0" in extras["all"]
 
 
 def test_an_uninstalled_corpus_names_the_extra_that_installs_it():

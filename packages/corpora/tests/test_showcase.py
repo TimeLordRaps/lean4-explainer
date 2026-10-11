@@ -1,5 +1,6 @@
 """fetch pins a corpus to its commit; the showcase builds one subsite per corpus under a landing page."""
 
+import json
 import subprocess
 from dataclasses import replace
 from pathlib import Path
@@ -277,8 +278,19 @@ def test_the_oai_implication_edges_are_contracts_read_at_its_pin():
     assert found.problems == ()
     assert found.edges, "the oai sidecar holds at least one edge"
     assert all(edge.commit == oai.commit for edge in found.edges)
-    assert all(edge.status != "proved" for edge in found.edges)  # nothing here has a Lean bridge yet
     assert all(c.implications == "" for name, c in CORPORA.items() if name != "oai")
+    # a proved edge ships its bridge file and a recorded kernel check that still matches its contract and that file
+    side = Path(oai.implications).parent
+    record_file = side / (Path(oai.implications).stem + ".verified.json")
+    records = json.loads(record_file.read_text(encoding="utf-8"))["edges"] if record_file.is_file() else {}
+    proved = [e for e in found.edges if e.status == "proved"]
+    for edge in proved:
+        assert edge.bridge_file, f"{edge.id} is proved by a bridge in the corpus sidecar, so it needs a bridge file"
+        bridge = side / edge.bridge_file
+        assert bridge.is_file(), bridge
+        v = edges.verify(edge, lambda name: None, records.get(edge.id), edges.content_sha256(bridge.read_bytes()))
+        assert (v.state, v.provenance) == ("kernel-checked", "recorded"), (edge.id, v.detail)
+    assert [e.id for e in proved] == ["seven-eighths-gives-an-explicit-real-zero-gap"]  # the fluid candidate is unfinished
 
 
 def test_with_the_reader_a_corpus_too_big_to_publish_twice_reads_from_its_pinned_raw_source(upstream, tmp_path):

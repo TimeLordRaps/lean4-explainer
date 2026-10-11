@@ -46,6 +46,8 @@ Math is a web of results leaning on each other. The site shows that web in five 
 4. **Link lists** under each declaration: Prerequisites, See also, and the results it uses.
 5. **Implication edges** (`implications.html`, with the optional implications extension). Some links are not in the code at all: one result could give another even though the published proof goes a different way. An edge says so, and since that is a claim, it keeps the exact hypotheses, the conclusion, the commit it was read at, and how far it has been checked (suggested, argued in words, or proved in Lean and checked by the kernel). Edges are kept apart from the links read from the code, so the map never mixes the two.
 
+   Beside the curated edges, a **catalogue of checked implications** (`implications/catalogue.html`) lists what the extension's discovery pipeline found: it proposes narrow candidates from the statements' structure alone, tries a fixed set of rules in Lean, and keeps a result only when Lean's kernel checks it with the sources as hypotheses. Each entry shows the exact statement checked and its steps; routine results (the same statement, a restatement, two forms of one challenge) are grouped apart, and attempts that established nothing are listed on a notes page, never as "false". The openai/math project ships one, with its run report.
+
 With the optional Lean extension, each declaration also lists the definitions and lemmas its statement and its proof use, taken from Lean itself. Its tactic trace and the Reading are joined: each step of the Reading has a "goals" link to what Lean had left to prove at that step, and each step of the trace has an "in words" link back.
 
 ## Try it on your own computer

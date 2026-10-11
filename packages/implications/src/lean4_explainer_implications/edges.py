@@ -18,6 +18,13 @@ The edges live in a sidecar TOML file, never in the Lean sources:
     origin = "..."                  # who proposed it, and when
     argument = "..."                # argued: the argument in words, and whose it is
     bridge = "Ns.edge_lemma"        # proved: a Lean declaration that states hypotheses -> conclusion and proves it
+    bridge_file = "bridges/X.lean"  # proved, optional: the file that declares the bridge (beside the edge file), checked
+                                    #   by `python -m lean4_explainer_implications.pipeline contracts`, which records
+                                    #   the result in <edge file stem>.verified.json; without it the bridge is a site
+                                    #   declaration, checked when the same build runs Lean
+    relation = "x_gives_target"     # strengthens with a bridge file: proves (the contract) -> the target's statement
+    improvement = "..."             # strengthens with a bridge file: what the contract gives that the target does not
+    construction = "Ns.f"           # supports-construction with a bridge file: the computable definition it is about
     evidence = "..."                # refuted: the counterexample or the step that fails
     note = "..."                    # optional
 
@@ -31,11 +38,16 @@ The edges live in a sidecar TOML file, never in the Lean sources:
     missing = "..."                 # what it needs to become an edge
 
 Every key is checked: an unknown key, a missing one or a contract with a gap is an error, so a typo never passes as
-a claim. Names are checked against the site when it is built.
+a claim. Names are checked against the site when it is built (a bridge in a bridge file is checked by Lean instead).
+
+A recorded check counts only while what it checked is unchanged: the edge's contract, the bridge file, the commit and
+the corpus files the bridge imports (`fingerprint`, and the record's `inputs`). Any difference makes it stale.
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import tomllib
 from collections.abc import Callable
@@ -77,7 +89,8 @@ STATUSES = {
     "refuted": "Refuted: the evidence below shows it does not hold as stated.",
 }
 _NEEDS = {"argued": "argument", "proved": "bridge", "refuted": "evidence"}
-_EDGE_KEYS = {"id", "kind", "from", "to", "hypotheses", "conclusion", "commit", "status", "origin", "argument", "bridge", "evidence", "note"}
+_EDGE_KEYS = {"id", "kind", "from", "to", "hypotheses", "conclusion", "commit", "status", "origin", "argument", "bridge", "evidence", "note",
+              "bridge_file", "relation", "improvement", "construction"}
 _EDGE_REQUIRED = ("id", "kind", "from", "hypotheses", "conclusion", "commit", "status", "origin")
 _CANDIDATE_KEYS = {"id", "kind", "from", "to", "phrase", "origin", "missing", "note"}
 _CANDIDATE_REQUIRED = ("id", "kind", "from", "phrase", "origin")
@@ -102,11 +115,15 @@ class Edge:
     bridge: str = ""
     evidence: str = ""
     note: str = ""
+    bridge_file: str = ""
+    relation: str = ""
+    improvement: str = ""
+    construction: str = ""
 
     @property
     def names(self) -> tuple[str, ...]:
-        """Every declaration it names: the sources, the target, the bridge."""
-        return self.sources + tuple(n for n in (self.target, self.bridge) if n)
+        """Every site declaration it names: the sources, the target, and the bridge unless a bridge file declares it."""
+        return self.sources + tuple(n for n in (self.target, "" if self.bridge_file else self.bridge) if n)
 
 
 @dataclass(frozen=True)
@@ -134,8 +151,9 @@ class Found:
 
 @dataclass(frozen=True)
 class Verification:
-    state: str  # proposed | argued | unchecked | kernel-checked | fails | refuted
+    state: str  # proposed | argued | unchecked | kernel-checked | stale | fails | refuted
     detail: str
+    provenance: str = ""  # kernel-checked: "this build" (Lean ran here) or "recorded" (a recorded check this build compared)
 
 
 def load(text: str) -> Found:
@@ -239,9 +257,28 @@ def _edge(row) -> Edge | list[str]:
         problems.append(f"status must be one of {', '.join(STATUSES)}, not {status!r}")
     elif status in _NEEDS and not str(row.get(_NEEDS[status], "")).strip():
         problems.append(f"{'an' if status[0] in 'aeiou' else 'a'} {status} edge needs `{_NEEDS[status]}`")
-    fields = {key: _text(row, key, problems, required=False) for key in ("argument", "bridge", "evidence", "note")}
-    if fields["bridge"] and not _NAME_RE.match(fields["bridge"]):
-        problems.append(f"{fields['bridge']!r} is not a declaration name")
+    fields = {key: _text(row, key, problems, required=False)
+              for key in ("argument", "bridge", "evidence", "note", "bridge_file", "relation", "improvement", "construction")}
+    for key in ("bridge", "relation", "construction"):
+        if fields[key] and not _NAME_RE.match(fields[key]):
+            problems.append(f"{fields[key]!r} is not a declaration name")
+    if fields["bridge_file"]:
+        parts = fields["bridge_file"].replace("\\", "/").split("/")
+        if not fields["bridge"]:
+            problems.append("a bridge file needs `bridge`, the declaration in it that proves the contract")
+        if fields["bridge_file"].startswith(("/", "\\")) or ":" in fields["bridge_file"] or ".." in parts or not fields["bridge_file"].endswith(".lean"):
+            problems.append("bridge_file must be a .lean file beside the edge file: a relative path, without ..")
+        if status == "proved" and kind == "strengthens":
+            for key, what in (("relation", "the declaration that proves the contract gives the target's statement"),
+                              ("improvement", "what the contract gives that the target does not")):
+                if not fields[key]:
+                    problems.append(f"a proved strengthens edge with a bridge file needs `{key}`: {what}")
+        if status == "proved" and kind == "supports-construction" and not fields["construction"]:
+            problems.append("a proved supports-construction edge with a bridge file needs `construction`, the computable definition")
+    else:
+        for key in ("relation", "construction"):
+            if fields[key]:
+                problems.append(f"`{key}` is checked with the bridge file: name `bridge_file` too")
     origin = _text(row, "origin", problems)
     if problems:
         return problems
@@ -260,18 +297,78 @@ def _candidate(row) -> Candidate | list[str]:
     return Candidate(row["id"], kind, sources, target, phrase, origin, missing, note)
 
 
-def verify(edge: Edge, kernel: Callable[[str], tuple[str, str] | None]) -> Verification:
-    """How far this build confirms the edge. `kernel(name)` is what a Lean run says of a declaration, None without one."""
+def content_sha256(data: bytes) -> str:
+    """The SHA-256 of a source file's text with its line endings made LF: a Windows checkout (CRLF) and a Linux one
+    (LF) of the same commit give the same digest, and Lean reads both the same way."""
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+
+
+def fingerprint(edge: Edge, bridge_sha256: str) -> str:
+    """What a recorded check of this edge depended on: the edge's contract and the bridge file's digest."""
+    blob = json.dumps({
+        "kind": edge.kind, "sources": [_bare(n) for n in edge.sources], "target": _bare(edge.target),
+        "hypotheses": list(edge.hypotheses), "conclusion": edge.conclusion, "commit": edge.commit,
+        "bridge": edge.bridge, "relation": edge.relation, "construction": edge.construction, "bridge_sha256": bridge_sha256,
+    }, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(blob.encode()).hexdigest()[:24]
+
+
+def _bare(name: str) -> str:
+    return name.partition("@")[0]
+
+
+def verify(
+    edge: Edge,
+    kernel: Callable[[str], tuple[str, str] | None],
+    record: dict | None = None,
+    bridge_sha256: str | None = None,
+    inputs: dict[str, str | None] | None = None,
+) -> Verification:
+    """How far this build confirms the edge.
+
+    Without a bridge file, `kernel(name)` is what a Lean run in this build says of the bridge (None without one).
+    With one, `record` is its recorded check (from the .verified.json file), `bridge_sha256` the bridge file's digest
+    now (None when the file is missing), and `inputs` the digests now of the corpus files the record names (None for a
+    file this build cannot read)."""
     if edge.status != "proved":
         detail = {"proposed": "Nothing has checked it.", "argued": "The argument is written out below; Lean has not checked it.", "refuted": edge.evidence}[edge.status]
         return Verification(edge.status, detail)
+    bridge = _bare(edge.bridge)  # the name Lean knows, without an @path
+    if edge.bridge_file:
+        return _recorded(edge, bridge, record, bridge_sha256, inputs or {})
     said = kernel(edge.bridge)
-    bridge = edge.bridge.partition("@")[0]  # the name Lean knows, without an @path
     if said is None:
         return Verification("unchecked", f"Not checked in this build: Lean was not run. The edge file says {bridge} proves it.")
     kind, label = said
     if kind in ("none", "standard"):
-        return Verification("kernel-checked", f"Lean's kernel checked {bridge} in this build: {label}.")
+        return Verification("kernel-checked", f"Lean's kernel checked {bridge} in this build: {label}.", "this build")
     if kind in ("sorry", "extra"):
         return Verification("fails", f"{bridge} does not prove it in this build ({label}).")
     return Verification("unchecked", f"Not checked in this build: {label}.")
+
+
+def _recorded(edge: Edge, bridge: str, record: dict | None, bridge_sha256: str | None, inputs: dict[str, str | None]) -> Verification:
+    if bridge_sha256 is None:
+        return Verification("fails", f"The bridge file {edge.bridge_file} is missing.")
+    if not record:
+        return Verification("unchecked", f"No recorded check: the edge file says {bridge} in {edge.bridge_file} proves it, "
+                            "and nothing has run Lean on it (python -m lean4_explainer_implications.pipeline contracts).")
+    when = record.get("checked_at", "")
+    if record.get("fingerprint") != fingerprint(edge, bridge_sha256):
+        return Verification("stale", f"The check recorded on {when} was of another contract or another bridge file: "
+                            "the edge or its bridge changed since, so it says nothing now.")
+    rev = str(record.get("corpus_revision", ""))
+    if not rev or not (rev.startswith(edge.commit) or edge.commit.startswith(rev)):
+        return Verification("stale", f"The check recorded on {when} read the corpus at {rev[:12] or 'an unknown commit'}, not at {edge.commit}.")
+    changed = sorted(path for path, digest in (record.get("inputs") or {}).items() if inputs.get(path) not in (None, digest))
+    if changed:
+        return Verification("stale", f"The check recorded on {when} read {', '.join(changed)}, which differ in this build.")
+    if record.get("status") != "checked":
+        return Verification("fails", f"The check recorded on {when} failed ({record.get('status')}): {record.get('reason', '')}")
+    unread = sorted(path for path in (record.get("inputs") or {}) if inputs.get(path) is None)
+    axioms = ", ".join(record.get("axioms") or []) or "none"
+    detail = (f"Lean's kernel checked {bridge} against this contract on {when} ({record.get('toolchain', '')}, Mathlib "
+              f"{str(record.get('mathlib', ''))[:12]}, corpus {rev[:12]}; axioms: {axioms}). This build did not run Lean: it "
+              "shows that record, after comparing the contract, the bridge file and the commit with it")
+    detail += f"; it could not read {', '.join(unread)} to compare." if unread else ", and the corpus files it read."
+    return Verification("kernel-checked", detail, "recorded")
