@@ -85,7 +85,9 @@ theorem odd_add_odd ...
 
 Lean treats them as ordinary comments, so your proofs are untouched. Run `lean4-explainer check` and it tells you what is missing or misspelled. Run `lean4-explainer annotate --file Foo.lean` and it prints a ready-to-fill template for every declaration that has no explanation.
 
-If you do not own the project, keep the explanations in a separate **overlay** file instead of editing their source. That is how the example projects on the live site are annotated. The details are in the [reference](docs/REFERENCE.md).
+If you do not own the project, keep the explanations in a separate **overlay** file instead of editing their source.
+The live showcase explicitly injects repository-owned overlays through a commit- and hash-bound manifest; corpus
+packages on PyPI contain no L4DEL explanation text. The details are in the [reference](docs/REFERENCE.md).
 
 ## Pick your pieces
 

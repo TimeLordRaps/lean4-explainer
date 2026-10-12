@@ -78,12 +78,15 @@ def check(ws: Workspace, edges: list[E.Edge], edge_dir: Path, out_dir: Path, cor
         plan_path, result_path = (out_dir / f"contract-{tag}.json").resolve(), (out_dir / f"contract-{tag}.jsonl").resolve()
         plan = {"bridge_file": str(path), "corpus": list(ws.corpus_prefixes), "contracts": [contract_json(e) for e in group]}
         plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+        # A prior interrupted check can have the same deterministic filename. Only this invocation may create the
+        # evidence read below.
+        result_path.unlink(missing_ok=True)
         imports = header_imports(path)
         env_id = A.environment_identity(ws, [m for m in imports if ws.is_corpus(m)])
         kwargs = {} if commit_gb is None else {"commit_gb": commit_gb}
         run = L.run(ws.env(), ws.root, ["contract", str(plan_path), str(result_path)], timeout, log, **kwargs)
         got = {}
-        if result_path.is_file():
+        if run.ok and result_path.is_file():
             for line in result_path.read_text(encoding="utf-8").splitlines():
                 if line.strip():
                     row = json.loads(line)
@@ -93,6 +96,10 @@ def check(ws: Workspace, edges: list[E.Edge], edge_dir: Path, out_dir: Path, cor
         for e in group:
             row = got.get(e.id) or {"id": e.id, "status": "error", "reason": f"the Lean process gave no result: {run.tail(600)}"}
             row.pop("bridge_file", None)
+            if "target_only_hypotheses" in row:
+                # Pipeline.lean currently compares these display strings. State that basis explicitly instead of
+                # claiming semantic inequality when two alpha-renamed hypotheses merely print differently.
+                row["hypothesis_comparison"] = "rendered-text"
             row.update({
                 "format": RECORD_FORMAT, "bridge_file": rel, "bridge_sha256": bridge_sha, "fingerprint": E.fingerprint(e, bridge_sha),
                 "inputs": inputs, "imports": imports, "environment": env_id, "toolchain": toolchain, "mathlib": mathlib_revision,

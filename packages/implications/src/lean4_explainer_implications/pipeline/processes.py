@@ -20,6 +20,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 POLL_SECONDS = 10.0
+MEMORY_LOG_SECONDS = 60.0
 MEMORY_WAIT_SECONDS = 7200.0  # how long a launch waits for memory before giving up
 _TURN = threading.Lock()
 
@@ -66,6 +67,7 @@ def wait_for_memory(need_gb: float, log: Callable[[str], None], max_wait: float 
     """Wait until the system can commit `need_gb` more; RuntimeError after `max_wait` seconds (MEMORY_WAIT_SECONDS)."""
     max_wait = MEMORY_WAIT_SECONDS if max_wait is None else max_wait
     waited = 0.0
+    next_log = MEMORY_LOG_SECONDS
     while True:
         free = free_commit_gb()
         if free is None or free >= need_gb:
@@ -74,6 +76,9 @@ def wait_for_memory(need_gb: float, log: Callable[[str], None], max_wait: float 
             raise RuntimeError(f"the system could commit only {free:.1f} GB for {max_wait:.0f}s; a Lean run needs {need_gb:.0f} GB")
         if waited == 0:
             log(f"lean: waiting for memory ({free:.1f} GB free to commit, {need_gb:.0f} GB needed)")
+        elif waited >= next_log:
+            log(f"lean: still waiting for memory ({free:.1f} GB free to commit, {need_gb:.0f} GB needed; waited {waited:.0f}s)")
+            next_log += MEMORY_LOG_SECONDS
         time.sleep(POLL_SECONDS)
         waited += POLL_SECONDS
 

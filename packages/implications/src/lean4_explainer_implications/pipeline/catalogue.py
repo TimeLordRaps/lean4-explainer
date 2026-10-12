@@ -148,27 +148,96 @@ def build(
 ) -> dict:
     """The catalogue as one dict (`write` shards it). `declarations` are extraction records with identity; `results`
     are attempt results that carry `source_keys` and `target_key`."""
+    seen_ids = set()
+    for row in results:
+        id_ = row.get("id")
+        if not isinstance(id_, str) or not id_:
+            raise ValueError("nonempty attempt id required")
+        if id_ in seen_ids:
+            raise ValueError(f"duplicate attempt id {id_}")
+        seen_ids.add(id_)
     by_key = {d["key"]: d for d in declarations}
-    released_proof_uses: dict[str, set[str]] = defaultdict(set)  # name -> names its released proof uses (direct)
+    proof_by_name: dict[str, list[dict]] = defaultdict(list)
     for d in declarations:
         if d["role"] in ("released", "helper"):
-            released_proof_uses[d["name"]].update(d.get("proof_uses", []))
+            proof_by_name[d["name"]].append(d)
 
-    def closure_uses(name: str, limit: int = 4000) -> set[str]:
-        seen, todo = set(), [name]
-        while todo and len(seen) < limit:
-            n = todo.pop()
-            for u in released_proof_uses.get(n, ()):
-                if u not in seen:
-                    seen.add(u)
-                    todo.append(u)
-        return seen
+    def resolve_proof_use(owner: dict, name: str) -> str:
+        """Resolve a proof-term name without joining clashing extraction environments.
+
+        A same-family declaration is authoritative. A cross-family declaration is usable only when the name is
+        globally unique among extracted released/helper declarations; every ambiguity fails closed.
+        """
+        candidates = proof_by_name.get(name, [])
+        if "env" in owner:
+            # `env` is assigned by extraction. Two modules that clash are deliberately put in distinct environments;
+            # a proof term can only refer to the declaration bearing this name in its own imported environment.
+            same_environment = [d for d in candidates if d.get("env") == owner["env"]]
+            return same_environment[0]["key"] if len(same_environment) == 1 else ""
+        same_family = [d for d in candidates if owner.get("family") and d.get("family") == owner.get("family")]
+        pool = same_family or candidates
+        return pool[0]["key"] if len(pool) == 1 else ""
+
+    proof_use_keys = {
+        d["key"]: {key for name in d.get("proof_uses", []) if (key := resolve_proof_use(d, name))}
+        for d in declarations if d["role"] in ("released", "helper")
+    }
+
+    def closure_uses(key: str, limit: int = 4000) -> tuple[set[str], set[str]]:
+        names, seen_keys, todo = set(), set(), [key]
+        while todo and len(seen_keys) < limit:
+            current = todo.pop()
+            declaration = by_key.get(current)
+            if declaration is None:
+                continue
+            names.update(declaration.get("proof_uses", []))
+            for used_key in proof_use_keys.get(current, ()):
+                if used_key not in seen_keys:
+                    seen_keys.add(used_key)
+                    todo.append(used_key)
+        return names, seen_keys
+
+    releases_by_name: dict[str, list[dict]] = defaultdict(list)
+    statement_families_by_name: dict[str, set[str]] = defaultdict(set)
+    for d in declarations:
+        if d["role"] == "released":
+            releases_by_name[d["name"]].append(d)
+        elif d["role"] == "statement":
+            statement_families_by_name[d["name"]].add(d.get("family", ""))
+
+    def released_copy(statement: dict | None) -> str:
+        if statement is None:
+            return ""
+        if statement.get("role") == "released":
+            return statement["key"]
+        candidates = releases_by_name.get(statement["name"], [])
+        family = statement.get("family")
+        if family:
+            candidates = [d for d in candidates if d.get("family") == family]
+        same_type = [d for d in candidates if d.get("type_hash") == statement.get("type_hash")]
+        pool = same_type or candidates
+        return pool[0]["key"] if len(pool) == 1 else ""
 
     all_results = results
-    # each row of the instantiate stage applies one checked derivation to the released theorems: it changes that
-    # derivation's state and is not a result of its own
-    applied = {r["derivation"]: r for r in results if r.get("derivation")}
+    # Each row of the instantiate stage applies one checked derivation to the released theorems: it changes that
+    # derivation's state and is not a result of its own. More than one row would otherwise silently choose the last.
+    applied = {}
+    for row in results:
+        derivation = row.get("derivation")
+        if not derivation:
+            continue
+        if derivation in applied:
+            raise ValueError(f"duplicate instantiation for derivation {derivation}")
+        applied[derivation] = row
     results = [r for r in results if not r.get("derivation")]
+    by_result_id = {r.get("id"): r for r in results if r.get("id")}
+    for derivation, row in applied.items():
+        original = by_result_id.get(derivation)
+        if original is None:
+            raise ValueError(f"orphan instantiation {derivation}")
+        identity = lambda r: (r.get("rule", ""), tuple(r.get("source_keys", [])), r.get("target_key", ""))  # noqa: E731
+        if identity(row) != identity(original):
+            raise ValueError(f"instantiation does not match derivation {derivation}")
     derivations = CHECKED + ("instantiation-circular",)
     checked = [r for r in results if r.get("status") in derivations]
     rejected = [r for r in results if r.get("status") == "rejected"]
@@ -188,6 +257,21 @@ def build(
         td = by_key.get(tgt)
         group, why = "connection", ""
         restates = [k for k in by_type.get(r.get("statement_hash", ""), []) if k not in srcs] if not tgt else []
+        target_release = (inst or {}).get("verification_target_key", "") or released_copy(td)
+        proof_names, proof_keys = closure_uses(target_release) if target_release else (set(), set())
+        verification_sources = (inst or {}).get("verification_source_keys", [])
+        exact_proof_route = bool(verification_sources) and all(k in proof_keys for k in verification_sources)
+
+        def source_occurs_in_proof(source: dict) -> bool:
+            if source["name"] not in proof_names:
+                return False
+            resolved = [by_key[k] for k in proof_keys if by_key.get(k, {}).get("name") == source["name"]]
+            if resolved:
+                return any(d.get("family") == source.get("family") for d in resolved)
+            families = statement_families_by_name.get(source["name"], set()) - {""}
+            target_family = by_key.get(target_release, {}).get("family", "")
+            return len(families) <= 1 or source.get("family") == target_family
+
         if status == "instantiation-circular":
             group, why = "source uses the target", "a source's released proof already uses the target, so applied to the released theorems the route is circular"
         elif any(generated(x) for x in sd + ([td] if td else [])):
@@ -200,7 +284,7 @@ def build(
             group, why = "restatement", "the proof passes the source through unchanged: the two state one proposition up to unfolding definitions"
         elif td is not None and sd and all(s.get("challenge") and s.get("challenge") == td.get("challenge") for s in sd):
             group, why = "one challenge", f"{td['challenge']} lists source and target as forms of one result"
-        elif td is not None and all(s["name"] in closure_uses(td["name"]) for s in sd):
+        elif td is not None and sd and (exact_proof_route or (not verification_sources and all(source_occurs_in_proof(s) for s in sd))):
             group, why = "in the released proof", "the target's released proof already goes through the source"
         elif td is not None and len(sd) == 1 and ((tgt,), srcs[0]) in pairs and srcs[0] > tgt:
             # both directions were checked: list the pair once, as an equivalence
@@ -215,6 +299,10 @@ def build(
             else:
                 by_statement[h] = r["id"]
         family = (td or (sd[0] if sd else {})).get("family", "")
+        # what a composition's first source supplies to the second, as Lean recorded it (older results did not)
+        supply = next((x for x in r.get("steps", []) if x.get("step") == "supply"), None)
+        link = None if supply is None or "hypothesis_head" not in supply else {
+            "hypothesis": supply.get("hypothesis", ""), "head": supply["hypothesis_head"], "positivity": bool(supply.get("positivity"))}
         implications.append({
             "id": r["id"], "state": "checked-instantiated" if status == "checked-instantiated" else "checked-derivation",
             "restates": restates,
@@ -226,24 +314,25 @@ def build(
             "axioms": r.get("axioms", []), "instantiated_axioms": r.get("instantiated_axioms") or (inst or {}).get("instantiated_axioms", []),
             "instantiation": None if inst is None else {
                 "id": inst["id"], "status": inst.get("status", ""), "reason": _short(inst.get("reason", ""), 300),
+                "verification_sources": inst.get("verification_source_keys", []),
+                "verification_target": inst.get("verification_target_key", ""),
                 "environment": {"id": inst.get("env_id", ""), "modules": inst.get("env_modules", 0)},
                 "cost": {"ms": inst.get("ms", 0), "heartbeats_thousands": inst.get("heartbeats", 0)}},
-            "match": r.get("match", ""), "shared": r.get("shared", []),
+            "link": link, "match": r.get("match", ""), "shared": r.get("shared", []),
             "environment": {"id": r.get("env_id", ""), "modules": r.get("env_modules", 0), "layer": r.get("layer", "")},
             "cost": {"ms": r.get("ms", 0), "heartbeats_thousands": r.get("heartbeats", 0)},
         })
     # only theorems a checked entry names: the rest would be most of the index and show nothing (other rows keep keys)
-    involved = {k for i in implications for k in i["sources"] + ([i["target"]] if i["target"] else []) + i["restates"]}
+    involved = {k for i in implications for k in i["sources"] + ([i["target"]] if i["target"] else []) + i["restates"]
+                + ((i.get("instantiation") or {}).get("verification_sources") or [])
+                + ([(i.get("instantiation") or {}).get("verification_target")] if (i.get("instantiation") or {}).get("verification_target") else [])}
     theorems = {d["key"]: theorem_entry(d) for d in declarations if d["key"] in involved}
     # proof dependencies among corpus declarations, read from released proof terms
-    names = defaultdict(list)
-    for d in declarations:
-        names[(d["name"], d["role"] in ("released", "helper"))].append(d["key"])
     dependencies = []
     for d in declarations:
         if d["role"] not in ("released", "helper") or d.get("kind") != "theorem":
             continue
-        uses = sorted({k for u in d.get("proof_uses", []) for k in names.get((u, True), [])})
+        uses = sorted(proof_use_keys.get(d["key"], ()))
         if uses:
             dependencies.append({"from": d["key"], "uses": uses, "family": d.get("family", "")})
     unresolved_rows = [{
@@ -264,6 +353,7 @@ def build(
         "checked_by_state": dict(Counter(i["state"] for i in implications)),
         "instantiation": dict(Counter(r.get("status", "") for r in applied.values())),
         "connections": sum(i["group"] == "connection" for i in implications),
+        "connections_by_link": dict(Counter(link_kind(i) for i in implications if i["group"] == "connection")),
         "dependencies": sum(len(d["uses"]) for d in dependencies),
         "unresolved": len(unresolved_rows),
         "unresolved_by_status": dict(Counter(r["status"] for r in unresolved_rows)),
@@ -291,6 +381,14 @@ def _shard_name(family: str) -> str:
     return f"{slug[:48]}-{hashlib.sha256(family.encode()).hexdigest()[:6]}"
 
 
+def link_kind(entry: dict) -> str:
+    """What links a composition's sources: a quantity's positivity, else the head of the supplied hypothesis."""
+    link = entry.get("link")
+    if not link:
+        return "derives a named result" if entry.get("target") else "not recorded"
+    return "positivity" if link["positivity"] else link["head"]
+
+
 def write(cat: dict, out: Path) -> dict[str, int]:
     """Write the catalogue as a small index plus shards per family, so a page loads only what it shows."""
     out.mkdir(parents=True, exist_ok=True)
@@ -302,7 +400,7 @@ def write(cat: dict, out: Path) -> dict[str, int]:
     index_rows = [{
         "id": i["id"], "state": i["state"], "group": i["group"], "rules": i["rules"], "sources": i["sources"],
         "target": i["target"], "restates": i["restates"], "families": i["families"], "statement": _short(i["statement"]),
-        "shard": _shard_name(i.get("family", "")), "layer": i["environment"]["layer"],
+        "shard": _shard_name(i.get("family", "")), "layer": i["environment"]["layer"], "link": link_kind(i) if i.get("link") else "",
     } for i in cat["implications"]]
     index = {k: v for k, v in cat.items() if k not in ("implications", "dependencies", "unresolved", "rejected")}
     index["implications"] = index_rows

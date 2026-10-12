@@ -619,6 +619,21 @@ end
 
 /-! ## Attempts -/
 
+/-- A source's universe level that the derivation leaves free (a composition fixes no target's levels, and a
+source's own universe need not occur in the target) becomes a universe parameter of the derived theorem, as it is
+one of the source: `u_1`, `u_2`, … after the names already taken. -/
+def generalizeLevels (levels : List Name) (type value : Expr) : MetaM (List Name) := do
+  let st := collectLevelMVars (collectLevelMVars {} type) value
+  let mut levels := levels
+  let mut k := 1
+  for mv in st.result do
+    if (← isLevelMVarAssigned mv) then continue
+    while levels.contains (Name.mkSimple s!"u_{k}") do k := k + 1
+    let n := Name.mkSimple s!"u_{k}"
+    assignLevelMVar mv (mkLevelParam n)
+    levels := levels ++ [n]
+  return levels
+
 /-- Check a found proof: kernel, axioms, what it reaches, which sources it uses. `stmt` is what is derived, in the
 context of the source hypotheses `hs`. -/
 def finish (cfg : Cfg) (id : String) (hs : Array Expr) (srcLevels : Array (List Level)) (proofBody stmt : Expr)
@@ -629,6 +644,9 @@ def finish (cfg : Cfg) (id : String) (hs : Array Expr) (srcLevels : Array (List 
   let used := hs.map fun h => proofBody.containsFVar h.fvarId!
   let value ← instantiateMVars (← mkLambdaFVars hs proofBody)
   let type ← instantiateMVars (← mkForallFVars hs stmt)
+  let levels ← generalizeLevels levels type value
+  let value ← instantiateMVars value
+  let type ← instantiateMVars type
   if type.hasLevelMVar || value.hasLevelMVar then return ([], "error", "universe levels are not determined")
   let stmt ← instantiateMVars stmt
   let name := (`LeanExplainer.derived).str id
@@ -694,6 +712,15 @@ def attemptTarget (cfg : Cfg) (id : String) (sources : Array Name) (target : Nam
     let (info, status, reason) ← finish cfg id hs levels goal tci.type tci.levelParams #[target] sources instantiate
     return outcome id status reason info
 
+/-- Whether a hypothesis says only that a quantity is positive or nonnegative (`0 < x`, `0 ≤ x`, `x > 0`, `x ≥ 0`):
+a composition linked by one says less than its two sources might suggest, and the catalogue says which it is. -/
+def isPositivity (e : Expr) : MetaM Bool := do
+  let e ← instantiateMVars e
+  let zero (z : Expr) : Bool := z.nat? == some 0 || z.isAppOfArity ``Zero.zero 2
+  if e.isAppOfArity ``LT.lt 4 || e.isAppOfArity ``LE.le 4 then return zero (e.getArg! 2)
+  if e.isAppOfArity ``GT.gt 4 || e.isAppOfArity ``GE.ge 4 then return zero (e.getArg! 3)
+  return false
+
 /-- Bind a step's undetermined variables and unproved hypotheses as binders of the derived statement, in order. -/
 partial def bindRest [Inhabited α] (s : Search) (ms : Array Expr) (bis : Array BinderInfo) (i : Nat) (acc : Array Expr)
     (k : Array Expr → MetaM α) : MetaM α := do
@@ -705,10 +732,16 @@ partial def bindRest [Inhabited α] (s : Search) (ms : Array Expr) (bis : Array 
       if let some inst ← (try some <$> synthInstance ty catch _ => pure none) then
         if ← isDefEq ms[i] inst then return ← bindRest s ms bis (i + 1) acc k
     if (← isProp ty) && !ty.hasExprMVar then
-      if ← m.assumptionCore then
+      -- checked here, not in `m`'s own context: the variables bound so far are locals of this one, and `ty` may
+      -- mention them
+      let g ← mkFreshExprMVar ty
+      if ← g.mvarId!.assumptionCore then
+        m.assign (← instantiateMVars g)
         logStep s [("step", "assumption"), ("goal", toJson (← ppStr ty))]
         return ← bindRest s ms bis (i + 1) acc k
-      if ← discharge s m s.cfg.dischargers then return ← bindRest s ms bis (i + 1) acc k
+      if ← discharge s g.mvarId! s.cfg.dischargers then
+        m.assign (← instantiateMVars g)
+        return ← bindRest s ms bis (i + 1) acc k
     withLocalDecl (← m.getDecl).userName bis[i]! ty fun x => do
       m.assign x
       bindRest s ms bis (i + 1) (acc.push x) k
@@ -743,7 +776,7 @@ def attemptCompose (cfg : Cfg) (id : String) (sources : Array Name) (instantiate
           if ← isDefEq pj ty then
             ms[j]!.mvarId!.assign t
             logStep s [("step", "supply"), ("from", toJson s!"source 1, {lbl}"), ("hypothesis", toJson (← ppStr ty)),
-              ("of", toJson "source 2")]
+              ("of", toJson "source 2"), ("hypothesis_head", toJson (headName ty)), ("positivity", toJson (← isPositivity ty))]
             let res ← bindRest s ms bis 0 #[] fun rest => do
               let stmt ← mkForallFVars (xs ++ rest) (← instantiateMVars concB)
               let body ← mkLambdaFVars (xs ++ rest) (← instantiateMVars (mkAppN hs[1]! ms))
@@ -844,14 +877,23 @@ def elabProp (text : String) : TermElabM Expr := do
   if e.hasMVar then throwError "the contract leaves something undetermined: {e}"
   return e
 
-/-- The hypotheses of a statement, printed, and its conclusion. -/
-def hypothesesOf (cfg : Cfg) (e : Expr) : MetaM (Array String × String) :=
+/-- The hypotheses a statement states and its conclusion, read through `∃` (its witness becomes a variable) and
+into the last part of a conjunction, as in `∃ c, 0 < c ∧ ∀ …`; with what was read through, in order. -/
+partial def hypothesesOf (cfg : Cfg) (e : Expr) (path : Array String := #[]) : MetaM (Array String × String × Array String) :=
   telescopeNorm cfg e fun xs body => do
     let mut hs := #[]
     for x in xs do
       let d ← x.fvarId!.getDecl
       if (← isProp d.type) && !d.binderInfo.isInstImplicit then hs := hs.push (← ppStr d.type)
-    return (hs, ← ppStr body)
+    if body.isAppOfArity ``Exists 2 && (body.getArg! 1).isLambda then
+      let (h2, c, p) ← lambdaTelescope (body.getArg! 1) fun ws inner => do
+        let names ← ws.mapM fun w => return (← w.fvarId!.getDecl).userName.toString
+        hypothesesOf cfg inner (path.push ("∃ " ++ " ".intercalate names.toList))
+      return (hs ++ h2, c, p)
+    if body.isAppOfArity ``And 2 then
+      let (h2, c, p) ← hypothesesOf cfg (body.getArg! 1) (path.push ((← ppStr (body.getArg! 0)) ++ " ∧"))
+      return (hs ++ h2, c, p)
+    return (hs, ← ppStr body, path)
 
 /-- Which of the first `n` lambda-bound variables of a proof term occur in its body ([] when it is not a lambda). -/
 def usedBinders (v : Expr) (n : Nat) : MetaM (Array Bool) :=
@@ -872,6 +914,8 @@ def checkContract (cfg : Cfg) (c : Json) : CoreM Json := do
   let env ← getEnv
   for n in sources.push bridge do
     unless env.contains n do return outcome id "error" s!"unknown declaration {n}"
+  if !target.isAnonymous && !env.contains target then
+    return outcome id "error" s!"unknown declaration {target}"
   MetaM.run' do
     -- the proposition the edge states: its sources as hypotheses, then its own hypotheses, then its conclusion
     let text := if hyps.isEmpty then conclusion else s!"∀ {" ".intercalate hyps.toList}, {conclusion}"
@@ -903,8 +947,9 @@ def checkContract (cfg : Cfg) (c : Json) : CoreM Json := do
       return outcome id "audit-failed" s!"the bridge reaches the target: {path}" (info ++ [("reaches", toJson (path.map toString))])
     let used ← usedBinders bvalue sources.size
     info := info ++ [("used", toJson used)]
+    if used.size != sources.size then
+      return outcome id "rejected" "the bridge's use of every source could not be determined" info
     if used.any (!·) then return outcome id "rejected" "the bridge does not use every source it names" info
-    if used.size < sources.size then info := info ++ [("used_note", toJson "the bridge is not a lambda over its sources; use not determined")]
     if !relation.isAnonymous then
       unless (← getEnv).contains relation && (← getEnv).contains target do
         return outcome id "error" "a relation needs both the relation declaration and the target" info
@@ -920,11 +965,13 @@ def checkContract (cfg : Cfg) (c : Json) : CoreM Json := do
       if let some path ← reaches cfg #[relation] #[target] then
         return outcome id "audit-failed" s!"the relation reaches the target: {path}" info
       let rused ← usedBinders rvalue 1
+      if rused.size != 1 then return outcome id "rejected" "the relation's use of the contract could not be determined" info
       if rused.any (!·) then return outcome id "rejected" "the relation does not use the contract" info
-      let (th, tc) ← hypothesesOf cfg tci.type
-      let (ch, cc) ← hypothesesOf cfg contract
+      let (th, tc, tp) ← hypothesesOf cfg tci.type
+      let (ch, cc, cp) ← hypothesesOf cfg contract
       info := info ++ [("target_hypotheses", toJson th), ("contract_hypotheses", toJson ch),
         ("target_conclusion", toJson tc), ("contract_conclusion", toJson cc),
+        ("target_path", toJson tp), ("contract_path", toJson cp),
         ("target_only_hypotheses", toJson (th.filter (!ch.contains ·)))]
     if !construction.isAnonymous then
       let some cci := (← getEnv).find? construction | return outcome id "error" s!"unknown declaration {construction}" info

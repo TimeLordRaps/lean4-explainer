@@ -217,8 +217,9 @@ def load_declarations(record: ExtractRecord, out_dir: Path, identity: Identity, 
     for env_index, batch in enumerate(b for b in record.batches if b.status == "ok"):
         for line in (out_dir / batch.file).read_text(encoding="utf-8").splitlines():
             d = json.loads(line)
-            if "error" in d:
-                d.update(role="unreadable")
+            unreadable = "error" in d
+            if unreadable:
+                d["role"] = "unreadable"
             mod = d["module"]
             d["env"] = env_index
             d["repo"], d["revision"], d["path"] = identity.repo, identity.revision, identity.path(mod)
@@ -226,16 +227,18 @@ def load_declarations(record: ExtractRecord, out_dir: Path, identity: Identity, 
             if mod.startswith("ComparatorChallenges."):
                 spec = specs.get(mod, {})
                 d["challenge"] = mod
-                if d["name"] in spec.get("theorem_names", []):
-                    d["role"] = "statement"
-                elif d.get("kind") == "def" or d["name"] in spec.get("definition_names", []):
-                    d["role"] = "interface"
-                else:
-                    d["role"] = "challenge-other"
+                if not unreadable:
+                    if d["name"] in spec.get("theorem_names", []):
+                        d["role"] = "statement"
+                    elif d.get("kind") == "def" or d["name"] in spec.get("definition_names", []):
+                        d["role"] = "interface"
+                    else:
+                        d["role"] = "challenge-other"
                 sol = spec.get("solution_module", "")
             else:
                 d["challenge"] = released.get(d["name"], "")
-                d["role"] = "released" if d["challenge"] else "helper"
+                if not unreadable:
+                    d["role"] = "released" if d["challenge"] else "helper"
                 sol = mod
             d["area"], d["family"] = area_family(sol) if sol else ("", "")
             out.append(d)

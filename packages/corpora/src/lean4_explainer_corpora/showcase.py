@@ -17,6 +17,7 @@ from lean4_explainer.lake import LakeProject, include_patterns, read_lake
 from lean4_explainer.render import ASSET_DIR, SITE_CSS
 
 from .registry import Corpus
+from .overlays import HostedOverlay, load_overlay_manifest
 from .themes import make_theme
 
 # The landing page is an atlas: ink on paper, each project a card in its own colour.
@@ -86,12 +87,15 @@ def build_showcase(
     byte_budget: int = PAGES_LIMIT_BYTES,
     jobs: int = 1,
     fetch=fetch_corpus,
+    overlay_manifest: Path | None = None,
 ) -> ShowcaseResult:
     """Fetch every corpus first, so a failed download stops the run before anything is published."""
+    overlays = load_overlay_manifest(overlay_manifest, corpora) if overlay_manifest else {}
     checkouts = [(corpus, fetch(corpus, work_dir, base_url=base_url)) for corpus in corpora]
     out_dir.mkdir(parents=True, exist_ok=True)
     items = []
     for corpus, checkout in checkouts:
+        overlay = overlays.get(corpus.name)
         project = read_lake(checkout / corpus.lean_root) if corpus.lake else None
         include = include_patterns(project) if project and project.libs else corpus.include
         prefix = f"{corpus.lean_root.strip('/')}/" if corpus.lean_root else ""
@@ -110,7 +114,7 @@ def build_showcase(
             options=tuple(
                 sorted(
                     [("theme_css", corpus.theme_css)] * bool(corpus.theme_css)
-                    + [("overlay", corpus.overlay)] * bool(corpus.overlay and Path(corpus.overlay).is_file())
+                    + _overlay_options(overlay)
                     # the edges were read at a commit: the site's pin is what they are checked against for staleness
                     + [("implications_file", corpus.implications), ("implications_commit", corpus.commit)]
                     * bool(corpus.implications and Path(corpus.implications).is_file())
@@ -138,11 +142,12 @@ def build_showcase(
         (f"{i.corpus.name}/annotate.html" for i in items if (out_dir / i.corpus.name / "annotate.html").is_file()),
         "",
     )  # the L4DEL guide exists only when the L4DEL extension is installed
-    annotated = {
-        i.corpus.name for i in items if i.corpus.overlay and Path(i.corpus.overlay).is_file()
-    } if any(ext.name == "l4del" for ext in extensions()) else set()
+    annotated = set(overlays) if any(ext.name == "l4del" for ext in extensions()) else set()
     curated = {i.corpus.name for i in items if (out_dir / i.corpus.name / "implications.html").is_file()}
-    (out_dir / "index.html").write_text(_landing(items, link_out or [], guide, annotated, curated), encoding="utf-8")
+    disclosures = {name: overlay.disclosure for name, overlay in overlays.items()}
+    (out_dir / "index.html").write_text(
+        _landing(items, link_out or [], guide, annotated, curated, disclosures), encoding="utf-8"
+    )
     return ShowcaseResult(tuple(items), _tree_bytes(out_dir), byte_budget)
 
 
@@ -162,7 +167,9 @@ def _landing(
     guide: str,
     annotated: set[str] = frozenset(),  # type: ignore[assignment]
     curated: set[str] = frozenset(),  # type: ignore[assignment]
+    disclosures: dict[str, str] | None = None,
 ) -> str:
+    disclosures = disclosures or {}
     cards = []
     for item in items:
         corpus, summary, project = item.corpus, item.summary, item.project
@@ -181,8 +188,9 @@ def _landing(
             f'License: {escape(corpus.license)} (<a href="{escape(corpus.name)}/LICENSE.txt">text</a>).'
             + (f"<br>{escape(corpus.license_note)}" if corpus.license_note else "")
             + (
-                "<br>Selected declarations are explained with L4DEL from a sidecar overlay kept in lean4-explainer; "
-                "the upstream authors did not write these explanations and their sources are unchanged."
+                "<br>Selected declarations are explained with L4DEL from a hosted sidecar overlay; "
+                "the upstream authors did not write these explanations and their sources are unchanged. "
+                + escape(disclosures.get(corpus.name, ""))
                 if corpus.name in annotated
                 else ""
             )
@@ -213,7 +221,8 @@ def _landing(
             "<body>",
             "<main>",
             "<h1>lean4-explainer showcase</h1>",
-            "<p>What lean4-explainer produces, with no annotation, for the Lean projects below. "
+            "<p>What lean4-explainer produces for the Lean projects below. Hosted annotations, when present, "
+            "carry their provenance beside the explanation. "
             "To write your own explanations, start with the "
             + (f'<a href="{escape(guide)}">L4DEL guide</a>' if guide else "L4DEL guide")
             + ' or <a href="https://github.com/TimeLordRaps/lean4-explainer#l4del-write-your-own-explanations">'
@@ -229,6 +238,16 @@ def _landing(
             "",
         ]
     )
+
+
+def _overlay_options(overlay: HostedOverlay | None) -> list[tuple[str, object]]:
+    if overlay is None:
+        return []
+    return [
+        ("overlay", str(overlay.path)),
+        ("overlay_provenance", overlay.provenance),
+        ("overlay_disclosure", overlay.disclosure),
+    ]
 
 
 def _head(checkout: Path) -> str:

@@ -154,13 +154,13 @@ def test_edges_show_on_both_ends_on_their_own_page_and_as_data(tmp_path):
     summary, out = _site(tmp_path, implications_commit="abc1234def")
     assert not summary.errors, summary.errors
     page = (out / "Demo.lean.html").read_text(encoding="utf-8")
-    source = page[page.index('id="L4"') : page.index('id="L6"')]
-    target = page[page.index('id="L6"') : page.index('id="L8"')]
+    source = page[page.index("id=L4") : page.index("id=L6")]
+    target = page[page.index("id=L6") : page.index("id=L8")]
     assert '<span class="imp-kind">strengthens</span> <a href="Demo.lean.html#L6"><code>Demo.gap</code></a>' in source
     assert '<span class="imp imp-argued">argued</span> <a href="implications.html#gap-from-pos">contract</a>' in source
     assert '<span class="imp-kind">is strengthened by</span> <a href="Demo.lean.html#L4"><code>Demo.pos_of_gt</code></a>' in target
-    assert "is the bridge" in page[page.index('id="L8"') : page.index('id="L10"')]  # the bridge says what it proves
-    assert "Implications" not in page[page.index('id="L10"') :]  # a declaration with no edge gets no block
+    assert "is the bridge" in page[page.index("id=L8") : page.index("id=L10")]  # the bridge says what it proves
+    assert "Implications" not in page[page.index("id=L10") :]  # a declaration with no edge gets no block
     assert '<a href="implications.html">Implications</a>' in page  # the nav
 
     index = (out / "implications.html").read_text(encoding="utf-8")
@@ -209,7 +209,7 @@ def test_a_name_declared_in_two_files_is_named_with_its_path(tmp_path):
     summary = build_site(root, tmp_path / "out", config, tmp_path / "idx", jobs=1)
     assert not summary.errors, summary.errors
     page = (tmp_path / "out" / "Demo.lean.html").read_text(encoding="utf-8")
-    assert '<span class="imp-kind">strengthens</span> <a href="Demo.lean.html#L6"><code>Demo.gap</code></a>' in page[page.index('id="L4"') : page.index('id="L6"')]
+    assert '<span class="imp-kind">strengthens</span> <a href="Demo.lean.html#L6"><code>Demo.gap</code></a>' in page[page.index("id=L4") : page.index("id=L6")]
     assert 'class="implications"' not in (tmp_path / "out" / "Challenges" / "Demo.lean.html").read_text(encoding="utf-8")
     index = (tmp_path / "out" / "implications.html").read_text(encoding="utf-8")
     assert "@Demo.lean" not in index and ">pos_of_gt</a>" in index  # names as Lean knows them; the links say where
@@ -382,6 +382,18 @@ def test_a_failed_record_fails_the_edge(tmp_path):
     assert any("chain" in w and "failed (mismatch)" in w for w in summary.warnings), summary.warnings
 
 
+def test_a_relation_says_what_the_target_was_read_through():
+    # TD-12: Siegel's statement is `∃ c, 0 < c ∧ ∀ …`; its hypotheses are read inside, and the page says so
+    from lean4_explainer_implications.extension import _relation_detail
+
+    html = _relation_detail({"target_conclusion": "c ≤ Fx.size n", "contract_conclusion": "n + 1 ≤ Fx.size n",
+                             "target_path": ["∃ c", "0 < c ∧"], "contract_path": [], "target_only_hypotheses": ["2 ≤ n"]})
+    assert "the target, read through <code>∃ c</code> and <code>0 &lt; c ∧</code>, concludes <code>c ≤ Fx.size n</code>" in html
+    assert "compared by rendered form" in html and "<code>2 ≤ n</code>" in html
+    plain = _relation_detail({"target_conclusion": "1 ≤ Fx.size n", "contract_conclusion": "n + 1 ≤ Fx.size n"})
+    assert "read through" not in plain and "the target concludes <code>1 ≤ Fx.size n</code>" in plain
+
+
 def test_the_catalogue_is_searchable_and_on_the_theorem_pages(tmp_path):
     summary, out = _recorded_site(tmp_path)
     assert not summary.errors, summary.errors
@@ -397,10 +409,123 @@ def test_the_catalogue_is_searchable_and_on_the_theorem_pages(tmp_path):
     notes = (out / "implications" / "notes.html").read_text(encoding="utf-8")
     assert "Unresolved attempts (1)" in notes and "never false" in notes
     fixture = (out / "ImplicationsFixture.lean.html").read_text(encoding="utf-8")
-    target = fixture[fixture.index('id="L19"') : fixture.index('id="L22"')]
+    target = fixture[fixture.index("id=L19") : fixture.index("id=L22")]
     assert "Checked implications" in target and "Follows from" in target and "implications/catalogue.html#a1" in target
     assert "kernel-checked (recorded)" in target  # the curated edge's badge says where its check comes from
     assert 'href="implications/notes.html"' in (out / "implications.html").read_text(encoding="utf-8")
-    source = fixture[fixture.index('id="L13"') : fixture.index('id="L16"')]
+    source = fixture[fixture.index("id=L13") : fixture.index("id=L16")]
     assert "Gives" in source and "together with" in source
-    assert "Checked implications" not in fixture[fixture.index('id="L37"') :]  # size_pos: only an unresolved attempt
+    assert "Checked implications" not in fixture[fixture.index("id=L37") :]  # size_pos: only an unresolved attempt
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_the_catalogue_controls_filter_rows_and_preserve_a_deep_link(tmp_path):
+    """Run every catalogue control, rather than only inspecting that the controls and script exist."""
+    import subprocess
+
+    from lean4_explainer_implications import catalogue_site as CS
+
+    def row(id_, group, rule, state, layer, family, statement, source, target):
+        return {
+            "id": id_, "group": group, "rules": [rule], "state": state, "layer": layer,
+            "families": [family], "statement": statement, "sources": [source], "target": target,
+            "restates": [], "shard": "fixture", "link": "", "derived": f"{source} → {statement}",
+            "directions": [], "group_reason": group, "axioms": [], "used": [True], "steps": [],
+            "environment": {"id": "fixture", "modules": 1, "layer": layer},
+            "cost": {"ms": 1, "heartbeats_thousands": 1}, "match": "fixture", "shared": [], "proof": "fun h => h",
+        }
+
+    rows = [
+        row("alpha-compose", "connection", "compose", "checked-instantiated", "oai-solutions", "Algebra",
+            "algebraic conclusion", "a", "b"),
+        row("order-map", "connection", "monotonicity", "checked-derivation", "mathlib", "Order",
+            "ordered conclusion", "c", "d"),
+        row("ellipse-restatement", "restatement", "same-statement", "checked-derivation", "oai-challenges", "Geometry",
+            "ellipse conclusion", "e", "f"),
+        row("number-generated", "generated", "unfold", "checked-instantiated", "generated", "Number Theory",
+            "arithmetic conclusion", "g", "h"),
+    ]
+    theorem_keys = sorted({key for item in rows for key in item["sources"] + [item["target"]]})
+    index = {
+        "theorems": {key: {"name": f"Theorem.{key}", "module": "Fixture", "statement": f"statement {key}",
+                            "page": f"../Fixture.lean.html#{key}"} for key in theorem_keys},
+        "implications": [{key: value for key, value in item.items() if key not in {"derived", "directions", "group_reason",
+                                                                                   "axioms", "used", "steps", "environment",
+                                                                                   "cost", "match", "shared", "proof"}}
+                         for item in rows],
+    }
+    # Two modules can expose the same Lean name. A theorem-page link carries the full key and must select only it.
+    index["theorems"]["a"]["name"] = "X.same"
+    index["theorems"]["c"]["name"] = "X.same"
+    data = tmp_path / "catalogue"
+    (data / "shards").mkdir(parents=True)
+    (data / "index.json").write_text(json.dumps(index), encoding="utf-8")
+    (data / "shards" / "fixture.json").write_text(json.dumps({"implications": rows}), encoding="utf-8")
+    script = tmp_path / "catalogue.js"
+    script.write_text(CS.script(), encoding="utf-8")
+    actions = [
+        {"label": "all", "control": "group", "value": "", "event": "change"},
+        {"label": "search", "control": "q", "value": "ellipse geometry", "event": "input"},
+        {"control": "q", "value": "", "event": "input"},
+        {"label": "relationship", "control": "rule", "value": "monotonicity", "event": "change"},
+        {"control": "rule", "value": "", "event": "change"},
+        {"label": "state", "control": "state", "value": "checked-instantiated", "event": "change"},
+        {"control": "state", "value": "", "event": "change"},
+        {"label": "layer", "control": "layer", "value": "oai-challenges", "event": "change"},
+        {"control": "layer", "value": "", "event": "change"},
+        {"label": "family", "control": "family", "value": "Number Theory", "event": "change"},
+    ]
+    run = subprocess.run(
+        [shutil.which("node") or "node", str(Path(__file__).parent / "catalogue_page_harness.js"), str(script),
+         str(tmp_path), "alpha-compose", json.dumps(actions)],
+        capture_output=True, text=True, encoding="utf-8", timeout=60,
+    )
+    assert run.returncode == 0, run.stderr
+    drawn = json.loads(run.stdout)
+    assert drawn["initial"]["count"] == "2 of 4 checked entries"
+    assert drawn["initial"]["visible"] == ["alpha-compose", "order-map"]
+    assert "Statement checked" in drawn["initial"]["detail"]
+    snapshots = {item["label"]: item for item in drawn["actions"] if item.get("label")}
+    assert snapshots["all"]["visible"] == ["alpha-compose", "order-map", "ellipse-restatement", "number-generated"]
+    assert snapshots["search"]["visible"] == ["ellipse-restatement"]
+    assert snapshots["relationship"]["visible"] == ["order-map"]
+    assert snapshots["state"]["visible"] == ["alpha-compose", "number-generated"]
+    assert snapshots["layer"]["visible"] == ["ellipse-restatement"]
+    assert snapshots["family"]["visible"] == ["number-generated"]
+    assert {drawn["initial"]["hash"], *(item["hash"] for item in drawn["actions"])} == {"#alpha-compose"}
+
+    exact = subprocess.run(
+        [shutil.which("node") or "node", str(Path(__file__).parent / "catalogue_page_harness.js"), str(script),
+         str(tmp_path), "", "[]", json.dumps({"search": "?theorem=a", "hash": ""})],
+        capture_output=True, text=True, encoding="utf-8", timeout=60,
+    )
+    assert exact.returncode == 0, exact.stderr
+    assert json.loads(exact.stdout)["initial"]["visible"] == ["alpha-compose"]
+
+    navigate = subprocess.run(
+        [shutil.which("node") or "node", str(Path(__file__).parent / "catalogue_page_harness.js"), str(script),
+         str(tmp_path), "alpha-compose", json.dumps([
+             {"control": "group", "value": "", "event": "change"},
+             {"control": "family", "value": "Algebra", "event": "change"},
+             {"label": "hash", "control": "hash", "value": "#order-map"},
+         ])],
+        capture_output=True, text=True, encoding="utf-8", timeout=60,
+    )
+    assert navigate.returncode == 0, navigate.stderr
+    followed = {item["label"]: item for item in json.loads(navigate.stdout)["actions"] if item.get("label")}["hash"]
+    assert "order-map" in followed["visible"] and "Statement checked" in followed["detail"]
+
+
+def test_theorem_catalogue_links_url_encode_the_exact_logical_key():
+    from lean4_explainer_implications import catalogue_site as CS
+
+    key = "Fixture.quoted&plus+fragment#name"
+    html = CS.theorem_block(
+        [("out", {"group": "restatement"})],
+        {key},
+        lambda value: value,
+        "../",
+    )
+
+    assert "?theorem=Fixture.quoted%26plus%2Bfragment%23name" in html
+    assert f"?theorem={key}" not in html

@@ -120,6 +120,22 @@ def test_a_build_that_never_gets_memory_says_so(monkeypatch, tmp_path):
     assert record.counts() == {"skipped": 1} and "commit only 2.0 GB" in record.stopped, record.to_json()
 
 
+def test_a_memory_wait_keeps_reporting_current_headroom(monkeypatch):
+    readings = iter([5.0, 6.0, 7.0, 20.0])
+    monkeypatch.setattr(P, "free_commit_gb", lambda: next(readings))
+    monkeypatch.setattr(P, "POLL_SECONDS", 10.0)
+    monkeypatch.setattr(P, "MEMORY_LOG_SECONDS", 20.0, raising=False)
+    monkeypatch.setattr(P.time, "sleep", lambda _seconds: None)
+    messages: list[str] = []
+
+    P.wait_for_memory(17.0, messages.append, max_wait=100.0)
+
+    assert messages == [
+        "lean: waiting for memory (5.0 GB free to commit, 17 GB needed)",
+        "lean: still waiting for memory (7.0 GB free to commit, 17 GB needed; waited 20s)",
+    ]
+
+
 def _alive(pid: int) -> bool:
     if os.name == "nt":
         out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"], capture_output=True, text=True).stdout

@@ -2,7 +2,7 @@ import pytest
 
 from lean4_explainer.build import ExplainerError, build_site
 from lean4_explainer.cli import main
-from lean4_explainer.render import file_page
+from lean4_explainer.render import SITE_JS, file_page
 from lean4_explainer.scan import parse_source
 
 
@@ -19,11 +19,29 @@ def test_pages_load_nothing_external():
     assert "http://" not in html
 
 
+def test_filter_targets_structural_rows_without_repeating_an_attribute_per_declaration():
+    html = file_page(parse_source("theorem t : True := trivial\n", "a.lean"))
+    assert "data-filterable" not in html
+    assert "main > ol.decls > li" in SITE_JS
+    assert "main > ul.list > li" in SITE_JS
+    assert "main > dl.glossary > div" in SITE_JS
+
+
+def test_declaration_rows_keep_text_and_anchors_with_thirty_fewer_bytes_of_markup():
+    html = file_page(parse_source("theorem t : True := trivial\n", "a.lean"))
+    old = '<li id="L1"><span class="kind">theorem</span> <code>t</code> <span class="ln">line 1</span>'
+    compact = '<li id=L1><b>theorem</b> <code>t</code> <small>line 1</small>'
+
+    assert compact in html
+    assert old not in html
+    assert len(old.encode()) - len(compact.encode()) == 30
+
+
 def test_statement_shown_only_for_described_declarations():
     text = "theorem bare : True := trivial\n\n/-- Documented. -/\ntheorem described : True := trivial\n"
     html = file_page(parse_source(text, "a.lean"))
-    bare_row = html.split('id="L1"', 1)[1].split("</li>", 1)[0]
-    described_row = html.split('id="L4"', 1)[1].split("</li>", 1)[0]
+    bare_row = html.split("id=L1", 1)[1].split("</li>", 1)[0]
+    described_row = html.split("id=L4", 1)[1].split("</li>", 1)[0]
     assert "<pre>" not in bare_row
     assert "<pre>" in described_row
 

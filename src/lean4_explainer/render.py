@@ -35,15 +35,16 @@ main { max-width: 56rem; margin: 0 auto; padding: 1.5rem; }
 h1 { font-size: 1.6rem; margin: 0.5rem 0 0.25rem; }
 h2 { font-size: 1.1rem; margin: 1.75rem 0 0.4rem; padding-bottom: 0.25rem; border-bottom: 1px solid var(--line); }
 a { color: inherit; }
-.muted, .ln, .crumbs { color: var(--muted); }
-.ln { font-size: 0.8rem; margin-left: 0.4rem; }
+.muted, .ln, .crumbs, ol.decls > li > small { color: var(--muted); }
+.ln, ol.decls > li > small { font-size: 0.8rem; margin-left: 0.4rem; }
 .crumbs { font-size: 0.85rem; }
 dl.summary { display: grid; grid-template-columns: max-content 1fr; gap: 0.2rem 1rem; }
 dl.summary dd { margin: 0; }
 input[type="search"] { width: 100%; margin: 0.75rem 0; padding: 0.5rem 0.75rem; font: inherit; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 6px; }
 ol.decls, ul.list { list-style: none; padding: 0; }
 ol.decls > li, ul.list > li { padding: 0.45rem 0; border-bottom: 1px solid var(--line); }
-.kind { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.kind, ol.decls > li > b:first-child { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+ol.decls > li > b:first-child { font-weight: normal; }
 .flag { font-size: 0.75rem; padding: 0 0.4rem; border-radius: 4px; }
 .flag.sorry { color: var(--warn); background: var(--warn-bg); }
 .doc { margin: 0.3rem 0; overflow-wrap: anywhere; }
@@ -88,7 +89,7 @@ SITE_JS = """
   for (const box of document.querySelectorAll("input[data-filter]")) {
     box.addEventListener("input", function () {
       const q = box.value.trim().toLowerCase();
-      for (const el of document.querySelectorAll("[data-filterable]")) {
+      for (const el of document.querySelectorAll("main > ol.decls > li, main > ul.list > li, main > dl.glossary > div")) {
         el.hidden = q !== "" && !el.textContent.toLowerCase().includes(q);
       }
     });
@@ -286,7 +287,7 @@ def _folder_page(
         for name in sorted(folder.folders):
             child = folders[(*dirs, name)]
             body.append(
-                f'<li data-filterable><a href="{quote(name)}/index.html">{escape(name)}/</a> '
+                f'<li><a href="{quote(name)}/index.html">{escape(name)}/</a> '
                 f'<span class="muted">{child.file_count} files, {child.declarations} declarations</span></li>'
             )
         body.append("</ul>")
@@ -296,7 +297,7 @@ def _folder_page(
         for summary in sorted(folder.files, key=lambda s: s.path):
             name = summary.path.split("/")[-1]
             body.append(
-                f'<li data-filterable><a href="{quote(name)}.html">{escape(name)}</a> '
+                f'<li><a href="{quote(name)}.html">{escape(name)}</a> '
                 f'<span class="muted">{_file_note(summary)}</span></li>'
             )
         body.append("</ul>")
@@ -325,17 +326,17 @@ _MENTION_LIMIT = 25
 
 
 def _decl_item(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> str:
-    head = f'<span class="kind">{escape(decl.kind)}</span> <code>{escape(decl.name)}</code>'
+    head = f'<b>{escape(decl.kind)}</b> <code>{escape(decl.name)}</code>'
     for ext, _ in ctx.extensions:
         if ext.name in decl.ext:
             head += ext.declaration_title(decl, decl.ext[ext.name])
     if decl.has_sorry:
         head += ' <span class="flag sorry">sorry</span>'
-    head += f' <span class="ln">line {decl.line}</span>'
+    head += f' <small>line {decl.line}</small>'
     if ctx.source_url and ctx.source_links == "declaration":
         href = escape(source_href(rel, decl.line, ctx), quote=True)
         head += f' <a class="src" href="{href}">source</a>'
-    parts = [f'<li id="L{decl.line}" data-filterable>{head}']
+    parts = [f'<li id=L{decl.line}>{head}']
     if decl.doc:  # a doc comment is Markdown; a plain comment above a declaration is shown as written
         parts.append(f'<div class="doc">{doc_html(decl.doc)}</div>')
     elif decl.comment:

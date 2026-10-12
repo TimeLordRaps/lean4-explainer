@@ -39,7 +39,7 @@ a:hover {{ color: var(--accent); }}
 pre {{ background: var(--panel); }}
 h2 {{ border-bottom-color: var(--accent); }}
 input[type="search"]:focus {{ outline: 2px solid var(--accent); outline-offset: 1px; }}
-.kind {{ color: var(--accent); }}
+.kind, ol.decls > li > b:first-child {{ color: var(--accent); }}
 {extra}
 """.lstrip()
 

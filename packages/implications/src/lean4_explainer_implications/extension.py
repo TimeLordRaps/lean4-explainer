@@ -29,7 +29,7 @@ from lean4_explainer.render import href, page, source_href
 from . import catalogue_site as CS
 from . import edges as E
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 DEFAULT_FILE = "implications.toml"
 STATE_LABELS = {
     "proposed": "proposed",
@@ -527,10 +527,16 @@ def _relation_detail(record: dict) -> str:
     only = record.get("target_only_hypotheses") or []
     out = ""
     if record.get("target_conclusion") and record.get("contract_conclusion"):
-        out += (f'. The contract concludes <code>{escape(record["contract_conclusion"])}</code>; the target, '
-                f'<code>{escape(record["target_conclusion"])}</code>')
+        # a statement like `∃ c, 0 < c ∧ ∀ …` is read inside: say through what
+        def conclusion(which: str, key: str, text: str) -> str:
+            path = record.get(key) or []
+            through = (", read through " + " and ".join(f"<code>{escape(p)}</code>" for p in path) + ",") if path else ""
+            return f'{which}{through} concludes <code>{escape(text)}</code>'
+        out += (". " + conclusion("The contract", "contract_path", record["contract_conclusion"]) + "; "
+                + conclusion("the target", "target_path", record["target_conclusion"]))
     if only:
-        out += ". Hypotheses the target has and the contract does not need: " + ", ".join(f"<code>{escape(h)}</code>" for h in only)
+        out += (". Hypotheses shown only in the target (compared by rendered form): "
+                + ", ".join(f"<code>{escape(h)}</code>" for h in only))
     return out + "."
 
 

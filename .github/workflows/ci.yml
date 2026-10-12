@@ -56,8 +56,34 @@ jobs:
       - name: Install the Lean extension (an edge's bridge is checked by the kernel when Lean runs)
         if: matrix.package == 'implications'
         run: python -m pip install -e packages/lean
-      - name: Check node is there (the reader's and the map's script tests run under it)
-        if: matrix.package == 'reader' || matrix.package == 'map'
+      - name: Check node is there (the browser-script tests run under it)
+        if: matrix.package == 'reader' || matrix.package == 'map' || matrix.package == 'implications'
         run: node --version
+      - name: Syntax-check the implications catalogue browser harness
+        if: matrix.package == 'implications'
+        run: node --check packages/implications/tests/catalogue_page_harness.js
       - name: Test
         run: python -m pytest packages/${{ matrix.package }} -vv -s --durations=10
+
+  release-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build frontend
+        run: python -m pip install build
+      - name: Build every wheel and source distribution
+        shell: bash
+        run: |
+          mkdir dist
+          python -m build --outdir dist .
+          for package in packages/*; do
+            if test -f "$package/pyproject.toml"; then
+              python -m build --outdir dist "$package"
+            fi
+          done
+      - name: Reject hosted annotations from release archives
+        run: python scripts/audit_release_artifacts.py dist/*

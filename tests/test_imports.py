@@ -135,7 +135,7 @@ def test_the_folder_list_says_a_file_only_imports_instead_of_zero_declarations(t
     _tree(tmp_path)
     out = _build(tmp_path)
     index = (out / "index.html").read_text(encoding="utf-8")
-    item = re.search(r'<li data-filterable><a href="Hub.lean.html">Hub.lean</a> <span class="muted">([^<]*)</span>', index)
+    item = re.search(r'<li><a href="Hub.lean.html">Hub.lean</a> <span class="muted">([^<]*)</span>', index)
     assert item and item.group(1) == "5 imports, no declarations"
     assert '<a href="User.lean.html">User.lean</a> <span class="muted">1 declarations</span>' in index
 

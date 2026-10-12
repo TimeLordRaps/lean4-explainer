@@ -43,6 +43,11 @@ class CorporaExtension(Extension):
         build.add_argument("--out", type=Path, default=Path(_SITE_DEFAULT), help="output directory")
         build.add_argument("--work", type=Path, default=Path(_WORK_DEFAULT), help="where checkouts are kept")
         build.add_argument("--jobs", type=int, default=_DEFAULT_JOBS, help="worker processes for indexing")
+        build.add_argument(
+            "--overlay-manifest",
+            type=Path,
+            help="explicit hosted-overlay manifest (content, corpus repository and commit are verified)",
+        )
         build.add_argument("--yes", action="store_true", help="download without asking")
 
     def run_cli(self, args: argparse.Namespace) -> int | None:
@@ -110,6 +115,7 @@ def _showcase(args) -> int:
             args.out,
             link_out=[c for c in registry.installed().values() if c.name not in chosen],
             jobs=args.jobs,
+            overlay_manifest=args.overlay_manifest,
         )
     except (ExplainerError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)

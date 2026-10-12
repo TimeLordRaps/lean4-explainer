@@ -58,7 +58,7 @@ def test_find_table_points_at_the_declaration_page(tmp_path):
     table = json.loads(script[script.index("{") : script.rindex("}") + 1])
     target, anchor = table["Demo.proof_changes"].split("#")
     assert (out / target).is_file() and anchor == "L3"
-    assert 'id="L3"' in (out / target).read_text(encoding="utf-8")
+    assert "id=L3" in (out / target).read_text(encoding="utf-8")
     assert (out / "_assets" / "find.js").is_file() and "find-names.js" in (out / "find.html").read_text(encoding="utf-8")
 
 

@@ -53,6 +53,7 @@ class L4Notes:
     see: tuple[str, ...] = ()
     terms: tuple[tuple[str, str], ...] = ()
     diagnostics: tuple[Diagnostic, ...] = ()
+    origin: str = "source"
 
     @property
     def is_empty(self) -> bool:

@@ -12,3 +12,7 @@ theorem bridge_bound (source1 : ∀ n : Nat, n + 1 ≤ Fx.size n) : ∀ n : Nat,
 /-- The stronger bound gives `Fx.size_pos`'s statement. -/
 theorem relation_bound (contract : ∀ n : Nat, n + 1 ≤ Fx.size n) : ∀ n : Nat, 1 ≤ Fx.size n :=
   fun n => by have := contract n; omega
+
+/-- The stronger bound gives `Fx.exists_size_bound`, with the constant 3 for the `n` it allows. -/
+theorem relation_gap (contract : ∀ n : Nat, n + 1 ≤ Fx.size n) : ∃ c, 0 < c ∧ ∀ n : Nat, 2 ≤ n → c ≤ Fx.size n :=
+  ⟨3, by decide, fun n h => by have := contract n; omega⟩

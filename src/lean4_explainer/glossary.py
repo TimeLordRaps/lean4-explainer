@@ -244,7 +244,7 @@ def _project_item(entry: _Entry) -> str:
     meaning = inline_html(text) if text else f"<code>{escape(sig)}</code>"
     link = escape(href([], rel, f"#L{line}"), quote=True)
     return (
-        f'<div data-filterable><dt>{escape(word)} <span class="kind">{escape(kind)}</span></dt>'
+        f'<div><dt>{escape(word)} <span class="kind">{escape(kind)}</span></dt>'
         f'<dd>{meaning} <span class="muted">· <a class="where" href="{link}">{escape(name)}</a></span></dd></div>'
     )
 
@@ -257,7 +257,7 @@ def _entry_item(entry: GlossaryEntry) -> str:
         rel, line, label = entry.where
         link = escape(href([], rel, f"#L{line}"), quote=True)
         where = f' <span class="muted">· <a class="where" href="{link}">{escape(label)}</a></span>'
-    return f'<div data-filterable><dt{anchor}>{escape(entry.term)}</dt><dd>{example}{entry.meaning}{where}</dd></div>'
+    return f'<div><dt{anchor}>{escape(entry.term)}</dt><dd>{example}{entry.meaning}{where}</dd></div>'
 
 
 def _slug(word: str) -> str:

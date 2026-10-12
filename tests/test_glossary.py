@@ -257,4 +257,4 @@ def test_every_entry_can_be_filtered(tmp_path):
     assert "data-filter" in html
     dts = html.count("<dt")
     assert dts > 10
-    assert html.count("<div data-filterable>") == dts
+    assert "data-filterable" not in html

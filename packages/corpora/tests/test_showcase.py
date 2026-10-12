@@ -1,5 +1,6 @@
 """fetch pins a corpus to its commit; the showcase builds one subsite per corpus under a landing page."""
 
+import hashlib
 import json
 import subprocess
 from dataclasses import replace
@@ -181,28 +182,81 @@ def test_a_corpus_overlay_annotates_the_subsite_and_the_landing_says_who_wrote_i
     corpus, base = upstream
     overlay = tmp_path / "demo.l4del"
     overlay.write_text("@file Demo/A.lean\n@decl a_fact\n-- L4DEL: title: A sidecar title\n", encoding="utf-8")
-    corpus = replace(corpus, overlay=str(overlay))
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema": 1,
+                "overlays": {
+                    "demo": {
+                        "file": "demo.l4del",
+                        "repo": corpus.repo,
+                        "commit": corpus.commit,
+                        "sha256": hashlib.sha256(overlay.read_bytes()).hexdigest(),
+                        "provenance": "ai-generated-unreviewed",
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
     extensions.activate([L4delExtension()])
     out = tmp_path / "site"
 
-    build_site_result = build_showcase([corpus], tmp_path / "work", out, base_url=base)
+    build_site_result = build_showcase(
+        [corpus], tmp_path / "work", out, base_url=base, overlay_manifest=manifest
+    )
 
-    assert "A sidecar title" in (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    page = (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
+    assert "A sidecar title" in page
+    assert "AI-generated and not human-reviewed" in page
+    assert "not mathematical authority" in page
     landing = (out / "index.html").read_text(encoding="utf-8")
-    assert "sidecar overlay" in landing and "did not write these explanations" in landing
+    assert "hosted sidecar overlay" in landing and "did not write these explanations" in landing
+    assert "AI-generated and not human-reviewed" in landing
     assert build_site_result.total_bytes > 0
 
 
-def test_without_l4del_the_overlay_is_ignored_and_the_landing_does_not_claim_annotations(upstream, tmp_path):
+def test_without_an_explicit_manifest_the_corpus_stays_annotation_free(upstream, tmp_path):
     corpus, base = upstream
     overlay = tmp_path / "demo.l4del"
     overlay.write_text("@file Demo/A.lean\n@decl a_fact\n-- L4DEL: title: A sidecar title\n", encoding="utf-8")
     out = tmp_path / "site"
 
-    build_showcase([replace(corpus, overlay=str(overlay))], tmp_path / "work", out, base_url=base)
+    build_showcase([corpus], tmp_path / "work", out, base_url=base)
 
     assert "A sidecar title" not in (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
     assert "sidecar overlay" not in (out / "index.html").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("repo", "someone/else", "repo"),
+        ("commit", "0" * 40, "commit"),
+        ("sha256", "0" * 64, "sha256"),
+        ("provenance", "reviewed-ish", "provenance"),
+    ],
+)
+def test_overlay_manifest_fails_closed_when_its_binding_is_wrong(upstream, tmp_path, field, value, message):
+    corpus, base = upstream
+    overlay = tmp_path / "demo.l4del"
+    overlay.write_text("@file Demo/A.lean\n@decl a_fact\n-- L4DEL: title: A sidecar title\n", encoding="utf-8")
+    entry = {
+        "file": "demo.l4del",
+        "repo": corpus.repo,
+        "commit": corpus.commit,
+        "sha256": hashlib.sha256(overlay.read_bytes()).hexdigest(),
+        "provenance": "human-authored",
+    }
+    entry[field] = value
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"schema": 1, "overlays": {"demo": entry}}), encoding="utf-8")
+
+    with pytest.raises(ExplainerError, match=message):
+        build_showcase(
+            [corpus], tmp_path / "work", tmp_path / "site", base_url=base, overlay_manifest=manifest
+        )
 
 
 def _edges(path, commit):
@@ -291,6 +345,15 @@ def test_the_oai_implication_edges_are_contracts_read_at_its_pin():
         v = edges.verify(edge, lambda name: None, records.get(edge.id), edges.content_sha256(bridge.read_bytes()))
         assert (v.state, v.provenance) == ("kernel-checked", "recorded"), (edge.id, v.detail)
     assert [e.id for e in proved] == ["seven-eighths-gives-an-explicit-real-zero-gap"]  # the fluid candidate is unfinished
+
+
+def test_the_packaged_oai_catalogue_has_unique_deep_link_ids():
+    catalogue = Path(CORPORA["oai"].implications).parent / "catalogue" / "index.json"
+    rows = json.loads(catalogue.read_text(encoding="utf-8"))["implications"]
+    ids = [row["id"] for row in rows]
+
+    assert all(isinstance(row_id, str) and row_id for row_id in ids)
+    assert len(ids) == len(set(ids))
 
 
 def test_with_the_reader_a_corpus_too_big_to_publish_twice_reads_from_its_pinned_raw_source(upstream, tmp_path):

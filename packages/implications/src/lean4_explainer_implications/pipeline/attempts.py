@@ -101,8 +101,28 @@ class Attempt:
     meta: dict = field(default_factory=dict)  # carried into the result (candidate keys, match, …)
 
     @property
+    def identity(self) -> tuple[tuple[str, ...], str]:
+        """The logical declarations this result is about, using corpus identities rather than ambiguous Lean names.
+
+        Instantiation deliberately keeps the challenge keys here: its result belongs to that checked derivation even
+        when another challenge declaration maps to the same released theorem. Direct callers without extraction
+        records fall back to Lean names.
+        """
+        sources = self.meta.get("source_keys") or self.sources
+        target = self.meta.get("target_key", self.target)
+        return tuple(sources), target
+
+    @property
+    def verification_identity(self) -> tuple[tuple[str, ...], str]:
+        """The declarations Lean actually checks; this is the reusable cache identity for an instantiation."""
+        sources, target = self.identity
+        return (tuple(self.meta.get("verification_source_keys") or sources),
+                self.meta.get("verification_target_key", target))
+
+    @property
     def id(self) -> str:
-        return attempt_id(self.rule, self.sources, self.target, self.instantiate)
+        sources, target = self.identity
+        return attempt_id(self.rule, sources, target, self.instantiate)
 
 
 @dataclass
@@ -142,11 +162,16 @@ def run_attempts(
         env_id = environment_identity(ws, modules)
         todo = []
         for a in group:
-            key = hashlib.sha256(json.dumps([pol, budget.to_json(), env_id, prefixes, a.rule, a.sources, a.target, a.instantiate]).encode()).hexdigest()
+            identity_sources, identity_target = a.verification_identity
+            key = hashlib.sha256(json.dumps(
+                [pol, budget.to_json(), env_id, prefixes, a.rule, identity_sources, identity_target, a.instantiate]
+            ).encode()).hexdigest()
             hit = cache.get(key)
             if hit is not None:
                 stats.cached += 1
-                results.append({**hit, **a.meta, "cached": True})
+                # A verification can be reused by two logical derivations. Its cached proof data is the same; its
+                # public result ID and join metadata belong to the current attempt.
+                results.append({**hit, **a.meta, "id": a.id, "cached": True})
             else:
                 a.meta["cache_key"] = key
                 todo.append(a)
@@ -160,6 +185,9 @@ def run_attempts(
         plan = {"imports": list(modules), "corpus": prefixes, **budget.to_json(),
                 "attempts": [{"id": a.id, "rule": a.rule, "sources": list(a.sources), "target": a.target, "instantiate": a.instantiate} for a in part]}
         plan_path.write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
+        # The name is deterministic so an interrupted run can leave a file here. Never let output from an older
+        # policy/environment masquerade as what this process wrote.
+        out_path.unlink(missing_ok=True)
         timeout = 600 + len(part) * (budget.ms // 1000 + 5)
         kwargs = {} if commit_gb is None else {"commit_gb": commit_gb}
         run = L.run(ws.env(), ws.root, ["attempt", str(plan_path), str(out_path)], timeout, log, **kwargs)
@@ -172,6 +200,11 @@ def run_attempts(
                         got[row["id"]] = row
                     else:  # the first line, written once the environment imported
                         imported = True
+        if not run.ok:
+            # Even rows written before a later process failure are not promotion evidence for a successful run.
+            # Remember only whether this invocation got as far as output, so every attempt fails closed below.
+            imported = imported or bool(got)
+            got = {}
         rows = []
         for a in part:
             row = got.get(a.id)
@@ -189,7 +222,8 @@ def run_attempts(
             stats.process_failures.append(f"{len(modules)} modules: {run.tail(300)}")
             log(f"attempts: the Lean process ended with code {run.code}: {run.tail(300)}")
         # an environment that did not import is not cached: the cause is outside the attempt
-        cache.put([r for r in rows if r["status"] not in ("env-error", "not-run")])
+        if run.ok:
+            cache.put([r for r in rows if r["status"] not in ("env-error", "not-run")])
         return rows
 
     with ThreadPoolExecutor(max_workers=max(1, jobs)) as pool:

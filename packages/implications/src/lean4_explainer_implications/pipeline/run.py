@@ -41,6 +41,27 @@ def read_results(run: Path, layer: str) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.is_file() else []
 
 
+def released_declaration(statement: dict, by_name: dict[str, list[dict]]) -> tuple[dict | None, str]:
+    """Select the released copy of one exact challenge declaration, or fail closed when provenance is ambiguous."""
+    candidates = by_name.get(statement["name"], [])
+    if not candidates:
+        return None, "solution not built"
+    family = statement.get("family")
+    same_family = [d for d in candidates if d.get("family") == family]
+    if family and not same_family:
+        # Two independent challenge environments may legally declare the same Lean name. A theorem from another
+        # family is not this statement's released proof, even when the elaborated types happen to be identical.
+        return None, "solution not built"
+    pool = same_family if family else candidates
+    same_type = [d for d in pool if d.get("type_hash") == statement.get("type_hash")]
+    if len(same_type) == 1:
+        return same_type[0], ""
+    if len(pool) == 1:
+        return pool[0], ""  # Lean still checks a unique released declaration whose statement changed
+    keys = ", ".join(sorted(d["key"] for d in (same_type or pool)))
+    return None, f"ambiguous released solution for {statement['name']}: {keys}"
+
+
 def extract_layer(ws: Workspace, identity: X.Identity, modules: list[str], run: Path, layer: str, batch_size: int = 500, log: Callable[[str], None] = print, commit_gb: float | None = None) -> dict:
     started = time.monotonic()
     record = X.run_extraction(ws, modules, run / layer / "extract", batch_size, log=log, commit_gb=commit_gb)
@@ -57,6 +78,7 @@ def extract_layer(ws: Workspace, identity: X.Identity, modules: list[str], run: 
         "splits": [{"modules": len(b.modules), "error": b.error[-300:]} for b in record.batches if b.status == "split"],
         "clashes": record.clashes, "moved_on_import": [b.error for b in record.batches if b.status == "clash"],
         "declarations": len(decls), "by_role": dict(Counter(d["role"] for d in decls)),
+        "failed_declarations": sum(b.failed_declarations for b in record.batches),
         "by_kind": dict(Counter(d.get("kind", "?") for d in decls)),
         "unreadable": sum(d["role"] == "unreadable" for d in decls),
         "with_sorry": sum(bool(d.get("sorry")) for d in decls),
@@ -173,7 +195,7 @@ def discover_layer(ws: Workspace, run: Path, layer: str, bounds: C.Bounds, budge
         "candidates": len(proposal.candidates), "candidates_per_match": dict(proposal.per_rule),
         "blocked": blocked_rows, "blocked_per_match": dict(Counter(b["match"] for b in blocked_rows)),
         "blocked_module_pairs": len({b["reason"] for b in blocked_rows}), "env_limit": env_limit,
-        "attempts": stats.attempts, "cached": stats.cached, "run": stats.run,
+        "attempts": stats.attempts, "results": len(results), "cached": stats.cached, "run": stats.run,
         "environments": stats.environments, "lean_processes": stats.lean_processes, "lean_seconds": round(stats.lean_seconds, 1),
         "process_failures": stats.process_failures,
         "outcomes": dict(Counter(r["status"] for r in results)),
@@ -192,30 +214,50 @@ def instantiate_checked(ws: Workspace, run: Path, from_layer: str, solutions_lay
     when that was built too, else from its challenge statement."""
     started = time.monotonic()
     stmts = {d["key"]: d for d in read_declarations(run, from_layer)}
-    released = {d["name"]: d for d in read_declarations(run, solutions_layer) if d["role"] == "released" and not d.get("sorry")}
+    released: dict[str, list[dict]] = {}
+    for declaration in read_declarations(run, solutions_layer):
+        if declaration["role"] == "released" and not declaration.get("sorry"):
+            released.setdefault(declaration["name"], []).append(declaration)
     attempts, blocked = [], []
     for r in read_results(run, from_layer):
         if r.get("status") not in A.CHECKED:
             continue
         srcs = [stmts[k] for k in r["source_keys"]]
         tgt = stmts.get(r.get("target_key", ""))
-        missing = [s["name"] for s in srcs if s["name"] not in released]
-        if missing:
-            blocked.append({"id": r["id"], "reason": "solution not built for " + ", ".join(missing)})
+        selected = [(s, *released_declaration(s, released)) for s in srcs]
+        unavailable = [(s, reason) for s, actual, reason in selected if actual is None]
+        if unavailable:
+            reasons = [f"{reason} for {s['name']}" if reason == "solution not built" else reason for s, reason in unavailable]
+            blocked.append({"id": r["id"], "reason": "; ".join(reasons)})
             continue
-        modules = {released[s["name"]]["module"] for s in srcs}
+        actual_sources = [actual for _s, actual, _reason in selected]
+        actual_target = None
         if tgt is not None:
-            modules.add(released[tgt["name"]]["module"] if tgt["name"] in released else tgt["module"])
-        attempts.append(A.Attempt(r["rule"], tuple(s["name"] for s in srcs), tgt["name"] if tgt else "", tuple(sorted(modules)), True,
-                                  {"source_keys": r["source_keys"], "target_key": r.get("target_key", ""), "match": r.get("match", ""),
-                                   "layer": "instantiation", "derivation": r["id"]}))
+            actual_target, target_reason = released_declaration(tgt, released)
+            if actual_target is None and target_reason.startswith("ambiguous"):
+                blocked.append({"id": r["id"], "reason": target_reason})
+                continue
+            if actual_target is None:  # a target solution need not be built: the exact challenge statement remains
+                actual_target = tgt
+        modules = {s["module"] for s in actual_sources}
+        if actual_target is not None:
+            modules.add(actual_target["module"])
+        attempts.append(A.Attempt(r["rule"], tuple(s["name"] for s in actual_sources), actual_target["name"] if actual_target else "",
+                                  tuple(sorted(modules)), True,
+                                  {"source_keys": r["source_keys"], "target_key": r.get("target_key", ""),
+                                   "verification_source_keys": [s["key"] for s in actual_sources],
+                                   "verification_target_key": actual_target["key"] if actual_target else "",
+                                   "match": r.get("match", ""), "layer": "instantiation", "derivation": r["id"]}))
     results, stats = A.run_attempts(ws, attempts, budget, run / "instantiation" / "attempts", A.Cache(run / "cache.jsonl"), log=log, jobs=jobs, commit_gb=commit_gb)
     (run / "instantiation").mkdir(parents=True, exist_ok=True)
     with (run / "instantiation" / "results.jsonl").open("w", encoding="utf-8") as handle:
         for r in results:
             handle.write(json.dumps(r, ensure_ascii=False) + "\n")
     summary = {"checked_derivations": sum(1 for r in read_results(run, from_layer) if r.get("status") in A.CHECKED),
-               "attempted": len(attempts), "blocked": blocked, "outcomes": dict(Counter(r["status"] for r in results)),
+               "attempts": stats.attempts, "attempted": len(attempts), "results": len(results), "blocked": blocked,
+               "cached": stats.cached, "run": stats.run, "environments": stats.environments,
+               "lean_processes": stats.lean_processes, "process_failures": stats.process_failures,
+               "outcomes": dict(Counter(r["status"] for r in results)),
                "lean_seconds": round(stats.lean_seconds, 1), "seconds": round(time.monotonic() - started, 1)}
     _write_json(run / "instantiation" / "instantiate.json", summary)
     return summary

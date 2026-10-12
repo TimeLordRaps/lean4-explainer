@@ -8,10 +8,11 @@ commands. Without this package the core site is built from standard Lean comment
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 import sys
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from html import escape
 from pathlib import Path
 from typing import Any
@@ -35,10 +36,12 @@ __version__ = "0.3.0"
 _PREFIX = "L4DEL:"
 _CARRIER_RE = re.compile(r"^[ \t]*L4DEL:(?P<rest>.*)$")
 _WARNING_PREVIEW = 20
+_CACHE_SCHEMA = 2  # L4Notes gained overlay origin/provenance rendering in schema 2.
 
 CSS = """
 .l4del { margin: 0.3rem 0; padding-left: 0.6rem; border-left: 3px solid var(--line); }
 .l4term { margin: 0.3rem 0; }
+.l4del-provenance { margin: 0.45rem 0; padding: 0.45rem 0.6rem; border-left: 3px solid var(--warn); background: var(--warn-bg); }
 """
 
 _GUIDE_EXAMPLE = "\n".join(
@@ -77,7 +80,12 @@ class L4delExtension(Extension):
     name = "l4del"
     version = __version__
     cache_types = frozenset({(FileSummary.__module__, "FileSummary"), (Note.__module__, "Note")})
-    config_keys = {"learning_path": bool, "overlay": str}  # overlay: a sidecar file of annotations (see overlay.py)
+    config_keys = {
+        "learning_path": bool,
+        "overlay": str,
+        "overlay_provenance": str,
+        "overlay_disclosure": str,
+    }  # overlay: a sidecar file of annotations (see overlay.py)
 
     # ---- parsing and indexing ----
     def hides_comment(self, body: str) -> bool:
@@ -123,7 +131,9 @@ class L4delExtension(Extension):
             if head is None:
                 diagnostics.append(Diagnostic("warning", 1, f"overlay: no declaration named {name} in this file (is the overlay out of date?)"))
             elif head.index not in payloads:  # an annotation in the source wins over the overlay
-                payloads[head.index] = parse_l4del([(head.index + 1, rest) for _, rest in items])
+                payloads[head.index] = replace(
+                    parse_l4del([(head.index + 1, rest) for _, rest in items]), origin="overlay"
+                )
         return ParseResult(payloads, diagnostics)
 
     def index_file(self, path: str, declarations: Sequence[Declaration], diagnostics: Sequence[Diagnostic]) -> FileSummary:
@@ -197,7 +207,12 @@ class L4delExtension(Extension):
     def fingerprint(self, options: Mapping[str, Any]) -> str:
         path = options.get("overlay")
         overlay = load_overlay(str(path)).digest[:16] if path else ""
-        return f"l4del:{__version__}:learning_path={options.get('learning_path', True)}:overlay={overlay}"
+        disclosure = str(options.get("overlay_disclosure", ""))
+        disclosure_digest = hashlib.sha256(disclosure.encode("utf-8")).hexdigest()[:16] if disclosure else ""
+        return (
+            f"l4del:{__version__}:schema={_CACHE_SCHEMA}:learning_path={options.get('learning_path', True)}:"
+            f"overlay={overlay}:provenance={options.get('overlay_provenance', '')}:disclosure={disclosure_digest}"
+        )
 
     # ---- rendering ----
     def css(self, options: Mapping[str, Any]) -> str:
@@ -211,6 +226,18 @@ class L4delExtension(Extension):
     ) -> tuple[str, str]:
         top: list[str] = []
         depth = len(dirs)
+        options = dict(ctx.options)
+        disclosure = str(options.get("overlay_disclosure", "")).strip()
+        if not disclosure and options.get("overlay_provenance") == "ai-generated-unreviewed":
+            disclosure = (
+                "AI-generated and not human-reviewed. Treat this explanatory draft as unverified "
+                "and not mathematical authority."
+            )
+        if payload.origin == "overlay" and disclosure:
+            top.append(
+                '<aside class="l4del-provenance"><strong>Annotation provenance.</strong> '
+                f"{escape(disclosure)}</aside>"
+            )
         if payload.intuition:
             top.append(f'<p class="intuition">{_highlight(payload.intuition, analysis, depth)}</p>')
         if payload.steps:

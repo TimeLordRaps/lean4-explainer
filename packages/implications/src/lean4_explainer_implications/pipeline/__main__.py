@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -62,6 +63,60 @@ def _log(s: str) -> None:
 
 def _record_path(edges: Path, given: str) -> Path:
     return Path(given) if given else edges.with_name(edges.stem + ".verified.json")
+
+
+def _portable_contract_command(argv: list[str], cwd: Path | None = None) -> str:
+    """A reproducible public command template, never a transcript of private checkout or scratch paths."""
+    root = (cwd or Path.cwd()).resolve()
+    private = {"--workspace": "<workspace>", "--corpus": "<corpus>", "--run": "<run>"}
+    public_paths = {"--edges": "<edges>", "--record": "<record>"}
+
+    def public_path(value: str, fallback: str) -> str:
+        try:
+            return Path(value).resolve().relative_to(root).as_posix()
+        except ValueError:
+            return fallback
+
+    shown, i = [], 0
+    while i < len(argv):
+        token = argv[i]
+        if token in private and i + 1 < len(argv):
+            shown += [token, private[token]]
+            i += 2
+            continue
+        if token in public_paths and i + 1 < len(argv):
+            shown += [token, public_path(argv[i + 1], public_paths[token])]
+            i += 2
+            continue
+        matched = next((flag for flag in (*private, *public_paths) if token.startswith(flag + "=")), "")
+        if matched:
+            value = token.split("=", 1)[1]
+            replacement = private.get(matched) or public_path(value, public_paths[matched])
+            shown.append(f"{matched}={replacement}")
+        elif Path(token).is_absolute():
+            shown.append("<path>")
+        else:
+            shown.append(token)
+        i += 1
+    return "python -I -m lean4_explainer_implications.pipeline " + shlex.join(shown)
+
+
+def _attempt_stage_ok(summary: dict) -> bool:
+    """Whether an attempt stage is complete enough for its zero exit status to mean success."""
+    attempts, results = summary.get("attempts"), summary.get("results")
+    outcomes = summary.get("outcomes") or {}
+    if attempts is None or results != attempts or sum(outcomes.values()) != results:
+        return False
+    if summary.get("process_failures"):
+        return False
+    if {"env-error", "not-run", "error", "kernel-rejected"} & set(outcomes):
+        return False
+    blocked = len(summary.get("blocked") or [])
+    if "candidates" in summary and summary["candidates"] != attempts + blocked:
+        return False
+    if "checked_derivations" in summary and summary["checked_derivations"] != attempts + blocked:
+        return False
+    return True
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -127,6 +182,7 @@ def main(argv: list[str] | None = None) -> int:
     k.add_argument("--layers", default="statements,solutions,instantiation")
     k.add_argument("--out", required=True)
     k.add_argument("--edges", default="", help="the curated edge file, whose verification record goes into the catalogue")
+    k.add_argument("--record", default="", help="the verification record (default: <edge file stem>.verified.json beside it)")
 
     t = sub.add_parser("contracts", help="check curated edges' bridge files in Lean")
     common(t)
@@ -139,9 +195,14 @@ def main(argv: list[str] | None = None) -> int:
     common(r, lean=False)
     r.add_argument("--catalogue", default="")
     r.add_argument("--edges", default="")
+    r.add_argument("--record", default="", help="the verification record (default: <edge file stem>.verified.json beside it)")
     r.add_argument("--out", default="", help="the directory to write into (default: the run directory)")
+    r.add_argument("--authoritative-build", action="append", default=None,
+                   help="build record stem to treat as a current report input (repeatable; default: every build record)")
 
     args = parser.parse_args(argv)
+    if args.command in ("catalogue", "report") and args.record and not args.edges:
+        parser.error("--record requires --edges")
     if hasattr(args, "prefix") and args.prefix is None:
         args.prefix = ["OAI", "ComparatorChallenges"]
     run = Path(args.run).resolve()  # Lean runs in the workspace: every path it is given must be absolute
@@ -168,7 +229,7 @@ def main(argv: list[str] | None = None) -> int:
         (run / "environment.json").write_text(json.dumps(env, indent=1), encoding="utf-8")
         summary = S.extract_layer(ws, identity, _modules(args), run, args.layer, args.batch_size, log=_log, commit_gb=gb)
         print(json.dumps({k: v for k, v in summary.items() if k != "batches"}), flush=True)
-        return 0 if summary["modules_extracted"] else 1
+        return 0 if (summary["modules_extracted"] and not summary["modules_failed"] and not summary["failed_declarations"]) else 1
 
     if args.command in ("discover", "instantiate"):
         ws = _ws(args)
@@ -181,7 +242,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             summary = S.instantiate_checked(ws, run, args.from_layer, args.solutions_layer, bud, log=_log, jobs=args.jobs, commit_gb=gb)
         print(json.dumps({k: v for k, v in summary.items() if k != "blocked"}), flush=True)
-        return 0
+        return 0 if _attempt_stage_ok(summary) else 1
 
     if args.command == "catalogue":
         decls, results, seen = [], [], set()
@@ -194,7 +255,7 @@ def main(argv: list[str] | None = None) -> int:
         env = json.loads((run / "environment.json").read_text(encoding="utf-8")) if (run / "environment.json").is_file() else {}
         contracts = []
         if args.edges:
-            rec = _record_path(Path(args.edges), "")
+            rec = _record_path(Path(args.edges), args.record)
             contracts = list((json.loads(rec.read_text(encoding="utf-8"))["edges"] if rec.is_file() else {}).values())
         extraction = {}
         for layer in args.layers.split(","):
@@ -218,7 +279,7 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         ids = {s for s in args.ids.split(",") if s}
         edges = [e for e in found.edges if e.bridge_file and (not ids or e.id in ids)]
-        command = "python -m lean4_explainer_implications.pipeline " + " ".join(sys.argv[1:] if argv is None else argv)
+        command = _portable_contract_command(list(sys.argv[1:] if argv is None else argv))
         records = T.check(ws, edges, path.parent, run / "contracts", args.revision or _git_head(ws.corpus_root), _mathlib(ws), command, log=_log, commit_gb=gb)
         T.write_records(_record_path(path, args.record), records)
         print(json.dumps({k: v["status"] for k, v in records.items()}), flush=True)
@@ -227,9 +288,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "report":
         contracts = {}
         if args.edges:
-            rec = _record_path(Path(args.edges), "")
+            rec = _record_path(Path(args.edges), args.record)
             contracts = json.loads(rec.read_text(encoding="utf-8"))["edges"] if rec.is_file() else {}
-        data = R.collect(run, Path(args.catalogue) if args.catalogue else None, contracts)
+        selected = set(args.authoritative_build) if args.authoritative_build is not None else None
+        data = R.collect(run, Path(args.catalogue) if args.catalogue else None, contracts, selected)
         out = Path(args.out) if args.out else run
         out.mkdir(parents=True, exist_ok=True)
         (out / "report.json").write_text(json.dumps(data, indent=1, ensure_ascii=False), encoding="utf-8")

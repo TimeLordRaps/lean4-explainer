@@ -1,6 +1,6 @@
 """Compfiles: the pinned source description lean4-explainer builds a site from."""
 
-from lean4_explainer_corpora.registry import Corpus, package_file
+from lean4_explainer_corpora.registry import Corpus
 from lean4_explainer_corpora.themes import make_theme, svg  # noqa: F401
 
 THEME = make_theme(
@@ -11,7 +11,7 @@ THEME = make_theme(
 h1 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 900; border-left: 0.6rem solid var(--accent); padding-left: 0.6rem; }
 h2 { text-transform: uppercase; letter-spacing: 0.08em; border-bottom-width: 3px; }
 ol.decls > li, ul.list > li { border-bottom-width: 2px; }
-.kind { font-weight: 700; }
+.kind, ol.decls > li > b:first-child { font-weight: 700; }
 """,
 )
 
@@ -26,5 +26,4 @@ CORPUS = Corpus(
     extra_kinds=("problem", "determine"),  # statements are `problem name : ...`, answers `determine name : ...`
     accent='#d7261e',
     theme_css=THEME,
-    overlay=package_file(__file__, "overlay.l4del"),
 )

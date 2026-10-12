@@ -82,6 +82,26 @@ def test_overlay_annotations_reach_the_page_and_the_source_is_untouched(tmp_path
     assert (root / "Demo.lean").read_text(encoding="utf-8") == SOURCE  # the sidecar never writes upstream
 
 
+def test_unreviewed_overlay_discloses_its_provenance_beside_the_annotation(tmp_path):
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "Demo.lean").write_text(SOURCE, encoding="utf-8")
+    overlay = tmp_path / "demo.l4del"
+    overlay.write_text(OVERLAY, encoding="utf-8")
+    config = Config(
+        options=(
+            ("overlay", str(overlay)),
+            ("overlay_provenance", "ai-generated-unreviewed"),
+        )
+    )
+
+    build_site(root, tmp_path / "out", config, tmp_path / "idx")
+
+    page = (tmp_path / "out" / "Demo.lean.html").read_text(encoding="utf-8")
+    assert "AI-generated and not human-reviewed" in page
+    assert "not mathematical authority" in page
+
+
 def test_a_source_annotation_wins_over_the_overlay(tmp_path):
     _, out, _ = _site(tmp_path, OVERLAY)
 
@@ -101,7 +121,7 @@ def test_declaration_lines_do_not_shift(tmp_path):
 
     for page in (with_overlay, without):
         text = (page / "Demo.lean.html").read_text(encoding="utf-8")
-        assert 'id="L4"' in text and 'id="L6"' in text and 'id="L9"' in text
+        assert "id=L4" in text and "id=L6" in text and "id=L9" in text
 
 
 def test_changing_the_overlay_rebuilds_with_the_new_text(tmp_path):
@@ -112,6 +132,36 @@ def test_changing_the_overlay_rebuilds_with_the_new_text(tmp_path):
     build_site(root, out, Config(options=(("overlay", str(overlay)),)), tmp_path / "a" / "idx")
 
     assert "First, explained again" in (out / "Demo.lean.html").read_text(encoding="utf-8")
+
+
+def test_changing_overlay_review_provenance_rebuilds_the_disclosure(tmp_path):
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "Demo.lean").write_text(SOURCE, encoding="utf-8")
+    overlay = tmp_path / "demo.l4del"
+    overlay.write_text(OVERLAY, encoding="utf-8")
+    out = tmp_path / "out"
+    cache = tmp_path / "idx"
+    first = Config(
+        options=(
+            ("overlay", str(overlay)),
+            ("overlay_provenance", "ai-generated-unreviewed"),
+        )
+    )
+    reviewed = Config(
+        options=(
+            ("overlay", str(overlay)),
+            ("overlay_provenance", "ai-assisted-human-reviewed"),
+            ("overlay_disclosure", "AI-assisted and human-reviewed by Ada."),
+        )
+    )
+
+    build_site(root, out, first, cache)
+    assert "not human-reviewed" in (out / "Demo.lean.html").read_text(encoding="utf-8")
+    build_site(root, out, reviewed, cache)
+
+    page = (out / "Demo.lean.html").read_text(encoding="utf-8")
+    assert "human-reviewed by Ada" in page and "not human-reviewed" not in page
 
 
 def test_workers_apply_the_overlay_too(tmp_path):

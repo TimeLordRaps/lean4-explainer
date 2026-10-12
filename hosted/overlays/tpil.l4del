@@ -1,0 +1,902 @@
+# Sidecar L4DEL annotations for Theorem Proving in Lean 4 (tpil). The upstream sources are never modified.
+# The book is written as Verso markup; the declarations below are the ones the scan lists out of its lean code blocks.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl and_commut
+-- L4DEL: title: An axiom: and is commutative, in a toy proof system
+-- L4DEL: intuition: The book first models proofs as data (Proof p), and an axiom is just a constant of such a type.
+-- L4DEL: step: Implies p q is defined as p → q, and Proof p is a structure with one field, proof : p, wrapping a proof of p.
+-- L4DEL: step: axiom and_commut (p q : Prop) : Proof (Implies (And p q) (And q p)) postulates a proof of the commutativity of And with no argument for it.
+-- L4DEL: step: With p q : Prop in scope, #check and_commut p q reports Proof (Implies (p ∧ q) (q ∧ p)).
+-- L4DEL: step: This is a sketch of how a proof system could be represented; the book then moves to the real Lean treatment of propositions as types.
+-- L4DEL: see: modus_ponens
+-- L4DEL: term: axiom = a declaration whose type is asserted without any proof term; Lean takes it on trust.
+
+@decl modus_ponens
+-- L4DEL: title: Modus ponens as an inference rule on Proof
+-- L4DEL: intuition: From a proof of p implies q and a proof of p, the rule produces a proof of q.
+-- L4DEL: step: The block first repeats Implies and Proof from the previous example.
+-- L4DEL: step: axiom modus_ponens (p q : Prop) : Proof (Implies p q) → Proof p → Proof q is stated as a function-typed axiom.
+-- L4DEL: step: It is an axiom, so there is no proof term here; the rule is simply assumed.
+-- L4DEL: see: and_commut
+-- L4DEL: term: modus ponens = the inference rule that from p implies q and p concludes q.
+
+@file book/TPiL/DependentTypeTheory.lean
+@decl five
+-- L4DEL: title: Example that fails: a numeral at a type that merely unfolds to Nat
+-- L4DEL: intuition: def Natural := Nat makes Natural a new name, but numeral literals still need an OfNat Natural 5 instance that does not exist.
+-- L4DEL: step: The book defines Natural as an alternative name for Nat with def Natural := Nat.
+-- L4DEL: step: This code block is marked as an expected error: def five : Natural := 5 does not elaborate.
+-- L4DEL: step: The recorded message says Lean failed to synthesize an instance of OfNat Natural 5, because numerals are polymorphic and the expected type is Natural.
+-- L4DEL: step: The point is that Lean treats a defined name as equal to its unfolding, but not every name is unfolded in every context, such as instance lookup.
+
+@file book/TPiL/Tactics.lean
+@decl swap_pair
+-- L4DEL: title: Tactics can define data: swapping a pair
+-- L4DEL: intuition: The same tactic script that proves p and q implies q and p also builds a function that swaps the two components of a pair.
+-- L4DEL: step: The type is α × β → β × α, a function type for products.
+-- L4DEL: step: intro p introduces the argument; cases p splits the pair into its two components.
+-- L4DEL: step: constructor <;> assumption builds the new pair, and for each of its two parts assumption finds the matching component in the context.
+-- L4DEL: step: The book remarks that, up to variable names, this is identical to the proof for conjunction.
+-- L4DEL: see: swap_sum
+
+@decl swap_sum
+-- L4DEL: title: Swapping the two sides of a sum type
+-- L4DEL: intuition: cases splits on which side of the sum we are in, and each branch rebuilds the value on the opposite side.
+-- L4DEL: step: The type is Sum α β → Sum β α.
+-- L4DEL: step: intro p and cases p give one goal per constructor of Sum.
+-- L4DEL: step: In the first branch apply Sum.inr; assumption wraps the left value on the right; in the second, apply Sum.inl; assumption does the reverse.
+-- L4DEL: step: The book remarks that this matches the proof of commutativity of disjunction.
+-- L4DEL: see: swap_pair
+-- L4DEL: term: cases = the tactic that splits a value or hypothesis by its constructors and gives one goal for each.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.next_previous
+-- L4DEL: title: next undoes previous, by cases on the constructors
+-- L4DEL: intuition: Weekday has seven constructors, so match gives seven cases, each true by computation.
+-- L4DEL: step: Weekday is an inductive type with constructors sunday through saturday, and next and previous move one day forward and back.
+-- L4DEL: step: theorem next_previous (d : Weekday) : next (previous d) = d is proved with match d with.
+-- L4DEL: step: In each of the seven cases the two sides reduce to the same constructor, so the proof is rfl.
+-- L4DEL: step: The book follows this with a shorter version of the proof.
+-- L4DEL: term: inductive type = a type generated freely by a list of constructors, such as the seven weekdays.
+
+@decl Weekday.Weekday.add_comm
+-- L4DEL: title: First attempt at commutativity of Nat addition (contains sorry)
+-- L4DEL: intuition: Induct on the second argument; one equation in the step is not yet proved and is left as sorry.
+-- L4DEL: step: This is a work-in-progress block in the book: the last calc step ends with := sorry, so Lean accepts it only with a warning.
+-- L4DEL: step: Nat.recOn with motive fun x => m + x = x + m does induction on n; the base case m + 0 = 0 + m is proved with Nat.zero_add and Nat.add_zero.
+-- L4DEL: step: In the inductive step a calc rewrites m + succ n to succ (m + n), then to succ (n + m) using the induction hypothesis.
+-- L4DEL: step: The missing step succ (n + m) = succ n + m is what the book proves next as succ_add, then plugs in to replace the sorry.
+-- L4DEL: see: Weekday.Weekday.succ_add
+-- L4DEL: term: induction hypothesis = in the inductive step, the assumption that the property holds for n, used to prove it for succ n.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl divides_trans
+-- L4DEL: title: Divisibility is transitive, so calc can chain it
+-- L4DEL: intuition: Compose the two witnesses by multiplying them, which is the witness for the combined divisibility.
+-- L4DEL: step: divides x y is defined as ∃ k, k*x = y.
+-- L4DEL: step: let ⟨k₁, d₁⟩ := h₁ and let ⟨k₂, d₂⟩ := h₂ unpack the two witnesses and their equations.
+-- L4DEL: step: The new witness is k₁ * k₂, and the equation is proved by rewriting with Nat.mul_comm, Nat.mul_assoc, d₁ and d₂.
+-- L4DEL: step: The book uses it to build instance Trans divides divides divides, which teaches calc about this relation.
+-- L4DEL: see: divides_mul
+
+# BEGIN GENERATED SOURCE-COMMENT ANNOTATIONS
+# Generated only from declaration doc comments or immediately leading comments at the pinned commit.
+# The Pages disclosure labels this transformed explanatory text AI-generated and unreviewed.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl (example at line 486)
+-- L4DEL: title: the computation principle
+-- L4DEL: intuition: the computation principle
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.(example at line 940)
+-- L4DEL: title: Documented declaration: (example at line 940)
+-- L4DEL: intuition: --------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.eqv.refl
+-- L4DEL: title: Documented declaration: refl
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Hidden.choice
+-- L4DEL: title: Documented declaration: choice
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Hidden.Decidable
+-- L4DEL: title: Documented declaration: Decidable
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Hidden.indefiniteDescription
+-- L4DEL: title: Documented declaration: indefiniteDescription
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Hidden.Nonempty
+-- L4DEL: title: Documented declaration: Nonempty
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Hidden.Quotient
+-- L4DEL: title: Documented declaration: Quotient
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Hidden.Setoid
+-- L4DEL: title: Documented declaration: Setoid
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.inhabited_of_nonempty
+-- L4DEL: title: Documented declaration: inhabited_of_nonempty
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.propext
+-- L4DEL: title: Documented declaration: propext
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.Quot.sound
+-- L4DEL: title: Documented declaration: sound
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.UProd.mem_fn
+-- L4DEL: title: Documented declaration: mem_fn
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.UProd.mem_swap
+-- L4DEL: title: auxiliary lemma for proving mem_respects
+-- L4DEL: intuition: auxiliary lemma for proving mem_respects
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.UProd.mk_eq_mk
+-- L4DEL: title: Documented declaration: mk_eq_mk
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Hidden.uprodSetoid
+-- L4DEL: title: Documented declaration: uprodSetoid
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/AxiomsComputation.lean
+@decl Set.empty
+-- L4DEL: title: Documented declaration: empty
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/DependentTypeTheory.lean
+@decl add
+-- L4DEL: title: Documented declaration: add
+-- L4DEL: intuition: ---
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/DependentTypeTheory.lean
+@decl doTwice
+-- L4DEL: title: Documented declaration: doTwice
+-- L4DEL: intuition: ---
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/DependentTypeTheory.lean
+@decl square
+-- L4DEL: title: Documented declaration: square
+-- L4DEL: intuition: ---
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/DependentTypeTheory.lean
+@decl whatever
+-- L4DEL: title: Avoid warnings
+-- L4DEL: intuition: Avoid warnings
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.allInfo
+-- L4DEL: title: Extracts all messages from the given code
+-- L4DEL: intuition: Extracts all messages from the given code.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.checkSeverity
+-- L4DEL: title: Reports a comment that names a severity other than the one its command produced
+-- L4DEL: intuition: Reports a comment that names a severity other than the one its command produced. A comment that names no severity describes a message of any kind.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.commentColumn
+-- L4DEL: title: The column at which the comment on a line begins, if it has one
+-- L4DEL: intuition: The column at which the comment on a line begins, if it has one.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.commentContents
+-- L4DEL: title: Extracts the text of a comment, which may span several lines
+-- L4DEL: intuition: Extracts the text of a comment, which may span several lines. Each line contributes its content after the delimiter and the single space that conventionally follows it. Any further indentation is part of the text, because messages indent their details.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.exampleSubversoRev
+-- L4DEL: title: The SubVerso revision recorded in the example project's Lake manifest
+-- L4DEL: intuition: The SubVerso revision recorded in the example project's Lake manifest. That revision writes the extracted JSON, and the copy of SubVerso that Verso brings in here reads it back, so the serialization the two agree on is part of what an extraction depends on.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.expectedComment
+-- L4DEL: title: The comment that describes a message
+-- L4DEL: intuition: The comment that describes a message. A message of one line is written on the command's own line; a longer one is written on the lines below it, at the command's indentation.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.ExpectedMessage
+-- L4DEL: title: A comment that describes the message a command produces
+-- L4DEL: intuition: A comment that describes the message a command produces.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.extractFile
+-- L4DEL: title: Extracts the highlighted contents of an example
+-- L4DEL: intuition: Extracts the highlighted contents of an example. When `expectErrors` is set, building the example is allowed to fail: the errors it reports are described in the document, and checked against the extracted messages there. Extraction itself must still succeed.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.fixupAnchorComments
+-- L4DEL: title: Leading anchor comments are always incorrect
+-- L4DEL: intuition: Leading anchor comments are always incorrect. They probably result from Lean placing them with the _next_ command, so we should move them back up before processing them. Line comments form one comment when they share a column, and a comment that describes a command follows it directly: on the command's own line, on the lines below it, or both. Those move back as well. A comment at some other column, or one held off by a blank line, is a separate comment that belongs to the command below it.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.isCommentLine
+-- L4DEL: title: Whether a line consists of a comment, along with any surrounding whitespace
+-- L4DEL: intuition: Whether a line consists of a comment, along with any surrounding whitespace.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.isMessageCommentLine
+-- L4DEL: title: Whether a line is a comment that introduces a message
+-- L4DEL: intuition: Whether a line is a comment that introduces a message.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.lastLineIndent
+-- L4DEL: title: The indentation of the last line of some code
+-- L4DEL: intuition: The indentation of the last line of some code.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.leanFirst
+-- L4DEL: title: Elaborates Lean blocks first, maintaining the order of blocks
+-- L4DEL: intuition: Elaborates Lean blocks first, maintaining the order of blocks. This makes their code available for `leanRef`.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.logCommentMismatch
+-- L4DEL: title: Reports a comment that doesn't describe the message its command produced
+-- L4DEL: intuition: Reports a comment that doesn't describe the message its command produced. The corrected block is offered when the command occurs just once, so that replacing it is unambiguous. Any existing comment is dropped, which moves it to the place that suits the message.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.messageComment?
+-- L4DEL: title: Splits the marker that introduces a message off a comment's text, along with the severity it names, if any
+-- L4DEL: intuition: Splits the marker that introduces a message off a comment's text, along with the severity it names, if any. A comment below a command describes the message it produces only when marked this way, which tells it apart from a comment that remarks on the code.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.messageSeverityName
+-- L4DEL: title: The name of a message's severity
+-- L4DEL: intuition: The name of a message's severity.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.suggest
+-- L4DEL: title: Internal detail of suggestion mechanism
+-- L4DEL: intuition: Internal detail of suggestion mechanism.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.trailingComment
+-- L4DEL: title: Extracts a trailing comment from code, if present
+-- L4DEL: intuition: Extracts a trailing comment from code, if present. Returns the code along with the comment and its trailing whitespace.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Examples.lean
+@decl TPiL.trailingText
+-- L4DEL: title: Splits the trailing text off some code
+-- L4DEL: intuition: Splits the trailing text off some code. Comments are read as text only when `comments` is set. Everywhere else they are part of the code and are shown as they were written.
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 178)
+-- L4DEL: title: Documented declaration: (example at line 178)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 212)
+-- L4DEL: title: Documented declaration: (example at line 212)
+-- L4DEL: intuition: ------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 363)
+-- L4DEL: title: Documented declaration: (example at line 363)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 80)
+-- L4DEL: title: Documented declaration: (example at line 80)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 913)
+-- L4DEL: title: Documented declaration: (example at line 913)
+-- L4DEL: intuition: ---
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 936)
+-- L4DEL: title: Documented declaration: (example at line 936)
+-- L4DEL: intuition: ---
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl (example at line 974)
+-- L4DEL: title: Documented declaration: (example at line 974)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl ack_gt_zero
+-- L4DEL: title: Documented declaration: ack_gt_zero
+-- L4DEL: intuition: -----------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl bar
+-- L4DEL: title: Documented declaration: bar
+-- L4DEL: intuition: ------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl f_or
+-- L4DEL: title: Documented declaration: f_or
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl foo
+-- L4DEL: title: Documented declaration: foo
+-- L4DEL: intuition: ------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl Hidden.and
+-- L4DEL: title: Documented declaration: and
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl Hidden.not
+-- L4DEL: title: Documented declaration: not
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl isNotZero
+-- L4DEL: title: Documented declaration: isNotZero
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl length_replicate
+-- L4DEL: title: Documented declaration: length_replicate
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl sub1
+-- L4DEL: title: Documented declaration: sub1
+-- L4DEL: intuition: ------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl tail
+-- L4DEL: title: Documented declaration: tail
+-- L4DEL: intuition: ------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl tail1
+-- L4DEL: title: Documented declaration: tail1
+-- L4DEL: intuition: ------
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl Vect.add
+-- L4DEL: title: Documented declaration: add
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl Vect.head
+-- L4DEL: title: Documented declaration: head
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl Vect.tailAux
+-- L4DEL: title: Documented declaration: tailAux
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl Vect.zipWith
+-- L4DEL: title: Documented declaration: zipWith
+-- L4DEL: intuition: -----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductionAndRecursion.lean
+@decl zero_add
+-- L4DEL: title: Documented declaration: zero_add
+-- L4DEL: intuition: ---
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.and
+-- L4DEL: title: Documented declaration: and
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Bool
+-- L4DEL: title: Documented declaration: Bool
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Eq
+-- L4DEL: title: Documented declaration: Eq
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Exists
+-- L4DEL: title: Documented declaration: Exists
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.False
+-- L4DEL: title: Documented declaration: False
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.fst
+-- L4DEL: title: Documented declaration: fst
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.List
+-- L4DEL: title: Documented declaration: List
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.List.append_nil
+-- L4DEL: title: Documented declaration: append_nil
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Nat
+-- L4DEL: title: Documented declaration: Nat
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Option
+-- L4DEL: title: Documented declaration: Option
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Prod
+-- L4DEL: title: Documented declaration: Prod
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Sigma
+-- L4DEL: title: Documented declaration: Sigma
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.subst
+-- L4DEL: title: Documented declaration: subst
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.Subtype
+-- L4DEL: title: Documented declaration: Subtype
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.Hidden.zero_add
+-- L4DEL: title: Documented declaration: zero_add
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.next_previous
+-- L4DEL: title: Documented declaration: next_previous
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InductiveTypes.lean
+@decl Weekday.Weekday.silly
+-- L4DEL: title: Documented declaration: silly
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl (example at line 470)
+-- L4DEL: title: Equivalent:
+-- L4DEL: intuition: Equivalent:
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl (example at line 484)
+-- L4DEL: title: Just f 7
+-- L4DEL: intuition: Just f 7
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl (example at line 486)
+-- L4DEL: title: These are equivalent:
+-- L4DEL: intuition: These are equivalent:
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl f'
+-- L4DEL: title: Alternative syntax:
+-- L4DEL: intuition: Alternative syntax:
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl foo
+-- L4DEL: title: a user-defined function
+-- L4DEL: intuition: a user-defined function
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl instLe
+-- L4DEL: title: Documented declaration: instLe
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl List.isPrefix_self
+-- L4DEL: title: Documented declaration: isPrefix_self
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl {lit}`Nat`.(instance at line 1091)
+-- L4DEL: title: Documented declaration: (instance at line 1091)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl {lit}`Nat`.Ex2.id1
+-- L4DEL: title: Documented declaration: id1
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl {lit}`Nat`.Ex2.id2
+-- L4DEL: title: In this example, implicit lambda introduction has been disabled because we use `@` before {kw}`fun`
+-- L4DEL: intuition: In this example, implicit lambda introduction has been disabled because we use `@` before {kw}`fun`
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/InteractingWithLean.lean
+@decl {lit}`Nat`.Ex2.id5
+-- L4DEL: title: In this example, implicit lambda introduction has been disabled because we used the binder annotation `{...}`
+-- L4DEL: intuition: In this example, implicit lambda introduction has been disabled because we used the binder annotation `{...}`
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1023)
+-- L4DEL: title: Documented declaration: (example at line 1023)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1127)
+-- L4DEL: title: distributivity
+-- L4DEL: intuition: distributivity
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1148)
+-- L4DEL: title: an example that requires classical reasoning
+-- L4DEL: intuition: an example that requires classical reasoning
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1168)
+-- L4DEL: title: commutativity of ∧ and ∨
+-- L4DEL: intuition: commutativity of ∧ and ∨
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1172)
+-- L4DEL: title: associativity of ∧ and ∨
+-- L4DEL: intuition: associativity of ∧ and ∨
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1176)
+-- L4DEL: title: distributivity
+-- L4DEL: intuition: distributivity
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl (example at line 1180)
+-- L4DEL: title: other properties
+-- L4DEL: intuition: other properties
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl ex
+-- L4DEL: title: Everything follows from false
+-- L4DEL: intuition: Everything follows from false
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl implies_intro
+-- L4DEL: title: Documented declaration: implies_intro
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/PropositionsAndProofs.lean
+@decl t1
+-- L4DEL: title: Documented declaration: t1
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 1014)
+-- L4DEL: title: Documented declaration: (example at line 1014)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 277)
+-- L4DEL: title: Documented declaration: (example at line 277)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 299)
+-- L4DEL: title: Documented declaration: (example at line 299)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 810)
+-- L4DEL: title: Documented declaration: (example at line 810)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 820)
+-- L4DEL: title: Documented declaration: (example at line 820)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 830)
+-- L4DEL: title: Documented declaration: (example at line 830)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl (example at line 842)
+-- L4DEL: title: Documented declaration: (example at line 842)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl even_plus_even
+-- L4DEL: title: Documented declaration: even_plus_even
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/QuantifiersEquality.lean
+@decl T
+-- L4DEL: title: Documented declaration: T
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/StructuresAndRecords.lean
+@decl with.p
+-- L4DEL: title: Documented declaration: p
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/StructuresAndRecords.lean
+@decl with.Point.smul
+-- L4DEL: title: Documented declaration: smul
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Tactics.lean
+@decl (example at line 1440)
+-- L4DEL: title: Documented declaration: (example at line 1440)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Tactics.lean
+@decl (example at line 1516)
+-- L4DEL: title: Documented declaration: (example at line 1516)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Tactics.lean
+@decl (example at line 1556)
+-- L4DEL: title: Documented declaration: (example at line 1556)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Tactics.lean
+@decl (example at line 1770)
+-- L4DEL: title: Documented declaration: (example at line 1770)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/Tactics.lean
+@decl reverse_mk_symm
+-- L4DEL: title: Documented declaration: reverse_mk_symm
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Add
+-- L4DEL: title: Documented declaration: Add
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.(instance at line 101)
+-- L4DEL: title: Documented declaration: (instance at line 101)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.(instance at line 120)
+-- L4DEL: title: Documented declaration: (instance at line 120)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.(instance at line 1283)
+-- L4DEL: title: Documented declaration: (instance at line 1283)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.(instance at line 1344)
+-- L4DEL: title: Documented declaration: (instance at line 1344)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Add
+-- L4DEL: title: Documented declaration: Add
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.double
+-- L4DEL: title: Documented declaration: double
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Ex.(instance at line 225)
+-- L4DEL: title: Documented declaration: (instance at line 225)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Ex.(instance at line 301)
+-- L4DEL: title: Documented declaration: (instance at line 301)
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Ex.double
+-- L4DEL: title: Documented declaration: double
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Ex.HMul
+-- L4DEL: title: Documented declaration: HMul
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Ex.Inhabited
+-- L4DEL: title: Documented declaration: Inhabited
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Ex.OfNat
+-- L4DEL: title: Documented declaration: OfNat
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Hidden.Decidable
+-- L4DEL: title: Documented declaration: Decidable
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Hidden.dite
+-- L4DEL: title: Documented declaration: dite
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Hidden.ite
+-- L4DEL: title: Documented declaration: ite
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.List.toSet
+-- L4DEL: title: Documented declaration: toSet
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.Morphism
+-- L4DEL: title: Documented declaration: Morphism
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+
+@file book/TPiL/TypeClasses.lean
+@decl Ex.Ex.s
+-- L4DEL: title: Documented declaration: s
+-- L4DEL: intuition: ----
+-- L4DEL: step: This explanation is a condensed rendering of the declaration's own leading source comment at the pinned source commit; consult the exact Lean statement below for authority.
+# END GENERATED SOURCE-COMMENT ANNOTATIONS

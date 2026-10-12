@@ -36,12 +36,28 @@ def size (n : Nat) : Nat := n * n + 1
 theorem size_ge (n : Nat) : n + 1 ≤ size n := by unfold size; cases n <;> simp [Nat.mul_succ] <;> omega
 theorem size_pos (n : Nat) : 1 ≤ size n := by unfold size; omega
 
+/-- A bound with a constant it does not name, `∃ c, 0 < c ∧ …`, as Siegel-type statements give theirs. -/
+theorem exists_size_bound : ∃ c, 0 < c ∧ ∀ n : Nat, 2 ≤ n → c ≤ size n := ⟨1, by decide, fun n _ => size_pos n⟩
+
 /-- The same existence, its parts in the other order: the witness carries over. -/
 theorem exists_fine : ∃ n, Fine n ∧ 2 ≤ n := ⟨2, ⟨by decide⟩, by decide⟩
 theorem exists_big_fine : ∃ n, 2 ≤ n ∧ Fine n := ⟨2, by decide, ⟨by decide⟩⟩
 
 /-- Nothing derives this within the rules: no source says anything about `Fine 0`. -/
 theorem not_fine_zero : ¬ Fine 0 := fun h => by have := h.pos; omega
+
+universe u
+
+/-- Universe polymorphic, with a universe nothing else here fixes: composed after `fine_double`, its level is left
+free, and the derived statement takes it as a parameter. -/
+theorem good_succ_of_fine {α : Type u} (_a : α) (n : Nat) (h : Fine n) : Good (n + 1) := ⟨by have := h.pos; omega⟩
+
+/-- A hypothesis that is only a positivity fact: composed after `Fine.pos`, the link is `0 < n`. -/
+theorem good_succ_of_pos (n : Nat) (h : 0 < n) : Good (n + 1) := ⟨by omega⟩
+
+/-- A number left free, with a premise about it that arithmetic proves: composed after `fine_double`, the premise
+is discharged only where the number is in scope. -/
+theorem fine_add_of_pos (m : Nat) (_hm : 0 < m + 1) (n : Nat) (h : Fine n) : Fine (n + m) := ⟨by have := h.pos; omega⟩
 
 /-- `fine_of_two` stated through a definition, as challenge files state their main claims. -/
 def FineFromTwo : Prop := ∀ n, 2 ≤ n → Fine n

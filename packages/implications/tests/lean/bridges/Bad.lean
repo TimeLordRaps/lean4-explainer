@@ -50,3 +50,13 @@ theorem relation_ignores (contract : ∀ n : Nat, n + 1 ≤ Fx.size n) : ∀ n :
 
 /-- A bridge for the relation-ignores case: the contract holds (it is the source). -/
 theorem bridge_bound_copy (source1 : ∀ n : Nat, n + 1 ≤ Fx.size n) : ∀ n : Nat, n + 1 ≤ Fx.size n := source1
+
+/-- A point-free bridge whose reused proof ignores the named source. -/
+theorem pointfree_bridge_helper : (∀ n : Nat, Fx.Good n → Fx.Fine n) → True := fun _ => trivial
+theorem bridge_pointfree : (∀ n : Nat, Fx.Good n → Fx.Fine n) → True := pointfree_bridge_helper
+
+/-- A point-free relation whose reused proof ignores the checked contract. -/
+theorem pointfree_relation_helper : (∀ n : Nat, n + 1 ≤ Fx.size n) → ∀ n : Nat, 1 ≤ Fx.size n :=
+  fun _ n => by unfold Fx.size; omega
+theorem relation_pointfree : (∀ n : Nat, n + 1 ≤ Fx.size n) → ∀ n : Nat, 1 ≤ Fx.size n :=
+  pointfree_relation_helper

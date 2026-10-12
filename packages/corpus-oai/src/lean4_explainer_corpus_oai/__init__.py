@@ -27,7 +27,6 @@ CORPUS = Corpus(
     source_links='file',
     accent='#2aa198',
     theme_css=THEME,
-    overlay=package_file(__file__, "overlay.l4del"),
     # curated implication edges, each a claim with its contract (see lean4-explainer-implications)
     implications=package_file(__file__, "implications.toml"),
     # 1.1 GB of Lean: per-declaration maps would not fit in the Pages size limit beside the pages themselves

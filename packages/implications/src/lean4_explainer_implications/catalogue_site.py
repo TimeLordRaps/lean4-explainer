@@ -13,6 +13,7 @@ from collections import Counter
 from collections.abc import Callable, Mapping
 from html import escape
 from pathlib import Path
+from urllib.parse import quote
 
 GROUP_LABELS = {
     "connection": "connection",
@@ -109,8 +110,9 @@ def theorem_block(entries: list[tuple[str, dict]], here_keys: set[str], link: Ca
             more = f'<li class="muted">and {len(rows) - limit} more in the catalogue</li>' if len(rows) > limit else ""
             parts.append(f"<p class=\"refs\"><em>{title}</em></p><ul>{''.join(item(direction, r) for r in rows[:limit])}{more}</ul>")
     if routine:
+        theorem_query = quote(next(iter(sorted(here_keys))), safe="")
         parts.append(f'<p class="muted">{sum(routine.values())} more checked entries are routine (the same statement, a restatement, a generated lemma, one challenge file, a field of a structure, a route the '
-                     f'released proof already takes, a duplicate): <a href="{escape(cat, quote=True)}?theorem={escape(next(iter(sorted(here_keys))), quote=True)}">in the catalogue</a>.</p>')
+                     f'released proof already takes, a duplicate): <a href="{escape(cat, quote=True)}?theorem={theorem_query}">in the catalogue</a>.</p>')
     return (f'<div class="implications"><p class="refs"><strong>Checked implications</strong> <span class="muted">(found by the '
             f'pipeline and checked by Lean\'s kernel when it ran; a recorded result, not checked again in this build: '
             f'<a href="{escape(cat, quote=True)}">what these are</a>)</span></p>{"".join(parts)}</div>')
@@ -126,12 +128,33 @@ def site_index(index: dict, places: Mapping[str, tuple[str, int]], href_from_cat
 def catalogue_body(index: dict) -> list[str]:
     c = index.get("counts", {})
     env = index.get("environment", {})
+    seen_ids: set[str] = set()
+    for row in index.get("implications", []):
+        row_id = row.get("id")
+        if not isinstance(row_id, str) or not row_id:
+            raise ValueError("catalogue implication id must be a nonempty string")
+        if row_id in seen_ids:
+            raise ValueError(f"duplicate catalogue implication id {row_id}")
+        seen_ids.add(row_id)
     groups = ", ".join(f"{escape(GROUP_LABELS.get(g) or g)} {n}" for g, n in sorted(c.get("checked_by_group", {}).items()))
     by_layer = index.get("extraction") or {}
     if not by_layer and (env.get("extract_policy") or env.get("policy")):  # older catalogues kept one, in the environment
         by_layer = {"": env.get("extract_policy") or env.get("policy")}
-    named = "; ".join(escape(str(p)) + (f" ({escape(layer)})" if layer else "") for layer, p in sorted(by_layer.items()) if p != index.get("policy"))
+    layers_of: dict[str, list[str]] = {}  # each rule set once, with the layers extracted under it
+    for layer, p in sorted(by_layer.items()):
+        if p != index.get("policy"):
+            layers_of.setdefault(str(p), []).append(layer)
+    named = "; ".join(escape(p) + (f" ({escape(', '.join(ls))})" if any(ls) else "") for p, ls in layers_of.items())
     extracted = f" (declarations extracted under {named})" if named else ""
+    shallow = (c.get("connections_by_link") or {}).get("positivity", 0)
+    by_positivity = f" ({shallow} of them linked only by a quantity's positivity, such as <code>0 &lt; x</code>)" if shallow else ""
+    # Keep every published fragment valid before JavaScript runs.  The first render clears these small fallbacks and
+    # replaces them with the interactive rows, so the live DOM never contains duplicate ids.
+    anchors = "".join(
+        f'<li id="{escape(str(row["id"]), quote=True)}"><code>{escape(str(row["id"]))}</code> '
+        '<span class="muted">(load JavaScript for details)</span></li>'
+        for row in index.get("implications", [])
+    )
     return [
         "<h1>Checked implications</h1>",
         "<p>What the discovery pipeline found and Lean's kernel checked: from the source statements, as hypotheses, a derivation "
@@ -141,7 +164,7 @@ def catalogue_body(index: dict) -> list[str]:
         f'<p class="imp-provenance"><strong>Provenance.</strong> {escape(index.get("provenance", ""))} Rule set: {escape(str(index.get("policy", "")))}{extracted}; '
         f'{escape(str(env.get("toolchain", "")))}; Mathlib {escape(str(env.get("mathlib", ""))[:12])}; {escape(str(env.get("corpus_repo", "")))} at '
         f'{escape(str(env.get("corpus_revision", ""))[:12])}.</p>',
-        f'<p>{c.get("checked", 0)} checked: {groups}. {c.get("connections", 0)} are connections; the rest are routine and grouped. '
+        f'<p>{c.get("checked", 0)} checked: {groups}. {c.get("connections", 0)} are connections{by_positivity}; the rest are routine and grouped. '
         f'{c.get("dependencies", 0)} proof dependencies were read from elaborated proof terms (a separate record). '
         f'{c.get("unresolved", 0)} attempts established nothing and {c.get("rejected", 0)} were rejected: '
         '<a href="notes.html">notes</a>.</p>',
@@ -153,7 +176,7 @@ def catalogue_body(index: dict) -> list[str]:
         '<select id="cat-layer" aria-label="Corpus layer"><option value="">any layer</option></select>'
         '<select id="cat-family" aria-label="Family"><option value="">any family</option></select>'
         "</div>",
-        '<p id="cat-count" class="muted">Loading…</p><div id="cat-chain"></div><ol id="cat-list" class="cat-list"></ol>'
+        f'<p id="cat-count" class="muted">Loading…</p><div id="cat-chain"></div><ol id="cat-list" class="cat-list">{anchors}</ol>'
         '<p><button id="cat-more" type="button" hidden>more</button></p>',
         '<noscript><p>The catalogue needs JavaScript to search; the data is <a href="catalogue/index.json">catalogue/index.json</a>.</p></noscript>',
     ]
@@ -197,7 +220,7 @@ SCRIPT = r"""
   var sel = { group: document.getElementById("cat-group"), rule: document.getElementById("cat-rule"), state: document.getElementById("cat-state"),
               layer: document.getElementById("cat-layer"), family: document.getElementById("cat-family") };
   var chainBox = document.getElementById("cat-chain");
-  var index = null, shards = {}, shown = 0, rows = [];
+  var index = null, shards = {}, shown = 0, rows = [], theoremKey = "";
   var LABELS = %LABELS%;
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]; }); }
   function thm(key) { return (index.theorems || {})[key] || { name: key.split(":").pop(), page: "" }; }
@@ -209,6 +232,8 @@ SCRIPT = r"""
     return parts.join(" ").toLowerCase();
   }
   function matches(row) {
+    if (theoremKey && row.sources.indexOf(theoremKey) < 0 && row.target !== theoremKey &&
+        (row.restates || []).indexOf(theoremKey) < 0) return false;
     if (sel.group.value && row.group !== sel.group.value) return false;
     if (sel.rule.value && row.rules.indexOf(sel.rule.value) < 0) return false;
     if (sel.state.value && row.state !== sel.state.value) return false;
@@ -236,6 +261,7 @@ SCRIPT = r"""
       li.id = r.id;
       li.innerHTML = '<div class="cat-head">' + ends(r) + '</div><div class="muted">' + esc(r.rules.join(", ")) + " · " +
         esc(LABELS.group[r.group] || r.group) + " · " + esc(LABELS.state[r.state] || r.state) +
+        (r.link ? " · " + esc(r.link === "positivity" ? "linked only by a positivity fact" : "linked by " + r.link) : "") +
         ' · <button type="button" class="cat-open">details</button> <a href="#' + esc(r.id) + '">link</a></div><div class="cat-detail" hidden></div>';
       list.appendChild(li);
     }
@@ -251,8 +277,10 @@ SCRIPT = r"""
     var subst = (s.substitutions || []).map(function (x) { return x.variable + " := " + x.value; }).join(", ");
     var what = { "apply": "apply " + (s.fact || ""), "assumption": "a hypothesis", "discharge": "discharged by " + (s.by || ""),
                  "bound transfer": "bound transfer from " + (s.fact || "") + " (" + (s.bound || "") + "), closed by " + (s["closed by"] || ""),
-                 "witness transport": "the witness of " + (s.fact || ""), "rewrite": "rewrite with " + (s.fact || "") }[s.step] || s.step;
-    return "<li>" + esc(what) + (subst ? " <span class=\"muted\">with " + esc(subst) + "</span>" : "") + (s.goal ? ": <code>" + esc(s.goal) + "</code>" : "") + "</li>";
+                 "witness transport": "the witness of " + (s.fact || ""), "rewrite": "rewrite with " + (s.fact || ""),
+                 "supply": (s.from || "") + " supplies a hypothesis of " + (s.of || "") }[s.step] || s.step;
+    var shown = s.goal || s.hypothesis;
+    return "<li>" + esc(what) + (subst ? " <span class=\"muted\">with " + esc(subst) + "</span>" : "") + (shown ? ": <code>" + esc(shown) + "</code>" : "") + "</li>";
   }
   function open(li, row) {
     var box = li.querySelector(".cat-detail");
@@ -272,8 +300,11 @@ SCRIPT = r"""
         "<dt>Steps</dt><dd><ol>" + (d.steps || []).map(stepText).join("") + "</ol></dd>" +
         (d.group !== "connection" ? "<dt>Grouped</dt><dd>" + esc(d.group_reason) + "</dd>" : "") +
         "<dt>Axioms</dt><dd>" + esc((d.axioms || []).join(", ") || "none") + (d.instantiated_axioms && d.instantiated_axioms.length ? "; applied to the released theorems: " + esc(d.instantiated_axioms.join(", ")) : "") + "</dd>" +
-        (d.instantiation ? "<dt>Applied to the released theorems</dt><dd>" + esc(LABELS.instantiation[d.instantiation.status] || "not established (" + d.instantiation.status + ")") +
+        (d.instantiation ? "<dt>Instantiation attempt</dt><dd>" + esc(LABELS.instantiation[d.instantiation.status] || "not established (" + d.instantiation.status + ")") +
           (d.instantiation.reason ? " <span class=\"muted\">(" + esc(d.instantiation.reason) + ")</span>" : "") +
+          (d.instantiation.verification_sources && d.instantiation.verification_sources.length ?
+            "<br><span class=\"muted\">verification inputs — source declarations: " + d.instantiation.verification_sources.map(link).join(", ") +
+            (d.instantiation.verification_target ? "; target statement: " + link(d.instantiation.verification_target) : "") + "</span>" : "") +
           "; environment <code>" + esc(d.instantiation.environment.id) + "</code>, " + esc(d.instantiation.environment.modules) + " modules imported; " +
           esc(d.instantiation.cost.ms) + " ms, " + esc(d.instantiation.cost.heartbeats_thousands) + "k heartbeats</dd>" : "") +
         "<dt>Found by</dt><dd>" + esc(d.match) + (d.shared && d.shared.length ? " <span class=\"muted\">(shared constants: " + esc(d.shared.slice(0, 8).join(", ")) + ")</span>" : "") + "</dd>" +
@@ -322,6 +353,23 @@ SCRIPT = r"""
     if (row) open(li, row);
   });
   more.onclick = page;
+  function showHash() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    if (!id || !(index.implications || []).some(function (r) { return r.id === id; })) return;
+    var at = rows.findIndex(function (r) { return r.id === id; });
+    if (at < 0) {
+      theoremKey = ""; q.value = "";
+      Object.keys(sel).forEach(function (k) { sel[k].value = ""; });
+      render();
+      at = rows.findIndex(function (r) { return r.id === id; });
+    }
+    while (at >= shown && shown < rows.length) page();
+    var li = document.getElementById(id);
+    if (li) {
+      li.scrollIntoView();
+      if (li.querySelector(".cat-detail").hidden) open(li, rows[at]);
+    }
+  }
   fetch("catalogue/index.json").then(function (r) { return r.json(); }).then(function (data) {
     index = data;
     var rules = {}, states = {}, layers = {}, fams = {};
@@ -331,17 +379,12 @@ SCRIPT = r"""
     fill(sel.rule, Object.keys(rules)); fill(sel.state, Object.keys(states)); fill(sel.layer, Object.keys(layers).filter(Boolean)); fill(sel.family, Object.keys(fams));
     var params = new URLSearchParams(location.search);
     if (params.get("q")) q.value = params.get("q");
-    if (params.get("theorem")) { sel.group.value = ""; q.value = thm(params.get("theorem")).name; chain(params.get("theorem")); }
-    [q].concat(Object.keys(sel).map(function (k) { return sel[k]; })).forEach(function (el) { el.addEventListener("input", render); el.addEventListener("change", render); });
+    if (params.get("theorem")) { theoremKey = params.get("theorem"); sel.group.value = ""; q.value = ""; chain(theoremKey); }
+    function userRender() { theoremKey = ""; render(); }
+    [q].concat(Object.keys(sel).map(function (k) { return sel[k]; })).forEach(function (el) { el.addEventListener("input", userRender); el.addEventListener("change", userRender); });
     render();
-    var id = location.hash.slice(1);
-    if (id) {
-      var at = rows.findIndex(function (r) { return r.id === id; });
-      if (at < 0) { sel.group.value = ""; q.value = ""; render(); at = rows.findIndex(function (r) { return r.id === id; }); }
-      while (at >= shown && shown < rows.length) page();
-      var li = document.getElementById(id);
-      if (li) { li.scrollIntoView(); open(li, rows[at]); }
-    }
+    window.addEventListener("hashchange", showHash);
+    showHash();
   }, function () { count.textContent = "Could not load catalogue/index.json."; });
 })();
 """

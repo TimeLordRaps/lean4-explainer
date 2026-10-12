@@ -13,10 +13,10 @@ lean4-explainer showcase oai --yes
 
 This package holds the pinned description of the project. The sources are fetched from GitHub when you build.
 
-It also carries sidecar files kept in lean4-explainer, never in the upstream sources, and not written by the
-upstream authors:
+It also carries implication sidecars kept in lean4-explainer, never in the upstream sources, and not written by the
+upstream authors. L4DEL explanations are deliberately excluded from this package and live under
+`hosted/overlays/` for explicit use by the Pages workflow.
 
-- `overlay.l4del`: L4DEL explanations of selected declarations (used when `lean4-explainer[l4del]` is installed).
 - `implications.toml`: curated implication edges, each a claim with its contract: what it starts from and reaches,
   the exact hypotheses and conclusion, the commit it was read at, and its status (used when
   `lean4-explainer[implications]` is installed). It has one proved edge: the 7/8 nonvanishing theorem for Dirichlet

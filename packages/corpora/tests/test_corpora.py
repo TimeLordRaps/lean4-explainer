@@ -30,6 +30,12 @@ def test_every_corpus_states_its_license():
         assert corpus.license == "Apache-2.0", corpus.name  # the LICENSE file of each pinned checkout
 
 
+def test_corpus_packages_do_not_select_explanatory_overlays():
+    assert all(not hasattr(corpus, "overlay") for corpus in CORPORA.values())
+    package_root = Path(__file__).resolve().parents[2]
+    assert not list(package_root.glob("corpus-*/src/**/*.l4del"))
+
+
 def test_formal_conjectures_carries_the_share_alike_notice():
     note = CORPORA["formal-conjectures"].license_note
     assert "CC-BY-SA" in note and "CC-BY" in note and "Wikipedia" in note and "OEIS" in note
@@ -84,6 +90,7 @@ def test_every_extra_installs_the_packages_of_its_corpora():
         wanted = {f"lean4-explainer-{name}" for name in names}
         assert {item.split(">")[0].split("=")[0] for item in extras[extra]} >= wanted, extra
     assert extras["l4del"] == ["lean4-explainer-l4del>=0.3.0"]  # the version that leaves the map and the glossary page to others
+    assert "lean4-explainer-l4del>=0.3.0" in extras["all"]
     # 0.2.0 follows imports through files that only import (the core's import graph, core 0.3.0)
     assert extras["map"] == ["lean4-explainer-map>=0.2.0"] and "lean4-explainer-map>=0.2.0" in extras["all"]
     # 0.4.0 carries the proved edge's bridge, its verification record and the discovered catalogue
@@ -119,3 +126,9 @@ def test_nothing_installed_says_how_to_install():
 def test_compfiles_lists_its_problem_statements():
     assert installed()["compfiles"].extra_kinds == ("problem", "determine")
     assert all(not c.extra_kinds for name, c in installed().items() if name != "compfiles")
+
+
+def test_themes_style_compact_declaration_kinds():
+    selector = ".kind, ol.decls > li > b:first-child"
+    assert all(selector in corpus.theme_css for corpus in CORPORA.values())
+    assert f"{selector} {{ font-weight: 700; }}" in CORPORA["compfiles"].theme_css

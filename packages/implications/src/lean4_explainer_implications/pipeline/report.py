@@ -50,23 +50,46 @@ def coverage(run: Path, layer: str, index: dict | None) -> dict:
 
 
 def statement_match(statements: list[dict], solutions: list[dict]) -> dict:
-    """For each released theorem that was built, whether its elaborated type is the same expression as its challenge
-    copy's (the same constants by name, in the same structure). The definitions those names refer to are compared by
-    openai/math's comparator, not here."""
-    copies = {d["name"]: d for d in statements if d.get("role") == "statement"}
+    """For each released theorem that was built, whether its elaborated type is the same expression as every
+    same-family challenge copy's (the same constants by name, in the same structure). The definitions those names
+    refer to are compared by openai/math's comparator, not here."""
+    copies: dict[str, list[dict]] = {}
+    for declaration in statements:
+        if declaration.get("role") == "statement":
+            copies.setdefault(declaration["name"], []).append(declaration)
     rows = []
     for d in solutions:
         if d.get("role") != "released" or d["name"] not in copies:
             continue
-        c = copies[d["name"]]
-        rows.append({"name": d["name"], "challenge": c.get("challenge", ""), "module": d["module"], "same": d.get("type_hash") == c.get("type_hash"),
+        named = copies[d["name"]]
+        family = [c for c in named if c.get("family") == d.get("family")]
+        if d.get("family") and not family:
+            # Same-named declarations from distinct challenge families can only coexist in separate Lean
+            # environments. Do not present one family's release as a comparison against another family's statement.
+            continue
+        cs = sorted(family if d.get("family") else named, key=lambda row: row["key"])
+        same = all(d.get("type_hash") == c.get("type_hash") for c in cs)
+        rows.append({"name": d["name"], "challenge": ", ".join(sorted({c.get("challenge", "") for c in cs} - {""})),
+                     "challenge_keys": [c["key"] for c in cs], "module": d["module"], "same": same,
                      "released_sorry": bool(d.get("sorry")), "released_axioms": d.get("axioms", [])})
     return {"compared": len(rows), "same": sum(r["same"] for r in rows), "different": [r for r in rows if not r["same"]],
             "released_with_sorry": [r["name"] for r in rows if r["released_sorry"]], "rows": rows}
 
 
-def collect(run: Path, catalogue_dir: Path | None = None, contracts: dict | None = None) -> dict:
-    builds = {p.stem: _load(p) for p in sorted(run.glob("build*.json"))}
+def collect(run: Path, catalogue_dir: Path | None = None, contracts: dict | None = None,
+            authoritative_builds: set[str] | None = None) -> dict:
+    build_records = {p.stem: _load(p) for p in sorted(run.glob("build*.json"))}
+    builds = {
+        name: {k: v for k, v in (record or {}).items() if k != "modules"} | {
+            "failed": [m for m in (record or {}).get("modules", []) if m["status"] not in ("built", "replayed")][:200],
+            "build_seconds": round(sum(m.get("seconds", 0) for m in (record or {}).get("modules", [])), 1),
+        }
+        for name, record in build_records.items()
+    }
+    if authoritative_builds is not None:
+        missing = sorted(authoritative_builds - builds.keys())
+        if missing:
+            raise FileNotFoundError("requested authoritative build records are missing: " + ", ".join(missing))
     layers = {}
     for layer_dir in sorted(p for p in run.iterdir() if p.is_dir()):
         extract, discover = _load(layer_dir / "extract.json"), _load(layer_dir / "discover.json")
@@ -77,13 +100,16 @@ def collect(run: Path, catalogue_dir: Path | None = None, contracts: dict | None
     index = _load(catalogue_dir / "index.json") if catalogue_dir else None
     sizes = {}
     if catalogue_dir and catalogue_dir.is_dir():
-        sizes = {str(p.relative_to(catalogue_dir)).replace("\\", "/"): p.stat().st_size for p in sorted(catalogue_dir.rglob("*.json"))}
+        # `report.json` contains this inventory and is rewritten from it. It is a report about the catalogue, not a
+        # catalogue shard; including its old size makes the new report self-inaccurate and non-idempotent.
+        sizes = {str(p.relative_to(catalogue_dir)).replace("\\", "/"): p.stat().st_size
+                 for p in sorted(catalogue_dir.rglob("*.json")) if p.name != "report.json"}
+    authoritative = set(builds) if authoritative_builds is None else authoritative_builds
     return {
         "run": run.name,  # not the absolute path: the report is published
         "environment": _load(run / "environment.json"),
-        "builds": {name: {k: v for k, v in (b or {}).items() if k != "modules"} | {
-            "failed": [m for m in (b or {}).get("modules", []) if m["status"] not in ("built", "replayed")][:200],
-            "build_seconds": round(sum(m.get("seconds", 0) for m in (b or {}).get("modules", [])), 1)} for name, b in builds.items()},
+        "builds": {name: build for name, build in builds.items() if name in authoritative},
+        "build_diagnostics": {name: build for name, build in builds.items() if name not in authoritative},
         "layers": layers,
         "catalogue": {"counts": (index or {}).get("counts"), "bytes": sizes, "total_bytes": sum(sizes.values())},
         "contracts": contracts or {},
@@ -98,6 +124,20 @@ def _table(rows: list[list], head: list[str]) -> list[str]:
     return out
 
 
+def _build_section(title: str, explanation: str, builds: dict) -> list[str]:
+    lines = [f"## {title}", "", explanation, "",
+             "Counts are corpus modules in each requested module's import closure: built means compiled in that run; "
+             "replayed means an existing matching build trace was reused.", ""]
+    rows = [[n, ", ".join(f"{s} {c}" for s, c in sorted((b.get("counts") or {}).items())), b.get("build_seconds", 0),
+             b.get("stopped") or "—"] for n, b in builds.items()]
+    lines += _table(rows, ["build", "import-closure outcomes", "module-seconds", "stopped"]) + [""]
+    for name, build in builds.items():
+        for module in build.get("failed", []):
+            lines.append(f"- {name}: `{module['module']}` {module['status']}: {module.get('detail', '')[:200]}")
+    lines.append("")
+    return lines
+
+
 def markdown(data: dict) -> str:
     env = data.get("environment") or {}
     lines = ["# Implication discovery: run report", ""]
@@ -107,13 +147,17 @@ def markdown(data: dict) -> str:
         lines += [f"- {names.get(k, k)}: `{v}`" for k, v in env.items()]
         lines.append("")
     if data["builds"]:
-        lines += ["## Builds", ""]
-        rows = [[n, ", ".join(f"{s} {c}" for s, c in sorted((b.get("counts") or {}).items())), b.get("build_seconds", 0), b.get("stopped") or "—"] for n, b in data["builds"].items()]
-        lines += _table(rows, ["build", "modules", "seconds", "stopped"]) + [""]
-        for n, b in data["builds"].items():
-            for m in b.get("failed", []):
-                lines.append(f"- {n}: `{m['module']}` {m['status']}: {m.get('detail', '')[:200]}")
-        lines.append("")
+        lines += _build_section(
+            "Authoritative builds",
+            "Selected as current report inputs: " + ", ".join(f"`{name}.json`" for name in data["builds"]) + ".",
+            data["builds"],
+        )
+    if data.get("build_diagnostics"):
+        lines += _build_section(
+            "Historical build diagnostics",
+            "Other `build*.json` records are retained for diagnosis and provenance, not promotion evidence.",
+            data["build_diagnostics"],
+        )
     for name, layer in data["layers"].items():
         lines += [f"## Layer `{name}`", ""]
         ex = layer.get("extract")
@@ -121,7 +165,8 @@ def markdown(data: dict) -> str:
             lines += [f"- modules requested {ex['modules_requested']}, extracted {ex['modules_extracted']}, in {len(ex['environments'])} environments "
                       f"(sizes {ex['environments']}); {len(ex.get('clashes', []))} pairs of modules declare the same name and were kept apart ({len(ex.get('moved_on_import', []))} more moved when an import failed), {len(ex['splits'])} batches split for other import failures",
                       f"- declarations {ex['declarations']}: " + ", ".join(f"{k} {v}" for k, v in sorted(ex["by_role"].items())),
-                      f"- statements (theorems whose type is a proposition) {ex['statements']}; with sorry {ex['with_sorry']}; unreadable {ex['unreadable']}",
+                      f"- statements (theorems whose type is a proposition) {ex['statements']}; with sorry {ex['with_sorry']}; "
+                      f"unreadable {ex['unreadable']} (declaration extraction failures {ex.get('failed_declarations', ex['unreadable'])})",
                       f"- extraction took {ex['seconds']} s"] + ([f"- extracted under rule set `{ex['policy']}`"] if ex.get("policy") else []) + (
                 [f"- {len(ex['modules_added'])} more modules extracted because they declare a theorem a challenge lists: "
                  + ", ".join(f"`{m}`" for m in ex["modules_added"])] if ex.get("modules_added") else [])
@@ -161,9 +206,12 @@ def markdown(data: dict) -> str:
                   f"- checked implications {c['checked']}: " + ", ".join(f"{k} {v}" for k, v in sorted(c["checked_by_group"].items())),
                   f"- by state: " + ", ".join(f"{k} {v}" for k, v in sorted(c["checked_by_state"].items())),
                   f"- connections (checked, not grouped as routine) {c['connections']}",
+                  *([f"- connections by what links their sources: " + ", ".join(f"{k} {v}" for k, v in sorted(c["connections_by_link"].items()))]
+                    if c.get("connections_by_link") else []),
                   f"- proof dependencies (from elaborated proof terms) {c['dependencies']}",
                   f"- unresolved attempts {c['unresolved']}: " + ", ".join(f"{k} {v}" for k, v in sorted(c["unresolved_by_status"].items())),
-                  f"- size: {cat['total_bytes']} bytes in {len(cat['bytes'])} files", ""]
+                  f"- rejected attempts {c.get('rejected', 0)}: " + (", ".join(f"{k} {v}" for k, v in sorted(c.get("rejected_by_reason", {}).items())) or "—"),
+                  f"- catalogue index and shards (generated reports excluded): {cat['total_bytes']} bytes in {len(cat['bytes'])} files", ""]
     if data.get("coverage"):
         lines += ["## Coverage", ""]
         for name, cov in data["coverage"].items():

@@ -25,6 +25,7 @@ from lean4_explainer_implications.pipeline import contracts as T
 from lean4_explainer_implications.pipeline import extract as X
 from lean4_explainer_implications.pipeline import run as S
 from lean4_explainer_implications.pipeline import workspace as W
+from lean4_explainer_implications.pipeline import __main__ as CLI
 
 HERE = Path(__file__).resolve().parent / "lean"
 LEAN = shutil.which("lean")
@@ -126,6 +127,40 @@ def test_a_composition_derives_a_statement_and_witnesses_carry_over(corpus):
 
 
 @needs_lean
+def test_a_universe_the_derivation_leaves_free_becomes_a_parameter_of_what_is_derived(corpus):
+    # TD-15, found 2026-10-10 on openai/math: 65 compositions and 2 derivations ended "universe levels are not
+    # determined", because a source's universe that nothing fixed stayed a metavariable
+    r = _one(corpus, "compose", ["Fx.fine_double", "Fx.good_succ_of_fine"])
+    assert r["status"] == "checked-instantiated", r
+    assert r["statement"] == "∀ (n : Nat), Fx.Fine (2 * n) → ∀ {α : Type u_1} (_a : α), Fx.Good (n + n + 1)", r["statement"]
+    assert r["used"] == [True, True]
+
+
+@needs_lean
+def test_a_premise_about_a_variable_the_composition_leaves_free_is_checked_where_it_is_in_scope(corpus):
+    # TD-15: a premise of the second source that mentions one of its variables left free was checked in the context
+    # of its own metavariable, which does not hold that variable: tactics either failed or stopped with "unknown
+    # free variable" (20 compositions on openai/math)
+    r = _one(corpus, "compose", ["Fx.fine_double", "Fx.fine_add_of_pos"])
+    assert r["status"] == "checked-instantiated", r
+    assert r["statement"] == "∀ (n : Nat), Fx.Fine (2 * n) → ∀ (m : Nat), Fx.Fine (n + n + m)", r["statement"]
+    assert any(s["step"] == "discharge" and s["goal"] == "0 < m + 1" for s in r["steps"]), r["steps"]
+
+
+@needs_lean
+def test_a_composition_records_what_links_its_sources(corpus):
+    # found 2026-10-11 on openai/math: 9 of the 14 connections are linked only by `0 < x`, a quantity's positivity;
+    # the catalogue should say so from what Lean read, not from the printed text
+    pos = _one(corpus, "compose", ["Fx.Fine.pos", "Fx.good_succ_of_pos"])
+    assert pos["status"] == "checked-instantiated", pos
+    supply = [s for s in pos["steps"] if s["step"] == "supply"][0]
+    assert supply["hypothesis"] == "0 < n" and supply["hypothesis_head"] == "LT.lt" and supply["positivity"] is True
+    other = _one(corpus, "compose", ["Fx.fine_double", "Fx.good_succ_of_fine"])
+    supply = [s for s in other["steps"] if s["step"] == "supply"][0]
+    assert supply["hypothesis_head"] == "Fx.Fine" and supply["positivity"] is False
+
+
+@needs_lean
 def test_bound_transfer_is_proof_producing_arithmetic_on_a_source_bound(corpus):
     r = _one(corpus, "target", ["Fx.size_ge"], "Fx.size_pos")
     assert r["status"] == "checked-instantiated", r
@@ -224,11 +259,14 @@ GOOD_EDGES = [
     _edge(id="good"),
     _edge(id="strengthens", kind="strengthens", sources=("Fx.size_ge",), target="Fx.size_pos", hypotheses=(),
           conclusion="∀ n : Nat, n + 1 ≤ Fx.size n", bridge="bridge_bound", relation="relation_bound", improvement="grows with n"),
+    _edge(id="gap", kind="strengthens", sources=("Fx.size_ge",), target="Fx.exists_size_bound", hypotheses=(),
+          conclusion="∀ n : Nat, n + 1 ≤ Fx.size n", bridge="bridge_bound", relation="relation_gap", improvement="every n, with the bound named"),
 ]
 ONE = ("Fx.fine_of_good",)
 BAD_EDGES = [
     # a valid theorem with the wrong statement must fail
-    _edge(id="true", sources=ONE, bridge="bridge_true", bridge_file="bridges/Bad.lean"),
+    _edge(id="true", sources=ONE, target="", hypotheses=(), conclusion="Fx.Fine 5",
+          bridge="bridge_true", bridge_file="bridges/Bad.lean"),
     _edge(id="extra", bridge="bridge_extra", bridge_file="bridges/Bad.lean"),
     _edge(id="domain", sources=("Fx.double_eq",), target="", hypotheses=(), conclusion="∀ n : Nat, n * 0 = 0", bridge="bridge_domain", bridge_file="bridges/Bad.lean"),
     _edge(id="order", sources=("Fx.double_eq",), target="", hypotheses=(), conclusion="∀ (n m : Nat), n ≤ n + m", bridge="bridge_order", bridge_file="bridges/Bad.lean"),
@@ -240,6 +278,13 @@ BAD_EDGES = [
     _edge(id="relation-ignores", kind="strengthens", sources=("Fx.size_ge",), target="Fx.size_pos", hypotheses=(),
           conclusion="∀ n : Nat, n + 1 ≤ Fx.size n", bridge="bridge_bound_copy", bridge_file="bridges/Bad.lean",
           relation="relation_ignores", improvement="grows with n"),
+    _edge(id="pointfree-unused", sources=ONE, target="", hypotheses=(), conclusion="True",
+          bridge="bridge_pointfree", bridge_file="bridges/Bad.lean"),
+    _edge(id="pointfree-relation", kind="strengthens", sources=("Fx.size_ge",), target="Fx.size_pos", hypotheses=(),
+          conclusion="∀ n : Nat, n + 1 ≤ Fx.size n", bridge="bridge_bound_copy", bridge_file="bridges/Bad.lean",
+          relation="relation_pointfree", improvement="grows with n"),
+    _edge(id="unknown-target", sources=ONE, target="Fx.not_a_declaration", bridge="bridge_direct",
+          bridge_file="bridges/Bad.lean"),
 ]
 
 
@@ -258,7 +303,19 @@ def test_a_bridge_that_proves_its_contract_is_checked_and_recorded(checked):
     assert good["fingerprint"] == E.fingerprint(GOOD_EDGES[0], T.sha256_file(HERE / "bridges" / "Good.lean"))
     s = checked["strengthens"]
     assert s["status"] == "checked", s
+    assert s["hypothesis_comparison"] == "rendered-text"
     assert s["target_conclusion"] == "1 ≤ Fx.size n" and s["contract_conclusion"] == "n + 1 ≤ Fx.size n"
+
+
+@needs_lean
+def test_a_relation_reads_the_targets_hypotheses_inside_an_existential(checked):
+    # TD-12, found 2026-10-10 on the seven-eighths edge: Siegel's statement is `∃ c, 0 < c ∧ ∀ …`, so the record
+    # listed none of its hypotheses and the improvement had to be stated in words instead of derived
+    g = checked["gap"]
+    assert g["status"] == "checked", g
+    assert g["target_path"] == ["∃ c", "0 < c ∧"] and g["contract_path"] == []
+    assert g["target_hypotheses"] == ["2 ≤ n"] and g["contract_hypotheses"] == []
+    assert g["target_only_hypotheses"] == ["2 ≤ n"] and g["target_conclusion"] == "c ≤ Fx.size n"
 
 
 @needs_lean
@@ -275,11 +332,47 @@ def test_a_bridge_that_proves_its_contract_is_checked_and_recorded(checked):
         ("alias", "audit-failed", "Fx.fine_of_two'"),
         ("unused", "rejected", "does not use every source"),
         ("relation-ignores", "rejected", "does not use the contract"),
+        ("pointfree-unused", "rejected", "could not be determined"),
+        ("pointfree-relation", "rejected", "could not be determined"),
+        ("unknown-target", "error", "unknown declaration Fx.not_a_declaration"),
     ],
 )
 def test_a_bridge_that_does_not_prove_its_contract_fails(checked, case, status, says):
     r = checked[case]
     assert r["status"] == status and says in r["reason"], r
+
+
+@needs_lean
+@pytest.mark.parametrize(
+    "case, expected, bridge_type",
+    [
+        (
+            "true",
+            "(∀ (n : Nat), Fx.Good n → Fx.Fine n) → Fx.Fine 5",
+            "(∀ (n : Nat), Fx.Good n → Fx.Fine n) → True",
+        ),
+        (
+            "extra",
+            "(∀ (n : Nat), 2 ≤ n → Fx.Good n) → (∀ (n : Nat), Fx.Good n → Fx.Fine n) → ∀ (n : Nat), 2 ≤ n → Fx.Fine n",
+            "(∀ (n : Nat), 2 ≤ n → Fx.Good n) → (∀ (n : Nat), Fx.Good n → Fx.Fine n) → ∀ (n : Nat), 2 ≤ n → 3 ≤ n → Fx.Fine n",
+        ),
+        (
+            "domain",
+            "(∀ (n : Nat), n + n = 2 * n) → ∀ (n : Nat), n * 0 = 0",
+            "(∀ (n : Nat), n + n = 2 * n) → ∀ (n : Int), n * 0 = 0",
+        ),
+        (
+            "order",
+            "(∀ (n : Nat), n + n = 2 * n) → ∀ (n m : Nat), n ≤ n + m",
+            "(∀ (n : Nat), n + n = 2 * n) → ∀ (m n : Nat), n ≤ n + m",
+        ),
+    ],
+)
+def test_each_bridge_mismatch_is_the_intended_type_mismatch(checked, case, expected, bridge_type):
+    r = checked[case]
+    assert r["expected"] == expected, r
+    assert r["bridge_type"] == bridge_type, r
+    assert r["identical_up_to_names"] is False, r
 
 
 # ---- recorded verification: stale records say nothing ----
@@ -366,6 +459,276 @@ def _decl(key, head, uses, hyps=(), parts=(), role="statement", family="F", type
             "norm": {"conclusion_head": head, "hyp_heads": list(hyps), "part_heads": list(parts), "uses": list(uses)}}
 
 
+def test_attempt_ids_use_full_declaration_identities_not_bare_lean_names(tmp_path, monkeypatch):
+    # found 2026-10-11 in the shipped openai/math catalogue: three checked IDs and 50 unresolved IDs each named two
+    # different attempts. Clashing challenge modules can declare the same Lean name, so the bare name is not an
+    # identity; the pipeline's identity is (repository, revision, module, declaration).
+    left = A.Attempt("target", ("OAI.Same.result",), "OAI.Same.conclusion", ("ComparatorChallenges.Left",), False,
+                     {"source_keys": ["openai/math@abc:ComparatorChallenges.Left:OAI.Same.result"],
+                      "target_key": "openai/math@abc:ComparatorChallenges.Left:OAI.Same.conclusion"})
+    right = A.Attempt("target", ("OAI.Same.result",), "OAI.Same.conclusion", ("ComparatorChallenges.Right",), False,
+                      {"source_keys": ["openai/math@abc:ComparatorChallenges.Right:OAI.Same.result"],
+                       "target_key": "openai/math@abc:ComparatorChallenges.Right:OAI.Same.conclusion"})
+    assert left.id != right.id
+
+    # Instantiation is a check of one particular derivation on released declarations. Two logical derivations can
+    # have the same released source/target tuple; their result rows must still join back unambiguously.
+    released = {"verification_source_keys": ["openai/math@abc:OAI.Solution:X.same"],
+                "verification_target_key": "openai/math@abc:OAI.Solution:X.conclusion"}
+    first = A.Attempt("target", ("X.same",), "X.conclusion", ("OAI.Solution",), True,
+                      {**released, "source_keys": ["openai/math@abc:ComparatorChallenges.A:X.same"],
+                       "target_key": "openai/math@abc:ComparatorChallenges.A:X.conclusion", "derivation": "derivation-a"})
+    second = A.Attempt("target", ("X.same",), "X.conclusion", ("OAI.Solution",), True,
+                       {**released, "source_keys": ["openai/math@abc:ComparatorChallenges.B:X.same"],
+                        "target_key": "openai/math@abc:ComparatorChallenges.B:X.conclusion", "derivation": "derivation-b"})
+    assert first.id != second.id
+    assert first.verification_identity == second.verification_identity
+
+    class OneVerificationCache:
+        def get(self, _key):
+            return {"id": "the-cached-verifications-id", "status": "checked-instantiated", "rule": "target"}
+
+        def put(self, _rows):  # pragma: no cover - every attempt above is a cache hit
+            raise AssertionError("nothing should run")
+
+    monkeypatch.setattr(A, "environment_identity", lambda _ws, _modules: "env")
+    ws = W.Workspace(tmp_path / "ws", tmp_path / "corpus", ("OAI",))
+    rows, stats = A.run_attempts(ws, [first, second], A.Budget(), tmp_path / "attempts", OneVerificationCache())
+    assert [r["id"] for r in rows] == [first.id, second.id] and stats.cached == 2 and stats.run == 0
+
+
+def test_a_failed_attempt_process_cannot_reuse_or_cache_an_old_checked_output(tmp_path, monkeypatch):
+    attempt = A.Attempt("target", ("X.source",), "X.target", ("Fixture",))
+    monkeypatch.setattr(A, "environment_identity", lambda _ws, _modules: "fixture-env")
+    out = tmp_path / "attempts"
+    out.mkdir()
+    tag = A.hashlib.sha256(json.dumps(["fixture-env", [attempt.id]]).encode()).hexdigest()[:10]
+    out.joinpath(f"result-{tag}.jsonl").write_text(json.dumps({
+        "id": attempt.id, "status": "checked", "rule": "target",
+        "sources": ["X.source"], "target": "X.target",
+    }) + "\n", encoding="utf-8")
+    monkeypatch.setattr(A.L, "run", lambda *_args, **_kw: A.L.LeanRun(1, "", "import failed before output", 0.1))
+    cache = A.Cache(tmp_path / "cache.jsonl")
+    ws = W.Workspace(tmp_path / "ws", tmp_path / "corpus", ("Fixture",))
+
+    rows, stats = A.run_attempts(ws, [attempt], A.Budget(), out, cache)
+
+    assert rows[0]["status"] in {"env-error", "not-run"}, rows
+    assert not cache.entries
+    assert stats.process_failures
+
+
+def test_a_failed_contract_process_cannot_reuse_an_old_checked_output(tmp_path, monkeypatch):
+    edge = _edge(id="stale-output")
+    out = tmp_path / "contracts"
+    out.mkdir()
+    tag = T.hashlib.sha256(edge.bridge_file.encode()).hexdigest()[:8]
+    out.joinpath(f"contract-{tag}.jsonl").write_text(json.dumps({
+        "id": edge.id, "status": "checked", "used": [True, True], "axioms": [],
+    }) + "\n", encoding="utf-8")
+    monkeypatch.setattr(T, "toolchain_version", lambda _ws: "Lean fixture")
+    monkeypatch.setattr(T.A, "environment_identity", lambda _ws, _modules: "fixture-env")
+    monkeypatch.setattr(T.L, "run", lambda *_args, **_kw: T.L.LeanRun(1, "", "import failed before output", 0.1))
+    ws = W.Workspace(tmp_path / "ws", HERE, ("ImplicationsFixture",))
+
+    records = T.check(ws, [edge], HERE, out, REV, "", "test", commit_gb=0)
+
+    assert records[edge.id]["status"] == "error", records[edge.id]
+    assert "gave no result" in records[edge.id]["reason"]
+
+
+def test_released_declarations_with_the_same_lean_name_are_selected_by_provenance():
+    stmt = {"key": "challenge-a", "name": "X.main", "family": "Family.A", "type_hash": "type-a"}
+    right = {"key": "released-a", "name": "X.main", "family": "Family.A", "type_hash": "type-a"}
+    other = {"key": "released-b", "name": "X.main", "family": "Family.B", "type_hash": "type-b"}
+    got, reason = S.released_declaration(stmt, {"X.main": [other, right]})
+    assert got == right and reason == ""
+    got, reason = S.released_declaration(stmt, {"X.main": [right, {**right, "key": "released-a-duplicate"}]})
+    assert got is None and reason.startswith("ambiguous released solution")
+    got, reason = S.released_declaration(stmt, {})
+    assert got is None and reason == "solution not built"
+    for wrong_type in ("type-a", "type-b"):
+        got, reason = S.released_declaration(
+            stmt, {"X.main": [{**other, "type_hash": wrong_type}]}
+        )
+        assert got is None and reason == "solution not built"
+
+
+def test_recorded_contract_command_never_exposes_workstation_paths(tmp_path):
+    root = tmp_path / "repo"
+    edge = root / "packages" / "corpus-oai" / "src" / "lean4_explainer_corpus_oai" / "implications.toml"
+    record = edge.with_name("implications.verified.json")
+    command = CLI._portable_contract_command([
+        "contracts", "--workspace", str(tmp_path / "private-workspace"),
+        "--corpus", str(tmp_path / "download" / "corpus"), "--run", str(tmp_path / "private-run"),
+        "--edges", str(edge), "--record", str(record),
+        "--revision", "abc123",
+    ], root)
+    assert command.startswith("python -I -m lean4_explainer_implications.pipeline contracts")
+    assert "<workspace>" in command and "<corpus>" in command and "<run>" in command
+    assert "packages/corpus-oai/src/lean4_explainer_corpus_oai/implications.toml" in command
+    assert tmp_path.as_posix() not in command.replace("\\", "/")
+
+
+def test_catalogue_cli_can_read_an_explicit_scratch_contract_record(tmp_path, monkeypatch):
+    run, out = tmp_path / "run", tmp_path / "catalogue"
+    run.mkdir()
+    edges = tmp_path / "implications.toml"
+    edges.write_text("", encoding="utf-8")
+    edges.with_name("implications.verified.json").write_text(
+        json.dumps({"edges": {"default": {"status": "stale"}}}), encoding="utf-8"
+    )
+    scratch = tmp_path / "scratch" / "contracts.json"
+    scratch.parent.mkdir()
+    scratch.write_text(json.dumps({"edges": {"scratch": {"status": "checked"}}}), encoding="utf-8")
+    captured = {}
+
+    def build(_decls, _results, _header, contracts):
+        captured["contracts"] = contracts
+        return {"counts": {}}
+
+    monkeypatch.setattr(CLI.K, "build", build)
+    monkeypatch.setattr(CLI.K, "write", lambda _catalogue, _out: {})
+
+    assert CLI.main([
+        "catalogue", "--run", str(run), "--out", str(out),
+        "--edges", str(edges), "--record", str(scratch),
+    ]) == 0
+    assert captured["contracts"] == [{"status": "checked"}]
+
+
+def test_report_cli_can_read_an_explicit_scratch_contract_record(tmp_path, monkeypatch):
+    run = tmp_path / "run"
+    run.mkdir()
+    edges = tmp_path / "implications.toml"
+    edges.write_text("", encoding="utf-8")
+    edges.with_name("implications.verified.json").write_text(
+        json.dumps({"edges": {"default": {"status": "stale"}}}), encoding="utf-8"
+    )
+    scratch = tmp_path / "scratch" / "contracts.json"
+    scratch.parent.mkdir()
+    scratch.write_text(json.dumps({"edges": {"scratch": {"status": "checked"}}}), encoding="utf-8")
+    captured = {}
+
+    def collect(_run, _catalogue, contracts, _authoritative_builds):
+        captured["contracts"] = contracts
+        return {"builds": {}, "layers": {}, "catalogue": {}, "contracts": contracts}
+
+    monkeypatch.setattr(CLI.R, "collect", collect)
+    monkeypatch.setattr(CLI.R, "markdown", lambda _data: "report\n")
+
+    assert CLI.main([
+        "report", "--run", str(run), "--edges", str(edges), "--record", str(scratch),
+    ]) == 0
+    assert captured["contracts"] == {"scratch": {"status": "checked"}}
+
+
+@pytest.mark.parametrize("command, extra", [("catalogue", ["--out", "catalogue"]), ("report", [])])
+def test_an_explicit_contract_record_requires_its_edge_file(tmp_path, command, extra):
+    with pytest.raises(SystemExit) as stopped:
+        CLI.main([command, "--run", str(tmp_path / "run"), "--record", str(tmp_path / "record.json"), *extra])
+
+    assert stopped.value.code == 2
+
+
+def test_attempt_stage_exit_status_fails_closed_on_incomplete_or_infrastructure_results():
+    complete = {"attempts": 2, "results": 2, "candidates": 3, "blocked": [{}],
+                "outcomes": {"checked": 1, "no-proof": 1}, "process_failures": []}
+    assert CLI._attempt_stage_ok(complete)
+    for change in (
+        {"process_failures": ["Lean exited"]},
+        {"results": 1},
+        {"outcomes": {"checked": 1, "env-error": 1}},
+        {"outcomes": {"checked": 1, "not-run": 1}},
+        {"outcomes": {"checked": 1, "error": 1}},
+        {"candidates": 4},
+    ):
+        assert not CLI._attempt_stage_ok({**complete, **change})
+
+    instantiation = {"checked_derivations": 3, "attempts": 2, "results": 2, "blocked": [{}],
+                     "outcomes": {"checked-instantiated": 1, "budget": 1}, "process_failures": []}
+    assert CLI._attempt_stage_ok(instantiation)
+    assert not CLI._attempt_stage_ok({**instantiation, "checked_derivations": 4})
+
+
+def test_an_extraction_error_can_never_be_relabelled_as_a_released_theorem(tmp_path):
+    corpus = tmp_path / "corpus"
+    specs = corpus / "ComparatorChallenges"
+    specs.mkdir(parents=True)
+    specs.joinpath("Fixture.json").write_text(json.dumps({
+        "challenge_module": "ComparatorChallenges.Fixture",
+        "solution_module": "OAI.Area.Family.Main",
+        "theorem_names": ["X.main"],
+    }), encoding="utf-8")
+    extracted = tmp_path / "extract"
+    extracted.mkdir()
+    extracted.joinpath("batch.jsonl").write_text(json.dumps({
+        "module": "OAI.Area.Family.Main", "name": "X.main", "error": "could not inspect declaration",
+    }) + "\n", encoding="utf-8")
+    record = X.ExtractRecord([X.Batch(["OAI.Area.Family.Main"], "ok", "batch.jsonl", failed_declarations=1)])
+    declarations = X.load_declarations(record, extracted, X.Identity("openai/math", "abcdef"), corpus)
+    assert declarations[0]["role"] == "unreadable"
+    assert declarations[0]["challenge"] == "ComparatorChallenges.Fixture"
+
+
+def test_statement_match_records_all_same_named_challenge_copies_without_order_dependence():
+    from lean4_explainer_implications.pipeline import report as R
+
+    statements = [
+        {"key": "b", "name": "X.main", "role": "statement", "family": "Family.X", "challenge": "B", "type_hash": "same"},
+        {"key": "a", "name": "X.main", "role": "statement", "family": "Family.X", "challenge": "A", "type_hash": "same"},
+        {"key": "z", "name": "X.main", "role": "statement", "family": "Family.Z", "challenge": "Z", "type_hash": "other"},
+        {"key": "c", "name": "Y.main", "role": "statement", "family": "Family.Y", "challenge": "C", "type_hash": "old"},
+    ]
+    solutions = [
+        {"key": "r1", "name": "X.main", "role": "released", "family": "Family.X", "module": "S.X",
+         "type_hash": "same", "sorry": False, "axioms": []},
+        {"key": "r2", "name": "Y.main", "role": "released", "family": "Family.Y", "module": "S.Y",
+         "type_hash": "new", "sorry": False, "axioms": []},
+        {"key": "r3", "name": "X.main", "role": "released", "family": "Family.Q", "module": "S.Q",
+         "type_hash": "same", "sorry": False, "axioms": []},
+    ]
+    got = R.statement_match(statements, solutions)
+    assert got["compared"] == 2 and got["same"] == 1
+    assert got["rows"][0]["challenge_keys"] == ["a", "b"] and got["rows"][0]["same"] is True
+    assert got["rows"][1]["challenge_keys"] == ["c"] and got["rows"][1]["same"] is False
+
+
+def test_the_catalogue_refuses_duplicate_attempt_ids():
+    # An ID is the DOM/deep-link key and joins an instantiation to its derivation. Never silently let a later row
+    # overwrite an earlier, different attempt.
+    decls = [_decl("repo@abc:A:X.same", "P", []), _decl("repo@abc:B:X.same", "P", []), _decl("repo@abc:C:X.goal", "P", [])]
+    rows = [
+        {"id": "collision", "status": "no-proof", "rule": "target", "source_keys": [decls[0]["key"]], "target_key": decls[2]["key"]},
+        {"id": "collision", "status": "no-proof", "rule": "target", "source_keys": [decls[1]["key"]], "target_key": decls[2]["key"]},
+    ]
+    with pytest.raises(ValueError, match="duplicate attempt id collision"):
+        K.build(decls, rows, {})
+
+    for missing_id in (None, ""):
+        with pytest.raises(ValueError, match="nonempty attempt id"):
+            K.build(decls, [{**rows[0], "id": missing_id}], {})
+
+    derivation = {"id": "derivation", "status": "checked", "rule": "target", "source_keys": [decls[0]["key"]],
+                  "target_key": decls[2]["key"], "sources": ["X.same"], "statement": "P", "statement_hash": "p"}
+    applied = [
+        {"id": "instantiation-1", "derivation": "derivation", "status": "checked-instantiated"},
+        {"id": "instantiation-2", "derivation": "derivation", "status": "budget"},
+    ]
+    with pytest.raises(ValueError, match="duplicate instantiation for derivation derivation"):
+        K.build(decls, [derivation, *applied], {})
+
+    orphan = {"id": "instantiation-orphan", "derivation": "old-id", "status": "checked-instantiated",
+              "rule": "target", "source_keys": derivation["source_keys"], "target_key": derivation["target_key"]}
+    with pytest.raises(ValueError, match="orphan instantiation old-id"):
+        K.build(decls, [derivation, orphan], {})
+
+    mismatch = {"id": "instantiation-mismatch", "derivation": "derivation", "status": "checked-instantiated",
+                "rule": "target", "source_keys": [decls[1]["key"]], "target_key": derivation["target_key"]}
+    with pytest.raises(ValueError, match="instantiation does not match derivation derivation"):
+        K.build(decls, [derivation, mismatch], {})
+
+
 def test_lemmas_lean_generated_are_never_proposed():
     # found 2026-10-10 on openai/math: 2,048 of 4,012 attempts involved a constructor's injectivity lemma, an equation
     # lemma or `sizeOf_spec`, which have no source position; none can be a stated result
@@ -410,6 +773,30 @@ def test_the_catalogue_groups_routine_results_apart_from_connections():
     assert cat["counts"]["rejected_by_reason"] == {"a source is unused": 1}
 
 
+def test_proof_dependencies_do_not_cross_same_named_solution_families():
+    def named(key, name, family, role="statement", proof_uses=(), env=0):
+        return {**_decl(key, "P", [], role=role, family=family, proof_uses=proof_uses),
+                "name": name, "module": f"Solution.{family}.{env}", "env": env}
+
+    declarations = [
+        named("sa", "X.source", "A"), named("ta", "X.target", "A"),
+        named("sb", "X.source", "B"), named("tb", "X.target", "B"),
+        named("ha", "X.source", "A", "helper"), named("hb", "X.source", "B", "helper", env=1),
+        named("hc", "X.source", "A", "helper", env=1),
+        named("ra", "X.target", "A", "released", ["X.source"]),
+        named("rb", "X.target", "B", "released"),
+    ]
+    row = lambda id_, source, target: {  # noqa: E731
+        "id": id_, "status": "checked", "rule": "target", "source_keys": [source], "target_key": target,
+        "sources": ["X.source"], "statement": "P", "statement_hash": id_,
+    }
+    catalogue = K.build(declarations, [row("edge-a", "sa", "ta"), row("edge-b", "sb", "tb")], {})
+    groups = {entry["id"]: entry["group"] for entry in catalogue["implications"]}
+    assert groups == {"edge-a": "in the released proof", "edge-b": "connection"}
+    dependencies = {entry["from"]: entry["uses"] for entry in catalogue["dependencies"]}
+    assert dependencies["ra"] == ["ha"]
+
+
 def test_a_source_passed_through_unchanged_is_a_restatement_not_a_connection():
     # found 2026-10-10 on openai/math: Hyperinvariant.main_theorem and BackwardIntertwiners.direct_algebra_corollary
     # each define their own FullClaim; the "derivation" between them is the source itself, so the two challenges
@@ -447,6 +834,86 @@ def test_compositions_inside_one_challenge_and_generated_lemmas_are_not_connecti
     results = [row("1", ["a", "b"]), row("2", ["a", "c"]), row("3", ["c", "g"]), row("4", ["g"], "d", rule="target")]
     groups = {i["id"]: i["group"] for i in K.build(decls, results, {})["implications"]}
     assert groups == {"1": "one challenge", "2": "connection", "3": "generated", "4": "generated"}
+
+
+def test_the_catalogue_says_what_links_each_composition(tmp_path):
+    # found 2026-10-11 on openai/math: 9 of the 14 connections are linked only by a quantity's positivity; the count
+    # of connections must not read as 14 deep links
+    from lean4_explainer_implications import catalogue_site as CS
+
+    at = {"line": 3}
+    decls = [dict(_decl(k, "P", [], challenge=c), range=at) for k, c in (("a", "X"), ("b", "Y"), ("c", "Z"), ("d", "W"))]
+    supply = lambda hyp, head, pos: [{"step": "supply", "hypothesis": hyp, "hypothesis_head": head, "positivity": pos}]  # noqa: E731
+    results = [{"id": i, "status": "checked", "rule": "compose", "source_keys": s, "target_key": "", "sources": s, "statement_hash": i,
+                "statement": i, "steps": st} for i, s, st in
+               (("1", ["a", "b"], supply("0 < K", "LT.lt", True)), ("2", ["c", "d"], supply("S.Infinite", "Set.Infinite", False)),
+                ("3", ["a", "d"], []))]  # recorded before links were: not counted as either
+    cat = K.build(decls, results, {})
+    got = {i["id"]: i for i in cat["implications"]}
+    assert got["1"]["link"] == {"hypothesis": "0 < K", "head": "LT.lt", "positivity": True} and got["3"]["link"] is None
+    assert cat["counts"]["connections_by_link"] == {"positivity": 1, "Set.Infinite": 1, "not recorded": 1}
+    K.write(cat, tmp_path)
+    rows = {r["id"]: r for r in json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))["implications"]}
+    assert rows["1"]["link"] == "positivity" and rows["2"]["link"] == "Set.Infinite" and rows["3"]["link"] == ""
+    page = "".join(CS.catalogue_body(cat))
+    assert "1 of them linked only by a quantity's positivity" in page
+    script = CS.script()
+    has_link = "linked by " in script and "r.link" in script  # each listed entry says what links it
+    assert has_link
+    from lean4_explainer_implications.pipeline import report as R
+
+    md = R.markdown({"builds": {}, "layers": {}, "contracts": {}, "catalogue": {"counts": cat["counts"], "total_bytes": 0, "bytes": {}}})
+    assert "- connections by what links their sources: Set.Infinite 1, not recorded 1, positivity 1" in md
+    assert "- rejected attempts 0: —" in md
+    assert "catalogue index and shards (generated reports excluded): 0 bytes" in md
+
+
+def test_the_report_calls_build_counts_import_closure_outcomes():
+    from lean4_explainer_implications.pipeline import report as R
+
+    data = {"builds": {"build-challenges": {"counts": {"built": 416, "replayed": 69}, "build_seconds": 1,
+                                                   "stopped": "", "failed": []}},
+            "layers": {}, "catalogue": {}, "contracts": {}}
+    md = R.markdown(data)
+    assert "corpus modules in each requested module's import closure" in md
+    assert "built means compiled in that run; replayed means an existing matching build trace was reused" in md
+    assert "| build | import-closure outcomes | module-seconds | stopped |" in md
+
+
+def test_the_report_separates_authoritative_builds_from_retained_diagnostics(tmp_path):
+    from lean4_explainer_implications.pipeline import report as R
+
+    records = {
+        "build-challenges": {"counts": {"built": 1}, "modules": []},
+        "build-solutions-21": {"counts": {"replayed": 1}, "modules": []},
+        "build-solutions-probe": {"counts": {"failed": 1}, "modules": []},
+        "build-old": {"counts": {"built": 99}, "modules": []},
+    }
+    for name, record in records.items():
+        (tmp_path / f"{name}.json").write_text(json.dumps(record), encoding="utf-8")
+
+    ordinary = R.collect(tmp_path)
+    assert set(ordinary["builds"]) == set(records) and not ordinary["build_diagnostics"]
+
+    got = R.collect(tmp_path, authoritative_builds={"build-challenges", "build-solutions-21"})
+    assert set(got["builds"]) == {"build-challenges", "build-solutions-21"}
+    assert set(got["build_diagnostics"]) == {"build-old", "build-solutions-probe"}
+
+    md = R.markdown(got)
+    assert "## Authoritative builds" in md
+    assert "## Historical build diagnostics" in md
+    assert "retained for diagnosis and provenance, not promotion evidence" in md
+    assert md.index("build-solutions-21") < md.index("build-old")
+
+
+def test_the_report_refuses_a_missing_requested_authoritative_build(tmp_path):
+    from lean4_explainer_implications.pipeline import report as R
+
+    (tmp_path / "build-challenges.json").write_text(
+        json.dumps({"counts": {"built": 1}, "modules": []}), encoding="utf-8"
+    )
+    with pytest.raises(FileNotFoundError, match="requested authoritative build records are missing: build-solutions-21"):
+        R.collect(tmp_path, authoritative_builds={"build-challenges", "build-solutions-21"})
 
 
 def test_a_derivation_through_a_structures_field_is_not_a_connection():
@@ -522,6 +989,20 @@ def test_the_report_counts_the_families_and_areas_each_stage_reached(tmp_path):
     assert R.coverage(tmp_path, "solutions", index)["families"]["connections"] == 1  # its own, F3; not F1 as well
 
 
+def test_the_report_does_not_include_its_self_rewriting_json_in_catalogue_bytes(tmp_path):
+    from lean4_explainer_implications.pipeline import report as R
+
+    run, catalogue = tmp_path / "run", tmp_path / "catalogue"
+    run.mkdir()
+    catalogue.mkdir()
+    (catalogue / "index.json").write_text('{"counts": {}}', encoding="utf-8")
+    (catalogue / "report.json").write_text("stale and a different length", encoding="utf-8")
+    first = R.collect(run, catalogue)
+    assert first["catalogue"]["bytes"] == {"index.json": (catalogue / "index.json").stat().st_size}
+    (catalogue / "report.json").write_text(json.dumps(first, indent=1), encoding="utf-8")
+    assert R.collect(run, catalogue)["catalogue"] == first["catalogue"]
+
+
 def test_modules_that_declare_the_same_name_go_to_separate_environments(tmp_path, monkeypatch):
     """Lean names both modules of a clash: the one that failed moves to another batch, and both batches import."""
     from lean4_explainer_implications.pipeline import lean as L
@@ -589,6 +1070,10 @@ def test_the_catalogue_names_the_rule_set_its_results_were_checked_under():
     cat = K.build(decls, [row], {"extraction": {"statements": "rules-1:ddd", "solutions": "rules-1:aaa"}, "environment": {}})
     page = "".join(CS.catalogue_body(cat))
     assert page.index("extracted under") < page.index("rules-1:ddd") and "statements" in page.split("extracted under")[1]
+    # layers extracted under one rule set name it once
+    cat = K.build(decls, [row], {"extraction": {"statements": "rules-1:eee", "solutions": "rules-1:eee"}, "environment": {}})
+    page = "".join(CS.catalogue_body(cat))
+    assert page.count("rules-1:eee") == 1 and "rules-1:eee (solutions, statements)" in page
     layer = {"extract": {"policy": "rules-1:ddd", "modules_requested": 1, "modules_added": ["S.Gauss"], "modules_extracted": 2, "environments": [2], "splits": [],
                          "declarations": 1, "by_role": {}, "statements": 1, "with_sorry": 0, "unreadable": 0, "seconds": 1}}
     md = R.markdown({"environment": {}, "builds": {}, "layers": {"statements": layer}, "catalogue": {}, "contracts": {}})
@@ -638,16 +1123,21 @@ def test_an_instantiation_upgrades_the_derivation_it_applies_and_is_not_listed_a
     # found 2026-10-10: the instantiate stage writes its own rows, each naming the derivation it applies; read as more
     # results they would list each derivation twice, and leave the derivation's own state unchanged
     decls = [_decl(k, "P", [], challenge=c) for k, c in (("a", "X"), ("b", "Y"), ("c", "Z"), ("d", "W"))]
+    decls += [_decl("released-a", "P", [], role="released"), _decl("released-b", "P", [], role="released")]
     row = lambda i, s, t, **kw: {"id": i, "status": "checked", "rule": "target", "source_keys": s, "target_key": t, "sources": s,  # noqa: E731
                                   "statement": i, "statement_hash": i, **kw}
     results = [row("1", ["a"], "b"), row("2", ["c"], "d"), row("3", ["b"], "c"),
-               {**row("i1", ["a"], "b"), "status": "checked-instantiated", "derivation": "1", "instantiated_axioms": ["propext"], "env_modules": 2},
+               {**row("i1", ["a"], "b"), "status": "checked-instantiated", "derivation": "1", "instantiated_axioms": ["propext"],
+                "verification_source_keys": ["released-a"], "verification_target_key": "released-b", "env_modules": 2},
                {**row("i2", ["c"], "d"), "status": "budget", "derivation": "2", "reason": "wall-clock limit of 10000 ms"},
                {**row("i3", ["b"], "c"), "status": "instantiation-circular", "derivation": "3"}]
     cat = K.build(decls, results, {})
     got = {i["id"]: i for i in cat["implications"]}
     assert sorted(got) == ["1", "2", "3"]
     assert got["1"]["state"] == "checked-instantiated" and got["1"]["instantiated_axioms"] == ["propext"]
+    assert got["1"]["instantiation"]["verification_sources"] == ["released-a"]
+    assert got["1"]["instantiation"]["verification_target"] == "released-b"
+    assert {"released-a", "released-b"} <= set(cat["theorems"])
     assert got["2"]["state"] == "checked-derivation" and got["2"]["instantiation"]["status"] == "budget"
     assert got["3"]["group"] == "source uses the target"
     assert cat["counts"]["instantiation"] == {"checked-instantiated": 1, "budget": 1, "instantiation-circular": 1}
@@ -666,6 +1156,38 @@ def test_the_page_says_what_applying_a_derivation_to_the_released_theorems_estab
     for label in labels.values():
         assert not any(w in label.lower() for w in ("false", "refut", "disprov", "fails for")), label
     assert "d.instantiation" in CS.script()
+    script = CS.script()
+    assert "verification inputs" in script and "target statement" in script and "verification_target" in script
+    assert "released sources checked" not in script and "released target checked" not in script
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_the_catalogue_page_draws_an_entrys_steps_and_what_applying_it_established(tmp_path):
+    # the page's script had no test that runs it; found 2026-10-11 reading it: a composition's step was drawn as the
+    # bare word "supply", without the hypothesis one source supplies to the other
+    import subprocess
+
+    from lean4_explainer_implications import catalogue_site as CS
+
+    at = {"line": 3}
+    decls = [dict(_decl(k, "P", [], challenge=c), range=at) for k, c in (("a", "X"), ("b", "Y"))]
+    row = {"id": "1", "status": "checked", "rule": "compose", "source_keys": ["a", "b"], "target_key": "", "sources": ["a", "b"],
+           "statement_hash": "1", "statement": "S", "derived": "A → B → S",
+           "steps": [{"step": "supply", "from": "source 1, conclusion", "hypothesis": "0 < K", "of": "source 2",
+                      "hypothesis_head": "LT.lt", "positivity": True}]}
+    applied = {"id": "i1", "derivation": "1", "status": "budget", "rule": "compose",
+               "source_keys": ["a", "b"], "target_key": "", "reason": "wall-clock limit of 10000 ms"}
+    K.write(K.build(decls, [row, applied], {}), tmp_path / "catalogue")
+    (tmp_path / "page.js").write_text(CS.script(), encoding="utf-8")
+    run = subprocess.run([shutil.which("node") or "node", str(Path(__file__).parent / "catalogue_page_harness.js"), str(tmp_path / "page.js"),
+                          str(tmp_path), "1"], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    assert run.returncode == 0, run.stderr
+    drawn = json.loads(run.stdout)
+    assert drawn["count"] == "1 of 1 checked entries"
+    assert "linked only by a positivity fact" in drawn["head"]
+    detail = drawn["detail"]
+    assert "<li>source 1, conclusion supplies a hypothesis of source 2: <code>0 &lt; K</code></li>" in detail, detail
+    assert "not established: the attempt ran out of its time or heartbeat budget" in detail and "wall-clock limit" in detail
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
@@ -686,7 +1208,7 @@ def test_the_catalogue_page_script_parses(tmp_path):
     good = parses(script)
     assert good
     # the check can fail: an unbalanced parenthesis in the same expression is rejected
-    marker = '"<dt>Applied to the released theorems</dt><dd>" +'
+    marker = '"<dt>Instantiation attempt</dt><dd>" +'
     assert marker in script
     broken = parses(script.replace(marker, marker[:-1] + ") +", 1))
     assert not broken
