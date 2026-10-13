@@ -111,6 +111,14 @@ def test_static_site_gate_rejects_a_false_reader_disclaimer(tmp_path):
     assert any("falsely says Lean was not run" in error for error in check_site(tmp_path, PUBLIC))
 
 
+def test_static_site_gate_rejects_an_unexpanded_l4del_acronym(tmp_path):
+    _site(tmp_path)
+    page = tmp_path / "demo" / "index.html"
+    page.write_text(page.read_text(encoding="utf-8").replace("All corpora", "L4DEL"), encoding="utf-8")
+
+    assert any("uses L4DEL without expanding" in error for error in check_site(tmp_path, PUBLIC))
+
+
 def test_static_site_gate_requires_local_lean_evidence_for_every_corpus(tmp_path):
     _site(tmp_path)
     (tmp_path / "demo" / "trust.json").unlink()

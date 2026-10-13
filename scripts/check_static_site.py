@@ -158,6 +158,14 @@ def check_site(site: Path, site_url: str) -> list[str]:
     if landing.meta.get(("link", "canonical")) != site_url:
         errors.append("index.html: canonical URL does not match --site-url")
 
+    for page in site.rglob("*.html"):
+        source = page.read_text(encoding="utf-8")
+        if "L4DEL" in source and "Lean4 Domain Explanation Language" not in source:
+            errors.append(
+                f"{page.relative_to(site).as_posix()}: uses L4DEL without expanding Lean4 Domain Explanation Language"
+            )
+            break
+
     for corpus in sorted(path for path in site.iterdir() if path.is_dir() and (path / "index.html").is_file()):
         reader = corpus / "_assets" / "reader.js"
         if reader.is_file() and "Lean was not run" in reader.read_text(encoding="utf-8"):
