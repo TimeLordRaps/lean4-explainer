@@ -7,7 +7,7 @@ from lean4_explainer.errors import ExplainerError
 from lean4_explainer_l4del.graph import build_glossary, build_learning_path, unresolved_links
 from lean4_explainer.objects import plain_objects, resolve
 from lean4_explainer_l4del.grammar import parse_l4del
-from lean4_explainer_l4del.extension import L4delExtension
+from lean4_explainer_l4del.extension import Analysis, L4delExtension
 from lean4_explainer.render import file_page
 from lean4_explainer.scan import parse_source
 from lean4_explainer.search import search_keys, shard_key, write_search
@@ -67,6 +67,13 @@ def test_annotated_page_starts_with_an_acronym_legend(make_context):
     assert "Explanation legend" in rendered
     assert "Lean4 Domain Explanation Language" in rendered
     assert "nondeterministic polynomial time" in rendered
+
+
+def test_corpus_status_expands_l4del_before_using_the_acronym():
+    rendered = L4delExtension().status(Analysis(notes=(), annotated=2, unannotated=3))
+
+    assert rendered.startswith("Lean4 Domain Explanation Language (L4DEL):")
+    assert "3 without an L4DEL annotation" in rendered
 
 
 def test_l4del_bad_directives_are_errors():

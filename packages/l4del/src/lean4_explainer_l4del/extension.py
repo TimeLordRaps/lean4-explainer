@@ -405,13 +405,15 @@ class L4delExtension(Extension):
 
     def status(self, analysis: Analysis) -> str:
         return (
-            f"L4DEL: {analysis.annotated} annotated, {analysis.flagged} flagged (errors or placeholders), "
-            f"{analysis.unannotated} without L4DEL. Run lean4-explainer annotate --file <path> for templates."
+            f"{_L4DEL_EXPANSION} (L4DEL): {analysis.annotated} annotated, "
+            f"{analysis.flagged} flagged (errors or placeholders), {analysis.unannotated} without an L4DEL annotation. "
+            "Run lean4-explainer annotate --file <path> for templates."
         )
 
     def summary(self, analysis: Analysis) -> Sequence[str]:
         return (
-            f"L4DEL: {analysis.annotated} annotated, {analysis.flagged} flagged, {analysis.unannotated} without L4DEL; "
+            f"{_L4DEL_EXPANSION} (L4DEL): {analysis.annotated} annotated, {analysis.flagged} flagged, "
+            f"{analysis.unannotated} without an L4DEL annotation; "
             f"{len(analysis.terms)} glossary terms, {len(analysis.steps)} learning-path steps.",
         )
 
@@ -455,8 +457,9 @@ def _check(args) -> int:
     for message in warnings[:_WARNING_PREVIEW]:
         print(message)
     print(
-        f"{len(tree.sources)} files checked; L4DEL: {analysis.annotated} annotated, {analysis.flagged} flagged, "
-        f"{analysis.unannotated} without L4DEL; {len(errors)} errors, {len(warnings)} warnings"
+        f"{len(tree.sources)} files checked; {_L4DEL_EXPANSION} (L4DEL): {analysis.annotated} annotated, "
+        f"{analysis.flagged} flagged, {analysis.unannotated} without an L4DEL annotation; "
+        f"{len(errors)} errors, {len(warnings)} warnings"
     )
     if tree.objects.identical or tree.objects.variant:
         from lean4_explainer.cli import duplicates_line
