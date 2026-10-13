@@ -139,8 +139,21 @@ def _showcase(args) -> int:
             print(f"{item.corpus.name}: {message}")
         if len(s.warnings) > _WARNING_PREVIEW:
             print(f"{item.corpus.name}: warning: {len(s.warnings) - _WARNING_PREVIEW} more not shown")
+        for line in s.extension_lines:
+            print(f"{item.corpus.name}: {line}")
         errors += len(s.errors)
-    print(f"wrote {args.out} ({result.total_bytes / 1e6:.1f} MB). Lean not run; axiom and trust checks UNKNOWN.")
+    lean_lines = [
+        line
+        for item in result.items
+        for line in item.summary.extension_lines
+        if line.startswith("lean ") or line.startswith("lean(")
+    ]
+    verification = (
+        " Lean-backed trust results were produced locally; see each Trust page for UNKNOWN files."
+        if any("Lean not found" not in line for line in lean_lines)
+        else " Lean not run; axiom and trust checks UNKNOWN."
+    )
+    print(f"wrote {args.out} ({result.total_bytes / 1e6:.1f} MB).{verification}")
     failed = 0
     if errors:
         print(f"error: {errors} build error(s): the site was written, but should not be published as it is", file=sys.stderr)

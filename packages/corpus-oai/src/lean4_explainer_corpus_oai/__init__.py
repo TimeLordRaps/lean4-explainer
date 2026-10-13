@@ -35,4 +35,6 @@ CORPUS = Corpus(
     glossary="described",
     # and its 336,022 imports: only a file that does nothing but import lists them (and what imports it)
     imports="import-only",
+    # The hosted local Lean pass is bounded and explicit: all later declaration files remain UNKNOWN, never textual trust.
+    lean_file_limit=2000,
 )

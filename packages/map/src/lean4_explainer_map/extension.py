@@ -302,7 +302,8 @@ def _project_page(ctx: Context, graph: Graph) -> str:
     body = [
         "<h1>Map</h1>",
         '<p class="muted">How this project builds on itself. An arrow goes from a file to a file that uses something '
-        "in it, so the foundations are on the left. The links come from the names in the code (Lean was not run); "
+        "in it, so the foundations are on the left. These links come from names in the source code, not from kernel "
+        "dependency facts; the separate Trust page says exactly what Lean checked. "
         "every declaration's own map, on its file page, shows the same thing one result at a time.</p>",
         '<div id="project-map"><noscript><p>The map is drawn by JavaScript.</p></noscript></div>',
         f'<script type="application/json" id="project-map-data">{payload}</script>',

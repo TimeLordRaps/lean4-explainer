@@ -61,14 +61,19 @@ def test_pages_have_metadata_skip_navigation_and_compact_file_pages(make_context
 
     html = file_page(parse_source("theorem t : True := trivial\n", "A.lean"), ctx)
 
-    assert '<meta name="description" content="A trustworthy Lean proof explorer.">' in html
+    assert '<meta name="description"' not in html  # generic metadata stays on richer navigation/feature pages
     assert '<link rel="canonical" href="https://example.org/proofs/A.lean.html">' in html
+    assert '<link rel="icon"' not in html
+    assert '<body data-root=' not in html
+    assert ">\n<" not in html
     assert '<a class="skip-link" href="#content">Skip to content</a>' in html
     assert '<main id="content" tabindex="-1">' in html
     assert '<meta property="og:title"' not in html and '<meta name="twitter:card"' not in html
     assert ">Project source</a>" not in html and ">Report a site issue</a>" not in html
 
     feature = search_page(ctx)
+    assert '<meta name="description" content="Search declarations in Test.">' in feature
+    assert '<link rel="icon"' in feature and '<body data-root="">' in feature
     assert '<meta property="og:title" content="Search — Test">' in feature
     assert '<meta name="twitter:card" content="summary">' in feature
     assert ">Project source</a>" in feature and ">Report a site issue</a>" in feature

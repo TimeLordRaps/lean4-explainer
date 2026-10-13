@@ -6,6 +6,7 @@
    and under node for the tests. */
 (function () {
   "use strict";
+  const SOURCE_URL_TEMPLATE = "";
 
   // ---------------------------------------------------------------- text helpers
   function esc(s) {
@@ -1342,7 +1343,17 @@
     const holder = document.getElementById("lean-source");
     const list = document.querySelector("ol.decls");
     if (!holder || !list) return;
-    const source = holder.getAttribute("data-src");
+    const pathTitle = document.querySelector(".path-title");
+    const sourcePath = pathTitle
+      ? pathTitle.textContent.trim().split("/").map((part) => encodeURIComponent(part)).join("/")
+      : "";
+    // The pinned template belongs to this corpus's shared reader.js, rather
+    // than being repeated in every file page. Keep data-src support for older
+    // generated pages and custom integrations.
+    const source = holder.getAttribute("data-src") ||
+      (holder.tagName === "DIV" && SOURCE_URL_TEMPLATE && sourcePath
+        ? SOURCE_URL_TEMPLATE.replace("{path}", sourcePath)
+        : "");
     const note = document.createElement("div");
     note.id = "reader-note";
     const traced = !!document.querySelector("details.trace");  // the lean extension ran: its tactic traces are on the page

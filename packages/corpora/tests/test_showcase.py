@@ -9,10 +9,26 @@ from pathlib import Path
 import pytest
 
 from lean4_explainer.errors import ExplainerError
+from lean4_explainer.build import BuildSummary
 from lean4_explainer_corpora import CorporaExtension, installed
-from lean4_explainer_corpora.showcase import GITHUB, build_showcase, fetch_corpus
+from lean4_explainer_corpora.showcase import GITHUB, ShowcaseItem, _verification_notice, build_showcase, fetch_corpus
 
 CORPORA = installed()
+
+
+def test_the_landing_describes_local_lean_evidence_instead_of_calling_it_source_only():
+    summary = BuildSummary(
+        files=3, declarations=7, sorry=1, axioms=0, pages_written=3, pages_reused=0,
+        bytes_written=1, total_bytes=1, byte_budget=10, search_entries=0, errors=(), warnings=(),
+        identical_names=0, variant_names=0,
+        extension_lines=("lean (Lean (version 4.34.1)): 6 no axioms, 1 sorry; 3 files elaborated, 0 from cache.",),
+    )
+    item = ShowcaseItem(CORPORA["flt"], summary, None, 1.0)
+
+    notice = _verification_notice([item])
+
+    assert "Lean-backed trust results produced locally" in notice
+    assert "source text only" not in notice and "Lean was not run" not in notice
 
 
 def _git(cwd, *args):
@@ -411,7 +427,9 @@ def test_with_the_reader_a_corpus_too_big_to_publish_twice_reads_from_its_pinned
     finally:
         extensions.activate(None)
     big = (tmp_path / "big" / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
-    assert f'data-src="https://raw.githubusercontent.com/acme/demo/{corpus.commit}/Demo/A.lean"' in big
+    assert '<div id="lean-source" hidden></div>' in big and "data-src" not in big
+    reader_js = (tmp_path / "big" / "demo" / "_assets" / "reader.js").read_text(encoding="utf-8")
+    assert f'https://raw.githubusercontent.com/acme/demo/{corpus.commit}/{{path}}' in reader_js
     small = (tmp_path / "small" / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
     assert '<script type="application/json" id="lean-source">' in small and "data-src" not in small
 
@@ -433,6 +451,7 @@ def test_a_corpus_carries_its_own_extension_settings_into_its_build(upstream, tm
 
 def test_the_oai_corpus_leaves_out_the_map_to_stay_inside_the_pages_limit():
     assert ("map_dependencies", False) in CORPORA["oai"].options
+    assert CORPORA["oai"].lean_file_limit == 2000
     assert all(("map_dependencies", False) not in c.options for name, c in CORPORA.items() if name != "oai")
 
 

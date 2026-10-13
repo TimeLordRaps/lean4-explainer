@@ -52,6 +52,6 @@ It reads text. Lean is not run, so a reading says what each tactic does in gener
 
 ## Config keys
 
-- `reader_source_url`: a template such as `https://raw.githubusercontent.com/OWNER/REPO/{ref}/lean/{path}`. When it is set, pages do not carry the source. Instead each page fetches its file from that pinned URL when it opens. The showcase uses this for openai/math, whose 1.1 GB of source could not be published twice under GitHub Pages' 1 GB limit.
+- `reader_source_url`: a template such as `https://raw.githubusercontent.com/OWNER/REPO/{ref}/lean/{path}`. When it is set, pages do not carry the source. The pinned template is stored once in the corpus's shared `reader.js`; each file page derives its path from its linked path title and fetches that file when it opens. The showcase uses this for openai/math, whose 1.1 GB of source could not be published twice under GitHub Pages' 1 GB limit.
 - `reader_embed_limit`: the largest file, in characters, a page carries. The default is 2,000,000. A bigger file gets no reading unless `reader_source_url` is set.
 - `reader_blueprint_macros`: read the project's blueprint macros (default `true`).

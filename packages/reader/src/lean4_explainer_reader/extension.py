@@ -20,7 +20,6 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping, Sequence
-from html import escape
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -30,7 +29,7 @@ from lean4_explainer.render import Context
 
 from .macros import blueprint_macros
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 HERE = Path(__file__).parent
 SCRIPT = "_assets/reader.js"
@@ -100,7 +99,10 @@ class ReaderExtension(Extension):
         return (LEAN2TEX, SCRIPT)  # deferred scripts run in order: the translator is there before the reader starts
 
     def pages(self, ctx: Context, analysis: Any) -> Mapping[str, str | bytes]:
-        return {SCRIPT: reader_js(_macros(analysis)), LEAN2TEX: LEAN2TEX_JS} | {path: source.read_bytes() for path, source in KATEX_FILES.items()}
+        template = str(dict(ctx.options).get("reader_source_url", "")).replace("{ref}", quote(ctx.source_ref))
+        return {SCRIPT: reader_js(_macros(analysis), template), LEAN2TEX: LEAN2TEX_JS} | {
+            path: source.read_bytes() for path, source in KATEX_FILES.items()
+        }
 
     def file_blocks(self, lean_file: Any, text: str, ctx: Context, analysis: Any) -> str:
         if not lean_file.declarations:
@@ -108,8 +110,7 @@ class ReaderExtension(Extension):
         options = dict(ctx.options)
         template = options.get("reader_source_url")
         if template:
-            url = str(template).replace("{path}", quote(lean_file.path)).replace("{ref}", quote(ctx.source_ref))
-            return f'<div id="lean-source" data-src="{escape(url, quote=True)}" hidden></div>'
+            return '<div id="lean-source" hidden></div>'
         if not text or len(text) > int(options.get("reader_embed_limit", _EMBED_LIMIT)):
             return ""
         payload = json.dumps(text, ensure_ascii=False).replace("<", "\\u003c")
@@ -137,12 +138,19 @@ class ReaderExtension(Extension):
 
 
 _MACROS_MARK = "const PROJECT_MACROS = {};"
+_SOURCE_URL_MARK = 'const SOURCE_URL_TEMPLATE = "";'
 
 
-def reader_js(macros: Mapping[str, str]) -> str:
-    """reader.js with the project's TeX macros in it."""
+def reader_js(macros: Mapping[str, str], source_url_template: str = "") -> str:
+    """reader.js with the project's TeX macros and optional pinned source template in it."""
     assert READER_JS.count(_MACROS_MARK) == 1
-    return READER_JS.replace(_MACROS_MARK, f"const PROJECT_MACROS = {json.dumps(dict(macros), ensure_ascii=True)};")
+    assert READER_JS.count(_SOURCE_URL_MARK) == 1
+    return READER_JS.replace(
+        _MACROS_MARK, f"const PROJECT_MACROS = {json.dumps(dict(macros), ensure_ascii=True)};"
+    ).replace(
+        _SOURCE_URL_MARK,
+        f"const SOURCE_URL_TEMPLATE = {json.dumps(source_url_template, ensure_ascii=True)};",
+    )
 
 
 def _macros(analysis: Any) -> Mapping[str, str]:
