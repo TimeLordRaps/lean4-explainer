@@ -3,6 +3,7 @@
 import hashlib
 import json
 import subprocess
+import gzip
 from dataclasses import replace
 from pathlib import Path
 
@@ -124,16 +125,36 @@ def test_public_showcase_has_onboarding_metadata_recovery_and_discovery_files(up
     assert 'aria-label="Explore Demo corpus"' in landing
     assert '>Browse</a>' in landing and '>Search</a>' in landing and '>Glossary</a>' in landing
     assert '<meta name="description"' in landing and '<meta property="og:title"' in landing
+    assert "Lean 4 explanations for OpenAI/math and AlphaProof Nexus" in landing
+    assert '<meta property="og:site_name" content="lean4-explainer">' in landing
+    assert 'type="application/ld+json"' in landing and '"@type":"WebSite"' in landing
     assert f'<link rel="canonical" href="{public}">' in landing
     assert f"{GITHUB}/{corpus.repo}/tree/{corpus.commit}" in landing
     assert (out / "404.html").is_file() and "Return to all corpora" in (out / "404.html").read_text(encoding="utf-8")
     assert f"Sitemap: {public}sitemap.xml" in (out / "robots.txt").read_text(encoding="utf-8")
-    assert "sitemap-1.xml" in (out / "sitemap.xml").read_text(encoding="utf-8")
-    assert f"{public}demo/index.html" in (out / "sitemap-1.xml").read_text(encoding="utf-8")
+    assert "sitemap-1.xml.gz" in (out / "sitemap.xml").read_text(encoding="utf-8")
+    assert not (out / "sitemap-1.xml").exists()
+    assert f"{public}demo/index.html" in gzip.decompress((out / "sitemap-1.xml.gz").read_bytes()).decode()
     subsite = (out / "demo" / "index.html").read_text(encoding="utf-8")
     assert f'<link rel="canonical" href="{public}demo/index.html">' in subsite
     assert ">Project source</a>" in subsite and ">Report a site issue</a>" in subsite
     assert (out / "_assets" / "favicon.svg").is_file()
+
+
+def test_landing_gives_openai_math_and_alphaproof_nexus_a_clear_search_entry_point(upstream, tmp_path):
+    corpus, base = upstream
+    corpora = [
+        replace(corpus, name="oai", title="openai/math"),
+        replace(corpus, name="alphaproof-nexus", title="AlphaProof Nexus results"),
+    ]
+    out = tmp_path / "site"
+
+    build_showcase(corpora, tmp_path / "work", out, base_url=base, site_url="https://example.org/lean/")
+
+    landing = (out / "index.html").read_text(encoding="utf-8")
+    assert "OpenAI/math and AlphaProof Nexus explanations" in landing
+    assert 'href="oai/index.html"' in landing and "OpenAI/math explanations" in landing
+    assert 'href="alphaproof-nexus/index.html"' in landing and "AlphaProof Nexus explanations" in landing
 
 
 def test_showcase_rejects_a_non_https_public_url(upstream, tmp_path):
@@ -259,13 +280,13 @@ def test_a_corpus_overlay_annotates_the_subsite_and_the_landing_says_who_wrote_i
 
     page = (out / "demo" / "Demo" / "A.lean.html").read_text(encoding="utf-8")
     assert "A sidecar title" in page
-    assert "AI-generated and not human-reviewed" in page
+    assert "1 curated AI-written annotation" in page and "not been human-reviewed" in page
     assert "not mathematical authority" in page
     assert "Pinned Lean source" in page and "Pinned documentation" in page
     assert "https://example.org/repo/blob/abc/README.md" in page
     landing = (out / "index.html").read_text(encoding="utf-8")
     assert "hosted sidecar overlay" in landing and "did not write these explanations" in landing
-    assert "AI-generated and not human-reviewed" in landing
+    assert "1 curated AI-written annotation" in landing and "not been human-reviewed" in landing
     assert "Lean4 Domain Explanation Language (L4DEL) guide" in landing
     assert "Primary project and mathematical sources" in landing
     assert "upstream authors and contributors retain credit" in landing

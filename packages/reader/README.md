@@ -22,7 +22,7 @@ The reading is made by `_assets/reader.js` in the browser. A page carries its fi
 
 `_assets/lean2tex.js` translates Lean expressions into LaTeX, and [KaTeX](https://katex.org) draws them. It knows Lean's operator precedences and Mathlib's notation: sums and products over sets and ranges, integrals, limits (`Tendsto … atTop (𝓝 a)`), "for all large enough n" (`∀ᶠ n in atTop`), "almost every" (`∀ᵐ`), asymptotic comparisons (`=O[…]`, `~[…]`), casts, absolute values and norms, set-builder notation, vectors and matrices, and more. `let` lines become "where x = …".
 
-Anything it cannot parse is left as Lean code, never guessed, and the Lean text is always one hover away. Across the eight example projects (60,393 declarations) it typesets 91% of statements and 87% of definition values; all 279,396 formulas it produces render in KaTeX without an error.
+Anything it cannot parse is left as Lean code, never guessed, and the Lean text is always one hover away. In the earlier eight-corpus sweep (60,393 declarations, before AlphaProof Nexus was added) it typeset 91% of statements and 87% of definition values; all 279,396 formulas it produced rendered in KaTeX without an error.
 
 KaTeX 0.16.47 ships inside the package (`vendor/katex`, MIT licence, checked against the published release's checksums), and is copied to `_assets/katex/` with its licence. It loads only when a page has a formula. Pages make no network requests for it.
 

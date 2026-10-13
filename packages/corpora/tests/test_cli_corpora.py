@@ -18,7 +18,7 @@ def test_sources_lists_every_corpus_with_its_pin(capsys):
     assert cli.main(["sources"]) == 0
 
     text = capsys.readouterr().out
-    for name in ("formal-conjectures", "carleson", "flt", "pfr", "compfiles", "mil", "tpil", "oai"):
+    for name in ("formal-conjectures", "alphaproof-nexus", "carleson", "flt", "pfr", "compfiles", "mil", "tpil", "oai"):
         assert name in text
     assert "openai/math" in text and "1646ca16afd6" in text
 
@@ -79,7 +79,7 @@ def test_showcase_without_yes_prints_the_plan_and_downloads_nothing(tmp_path, mo
     assert "teorth/pfr" in text and "--yes" in text
 
 
-def test_no_command_is_the_showcase_of_all_eight(tmp_path, monkeypatch, capsys):
+def test_no_command_is_the_showcase_of_all_nine(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(extension.showcase, "build_showcase", lambda *a, **k: (_ for _ in ()).throw(AssertionError("downloaded")))
     monkeypatch.setattr("sys.stdin", _NotATty())
@@ -88,7 +88,7 @@ def test_no_command_is_the_showcase_of_all_eight(tmp_path, monkeypatch, capsys):
 
     text = capsys.readouterr().out
     assert code == 2
-    for repo in ("google-deepmind/formal-conjectures", "ImperialCollegeLondon/FLT", "openai/math"):
+    for repo in ("google-deepmind/formal-conjectures", "google-deepmind/alphaproof-nexus-results", "ImperialCollegeLondon/FLT", "openai/math"):
         assert repo in text
 
 

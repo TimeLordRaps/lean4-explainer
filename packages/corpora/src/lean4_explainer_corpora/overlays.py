@@ -19,6 +19,7 @@ PROVENANCE = frozenset(
         "human-authored",
         "ai-assisted-human-reviewed",
         "ai-generated-unreviewed",
+        "source-derived-unreviewed",
     }
 )
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
@@ -35,13 +36,33 @@ class HostedOverlay:
     reviewed_by: str = ""
     sources: tuple[tuple[str, str], ...] = ()
     credit: str = DEFAULT_CREDIT
+    generation_history: tuple[str, ...] = ()
+    curated_annotations: int = 0
+    source_derived_annotations: int = 0
 
     @property
     def disclosure(self) -> str:
         if self.provenance == "ai-generated-unreviewed":
+            curated_noun = "annotation" if self.curated_annotations == 1 else "annotations"
+            source_noun = "annotation" if self.source_derived_annotations == 1 else "annotations"
+            composition = (
+                f"This overlay contains {self.curated_annotations} curated AI-written {curated_noun} and "
+                f"{self.source_derived_annotations} mechanical source-derived {source_noun}. "
+            )
+            history = f" Retained generation history: {' '.join(self.generation_history)}" if self.generation_history else ""
             return (
-                "AI-generated and not human-reviewed. Treat this explanatory draft as unverified "
-                "and not mathematical authority."
+                composition
+                + "They have not been human-reviewed as explanations; treat them as unverified and not mathematical authority."
+                + history
+            )
+        if self.provenance == "source-derived-unreviewed":
+            noun = "annotation" if self.source_derived_annotations == 1 else "annotations"
+            history = f" Retained generation history: {' '.join(self.generation_history)}" if self.generation_history else ""
+            return (
+                f"All {self.source_derived_annotations} {noun} in this overlay were mechanically condensed from "
+                "source-authored comments and have not been human-reviewed as explanations. "
+                "The pinned Lean source remains the authority."
+                + history
             )
         if self.provenance == "ai-assisted-human-reviewed":
             return f"AI-assisted and human-reviewed by {self.reviewed_by}."
@@ -61,6 +82,13 @@ def load_overlay_manifest(path: Path, corpora: list[Corpus]) -> dict[str, Hosted
     entries = document.get("overlays")
     if not isinstance(entries, dict):
         raise ExplainerError(f"overlay manifest {path}: overlays must be an object")
+    default_history = document.get("annotation_generation_history", [])
+    if not isinstance(default_history, list) or any(
+        not isinstance(note, str) or not note.strip() for note in default_history
+    ):
+        raise ExplainerError(
+            f"overlay manifest {path}: annotation_generation_history must be a list of non-empty strings"
+        )
 
     root = path.resolve().parent
     selected: dict[str, HostedOverlay] = {}
@@ -97,10 +125,16 @@ def load_overlay_manifest(path: Path, corpora: list[Corpus]) -> dict[str, Hosted
         reviewed_by = entry.get("reviewed_by", "")
         if not isinstance(reviewed_by, str):
             raise ExplainerError(f"{where}: reviewed_by must be a string")
-        if provenance != "ai-generated-unreviewed" and not reviewed_by.strip():
+        if provenance not in {"ai-generated-unreviewed", "source-derived-unreviewed"} and not reviewed_by.strip():
             raise ExplainerError(f"{where}: reviewed_by is required for {provenance}")
-        if provenance == "ai-generated-unreviewed" and reviewed_by.strip():
+        if provenance in {"ai-generated-unreviewed", "source-derived-unreviewed"} and reviewed_by.strip():
             raise ExplainerError(f"{where}: an unreviewed overlay cannot name a reviewer")
+        history_rows = entry.get("generation_history", default_history)
+        if not isinstance(history_rows, list) or any(
+            not isinstance(note, str) or not note.strip() for note in history_rows
+        ):
+            raise ExplainerError(f"{where}: generation_history must be a list of non-empty strings")
+        generation_history = tuple(note.strip() for note in history_rows)
         source_rows = entry.get("sources")
         if not isinstance(source_rows, list) or not source_rows:
             raise ExplainerError(f"{where}: sources must be a non-empty list of stable reference links")
@@ -118,11 +152,28 @@ def load_overlay_manifest(path: Path, corpora: list[Corpus]) -> dict[str, Hosted
         credit = entry.get("credit", "")
         if not isinstance(credit, str):
             raise ExplainerError(f"{where}: credit must be a string")
+        curated_annotations, source_derived_annotations = _annotation_counts(overlay, provenance)
         selected[corpus.name] = HostedOverlay(
             overlay,
             provenance,
             reviewed_by.strip(),
             tuple(sources),
             credit.strip() or DEFAULT_CREDIT,
+            generation_history,
+            curated_annotations,
+            source_derived_annotations,
         )
     return selected
+
+
+def _annotation_counts(path: Path, provenance: str) -> tuple[int, int]:
+    """Count the curated prefix and deterministic generated section without interpreting L4DEL."""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    marker = next((index for index, line in enumerate(lines) if line.startswith("# BEGIN GENERATED")), None)
+    if marker is None:
+        total = sum(line.startswith("@decl ") for line in lines)
+        return (0, total) if provenance == "source-derived-unreviewed" else (total, 0)
+    return (
+        sum(line.startswith("@decl ") for line in lines[:marker]),
+        sum(line.startswith("@decl ") for line in lines[marker + 1 :]),
+    )

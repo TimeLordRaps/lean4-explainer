@@ -253,7 +253,7 @@ def generate(repo: Path, current: str, declarations_jsonl: Path | None = None) -
         + BEGIN
         + "\n"
         + "# Generated only from the pinned repository's lean/docs notes, ComparatorChallenges JSON, and declaration doc comments.\n"
-        + "# The Pages disclosure still labels this transformed explanatory text AI-generated and unreviewed.\n\n"
+        + "# The Pages disclosure labels this transformed text as mechanically source-derived and unreviewed.\n\n"
         + generated
         + "\n"
         + END

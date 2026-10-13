@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import json
 import os
 import subprocess
@@ -44,8 +45,10 @@ RAW = "https://raw.githubusercontent.com"
 _GIT_TIMEOUT_SECONDS = 1800
 SITE_REPOSITORY = "https://github.com/TimeLordRaps/lean4-explainer"
 REPORT_URL = SITE_REPOSITORY + "/issues/new?title=Site%20feedback%3A%20"
+SITE_TITLE = "Lean 4 explanations for OpenAI/math and AlphaProof Nexus | lean4-explainer"
 SHOWCASE_DESCRIPTION = (
-    "Explore declarations, source, grounded explanations, learning paths, and dependency maps across major Lean projects."
+    "Read plain-language, source-linked explanations of Lean 4 mathematics, including OpenAI/math and Google "
+    "DeepMind AlphaProof Nexus results, with local Lean trust checks and explicit annotation provenance."
 )
 
 
@@ -125,7 +128,9 @@ def build_showcase(
             byte_budget=byte_budget,
             home="../index.html",
             site_url=f"{public_url}{corpus.name}/" if public_url else None,
-            description=f"Explore {corpus.title}: Lean declarations, pinned source, explanations, and dependencies.",
+            description=corpus.seo_description or (
+                f"Explore {corpus.title}: Lean declarations, pinned source, explanations, and dependencies."
+            ),
             project_url=f"{GITHUB}/{corpus.repo}/tree/{corpus.commit}",
             report_url=REPORT_URL,
             glossary=corpus.glossary,
@@ -351,6 +356,22 @@ def _landing(
         if annotated
         else ""
     )
+    featured = _featured_search_section({item.corpus.name for item in items})
+    structured = ""
+    if site_url:
+        structured = json.dumps(
+            {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "lean4-explainer",
+                "alternateName": "Lean 4 Explainer",
+                "url": site_url,
+                "description": SHOWCASE_DESCRIPTION,
+                "sameAs": SITE_REPOSITORY,
+            },
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).replace("<", "\\u003c")
     return "\n".join(
         [
             "<!doctype html>",
@@ -358,14 +379,16 @@ def _landing(
             "<head>",
             '<meta charset="utf-8">',
             '<meta name="viewport" content="width=device-width, initial-scale=1">',
-            "<title>lean4-explainer showcase</title>",
+            f"<title>{escape(SITE_TITLE)}</title>",
             f'<meta name="description" content="{escape(SHOWCASE_DESCRIPTION, quote=True)}">',
-            '<meta property="og:title" content="lean4-explainer showcase">',
+            f'<meta property="og:title" content="{escape(SITE_TITLE, quote=True)}">',
             f'<meta property="og:description" content="{escape(SHOWCASE_DESCRIPTION, quote=True)}">',
+            '<meta property="og:site_name" content="lean4-explainer">',
             '<meta property="og:type" content="website">',
             '<meta name="twitter:card" content="summary">',
             canonical,
             og_url,
+            f'<script type="application/ld+json">{structured}</script>' if structured else "",
             f'<link rel="stylesheet" href="{ASSET_DIR}/site.css">',
             f'<link rel="icon" href="{ASSET_DIR}/favicon.svg" type="image/svg+xml">',
             "</head>",
@@ -384,6 +407,7 @@ def _landing(
             + f' or <a href="{SITE_REPOSITORY}#l4del-write-your-own-explanations">the README</a>.</p>',
             _verification_notice(items),
             audit,
+            featured,
             start,
             '<h2 id="corpora">All corpora</h2>',
             '<ol class="list">',
@@ -395,6 +419,29 @@ def _landing(
             "</html>",
             "",
         ]
+    )
+
+
+def _featured_search_section(names: set[str]) -> str:
+    rows = []
+    if "oai" in names:
+        rows.append(
+            '<li><a href="oai/index.html"><strong>OpenAI/math explanations</strong></a> — '
+            "browse plain-language, source-linked explanations of the pinned OpenAI mathematics formalizations.</li>"
+        )
+    if "alphaproof-nexus" in names:
+        rows.append(
+            '<li><a href="alphaproof-nexus/index.html"><strong>AlphaProof Nexus explanations</strong></a> — '
+            "explore Google DeepMind's published Lean 4 proof artifacts with local trust checks and pinned provenance.</li>"
+        )
+    if not rows:
+        return ""
+    return (
+        '<section class="start" aria-labelledby="featured-math-heading">'
+        '<h2 id="featured-math-heading">OpenAI/math and AlphaProof Nexus explanations</h2>'
+        '<p>Search and read the formal mathematics by theorem, topic, module, or source file. '
+        "The site separates checked Lean evidence, source-derived wording, and unreviewed annotation prose.</p>"
+        "<ul>" + "".join(rows) + "</ul></section>"
     )
 
 
@@ -451,19 +498,20 @@ def _write_discovery(out_dir: Path, site_url: str) -> None:
     urls = [urljoin(site_url, quote(path, safe="/")) for path in pages]
     chunk_size = 45_000
     chunks = [urls[start : start + chunk_size] for start in range(0, len(urls), chunk_size)] or [[]]
-    for stale in out_dir.glob("sitemap-*.xml"):
-        stale.unlink()
+    for pattern in ("sitemap-*.xml", "sitemap-*.xml.gz"):
+        for stale in out_dir.glob(pattern):
+            stale.unlink()
     names = []
     for number, chunk in enumerate(chunks, start=1):
-        name = f"sitemap-{number}.xml"
+        name = f"sitemap-{number}.xml.gz"
         names.append(name)
         body = "".join(f"<url><loc>{escape(url)}</loc></url>" for url in chunk)
-        (out_dir / name).write_text(
+        document = (
             '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
             + body
-            + "</urlset>\n",
-            encoding="utf-8",
+            + "</urlset>\n"
         )
+        (out_dir / name).write_bytes(gzip.compress(document.encode("utf-8"), mtime=0))
     index = "".join(f"<sitemap><loc>{escape(urljoin(site_url, name))}</loc></sitemap>" for name in names)
     (out_dir / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'

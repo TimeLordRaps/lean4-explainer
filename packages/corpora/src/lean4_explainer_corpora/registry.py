@@ -1,6 +1,6 @@
 """A corpus is a Lean repository pinned to a commit. Each one is its own installable package.
 
-`pip install lean4-explainer[conjectures]` (or `[carleson]`, `[pfr]`, `[compfiles]`, `[tutorials]`, `[oai]`,
+`pip install lean4-explainer[conjectures]` (or `[alphaproof-nexus]`, `[carleson]`, `[pfr]`, `[compfiles]`, `[tutorials]`, `[oai]`,
 `[all]`) installs the matching `lean4-explainer-<name>` packages. Each holds the pinned description of one
 repository: its commit, library roots, license and license notes. The sources are not bundled: `fetch` and
 `showcase` clone the pinned commit from GitHub, and say so before they do.
@@ -24,6 +24,7 @@ class Corpus:
     branch: str
     kind: str  # formalization | conjectures | competition | tutorial | oai
     blurb: str
+    seo_description: str = ""  # truthful page-specific search and social summary; defaults to the generic description
     lean_root: str = ""  # subdirectory of the checkout that holds the Lean sources
     lake: bool = True  # read library roots from the Lake files
     include: tuple[str, ...] = ()  # patterns relative to the checkout, used when `lake` is false
@@ -52,13 +53,14 @@ GROUP = "lean4_explainer.corpora"
 # pip extra -> corpus names.
 EXTRAS: dict[str, tuple[str, ...]] = {
     "conjectures": ("formal-conjectures",),
+    "alphaproof-nexus": ("alphaproof-nexus",),
     "carleson": ("carleson",),
     "flt": ("flt",),
     "pfr": ("pfr",),
     "compfiles": ("compfiles",),
     "tutorials": ("mil", "tpil"),
     "oai": ("oai",),
-    "all": ("formal-conjectures", "carleson", "flt", "pfr", "compfiles", "mil", "tpil", "oai"),
+    "all": ("formal-conjectures", "alphaproof-nexus", "carleson", "flt", "pfr", "compfiles", "mil", "tpil", "oai"),
 }
 
 _active: dict[str, Corpus] | None = None

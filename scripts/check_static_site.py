@@ -8,6 +8,7 @@ pages that exist. It never requests external URLs.
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 from html.parser import HTMLParser
@@ -53,6 +54,13 @@ def _document(path: Path) -> Document:
     doc = Document()
     doc.feed(path.read_text(encoding="utf-8"))
     return doc
+
+
+def _xml_root(path: Path):
+    if path.suffix == ".gz":
+        with gzip.open(path, "rb") as source:
+            return ElementTree.parse(source).getroot()
+    return ElementTree.parse(path).getroot()
 
 
 def _local_target(site: Path, page: Path, href: str, base_path: str) -> Path | None:
@@ -134,6 +142,13 @@ def check_site(site: Path, site_url: str) -> list[str]:
         errors.append("index.html: missing reader onboarding")
     if "Lean4 Domain Explanation Language (L4DEL)" not in landing_text:
         errors.append("index.html: explanation language is not introduced by its full name")
+    if "OpenAI/math and AlphaProof Nexus explanations" not in landing_text:
+        errors.append("index.html: missing the OpenAI/math and AlphaProof Nexus explanation entry point")
+    landing_source = (site / "index.html").read_text(encoding="utf-8")
+    if 'type="application/ld+json"' not in landing_source or '"@type":"WebSite"' not in landing_source:
+        errors.append("index.html: missing WebSite structured data")
+    if landing.meta.get(("meta", "og:site_name")) != "lean4-explainer":
+        errors.append("index.html: missing Open Graph site name")
     if "Report a site issue" not in landing_text:
         errors.append("index.html: missing feedback route")
     if "Lean-backed trust results produced locally" not in landing_text:
@@ -206,7 +221,7 @@ def check_site(site: Path, site_url: str) -> list[str]:
 
     sitemap_files: set[str] = set()
     try:
-        index = ElementTree.parse(site / "sitemap.xml").getroot()
+        index = _xml_root(site / "sitemap.xml")
         for node in index.findall("{*}sitemap/{*}loc"):
             name = PurePosixPath(urlsplit(node.text or "").path).name
             if name:
@@ -220,12 +235,12 @@ def check_site(site: Path, site_url: str) -> list[str]:
             errors.append(f"sitemap.xml: missing referenced {name}")
             continue
         try:
-            root = ElementTree.parse(path).getroot()
+            root = _xml_root(path)
             for node in root.findall("{*}url/{*}loc"):
                 url = node.text or ""
                 if url.startswith(site_url):
                     listed.add(unquote(url[len(site_url) :]))
-        except ElementTree.ParseError as exc:
+        except (ElementTree.ParseError, OSError) as exc:
             errors.append(f"{name}: cannot parse: {exc}")
     expected = {
         path.relative_to(site).as_posix()

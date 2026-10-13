@@ -8,7 +8,7 @@ lean4-explainer turns that pile into a source-first website you can browse like 
 explanations when available, dependency links, and the exact pinned source stay together. The site labels what was
 checked by Lean, what was only scanned from text, and what remains an unreviewed explanatory overlay.
 
-**See it live:** https://timelordraps.github.io/lean4-explainer/ (eight well-known Lean projects, including the unfinished Fermat's Last Theorem formalization project)
+**See it live:** https://timelordraps.github.io/lean4-explainer/ (nine notable Lean projects, including the unfinished Fermat's Last Theorem formalization project and AlphaProof Nexus results)
 
 ## Who is this for?
 
@@ -117,9 +117,9 @@ The core is small and works alone. You add only what you want:
 | Claims that one result gives another, each with its contract | `packages/implications` | Implication edges on the declarations they connect, and a page of them |
 | Proof state after each tactic, and a trust badge | `packages/lean` | Needs Lean installed. It runs Lean on your files |
 | `explain#Name` links, what changed between versions | `packages/ecosystem` | Links and a changes page |
-| Ready-made example projects | `packages/corpora` and `packages/corpus-*` | Eight projects, pinned to exact versions |
+| Ready-made example projects | `packages/corpora` and `packages/corpus-*` | Nine projects, pinned to exact versions |
 
-Once the packages are published these become `pip install lean4-explainer[reader]`, `[map]`, `[l4del]`, `[lean]`, `[implications]`, `[ecosystem]`, `[all]` and one extra per project (`conjectures`, `carleson`, `flt`, `pfr`, `compfiles`, `tutorials`, `oai`). They are not published yet, so use the checkout for now.
+Once the packages are published these become `pip install lean4-explainer[reader]`, `[map]`, `[l4del]`, `[lean]`, `[implications]`, `[ecosystem]`, `[all]` and one extra per project (`conjectures`, `alphaproof-nexus`, `carleson`, `flt`, `pfr`, `compfiles`, `tutorials`, `oai`). They are not published yet, so use the checkout for now.
 
 ## Words you will meet
 
@@ -142,14 +142,16 @@ Two of the example projects are tutorials, so you can read them here and then do
 ## Honest limits
 
 - The tool reads your files as text. Without the Lean extension it does not run Lean, so it cannot say whether a proof is correct. The site says so on each page.
-- The Reading comes from patterns over the source. It says what each tactic does in general, not the exact goal left after it (the Lean extension shows that). Anything it does not recognize is shown as code, never guessed. Across all eight example projects about 3% of statements fall back to code.
+- The Reading comes from patterns over the source. It says what each tactic does in general, not the exact goal left after it (the Lean extension shows that). Anything it does not recognize is shown as code, never guessed. Across the example projects, some statements therefore fall back to code.
 - The map reads names, not types. It follows Lean's rules for namespaces, `open`, imports and local names, but it misses a result reached as a field of a value (`P.freyCurve`) and names built by macros. It is left out for openai/math, whose pages would not fit in GitHub Pages' size limit with it.
 - The openai/math project is too big to publish twice (1.1 GB of source), so its pages fetch their file from GitHub, at the pinned commit, to make the Reading. Its glossary lists only the definitions that have a description (about 25,000 of 1.3 million).
 - The glossary lists definitions, not theorems: theorems are results, and each one is on its file page.
 - Doc comments are drawn as Markdown, with their formulas typeset. Tables and a few rarer forms show as written, and so does a formula whose TeX has a mistake in it.
-- The hosted explanations on the example projects are AI-generated and not human-reviewed. Most are mechanically
-  regenerated from source-controlled comments or formalization notes; the smaller curated layer is target-checked and
-  source-linked but remains unreviewed. The site says this beside every annotation and never presents it as mathematical authority.
+- The hosted explanation layer is not human-reviewed. The 71 original curated annotations trace to a Claude Sonnet 5.5
+  session at medium effort; Claude Opus 5.5 is recorded as its advisor model, not the direct author. The much larger
+  source-derived layer is mechanically regenerated from pinned comments or formalization notes by tooling developed in
+  a GPT-5.6 Sol session at ultra reasoning; GPT-5.6 Sol did not originate the source prose. The site reports the per-overlay
+  curated/source-derived counts beside every annotation and never presents either layer as mathematical authority.
 - The openai/math card credits the repository's internal OpenAI model for producing its manuscripts and proof artifacts,
   while explicitly recognizing that the collection builds on the accumulated work of the mathematics community. Individual
   scholarly credit follows each manuscript's BibTeX and bibliography, not the site owner's name.

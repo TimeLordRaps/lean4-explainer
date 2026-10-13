@@ -11,10 +11,10 @@ from lean4_explainer_corpora import EXTRAS, installed, select
 
 CORPORA = installed()
 
-ALL = {"formal-conjectures", "carleson", "flt", "pfr", "compfiles", "mil", "tpil", "oai"}
+ALL = {"formal-conjectures", "alphaproof-nexus", "carleson", "flt", "pfr", "compfiles", "mil", "tpil", "oai"}
 
 
-def test_registry_holds_the_eight_corpora():
+def test_registry_holds_the_nine_corpora():
     assert set(CORPORA) == ALL
 
 
@@ -39,7 +39,9 @@ def test_corpus_packages_do_not_select_explanatory_overlays():
 def test_formal_conjectures_carries_the_share_alike_notice():
     note = CORPORA["formal-conjectures"].license_note
     assert "CC-BY-SA" in note and "CC-BY" in note and "Wikipedia" in note and "OEIS" in note
-    assert all(not c.license_note for c in CORPORA.values() if c.name != "formal-conjectures")
+    assert "CC-BY 4.0" in CORPORA["alphaproof-nexus"].license_note
+    assert "OEIS" in CORPORA["alphaproof-nexus"].license_note
+    assert all(not c.license_note for c in CORPORA.values() if c.name not in {"formal-conjectures", "alphaproof-nexus"})
 
 
 def test_two_of_the_corpora_are_tutorials():
@@ -62,7 +64,14 @@ def test_oai_is_openai_math():
     assert not corpus.lake
 
 
-def test_all_and_the_default_selection_hold_all_eight():
+def test_alphaproof_nexus_is_the_published_results_repository():
+    corpus = select("alphaproof-nexus")[0]
+    assert corpus.repo == "google-deepmind/alphaproof-nexus-results"
+    assert corpus.commit == "0647711a71183c1ea492ad60860776617ce1ea88"
+    assert corpus.lake
+
+
+def test_all_and_the_default_selection_hold_all_nine():
     assert {c.name for c in select("all")} == ALL
     assert {c.name for c in select(None)} == ALL
 

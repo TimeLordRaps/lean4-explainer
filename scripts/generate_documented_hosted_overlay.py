@@ -131,7 +131,7 @@ def generate(corpus_name: str, checkout: Path, current: str) -> tuple[str, int, 
         + BEGIN
         + "\n"
         + "# Generated only from declaration doc comments or immediately leading comments at the pinned commit.\n"
-        + "# The Pages disclosure labels this transformed explanatory text AI-generated and unreviewed.\n\n"
+        + "# The Pages disclosure labels this transformed text as mechanically source-derived and unreviewed.\n\n"
         + generated
         + "\n"
         + END

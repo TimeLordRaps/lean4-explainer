@@ -1,4 +1,5 @@
 from pathlib import Path
+import gzip
 import json
 
 from scripts.check_static_site import check_site
@@ -10,7 +11,8 @@ PUBLIC = "https://example.org/proofs/"
 def _page(title: str, canonical: str, body: str) -> str:
     return f"""<!doctype html><html lang="en"><head>
 <meta name="description" content="description"><meta property="og:title" content="{title}">
-<meta property="og:description" content="description"><meta name="twitter:card" content="summary">
+<meta property="og:description" content="description"><meta property="og:site_name" content="lean4-explainer"><meta name="twitter:card" content="summary">
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"WebSite"}}</script>
 <link rel="canonical" href="{canonical}"></head><body>
 <a class="skip-link" href="#content">Skip to content</a><main id="content">{body}</main></body></html>"""
 
@@ -20,7 +22,7 @@ def _site(root: Path) -> None:
     (root / "_assets" / "favicon.svg").write_text("<svg/>", encoding="utf-8")
     (root / "demo").mkdir()
     (root / "index.html").write_text(
-        _page("Home", PUBLIC, '<h1>Start exploring</h1><p>Lean4 Domain Explanation Language (L4DEL)</p><p>Lean-backed trust results produced locally.</p><h2>All corpora</h2><a href="demo/index.html">Demo</a><a href="https://example.org/issues">Report a site issue</a>'),
+        _page("Home", PUBLIC, '<h1>Start exploring</h1><p>Lean4 Domain Explanation Language (L4DEL)</p><p>Lean-backed trust results produced locally.</p><h2>OpenAI/math and AlphaProof Nexus explanations</h2><h2>All corpora</h2><a href="demo/index.html">Demo</a><a href="https://example.org/issues">Report a site issue</a>'),
         encoding="utf-8",
     )
     (root / "demo" / "index.html").write_text(
@@ -58,15 +60,15 @@ def _site(root: Path) -> None:
     (root / "404.html").write_text(
         '<!doctype html><html><body><main><a href="/proofs/">Return to all corpora</a></main></body></html>', encoding="utf-8"
     )
-    (root / "sitemap-1.xml").write_text(
+    sitemap = (
         '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
         f"<url><loc>{PUBLIC}index.html</loc></url><url><loc>{PUBLIC}demo/index.html</loc></url>"
-        f"<url><loc>{PUBLIC}demo/trust.html</loc></url></urlset>",
-        encoding="utf-8",
+        f"<url><loc>{PUBLIC}demo/trust.html</loc></url></urlset>"
     )
+    (root / "sitemap-1.xml.gz").write_bytes(gzip.compress(sitemap.encode("utf-8"), mtime=0))
     (root / "sitemap.xml").write_text(
         '<?xml version="1.0"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-        f"<sitemap><loc>{PUBLIC}sitemap-1.xml</loc></sitemap></sitemapindex>",
+        f"<sitemap><loc>{PUBLIC}sitemap-1.xml.gz</loc></sitemap></sitemapindex>",
         encoding="utf-8",
     )
     (root / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {PUBLIC}sitemap.xml\n", encoding="utf-8")
