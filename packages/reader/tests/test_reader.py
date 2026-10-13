@@ -103,6 +103,13 @@ def test_a_page_carries_its_source_and_loads_the_reader(tmp_path):
     assert "Lean was not run" in READER_JS  # the note is written by the script, so pages stay small
 
 
+def test_readings_have_page_level_expand_and_collapse_controls():
+    assert 'reader-controls' in READER_JS
+    assert 'Expand all readings' in READER_JS
+    assert 'Collapse all readings' in READER_JS
+    assert 'document.querySelectorAll("details.reading")' in READER_JS
+
+
 def test_source_that_contains_a_closing_script_tag_cannot_end_the_block(tmp_path):
     text = DEMO.replace("/-- A doc comment. -/", '/-- see "</script><script>alert(1)</script>" -/')
     page, _ = _build(tmp_path, text)

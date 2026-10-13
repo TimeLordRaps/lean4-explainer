@@ -10,7 +10,7 @@ import pytest
 
 from lean4_explainer.errors import ExplainerError
 from lean4_explainer_corpora import CorporaExtension, installed
-from lean4_explainer_corpora.showcase import build_showcase, fetch_corpus
+from lean4_explainer_corpora.showcase import GITHUB, build_showcase, fetch_corpus
 
 CORPORA = installed()
 
@@ -94,6 +94,37 @@ def test_showcase_builds_a_subsite_per_corpus_and_a_landing_page(upstream, tmp_p
     assert 'href="../index.html">All corpora<' in (out / "demo" / "index.html").read_text(encoding="utf-8")
     assert result.total_bytes > 0 and not result.over_budget
     assert (out / ".nojekyll").is_file()
+
+
+def test_public_showcase_has_onboarding_metadata_recovery_and_discovery_files(upstream, tmp_path):
+    corpus, base = upstream
+    out = tmp_path / "site"
+    public = "https://example.org/lean/"
+
+    build_showcase([corpus], tmp_path / "work", out, base_url=base, site_url=public)
+
+    landing = (out / "index.html").read_text(encoding="utf-8")
+    assert "Start exploring" in landing
+    assert 'aria-label="Explore Demo corpus"' in landing
+    assert '>Browse</a>' in landing and '>Search</a>' in landing and '>Glossary</a>' in landing
+    assert '<meta name="description"' in landing and '<meta property="og:title"' in landing
+    assert f'<link rel="canonical" href="{public}">' in landing
+    assert f"{GITHUB}/{corpus.repo}/tree/{corpus.commit}" in landing
+    assert (out / "404.html").is_file() and "Return to all corpora" in (out / "404.html").read_text(encoding="utf-8")
+    assert f"Sitemap: {public}sitemap.xml" in (out / "robots.txt").read_text(encoding="utf-8")
+    assert "sitemap-1.xml" in (out / "sitemap.xml").read_text(encoding="utf-8")
+    assert f"{public}demo/index.html" in (out / "sitemap-1.xml").read_text(encoding="utf-8")
+    subsite = (out / "demo" / "index.html").read_text(encoding="utf-8")
+    assert f'<link rel="canonical" href="{public}demo/index.html">' in subsite
+    assert ">Project source</a>" in subsite and ">Report a site issue</a>" in subsite
+    assert (out / "_assets" / "favicon.svg").is_file()
+
+
+def test_showcase_rejects_a_non_https_public_url(upstream, tmp_path):
+    corpus, base = upstream
+
+    with pytest.raises(ExplainerError, match="site_url"):
+        build_showcase([corpus], tmp_path / "work", tmp_path / "site", base_url=base, site_url="http://example.org/")
 
 
 def test_showcase_copies_each_license_and_shows_it_on_the_landing_page(upstream, tmp_path):
@@ -194,6 +225,9 @@ def test_a_corpus_overlay_annotates_the_subsite_and_the_landing_says_who_wrote_i
                         "commit": corpus.commit,
                         "sha256": hashlib.sha256(overlay.read_bytes()).hexdigest(),
                         "provenance": "ai-generated-unreviewed",
+                        "sources": [
+                            {"label": "Pinned documentation", "url": "https://example.org/repo/blob/abc/README.md"}
+                        ],
                     }
                 },
             }
@@ -211,9 +245,16 @@ def test_a_corpus_overlay_annotates_the_subsite_and_the_landing_says_who_wrote_i
     assert "A sidecar title" in page
     assert "AI-generated and not human-reviewed" in page
     assert "not mathematical authority" in page
+    assert "Pinned Lean source" in page and "Pinned documentation" in page
+    assert "https://example.org/repo/blob/abc/README.md" in page
     landing = (out / "index.html").read_text(encoding="utf-8")
     assert "hosted sidecar overlay" in landing and "did not write these explanations" in landing
     assert "AI-generated and not human-reviewed" in landing
+    assert "Lean4 Domain Explanation Language (L4DEL) guide" in landing
+    assert "Primary project and mathematical sources" in landing
+    assert "upstream authors and contributors retain credit" in landing
+    assert 'href="annotation-audit.json"' in landing
+    assert "curated wording remains source-linked and unreviewed" in landing
     assert build_site_result.total_bytes > 0
 
 
@@ -248,6 +289,8 @@ def test_overlay_manifest_fails_closed_when_its_binding_is_wrong(upstream, tmp_p
         "commit": corpus.commit,
         "sha256": hashlib.sha256(overlay.read_bytes()).hexdigest(),
         "provenance": "human-authored",
+        "reviewed_by": "A reviewer",
+        "sources": [{"label": "Pinned documentation", "url": "https://example.org/repo/blob/abc/README.md"}],
     }
     entry[field] = value
     manifest = tmp_path / "manifest.json"

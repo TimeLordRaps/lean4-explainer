@@ -20,6 +20,7 @@ from .imports import modules
 from .objects import Copy, Objects, index_objects
 from .render import (
     ASSET_DIR,
+    FAVICON_SVG,
     SITE_CSS,
     SITE_JS,
     Context,
@@ -41,6 +42,9 @@ __all__ = [
 ]
 
 CACHE_FORMAT = 9
+# Rendered-page compatibility is separate from the parsed-source cache. Increment this when
+# shared HTML changes so incremental builds rewrite pages without needlessly rescanning Lean.
+PAGE_FORMAT = 3
 # Lake's build configuration and its older dependency directory are not library source. Always skipped,
 # at the root and in any subdirectory, on top of the user's exclude patterns. Hidden directories (.lake)
 # are already skipped by the scanner.
@@ -207,7 +211,7 @@ def _build_site(
     tree = collect_tree(lean_root, config, cache_dir, jobs)
     for rel in tree.stale:
         (out_dir / (rel + ".html")).unlink(missing_ok=True)
-    digest = hashlib.sha256(_fingerprint(config).encode("utf-8"))
+    digest = hashlib.sha256(f"{_fingerprint(config)}|page:{PAGE_FORMAT}".encode("utf-8"))
     for rel, _ in tree.sources:
         entry = tree.cache.files[rel]
         digest.update(rel.encode("utf-8") + b"\0" + entry.names.encode("utf-8") + b"\0" + entry.lines.tobytes())
@@ -229,12 +233,17 @@ def _build_site(
         extensions=tuple(tree.analyses),
         options=config.options + (("_root", str(lean_root)),),  # as `analyze` gets them: `_root` is where the sources are
         home=config.home,
+        site_url=config.site_url,
+        description=config.description,
+        project_url=config.project_url,
+        report_url=config.report_url,
         source_links=config.source_links,
         imports=config.imports,
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
     written = _write(out_dir / ASSET_DIR / "site.css", SITE_CSS + "".join(ext.css(dict(config.options)) for ext, _ in tree.analyses))
+    written += _write(out_dir / ASSET_DIR / "favicon.svg", FAVICON_SVG)
     written += _write(out_dir / ASSET_DIR / "site.js", SITE_JS)
     written += _write(out_dir / ".nojekyll", "")
 

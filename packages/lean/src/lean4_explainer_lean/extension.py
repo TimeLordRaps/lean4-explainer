@@ -271,7 +271,7 @@ def _trust_page(ctx, analysis: Analysis) -> str:
     body = ["<h1>Trust</h1>"]
     if not analysis.toolchain:
         body.append('<p class="warn">Lean was not found on the PATH, so no declaration was checked. All trust is UNKNOWN.</p>')
-        return page("Trust", 0, body, ctx)
+        return page("Trust", 0, body, ctx, canonical_path="trust.html")
     body.append(
         f'<p class="muted">Axioms come from the Lean kernel ({escape(analysis.toolchain)}): the constants each declaration '
         "depends on, as Lean's collectAxioms reports them. Standard axioms are propext, Classical.choice and Quot.sound.</p>"
@@ -309,4 +309,4 @@ def _trust_page(ctx, analysis: Analysis) -> str:
         if len(rows) > _TRUST_ROWS:
             body.append(f'<li class="muted">… and {len(rows) - _TRUST_ROWS} more</li>')
         body.append("</ol>")
-    return page("Trust", 0, body, ctx)
+    return page("Trust", 0, body, ctx, canonical_path="trust.html")

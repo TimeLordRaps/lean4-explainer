@@ -91,6 +91,22 @@ def build_glossary(notes: Sequence[Note]) -> tuple[dict[str, tuple[str, str, Loc
     return terms, issues
 
 
+def build_acronyms(notes: Sequence[Note]) -> tuple[dict[str, tuple[str, str, Location]], list[str]]:
+    """One unambiguous expansion per acronym across a project."""
+    found: dict[str, tuple[str, str, Location]] = {}
+    issues: list[str] = []
+    for note in notes:
+        for short, expansion in note.acronyms:
+            kept = found.get(short)
+            if kept is not None and kept[0] != expansion:
+                issues.append(
+                    f"error: {note.rel}:{note.line}: acronym '{short}' is already expanded as '{kept[0]}'; keeping the first"
+                )
+            else:
+                found.setdefault(short, (expansion, note.name, (note.rel, note.line)))
+    return found, issues
+
+
 def merge_notes(notes: Sequence[Note], objects: Objects) -> tuple[list[Note], list[str]]:
     """One note per object. Identical copies may repeat an annotation; differing ones conflict."""
     merged: dict[str, Note] = {}
@@ -106,7 +122,7 @@ def merge_notes(notes: Sequence[Note], objects: Objects) -> tuple[list[Note], li
 
 
 def _content(note: Note) -> tuple[object, ...]:
-    return (note.title, note.prereqs, note.see, note.terms)
+    return (note.title, note.prereqs, note.see, note.terms, note.acronyms)
 
 
 def unresolved_links(notes: Sequence[Note], objects: Objects) -> list[str]:

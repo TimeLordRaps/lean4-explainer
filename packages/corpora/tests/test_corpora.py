@@ -89,8 +89,8 @@ def test_every_extra_installs_the_packages_of_its_corpora():
     for extra, names in EXTRAS.items():
         wanted = {f"lean4-explainer-{name}" for name in names}
         assert {item.split(">")[0].split("=")[0] for item in extras[extra]} >= wanted, extra
-    assert extras["l4del"] == ["lean4-explainer-l4del>=0.3.0"]  # the version that leaves the map and the glossary page to others
-    assert "lean4-explainer-l4del>=0.3.0" in extras["all"]
+    assert extras["l4del"] == ["lean4-explainer-l4del>=0.5.0"]  # legends and linked quotes; overlays remain hosted-only
+    assert "lean4-explainer-l4del>=0.5.0" in extras["all"]
     # 0.2.0 follows imports through files that only import (the core's import graph, core 0.3.0)
     assert extras["map"] == ["lean4-explainer-map>=0.2.0"] and "lean4-explainer-map>=0.2.0" in extras["all"]
     # 0.4.0 carries the proved edge's bridge, its verification record and the discovered catalogue

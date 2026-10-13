@@ -7,9 +7,10 @@ from lean4_explainer.errors import ExplainerError
 from lean4_explainer_l4del.graph import build_glossary, build_learning_path, unresolved_links
 from lean4_explainer.objects import plain_objects, resolve
 from lean4_explainer_l4del.grammar import parse_l4del
+from lean4_explainer_l4del.extension import L4delExtension
 from lean4_explainer.render import file_page
 from lean4_explainer.scan import parse_source
-from lean4_explainer.search import shard_key, write_search
+from lean4_explainer.search import search_keys, shard_key, write_search
 
 
 def _note(name, rel, line, title=None, prereqs=(), terms=()):
@@ -42,6 +43,30 @@ def test_l4del_structured_keys():
     assert notes.see == ("E.f",)
     assert notes.terms == (("box", "a container"),)
     assert notes.diagnostics == ()
+
+
+def test_an_annotated_file_gets_full_share_metadata(make_context):
+    extension = L4delExtension()
+    ctx = make_context(site_url="https://example.org/", extensions=((extension, None),))
+    annotated = parse_source("-- L4DEL: title: Fact\ntheorem fact : True := trivial\n", "A.lean")
+    bare = parse_source("theorem fact : True := trivial\n", "B.lean")
+
+    assert '<meta property="og:title"' in file_page(annotated, ctx)
+    assert '<meta property="og:title"' not in file_page(bare, ctx)
+
+
+def test_annotated_page_starts_with_an_acronym_legend(make_context):
+    extension = L4delExtension()
+    ctx = make_context(extensions=((extension, None),))
+    source = (
+        "-- L4DEL: title: NP example\n"
+        "-- L4DEL: acronym: NP = nondeterministic polynomial time\n"
+        "theorem fact : True := trivial\n"
+    )
+    rendered = file_page(parse_source(source, "A.lean"), ctx)
+    assert "Explanation legend" in rendered
+    assert "Lean4 Domain Explanation Language" in rendered
+    assert "nondeterministic polynomial time" in rendered
 
 
 def test_l4del_bad_directives_are_errors():
@@ -93,6 +118,35 @@ def test_search_shards_group_names_by_prefix():
     assert '"Nat.sub"' in written["_assets/search/s_na.js"]
     assert "b/c.lean.html" in written["_assets/search/files.js"]
     assert total == sum(len(text.encode("utf-8")) for text in written.values())
+
+
+def test_search_also_shards_camel_case_words_without_inflating_the_entry_count():
+    written = {}
+
+    def write(parts, text):
+        written["/".join(parts)] = text
+        return len(text.encode("utf-8"))
+
+    name = "AbstractHeckeOperator.heckeOperator"
+    entries, _ = write_search({name: ("A.lean", 7)}, write)
+
+    assert search_keys(name) >= {"ab", "he", "op"}
+    assert name in written["_assets/search/s_he.js"]
+    assert entries == 1
+
+
+def test_learning_path_can_be_filtered(tmp_path):
+    lean = tmp_path / "lean"
+    _tree(
+        lean,
+        {"A.lean": "-- L4DEL: title: First idea\ntheorem A.first : True := trivial\n"},
+    )
+    out = tmp_path / "docs"
+    build_site(lean, out)
+
+    html = (out / "learning-path.html").read_text(encoding="utf-8")
+    assert 'aria-label="Filter learning path"' in html
+    assert '<ol class="path" data-filter-rows>' in html
 
 
 def test_learning_path_puts_prerequisites_first():

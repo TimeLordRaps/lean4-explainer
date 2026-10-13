@@ -27,6 +27,7 @@ OVERLAY = """\
 @decl Demo.first
 -- L4DEL: title: First, explained
 -- L4DEL: intuition: Trivial things are true.
+-- L4DEL: source: Logic reference = https://example.org/logic
 @decl Demo.second
 -- L4DEL: step: Apply trivial.
 @decl Demo.inline
@@ -78,8 +79,44 @@ def test_overlay_annotations_reach_the_page_and_the_source_is_untouched(tmp_path
 
     page = (out / "Demo.lean.html").read_text(encoding="utf-8")
     assert "First, explained" in page and "Trivial things are true." in page
+    assert '<strong>Sources and attribution:</strong>' in page and 'href="https://example.org/logic"' in page
     assert "Apply trivial." in page
     assert (root / "Demo.lean").read_text(encoding="utf-8") == SOURCE  # the sidecar never writes upstream
+
+
+def test_linked_quote_renders_as_a_citation(tmp_path):
+    overlay = """@file Demo.lean
+@decl Demo.first
+-- L4DEL: source: Original note = https://example.org/note
+-- L4DEL: quote: Original note = Exact words from the note.
+"""
+    _, out, _ = _site(tmp_path, overlay)
+    rendered = (out / "Demo.lean.html").read_text(encoding="utf-8")
+    assert '<blockquote class="l4del-quote" cite="https://example.org/note">' in rendered
+    assert '>Original note</a>' in rendered
+
+
+def test_overlay_adds_the_configured_pinned_source_beside_the_explanation(tmp_path):
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "Demo.lean").write_text(SOURCE, encoding="utf-8")
+    overlay = tmp_path / "demo.l4del"
+    overlay.write_text(OVERLAY, encoding="utf-8")
+    config = Config(
+        source_url="https://github.com/example/repo/blob/{ref}/{path}#L{line}",
+        source_ref="0123456789abcdef",
+        options=(
+            ("overlay", str(overlay)),
+            ("overlay_sources", '[["Pinned project documentation","https://example.org/docs/abc"]]'),
+        ),
+    )
+
+    build_site(root, tmp_path / "out", config, tmp_path / "idx")
+
+    page = (tmp_path / "out" / "Demo.lean.html").read_text(encoding="utf-8")
+    assert "Pinned Lean source (0123456789ab)" in page
+    assert "https://github.com/example/repo/blob/0123456789abcdef/Demo.lean#L4" in page
+    assert "Pinned project documentation" in page and "https://example.org/docs/abc" in page
 
 
 def test_unreviewed_overlay_discloses_its_provenance_beside_the_annotation(tmp_path):

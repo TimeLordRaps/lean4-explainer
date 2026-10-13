@@ -14,7 +14,7 @@ from html import escape
 
 from .extensions import GlossaryEntry, GlossarySection
 from .markdown import inline_html
-from .render import _FILTER_HTML, Context, href, page
+from .render import Context, filter_box, href, page
 from .scan import Declaration
 
 PAGE = "glossary.html"
@@ -143,25 +143,29 @@ def glossary_pages(
         "<h1>Glossary</h1>",
         '<p class="muted">Every word this site uses, in one place: what this project defines, the words its '
         "explanations and readings use, and Lean's own words. Type in the box to filter.</p>",
-        _FILTER_HTML,
+        filter_box("Filter glossary terms"),
         '<nav class="toc">In this glossary: '
         + " · ".join(f'<a href="#g-{escape(key, quote=True)}">{escape(title)}</a> ({count})' for key, title, count in parts)
         + "</nav>",
     ]
     if project:
+        body.append('<section data-filter-section>')
         body.append('<h2 id="g-project">Defined in this project</h2>')
         body.append(f'<p class="muted">{escape(_project_intro(scope, split))}</p>')
         if split:
             body.append(_letter_row(letters, lambda letter: f"glossary-{letter}.html", counts=True))
         else:
             body.extend(_project_list(project, letters))
+        body.append("</section>")
     for section in (*shown, lean):
+        body.append('<section data-filter-section>')
         body.append(f'<h2 id="g-{escape(section.key, quote=True)}">{escape(section.title)}</h2>')
         if section.intro:
             body.append(f'<p class="muted">{escape(section.intro)}</p>')
         entries = sorted(section.entries, key=lambda e: (e.term.casefold(), e.term, e.where or ("", 0, "")))
-        body.append('<dl class="glossary">' + "".join(_entry_item(entry) for entry in entries) + "</dl>")
-    pages = {PAGE: page("Glossary", 0, body, ctx)}
+        body.append('<dl class="glossary" data-filter-rows>' + "".join(_entry_item(entry) for entry in entries) + "</dl>")
+        body.append("</section>")
+    pages = {PAGE: page("Glossary", 0, body, ctx, canonical_path=PAGE)}
     if split:
         for letter, entries in letters.items():
             label = _label(letter)
@@ -170,10 +174,11 @@ def glossary_pages(
                 f'<p class="muted">Definitions in this project whose names start with {escape(label)}. '
                 f'<a href="{PAGE}">The whole glossary</a> has the other sections.</p>',
                 _letter_row(letters, lambda other: f"glossary-{other}.html", counts=False),
-                _FILTER_HTML,
-                '<dl class="glossary">' + "".join(_project_item(entry) for entry in entries) + "</dl>",
+                filter_box("Filter glossary terms"),
+                '<dl class="glossary" data-filter-rows>' + "".join(_project_item(entry) for entry in entries) + "</dl>",
             ]
-            pages[f"glossary-{letter}.html"] = page(f"Glossary: {label}", 0, shard, ctx)
+            name = f"glossary-{letter}.html"
+            pages[name] = page(f"Glossary: {label}", 0, shard, ctx, canonical_path=name)
     return pages
 
 
@@ -231,11 +236,11 @@ def _project_intro(scope: str, split: bool) -> str:
 
 def _project_list(entries: list[_Entry], letters: dict[str, list[_Entry]]) -> list[str]:
     if len(entries) <= GROUP_AT:
-        return ['<dl class="glossary">' + "".join(_project_item(entry) for entry in entries) + "</dl>"]
+        return ['<dl class="glossary" data-filter-rows>' + "".join(_project_item(entry) for entry in entries) + "</dl>"]
     out = [_letter_row(letters, lambda letter: f"#g-project-{letter}", counts=False)]
     for letter, group in letters.items():
         out.append(f'<h3 id="g-project-{letter}">{_label(letter)}</h3>')
-        out.append('<dl class="glossary">' + "".join(_project_item(entry) for entry in group) + "</dl>")
+        out.append('<dl class="glossary" data-filter-rows>' + "".join(_project_item(entry) for entry in group) + "</dl>")
     return out
 
 

@@ -96,14 +96,18 @@ def test_showcase_with_yes_builds_and_reports(tmp_path, monkeypatch, capsys):
     seen = {}
 
     def fake(corpora, work, out, **kwargs):
-        seen.update(names=[c.name for c in corpora], out=out, jobs=kwargs["jobs"])
+        seen.update(names=[c.name for c in corpora], out=out, jobs=kwargs["jobs"], site_url=kwargs["site_url"])
         return ShowcaseResult((), 1234, 1000)
 
     monkeypatch.setattr(extension.showcase, "build_showcase", fake)
 
-    code = cli.main(["showcase", "tutorials", "--yes", "--out", str(tmp_path / "s"), "--work", str(tmp_path / "w")])
+    code = cli.main([
+        "showcase", "tutorials", "--yes", "--site-url", "https://example.org/proofs/",
+        "--out", str(tmp_path / "s"), "--work", str(tmp_path / "w")
+    ])
 
     assert seen["names"] == ["mil", "tpil"]
+    assert seen["site_url"] == "https://example.org/proofs/"
     assert code == 1  # the fake result is over its budget
     assert "over" in capsys.readouterr().err
 

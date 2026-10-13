@@ -6,6 +6,7 @@ import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from .errors import ExplainerError
 from .extensions import config_keys
@@ -27,6 +28,10 @@ class Config:
     byte_budget: int = PAGES_LIMIT_BYTES
     source_links: str = "declaration"  # "declaration": one link per declaration; "file": one per page
     home: str | None = None  # relative URL of a landing page above this site, when it is one of several
+    site_url: str | None = None  # canonical HTTPS base URL for this site
+    description: str = "Explore Lean declarations, source, explanations, and dependencies."
+    project_url: str | None = None  # public source repository shown in the footer
+    report_url: str | None = None  # issue/feedback URL shown in the footer
     glossary: str = "all"  # the project's definitions in the glossary: "all", "described" (with a description) or "none"
     imports: str = "all"  # imports on file pages: "all", "import-only" (files that only import) or "none"
     options: tuple[tuple[str, object], ...] = ()  # keys that installed extensions declared, sorted
@@ -44,6 +49,10 @@ _TYPES: dict[str, type] = {
     "byte_budget": int,
     "source_links": str,
     "home": str,
+    "site_url": str,
+    "description": str,
+    "project_url": str,
+    "report_url": str,
     "glossary": str,
     "imports": str,
 }
@@ -80,6 +89,12 @@ def load_config(path: Path | None) -> Config:
             raise ExplainerError(f"'extra_kinds' entries must be plain keywords in {path}")
         if key == "source_links" and value not in ("declaration", "file"):
             raise ExplainerError(f"'source_links' must be \"declaration\" or \"file\" in {path}")
+        if key in ("site_url", "project_url", "report_url"):
+            parsed = urlsplit(value)
+            if parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
+                raise ExplainerError(f"'{key}' must be an HTTPS URL without credentials in {path}")
+            if key == "site_url" and (parsed.query or parsed.fragment):
+                raise ExplainerError(f"'site_url' cannot contain a query or fragment in {path}")
         if key == "glossary" and value not in GLOSSARY_SCOPES:
             raise ExplainerError(f"'glossary' must be \"all\", \"described\" or \"none\" in {path}")
         if key == "imports" and value not in IMPORT_SCOPES:

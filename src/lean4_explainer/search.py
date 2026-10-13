@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import string
 from collections.abc import Callable, Mapping
 from urllib.parse import quote
@@ -13,6 +14,14 @@ _SAFE = frozenset(string.ascii_lowercase + string.digits)
 def shard_key(name: str) -> str:
     head = name.lower()[:2]
     return "".join(ch if ch in _SAFE else "_" for ch in head).ljust(2, "_")
+
+
+_WORD_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|[0-9]|\b)|[A-Z]?[a-z]+|[0-9]+")
+
+
+def search_keys(name: str) -> set[str]:
+    """Shards that can find the qualified name by its start or by a CamelCase word."""
+    return {shard_key(name), *(shard_key(word) for word in _WORD_RE.findall(name) if len(word) >= 2)}
 
 
 def _url(rel: str) -> str:
@@ -32,19 +41,19 @@ def write_search(
         if index is None:
             index = file_index[rel] = len(urls)
             urls.append(_url(rel))
-        shards.setdefault(shard_key(name), []).append([name, index, line])
+        row = [name, index, line]
+        for key in search_keys(name):
+            shards.setdefault(key, []).append(row)
 
     written = write(
         ("_assets", "search", "files.js"),
         "window.L4F = " + json.dumps(urls, ensure_ascii=False) + ";\n",
     )
-    entries = 0
     for key in sorted(shards):
         rows = shards[key]
-        entries += len(rows)
         payload = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
         written += write(
             ("_assets", "search", f"s_{key}.js"),
             f"window.l4shard({json.dumps(key)}, {payload});\n",
         )
-    return entries, written
+    return len(locations), written

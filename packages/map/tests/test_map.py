@@ -271,6 +271,10 @@ def test_the_project_map_links_files_and_is_in_the_navigation(tmp_path):
     a, b = files["Demo/Base.lean"][0], files["Demo/More.lean"][0]
     assert data["e"] == [[a, b, 2]]  # middle uses base, top uses base_pos: two uses, all one way
     assert '<div id="project-map">' in page and 'src="_assets/map.js"' in page
+    assert '<caption>Files and cross-file dependency counts</caption>' in page
+    assert 'aria-label="Filter map files"' in page
+    assert '>Demo/Base.lean</a></td><td>2</td><td>0</td><td>1</td>' in page
+    assert "Text version of this map" in MAP_JS
     assert 'href="../map.html">Map</a>' in (out / "Demo" / "Base.lean.html").read_text(encoding="utf-8")
     assert (out / "_assets" / "map.js").read_text(encoding="utf-8") == MAP_JS
 

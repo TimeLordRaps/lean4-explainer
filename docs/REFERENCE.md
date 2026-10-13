@@ -67,9 +67,11 @@ Formulas stay as their TeX, inside `<span class="tex">`, for the reader extensio
 - `sorry` detection is textual. It does not follow dependencies and does not check axioms.
 - Without the Lean extension, Lean is not run, so axiom and trust checks are UNKNOWN.
 
-## L4DEL: write your own explanations
+<a id="l4del-write-your-own-explanations"></a>
 
-L4DEL is an optional extension. It reads `-- L4DEL: key: value` line comments and adds an explanation layer to the site. The core never needs it, and a project that writes none gets the same output as without it.
+## Lean4 Domain Explanation Language (L4DEL): write your own explanations
+
+The Lean4 Domain Explanation Language (L4DEL) is an optional extension. It reads `-- L4DEL: key: value` line comments and adds an explanation layer to the site. The core never needs it, and a project that writes none gets the same output as without it.
 
 ```
 pip install lean4-explainer[l4del]
@@ -82,7 +84,7 @@ Whenever a declaration has no valid L4DEL, the tool says what is missing and pri
 3. **Paste** a template directly above its declaration, then replace every `TODO_` value.
 4. **Build** with `lean4-explainer build --lean-root lean --out docs`. A `TODO_` left in a value is a warning, so the build reports it.
 
-The generated site gets an L4DEL guide page (`annotate.html`), its `term` lines in the glossary (`glossary.html#t0`, …), and a learning path ordered by prerequisites.
+The generated site gets a Lean4 Domain Explanation Language guide page (`annotate.html`), its `term` and `acronym` lines in the glossary, an explanation legend at the top of each annotated file page, and a learning path ordered by prerequisites. Acronym-looking text without an explicit expansion is labeled unresolved rather than guessed; this guarantee covers the explanation layer, not arbitrary identifiers in upstream Lean code.
 
 ### The directive grammar
 
@@ -98,6 +100,9 @@ Each directive is one line comment:
 | `prereq` | comma-separated fully qualified names the proof depends on | a repeated name is an error |
 | `see` | comma-separated related declarations | a repeated name is an error |
 | `term` | `word = definition` | each word is defined once in the project |
+| `acronym` | `SHORT = expansion` | one consistent expansion across the project; repeated in affected page legends |
+| `source` | `label = https://URL` | repeatable; each URL is unique |
+| `quote` | `source label = exact excerpt` | repeatable; label must match a `source`, or the hosted overlay's pinned Lean source |
 
 Rules:
 
@@ -106,6 +111,8 @@ Rules:
 - A directive attaches to the next declaration. Only blank lines, comments, attribute lines, and `set_option` lines may separate them. Other code makes a directive an orphan, which is an error.
 - Anonymous declarations (`example`, unnamed `instance`) cannot carry directives.
 - `prereq` and `see` names are exact. `foo` does not match `Demo.foo`. A name that matches nothing is a warning.
+- `source` links appear beside the explanation under **Sources and attribution**. Use a full-commit GitHub blob URL, DOI, or versioned arXiv URL where possible; a citation makes the wording traceable but does not make it reviewed or correct.
+- `quote` keeps exact source words visually and semantically separate from `intuition` and `step` prose. Its source label becomes the quotation link.
 - A name with distinct definitions is ambiguous: a plain reference is an error, and it must be written `Name@path`, for example `Demo.value@Var/B.lean`.
 - Values are trimmed, must not be empty, and are at most 2000 characters.
 - The complete grammar is in `packages/l4del/src/lean4_explainer_l4del/grammar.py`.
@@ -172,11 +179,11 @@ Licenses are those of each repository's `LICENSE` file at the pinned commit. Whe
 ```
 lean4-explainer sources [NAME...]              # installed corpora, pinned commits, licenses
 lean4-explainer fetch tutorials --yes          # download only
-lean4-explainer showcase --yes --out site      # download and build one subsite each under a landing page
+lean4-explainer showcase --yes --out site --site-url https://example.org/base/  # build a public, canonical site
 lean4-explainer                                # same as showcase; prints what it will download, asks first
 ```
 
-Without `--yes`, the commands print the plan and ask. When stdin is not a terminal they download nothing and exit with code 2. Corpus packages do not select or contain L4DEL overlays, so an ordinary showcase remains annotation-free even when the L4DEL tooling is installed. A hosted build may opt in with `--overlay-manifest PATH`; every entry is checked against the corpus repository, exact commit and overlay SHA-256, and its review provenance is shown on the landing page and beside rendered annotations. The showcase landing page shows each project's commit, Lean toolchain, `mathlib` commit, and license, and the license text is copied next to each subsite. Each corpus's build errors are printed (and its first warnings): an overlay or an implication edge that names a declaration the site does not have is an error, and the command then exits with code 1, so the Pages workflow does not publish a broken site. Output is about 975 MB for all eight (measured 2026-10-10 with the reader, the map, L4DEL and the implications extension), mostly openai/math, which gets one source link per file instead of one per declaration, no map, and a glossary of its described definitions only, to stay under the 1 GB Pages limit.
+Without `--yes`, the commands print the plan and ask. When stdin is not a terminal they download nothing and exit with code 2. Corpus packages do not select or contain L4DEL overlays, so an ordinary showcase remains annotation-free even when the L4DEL tooling is installed. A hosted build may opt in with `--overlay-manifest PATH`; every entry is checked against the corpus repository, exact commit and overlay SHA-256, and its review provenance is shown on the landing page and beside rendered annotations. The hosted workflow also audits generated wording against pinned source-controlled comments or notes and publishes the machine-readable result as `annotation-audit.json`; curated wording is enumerated there as `source-linked-unreviewed`, not silently promoted to reviewed. The showcase landing page shows each project's commit, Lean toolchain, `mathlib` commit, and license, and the license text is copied next to each subsite. `--site-url` enables canonical and social metadata, a custom 404 page, `robots.txt`, and chunked sitemaps. Each corpus's build errors are printed (and its first warnings): an overlay or an implication edge that names a declaration the site does not have is an error, and the command then exits with code 1, so the Pages workflow does not publish a broken site. Output must remain below the configured byte budget; the workflow and release smoke check measure the generated artifact rather than relying on an older estimate.
 
 ## Extensions
 
@@ -194,6 +201,10 @@ Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types ar
 - `source_links`: `"declaration"` (default, one link per declaration) or `"file"` (one per page, for very large trees).
 - `search`, `cross_links`: booleans that switch those features on or off.
 - `home`: relative URL of a landing page above this site. Adds an "All corpora" link to every page.
+- `site_url`: canonical HTTPS base URL, without a query or fragment. Every page gets a canonical URL; navigation, feature, and annotated pages also get Open Graph/Twitter metadata. Unannotated file pages use a compact shell so very large corpora remain deployable.
+- `description`: page description used in metadata.
+- `project_url`: HTTPS source-project link shown in full page footers.
+- `report_url`: HTTPS feedback or issue link shown in full page footers.
 - `byte_budget`: the build fails if the output exceeds this many bytes. The default is 1 GB, the GitHub Pages limit.
 - `glossary`: which of the project's definitions the glossary lists: `"all"` (default), `"described"` (only those with a doc comment, a plain comment or an extension's note; the showcase uses this for openai/math) or `"none"`.
 - `imports`: where file pages list imports: `"all"` (default), `"import-only"` (only on files that do nothing but import; the showcase uses this for openai/math, whose 336,022 imports would not fit) or `"none"`.
@@ -206,7 +217,7 @@ Pass `--config lean4-explainer.toml` to `build`. Unknown keys and wrong types ar
   - **Defined in this project**: every `def`, `abbrev`, `structure`, `class`, `class inductive`, `inductive` and `opaque` (theorems, instances and examples are results, not words), under its own name (the last part of the full name), with the first paragraph of its description, or its declaration line when it has none, and a link to it. Identical copies in several files are one entry. More than 2,000 entries go on one page per first letter, `glossary-a.html` … `glossary-other.html`; up to that, a long list gets letter headings. The entries come from the incremental cache, so a rebuild that reuses every file still lists them all.
   - One section per extension that adds words (the `glossary` hook): L4DEL's `term` lines (the term links in explanations point here), and the reader's types, structures, properties, symbols and tactics.
   - **Lean words**: the language itself (`theorem`, `sorry`, `:=`, `namespace`, `⟨ ⟩`, `·`, …), including all of the README's "Words you will meet".
-- Extension pages. L4DEL adds `annotate.html` and `learning-path.html`. The map extension (`packages/map`) adds `map.html`, with the project's folders and any one file with the files around it. It also gives every declaration a "Map" of what it builds on and what uses it, two steps each way, drawn when opened. Its links are read from the code by Lean's name rules (namespaces, `open`, imports, local names; see `packages/map/README.md`), and L4DEL `prereq` links are added as dashed arrows. Imports are followed through files that only import (from the core's import graph): in formal-conjectures that more than doubled the links, from 6,077 to 12,707. Set `map_dependencies = false` to leave it out.
+- Extension pages. L4DEL adds `annotate.html` and `learning-path.html`. The map extension (`packages/map`) adds `map.html`, with the project's folders and any one file with the files around it. The same relationships also appear in a searchable file table and a collapsible text representation, so map navigation does not require the diagram or a pointer device. It gives every declaration a "Map" of what it builds on and what uses it, two steps each way, drawn when opened. Its links are read from the code by Lean's name rules (namespaces, `open`, imports, local names; see `packages/map/README.md`), and L4DEL `prereq` links are added as dashed arrows. Imports are followed through files that only import (from the core's import graph): in formal-conjectures that more than doubled the links, from 6,077 to 12,707. Set `map_dependencies = false` to leave it out.
 - Pages that have not changed since the last build are reused. The cache lives beside the output directory, outside the published site, and can be moved with `--cache`. It is loaded through an allow-list of this package's own types and the types extensions declare. A cache file that refers to anything else is ignored and rebuilt, never run.
 
 ## Development

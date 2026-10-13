@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import re
 import sys
 from collections.abc import Mapping, Sequence
@@ -22,26 +23,37 @@ from lean4_explainer.config import load_config
 from lean4_explainer.errors import ExplainerError
 from lean4_explainer.extensions import Diagnostic, Extension, GlossaryEntry, GlossarySection, ParseResult, SourceView
 from lean4_explainer.objects import Objects
-from lean4_explainer.render import Context, href, page, refs, up_path
+from lean4_explainer.render import Context, filter_box, href, page, refs, source_href, up_path
 from lean4_explainer.scan import Declaration, parse_source
 
 from .grammar import L4Notes, parse_l4del
-from .graph import PathStep, build_glossary, build_learning_path, build_links, merge_notes, unresolved_links
+from .graph import PathStep, build_acronyms, build_glossary, build_learning_path, build_links, merge_notes, unresolved_links
 from .model import FileSummary, Note
 from .overlay import load_overlay
 from .templates import annotation_report, annotation_state, notes_of, placeholder_block
 
-__version__ = "0.3.0"
+__version__ = "0.5.0"
 
 _PREFIX = "L4DEL:"
 _CARRIER_RE = re.compile(r"^[ \t]*L4DEL:(?P<rest>.*)$")
 _WARNING_PREVIEW = 20
-_CACHE_SCHEMA = 2  # L4Notes gained overlay origin/provenance rendering in schema 2.
+_CACHE_SCHEMA = 6  # Navigation names the purpose without introducing an unexplained acronym.
+_ACRONYM_TOKEN_RE = re.compile(r"(?<![A-Za-z0-9_])[A-Z][A-Z0-9-]+(?![A-Za-z0-9_])")
+_L4DEL_EXPANSION = "Lean4 Domain Explanation Language"
 
 CSS = """
 .l4del { margin: 0.3rem 0; padding-left: 0.6rem; border-left: 3px solid var(--line); }
 .l4term { margin: 0.3rem 0; }
+.l4del-sources { margin: 0.45rem 0; font-size: 0.94em; }
 .l4del-provenance { margin: 0.45rem 0; padding: 0.45rem 0.6rem; border-left: 3px solid var(--warn); background: var(--warn-bg); }
+.l4del-quote { margin: 0.55rem 0; padding: 0.4rem 0.8rem; border-left: 3px solid var(--accent); background: var(--panel); }
+.l4del-quote p { margin: 0 0 0.3rem; }
+.l4del-quote footer { color: var(--muted); font-size: 0.9em; }
+.explanation-legend { margin: 0.8rem 0 1rem; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+.explanation-legend h2 { margin-top: 0; font-size: 1.05rem; }
+.acronym-legend { display: grid; grid-template-columns: max-content 1fr; gap: 0.2rem 0.8rem; margin: 0.35rem 0; }
+.acronym-legend dt { font-weight: 700; }
+.acronym-legend dd { margin: 0; }
 """
 
 _GUIDE_EXAMPLE = "\n".join(
@@ -51,6 +63,9 @@ _GUIDE_EXAMPLE = "\n".join(
         "-- L4DEL: intuition: Three items cannot all sit in different boxes when there are only two boxes.",
         "-- L4DEL: step: Assume no box holds two items.",
         "-- L4DEL: step: Then three items need three different boxes, which do not exist.",
+        "-- L4DEL: source: Formal statement = https://example.org/pinned-source#L1",
+        "-- L4DEL: quote: Formal statement = Three items in two boxes put two items in one box.",
+        "-- L4DEL: acronym: DEL = Domain Explanation Language",
         "-- L4DEL: prereq: Demo.box_count",
         "-- L4DEL: term: box = a container for one item",
         "theorem pigeonhole_three_two : ...",
@@ -64,6 +79,7 @@ class Analysis:
 
     notes: tuple[Note, ...]
     terms: dict = field(default_factory=dict, repr=False)
+    acronyms: dict = field(default_factory=dict, repr=False)
     steps: list = field(default_factory=list, repr=False)
     prereqs: dict = field(default_factory=dict, repr=False)  # key -> keys it builds on
     sees: dict = field(default_factory=dict, repr=False)  # key -> related keys (both directions)
@@ -85,9 +101,14 @@ class L4delExtension(Extension):
         "overlay": str,
         "overlay_provenance": str,
         "overlay_disclosure": str,
+        "overlay_sources": str,
+        "overlay_credit": str,
     }  # overlay: a sidecar file of annotations (see overlay.py)
 
     # ---- parsing and indexing ----
+    def promote_file_page(self, lean_file: Any) -> bool:
+        return any(self.name in declaration.ext for declaration in lean_file.declarations)
+
     def hides_comment(self, body: str) -> bool:
         return body.strip().startswith(_PREFIX)
 
@@ -95,7 +116,7 @@ class L4delExtension(Extension):
         return not payload.is_empty
 
     def describe(self, payload: Any) -> str:
-        return payload.intuition or payload.title or ""
+        return payload.intuition or (payload.quotes[0][1] if payload.quotes else None) or payload.title or ""
 
     def parse(self, view: SourceView) -> ParseResult:
         diagnostics: list[Diagnostic] = []
@@ -147,10 +168,11 @@ class L4delExtension(Extension):
                 prereqs=n.prereqs,
                 see=n.see,
                 terms=n.terms,
+                acronyms=n.acronyms,
             )
             for decl in named
             for n in (notes_of(decl),)
-            if n.title or n.prereqs or n.see or n.terms
+            if n.title or n.prereqs or n.see or n.terms or n.acronyms
         )
         issues = tuple(
             f"{d.severity}: {path}:{d.line}: {d.message}" for decl in declarations for d in notes_of(decl).diagnostics
@@ -180,15 +202,17 @@ class L4delExtension(Extension):
             unannotated += summary.unannotated
         merged, merge_issues = merge_notes(notes, objects)
         terms, term_issues = build_glossary(merged)
+        acronyms, acronym_issues = build_acronyms(merged)
         use_path = bool(options.get("learning_path", True))
         steps, path_issues = build_learning_path(merged, objects) if use_path else ([], [])
         prereq_edges, see_edges = build_links(merged, objects)
-        graph_issues = [*merge_issues, *path_issues, *unresolved_links(notes, objects)]
+        graph_issues = [*merge_issues, *acronym_issues, *path_issues, *unresolved_links(notes, objects)]
         words = sorted(terms, key=len, reverse=True)
         pattern = re.compile(r"(?<![\w'])(" + "|".join(re.escape(w) for w in words) + r")(?![\w'])") if words else None
         return Analysis(
             notes=tuple(notes),
             terms=terms,
+            acronyms=acronyms,
             steps=steps,
             prereqs=prereq_edges,
             sees=see_edges,
@@ -209,9 +233,14 @@ class L4delExtension(Extension):
         overlay = load_overlay(str(path)).digest[:16] if path else ""
         disclosure = str(options.get("overlay_disclosure", ""))
         disclosure_digest = hashlib.sha256(disclosure.encode("utf-8")).hexdigest()[:16] if disclosure else ""
+        sources = str(options.get("overlay_sources", ""))
+        sources_digest = hashlib.sha256(sources.encode("utf-8")).hexdigest()[:16] if sources else ""
+        credit = str(options.get("overlay_credit", ""))
+        credit_digest = hashlib.sha256(credit.encode("utf-8")).hexdigest()[:16] if credit else ""
         return (
             f"l4del:{__version__}:schema={_CACHE_SCHEMA}:learning_path={options.get('learning_path', True)}:"
-            f"overlay={overlay}:provenance={options.get('overlay_provenance', '')}:disclosure={disclosure_digest}"
+            f"overlay={overlay}:provenance={options.get('overlay_provenance', '')}:"
+            f"disclosure={disclosure_digest}:sources={sources_digest}:credit={credit_digest}"
         )
 
     # ---- rendering ----
@@ -227,6 +256,19 @@ class L4delExtension(Extension):
         top: list[str] = []
         depth = len(dirs)
         options = dict(ctx.options)
+        sources = list(payload.sources)
+        if payload.origin == "overlay" and ctx.source_url:
+            pinned = source_href(rel, decl.line, ctx)
+            if pinned not in {url for _, url in sources}:
+                ref = ctx.source_ref[:12] if ctx.source_ref else "configured revision"
+                sources.insert(0, (f"Pinned Lean source ({ref})", pinned))
+        if payload.origin == "overlay":
+            for shared in _overlay_sources(options.get("overlay_sources")):
+                if shared[1] not in {url for _, url in sources}:
+                    sources.append(shared)
+        source_by_label = {label: url for label, url in sources}
+        if payload.origin == "overlay" and sources:
+            source_by_label.setdefault("Pinned Lean source", sources[0][1])
         disclosure = str(options.get("overlay_disclosure", "")).strip()
         if not disclosure and options.get("overlay_provenance") == "ai-generated-unreviewed":
             disclosure = (
@@ -238,6 +280,17 @@ class L4delExtension(Extension):
                 '<aside class="l4del-provenance"><strong>Annotation provenance.</strong> '
                 f"{escape(disclosure)}</aside>"
             )
+        for label, excerpt in payload.quotes:
+            url = source_by_label.get(label, "")
+            citation = (
+                f'<a href="{escape(url, quote=True)}">{escape(label)}</a>'
+                if url
+                else f'{escape(label)} (source link unresolved)'
+            )
+            top.append(
+                f'<blockquote class="l4del-quote" cite="{escape(url, quote=True)}">'
+                f'<p>{_highlight(excerpt, analysis, depth)}</p><footer>— {citation}</footer></blockquote>'
+            )
         if payload.intuition:
             top.append(f'<p class="intuition">{_highlight(payload.intuition, analysis, depth)}</p>')
         if payload.steps:
@@ -247,6 +300,11 @@ class L4delExtension(Extension):
             top.append(refs("Prerequisites", payload.prereqs, None, dirs, ctx))
         if payload.see:
             top.append(refs("See also", payload.see, None, dirs, ctx))
+        if sources:
+            links = ", ".join(
+                f'<a href="{escape(url, quote=True)}">{escape(label)}</a>' for label, url in sources
+            )
+            top.append(f'<p class="l4del-sources"><strong>Sources and attribution:</strong> {links}</p>')
         bottom = [
             f'<p class="l4term"><strong>{escape(word)}</strong>: {escape(definition)}</p>'
             for word, definition in payload.terms
@@ -255,8 +313,61 @@ class L4delExtension(Extension):
             bottom.append(_hint(decl, payload, ctx))
         return "".join(top), "".join(bottom)
 
+    def file_preamble(self, lean_file: Any, ctx: Context, analysis: Analysis) -> str:
+        payloads = [
+            payload
+            for declaration in lean_file.declarations
+            for payload in (declaration.ext.get(self.name),)
+            if isinstance(payload, L4Notes) and not payload.is_empty
+        ]
+        if not payloads:
+            return ""
+        tokens = {"L4DEL"}
+        for payload in payloads:
+            parts = [
+                payload.title or "",
+                payload.intuition or "",
+                *payload.steps,
+                *(definition for _, definition in payload.terms),
+                *(excerpt for _, excerpt in payload.quotes),
+            ]
+            tokens.update(token for part in parts for token in _ACRONYM_TOKEN_RE.findall(part))
+            tokens.update(short for short, _ in payload.acronyms)
+        project_acronyms = analysis.acronyms if isinstance(analysis, Analysis) else {}
+        local_acronyms = {short: expansion for payload in payloads for short, expansion in payload.acronyms}
+        definitions = {
+            "L4DEL": _L4DEL_EXPANSION,
+            **{key: value[0] for key, value in project_acronyms.items()},
+            **local_acronyms,
+        }
+        rows = []
+        for token in sorted(tokens, key=str.casefold):
+            expansion = definitions.get(token)
+            if expansion:
+                meaning = escape(expansion)
+            else:
+                meaning = "Used in an explanation or its source, but not expanded by this annotation. Follow its linked source."
+            rows.append(f'<dt><abbr title="{escape(expansion or token, quote=True)}">{escape(token)}</abbr></dt><dd>{meaning}</dd>')
+        options = dict(ctx.options)
+        credit = str(options.get("overlay_credit", "")).strip()
+        shared = _overlay_sources(options.get("overlay_sources"))
+        source_links = ""
+        if shared:
+            links = ", ".join(
+                f'<a href="{escape(url, quote=True)}">{escape(label)}</a>' for label, url in shared
+            )
+            source_links = f'<p><strong>Project sources:</strong> {links}</p>'
+        credit_html = f'<p><strong>Credit:</strong> {escape(credit)}</p>' if credit else ""
+        return (
+            '<section class="explanation-legend" aria-labelledby="explanation-legend-heading">'
+            '<h2 id="explanation-legend-heading">Explanation legend</h2>'
+            '<p><strong>L4DEL explanations are a separate layer.</strong> They do not change the Lean source. '
+            'Intuition is explanatory prose; numbered items are a reading path; sources link the wording back to evidence.</p>'
+            f'<dl class="acronym-legend">{"".join(rows)}</dl>{credit_html}{source_links}</section>'
+        )
+
     def nav_links(self, up: str, options: Mapping[str, Any]) -> Sequence[tuple[str, str]]:
-        links = [("L4DEL guide", f"{up}annotate.html")]  # the core links its glossary page, which lists the terms
+        links = [("Explanation guide", f"{up}annotate.html")]
         if options.get("learning_path", True):
             links.append(("Learning path", f"{up}learning-path.html"))
         return links
@@ -272,8 +383,25 @@ class L4delExtension(Extension):
             GlossaryEntry(term=term, meaning=escape(definition), where=(rel, line, decl_name), anchor=analysis.anchors[term])
             for term, (definition, decl_name, (rel, line)) in analysis.terms.items()
         )
-        intro = "Words defined in the explanations on this site (L4DEL term lines). Where they appear, they link here."
-        return (GlossarySection(key="l4del", title="Terms from the explanations", entries=entries, intro=intro),)
+        intro = (
+            "Words defined in the explanations on this site (Lean4 Domain Explanation Language term lines). "
+            "Where they appear, they link here."
+        )
+        acronym_entries = tuple(
+            GlossaryEntry(term=short, meaning=escape(expansion), where=(rel, line, decl_name))
+            for short, (expansion, decl_name, (rel, line)) in analysis.acronyms.items()
+        )
+        sections = [GlossarySection(key="l4del", title="Terms from the explanations", entries=entries, intro=intro)]
+        if acronym_entries:
+            sections.append(
+                GlossarySection(
+                    key="l4del-acronyms",
+                    title="Acronyms from the explanations",
+                    entries=acronym_entries,
+                    intro="Explicit expansions supplied by acronym lines and repeated in each affected page's legend.",
+                )
+            )
+        return tuple(sections)
 
     def status(self, analysis: Analysis) -> str:
         return (
@@ -372,6 +500,24 @@ def _highlight(text: str, analysis: Analysis, depth: int) -> str:
     return "".join(pieces)
 
 
+def _overlay_sources(raw: object) -> tuple[tuple[str, str], ...]:
+    if not raw:
+        return ()
+    try:
+        rows = json.loads(str(raw))
+    except json.JSONDecodeError as exc:
+        raise ExplainerError(f"overlay_sources is not valid JSON: {exc}") from exc
+    if not isinstance(rows, list) or not all(
+        isinstance(row, list)
+        and len(row) == 2
+        and all(isinstance(value, str) and value for value in row)
+        and row[1].startswith("https://")
+        for row in rows
+    ):
+        raise ExplainerError("overlay_sources must be a JSON list of [label, https://URL] pairs")
+    return tuple((row[0], row[1]) for row in rows)
+
+
 def _hint(decl: Declaration, payload: L4Notes, ctx: Context) -> str:
     objects = ctx.objects
     ambiguous = objects.ambiguous if objects else frozenset()
@@ -387,7 +533,8 @@ def _hint(decl: Declaration, payload: L4Notes, ctx: Context) -> str:
 def _learning_path_page(steps: list[PathStep], warnings: list[str], ctx: Context) -> str:
     body = ["<h1>Learning path</h1>", '<p class="muted">Each declaration appears after its prerequisites.</p>']
     if steps:
-        body.append('<ol class="path">')
+        body.append(filter_box("Filter learning path"))
+        body.append('<ol class="path" data-filter-rows>')
         for step in steps:
             rel, line = step.location
             link = escape(href([], rel, f"#L{line}"), quote=True)
@@ -402,13 +549,20 @@ def _learning_path_page(steps: list[PathStep], warnings: list[str], ctx: Context
     if warnings:
         body.append("<h2>Warnings</h2>")
         body.append('<ul class="list">' + "".join(f'<li class="warn">{escape(w)}</li>' for w in warnings) + "</ul>")
-    return page("Learning path", 0, body, ctx)
+    return page("Learning path", 0, body, ctx, canonical_path="learning-path.html")
 
 
 def _guide_page(ctx: Context) -> str:
     body = [
-        "<h1>Annotating with L4DEL</h1>",
-        '<p class="muted">lean4-explainer reads L4DEL from Lean line comments. An annotation is optional at first. '
+        "<h1>Lean4 Domain Explanation Language (L4DEL)</h1>",
+        '<section class="explanation-legend" aria-labelledby="guide-legend-heading">'
+        '<h2 id="guide-legend-heading">Acronym legend</h2>'
+        f'<dl class="acronym-legend"><dt><abbr title="{_L4DEL_EXPANSION}">L4DEL</abbr></dt>'
+        f'<dd>{_L4DEL_EXPANSION}</dd></dl>'
+        '<p>A domain explanation language keeps expert meaning, provenance, definitions, and reading order explicit '
+        'instead of asking a reader to infer them from jargon.</p></section>',
+        '<p class="muted">lean4-explainer reads Lean4 Domain Explanation Language directives from Lean line comments. '
+        "An annotation is optional at first. "
         "The tool checks every directive it finds, and for each declaration without a valid annotation it "
         "prints a template to paste in.</p>",
         "<h2>Workflow</h2>",
@@ -427,7 +581,17 @@ def _guide_page(ctx: Context) -> str:
         "<li><code>prereq</code>: comma-separated fully qualified names the proof depends on.</li>"
         "<li><code>see</code>: comma-separated related declarations.</li>"
         "<li><code>term</code>: <code>word = definition</code>. Each word is defined once in the project.</li>"
+        "<li><code>acronym</code>: <code>SHORT = expansion</code>. The expansion appears in the legend at the top "
+        "of every affected file page. Acronym-looking source text without a supplied expansion is labeled as unresolved; "
+        "the renderer never guesses what an upstream author meant.</li>"
+        "<li><code>source</code>: <code>label = https://URL</code>. Repeat it for independent sources.</li>"
+        "<li><code>quote</code>: <code>source label = exact excerpt</code>. The label must match a source line; the "
+        "excerpt is rendered as a linked quotation rather than being passed off as the explainer's prose.</li>"
         "</ul>",
+        "<h2>Sources and attribution</h2>",
+        "<p>Use immutable links where possible: a full-commit repository blob for the exact formal source, "
+        "a DOI or versioned arXiv record for a paper, or a versioned project blueprint. A citation makes an "
+        "explanation traceable; it does not by itself certify that the explanation is correct.</p>",
         "<h2>Rules</h2>",
         "<p>Only line comments carry directives. A directive attaches to the next declaration. "
         "Anonymous declarations cannot carry directives. Keys are case-sensitive. "
@@ -439,4 +603,4 @@ def _guide_page(ctx: Context) -> str:
         "<h2>Example</h2>",
         f"<pre>{escape(_GUIDE_EXAMPLE)}</pre>",
     ]
-    return page("L4DEL guide", 0, body, ctx)
+    return page("Lean4 Domain Explanation Language (L4DEL) guide", 0, body, ctx, canonical_path="annotate.html")

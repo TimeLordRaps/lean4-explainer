@@ -18,7 +18,7 @@ EXPECTED = {
     "mil": 74,
     "oai": 1316,
     "pfr": 523,
-    "tpil": 144,
+    "tpil": 129,
 }
 
 
@@ -31,6 +31,8 @@ def test_real_hosted_overlays_are_bound_parseable_and_annotation_rich():
     for name, hosted in selected.items():
         assert hosted.path.parent == HOSTED
         assert hosted.provenance == "ai-generated-unreviewed"
+        assert len(hosted.sources) >= 2
+        assert all(url.startswith("https://") for _, url in hosted.sources)
         overlay = parse_overlay(hosted.path.read_text(encoding="utf-8"), str(hosted.path))
         counts[name] = sum(len(declarations) for declarations in overlay.files.values())
         for file, declarations in overlay.files.items():
@@ -44,4 +46,4 @@ def test_real_hosted_overlays_are_bound_parseable_and_annotation_rich():
 
     assert not errors
     assert counts == EXPECTED
-    assert sum(counts.values()) == 14_990
+    assert sum(counts.values()) == 14_975

@@ -1,4 +1,4 @@
-"""L4DEL (Lean4 Domain Explanation Language) extension for lean4-explainer."""
+"""Lean4 Domain Explanation Language (L4DEL) extension for lean4-explainer."""
 
 from .extension import L4delExtension, __version__
 from .grammar import L4Notes, parse_l4del

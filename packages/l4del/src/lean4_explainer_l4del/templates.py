@@ -51,6 +51,9 @@ def placeholder_block(
             f"-- L4DEL: intuition: {PLACEHOLDER}one_plain_sentence_why_it_holds",
             f"-- L4DEL: step: {PLACEHOLDER}first_proof_step",
             f"-- L4DEL: prereq: {prereq}",
+            f"-- L4DEL: source: {PLACEHOLDER}source_label = https://example.org/{PLACEHOLDER}stable_source",
+            f"-- L4DEL: quote: {PLACEHOLDER}source_label = {PLACEHOLDER}exact_source_excerpt",
+            f"-- L4DEL: acronym: {PLACEHOLDER}SHORT = {PLACEHOLDER}full_expansion",
         ]
     )
 

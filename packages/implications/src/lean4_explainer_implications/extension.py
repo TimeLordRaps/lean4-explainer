@@ -244,13 +244,24 @@ class ImplicationsExtension(Extension):
             for shard in sorted((cat_dir / "shards").glob("*.json")):
                 out[f"implications/catalogue/shards/{shard.name}"] = shard.read_text(encoding="utf-8")
             out["implications/catalogue.js"] = CS.script()
-            out["implications/catalogue.html"] = page("Checked implications", 1, CS.catalogue_body(analysis.catalogue)
-                                                      + ['<script src="catalogue.js" defer></script>'], ctx)
+            out["implications/catalogue.html"] = page(
+                "Checked implications",
+                1,
+                CS.catalogue_body(analysis.catalogue) + ['<script src="catalogue.js" defer></script>'],
+                ctx,
+                canonical_path="implications/catalogue.html",
+            )
         if analysis.catalogue is not None or analysis.path:
             argued = [(e.id, f"{', '.join(_bare(s) for s in e.sources)} → {_bare(e.target) or 'a composite'}") for e in analysis.found.edges if e.status in ("argued", "proposed")]
             cands = [(c.id, c.phrase) for c in analysis.found.candidates]
             if analysis.catalogue is not None or argued or cands:
-                out["implications/notes.html"] = page("Implication notes", 1, CS.notes_body(analysis.catalogue or {}, argued, cands), ctx)
+                out["implications/notes.html"] = page(
+                    "Implication notes",
+                    1,
+                    CS.notes_body(analysis.catalogue or {}, argued, cands),
+                    ctx,
+                    canonical_path="implications/notes.html",
+                )
         return out
 
     def glossary(self, ctx, analysis: Analysis) -> Sequence[GlossarySection]:
@@ -416,7 +427,7 @@ def _bridge_source_page(ctx, analysis: Analysis, rel: str, sha: str, text: str) 
         + "</ul>",
         f'<pre class="bridge-source"><code>{lines}</code></pre>',
     ]
-    return page(rel, depth, body, ctx)
+    return page(rel, depth, body, ctx, canonical_path=_bridge_page(rel))
 
 
 def _index_page(ctx, analysis: Analysis, kernel) -> str:
@@ -467,7 +478,7 @@ def _index_page(ctx, analysis: Analysis, kernel) -> str:
             )
         body.append("</section>")
     body.append('<p class="muted">The same edges as data: <a href="implications.json">implications.json</a>.</p>')
-    return page("Implications", 0, body, ctx)
+    return page("Implications", 0, body, ctx, canonical_path="implications.html")
 
 
 def _edge_card(ctx, analysis: Analysis, edge: E.Edge, kernel) -> str:
