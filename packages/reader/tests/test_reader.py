@@ -100,7 +100,8 @@ def test_a_page_carries_its_source_and_loads_the_reader(tmp_path):
     for rel in set(KATEX["sha256"]) - {"LICENSE"}:  # KaTeX ships with the site, byte for byte, so formulas draw offline
         assert (out / "_assets" / "katex" / rel).read_bytes() == (KATEX_DIR / rel).read_bytes()
     assert "MIT License" in (out / "_assets" / "katex" / "LICENSE.txt").read_text(encoding="utf-8")
-    assert "Lean was not run" in READER_JS  # the note is written by the script, so pages stay small
+    assert "Lean was not run" not in READER_JS
+    assert "Any Lean-backed trust result is reported separately on the Trust page" in READER_JS
 
 
 def test_readings_have_page_level_expand_and_collapse_controls():

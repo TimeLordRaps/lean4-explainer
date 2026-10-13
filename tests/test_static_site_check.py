@@ -100,6 +100,15 @@ def test_static_site_gate_rejects_a_global_source_only_disclaimer(tmp_path):
     assert any("source-only release" in error for error in check_site(tmp_path, PUBLIC))
 
 
+def test_static_site_gate_rejects_a_false_reader_disclaimer(tmp_path):
+    _site(tmp_path)
+    assets = tmp_path / "demo" / "_assets"
+    assets.mkdir()
+    (assets / "reader.js").write_text('note.textContent = "Lean was not run";', encoding="utf-8")
+
+    assert any("falsely says Lean was not run" in error for error in check_site(tmp_path, PUBLIC))
+
+
 def test_static_site_gate_requires_local_lean_evidence_for_every_corpus(tmp_path):
     _site(tmp_path)
     (tmp_path / "demo" / "trust.json").unlink()
