@@ -143,6 +143,11 @@ def check_site(site: Path, site_url: str) -> list[str]:
     if landing.meta.get(("link", "canonical")) != site_url:
         errors.append("index.html: canonical URL does not match --site-url")
 
+    for corpus in sorted(path for path in site.iterdir() if path.is_dir() and (path / "index.html").is_file()):
+        reader = corpus / "_assets" / "reader.js"
+        if reader.is_file() and "Lean was not run" in reader.read_text(encoding="utf-8"):
+            errors.append(f"{reader.relative_to(site).as_posix()}: falsely says Lean was not run")
+
     try:
         actual_trust = collect_trust(site)
     except ValueError as exc:
