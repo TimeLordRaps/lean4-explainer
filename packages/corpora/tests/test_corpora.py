@@ -25,6 +25,12 @@ def test_every_corpus_is_pinned_to_a_full_commit():
         assert corpus.title and corpus.blurb, corpus.name
 
 
+def test_seo_descriptions_never_use_l4del_without_expanding_it():
+    for corpus in CORPORA.values():
+        if "L4DEL" in corpus.seo_description:
+            assert "Lean4 Domain Explanation Language (L4DEL)" in corpus.seo_description, corpus.name
+
+
 def test_every_corpus_states_its_license():
     for corpus in CORPORA.values():
         assert corpus.license == "Apache-2.0", corpus.name  # the LICENSE file of each pinned checkout

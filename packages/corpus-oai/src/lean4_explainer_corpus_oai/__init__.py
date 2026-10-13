@@ -24,7 +24,7 @@ CORPUS = Corpus(
     blurb='Lean formalizations that accompany the openai/math manuscripts.',
     seo_description=(
         'Explore openai/math in plain language: locally checked Lean 4 formalizations, exact pinned source links, '
-        'mathematical context, and clearly separated L4DEL explanatory annotations.'
+        'mathematical context, and separate Lean4 Domain Explanation Language (L4DEL) annotations.'
     ),
     lean_root='lean',
     lake=False,
