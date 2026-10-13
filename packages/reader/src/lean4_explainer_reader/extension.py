@@ -47,6 +47,8 @@ _EMBED_LIMIT = 2_000_000  # characters of source per page; a bigger file gets no
 CSS = """
 #reader-note { font-size: 0.9rem; color: var(--muted); border-left: 3px solid var(--line); padding: 0.2rem 0.6rem; margin: 0.6rem 0; }
 #reader-note .reader-status:empty { display: none; }
+#reader-note .reader-controls { display: inline-flex; gap: 0.35rem; margin-left: 0.45rem; }
+#reader-note button { font: inherit; color: inherit; background: transparent; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
 details.reading { margin: 0.45rem 0 0.2rem; }
 details.reading > summary { cursor: pointer; font-size: 0.9rem; color: var(--muted); }
 details.reading[open] > summary { margin-bottom: 0.3rem; }

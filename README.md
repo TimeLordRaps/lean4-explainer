@@ -1,16 +1,18 @@
 # lean4-explainer
 
-**Read real, computer-checked mathematics, one step at a time.**
+**Read real Lean source, one step at a time.**
 
 Lean 4 is a programming language where you write a math proof and the computer checks every single step. People have used it to formalize huge results, including Fermat's Last Theorem. But a pile of `.lean` files is hard to read if you have never seen one.
 
-lean4-explainer turns that pile into a website you can browse like a guided tour: every theorem gets a plain-English heading, the idea behind it, the steps of the proof, and links to the things it depends on.
+lean4-explainer turns that pile into a source-first website you can browse like a guided tour: declarations, comments,
+explanations when available, dependency links, and the exact pinned source stay together. The site labels what was
+checked by Lean, what was only scanned from text, and what remains an unreviewed explanatory overlay.
 
-**See it live:** https://timelordraps.github.io/lean4-explainer/ (eight well-known Lean projects, including the Fermat's Last Theorem project)
+**See it live:** https://timelordraps.github.io/lean4-explainer/ (eight well-known Lean projects, including the unfinished Fermat's Last Theorem formalization project)
 
 ## Who is this for?
 
-Someone who loves math and is curious about Lean. You do not need to know Lean, and you do not need to install it to read the site. If you have seen calculus or differential equations in high school, you have the background for most of the pages. When a word is new, look it up in the **Glossary**, linked from every page: it has every definition in the project, every type, property, symbol and tactic the Reading explains, and Lean's own words.
+Someone who loves math and is curious about Lean. You do not need to know Lean, and you do not need to install it to read the site. When a word is new, look it up in the **Glossary**, linked from every page: it has every definition in the project, every type, property, symbol and tactic the Reading explains, and Lean's own words.
 
 It is also for people who write Lean and want others to understand it. You add short comments above your theorems, and the site does the rest.
 
@@ -35,14 +37,17 @@ Where a project has added explanations of its own (or we have, in a separate ove
 | **Prerequisites** | What you should understand first |
 | **Glossary** words | A word the explanations define links to its meaning in the Glossary |
 | The **statement** and a link to the real source | The exact Lean, when you want it |
+| **Sources and attribution** links | The exact full-commit source plus primary project references; traceability and credit, not a claim of review |
+| An **Explanation legend** | Lean4 Domain Explanation Language (L4DEL), plus every acronym the explanation defines; unexpanded source abbreviations are labeled rather than guessed |
+| A linked **quotation** | Exact words kept distinct from the explainer's own prose and linked to the named source |
 
 ## How relationships show up
 
 Math is a web of results leaning on each other. The site shows that web in five ways:
 
 1. **The map on each declaration.** Open "Map" under any result to see what it builds on (left) and what uses it (right), two steps each way. The links are read from the code itself, so every project has them, explained or not. Every box is a link, and the map wears the project's own colours.
-2. **The project map** (`map.html`). The folders and how they use each other, and any one file with the files around it.
-3. **The learning path** (`learning-path.html`). One reading order where nothing appears before the things it needs (from L4DEL `prereq` lines).
+2. **The project map** (`map.html`). The folders and how they use each other, and any one file with the files around it. A searchable table exposes the same data without relying on the drawing.
+3. **The learning path** (`learning-path.html`). One reading order where nothing appears before the things it needs (from Lean4 Domain Explanation Language `prereq` lines).
 4. **Link lists** under each declaration: Prerequisites, See also, and the results it uses.
 5. **Implication edges** (`implications.html`, with the optional implications extension). Some links are not in the code at all: one result could give another even though the published proof goes a different way. An edge says so, and since that is a claim, it keeps the exact hypotheses, the conclusion, the commit it was read at, and how far it has been checked (suggested, argued in words, or proved in Lean and checked by the kernel). Edges are kept apart from the links read from the code, so the map never mixes the two.
 
@@ -70,9 +75,11 @@ pip install -e packages/corpora -e packages/corpus-flt
 lean4-explainer showcase --out site
 ```
 
-## Write your own explanations (L4DEL)
+<a id="l4del-write-your-own-explanations"></a>
 
-L4DEL is a tiny way to explain a theorem inside a Lean comment. Put lines like these just above it:
+## Write your own explanations with the Lean4 Domain Explanation Language (L4DEL)
+
+The Lean4 Domain Explanation Language (L4DEL) is a small, checked vocabulary for explaining a theorem inside a Lean comment. Put lines like these just above it:
 
 ```lean
 -- L4DEL: title: Two odd numbers add to an even number
@@ -80,14 +87,19 @@ L4DEL is a tiny way to explain a theorem inside a Lean comment. Put lines like t
 -- L4DEL: step: Write each number as 2k + 1.
 -- L4DEL: step: Add them to get 2(k + m + 1).
 -- L4DEL: prereq: Nat.odd_iff
+-- L4DEL: source: Exact formal source = https://github.com/OWNER/REPO/blob/FULL_COMMIT/Foo.lean#L42
+-- L4DEL: quote: Exact formal source = Two odd numbers add to an even number.
+-- L4DEL: acronym: DEL = Domain Explanation Language
 theorem odd_add_odd ...
 ```
 
 Lean treats them as ordinary comments, so your proofs are untouched. Run `lean4-explainer check` and it tells you what is missing or misspelled. Run `lean4-explainer annotate --file Foo.lean` and it prints a ready-to-fill template for every declaration that has no explanation.
 
 If you do not own the project, keep the explanations in a separate **overlay** file instead of editing their source.
-The live showcase explicitly injects repository-owned overlays through a commit- and hash-bound manifest; corpus
-packages on PyPI contain no L4DEL explanation text. The details are in the [reference](docs/REFERENCE.md).
+The live showcase explicitly injects repository-owned overlays through a commit- and hash-bound manifest; every
+rendered overlay links to its exact full-commit source and corpus-level primary references. Those links make a claim
+auditable, but do not relabel AI-generated text as human-reviewed. Corpus packages on PyPI contain no hosted L4DEL
+explanation text. The details are in the [reference](docs/REFERENCE.md).
 
 ## Pick your pieces
 
@@ -98,7 +110,7 @@ The core is small and works alone. You add only what you want:
 | A quick page of your Lean code | the core | The site from your declarations and comments |
 | A plain-English reading of every declaration | `packages/reader` | The Reading: claim in words and as a typeset formula, givens, every proof step explained |
 | What builds on what | `packages/map` | A map on every declaration and a project map, read from the code |
-| Titles, intuition, steps, glossary, learning path | `packages/l4del` | L4DEL |
+| Titles, intuition, steps, linked quotations, acronym legends, glossary, learning path | `packages/l4del` | Lean4 Domain Explanation Language (L4DEL) |
 | Claims that one result gives another, each with its contract | `packages/implications` | Implication edges on the declarations they connect, and a page of them |
 | Proof state after each tactic, and a trust badge | `packages/lean` | Needs Lean installed. It runs Lean on your files |
 | `explain#Name` links, what changed between versions | `packages/ecosystem` | Links and a changes page |
@@ -132,7 +144,12 @@ Two of the example projects are tutorials, so you can read them here and then do
 - The openai/math project is too big to publish twice (1.1 GB of source), so its pages fetch their file from GitHub, at the pinned commit, to make the Reading. Its glossary lists only the definitions that have a description (about 25,000 of 1.3 million).
 - The glossary lists definitions, not theorems: theorems are results, and each one is on its file page.
 - Doc comments are drawn as Markdown, with their formulas typeset. Tables and a few rarer forms show as written, and so does a formula whose TeX has a mistake in it.
-- The explanations on the example projects were written for this site. They are not the authors' words, and the site says that too.
+- The hosted explanations on the example projects are AI-generated and not human-reviewed. Most are mechanically
+  regenerated from source-controlled comments or formalization notes; the smaller curated layer is target-checked and
+  source-linked but remains unreviewed. The site says this beside every annotation and never presents it as mathematical authority.
+- The openai/math card credits the repository's internal OpenAI model for producing its manuscripts and proof artifacts,
+  while explicitly recognizing that the collection builds on the accumulated work of the mathematics community. Individual
+  scholarly credit follows each manuscript's BibTeX and bibliography, not the site owner's name.
 - A few kinds of declaration (indented ones, ones made by macros) are not listed.
 
 ## More

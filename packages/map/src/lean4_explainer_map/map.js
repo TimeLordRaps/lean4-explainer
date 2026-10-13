@@ -333,6 +333,17 @@
           (left.length ? " Drawn: " + left.join(", and ") + "." : "") +
           " Boxes are links; point at one to light up its arrows.";
         box.appendChild(legend);
+        const text = document.createElement("details");
+        text.className = "depmap-text";
+        const rows = items.map((item, index) => {
+          let relation = index === local.get(here) ? "current declaration" : "two steps away";
+          if (edges.some((edge) => edge[0] === index && edge[1] === local.get(here))) relation = "builds on";
+          if (edges.some((edge) => edge[0] === local.get(here) && edge[1] === index)) relation = "used by";
+          const label = esc(item.name) + " — " + relation;
+          return "<li>" + (item.href && !item.here ? '<a href="' + esc(item.href) + '">' + label + "</a>" : label) + "</li>";
+        }).join("");
+        text.innerHTML = "<summary>Text version of this map</summary><ul>" + rows + "</ul>";
+        box.appendChild(text);
         wire(wrap);
       });
       li.appendChild(box);

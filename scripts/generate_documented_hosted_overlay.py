@@ -90,17 +90,24 @@ def generate(corpus_name: str, checkout: Path, current: str) -> tuple[str, int, 
 
     base = _base(current)
     existing = _targets(base)
+    seen_source_targets: set[tuple[str, str]] = set()
     blocks: list[tuple[str, str, str]] = []
     source_described = 0
     for rel, path in sources:
         text = path.read_bytes().decode("utf-8-sig", errors="replace").replace("\r\n", "\n")
         lean_file = parse_source(text, rel, extra_kinds=corpus.extra_kinds)
         for declaration in lean_file.declarations:
+            target = (rel, declaration.name)
+            # An overlay selects by file and name, not by source occurrence. If a
+            # file repeats a name, it attaches to the first occurrence; never use
+            # a later occurrence's comment to describe that earlier declaration.
+            if target in seen_source_targets:
+                continue
+            seen_source_targets.add(target)
             description = declaration.doc or declaration.comment
             if not description:
                 continue
             source_described += 1
-            target = (rel, declaration.name)
             if target in existing:
                 continue
             kind = "doc comment" if declaration.doc else "leading source comment"

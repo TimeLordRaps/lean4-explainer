@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from lean4_explainer.extensions import Extension, ParseResult, SourceView
-from lean4_explainer.render import Context, href, page
+from lean4_explainer.render import Context, filter_box, href, page
 
 from .deps import Resolver, bound_in, declaration_end, imports_in, names_in, opens_in, reverse, variables_in, reachable, visible_files
 
@@ -52,6 +52,11 @@ svg.depmap-svg .tip { fill: var(--muted); }
 #project-map .depmap-wrap { width: calc(100vw - 2rem); position: relative; left: 50%; transform: translateX(-50%); }
 #project-map .controls { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin: 0.5rem 0; }
 #project-map input[type="search"] { min-width: 18rem; }
+.map-table-wrap { overflow-x: auto; }
+.map-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.map-table th, .map-table td { padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--line); text-align: left; }
+.map-table th:not(:first-child), .map-table td:not(:first-child) { text-align: right; white-space: nowrap; }
+.depmap-text { font-size: 0.88rem; }
 """
 
 
@@ -282,8 +287,18 @@ def _project_page(ctx: Context, graph: Graph) -> str:
                 a = file(ctx.locations[target][0])
                 if a != b:
                     weights[(a, b)] = weights.get((a, b), 0) + 1
+    builds_on: dict[int, set[int]] = {index: set() for index in range(len(order))}
+    used_by: dict[int, set[int]] = {index: set() for index in range(len(order))}
+    for a, b in weights:
+        builds_on[b].add(a)
+        used_by[a].add(b)
     data = {"f": order, "e": [[a, b, w] for (a, b), w in sorted(weights.items())]}
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+    rows = "".join(
+        f'<tr><td><a href="{item[1]}">{item[0]}</a></td><td>{item[2]}</td>'
+        f'<td>{len(builds_on[index])}</td><td>{len(used_by[index])}</td></tr>'
+        for index, item in enumerate(order)
+    )
     body = [
         "<h1>Map</h1>",
         '<p class="muted">How this project builds on itself. An arrow goes from a file to a file that uses something '
@@ -291,8 +306,16 @@ def _project_page(ctx: Context, graph: Graph) -> str:
         "every declaration's own map, on its file page, shows the same thing one result at a time.</p>",
         '<div id="project-map"><noscript><p>The map is drawn by JavaScript.</p></noscript></div>',
         f'<script type="application/json" id="project-map-data">{payload}</script>',
+        '<section data-filter-section><h2>Files as a table</h2>',
+        '<p class="muted">The same map data in a searchable keyboard- and screen-reader-friendly form.</p>',
+        filter_box("Filter map files"),
+        '<div class="map-table-wrap"><table class="map-table"><caption>Files and cross-file dependency counts</caption>'
+        '<thead><tr><th scope="col">File</th><th scope="col">Declarations</th><th scope="col">Builds on</th>'
+        '<th scope="col">Used by</th></tr></thead><tbody data-filter-rows>'
+        + rows
+        + "</tbody></table></div></section>",
     ]
     if not data["e"]:
         body.insert(2, '<p class="muted">No file uses another yet, so there is nothing to connect.</p>')
-    return page("Map", 0, body, ctx)
+    return page("Map", 0, body, ctx, canonical_path="map.html")
 

@@ -2,7 +2,8 @@ import pytest
 
 from lean4_explainer.build import ExplainerError, build_site
 from lean4_explainer.cli import main
-from lean4_explainer.render import SITE_JS, file_page
+from lean4_explainer.extensions import Extension
+from lean4_explainer.render import SITE_CSS, SITE_JS, default_context, file_page, search_page
 from lean4_explainer.scan import parse_source
 
 
@@ -22,9 +23,73 @@ def test_pages_load_nothing_external():
 def test_filter_targets_structural_rows_without_repeating_an_attribute_per_declaration():
     html = file_page(parse_source("theorem t : True := trivial\n", "a.lean"))
     assert "data-filterable" not in html
-    assert "main > ol.decls > li" in SITE_JS
-    assert "main > ul.list > li" in SITE_JS
-    assert "main > dl.glossary > div" in SITE_JS
+    assert "data-filter-rows" in html
+    assert "[data-filter-rows] > li" in SITE_JS
+    assert "[data-filter-rows] > div" in SITE_JS
+    assert 'aria-label="Filter declarations"' in html
+    assert "No matches." in SITE_JS
+
+
+def test_file_path_is_a_linked_hierarchy_as_well_as_a_breadcrumb():
+    html = file_page(parse_source("theorem t : True := trivial\n", "FLT/AutomorphicForm/Abstract.lean"))
+
+    assert '<nav class="crumbs" aria-label="Breadcrumb">' in html
+    assert '>Corpus home</a> / <a href="../index.html">FLT</a>' in html
+    assert '<h1 class="path-title"><code><a href="../index.html">FLT</a>/<a href="index.html">AutomorphicForm</a>/<span>Abstract.lean</span></code></h1>' in html
+    assert "scroll-margin-top" in SITE_CSS  # sticky navigation must not cover a declaration reached by #L123
+
+
+def test_search_explains_word_search_and_has_an_accessible_status():
+    html = search_page(default_context())
+
+    assert '<label for="q">Search declarations</label>' in html
+    assert 'aria-describedby="search-help search-status"' in html
+    assert 'id="search-status"' in html and 'aria-live="polite"' in html
+    assert "Matches words anywhere in qualified names" in html
+    assert ".every(function (word)" in SITE_JS
+    assert 'new URLSearchParams(window.location.search).get("q")' in SITE_JS
+    assert 'url.searchParams.set("q", value)' in SITE_JS
+
+
+def test_pages_have_metadata_skip_navigation_and_compact_file_pages(make_context):
+    ctx = make_context(
+        site_url="https://example.org/proofs/",
+        description="A trustworthy Lean proof explorer.",
+        project_url="https://github.com/example/project",
+        report_url="https://github.com/example/site/issues/new",
+    )
+
+    html = file_page(parse_source("theorem t : True := trivial\n", "A.lean"), ctx)
+
+    assert '<meta name="description" content="A trustworthy Lean proof explorer.">' in html
+    assert '<link rel="canonical" href="https://example.org/proofs/A.lean.html">' in html
+    assert '<a class="skip-link" href="#content">Skip to content</a>' in html
+    assert '<main id="content" tabindex="-1">' in html
+    assert '<meta property="og:title"' not in html and '<meta name="twitter:card"' not in html
+    assert ">Project source</a>" not in html and ">Report a site issue</a>" not in html
+
+    feature = search_page(ctx)
+    assert '<meta property="og:title" content="Search — Test">' in feature
+    assert '<meta name="twitter:card" content="summary">' in feature
+    assert ">Project source</a>" in feature and ">Report a site issue</a>" in feature
+
+
+def test_an_extension_can_promote_an_important_file_to_full_share_metadata(make_context):
+    class Promoter(Extension):
+        def promote_file_page(self, lean_file):
+            return True
+
+    ctx = make_context(
+        site_url="https://example.org/proofs/",
+        project_url="https://github.com/example/project",
+        extensions=((Promoter(), None),),
+    )
+
+    html = file_page(parse_source("theorem t : True := trivial\n", "A.lean"), ctx)
+
+    assert '<meta property="og:title" content="A.lean — Test">' in html
+    assert '<meta name="twitter:card" content="summary">' in html
+    assert ">Project source</a>" in html
 
 
 def test_declaration_rows_keep_text_and_anchors_with_thirty_fewer_bytes_of_markup():

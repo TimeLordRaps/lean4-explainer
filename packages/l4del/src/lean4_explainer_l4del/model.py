@@ -14,6 +14,7 @@ class Note:
     prereqs: tuple[str, ...]
     see: tuple[str, ...]
     terms: tuple[tuple[str, str], ...]
+    acronyms: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)

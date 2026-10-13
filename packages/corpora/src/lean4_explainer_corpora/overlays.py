@@ -7,6 +7,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from lean4_explainer.errors import ExplainerError
 
@@ -21,6 +22,10 @@ PROVENANCE = frozenset(
     }
 )
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
+DEFAULT_CREDIT = (
+    "The upstream authors and contributors retain credit for the project and mathematics. "
+    "lean4-explainer only renders their pinned source and adds the separately disclosed explanation layer."
+)
 
 
 @dataclass(frozen=True)
@@ -28,6 +33,8 @@ class HostedOverlay:
     path: Path
     provenance: str
     reviewed_by: str = ""
+    sources: tuple[tuple[str, str], ...] = ()
+    credit: str = DEFAULT_CREDIT
 
     @property
     def disclosure(self) -> str:
@@ -94,5 +101,28 @@ def load_overlay_manifest(path: Path, corpora: list[Corpus]) -> dict[str, Hosted
             raise ExplainerError(f"{where}: reviewed_by is required for {provenance}")
         if provenance == "ai-generated-unreviewed" and reviewed_by.strip():
             raise ExplainerError(f"{where}: an unreviewed overlay cannot name a reviewer")
-        selected[corpus.name] = HostedOverlay(overlay, provenance, reviewed_by.strip())
+        source_rows = entry.get("sources")
+        if not isinstance(source_rows, list) or not source_rows:
+            raise ExplainerError(f"{where}: sources must be a non-empty list of stable reference links")
+        sources: list[tuple[str, str]] = []
+        for index, row in enumerate(source_rows, start=1):
+            if not isinstance(row, dict) or not isinstance(row.get("label"), str) or not row["label"].strip():
+                raise ExplainerError(f"{where}: sources[{index}] needs a non-empty label")
+            url = row.get("url")
+            parsed = urlsplit(url) if isinstance(url, str) else None
+            if not parsed or parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
+                raise ExplainerError(f"{where}: sources[{index}] must be an HTTPS URL without credentials")
+            if url in {found for _, found in sources}:
+                raise ExplainerError(f"{where}: source URL repeated: {url}")
+            sources.append((row["label"].strip(), url))
+        credit = entry.get("credit", "")
+        if not isinstance(credit, str):
+            raise ExplainerError(f"{where}: credit must be a string")
+        selected[corpus.name] = HostedOverlay(
+            overlay,
+            provenance,
+            reviewed_by.strip(),
+            tuple(sources),
+            credit.strip() or DEFAULT_CREDIT,
+        )
     return selected

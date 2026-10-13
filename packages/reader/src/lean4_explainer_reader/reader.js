@@ -1386,6 +1386,20 @@
         const trace = li.querySelector("details.trace");
         if (trace && !eager) trace.addEventListener("toggle", fill);
       });
+      if (document.querySelector("details.reading")) {
+        const controls = document.createElement("span");
+        controls.className = "reader-controls";
+        [["Expand all readings", true], ["Collapse all readings", false]].forEach(([label, open]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = label;
+          button.addEventListener("click", () => {
+            document.querySelectorAll("details.reading").forEach((reading) => { reading.open = open; });
+          });
+          controls.appendChild(button);
+        });
+        note.appendChild(controls);
+      }
       status(eager ? "" : "Open any “Reading” to see it.");
     }).catch((e) => status("Could not load the source (" + e.message + "). The source links still work."));
   }

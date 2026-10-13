@@ -15,7 +15,8 @@ Hooks run in this order for a build:
 3. `analyze`: once per tree, with every file's summary and the name index. Returns an analysis object, which the
    later hooks receive. `review` then runs once all have analyzed, for issues that need another extension's
    analysis; `kernel_trust` is how an extension that runs Lean answers what the kernel says of a declaration.
-4. `declaration_title`, `declaration_blocks`, `file_blocks`, `scripts`, `pages`, `nav_links`, `css`, `status`: rendering.
+4. `declaration_title`, `declaration_blocks`, `file_preamble`, `file_blocks`, `scripts`, `pages`, `nav_links`,
+   `css`, `status`: rendering.
    `glossary`: sections of words for the glossary page, which the core writes.
 5. `summary`: lines printed after a build.
 6. `register_cli` / `run_cli`: extra subcommands.
@@ -155,9 +156,17 @@ class Extension:
         """HTML before and after the "also declared" block."""
         return "", ""
 
+    def file_preamble(self, lean_file: Any, ctx: Any, analysis: Any) -> str:
+        """HTML near the top of a file page, after its path heading and before its statistics."""
+        return ""
+
     def file_blocks(self, lean_file: Any, text: str, ctx: Any, analysis: Any) -> str:
         """HTML after a file page's declaration list. `text` is the file's source, empty when it is not at hand."""
         return ""
+
+    def promote_file_page(self, lean_file: Any) -> bool:
+        """Whether this file merits full share metadata instead of the compact large-corpus page shell."""
+        return False
 
     def scripts(self, options: Mapping[str, Any]) -> Sequence[str]:
         """Site-relative script paths (written through `pages`) that every page loads, deferred."""

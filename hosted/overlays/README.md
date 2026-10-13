@@ -8,6 +8,12 @@ The build fails if any binding drifts. `ai-generated-unreviewed` overlays are vi
 the landing page and beside every rendered annotation. Change that provenance only after an identified human has
 reviewed the mathematical explanation, and record that identity in `reviewed_by`.
 
+Every rendered overlay annotation links directly to the declaration in the immutable, full-commit GitHub source URL.
+The manifest also supplies at least two corpus-level primary references (normally pinned project documentation plus a
+paper, blueprint, catalogue, or textbook). Commit-pinned GitHub blobs are used instead of mutable branch links or an
+on-demand Wayback snapshot: the URL names the exact bytes the site built, while the manifest hash makes drift fail
+closed. These links establish traceability; they do **not** turn an AI-generated explanation into a human review.
+
 The large generated sections copy or condense only material already present in the pinned source: declaration doc
 comments, immediately leading source comments, and (for openai/math) formalization notes plus Comparator configs.
 They do not infer mathematics from names. Existing curated entries remain separate at the top of each file and win

@@ -27,6 +27,7 @@ def test_clean_annotation_has_no_issues():
         "-- L4DEL: intuition: Two items share a box.\n"
         "-- L4DEL: step: Count the boxes.\n"
         "-- L4DEL: term: box = a container\n"
+        "-- L4DEL: source: Pinned proof = https://example.org/proof/abc#L1\n"
         "theorem t : True := trivial\n"
     )
     assert issues(text) == []
@@ -56,6 +57,57 @@ def test_prereq_names_must_be_single_tokens():
 def test_repeated_name_is_error():
     assert issues("-- L4DEL: prereq: A.b, A.b\ntheorem t : True := trivial\n") == [
         "error: line 1: name 'A.b' repeated in prereq"
+    ]
+
+
+def test_sources_are_structured_repeatable_https_links():
+    text = (
+        "-- L4DEL: source: Formal statement = https://example.org/repo/blob/abc/A.lean#L2\n"
+        "-- L4DEL: source: Paper = https://doi.org/10.1000/example\n"
+        "theorem t : True := trivial\n"
+    )
+    notes = parse_source(text, "a.lean").declarations[0].ext["l4del"]
+    assert notes.sources == (
+        ("Formal statement", "https://example.org/repo/blob/abc/A.lean#L2"),
+        ("Paper", "https://doi.org/10.1000/example"),
+    )
+    assert issues(text) == []
+
+
+def test_source_rejects_mutable_or_malformed_links_and_duplicates():
+    assert issues("-- L4DEL: source: Paper = http://example.org/paper\ntheorem t : True := trivial\n") == [
+        "error: line 1: source URL must be an HTTPS URL without credentials"
+    ]
+    assert issues("-- L4DEL: source: https://example.org/paper\ntheorem t : True := trivial\n") == [
+        "error: line 1: source needs the form 'label = https://url'"
+    ]
+    repeated = (
+        "-- L4DEL: source: One = https://example.org/paper\n"
+        "-- L4DEL: source: Two = https://example.org/paper\n"
+        "theorem t : True := trivial\n"
+    )
+    assert issues(repeated) == ["error: line 2: source URL repeated: https://example.org/paper"]
+
+
+def test_acronym_and_linked_quote_are_structured():
+    text = (
+        "-- L4DEL: acronym: DEL = Domain Explanation Language\n"
+        "-- L4DEL: source: Original paper = https://example.org/paper\n"
+        "-- L4DEL: quote: Original paper = The exact source words.\n"
+        "theorem t : True := trivial\n"
+    )
+    notes = parse_source(text, "a.lean").declarations[0].ext["l4del"]
+    assert notes.acronyms == (("DEL", "Domain Explanation Language"),)
+    assert notes.quotes == (("Original paper", "The exact source words."),)
+    assert issues(text) == []
+
+
+def test_quote_must_name_a_source_and_acronym_names_are_explicit():
+    assert issues("-- L4DEL: quote: Missing = Words\ntheorem t : True := trivial\n") == [
+        "error: line 1: quote source label 'Missing' has no matching source directive"
+    ]
+    assert issues("-- L4DEL: acronym: Np = nondeterministic polynomial time\ntheorem t : True := trivial\n") == [
+        "error: line 1: acronym name must start with A-Z and contain only uppercase letters, digits, or hyphens"
     ]
 
 
@@ -118,7 +170,7 @@ def test_unannotated_declaration_state_and_valid_template():
     assert annotation_state(decl) == "unannotated"
     block = placeholder_block(decl, {})
     parsed = parse_source(block + "\ntheorem t : True := trivial\n", "a.lean").declarations[0]
-    assert [d.severity for d in notes_of(parsed).diagnostics] == ["warning"] * 4
+    assert [d.severity for d in notes_of(parsed).diagnostics] == ["warning"] * 7
     assert all("placeholder" in d.message for d in notes_of(parsed).diagnostics)
 
 

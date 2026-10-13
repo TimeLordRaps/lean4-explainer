@@ -141,7 +141,7 @@ def _find_page(ctx) -> str:
         '<script src="_assets/find-names.js"></script>',
         '<script src="_assets/find.js"></script>',
     ]
-    return page("Find", 0, body, ctx)
+    return page("Find", 0, body, ctx, canonical_path="find.html")
 
 
 def _names_script(ctx, limit: int) -> str:
@@ -156,7 +156,7 @@ def _changes_page(ctx, analysis: Analysis) -> str:
     body = ["<h1>Changes since the baseline</h1>"]
     if analysis.changes is None:
         body.append(f'<p class="warn">{escape(analysis.baseline_error or "No baseline was compared.")}</p>')
-        return page("Changes", 0, body, ctx)
+        return page("Changes", 0, body, ctx, canonical_path="changes.html")
     c = analysis.changes
     if c.level != "declaration":
         body.append(
@@ -181,4 +181,4 @@ def _changes_page(ctx, analysis: Analysis) -> str:
         body.append("</ul>")
     if not any(rows for _, rows in sections):
         body.append("<p>Nothing changed.</p>")
-    return page("Changes", 0, body, ctx)
+    return page("Changes", 0, body, ctx, canonical_path="changes.html")

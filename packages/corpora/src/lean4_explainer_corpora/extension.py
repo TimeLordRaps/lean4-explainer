@@ -44,6 +44,10 @@ class CorporaExtension(Extension):
         build.add_argument("--work", type=Path, default=Path(_WORK_DEFAULT), help="where checkouts are kept")
         build.add_argument("--jobs", type=int, default=_DEFAULT_JOBS, help="worker processes for indexing")
         build.add_argument(
+            "--site-url",
+            help="canonical public HTTPS URL for metadata, robots.txt and sitemaps (for example https://example.org/site/)",
+        )
+        build.add_argument(
             "--overlay-manifest",
             type=Path,
             help="explicit hosted-overlay manifest (content, corpus repository and commit are verified)",
@@ -116,6 +120,7 @@ def _showcase(args) -> int:
             link_out=[c for c in registry.installed().values() if c.name not in chosen],
             jobs=args.jobs,
             overlay_manifest=args.overlay_manifest,
+            site_url=args.site_url,
         )
     except (ExplainerError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
