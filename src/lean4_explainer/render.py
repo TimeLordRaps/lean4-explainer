@@ -610,16 +610,18 @@ def page(
         if ctx.site_url and canonical_path
         else ""
     )
-    meta = [f'<meta name="description" content="{escape(description, quote=True)}">']
-    if not compact:
-        meta.extend(
-            [
-                f'<meta property="og:title" content="{escape(full_title, quote=True)}">',
-                f'<meta property="og:description" content="{escape(description, quote=True)}">',
-                '<meta property="og:type" content="website">',
-                '<meta name="twitter:card" content="summary">',
-            ]
-        )
+    # A full corpus can have more than 100,000 ordinary file pages. Their title,
+    # canonical URL and visible first paragraph are page-specific; the generic
+    # site description and social-card metadata are not. Keep the richer block on
+    # navigation, feature and explicitly promoted pages instead of repeating it
+    # until the static artifact no longer fits its release budget.
+    meta = [] if compact else [
+        f'<meta name="description" content="{escape(description, quote=True)}">',
+        f'<meta property="og:title" content="{escape(full_title, quote=True)}">',
+        f'<meta property="og:description" content="{escape(description, quote=True)}">',
+        '<meta property="og:type" content="website">',
+        '<meta name="twitter:card" content="summary">',
+    ]
     if canonical:
         meta.append(f'<link rel="canonical" href="{escape(canonical, quote=True)}">')
         if not compact:
@@ -630,7 +632,7 @@ def page(
     if ctx.report_url:
         footer_links.append(f'<a href="{escape(ctx.report_url, quote=True)}">Report a site issue</a>')
     footer = f'<footer class="site-footer">{" · ".join(footer_links)}</footer>' if footer_links and not compact else ""
-    return "\n".join(
+    rendered = "\n".join(
         [
             "<!doctype html>",
             '<html lang="en">',
@@ -640,9 +642,9 @@ def page(
             f"<title>{escape(full_title)}</title>",
             *meta,
             f'<link rel="stylesheet" href="{up}{ASSET_DIR}/site.css">',
-            f'<link rel="icon" href="{up}{ASSET_DIR}/favicon.svg" type="image/svg+xml">',
+            *([] if compact else [f'<link rel="icon" href="{up}{ASSET_DIR}/favicon.svg" type="image/svg+xml">']),
             "</head>",
-            f'<body data-root="{up}">',
+            '<body>' if compact else f'<body data-root="{up}">',
             '<a class="skip-link" href="#content">Skip to content</a>',
             '<main id="content" tabindex="-1">',
             *header,
@@ -660,3 +662,7 @@ def page(
             "",
         ]
     )
+    # Text inside <pre> and other elements is untouched: only whitespace between
+    # adjacent tags is removed. At corpus scale those formatting newlines cost
+    # megabytes while carrying no rendered or accessibility semantics.
+    return re.sub(r">\n+(?=<)", ">", rendered) if compact else rendered

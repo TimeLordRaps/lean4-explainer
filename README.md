@@ -75,6 +75,9 @@ pip install -e packages/corpora -e packages/corpus-flt
 lean4-explainer showcase --out site
 ```
 
+The hosted showcase is Lean-checked on a local machine and then published as a static `gh-pages` tree; GitHub Actions
+does not compile the corpora. Its fail-closed release procedure is in [docs/RELEASING.md](docs/RELEASING.md).
+
 <a id="l4del-write-your-own-explanations"></a>
 
 ## Write your own explanations with the Lean4 Domain Explanation Language (L4DEL)

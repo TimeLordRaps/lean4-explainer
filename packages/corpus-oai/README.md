@@ -15,7 +15,7 @@ This package holds the pinned description of the project. The sources are fetche
 
 It also carries implication sidecars kept in lean4-explainer, never in the upstream sources, and not written by the
 upstream authors. L4DEL explanations are deliberately excluded from this package and live under
-`hosted/overlays/` for explicit use by the Pages workflow.
+`hosted/overlays/` for explicit use by the local hosted-release build.
 
 - `implications.toml`: curated implication edges, each a claim with its contract: what it starts from and reaches,
   the exact hypotheses and conclusion, the commit it was read at, and its status (used when

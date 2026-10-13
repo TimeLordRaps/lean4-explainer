@@ -105,6 +105,7 @@ def build_showcase(
     """Fetch every corpus first, so a failed download stops the run before anything is published."""
     public_url = _site_url(site_url)
     overlays = load_overlay_manifest(overlay_manifest, corpora) if overlay_manifest else {}
+    lean_active = any(ext.name == "lean" for ext in extensions())
     checkouts = [(corpus, fetch(corpus, work_dir, base_url=base_url)) for corpus in corpora]
     out_dir.mkdir(parents=True, exist_ok=True)
     items = []
@@ -139,6 +140,10 @@ def build_showcase(
                     # a tree too large to publish twice: its readings load the pinned source instead of carrying it
                     + [("reader_source_url", f"{RAW}/{corpus.repo}/{{ref}}/{prefix}{{path}}")]
                     * (corpus.source_links == "file")
+                    # UNKNOWN files remain explicit on the Trust page. Repeating the same UNKNOWN badge next to
+                    # every declaration would crowd actual checked evidence out of the hosted byte budget.
+                    + [("lean_unknown_badges", False)] * lean_active
+                    + [("lean_file_limit", corpus.lean_file_limit)] * bool(lean_active and corpus.lean_file_limit)
                     + list(corpus.options)
                 )
             ),
@@ -220,6 +225,7 @@ def _corpus_actions(items: list[ShowcaseItem], out_dir: Path) -> dict[str, list[
             ("Glossary", "glossary.html"),
             ("Learn", "learning-path.html"),
             ("Map", "map.html"),
+            ("Trust", "trust.html"),
         ]
         found[name] = [(label, f"{name}/{rel}") for label, rel in choices if (root / rel).is_file()]
     return found
@@ -376,8 +382,7 @@ def _landing(
                 else "Lean4 Domain Explanation Language (L4DEL) guide"
             )
             + f' or <a href="{SITE_REPOSITORY}#l4del-write-your-own-explanations">the README</a>.</p>',
-            '<p class="muted">Built from the source text only. Lean was not run, so axiom and trust checks are UNKNOWN '
-            "and <code>sorry</code> detection is textual.</p>",
+            _verification_notice(items),
             audit,
             start,
             '<h2 id="corpora">All corpora</h2>',
@@ -390,6 +395,26 @@ def _landing(
             "</html>",
             "",
         ]
+    )
+
+
+def _verification_notice(items: list[ShowcaseItem]) -> str:
+    lean_lines = [
+        line
+        for item in items
+        for line in item.summary.extension_lines
+        if line.startswith("lean ") or line.startswith("lean(")
+    ]
+    if any("Lean not found" not in line for line in lean_lines):
+        return (
+            '<p class="muted">This release includes Lean-backed trust results produced locally. '
+            "A cached result is reused only for matching source, declarations, Lean toolchain, probe, and dependency pins. "
+            "Each corpus's <strong>Trust</strong> page identifies checked declarations and every file that remained UNKNOWN. "
+            "The corpus-card <code>sorry</code> count is still a separate textual source scan.</p>"
+        )
+    return (
+        '<p class="muted">Built from the source text only. Lean was not run, so axiom and trust checks are UNKNOWN '
+        "and <code>sorry</code> detection is textual.</p>"
     )
 
 

@@ -15,6 +15,11 @@ from pathlib import Path, PurePosixPath
 from urllib.parse import quote, unquote, urljoin, urlsplit
 from xml.etree import ElementTree
 
+if __package__:
+    from .finalize_local_site import collect_trust
+else:  # `python scripts/check_static_site.py ...`
+    from finalize_local_site import collect_trust
+
 
 class Document(HTMLParser):
     def __init__(self) -> None:
@@ -79,7 +84,7 @@ def _sample_pages(site: Path) -> list[Path]:
     pages = [site / "index.html", site / "404.html"]
     for corpus in sorted(path for path in site.iterdir() if path.is_dir() and (path / "index.html").is_file()):
         pages.append(corpus / "index.html")
-        for name in ("search.html", "glossary.html", "learning-path.html", "map.html", "annotate.html"):
+        for name in ("search.html", "glossary.html", "learning-path.html", "map.html", "annotate.html", "trust.html"):
             if (corpus / name).is_file():
                 pages.append(corpus / name)
     featured = site / "flt" / "FLT" / "Proof.lean.html"
@@ -96,7 +101,7 @@ def check_site(site: Path, site_url: str) -> list[str]:
         return ["site URL must be HTTPS without a query or fragment"]
     site_url = site_url.rstrip("/") + "/"
     base_path = parsed_url.path.rstrip("/") + "/"
-    required = ("index.html", "404.html", "robots.txt", "sitemap.xml", "_assets/favicon.svg")
+    required = ("index.html", "404.html", "robots.txt", "sitemap.xml", "_assets/favicon.svg", "build-info.json")
     for rel in required:
         if not (site / rel).is_file():
             errors.append(f"missing {rel}")
@@ -131,8 +136,28 @@ def check_site(site: Path, site_url: str) -> list[str]:
         errors.append("index.html: explanation language is not introduced by its full name")
     if "Report a site issue" not in landing_text:
         errors.append("index.html: missing feedback route")
+    if "Lean-backed trust results produced locally" not in landing_text:
+        errors.append("index.html: missing local Lean verification disclosure")
+    if "Built from the source text only" in landing_text or "Lean was not run" in landing_text:
+        errors.append("index.html: source-only release cannot be published as the verified showcase")
     if landing.meta.get(("link", "canonical")) != site_url:
         errors.append("index.html: canonical URL does not match --site-url")
+
+    try:
+        actual_trust = collect_trust(site)
+    except ValueError as exc:
+        errors.append(str(exc))
+        actual_trust = None
+    try:
+        build_info = json.loads((site / "build-info.json").read_text(encoding="utf-8"))
+        if build_info.get("format") != 1 or build_info.get("build_mode") != "local-lean":
+            errors.append("build-info.json: release was not finalized as a local Lean build")
+        if not re.fullmatch(r"[0-9a-f]{40}", str(build_info.get("repository_sha", ""))):
+            errors.append("build-info.json: invalid repository SHA")
+        if actual_trust is not None and build_info.get("trust") != actual_trust:
+            errors.append("build-info.json: trust totals do not match the corpus records")
+    except (json.JSONDecodeError, OSError) as exc:
+        errors.append(f"build-info.json: cannot parse: {exc}")
     if "annotation-audit.json" in landing.hrefs:
         audit_path = site / "annotation-audit.json"
         if not audit_path.is_file():

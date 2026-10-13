@@ -120,8 +120,12 @@ def test_source_that_contains_a_closing_script_tag_cannot_end_the_block(tmp_path
 
 def test_a_tree_too_big_to_publish_twice_points_at_a_pinned_raw_url(tmp_path):
     template = "https://raw.githubusercontent.com/o/r/{ref}/lean/{path}"
-    page, _ = _build(tmp_path, options=[("reader_source_url", template)])
-    assert 'data-src="https://raw.githubusercontent.com/o/r/abc123/lean/Demo/Basic.lean"' in page
+    page, out = _build(tmp_path, options=[("reader_source_url", template)])
+    assert '<div id="lean-source" hidden></div>' in page
+    assert "data-src" not in page
+    reader = (out / "_assets" / "reader.js").read_text(encoding="utf-8")
+    assert 'const SOURCE_URL_TEMPLATE = "https://raw.githubusercontent.com/o/r/abc123/lean/{path}";' in reader
+    assert 'document.querySelector(".path-title")' in reader
     assert 'type="application/json"' not in page
     assert "pinned commit on GitHub" in READER_JS
 

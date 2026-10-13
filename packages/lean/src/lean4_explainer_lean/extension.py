@@ -8,6 +8,7 @@ PATH, or where a file does not elaborate, the badge says trust is unknown; nothi
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import threading
 from collections.abc import Mapping, Sequence
@@ -52,13 +53,22 @@ class Analysis:
     max_steps: int
     ran: int = field(default=0, repr=False, compare=False)  # files elaborated this run
     reused: int = field(default=0, repr=False, compare=False)  # files answered from the cache
+    unreported_declarations: int = 0  # declarations in failed, unavailable, or deliberately unselected files
 
 
 class LeanExtension(Extension):
     name = "lean"
     version = __version__
     runs_lean = True
-    config_keys = {"lean_timeout": int, "lean_jobs": int, "lean_steps": int, "lean_project": str, "lean_cache": str}
+    config_keys = {
+        "lean_timeout": int,
+        "lean_jobs": int,
+        "lean_steps": int,
+        "lean_project": str,
+        "lean_cache": str,
+        "lean_unknown_badges": bool,
+        "lean_file_limit": int,
+    }
 
     # -- indexing: remember (name, line) of each named declaration, so the Lean run can ask about them --
     def parse(self, view: SourceView) -> ParseResult | None:
@@ -77,7 +87,9 @@ class LeanExtension(Extension):
         tc = runner.find_toolchain(root, str(options.get("lean_project", "")))
         if tc is None:
             reason = "Lean (the `lean` command) was not found on the PATH, so no file was elaborated"
-            return Analysis({rel: F.FileFacts("unavailable", reason) for rel in summaries}, "", max_steps)
+            unknown = sum(len(rows or ()) for rows in summaries.values())
+            return Analysis({rel: F.FileFacts("unavailable", reason) for rel in summaries}, "", max_steps,
+                            unreported_declarations=unknown)
         cache = runner.cache_dir(str(options.get("lean_cache", "")))
         timeout = int(options.get("lean_timeout", _DEFAULT_TIMEOUT))
         jobs = max(1, min(int(options.get("lean_jobs", min(_MAX_JOBS, os.cpu_count() or 1))), 16))
@@ -89,39 +101,63 @@ class LeanExtension(Extension):
             declarations = list(summaries[rel] or ())
             path = root / rel
             names = [name for name, _ in declarations]
-            key = hashlib.sha256(
-                b"\0".join(
-                    [path.read_bytes(), tc.version.encode(), tc.probe_digest.encode(), "\n".join(names).encode(), pins]
-                )
-            ).hexdigest()
+            identity = [path.read_bytes(), tc.version.encode(), tc.probe_digest.encode(), "\n".join(names).encode(), pins]
+            # Failures are reusable only at the same bound: increasing the timeout must retry rather than preserve a
+            # resource-bound UNKNOWN forever. The legacy key keeps successful records made before timeout was keyed.
+            legacy_key = hashlib.sha256(b"\0".join(identity)).hexdigest()
+            key = hashlib.sha256(b"\0".join([*identity, f"timeout={timeout}".encode()])).hexdigest()
             cached = cache / f"{key}.json"
-            if cached.is_file():
+            legacy = cache / f"{legacy_key}.json"
+            for candidate in (cached, legacy):
+                if not candidate.is_file():
+                    continue
                 try:
-                    result = F.from_json(cached.read_text(encoding="utf-8"))
+                    result = F.from_json(candidate.read_text(encoding="utf-8"))
                 except (ValueError, KeyError, OSError):
-                    pass
-                else:
-                    with lock:
-                        counts["reused"] += 1
-                    return rel, result
+                    continue
+                if candidate == legacy and result.status != "ok":
+                    continue
+                if candidate != cached:
+                    _write_cached(cached, result)
+                with lock:
+                    counts["reused"] += 1
+                return rel, result
             code, out, err = runner.run_probe(tc, path, names, timeout)
             with lock:
                 counts["ran"] += 1
             if code != 0:
                 text = (err or out).strip()
-                return rel, F.FileFacts("failed", text.splitlines()[-1][:300] if text else f"lean exited with {code}")
-            result = F.parse_probe(out, declarations)
-            try:
-                cache.mkdir(parents=True, exist_ok=True)
-                cached.write_text(F.to_json(result), encoding="utf-8")
-            except OSError:
-                pass  # an unwritable cache only costs time
+                result = F.FileFacts("failed", text.splitlines()[-1][:300] if text else f"lean exited with {code}")
+            else:
+                result = F.parse_probe(out, declarations)
+            _write_cached(cached, result)
             return rel, result
 
+        declaration_files = [rel for rel in sorted(summaries) if summaries[rel]]
+        limit = max(0, int(options.get("lean_file_limit", 0)))
+        selected = declaration_files[:limit] if limit else declaration_files
+        selected_set = set(selected)
         with ThreadPoolExecutor(max_workers=jobs) as pool:
-            results = dict(pool.map(one, [rel for rel in sorted(summaries) if summaries[rel]]))
-        files = {rel: results.get(rel, F.FileFacts("ok")) for rel in sorted(summaries)}
-        return Analysis(files, tc.version, max_steps, counts["ran"], counts["reused"])
+            results = dict(pool.map(one, selected))
+        omitted_reason = (
+            f"outside this bounded local Lean pass (first {limit} declaration-bearing files selected)" if limit else ""
+        )
+        files = {
+            rel: (
+                results[rel]
+                if rel in selected_set
+                else F.FileFacts("unavailable", omitted_reason)
+                if summaries[rel]
+                else F.FileFacts("ok")
+            )
+            for rel in sorted(summaries)
+        }
+        unreported = sum(
+            len(summaries[rel] or ())
+            for rel, facts in files.items()
+            if facts.status != "ok"
+        )
+        return Analysis(files, tc.version, max_steps, counts["ran"], counts["reused"], unreported)
 
     def analysis_issues(self, analysis: Analysis) -> Sequence[str]:
         return [f"warning: lean could not elaborate {rel}: {f.reason}" for rel, f in analysis.files.items() if f.status == "failed"]
@@ -131,17 +167,22 @@ class LeanExtension(Extension):
         return CSS
 
     def declaration_blocks(self, decl, payload, rel, dirs, ctx, analysis: Analysis) -> tuple[str, str]:
+        show_unknown = bool(dict(ctx.options).get("lean_unknown_badges", True))
         file_facts = analysis.files.get(rel)
         if file_facts is None:
             return "", ""
         if file_facts.status != "ok":
-            return _badge("unknown", f"trust unknown: {file_facts.reason}", dirs), ""
+            return (_badge("unknown", f"trust unknown: {file_facts.reason}", dirs), "") if show_unknown else ("", "")
         found = file_facts.find(decl.name, decl.line)
         if found is None:
-            return _badge("unknown", "trust unknown: not checked (anonymous declaration)", dirs), ""
+            return (_badge("unknown", "trust unknown: not checked (anonymous declaration)", dirs), "") if show_unknown else ("", "")
         kind, label = F.classify(found.axioms)
         if file_facts.errors:
             label += f" (Lean reported {len(file_facts.errors)} error(s) in this file)"
+            if kind in ("none", "standard"):
+                kind = "unknown"
+        if kind == "unknown" and not show_unknown:
+            return "", ""
         return _badge(kind, label, dirs) + _uses(found, ctx, dirs), _trace(found, analysis.max_steps, rel, ctx)
 
     def kernel_trust(self, analysis: Analysis, name: str, rel: str, line: int) -> tuple[str, str] | None:
@@ -163,7 +204,10 @@ class LeanExtension(Extension):
         return [("Trust", f"{up}trust.html")]
 
     def pages(self, ctx, analysis: Analysis) -> Mapping[str, str]:
-        return {"trust.html": _trust_page(ctx, analysis)}
+        return {
+            "trust.html": _trust_page(ctx, analysis),
+            "trust.json": json.dumps(_trust_record(analysis), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
+        }
 
     def status(self, analysis: Analysis) -> str:
         if not analysis.toolchain:
@@ -175,6 +219,14 @@ class LeanExtension(Extension):
             return ("lean: Lean not found; no trust information.",)
         text = ", ".join(f"{n} {k}" for k, n in _tally(analysis).items() if n)
         return (f"lean ({analysis.toolchain}): {text}; {analysis.ran} files elaborated, {analysis.reused} from cache.",)
+
+
+def _write_cached(path: Path, result: F.FileFacts) -> None:
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(F.to_json(result), encoding="utf-8")
+    except OSError:
+        pass  # an unwritable cache only costs time
 
 
 def _manifest(project: Path | None) -> bytes:
@@ -257,13 +309,50 @@ def _tally(analysis: Analysis) -> dict[str, int]:
     for file_facts in analysis.files.values():
         if file_facts.status == "ok":
             for found in file_facts.decls:
-                counts[F.classify(found.axioms)[0]] += 1
+                kind = F.classify(found.axioms)[0]
+                # Errors can cause Lean to synthesize missing proof terms. Negative findings remain useful, but an
+                # otherwise clean-looking theorem in that file is not a positive kernel check.
+                if file_facts.errors and kind in ("none", "standard"):
+                    kind = "unknown"
+                counts[kind] += 1
+    counts["unknown"] += analysis.unreported_declarations
     return {
         "no axioms": counts["none"],
         "standard axioms": counts["standard"],
         "sorry": counts["sorry"],
         "extra axioms": counts["extra"],
         "unknown": counts["unknown"],
+    }
+
+
+def _trust_record(analysis: Analysis) -> dict[str, object]:
+    """Machine-readable release evidence, with no workstation paths or source text.
+
+    The static site release gate consumes this record after a local build.  It is
+    deliberately a summary: the declaration-level evidence remains in the badges
+    and Trust page generated from the same ``Analysis`` object.
+    """
+    file_counts = {"ok": 0, "failed": 0, "unavailable": 0}
+    declarations = analysis.unreported_declarations
+    for facts in analysis.files.values():
+        file_counts[facts.status if facts.status in file_counts else "failed"] += 1
+        declarations += len(facts.decls)
+    tally = _tally(analysis)
+    kernel_checked = tally["no axioms"] + tally["standard axioms"]
+    classified = kernel_checked + tally["sorry"] + tally["extra axioms"]
+    return {
+        "format": 1,
+        "provenance": "local-lean-run" if analysis.toolchain else "unavailable",
+        "toolchain": analysis.toolchain,
+        "probe_sha256_16": runner.probe_digest(),
+        "files": file_counts,
+        "declarations": {
+            "total": declarations,
+            "kernel_checked": kernel_checked,
+            "classified": classified,
+            **tally,
+        },
+        "execution": {"elaborated_now": analysis.ran, "reused_content_bound_cache": analysis.reused},
     }
 
 
@@ -282,6 +371,13 @@ def _trust_page(ctx, analysis: Analysis) -> str:
     if failed:
         body.append('<h2>Files Lean could not elaborate</h2><ul class="list">')
         body.extend(f"<li><code>{escape(rel)}</code>: {escape(f.reason)}</li>" for rel, f in failed)
+        body.append("</ul>")
+    unavailable = [(rel, f) for rel, f in analysis.files.items() if f.status == "unavailable"]
+    if unavailable:
+        body.append(f'<h2>Files outside this Lean pass ({len(unavailable)})</h2><ul class="list">')
+        body.extend(f"<li><code>{escape(rel)}</code>: {escape(f.reason)}</li>" for rel, f in unavailable[:_TRUST_ROWS])
+        if len(unavailable) > _TRUST_ROWS:
+            body.append(f'<li class="muted">… and {len(unavailable) - _TRUST_ROWS} more</li>')
         body.append("</ul>")
     erroneous = [(rel, f) for rel, f in analysis.files.items() if f.status == "ok" and f.errors]
     if erroneous:
@@ -302,7 +398,10 @@ def _trust_page(ctx, analysis: Analysis) -> str:
             continue
         body.append(f'<h2>{heading} ({len(rows)})</h2><ol class="list">')
         for rel, d in rows[:_TRUST_ROWS]:
-            where = ctx.locations.get(d.name, (rel + ".html", d.line))[0]
+            # ``href`` adds the rendered ``.html`` suffix. Ambiguous names are
+            # deliberately absent from ``ctx.locations``, so their fallback must
+            # remain the Lean-relative source path rather than an output filename.
+            where = ctx.locations.get(d.name, (rel, d.line))[0]
             link = escape(href([], where, f"#L{d.line}"), quote=True)
             note = "" if wanted == "sorry" else f' <span class="muted">{escape(F.classify(d.axioms)[1])}</span>'
             body.append(f'<li><a href="{link}"><code>{escape(d.name)}</code></a> <span class="ln">{escape(rel)}</span>{note}</li>')
