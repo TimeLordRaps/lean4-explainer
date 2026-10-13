@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Sobolev/PoissonComparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Sobolev/PoissonComparison.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Sobolev</a> / <span>PoissonComparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Sobolev</a>/<span>PoissonComparison.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Sobolev/PoissonComparison.lean#L1">source</a></p><div class="doc"><h3>Comparison for the constant-Laplacian Dirichlet replacement</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.RegularPointCoordinates.constant_laplacian_replacement_le</code> <small>line 21</small><div class="doc"><p>A distributional upper Laplacian bound on the boundary datum makes
+its constant-Laplacian replacement lie below it. This is the comparison
+used for the squared-distance datum in the Poisson pinching argument.</p></div><pre>theorem constant_laplacian_replacement_le (Ω : Set X) (hΩ : MeasurableSet Ω)
+    (hfin : μ Ω ≠ ∞) {P : ℝ} (hP : 0 ≤ P)
+    (hbound : ∀ f : SobolevSpace.dirichlet μ hQ Ω,
+      ‖SobolevSpace.toLp μ hQ f.val‖ ^ 2 ≤ P * energyForm μ hQ f.val f.val)
+    (c : ℝ) (u v : SobolevSpace μ hQ)
+    (hboundary : v - u ∈ SobolevSpace.dirichlet μ hQ Ω)
+    (hsolve : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      energyForm μ hQ v φ.val = -c * ∫ x in Ω, SobolevSpace.toLp μ hQ φ.val x ∂μ)
+    (hcomparison : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x) →
+      -energyForm μ hQ u φ.val ≤ c * ∫ x in Ω, SobolevSpace.toLp μ hQ φ.val x ∂μ) :
+    ∀ᵐ x ∂μ, SobolevSpace.toLp μ hQ v x ≤ SobolevSpace.toLp μ hQ u x := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a></p></li><li id=L62><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_constant_laplacian_replacement_le</code> <small>line 62</small><div class="doc"><p>Existence and the comparison conclusion are obtained together from
+coercivity and the actual distributional Laplacian inequality.</p></div><pre>theorem exists_constant_laplacian_replacement_le
+    (Ω : Set X) (hΩ : MeasurableSet Ω) (hfin : μ Ω ≠ ∞)
+    {P : ℝ} (hP : 0 ≤ P)
+    (hbound : ∀ f : SobolevSpace.dirichlet μ hQ Ω,
+      ‖SobolevSpace.toLp μ hQ f.val‖ ^ 2 ≤ P * energyForm μ hQ f.val f.val)
+    (c : ℝ) (u : SobolevSpace μ hQ)
+    (hcomparison : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x) →
+      -energyForm μ hQ u φ.val ≤ c * ∫ x in Ω, SobolevSpace.toLp μ hQ φ.val x ∂μ) :
+    ∃ v : SobolevSpace μ hQ, v - u ∈ SobolevSpace.dirichlet μ hQ Ω ∧
+      (∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+        energyForm μ hQ v φ.val = -c * ∫ x in Ω, SobolevSpace.toLp μ hQ φ.val x ∂μ) ∧
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Gaussian/GaussianGGBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Gaussian/GaussianGGBounds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Gaussian</a> / <span>GaussianGGBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Gaussian</a>/<span>GaussianGGBounds.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Gaussian/GaussianGGBounds.lean#L1">source</a></p><div class="doc"><p>Gaussian GG estimates retaining the spectral diagonal error.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>lemma</b> <code>OAI.InvariantIsing.randomReplicaAverage_const_mul</code> <small>line 21</small></li><li id=L29><b>lemma</b> <code>OAI.InvariantIsing.randomReplicaAverage_add_bounded</code> <small>line 29</small></li><li id=L50><b>theorem</b> <code>OAI.InvariantIsing.randomReplicaEnergy_full_identity</code> <small>line 50</small><div class="doc"><p>Gaussian integration by parts without imposing a constant diagonal.</p></div><pre>theorem randomReplicaEnergy_full_identity (hν : Measurable ν)
+    (A : X → ℕ →₀ ℝ) {B : ℝ} (hA : ∀ x, (A x).sum (fun _ c =&gt; c ^ 2) ≤ B)
+    (t : ℝ) {r : ℕ} (D : (Fin (r + 1) → X) → ℝ)
+    {c : ℝ} (hc : 0 ≤ c) (hD : ∀ σ, |D σ| ≤ c) :
+    randomReplicaEnergy P ν A t D = t *
+      (randomReplicaAverage P ν A t (fun σ =&gt; D σ *
+        (∑ i : Fin (r + 1), cylinderCross (A (σ 0)) (A (σ i)))) -
+      (r + 1 : ℕ) * randomReplicaAverage P ν A t
+        (fun τ : Fin (r + 1 + 1) → X =&gt; D (Fin.tail τ) *
+          cylinderCross (A ((Fin.tail τ) 0)) (A (τ 0)))) := by
+…</pre></li><li id=L88><b>theorem</b> <code>OAI.InvariantIsing.countable_gaussian_gg_bound_variable_diagonal</code> <small>line 88</small><div class="doc"><p>The finite GG error splits into an energy fluctuation and an explicit
+covariance of the self-overlap. Spectral self-overlaps are not constant before
+adding their separate deterministic perturbations.</p></div><pre>theorem countable_gaussian_gg_bound_variable_diagonal (hν : Measurable ν)
+    (A : X → ℕ →₀ ℝ) {B : ℝ} (hA : ∀ x, (A x).sum (fun _ c =&gt; c ^ 2) ≤ B)
+    (t b : ℝ) {r : ℕ} (D : (Fin (r + 1) → X) → ℝ)
+    {c : ℝ} (hc : 0 ≤ c) (hD : ∀ σ, |D σ| ≤ c)
+    (hE : Integrable (fun z : Ω × (ℕ → ℝ) =&gt; ∫ x,
+      |cylinderField (A x) z.2 - b|
+        ∂(ν z.1).tilted (fun x =&gt; t * cylinderField (A x) z.2))
+      (P.prod gaussianCoordinates)) :
+    |t| * |(r + 1 : ℕ) * randomReplicaAverage P ν A t
+        (fun τ : Fin (r + 1 + 1) → X =&gt; D (Fin.tail τ) *
+          cylinderCross (A ((Fin.tail τ) 0)) (A (τ 0))) -
+      randomReplicaAverage P ν A t D * randomReplicaAverage P ν A t
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

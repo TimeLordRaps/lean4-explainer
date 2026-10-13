@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/GeometricCollision.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/GeometricCollision.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>GeometricCollision.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>GeometricCollision.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/GeometricCollision.lean#L1">source</a></p><div class="doc"><h3>Collision for geometric section families and necessary sections</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.Nagata.W20.source_collision_of_every_configuration</code> <small>line 26</small><div class="doc"><p>The manuscript collision conclusion for the literal source section space
+and actual jet map. Finite basis and all analytic coefficient premises have been
+discharged. Only the universal necessary-W geometric input remains.</p></div><pre>theorem source_collision_of_every_configuration
+    {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (marks : Fin 9 → ℝ) (a delta x0 : ℝ) (d : ℤ) (m q : ℕ)
+    (hs : (∑ i, marks i) = 9 * x0 - delta)
+    (hd : 3 * (m : ℤ) &lt; d)
+    (hfirst : ∀ j : ℤ, 0 ≤ j → j ≤ (m : ℤ) →
+      firstLower d (m : ℤ) j a delta ∉ Set.range (Int.cast : ℤ → ℝ))
+    (hsecond : ∀ j : ℤ, (m : ℤ) &lt; j → j ≤ d / 3 → 0 &lt; d - 3 * j →
+      secondLower d j a delta ∉ Set.range (Int.cast : ℤ → ℝ))
+    {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (hEvery : ∀ p : Fin q → ℂ, Function.Injective p → (∀ i, p i ∈ U) →
+      ∃ F : genuineSourceSections hτ hτone marks a d m, F ≠ 0 ∧
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.Nagata.W20.genuineSourceJetMap_eq_mixed_derivative</code> <small>line 50</small><div class="doc"><p>The actual source jet rows are the manuscript's mixed derivatives in one
+fixed covering frame. Row first coordinate is b, second is ell.</p></div><pre>theorem genuineSourceJetMap_eq_mixed_derivative
+    {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (marks : Fin 9 → ℝ) (a x0 : ℝ) (d : ℤ) (m q : ℕ)
+    (F : genuineSourceSections hτ hτone marks a d m)
+    (row : Nagata.Workers.W30.JetIndex q m) :
+    genuineSourceJetMap hτ hτone marks a x0 d m q F row =
+      iteratedDeriv row.2.val
+        (fun x =&gt; iteratedDeriv row.1.val
+          (fun y =&gt; localScalar F (tauPower τ x0) x y) 0) 0 := by
+…</pre><p class="refs">Mentions: <a href="PolynomialJets.lean.html#L25">OAI.Nagata.Workers.W30.JetIndex</a>, <a href="SectionKernels.lean.html#L25">OAI.Nagata.W20.localScalar</a></p></li><li id=L76><b>theorem</b> <code>OAI.Nagata.W20.source_necessary_W_of_cubic_geometry</code> <small>line 76</small><div class="doc"><p>Genuine universal-support specialization, transported to the exact Wτ used
+by the source basis and collision map, with all scalar identifications discharged.</p></div><pre>theorem source_necessary_W_of_cubic_geometry {q d m : ℕ} {τ : ℝ}
+    (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (hUniversal : Nagata.W13.UniversalSupport (9 + q) d (fun _ =&gt; m))
+    (marks : Fin 9 → ℝ) (a x0 : ℝ)
+    (hdisjoint : Pairwise (fun i j =&gt; ∀ k : ℤ,
+      ((τ ^ marks i : ℝ) : ℂ) ≠ ((τ ^ marks j : ℝ) : ℂ) * (τ : ℂ) ^ k))
+    (ξ : Fin q → ℂ)
+    (hpP : ∀ i, (Nagata.W22.rayMarkedSection hτ hτone marks).val
+      (tauPower τ x0 * Complex.exp (ξ i)) ≠ 0)
+    (C : MvPolynomial (Fin 3) ℂ) (hC : C.IsHomogeneous 3)
+    (X : Fin 3 → Nagata.W08.automorphicSections (τ : ℂ) 3
+      (tauPower τ (((∑ i, marks i) + a) / 3)))
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="ThetaLimits.lean.html#L203">OAI.Nagata.W22.rayMarkedSection</a>, <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L150><b>theorem</b> <code>OAI.Nagata.W20.source_markedPi_cover_eq</code> <small>line 150</small><div class="doc"><p>Equality of the actual source marked section with the actual marked product
+on the common exponential chart.</p></div><pre>theorem source_markedPi_cover_eq {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (marks : Fin 9 → ℝ) (x0 : ℝ) (x : ℂ) :
+    (Nagata.W22.rayMarkedSection hτ hτone marks).val
+      (tauPower τ x0 * Complex.exp x) =
+    Nagata.W06.TorusConfiguration.markedPi τ marks
+      (Nagata.Workers.W05.chartPoint τ x0 x : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L203">OAI.Nagata.W22.rayMarkedSection</a>, <a href="MarkedDisplacements.lean.html#L21">OAI.Nagata.W06.TorusConfiguration.markedPi</a>, <a href="TorusCharts.lean.html#L116">OAI.Nagata.Workers.W05.chartPoint</a></p></li><li id=L165><b>theorem</b> <code>OAI.Nagata.W20.source_marked_orbits_disjoint</code> <small>line 165</small><div class="doc"><p>The actual marked ray lifts occupy pairwise disjoint period orbits.</p></div><pre>theorem source_marked_orbits_disjoint {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (marks : Fin 9 → ℝ) (hinj : Function.Injective marks)
+    (hb : ∀ i, 0 &lt; marks i ∧ marks i &lt; 1 / 2) :
+    Pairwise (fun i j =&gt; ∀ k : ℤ,
+      ((τ ^ marks i : ℝ) : ℂ) ≠ ((τ ^ marks j : ℝ) : ℂ) * (τ : ℂ) ^ k) := by
+…</pre></li><li id=L190><b>theorem</b> <code>OAI.Nagata.W20.source_collision_of_universalSupport_and_cubic_geometry</code> <small>line 190</small><div class="doc"><p>Fixed-period source collision from genuine universal support and concrete
+cubic chart geometry. No finite basis, analytic section, Pi-nonvanishing, local
+multiplicity, or moving-sequence hypothesis remains.</p></div><pre>theorem source_collision_of_universalSupport_and_cubic_geometry
+    {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (marks : Fin 9 → ℝ) (hmarks : Function.Injective marks)
+    (hmbounds : ∀ i, 0 &lt; marks i ∧ marks i &lt; 1 / 2)
+    (a delta : ℝ) (d m q : ℕ)
+    (hs : (∑ i, marks i) = 9 * (1 / 2 : ℝ) - delta)
+    (hd : 3 * (m : ℤ) &lt; (d : ℤ))
+    (hfirst : ∀ j : ℤ, 0 ≤ j → j ≤ (m : ℤ) →
+      firstLower (d : ℤ) (m : ℤ) j a delta ∉ Set.range (Int.cast : ℤ → ℝ))
+    (hsecond : ∀ j : ℤ, (m : ℤ) &lt; j → j ≤ (d : ℤ) / 3 → 0 &lt; (d : ℤ) - 3 * j →
+      secondLower (d : ℤ) j a delta ∉ Set.range (Int.cast : ℤ → ℝ))
+    (hUniversal : Nagata.W13.UniversalSupport (9 + q) d (fun _ =&gt; m))
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("52", [["OAI.MUB6.Certificate.PairData.row52",10678,166],["OAI.Problem348.BodySignatures52.anchor64_col_ne_body_signature",16103,42],["OAI.Problem348.BodySignatures52.anchor64_row_ne_body_signature",16103,34],["OAI.Problem348.Construction.strictMono_anchorIndex52",16104,39]]);

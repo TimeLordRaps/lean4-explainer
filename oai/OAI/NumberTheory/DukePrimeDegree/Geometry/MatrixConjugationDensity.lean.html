@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Geometry/MatrixConjugationDensity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Geometry/MatrixConjugationDensity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Geometry</a> / <span>MatrixConjugationDensity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Geometry</a>/<span>MatrixConjugationDensity.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Geometry/MatrixConjugationDensity.lean#L1">source</a></p><div class="doc"><h3>Finite measures in the matrix conjugation representation</h3><p>This is the elementary recurrence part of the needed Borel-density
+argument. A finite measure invariant under a strict real contraction is
+concentrated at zero. Applied to matrix coefficients, split diagonal
+conjugation forces invariant finite matrix measures onto diagonal matrices.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.DukePrimeDegree.ae_zero_of_mul_map_eq</code> <small>line 28</small></li><li id=L52><b>def</b> <code>OAI.DukePrimeDegree.diagonalMatrixConjugation</code> <small>line 52</small><div class="doc"><p>Conjugation by the split real diagonal one-parameter subgroup.</p></div><pre>def diagonalMatrixConjugation {n : ℕ} (ell : Fin n → ℝ) (t : ℝ)
+    (M : Matrix (Fin n) (Fin n) ℝ) : Matrix (Fin n) (Fin n) ℝ :=
+…</pre></li><li id=L57><b>lemma</b> <code>OAI.DukePrimeDegree.diagonalMatrixConjugation_entry</code> <small>line 57</small></li><li id=L65><b>lemma</b> <code>OAI.DukePrimeDegree.continuous_diagonalMatrixConjugation</code> <small>line 65</small></li><li id=L76><b>theorem</b> <code>OAI.DukePrimeDegree.ae_matrix_entry_zero_of_split_invariance</code> <small>line 76</small><div class="doc"><p>Split diagonal invariance annihilates every nonzero weight.</p></div><pre>theorem ae_matrix_entry_zero_of_split_invariance {n : ℕ}
+    (μ : Measure (Matrix (Fin n) (Fin n) ℝ)) [IsFiniteMeasure μ]
+    (ell : Fin n → ℝ)
+    (hdiag : ∀ t : ℝ, μ.map (diagonalMatrixConjugation ell t) = μ)
+    (i j : Fin n) (hij : ell i ≠ ell j) : ∀ᵐ M ∂μ, M i j = 0 := by
+…</pre><p class="refs">Mentions: <a href="MatrixConjugationDensity.lean.html#L52">OAI.DukePrimeDegree.diagonalMatrixConjugation</a></p></li><li id=L105><b>theorem</b> <code>OAI.DukePrimeDegree.ae_diagonal_of_split_invariance</code> <small>line 105</small><div class="doc"><p>For a regular split diagonal subgroup, an invariant finite matrix
+measure is supported on the diagonal matrix space.</p></div><pre>theorem ae_diagonal_of_split_invariance {n : ℕ}
+    (μ : Measure (Matrix (Fin n) (Fin n) ℝ)) [IsFiniteMeasure μ]
+    (ell : Fin n → ℝ) (hell : Function.Injective ell)
+    (hdiag : ∀ t : ℝ, μ.map (diagonalMatrixConjugation ell t) = μ) :
+    ∀ᵐ M ∂μ, M = Matrix.diagonal (fun i =&gt; M i i) := by
+…</pre><p class="refs">Mentions: <a href="MatrixConjugationDensity.lean.html#L52">OAI.DukePrimeDegree.diagonalMatrixConjugation</a></p></li><li id=L127><b>def</b> <code>OAI.DukePrimeDegree.rootMatrixConjugation</code> <small>line 127</small><div class="doc"><p>Conjugation by a root unipotent matrix.</p></div><pre>def rootMatrixConjugation {n : ℕ} (i j : Fin n) (t : ℝ)
+    (M : Matrix (Fin n) (Fin n) ℝ) : Matrix (Fin n) (Fin n) ℝ :=
+…</pre></li><li id=L131><b>lemma</b> <code>OAI.DukePrimeDegree.continuous_rootMatrixConjugation</code> <small>line 131</small></li><li id=L138><b>theorem</b> <code>OAI.DukePrimeDegree.ae_diagonal_entries_eq_of_root_invariance</code> <small>line 138</small><div class="doc"><p>Once the matrix measure is diagonal, one invariant root forces the
+two corresponding diagonal entries to coincide.</p></div><pre>theorem ae_diagonal_entries_eq_of_root_invariance {n : ℕ}
+    (μ : Measure (Matrix (Fin n) (Fin n) ℝ))
+    (hD : ∀ᵐ M ∂μ, M = Matrix.diagonal (fun i =&gt; M i i))
+    (i j : Fin n) (hij : i ≠ j)
+    (hroot : μ.map (rootMatrixConjugation i j 1) = μ) :
+    ∀ᵐ M ∂μ, M i i = M j j := by
+…</pre><p class="refs">Mentions: <a href="MatrixConjugationDensity.lean.html#L127">OAI.DukePrimeDegree.rootMatrixConjugation</a></p></li><li id=L170><b>theorem</b> <code>OAI.DukePrimeDegree.ae_blockScalar_of_conjugation_invariance</code> <small>line 170</small><div class="doc"><p>Finite matrix measures invariant under split diagonals and the
+within-block root groups are concentrated on the block-scalar algebra.</p></div><pre>theorem ae_blockScalar_of_conjugation_invariance {n : ℕ}
+    (μ : Measure (Matrix (Fin n) (Fin n) ℝ)) [IsFiniteMeasure μ]
+    (ell : Fin n → ℝ) (hell : Function.Injective ell)
+    (hdiag : ∀ t : ℝ, μ.map (diagonalMatrixConjugation ell t) = μ)
+    (r : Setoid (Fin n))
+    (hroot : ∀ i j, i ≠ j → r i j → μ.map (rootMatrixConjugation i j 1) = μ) :
+    ∀ᵐ M ∂μ, M ∈ blockScalarAlgebra r := by
+…</pre><p class="refs">Mentions: <a href="MatrixConjugationDensity.lean.html#L52">OAI.DukePrimeDegree.diagonalMatrixConjugation</a>, <a href="MatrixConjugationDensity.lean.html#L127">OAI.DukePrimeDegree.rootMatrixConjugation</a>, <a href="../Dynamics/BlockDiagonalAlgebra.lean.html#L54">OAI.DukePrimeDegree.blockScalarAlgebra</a></p></li><li id=L195><b>theorem</b> <code>OAI.DukePrimeDegree.support_subset_blockScalar_of_conjugation_invariance</code> <small>line 195</small><div class="doc"><p>The same conclusion holds at every point of the measure's support.
+This is the form used by a continuous conjugation-orbit map.</p></div><pre>theorem support_subset_blockScalar_of_conjugation_invariance {n : ℕ}
+    (μ : Measure (Matrix (Fin n) (Fin n) ℝ)) [IsFiniteMeasure μ]
+    (ell : Fin n → ℝ) (hell : Function.Injective ell)
+    (hdiag : ∀ t : ℝ, μ.map (diagonalMatrixConjugation ell t) = μ)
+    (r : Setoid (Fin n))
+    (hroot : ∀ i j, i ≠ j → r i j → μ.map (rootMatrixConjugation i j 1) = μ) :
+    μ.support ⊆ (blockScalarAlgebra r : Set (Matrix (Fin n) (Fin n) ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="MatrixConjugationDensity.lean.html#L52">OAI.DukePrimeDegree.diagonalMatrixConjugation</a>, <a href="MatrixConjugationDensity.lean.html#L127">OAI.DukePrimeDegree.rootMatrixConjugation</a>, <a href="../Dynamics/BlockDiagonalAlgebra.lean.html#L54">OAI.DukePrimeDegree.blockScalarAlgebra</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

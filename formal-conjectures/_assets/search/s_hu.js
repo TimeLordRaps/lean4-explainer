@@ -1,0 +1,1 @@
+window.l4shard("hu", [["Erdos102.erdos_102.variants.hunter",151,146],["Erdos1023.erdos_1023.variants.hunter",155,75],["Erdos1037.erdos_1037.variants.cambie_chan_hunter",167,68],["Erdos30.erdos_30.variants.carter_hunter_obryant",420,111],["Green14.green_14_lower_bound_hunter",969,107],["Margulis.huang_shi_theorem_1_2",1112,97]]);

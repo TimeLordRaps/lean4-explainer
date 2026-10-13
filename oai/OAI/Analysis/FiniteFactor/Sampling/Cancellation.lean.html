@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/FiniteFactor/Sampling/Cancellation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/FiniteFactor/Sampling/Cancellation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">FiniteFactor</a> / <a href="index.html">Sampling</a> / <span>Cancellation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">FiniteFactor</a>/<a href="index.html">Sampling</a>/<span>Cancellation.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/FiniteFactor/Sampling/Cancellation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.FiniteFactor.sampling_average_square_expansion</code> <small>line 11</small><div class="doc"><p>Exact finite-average expansion, before bounding or discarding any term.</p></div><pre>theorem sampling_average_square_expansion {ι Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) (S : Finset ι) (f : ι → Ω → ℝ) (g : Ω → ℝ)
+    (hpair : ∀ n ∈ S, ∀ k ∈ S, Integrable (fun x =&gt; f n x*f k x) μ)
+    (hmix : ∀ n ∈ S, Integrable (fun x =&gt; f n x*g x) μ)
+    (hg : Integrable (fun x =&gt; g x^2) μ) :
+    (∫ x, ((∑ n ∈ S, f n x)/(S.card : ℝ)-g x)^2 ∂μ) =
+      (∑ n ∈ S, ∑ k ∈ S, ∫ x, f n x*f k x ∂μ)/(S.card : ℝ)^2 -
+      2*(∑ n ∈ S, ∫ x, f n x*g x ∂μ)/(S.card : ℝ)+(∫ x, g x^2 ∂μ) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.FiniteFactor.sampling_average_square_integrable</code> <small>line 43</small><div class="doc"><p>Integrability of the full error follows from the same finite expansion.</p></div><pre>theorem sampling_average_square_integrable {ι Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) (S : Finset ι) (f : ι → Ω → ℝ) (g : Ω → ℝ)
+    (hpair : ∀ n ∈ S, ∀ k ∈ S, Integrable (fun x =&gt; f n x*f k x) μ)
+    (hmix : ∀ n ∈ S, Integrable (fun x =&gt; f n x*g x) μ)
+    (hg : Integrable (fun x =&gt; g x^2) μ) :
+    Integrable (fun x =&gt; ((∑ n ∈ S, f n x)/(S.card : ℝ)-g x)^2) μ := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.FiniteFactor.sampling_finite_cancellation</code> <small>line 65</small><div class="doc"><p>The distinct-pair and mixed main terms cancel to -A/P. Since A is
+nonnegative, the surviving upper bound is the actual diagonal term plus 3ε.</p></div><pre>theorem sampling_finite_cancellation {ι : Type*} (S : Finset ι) (hS : S.Nonempty)
+    (B : ι → ι → ℝ) (M : ι → ℝ) (A ε : ℝ) (hA : 0 ≤ A) (hε : 0 ≤ ε)
+    (hpair : ∀ n ∈ S, ∀ k ∈ S, n ≠ k → |B n k-A| ≤ ε)
+    (hmix : ∀ n ∈ S, |M n-A| ≤ ε) :
+    (∑ n ∈ S, ∑ k ∈ S, B n k)/(S.card : ℝ)^2 -
+      2*(∑ n ∈ S, M n)/(S.card : ℝ)+A ≤
+      (∑ n ∈ S, B n n)/(S.card : ℝ)^2+3*ε := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

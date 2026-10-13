@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Implications — openai/math</title>
+<meta name="description" content="Explore openai/math: Lean declarations, pinned source, explanations, and dependencies.">
+<meta property="og:title" content="Implications — openai/math">
+<meta property="og:description" content="Explore openai/math: Lean declarations, pinned source, explanations, and dependencies.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/implications.html">
+<meta property="og:url" content="https://timelordraps.github.io/lean4-explainer/oai/implications.html">
+<link rel="stylesheet" href="_assets/site.css">
+<link rel="icon" href="_assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-root="">
+<a class="skip-link" href="#content">Skip to content</a>
+<main id="content" tabindex="-1">
+<header class="site-head">
+<nav class="top"><a href="../index.html">All corpora</a> | <a href="index.html">Index</a> | <a href="glossary.html">Glossary</a> | <a href="find.html">Find</a> | <a href="implications.html">Implications</a> | <a href="annotate.html">Explanation guide</a> | <a href="learning-path.html">Learning path</a> | <a href="trust.html">Trust</a> | <a href="search.html">Search</a></nav>
+</header>
+<h1>Implications</h1>
+<p>A dependency records which declarations a proof uses: the map and the “uses” lists show those, read from the code. An implication edge records what one result could establish about another, even when the released proof goes another way. It is a claim, so each one keeps its contract: the declarations it starts from and reaches, the exact hypotheses, the conclusion it derives, the commit the statements were read at, and how far it has been checked. The edges are curated beside the project, not written by its authors.</p>
+<p>Besides these curated edges, the discovery pipeline checked 100 implications in Lean (14 connections): <a href="implications/catalogue.html">the catalogue</a>. What it tried and did not establish, and the suggestions still without a Lean check: <a href="implications/notes.html">notes</a>.</p>
+<details><summary>The kinds of edge, and what each status means</summary><dl class="imp-legend">
+<dt>Strengthens</dt><dd>From the sources and the hypotheses, the conclusion follows, and the conclusion gives the target&#x27;s statement with more: an explicit constant, a weaker hypothesis, a wider range.</dd>
+<dt>Composes with</dt><dd>The sources together give the conclusion, and it needs each of them.</dd>
+<dt>Specializes to</dt><dd>The target&#x27;s statement is the source&#x27;s general statement with particular values or in a narrower setting; the hypotheses say which.</dd>
+<dt>Supports an executable construction</dt><dd>The sources justify a computable definition, the target, and the conclusion says what it computes.</dd>
+<dt>proposed</dt><dd>Proposed: someone suggested it. No argument is recorded, and nothing has checked it.</dd>
+<dt>argued</dt><dd>Argued: the argument is written out below. Lean has not checked it.</dd>
+<dt>proved</dt><dd>Proved in Lean: the bridge declaration states the hypotheses and the conclusion, and proves them.</dd>
+<dt>refuted</dt><dd>Refuted: the evidence below shows it does not hold as stated.</dd>
+<dt>proved, not checked here</dt><dd>The edge file says a bridge proves it, and no Lean check of it ran in this build or was recorded.</dd><dt>kernel-checked</dt><dd>Lean's kernel checked the bridge against the contract with no sorry and no extra axioms: either in this build, or in a recorded check this build compared with the contract, the bridge file, the commit and the corpus files it read. The card says which.</dd><dt>check is stale</dt><dd>A check was recorded, but of another contract, bridge file, commit or corpus file than this build has: it says nothing now.</dd><dt>stale</dt><dd>The edge was read at another commit than the one this site shows: the statements may have changed.</dd></dl></details>
+<h2 id="kind-strengthens">Strengthens (1)</h2><p class="muted">From the sources and the hypotheses, the conclusion follows, and the conclusion gives the target&#x27;s statement with more: an explicit constant, a weaker hypothesis, a wider range.</p>
+<article class="edge" id="seven-eighths-gives-an-explicit-real-zero-gap"><h3><a href="OAI/NumberTheory/DirichletL/Nonvanishing.lean.html#L19"><code>OAI.DirichletCharacter.LFunction_ne_zero_of_seven_eighths_lt_re</code></a> → <a href="OAI/NumberTheory/SiegelZeros/Conclusions/Theorem.lean.html#L11"><code>OAI.SiegelZeros.WeightedTorusJets.exists_absolute_real_zero_gap</code></a></h3><p><span class="imp imp-kernel-checked">kernel-checked (recorded)</span> Lean&#x27;s kernel checked seven_eighths_gap against this contract on 2026-10-10T22:56:22Z (Lean (version 4.34.1, x86_64-w64-windows-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release), Mathlib d13f23b723b8, corpus fd4aeeb2ee4f; axioms: propext, Classical.choice, Quot.sound). This build did not run Lean: it shows that record, after comparing the contract, the bridge file and the commit with it, and the corpus files it read.</p><dl><dt>Hypotheses</dt><dd><pre>(q : ℕ) [NeZero q] (hq : 3 ≤ q)</pre><pre>(χ : DirichletCharacter ℂ q)</pre><pre>(β : ℝ) (hβ : β &lt; 1)</pre><pre>(hzero : χ.LFunction (β : ℂ) = 0)</pre></dd><dt>Conclusion</dt><dd><pre>Real.log 3 / 8 ≤ (1 - β) * Real.log (q : ℝ)</pre></dd><dt>The exact contract, as Lean states it</dt><dd><pre>(∀ {q : ℕ} [inst : NeZero q] (χ : DirichletCharacter ℂ q) {s : ℂ},
+    7 / 8 &lt; s.re → ¬(χ = 1 ∧ s = 1) → DirichletCharacter.LFunction χ s ≠ 0) →
+  ∀ (q : ℕ) [inst : NeZero q],
+    3 ≤ q →
+      ∀ (χ : DirichletCharacter ℂ q),
+        ∀ β &lt; 1, DirichletCharacter.LFunction χ ↑β = 0 → Real.log 3 / 8 ≤ (1 - β) * Real.log ↑q</pre><span class="muted">Each source is a hypothesis: the bridge proves this, and the kernel checked that it does.</span></dd><dt>What it adds to the target</dt><dd>An explicit constant, c = log 3 / 8, where the target says only that some c &gt; 0 exists; and fewer hypotheses: the contract needs none of the target&#x27;s χ primitive, χ ≠ 1, χ real-valued or 0 &lt; β.</dd><dt>Argument (in words; Lean checked the bridge, not these words)</dt><dd>Suppose 7/8 &lt; β. Take s = β: its real part is β &gt; 7/8, and s ≠ 1 because β &lt; 1, so the pole exception ¬(χ = 1 ∧ s = 1) holds whatever χ is. The source theorem then gives χ.LFunction β ≠ 0, against hzero. So β ≤ 7/8, and 1 − β ≥ 1/8 &gt; 0. Since q ≥ 3, log q ≥ log 3 &gt; 0. Multiplying, (1 − β) · log q ≥ (1/8) · log q ≥ (log 3)/8. This is the target&#x27;s statement with c = (log 3)/8 ≈ 0.137 &gt; 0, and it uses none of the target&#x27;s hypotheses that χ is primitive, that χ ≠ 1, that χ is real-valued, or that 0 &lt; β. Argued by Claude (Opus 5.5), 2026-10-10; the bridge in bridges/SevenEighthsGap.lean is the proof Lean checked.</dd><dt>Bridge</dt><dd><a href="implications/bridges/SevenEighthsGap.lean.html#L20"><code>seven_eighths_gap</code></a> in <a href="implications/bridges/SevenEighthsGap.lean.html">bridges/SevenEighthsGap.lean</a></dd><dt>Relation to the target</dt><dd><a href="implications/bridges/SevenEighthsGap.lean.html#L39"><code>seven_eighths_gap_gives_absolute_gap</code></a> proves that the contract gives the target's statement. The contract concludes <code>Real.log 3 / 8 ≤ (1 - β) * Real.log ↑q</code>; the target concludes <code>∃ c,
+  0 &lt; c ∧
+    ∀ (q : ℕ) [inst : NeZero q],
+      3 ≤ q →
+        ∀ (χ : DirichletCharacter ℂ q),
+          χ.IsPrimitive →
+            χ ≠ 1 →
+              (∀ (a : ZMod q), (χ a).im = 0) →
+                ∀ (β : ℝ), 0 &lt; β → β &lt; 1 → DirichletCharacter.LFunction χ ↑β = 0 → c ≤ (1 - β) * Real.log ↑q</code>.</dd><dt>Recorded check</dt><dd>2026-10-10T22:56:22Z: checked; Lean (version 4.34.1, x86_64-w64-windows-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release); Mathlib d13f23b723b8; corpus fd4aeeb2ee4f; environment 362897e7c89fc6ed2d1c; imports ComparatorChallenges.DirichletSevenEighths, ComparatorChallenges.SiegelZeros; bridge file SHA-256 8b56c323c7e21dee…; run as: python -m lean4_explainer_implications.pipeline contracts --workspace oai-ws --corpus e2e/work/oai/lean --run implications-run --edges E:/lean4-explainer/packages/corpus-oai/src/lean4_explainer_corpus_oai/implications.toml --revision fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb</dd><dt>Read at commit</dt><dd><code>fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb</code>: <a href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DirichletL/Nonvanishing.lean#L19">LFunction_ne_zero_of_seven_eighths_lt_re</a>, <a href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/SiegelZeros/Conclusions/Theorem.lean#L11">exists_absolute_real_zero_gap</a></dd><dt>Origin</dt><dd>Suggested by ChatGPT as “7/8 nonvanishing supplies an explicit real-zero constant”, relayed by the lean4-explainer maintainer, 2026-10-10.</dd><dt>Note</dt><dd>The target gives no value of c: “No explicit value of $c$ is given.” (lean/docs/003.md, line 16). Its released proof applies SiegelZerosAwei.W50.uniform_exclusion_of_local_isolated_bezout. The bridge is checked against the statements in ComparatorChallenges/DirichletSevenEighths.lean and ComparatorChallenges/SiegelZeros.lean, the copies openai/math&#x27;s comparator checks the released proofs against. The released modules were not built here (the source&#x27;s import closure is 2,924 files), so that each copy states the same proposition as its released theorem is the comparator&#x27;s claim, not checked here.</dd></dl></article>
+<section class="candidates"><h2 id="candidates">Candidates</h2><p class="muted">Suggested edges with no contract yet: what they would connect, in their proposer's words, and what is missing. They are not claims.</p>
+<article class="edge" id="fluid-halting-with-single-fold"><h3>Composes with: <a href="OAI/MathematicalPhysics/NavierStokes/BalancedTransport/MainResult.lean.html#L12"><code>OAI.BalancedTransport.balanced_three_stack_realization</code></a> and <a href="OAI/NumberTheory/SingleFold/Main.lean.html#L21"><code>OAI.SingleFold.main</code></a></h3><dl><dt>Suggested as</dt><dd>“Fluid halting detection plus single-fold representation”</dd><dt>Origin</dt><dd>Suggested by ChatGPT, relayed by the lean4-explainer maintainer, 2026-10-10.</dd><dt>Missing</dt><dd>A stated conclusion, and the link between two models of computation. The fluid theorem says the particle that starts at fixedLabel reaches the observer exactly when Halts M w, for a FiniteMachine M and an input w. SingleFold.main gives every set of natural-number tuples that is REPred (Mathlib&#x27;s recursively enumerable) a polynomial with exactly one witness on each member and none off it. Composing them needs an encoding of (M, w) as a tuple of natural numbers and a proof that Halts is REPred under it; neither file states one (the fluid proof uses an inputCode internally). With both, the composite would read: the particle reaches the observer exactly when one integer polynomial in the encoded (M, w) has a natural-number solution, and that solution is unique.</dd></dl></article>
+</section>
+<p class="muted">The same edges as data: <a href="implications.json">implications.json</a>.</p>
+</main>
+<footer class="site-footer"><a href="https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb">Project source</a> · <a href="https://github.com/TimeLordRaps/lean4-explainer/issues/new?title=Site%20feedback%3A%20">Report a site issue</a></footer>
+<script src="_assets/site.js"></script>
+<script src="_assets/lean2tex.js" defer></script>
+<script src="_assets/reader.js" defer></script>
+</body>
+</html>

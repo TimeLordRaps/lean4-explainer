@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/ActualTubeMetricPositivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/ActualTubeMetricPositivity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>ActualTubeMetricPositivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>ActualTubeMetricPositivity.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/ActualTubeMetricPositivity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.AffineBernstein.affineEpigraph_tube_angular_pair_nonneg</code> <small>line 22</small></li><li id=L55><b>lemma</b> <code>OAI.AffineBernstein.gradient_exp_linear_combination</code> <small>line 55</small></li><li id=L69><b>lemma</b> <code>OAI.AffineBernstein.tangentProjection_smul_add</code> <small>line 69</small></li><li id=L78><b>theorem</b> <code>OAI.AffineBernstein.integral_supportNewtonTensor_exp_weight</code> <small>line 78</small><div class="doc plain">Exact angular weighted integration by parts for the source exponential
+weight. The cofactor divergence and radial cancellations are proved by the
+Newton calculus, not included as additional hypotheses.</div><pre>theorem integral_supportNewtonTensor_exp_weight (b : OrthonormalBasis ι ℝ E)
+    {U : Set E} (hU : IsOpen U) (hSU : sphere (0 : E) 1 ⊆ U)
+    {H P F : E → ℝ} (hH : ContDiffOn ℝ ∞ H U)
+    (hr : ∀ q ∈ U, ∀ v, fderiv ℝ (fderiv ℝ H) q v q = 0)
+    (hP : ContDiffOn ℝ ∞ P U) (hF : ContDiffOn ℝ ∞ F U) (a c : ℝ) :
+    (∫ e : sphere (0 : E) 1, Real.exp (a*P e+c*F e) *
+      roundHessianContraction b (supportNewtonTensor b H) F e ∂volume.toSphere) =
+      -(∫ e : sphere (0 : E) 1, Real.exp (a*P e+c*F e) *
+        (a * supportNewtonTensor b H e (tangentProjection e (gradient P e))
+            (tangentProjection e (gradient F e)) +
+         c * supportNewtonTensor b H e (tangentProjection e (gradient F e))
+            (tangentProjection e (gradient F e))) ∂volume.toSphere) := by
+…</pre><p class="refs">Mentions: <a href="TensorFlux.lean.html#L113">OAI.AffineBernstein.roundHessianContraction</a>, <a href="BilinearNewton.lean.html#L140">OAI.AffineBernstein.supportNewtonTensor</a>, <a href="AngularCalculus.lean.html#L16">OAI.AffineBernstein.tangentProjection</a></p></li><li id=L105><b>lemma</b> <code>OAI.AffineBernstein.sphere_tangent_gradient_continuous</code> <small>line 105</small></li><li id=L115><b>lemma</b> <code>OAI.AffineBernstein.sphere_supportNewtonTensor_continuous</code> <small>line 115</small></li><li id=L125><b>theorem</b> <code>OAI.AffineBernstein.integral_supportNewtonTensor_weighted_drift</code> <small>line 125</small><div class="doc plain">The angular drift coefficient after integration is exactly `1-c`.
+At `c=(n+2)/2` this is `-n/2`, as in tubes.tex.</div><pre>theorem integral_supportNewtonTensor_weighted_drift (b : OrthonormalBasis ι ℝ E)
+    {U : Set E} (hU : IsOpen U) (hSU : sphere (0 : E) 1 ⊆ U)
+    {H P F : E → ℝ} (hH : ContDiffOn ℝ ∞ H U)
+    (hr : ∀ q ∈ U, ∀ v, fderiv ℝ (fderiv ℝ H) q v q = 0)
+    (hP : ContDiffOn ℝ ∞ P U) (hF : ContDiffOn ℝ ∞ F U) (a c : ℝ) :
+    (∫ e : sphere (0 : E) 1, Real.exp (a*P e+c*F e) *
+      roundHessianContraction b (supportNewtonTensor b H) F e ∂volume.toSphere) +
+    a*(∫ e : sphere (0 : E) 1, Real.exp (a*P e+c*F e) *
+      supportNewtonTensor b H e (tangentProjection e (gradient P e))
+        (tangentProjection e (gradient F e)) ∂volume.toSphere) +
+    (∫ e : sphere (0 : E) 1, Real.exp (a*P e+c*F e) *
+      supportNewtonTensor b H e (tangentProjection e (gradient F e))
+…</pre><p class="refs">Mentions: <a href="TensorFlux.lean.html#L113">OAI.AffineBernstein.roundHessianContraction</a>, <a href="BilinearNewton.lean.html#L140">OAI.AffineBernstein.supportNewtonTensor</a>, <a href="AngularCalculus.lean.html#L16">OAI.AffineBernstein.tangentProjection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

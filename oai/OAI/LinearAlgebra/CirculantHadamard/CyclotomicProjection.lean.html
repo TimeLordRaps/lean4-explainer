@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/CirculantHadamard/CyclotomicProjection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/CirculantHadamard/CyclotomicProjection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">LinearAlgebra</a> / <a href="index.html">CirculantHadamard</a> / <span>CyclotomicProjection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">LinearAlgebra</a>/<a href="index.html">CirculantHadamard</a>/<span>CyclotomicProjection.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/CirculantHadamard/CyclotomicProjection.lean#L1">source</a></p><div class="doc"><h3>Integral division after projection to a smaller cyclic group</h3><p>At an element of order dividing <code>p ^ e</code>, the prime-power cyclotomic polynomial
+<code>cyclotomic (p ^ (e + 1)) R</code> evaluates to the scalar <code>p</code>. Consequently, if all
+coefficients of a polynomial's monic remainder are divisible by <code>p</code>, its image
+in the group algebra of <code>ZMod (p ^ e)</code> is divisible by the same scalar.</p><p>All divisions are witnessed inside the coefficient ring or group algebra.
+No domain instance or cancellation assumption on a finite group algebra is used.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L32><b>theorem</b> <code>OAI.CirculantHadamard.exists_cyclic_polynomial</code> <small>line 32</small><div class="doc"><p>Every actual cyclic group-ring element has a polynomial representative.</p></div><pre>theorem exists_cyclic_polynomial (n : ℕ) [NeZero n]
+    (F : AddMonoidAlgebra R (ZMod n)) :
+    ∃ P : R[X], aeval (CyclicPolynomial.generator R n) P = F := by
+…</pre><p class="refs">Mentions: <a href="CyclicPolynomial.lean.html#L30">OAI.CirculantHadamard.CyclicPolynomial.generator</a></p></li><li id=L42><b>theorem</b> <code>OAI.CirculantHadamard.cyclotomicAdjoinRoot_pow</code> <small>line 42</small><div class="doc"><p>The actual root in the cyclotomic quotient satisfies its <code>n</code>th-power
+relation, directly because the cyclotomic polynomial divides <code>X ^ n - 1</code>.</p></div><pre>theorem cyclotomicAdjoinRoot_pow (n : ℕ) :
+    AdjoinRoot.root (cyclotomic n R) ^ n = 1 := by
+…</pre></li><li id=L50><b>def</b> <code>OAI.CirculantHadamard.cyclicCyclotomicEvaluation</code> <small>line 50</small><div class="doc"><p>Evaluation of the actual cyclic group ring at the root in its cyclotomic
+quotient, using the root's proved power relation.</p></div><pre>def cyclicCyclotomicEvaluation (R : Type uR) [CommRing R] (n : ℕ) [NeZero n] :
+    AddMonoidAlgebra R (ZMod n) →ₐ[R] AdjoinRoot (cyclotomic n R) :=
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.CirculantHadamard.cyclicCyclotomicEvaluation_aeval</code> <small>line 56</small></li><li id=L63><b>theorem</b> <code>OAI.CirculantHadamard.aeval_cyclotomic_prime_pow_of_pow_eq_one</code> <small>line 63</small><div class="doc"><p>A prime-power cyclotomic polynomial becomes <code>p</code> at every element whose
+<code>p ^ e</code>th power is one.</p></div><pre>theorem aeval_cyclotomic_prime_pow_of_pow_eq_one {p e : ℕ} (hp : p.Prime)
+    (x : S) (hx : x ^ (p ^ e) = 1) :
+    aeval x (cyclotomic (p ^ (e + 1)) R) = (p : S) := by
+…</pre></li><li id=L71><b>theorem</b> <code>OAI.CirculantHadamard.aeval_divisible_of_modByMonic_coeff</code> <small>line 71</small><div class="doc"><p>Evaluating a monic division identity preserves integral divisibility if
+both the divisor's evaluation and the remainder have the stated scalar factor.</p></div><pre>theorem aeval_divisible_of_modByMonic_coeff (x : S) (F Q : R[X]) (a : R)
+    (_hQ : Q.Monic) (hQx : aeval x Q = algebraMap R S a)
+    (hcoeff : ∀ i, a ∣ (F %ₘ Q).coeff i) :
+    ∃ G : S, aeval x F = algebraMap R S a * G := by
+…</pre></li><li id=L85><b>theorem</b> <code>OAI.CirculantHadamard.aeval_divisible_of_cyclotomic_remainder_coeff</code> <small>line 85</small><div class="doc"><p>Integral divisibility at a <code>p ^ e</code>th root follows from coefficientwise
+divisibility of the remainder modulo the next cyclotomic polynomial.</p></div><pre>theorem aeval_divisible_of_cyclotomic_remainder_coeff {p e : ℕ} (hp : p.Prime)
+    (x : S) (hx : x ^ (p ^ e) = 1) (F : R[X])
+    (hcoeff : ∀ i, (p : R) ∣ (F %ₘ cyclotomic (p ^ (e + 1)) R).coeff i) :
+    ∃ G : S, aeval x F = (p : S) * G := by
+…</pre></li><li id=L97><b>theorem</b> <code>OAI.CirculantHadamard.cyclicProjection_divisible_of_remainder_coeff</code> <small>line 97</small><div class="doc"><p>The concrete <code>p</code>-division step in the cyclic group algebra: project from
+order <code>p ^ (e + 1)</code> to order <code>p ^ e</code>, then divide integrally by <code>p</code>.</p></div><pre>theorem cyclicProjection_divisible_of_remainder_coeff {p e : ℕ} (hp : p.Prime)
+    (F : R[X])
+    (hcoeff : ∀ i, (p : R) ∣ (F %ₘ cyclotomic (p ^ (e + 1)) R).coeff i) :
+    ∃ G : AddMonoidAlgebra R (ZMod (p ^ e)),
+      cyclicProjection R (pow_dvd_pow p (Nat.le_succ e))
+          (aeval (CyclicPolynomial.generator R (p ^ (e + 1))) F) =
+        (p : AddMonoidAlgebra R (ZMod (p ^ e))) * G := by
+…</pre><p class="refs">Mentions: <a href="CyclicProjection.lean.html#L25">OAI.CirculantHadamard.cyclicProjection</a>, <a href="CyclicPolynomial.lean.html#L30">OAI.CirculantHadamard.CyclicPolynomial.generator</a></p></li><li id=L114><b>theorem</b> <code>OAI.CirculantHadamard.cyclicProjection_divisible_of_cyclotomicEvaluation</code> <small>line 114</small><div class="doc"><p>Divisibility at the actual primitive-root quotient forces integral
+divisibility after projecting the actual cyclic group-ring element.</p><p>The concrete monic quotient's linear remainder map supplies coefficientwise
+divisibility of the remainder.</p></div><pre>theorem cyclicProjection_divisible_of_cyclotomicEvaluation {p e : ℕ}
+    [NeZero p] (hp : p.Prime) (F : AddMonoidAlgebra R (ZMod (p ^ (e + 1))))
+    (hdiv : (p : AdjoinRoot (cyclotomic (p ^ (e + 1)) R)) ∣
+      cyclicCyclotomicEvaluation R (p ^ (e + 1)) F) :
+    ∃ G : AddMonoidAlgebra R (ZMod (p ^ e)),
+      cyclicProjection R (pow_dvd_pow p (Nat.le_succ e)) F =
+        (p : AddMonoidAlgebra R (ZMod (p ^ e))) * G := by
+…</pre><p class="refs">Mentions: <a href="CyclotomicProjection.lean.html#L50">OAI.CirculantHadamard.cyclicCyclotomicEvaluation</a>, <a href="CyclicProjection.lean.html#L25">OAI.CirculantHadamard.cyclicProjection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

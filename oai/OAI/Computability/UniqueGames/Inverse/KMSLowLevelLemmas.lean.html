@@ -1,0 +1,150 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Inverse/KMSLowLevelLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Inverse/KMSLowLevelLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Inverse</a> / <span>KMSLowLevelLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Inverse</a>/<span>KMSLowLevelLemmas.lean</span></code></h1><p class="muted">32 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Inverse/KMSLowLevelLemmas.lean#L1">source</a></p><div class="doc"><p>The spectral cutoff step of KMS on the actual full uniform rank-one noise.
+The low-level fourth-moment estimate remains an explicit input to the last
+combining lemma; none of these statements asserts that estimate or expansion.
+The multiplier is reused from the proved uniform-subspace kernel count.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L42><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.rankEnergy</code> <small>line 42</small></li><li id=L45><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.sum_rankEnergy</code> <small>line 45</small></li><li id=L57><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.spectral_cutoff</code> <small>line 57</small><div class="doc"><p>Exact rank multiplier cutoff, without dimension-dependent constants.</p></div><pre>theorem spectral_cutoff (rank : I → ℕ) (a : I → ℝ) (r : ℕ) :
+    (∑ s, ((2 : ℝ) ^ rank s)⁻¹ * a s ^ 2) ≤
+      (∑ i ∈ Finset.range (r + 1), rankEnergy rank a i) +
+        ((2 : ℝ) ^ (r + 1))⁻¹ * ∑ s, a s ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="KMSLowLevelLemmas.lean.html#L42">OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.rankEnergy</a></p></li><li id=L79><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.spectral_cutoff_of_level_bounds</code> <small>line 79</small></li><li id=L105><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise</code> <small>line 105</small><div class="doc"><p>The actual operator samples both rank-one factors uniformly, including zero.</p></div><pre>def uniformNoise (f : (E →ₗ[F2] F) → ℝ) : (E →ₗ[F2] F) → ℝ :=
+…</pre></li><li id=L110><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise_apply</code> <small>line 110</small></li><li id=L117><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise_energy</code> <small>line 117</small></li><li id=L128><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.rankEnergy_eq</code> <small>line 128</small></li><li id=L136><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.rankComponent_bound</code> <small>line 136</small><div class="doc"><p>The scalar fourth-moment argument applied to genuine rank projections.</p></div><pre>theorem rankComponent_bound (f : (E →ₗ[F2] F) → ℝ) (hf : IsBoolean f)
+    (r i : ℕ) (ε : ℝ) (hε : 0 ≤ ε)
+    (hupper : (𝔼 X, rankComponent i f X ^ 4) ≤
+      (2 : ℝ) ^ (25 * r ^ 3) * (𝔼 X, rankComponent i f X ^ 2) * ε) :
+    (𝔼 X, rankComponent i f X ^ 2) ≤
+      (2 : ℝ) ^ (7 * r ^ 3 + 3) * ε ^ ((1 : ℝ) / 4) * (𝔼 X, f X) := by
+…</pre></li><li id=L147><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise_bound_of_fourthMoments</code> <small>line 147</small><div class="doc"><p>The KMS spectral conclusion once the actual pseudorandom upper fourth
+moments have been proved. The error, cutoff and constants precede dimensions.</p></div><pre>theorem uniformNoise_bound_of_fourthMoments (f : (E →ₗ[F2] F) → ℝ)
+    (hf : IsBoolean f) (r : ℕ) (ε : ℝ) (hε : 0 ≤ ε)
+    (hupper : ∀ i ≤ r, (𝔼 X, rankComponent i f X ^ 4) ≤
+      (2 : ℝ) ^ (25 * r ^ 3) * (𝔼 X, rankComponent i f X ^ 2) * ε) :
+    (𝔼 X, f X * uniformNoise f X) ≤
+      ((r + 1 : ℕ) * ((2 : ℝ) ^ (7 * r ^ 3 + 3) * ε ^ ((1 : ℝ) / 4)) +
+        ((2 : ℝ) ^ (r + 1))⁻¹) * (𝔼 X, f X) := by
+…</pre><p class="refs">Mentions: <a href="KMSLowLevelLemmas.lean.html#L105">OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise</a></p></li><li id=L183><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.projection_bound_of_general_fourthMoment</code> <small>line 183</small><div class="doc"><p>No particular polynomial in the cutoff is required for the scalar step.</p></div><pre>theorem projection_bound_of_general_fourthMoment {X : Type*} [Fintype X]
+    {f : X → ℝ} (hf : IsBoolean f) (g : X → ℝ)
+    (C ε : ℝ) (hC : 0 ≤ C) (hε : 0 ≤ ε)
+    (hprojection : (𝔼 x, g x ^ 2) = 𝔼 x, g x * f x)
+    (hupper : (𝔼 x, g x ^ 4) ≤ C * (𝔼 x, g x ^ 2) * ε) :
+    (𝔼 x, g x ^ 2) ≤ (C + 1) * ε ^ ((1 : ℝ) / 4) * (𝔼 x, f x) := by
+…</pre></li><li id=L221><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise_bound_of_general_fourthMoments</code> <small>line 221</small><div class="doc"><p>The actual full-uniform rank-one correlation, with a general moment constant.</p></div><pre>theorem uniformNoise_bound_of_general_fourthMoments
+    (f : (E →ₗ[F2] F) → ℝ) (hf : IsBoolean f)
+    (r : ℕ) (C ε : ℝ) (hC : 0 ≤ C) (hε : 0 ≤ ε)
+    (hupper : ∀ i ≤ r, (𝔼 X, rankComponent i f X ^ 4) ≤
+      C * (𝔼 X, rankComponent i f X ^ 2) * ε) :
+    (𝔼 X, f X * uniformNoise f X) ≤
+      ((r + 1 : ℕ) * ((C + 1) * ε ^ ((1 : ℝ) / 4)) +
+        ((2 : ℝ) ^ (r + 1))⁻¹) * (𝔼 X, f X) := by
+…</pre><p class="refs">Mentions: <a href="KMSLowLevelLemmas.lean.html#L105">OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.uniformNoise</a></p></li><li id=L241><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSLowLevel.exists_general_cutoff_parameters</code> <small>line 241</small><div class="doc"><p>Even an arbitrarily large constant depending on r alone permits the
+cutoff and tolerance to be chosen before both dimensions.</p></div><pre>theorem exists_general_cutoff_parameters (C : ℕ → ℝ) (hC : ∀ r, 0 ≤ C r)
+    {ζ : ℝ} (hζ : 0 &lt; ζ) :
+    ∃ r : ℕ, 1 ≤ r ∧ ∃ ε : ℝ, 0 &lt; ε ∧ ε ≤ 1 ∧
+      (r + 1 : ℕ) * ((C r + 1) * ε ^ ((1 : ℝ) / 4)) +
+        ((2 : ℝ) ^ (r + 1))⁻¹ ≤ ζ / 2 := by
+…</pre></li><li id=L294><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSMomentToExpansion.liftExpansion_of_upperMoments</code> <small>line 294</small><div class="doc"><p>Any proved dimension-independent upper moment with a finite local budget
+supplies the exact ordered-basis expansion interface. This lemma is conditional
+until the genuine KMS small-component induction supplies <code>hupper</code>.</p></div><pre>theorem liftExpansion_of_upperMoments
+    (C : ℕ → ℝ) (hC : ∀ r, 0 ≤ C r) (R ellMin : ℕ → ℕ)
+    (hupper : ∀ r : ℕ, ∀ ε : ℝ, 0 ≤ ε → ε ≤ 1 →
+      ∀ ell : ℕ, ellMin r ≤ ell → ∀ n : ℕ,
+      ∀ S : Finset (Vertex n ell), TuplePseudorandom S (R r) ε →
+      ∀ i : ℕ, i ≤ r →
+        (𝔼 X : BasisMap n ell, rankComponent i (liftedIndicator S) X ^ 4) ≤
+          C r * (𝔼 X : BasisMap n ell, rankComponent i (liftedIndicator S) X ^ 2) * ε) :
+    LiftExpansionPrinciple := by
+…</pre></li><li id=L335><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSMomentToExpansion.expansion_of_upperMoments</code> <small>line 335</small><div class="doc"><p>Checked finite bridges and parameter choices reduce the full KMS expansion
+principle to the displayed actual upper-moment estimate, and nothing weaker.</p></div><pre>theorem expansion_of_upperMoments
+    (C : ℕ → ℝ) (hC : ∀ r, 0 ≤ C r) (R ellMin : ℕ → ℕ)
+    (hupper : ∀ r : ℕ, ∀ ε : ℝ, 0 ≤ ε → ε ≤ 1 →
+      ∀ ell : ℕ, ellMin r ≤ ell → ∀ n : ℕ,
+      ∀ S : Finset (Vertex n ell), TuplePseudorandom S (R r) ε →
+      ∀ i : ℕ, i ≤ r →
+        (𝔼 X : BasisMap n ell, rankComponent i (liftedIndicator S) X ^ 4) ≤
+          C r * (𝔼 X : BasisMap n ell, rankComponent i (liftedIndicator S) X ^ 2) * ε) :
+    KMS.ExpansionPrinciple :=
+…</pre><p class="refs">Mentions: <a href="KMSFoundationLemmas.lean.html#L109">OAI.UniqueGamesTheorem.Inverse.KMS.ExpansionPrinciple</a></p></li><li id=L369><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSPointComplement.pointEquivOfIsCompl</code> <small>line 369</small><div class="doc"><p>The coordinates supplied by a complement to a nonzero point.</p></div><pre>def pointEquivOfIsCompl (U : Submodule F2 E) (v : E) (hv : v ≠ 0)
+    (hc : IsCompl U (Submodule.span F2 {v})) : (U × F2) ≃ₗ[F2] E :=
+…</pre></li><li id=L375><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSPointComplement.pointEquivOfIsCompl_apply</code> <small>line 375</small></li><li id=L381><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSPointComplement.exists_aligned_point_equiv</code> <small>line 381</small><div class="doc"><p>Every injection with a distinguished last coordinate can be expressed
+as <code>pointLift</code> after a change of coordinates on its target.</p></div><pre>theorem exists_aligned_point_equiv (ι : (I × F2) →ₗ[F2] E)
+    (hι : Function.Injective ι) :
+    ∃ U : Submodule F2 E, ∃ e : (U × F2) ≃ₗ[F2] E,
+      ∃ κ : I →ₗ[F2] U, Function.Injective κ ∧
+        e.toLinearMap.comp (pointLift κ) = ι := by
+…</pre></li><li id=L414><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSPointComplement.exists_point_equiv</code> <small>line 414</small><div class="doc"><p>A positive-dimensional binary space admits a last-point coordinate, with
+an actual subspace for the remaining coordinates and the exact dimension drop.</p></div><pre>theorem exists_point_equiv [FiniteDimensional F2 E]
+    (h : 0 &lt; Module.finrank F2 E) :
+    ∃ U : Submodule F2 E, ∃ _ : (U × F2) ≃ₗ[F2] E,
+      Module.finrank F2 U + 1 = Module.finrank F2 E := by
+…</pre></li><li id=L450><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.exists_mixed_aligned_point</code> <small>line 450</small><div class="doc"><p>The injection can be aligned with the fixed-point shuffle on its domain.</p></div><pre>theorem exists_mixed_aligned_point (ι : (A × I) →ₗ[F2] E)
+    (hι : Function.Injective ι) (eA : (A0 × F2) ≃ₗ[F2] A) :
+    ∃ U : Submodule F2 E, ∃ eE : (U × F2) ≃ₗ[F2] E,
+      ∃ κ : (A0 × I) →ₗ[F2] U, Function.Injective κ ∧
+        eE.toLinearMap.comp (pointLift κ) =
+          ι.comp (pointShuffle eA).toLinearMap :=
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentMixedBaseLemmas.lean.html#L251">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.pointShuffle</a></p></li><li id=L474><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.smallComponent_mixed_aligned</code> <small>line 474</small><div class="doc"><p>Exact small function after both coordinate changes.</p></div><pre>theorem smallComponent_mixed_aligned (ι : (A × I) →ₗ[F2] E)
+    (eA : (A0 × F2) ≃ₗ[F2] A) (eE : (E0 × F2) ≃ₗ[F2] E)
+    (κ : (A0 × I) →ₗ[F2] E0)
+    (halign : eE.toLinearMap.comp (pointLift κ) =
+      ι.comp (pointShuffle eA).toLinearMap) (f : (E →ₗ[F2] F) → ℝ) :
+    smallComponent (pointLift κ)
+      (fun X : (E0 × F2) →ₗ[F2] F =&gt; f (X.comp eE.symm.toLinearMap)) =
+      pointShuffleTransport eA (smallComponent ι f) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentMixedBaseLemmas.lean.html#L251">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.pointShuffle</a>, <a href="KMSFourthMomentMixedBaseLemmas.lean.html#L302">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.pointShuffleTransport</a></p></li><li id=L504><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.partialRestrict_smallComponent_mixed_aligned</code> <small>line 504</small><div class="doc"><p>The original partially fixed small function is literally the function
+appearing on the left side of the actual one-point mixed recurrence.</p></div><pre>theorem partialRestrict_smallComponent_mixed_aligned (ι : (A × I) →ₗ[F2] E)
+    (eA : (A0 × F2) ≃ₗ[F2] A) (eE : (E0 × F2) ≃ₗ[F2] E)
+    (κ : (A0 × I) →ₗ[F2] E0)
+    (halign : eE.toLinearMap.comp (pointLift κ) =
+      ι.comp (pointShuffle eA).toLinearMap)
+    (f : (E →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F) :
+    partialRestrict (smallComponent ι f) a =
+      partialRestrict (pointRestrict (smallComponent (pointLift κ)
+        (fun X : (E0 × F2) →ₗ[F2] F =&gt; f (X.comp eE.symm.toLinearMap)))
+        (a (eA (0, 1))))
+        ((a.comp eA.toLinearMap).comp (LinearMap.inl F2 A0 F2)) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentMixedBaseLemmas.lean.html#L251">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.pointShuffle</a>, <a href="KMSFourthMomentMixedEnergyLemmas.lean.html#L144">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.partialRestrict</a></p></li><li id=L556><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixed_bound_of_character_bound</code> <small>line 556</small><div class="doc"><p>The actual mixed norm for arbitrary prescribed fixed points. The rank cap
+and scalar constants are chosen before either ambient dimension.</p></div><pre>theorem mixed_bound_of_character_bound (R : ℕ) (H ε : ℝ)
+    (hH : 0 ≤ H) (hε : 0 ≤ ε) (π : I →ₗ[F2] J) (ν : F →ₗ[F2] J)
+    (hπ : Function.Surjective π)
+    (hbase : ∀ (E : Type u) [AddCommGroup E] [Module F2 E]
+      [FiniteDimensional F2 E] [Fintype E],
+      ∀ (ι : I →ₗ[F2] E), Function.Injective ι →
+      ∀ (f : (E →ₗ[F2] F) → ℝ), KMSBasisInvariant.IsBasisInvariant f →
+      AffineDensityBound (Module.finrank F2 I) ε f →
+      (2 : ℝ) ^ ((Module.finrank F2 I + Module.finrank F2 J) * Module.finrank F2 E) *
+        fixedFrequencyEnergy ι f π ν ≤ H * ε) :
+    ∀ (n : ℕ) (E : Type u) [AddCommGroup E] [Module F2 E]
+      [FiniteDimensional F2 E] [Fintype E]
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticHybridEnergyImageTransportCoreLemmas.lean.html#L649">OAI.UniqueGamesTheorem.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSFourthMomentZoomInAlgebraLemmas.lean.html#L353">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L686><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixed_slice_bound</code> <small>line 686</small><div class="doc"><p>KMS's mixed bound with an explicit safe rank-dependent constant. Fixed
+points and fixed characters are arbitrary; their independence is not assumed.</p></div><pre>theorem mixed_slice_bound (R : ℕ) (ε : ℝ) (hε : 0 ≤ ε)
+    (ι : (A × I) →ₗ[F2] E) (hι : Function.Injective ι)
+    (f : (E →ₗ[F2] F) → ℝ) (hf : KMSBasisInvariant.IsBasisInvariant f)
+    (hd : AffineDensityBound (Module.finrank F2 A + Module.finrank F2 I) ε f)
+    (a : A →ₗ[F2] F) (π : I →ₗ[F2] J) (hπ : Function.Surjective π)
+    (ν : F →ₗ[F2] J) (hr : Module.finrank F2 A + Module.finrank F2 I ≤ R) :
+    (2 : ℝ) ^ ((Module.finrank F2 I + Module.finrank F2 J) * Module.finrank F2 E) *
+      sliceEnergy (fun T =&gt; π.comp T = ν) (partialRestrict (smallComponent ι f) a) ≤
+        (2 : ℝ) ^ (4 * R * R) * mixedStepFactor R ^ Module.finrank F2 A * ε := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticHybridEnergyImageTransportCoreLemmas.lean.html#L649">OAI.UniqueGamesTheorem.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSFourthMomentZoomInAlgebraLemmas.lean.html#L353">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.AffineDensityBound</a>, <a href="KMSFourthMomentMixedEnergyLemmas.lean.html#L33">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.sliceEnergy</a>, <a href="KMSFourthMomentMixedEnergyLemmas.lean.html#L144">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.partialRestrict</a>, <a href="KMSFourthMomentMixedScalarLemmas.lean.html#L34">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixedStepFactor</a></p></li><li id=L708><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixedRankConstant</code> <small>line 708</small><div class="doc"><p>A single uniform constant for all fixed-point dimensions at rank at most R.</p></div><pre>def mixedRankConstant (R : ℕ) : ℝ := (2 : ℝ) ^ (4 * R * R) * mixedStepFactor R ^ R</pre><p class="refs">Mentions: <a href="KMSFourthMomentMixedScalarLemmas.lean.html#L34">OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixedStepFactor</a></p></li><li id=L710><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixedRankConstant_nonneg</code> <small>line 710</small></li><li id=L714><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSFourthMoment.mixed_slice_bound_uniform</code> <small>line 714</small></li><li id=L756><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.mixedMapFintype</code> <small>line 756</small><div class="doc"><p>A consistent finite enumeration of actual binary linear maps, built from
+the finite vertex spaces. This is the enumeration used by the mixed theorem.</p></div><pre>@[instance_reducible] def mixedMapFintype {V W : Type*}
+    [AddCommGroup V] [Module F2 V] [AddCommGroup W] [Module F2 W]
+    [Fintype V] [Fintype W] : Fintype (V →ₗ[F2] W) :=
+…</pre></li><li id=L771><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.UniformMixedBound</code> <small>line 771</small><div class="doc"><p>All mixed small-component slices of total degree at most <code>r</code>, with their
+exact ambient normalization weight. No Hybrid derivative bound is included
+in this property. Fixed primal points and prescribed frequencies are arbitrary.</p></div><pre>def UniformMixedBound (r : ℕ) (L : ℝ) (f : (E →ₗ[F2] F) → ℝ) : Prop :=
+…</pre></li><li id=L793><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.UniformMixedBound.pullback</code> <small>line 793</small><div class="doc"><p>Ambient and codomain coordinate pullback preserves every actual mixed
+slice, while the exponent is unchanged by ambient dimension invariance.</p></div><pre>theorem UniformMixedBound.pullback {r : ℕ} {L : ℝ}
+    (a : E ≃ₗ[F2] E&#x27;) (b : F ≃ₗ[F2] F&#x27;)
+    (f : (E&#x27; →ₗ[F2] F&#x27;) → ℝ) (hf : UniformMixedBound r L f) :
+    UniformMixedBound r L (fun M =&gt; f (LinearEquiv.arrowCongr a b M)) := by
+…</pre><p class="refs">Mentions: <a href="KMSLowLevelLemmas.lean.html#L771">OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.UniformMixedBound</a></p></li><li id=L806><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.UniformMixedBound.pullback_iff</code> <small>line 806</small><div class="doc"><p>The uniform mixed property is independent of both ambient coordinate
+choices. The reverse direction is pullback by the inverse equivalences.</p></div><pre>theorem UniformMixedBound.pullback_iff {r : ℕ} {L : ℝ}
+    (a : E ≃ₗ[F2] E&#x27;) (b : F ≃ₗ[F2] F&#x27;)
+    (f : (E&#x27; →ₗ[F2] F&#x27;) → ℝ) :
+    UniformMixedBound r L (fun M =&gt; f (LinearEquiv.arrowCongr a b M)) ↔
+      UniformMixedBound r L f := by
+…</pre><p class="refs">Mentions: <a href="KMSLowLevelLemmas.lean.html#L771">OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.UniformMixedBound</a></p></li><li id=L832><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.uniformMixedBound_of_affineDensityBound</code> <small>line 832</small><div class="doc"><p>The proved KMS mixed estimate discharges every instance of the uniform
+mixed property. Only the actual affine density and basis-invariance
+hypotheses remain; no Fourier or Hybrid estimate is supplied as a premise.</p></div><pre>theorem uniformMixedBound_of_affineDensityBound (r : ℕ) (ε : ℝ) (hε : 0 ≤ ε)
+    (f : (E →ₗ[F2] F) → ℝ) (hf : KMSBasisInvariant.IsBasisInvariant f)
+    (hd : AffineDensityBound r ε f) :
+    UniformMixedBound r (mixedRankConstant r * ε) f := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticHybridEnergyImageTransportCoreLemmas.lean.html#L649">OAI.UniqueGamesTheorem.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSLowLevelLemmas.lean.html#L771">OAI.UniqueGamesTheorem.Inverse.KMSAnalyticHybridEnergy.UniformMixedBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

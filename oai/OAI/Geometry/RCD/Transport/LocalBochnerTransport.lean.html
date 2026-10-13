@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Transport/LocalBochnerTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Transport/LocalBochnerTransport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Transport</a> / <span>LocalBochnerTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Transport</a>/<span>LocalBochnerTransport.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Transport/LocalBochnerTransport.lean#L1">source</a></p><div class="doc"><h3>Transport of the canonical Bochner family</h3><p>One positive bilinear measure supplies every local coordinate normalization.
+Restriction and linear coordinate changes preserve this measure and its
+singular part through the corresponding pullbacks.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>def</b> <code>OAI.RegularPointCoordinates.LocalHarmonicEnergy.restrict</code> <small>line 30</small><div class="doc"><p>Restriction keeps the same energy representative and the same measure.</p></div><pre>def LocalHarmonicEnergy.restrict
+    (G : LocalHarmonicEnergy μ hQ U M κ p r L v)
+    {q : X} {s : ℝ} (hsub : ball q (2 * s) ⊆ ball p (2 * r)) :
+    LocalHarmonicEnergy μ hQ U M κ q s L v where
+…</pre><p class="refs">Mentions: <a href="../Sobolev/LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a></p></li><li id=L42><b>def</b> <code>OAI.RegularPointCoordinates.LocalHarmonicEnergy.comp</code> <small>line 42</small><div class="doc"><p>Linear coordinate changes pull back the full positive measure, including
+its singular part. The global extension bound pays only the operator norm.</p></div><pre>def LocalHarmonicEnergy.comp (A : E →L[ℝ] E)
+    (G : LocalHarmonicEnergy μ hQ U M κ p r L (A v)) :
+    LocalHarmonicEnergy μ hQ (U.comp A) (M.comap A.toLinearMap) κ p r (L * ‖A‖₊) v where
+…</pre><p class="refs">Mentions: <a href="../Sobolev/LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a></p></li><li id=L59><b>theorem</b> <code>OAI.RegularPointCoordinates.transformed_harmonic_mass_le</code> <small>line 59</small><div class="doc"><p>A normalized splitting error controls the original Bochner measure
+in the transformed direction. All scales use the same original measure.</p></div><pre>theorem transformed_harmonic_mass_le [IsFiniteMeasureOnCompacts μ]
+    {n : ℕ} (u : Fin n → SobolevSpace μ hQ)
+    (M : PositiveBilinearMeasure X (Euclidean n))
+    {p : X} {r ρ C κ : ℝ} {L : ℝ≥0}
+    (G : ∀ v, LocalHarmonicEnergy μ hQ (sobolevColumnMap μ hQ u) M κ p r L v)
+    (A : Euclidean n ≃L[ℝ] Euclidean n)
+    (χ : GoodLaplacianCutoff μ hQ p ρ C)
+    (hρ : 0 &lt; ρ) (hρr : ρ &lt; r) (hC : 0 ≤ C) (hκ : 0 ≤ κ)
+    {ε : ℝ} (hε : 0 ≤ ε)
+    (herror : ∀ i j : Fin n, ∫ x in closedBall p (2 * ρ),
+      |localGamma μ hQ (transformedColumn μ hQ u A i)
+        (transformedColumn μ hQ u A j) x - (if i = j then 1 else 0)| ∂μ ≤ ε)
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../Sobolev/LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a>, <a href="../Sobolev/GoodLaplacianCutoff.lean.html#L26">OAI.RegularPointCoordinates.GoodLaplacianCutoff</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L6133">OAI.RegularPointCoordinates.localGamma</a>, <a href="../Harmonic/TransformedColumns.lean.html#L19">OAI.RegularPointCoordinates.transformedColumn</a></p></li><li id=L92><b>theorem</b> <code>OAI.RegularPointCoordinates.transformed_normalized_bochner_mass_le</code> <small>line 92</small><div class="doc"><p>The dimensionless splitting estimate applies to the same original
+measure in every transformed direction.</p></div><pre>theorem transformed_normalized_bochner_mass_le [IsFiniteMeasureOnCompacts μ]
+    {n : ℕ} (u : Fin n → SobolevSpace μ hQ)
+    (M : PositiveBilinearMeasure X (Euclidean n))
+    {p : X} {r ε C κ : ℝ} {L : ℝ≥0}
+    (G : ∀ v, LocalHarmonicEnergy μ hQ (sobolevColumnMap μ hQ u) M κ p r L v)
+    (A : Euclidean n ≃L[ℝ] Euclidean n) {w : X → Euclidean n}
+    (h : FirstOrderSplittingOn μ hQ p (8 * r) ε (transformedColumn μ hQ u A) w)
+    (hr : 0 &lt; r) (hε : 0 ≤ ε) (hC : 0 ≤ C) (hκ : 0 ≤ κ)
+    (hvol : 0 &lt; μ.real (ball p (8 * r)))
+    (χ : GoodLaplacianCutoff μ hQ p (r / 2) C) (v : Euclidean n) :
+    (r ^ 2 / μ.real (ball p (8 * r))) * ⟪A v, M.massOperator (ball p (r / 2)) (A v)⟫_ℝ ≤
+      (2 * C * (n : ℝ) ^ 2 * ε + κ * r ^ 2 * ((n : ℝ) ^ 2 * ε + 1)) * ‖v‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../Sobolev/LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a>, <a href="../Coordinates/SplittingApproximation.lean.html#L35">OAI.RegularPointCoordinates.FirstOrderSplittingOn</a>, <a href="../Harmonic/TransformedColumns.lean.html#L19">OAI.RegularPointCoordinates.transformedColumn</a>, <a href="../Sobolev/GoodLaplacianCutoff.lean.html#L26">OAI.RegularPointCoordinates.GoodLaplacianCutoff</a></p></li><li id=L121><b>theorem</b> <code>OAI.RegularPointCoordinates.original_gram_bochner_mass_le</code> <small>line 121</small><div class="doc"><p>Returning from exact normalized directions gives a relative mass
+bound in the original mean Gram.</p></div><pre>theorem original_gram_bochner_mass_le [IsFiniteMeasureOnCompacts μ]
+    {n : ℕ} (u : Fin n → SobolevSpace μ hQ)
+    (M : PositiveBilinearMeasure X (Euclidean n))
+    {p : X} {r ε C κ : ℝ} {L : ℝ≥0}
+    (G : ∀ v, LocalHarmonicEnergy μ hQ (sobolevColumnMap μ hQ u) M κ p r L v)
+    (A : Euclidean n ≃L[ℝ] Euclidean n) {w : X → Euclidean n}
+    (h : FirstOrderSplittingOn μ hQ p (8 * r) ε (transformedColumn μ hQ u A) w)
+    (hexact : IsExactMeanNormalization μ hQ (sobolevColumnMap μ hQ u)
+      (ball p (8 * r)) measurableSet_ball A)
+    (hr : 0 &lt; r) (hε : 0 ≤ ε) (hC : 0 ≤ C) (hκ : 0 ≤ κ)
+    (hvol : 0 &lt; μ.real (ball p (8 * r)))
+    (χ : GoodLaplacianCutoff μ hQ p (r / 2) C) (v : Euclidean n) :
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../Sobolev/LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a>, <a href="../Coordinates/SplittingApproximation.lean.html#L35">OAI.RegularPointCoordinates.FirstOrderSplittingOn</a>, <a href="../Harmonic/TransformedColumns.lean.html#L19">OAI.RegularPointCoordinates.transformedColumn</a>, <a href="../Coordinates/GramNormalization.lean.html#L28">OAI.RegularPointCoordinates.IsExactMeanNormalization</a>, <a href="../Sobolev/GoodLaplacianCutoff.lean.html#L26">OAI.RegularPointCoordinates.GoodLaplacianCutoff</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

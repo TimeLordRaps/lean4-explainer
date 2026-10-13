@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/EightProductConductor.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/EightProductConductor.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>EightProductConductor.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>EightProductConductor.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/EightProductConductor.lean#L1">source</a></p><div class="doc"><h3>Eight products from a subuniform conductor collision bound</h3><p>A collision exponent of <code>7/8</code>, unlike exact equidistribution, is compatible
+with the rough-modulus exceptional-set construction. Eight products then
+produce a cubic conductor loss, controlled by the existing uniform <code>3/4</code>
+conductor budget. The index type retains all sample multiplicities.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.eight_products_of_conductor_power_bound</code> <small>line 21</small><div class="doc"><p>A pointwise eighth-moment bound suffices for eight indexed products with
+any prescribed sum. This formulation avoids fractional powers in consumers.</p></div><pre>theorem eight_products_of_conductor_power_bound
+    {q : ℕ} [NeZero q] {ι : Type*} [Fintype ι] [Nonempty ι]
+    (v : ι → ZMod q)
+    (hchar : ∀ r : ZMod q, r ≠ 0 →
+      ‖∑ i : ι, ∑ j : ι, ZMod.stdAddChar (v i * v j * r)‖ ^ 8 ≤
+        (Fintype.card ι : ℝ) ^ 16 / (addOrderOf r : ℝ) ^ 3)
+    (target : ZMod q) :
+    ∃ a b : Fin 8 → ι, ∑ i, v (a i) * v (b i) = target := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L42">OAI.Problem337.v</a></p></li><li id=L55><b>def</b> <code>OAI.Problem337.CompositeSpectral.remainderCollisionCount</code> <small>line 55</small><div class="doc"><p>Ordered residue-collision pairs, expressed with natural remainders so
+no typeclass proof is part of the collision function's data.</p></div><pre>def remainderCollisionCount {ι : Type*} [Fintype ι] (t : ι → ℕ) (d : ℕ) : ℕ :=
+…</pre></li><li id=L58><b>lemma</b> <code>OAI.Problem337.CompositeSpectral.remainderCollisionCount_eq_cast</code> <small>line 58</small></li><li id=L67><b>lemma</b> <code>OAI.Problem337.CompositeSpectral.bilinear_le_sqrt_order_mul_collisions</code> <small>line 67</small><div class="doc"><p>Conductor-sensitive bilinear estimate in the natural-remainder convention.</p></div><pre>lemma bilinear_le_sqrt_order_mul_collisions
+    {q : ℕ} [NeZero q] {ι : Type*} [Fintype ι]
+    (t : ι → ℕ) (r : ZMod q) :
+    ‖∑ i : ι, ∑ j : ι,
+      ZMod.stdAddChar ((t i : ZMod q) * (t j : ZMod q) * r)‖ ≤
+        Real.sqrt (addOrderOf r : ℝ) * remainderCollisionCount t (addOrderOf r) := by
+…</pre><p class="refs">Mentions: <a href="EightProductConductor.lean.html#L55">OAI.Problem337.CompositeSpectral.remainderCollisionCount</a></p></li><li id=L91><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.eight_products_of_collision_power_bound</code> <small>line 91</small><div class="doc"><p>A purely polynomial collision hypothesis at every nontrivial divisor of
+<code>q</code> gives eight products with every prescribed residue. The hypothesis is the
+power-eight form of collision density at most <code>d^(-7/8)</code>.</p></div><pre>theorem eight_products_of_collision_power_bound
+    {q : ℕ} [NeZero q] {ι : Type*} [Fintype ι] [Nonempty ι]
+    (t : ι → ℕ)
+    (hcollision : ∀ d : ℕ, 2 ≤ d → d ∣ q →
+      (remainderCollisionCount t d : ℝ) ^ 8 * (d : ℝ) ^ 7 ≤
+        (Fintype.card ι : ℝ) ^ 16)
+    (target : ZMod q) :
+    ∃ a b : Fin 8 → ι,
+      ∑ i, (t (a i) : ZMod q) * (t (b i) : ZMod q) = target := by
+…</pre><p class="refs">Mentions: <a href="EightProductConductor.lean.html#L55">OAI.Problem337.CompositeSpectral.remainderCollisionCount</a></p></li><li id=L127><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.eight_products_of_collision_rpow_bound</code> <small>line 127</small><div class="doc"><p>The fractional-power form directly matches a collision exceptional-set
+threshold. The estimate is required only at divisors of the final modulus.</p></div><pre>theorem eight_products_of_collision_rpow_bound
+    {q : ℕ} [NeZero q] {ι : Type*} [Fintype ι] [Nonempty ι]
+    (t : ι → ℕ)
+    (hcollision : ∀ d : ℕ, 2 ≤ d → d ∣ q →
+      (remainderCollisionCount t d : ℝ) ≤
+        (Fintype.card ι : ℝ) ^ 2 / (d : ℝ) ^ ((7 : ℝ) / 8))
+    (target : ZMod q) :
+    ∃ a b : Fin 8 → ι,
+      ∑ i, (t (a i) : ZMod q) * (t (b i) : ZMod q) = target := by
+…</pre><p class="refs">Mentions: <a href="EightProductConductor.lean.html#L55">OAI.Problem337.CompositeSpectral.remainderCollisionCount</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Cavity/CavityQuadraticCovariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Cavity/CavityQuadraticCovariance.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Cavity</a> / <span>CavityQuadraticCovariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Cavity</a>/<span>CavityQuadraticCovariance.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Cavity/CavityQuadraticCovariance.lean#L1">source</a></p><div class="doc"><p>The matrix covariance identities of <code>cav:q-innovations</code>.  These
+identities apply also to zero covariance increments.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.InvariantIsing.cavity_rescaled_step_covariance</code> <small>line 15</small><div class="doc"><p>Rescaling a tilted-step covariance by <code>J_i</code> gives the innovation
+covariance with the previous inverse on the left.</p></div><pre>theorem cavity_rescaled_step_covariance {d : ℕ}
+    (K P C S : Matrix (Fin d) (Fin d) ℝ)
+    (hP : IsUnit (1 - P * K).det) (hC : IsUnit (1 - C * K).det) :
+    (1 - C * K)⁻¹ * (cavityStepTransition K P C * S) *
+        ((1 - C * K)⁻¹).transpose =
+      (1 - P * K)⁻¹ * S * ((1 - C * K)⁻¹).transpose := by
+…</pre><p class="refs">Mentions: <a href="CavityQuadraticAlgebra.lean.html#L19">OAI.InvariantIsing.cavityStepTransition</a></p></li><li id=L25><b>theorem</b> <code>OAI.InvariantIsing.cavity_innovation_covariance_mul</code> <small>line 25</small><div class="doc"><p>The covariance increment transforms by the resolvent difference.
+This multiplication form does not require a nonzero cascade exponent.</p></div><pre>theorem cavity_innovation_covariance_mul {d : ℕ}
+    (K P C S : Matrix (Fin d) (Fin d) ℝ) (ζ : ℝ)
+    (hK : K.transpose = K) (hC : C.transpose = C)
+    (hPdet : IsUnit (1 - P * K).det) (hCdet : IsUnit (1 - C * K).det)
+    (hΔ : P - C = ζ • S) :
+    ζ • ((1 - P * K)⁻¹ * S * ((1 - C * K)⁻¹).transpose) =
+      cavityResolvent K P - cavityResolvent K C := by
+…</pre><p class="refs">Mentions: <a href="CavityResolvent.lean.html#L13">OAI.InvariantIsing.cavityResolvent</a></p></li><li id=L36><b>theorem</b> <code>OAI.InvariantIsing.cavity_innovation_covariance</code> <small>line 36</small><div class="doc"><p>The positive-level covariance formula in <code>cav:q-innovations</code>.</p></div><pre>theorem cavity_innovation_covariance {d : ℕ}
+    (K P C S : Matrix (Fin d) (Fin d) ℝ) (ζ : ℝ) (hζ : ζ ≠ 0)
+    (hK : K.transpose = K) (hC : C.transpose = C)
+    (hPdet : IsUnit (1 - P * K).det) (hCdet : IsUnit (1 - C * K).det)
+    (hΔ : P - C = ζ • S) :
+    (1 - C * K)⁻¹ * (cavityStepTransition K P C * S) *
+        ((1 - C * K)⁻¹).transpose =
+      ζ⁻¹ • (cavityResolvent K P - cavityResolvent K C) := by
+…</pre><p class="refs">Mentions: <a href="CavityQuadraticAlgebra.lean.html#L19">OAI.InvariantIsing.cavityStepTransition</a>, <a href="CavityResolvent.lean.html#L13">OAI.InvariantIsing.cavityResolvent</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

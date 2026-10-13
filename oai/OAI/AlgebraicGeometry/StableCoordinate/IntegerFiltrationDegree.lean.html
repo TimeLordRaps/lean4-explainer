@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/StableCoordinate/IntegerFiltrationDegree.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/StableCoordinate/IntegerFiltrationDegree.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">StableCoordinate</a> / <span>IntegerFiltrationDegree.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">StableCoordinate</a>/<span>IntegerFiltrationDegree.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/StableCoordinate/IntegerFiltrationDegree.lean#L1">source</a></p><div class="doc"><h3>Integer filtration degree and initial forms</h3><p>Section 3 uses an exhaustive separated increasing filtration indexed by all
+integers, including negative integers.  These generic lemmas prove that every
+nonzero element has a least layer and that its image modulo the preceding layer
+is nonzero.  They do not assume any coordinate obstruction or associated-graded
+presentation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.StableCoordinate.IntegerFiltration.degree</code> <small>line 25</small><div class="doc"><p>The integer degree is the infimum of the layers containing an element.
+The lemmas below show that for a nonzero element this infimum is attained.</p></div><pre>noncomputable def degree {A : Type*} (F : ℤ → Set A) (x : A) : ℤ :=
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.degree_eq_of_least</code> <small>line 29</small><div class="doc"><p>A least layer computes the filtration degree.</p></div><pre>theorem degree_eq_of_least {A : Type*} (F : ℤ → Set A) {x : A} {d : ℤ}
+    (hd : x ∈ F d) (hleast : ∀ e : ℤ, x ∈ F e → d ≤ e) :
+    degree F x = d := by
+…</pre><p class="refs">Mentions: <a href="IntegerFiltrationDegree.lean.html#L25">OAI.StableCoordinate.IntegerFiltration.degree</a></p></li><li id=L40><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.exists_least_index</code> <small>line 40</small><div class="doc"><p>An exhaustive separated increasing integer filtration gives every nonzero
+object a genuine least degree, not merely an infimum or a natural-number degree.</p></div><pre>theorem exists_least_index (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) :
+    ∃ d : ℤ, x ∈ F d ∧ ∀ e : ℤ, x ∈ F e → d ≤ e := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.exists_initial_index</code> <small>line 57</small><div class="doc"><p>In particular the initial form of a nonzero element is represented in one
+layer but not the preceding layer.</p></div><pre>theorem exists_initial_index (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) :
+    ∃ d : ℤ, x ∈ F d ∧ x ∉ F (d - 1) := by
+…</pre></li><li id=L69><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.initial_index_unique</code> <small>line 69</small><div class="doc"><p>Such an initial index is unique.</p></div><pre>theorem initial_index_unique (F : ℤ → Set A) (hmono : Monotone F)
+    {x : A} {d e : ℤ} (hd : x ∈ F d) (hd&#x27; : x ∉ F (d - 1))
+    (he : x ∈ F e) (he&#x27; : x ∉ F (e - 1)) : d = e := by
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.degree_spec</code> <small>line 81</small><div class="doc"><p>The degree of a nonzero element is an attained least index.</p></div><pre>theorem degree_spec (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) :
+    x ∈ F (degree F x) ∧ ∀ e : ℤ, x ∈ F e → degree F x ≤ e := by
+…</pre><p class="refs">Mentions: <a href="IntegerFiltrationDegree.lean.html#L25">OAI.StableCoordinate.IntegerFiltration.degree</a></p></li><li id=L91><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.mem_iff_degree_le</code> <small>line 91</small><div class="doc"><p>Membership in a filtration layer is equivalent to the integer degree bound.</p></div><pre>theorem mem_iff_degree_le (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) (e : ℤ) :
+    x ∈ F e ↔ degree F x ≤ e := by
+…</pre><p class="refs">Mentions: <a href="IntegerFiltrationDegree.lean.html#L25">OAI.StableCoordinate.IntegerFiltration.degree</a></p></li><li id=L100><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.not_mem_degree_sub_one</code> <small>line 100</small><div class="doc"><p>The preceding layer misses every nonzero element.</p></div><pre>theorem not_mem_degree_sub_one (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) : x ∉ F (degree F x - 1) := by
+…</pre><p class="refs">Mentions: <a href="IntegerFiltrationDegree.lean.html#L25">OAI.StableCoordinate.IntegerFiltration.degree</a></p></li><li id=L110><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.degree_eq_iff_initial</code> <small>line 110</small><div class="doc"><p>The degree is characterized by membership in a layer and failure of
+membership in the immediately preceding layer.</p></div><pre>theorem degree_eq_iff_initial (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) (d : ℤ) :
+    degree F x = d ↔ x ∈ F d ∧ x ∉ F (d - 1) := by
+…</pre><p class="refs">Mentions: <a href="IntegerFiltrationDegree.lean.html#L25">OAI.StableCoordinate.IntegerFiltration.degree</a></p></li><li id=L125><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.degree_pos_iff</code> <small>line 125</small><div class="doc"><p>Being outside the zeroth layer is exactly positivity of filtration degree.</p></div><pre>theorem degree_pos_iff (F : ℤ → Set A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d)
+    (hseparated : ∀ x : A, (∀ d : ℤ, x ∈ F d) → x = 0)
+    {x : A} (hx : x ≠ 0) :
+    0 &lt; degree F x ↔ x ∉ F 0 := by
+…</pre><p class="refs">Mentions: <a href="IntegerFiltrationDegree.lean.html#L25">OAI.StableCoordinate.IntegerFiltration.degree</a></p></li><li id=L141><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.initial_form_ne_zero</code> <small>line 141</small><div class="doc"><p>A representative in the first possible layer is nonzero in the quotient by
+its preceding layer.  This is the nonvanishing needed for an initial form.</p></div><pre>theorem initial_form_ne_zero (F : ℤ → Submodule K A) {d : ℤ} {x : A}
+    (hx : x ∈ F d) (hxprev : x ∉ F (d - 1)) :
+    (Submodule.Quotient.mk ⟨x, hx⟩ :
+      (F d) ⧸ (F (d - 1)).comap (F d).subtype) ≠ 0 := by
+…</pre></li><li id=L151><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.separated_of_iInf_eq_bot</code> <small>line 151</small><div class="doc"><p>Separation phrased as a lattice intersection implies elementwise separation.</p></div><pre>theorem separated_of_iInf_eq_bot (F : ℤ → Submodule K A) (hF : ⨅ d, F d = ⊥)
+    (x : A) (hx : ∀ d : ℤ, x ∈ F d) : x = 0 := by
+…</pre></li><li id=L159><b>theorem</b> <code>OAI.StableCoordinate.IntegerFiltration.exists_nonzero_initial_form</code> <small>line 159</small><div class="doc"><p>The source's exhaustive separated filtration has a nonzero initial form for
+every nonzero element, as a genuine quotient-module element.</p></div><pre>theorem exists_nonzero_initial_form (F : ℤ → Submodule K A) (hmono : Monotone F)
+    (hexhaustive : ∀ x : A, ∃ d : ℤ, x ∈ F d) (hF : ⨅ d, F d = ⊥)
+    {x : A} (hx : x ≠ 0) :
+    ∃ (d : ℤ) (hd : x ∈ F d),
+      (Submodule.Quotient.mk ⟨x, hd⟩ :
+        (F d) ⧸ (F (d - 1)).comap (F d).subtype) ≠ 0 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

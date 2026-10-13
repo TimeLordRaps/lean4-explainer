@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/AffineLocalization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/AffineLocalization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>AffineLocalization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>AffineLocalization.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/AffineLocalization.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem326.compact_uniform_gap_of_ne</code> <small>line 15</small><div class="doc"><p>A continuous scalar function on a compact set stays uniformly away from
+any value which it never attains. Empty compact sets are allowed.</p></div><pre>theorem compact_uniform_gap_of_ne
+    {X : Type uX} [TopologicalSpace X] {K : Set X} {f : X → ℝ} {t : ℝ}
+    (hK : IsCompact K) (hf : ContinuousOn f K)
+    (hne : ∀ x ∈ K, f x ≠ t) :
+    ∃ ρ : ℝ, 0 &lt; ρ ∧ ∀ x ∈ K, ρ ≤ |f x - t| := by
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.Problem326.finite_closed_family_extend_fiber</code> <small>line 27</small><div class="doc"><p>The strict conclusions of finitely many closed active-label conditions
+extend from one level of a continuous function to a neighborhood of that level.
+Each tolerance is fixed separately; no continuity in the label is required.</p></div><pre>theorem finite_closed_family_extend_fiber
+    {X : Type uX} {ι : Type uIota} [TopologicalSpace X] [Finite ι]
+    {K : Set X} (hK : IsCompact K)
+    (A : ι → Set X) (hA : ∀ i, IsClosed (A i))
+    (μ : X → ℝ) (hμ : Continuous μ)
+    (error : ι → X → ℝ) (herror : ∀ i, Continuous (error i))
+    (E : ι → ℝ) (t : ℝ)
+    (hgood : ∀ i x, x ∈ K → x ∈ A i → μ x = t → error i x &lt; E i) :
+    ∃ ρ : ℝ, 0 &lt; ρ ∧
+      ∀ i x, x ∈ K → x ∈ A i → |μ x - t| &lt; ρ → error i x &lt; E i := by
+…</pre></li><li id=L55><b>def</b> <code>OAI.Problem326.AsymptoticActive</code> <small>line 55</small><div class="doc"><p>Limit points of active parameters as the positive scale tends to zero.
+This neighborhood formulation needs no regularity of the activity predicate.</p></div><pre>def AsymptoticActive {X : Type uX} [PseudoMetricSpace X]
+    (active : ℝ → X → Prop) (p : X) : Prop :=
+…</pre></li><li id=L62><b>theorem</b> <code>OAI.Problem326.isClosed_asymptoticActive</code> <small>line 62</small><div class="doc"><p>Diagonal closure of asymptotic activity, without assuming continuity of
+any scale-dependent affine offset.</p></div><pre>theorem isClosed_asymptoticActive {X : Type uX} [PseudoMetricSpace X]
+    (active : ℝ → X → Prop) : IsClosed {p | AsymptoticActive active p} := by
+…</pre><p class="refs">Mentions: <a href="AffineLocalization.lean.html#L55">OAI.Problem326.AsymptoticActive</a></p></li><li id=L74><b>theorem</b> <code>OAI.Problem326.asymptoticActive_of_sequences</code> <small>line 74</small><div class="doc"><p>An actual convergent active sequence yields asymptotic activity.</p></div><pre>theorem asymptoticActive_of_sequences {X : Type uX} [PseudoMetricSpace X]
+    (active : ℝ → X → Prop) {h : ℕ → ℝ} {q : ℕ → X} {p : X}
+    (hhpos : ∀ n, 0 &lt; h n) (hh : Tendsto h atTop (𝓝 0))
+    (hq : Tendsto q atTop (𝓝 p)) (hactive : ∀ n, active (h n) (q n)) :
+    AsymptoticActive active p := by
+…</pre><p class="refs">Mentions: <a href="AffineLocalization.lean.html#L55">OAI.Problem326.AsymptoticActive</a></p></li><li id=L88><b>theorem</b> <code>OAI.Problem326.AsymptoticActive.exists_sequences</code> <small>line 88</small><div class="doc"><p>Every asymptotically active point has a realizing sequence.</p></div><pre>theorem AsymptoticActive.exists_sequences {X : Type uX} [PseudoMetricSpace X]
+    {active : ℝ → X → Prop} {p : X} (hp : AsymptoticActive active p) :
+    ∃ (h : ℕ → ℝ) (q : ℕ → X),
+      (∀ n, 0 &lt; h n) ∧ Tendsto h atTop (𝓝 0) ∧ Tendsto q atTop (𝓝 p) ∧
+      ∀ n, active (h n) (q n) := by
+…</pre><p class="refs">Mentions: <a href="AffineLocalization.lean.html#L55">OAI.Problem326.AsymptoticActive</a></p></li><li id=L109><b>theorem</b> <code>OAI.Problem326.active_family_extend_fiber</code> <small>line 109</small><div class="doc"><p>The localization step for arbitrary scale-dependent active families.
+Its hypothesis is precisely a strict error bound for every active sequence
+whose limit lies in one prescribed level set.</p></div><pre>theorem active_family_extend_fiber
+    {X : Type uX} {ι : Type uIota} [PseudoMetricSpace X] [Finite ι]
+    {K : Set X} (hK : IsCompact K)
+    (active : ι → ℝ → X → Prop)
+    (μ : X → ℝ) (hμ : Continuous μ)
+    (error : ι → X → ℝ) (herror : ∀ i, Continuous (error i))
+    (E : ι → ℝ) (t : ℝ)
+    (hgood : ∀ (i : ι) (h : ℕ → ℝ) (q : ℕ → X) (p : X),
+      p ∈ K → μ p = t → (∀ n, 0 &lt; h n) → Tendsto h atTop (𝓝 0) →
+      Tendsto q atTop (𝓝 p) → (∀ n, active i (h n) (q n)) → error i p &lt; E i) :
+    ∃ ρ : ℝ, 0 &lt; ρ ∧ ∀ i p, p ∈ K → |μ p - t| &lt; ρ →
+      AsymptoticActive (active i) p → error i p &lt; E i := by
+…</pre><p class="refs">Mentions: <a href="AffineLocalization.lean.html#L55">OAI.Problem326.AsymptoticActive</a></p></li><li id=L131><b>theorem</b> <code>OAI.Problem326.uniform_activity_of_asymptotic</code> <small>line 131</small><div class="doc"><p>Compactness turns a strict bound on all limiting active points into a
+uniform bound at every sufficiently small positive scale.</p></div><pre>theorem uniform_activity_of_asymptotic
+    {X : Type uX} [PseudoMetricSpace X] {K : Set X} (hK : IsCompact K)
+    (active : ℝ → X → Prop) (error : X → ℝ) (herror : Continuous error) (E : ℝ)
+    (hgood : ∀ p ∈ K, AsymptoticActive active p → error p &lt; E) :
+    ∃ h0 : ℝ, 0 &lt; h0 ∧ ∀ h : ℝ, 0 &lt; h → h &lt; h0 →
+      ∀ p ∈ K, active h p → error p &lt; E := by
+…</pre><p class="refs">Mentions: <a href="AffineLocalization.lean.html#L55">OAI.Problem326.AsymptoticActive</a></p></li><li id=L158><b>theorem</b> <code>OAI.Problem326.finite_uniform_activity_of_asymptotic</code> <small>line 158</small><div class="doc"><p>The scale in the uniform activity estimate can be chosen simultaneously
+for finitely many labels.</p></div><pre>theorem finite_uniform_activity_of_asymptotic
+    {X : Type uX} {ι : Type uIota} [PseudoMetricSpace X] [Finite ι]
+    {K : Set X} (hK : IsCompact K)
+    (active : ι → ℝ → X → Prop) (error : ι → X → ℝ)
+    (herror : ∀ i, Continuous (error i)) (E : ι → ℝ)
+    (hgood : ∀ i p, p ∈ K → AsymptoticActive (active i) p → error i p &lt; E i) :
+    ∃ h0 : ℝ, 0 &lt; h0 ∧ ∀ h : ℝ, 0 &lt; h → h &lt; h0 →
+      ∀ i p, p ∈ K → active i h p → error i p &lt; E i := by
+…</pre><p class="refs">Mentions: <a href="AffineLocalization.lean.html#L55">OAI.Problem326.AsymptoticActive</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

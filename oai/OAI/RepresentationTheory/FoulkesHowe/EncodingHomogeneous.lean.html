@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/FoulkesHowe/EncodingHomogeneous.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/FoulkesHowe/EncodingHomogeneous.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">FoulkesHowe</a> / <span>EncodingHomogeneous.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">FoulkesHowe</a>/<span>EncodingHomogeneous.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/FoulkesHowe/EncodingHomogeneous.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem346.EncodingDegree.weightedHomogeneous_expansion</code> <small>line 15</small><div class="doc"><p>A coefficient expansion has weighted degree given by the sum of the weights
+of its assigned vector blocks. The coefficients can be arbitrary.</p></div><pre>theorem weightedHomogeneous_expansion (c : (S → K) → R) (blocks : S → B)
+    (w : B → ℕ) :
+    MvPolynomial.IsWeightedHomogeneous (fun x : B × K =&gt; w x.1)
+      (∑ k : S → K, MvPolynomial.C (c k) *
+        ∏ i : S, MvPolynomial.X (blocks i, k i))
+      (∑ i : S, w (blocks i)) := by
+…</pre></li><li id=L30><b>theorem</b> <code>OAI.Problem346.EncodingDegree.blockHomogeneous_expansion</code> <small>line 30</small><div class="doc"><p>The degree in one block is exactly the number of occurrences of that block.</p></div><pre>theorem blockHomogeneous_expansion [DecidableEq B]
+    (c : (S → K) → R) (blocks : S → B) (b : B) :
+    MvPolynomial.IsWeightedHomogeneous
+      (fun x : B × K =&gt; if x.1 = b then 1 else 0)
+      (∑ k : S → K, MvPolynomial.C (c k) *
+        ∏ i : S, MvPolynomial.X (blocks i, k i))
+      (Finset.univ.filter (fun i =&gt; blocks i = b)).card := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Problem346.EncodingDegree.sum_weight_update</code> <small>line 42</small><div class="doc"><p>Changing a single assigned block changes the weight by exactly the
+corresponding source/destination contribution. This form avoids truncated subtraction.</p></div><pre>theorem sum_weight_update (blocks : S → B) (w : B → ℕ)
+    (i : S) (b : B) :
+    (∑ j : S, w ((Function.update blocks i b) j)) + w (blocks i) =
+      (∑ j : S, w (blocks j)) + w b := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

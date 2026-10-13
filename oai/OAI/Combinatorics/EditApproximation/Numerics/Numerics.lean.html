@@ -1,0 +1,296 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/EditApproximation/Numerics/Numerics.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/EditApproximation/Numerics/Numerics.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">EditApproximation</a> / <a href="index.html">Numerics</a> / <span>Numerics.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">EditApproximation</a>/<a href="index.html">Numerics</a>/<span>Numerics.lean</span></code></h1><p class="muted">65 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/EditApproximation/Numerics/Numerics.lean#L1">source</a></p><div class="doc"><h3>Finite numerical optimizer for edit-distance refinement</h3><p>These are the explicit fixed-step recurrence and rational mixture
+calculations from Section 9 of <em>An Almost-Linear Approximation Scheme
+for Edit Distance</em> (September 24, 2026). The recurrence is an internal
+analytic obligation of the manuscript, not an assumed published theorem.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.EditApproximation.frankWolfeStep</code> <small>line 21</small><div class="doc"><p>The conditional-gradient step size in the finite entropy optimizer.</p></div><pre>noncomputable def frankWolfeStep (j : ℕ) : ℝ := 2 / ((j : ℝ) + 2)</pre></li><li id=L23><b>theorem</b> <code>OAI.EditApproximation.frankWolfeStep_nonnegative</code> <small>line 23</small></li><li id=L27><b>theorem</b> <code>OAI.EditApproximation.frankWolfeStep_le_one</code> <small>line 27</small></li><li id=L35><b>theorem</b> <code>OAI.EditApproximation.frank_wolfe_scalar_step</code> <small>line 35</small><div class="doc"><p>The scalar induction step giving the optimizer's <code>8/(σ(j+1))</code>
+error term.</p></div><pre>theorem frank_wolfe_scalar_step (σ error x : ℝ) (hσ : 0 &lt; σ) (hx : 0 ≤ x) :
+    (1 - 2 / (x + 3)) * (2 * error + 8 / (σ * (x + 2))) +
+        2 * error * (2 / (x + 3)) + 2 * (2 / (x + 3)) ^ 2 / σ ≤
+      2 * error + 8 / (σ * (x + 3)) := by
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.EditApproximation.frank_wolfe_gap_bound</code> <small>line 53</small><div class="doc"><p>The first update removes dependence on the initial objective gap.
+The conclusion corresponds to manuscript indices <code>j ≥ 1</code>.</p></div><pre>theorem frank_wolfe_gap_bound (σ error : ℝ) (gap : ℕ → ℝ)
+    (hσ : 0 &lt; σ)
+    (hrecurrence : ∀ j,
+      gap (j + 1) ≤ (1 - frankWolfeStep j) * gap j +
+        2 * error * frankWolfeStep j + 2 * (frankWolfeStep j) ^ 2 / σ) :
+    ∀ j : ℕ, gap (j + 1) ≤ 2 * error + 8 / (σ * ((j : ℝ) + 2)) := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L21">OAI.EditApproximation.frankWolfeStep</a></p></li><li id=L87><b>def</b> <code>OAI.EditApproximation.optimizerMixtureWeight</code> <small>line 87</small><div class="doc"><p>Exact rational weight of the vertex selected at step <code>j</code>, after
+<code>K</code> steps.</p></div><pre>def optimizerMixtureWeight (K j : ℕ) : ℚ :=
+…</pre></li><li id=L90><b>theorem</b> <code>OAI.EditApproximation.sum_optimizer_numerators</code> <small>line 90</small></li><li id=L99><b>theorem</b> <code>OAI.EditApproximation.optimizerMixtureWeight_positive</code> <small>line 99</small></li><li id=L105><b>theorem</b> <code>OAI.EditApproximation.sum_optimizerMixtureWeight</code> <small>line 105</small></li><li id=L113><b>theorem</b> <code>OAI.EditApproximation.optimizerMixtureWeight_update_old</code> <small>line 113</small></li><li id=L122><b>theorem</b> <code>OAI.EditApproximation.optimizerMixtureWeight_update_new</code> <small>line 122</small></li><li id=L130><b>def</b> <code>OAI.EditApproximation.rationalOptimizerIterate</code> <small>line 130</small><div class="doc"><p>Exact rational conditional-gradient iterates.</p></div><pre>def rationalOptimizerIterate {ι : Type*} (initial : ι → ℚ) (selected : ℕ → ι → ℚ) :
+    ℕ → ι → ℚ
+  | 0 =&gt; initial
+  | j + 1 =&gt; fun i =&gt;
+    (1 - 2 / ((j : ℚ) + 2)) * rationalOptimizerIterate initial selected j i +
+      (2 / ((j : ℚ) + 2)) * selected j i
+
+/-- After the first update, the initial vertex has weight zero. The
+remaining iterates are exactly the explicit rational triangular mixture
+used by the fair-bit sampler in Section 9. -/</pre></li><li id=L140><b>theorem</b> <code>OAI.EditApproximation.rationalOptimizerIterate_eq_mixture</code> <small>line 140</small><div class="doc"><p>After the first update, the initial vertex has weight zero. The
+remaining iterates are exactly the explicit rational triangular mixture
+used by the fair-bit sampler in Section 9.</p></div><pre>theorem rationalOptimizerIterate_eq_mixture {ι : Type*}
+    (initial : ι → ℚ) (selected : ℕ → ι → ℚ) (K : ℕ) (i : ι) :
+    rationalOptimizerIterate initial selected (K + 1) i =
+      ∑ j ∈ range (K + 1), optimizerMixtureWeight (K + 1) j * selected j i := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L130">OAI.EditApproximation.rationalOptimizerIterate</a>, <a href="Numerics.lean.html#L87">OAI.EditApproximation.optimizerMixtureWeight</a></p></li><li id=L160><b>theorem</b> <code>OAI.EditApproximation.optimizerTriangularMass_succ</code> <small>line 160</small><div class="doc"><p>Cumulative integer mass for the triangular exact sampler.</p></div><pre>theorem optimizerTriangularMass_succ (K : ℕ) :
+    optimizerTriangularMass (K + 1) = optimizerTriangularMass K + (K + 1) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1208">OAI.EditApproximation.optimizerTriangularMass</a></p></li><li id=L165><b>theorem</b> <code>OAI.EditApproximation.optimizerTriangularMass_twice</code> <small>line 165</small></li><li id=L175><b>theorem</b> <code>OAI.EditApproximation.optimizerSampler_block_card</code> <small>line 175</small><div class="doc"><p>The integers assigned to selection index <code>j</code> form a block of
+exactly <code>j+1</code> points.</p></div><pre>theorem optimizerSampler_block_card (j : ℕ) :
+    (Icc (optimizerTriangularMass j + 1) (optimizerTriangularMass (j + 1))).card = j + 1 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1208">OAI.EditApproximation.optimizerTriangularMass</a></p></li><li id=L182><b>theorem</b> <code>OAI.EditApproximation.optimizerSampler_block_weight</code> <small>line 182</small><div class="doc"><p>Counting the fair uniform integer sampler gives exactly the stored
+mixture weights, including repeated selected vertices.</p></div><pre>theorem optimizerSampler_block_weight (K j : ℕ) (hK : 0 &lt; K) :
+    ((j + 1 : ℕ) : ℚ) / optimizerTriangularMass K = optimizerMixtureWeight K j := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1208">OAI.EditApproximation.optimizerTriangularMass</a>, <a href="Numerics.lean.html#L87">OAI.EditApproximation.optimizerMixtureWeight</a></p></li><li id=L195><b>theorem</b> <code>OAI.EditApproximation.entropy_smoothing_upper</code> <small>line 195</small><div class="doc"><p>The increase of <code>-x log x</code> after adding a positive smoothing
+parameter is bounded by that parameter's own entropy.</p></div><pre>theorem entropy_smoothing_upper (x σ : ℝ) (hx : 0 ≤ x) (hσ : 0 &lt; σ) :
+    Real.negMulLog (x + σ) - Real.negMulLog x ≤ Real.negMulLog σ := by
+…</pre></li><li id=L211><b>theorem</b> <code>OAI.EditApproximation.entropy_smoothing_lower</code> <small>line 211</small><div class="doc"><p>The negative change in the smoothed entropy coordinate is linear
+in the smoothing parameter on the relevant interval <code>[0,2]</code>.</p></div><pre>theorem entropy_smoothing_lower (x σ : ℝ) (hx : 0 ≤ x) (hσ : 0 &lt; σ)
+    (hupper : x + σ ≤ 2) :
+    Real.negMulLog x - Real.negMulLog (x + σ) ≤ 2 * σ := by
+…</pre></li><li id=L235><b>theorem</b> <code>OAI.EditApproximation.negMulLog_le_two_sqrt</code> <small>line 235</small></li><li id=L252><b>theorem</b> <code>OAI.EditApproximation.entropy_smoothing_coordinate</code> <small>line 252</small><div class="doc"><p>A uniform coordinate modulus for entropy smoothing, valid including
+zero coordinates.</p></div><pre>theorem entropy_smoothing_coordinate (x σ : ℝ)
+    (hx : 0 ≤ x) (hx1 : x ≤ 1) (hσ : 0 &lt; σ) (hσ1 : σ ≤ 1) :
+    |Real.negMulLog (x + σ) - Real.negMulLog x| ≤ 2 * Real.sqrt σ := by
+…</pre></li><li id=L267><b>theorem</b> <code>OAI.EditApproximation.finite_entropy_smoothing_bound</code> <small>line 267</small><div class="doc"><p>Manuscript Equation <code>eq:entropy-smoothing</code>, with a slightly stronger
+constant from the coordinate estimate. The linear coefficient vector
+cancels, so the bound is independent of its magnitude.</p></div><pre>theorem finite_entropy_smoothing_bound {ι : Type*} (coordinates : Finset ι)
+    (p objective : ι → ℝ) (σ η : ℝ)
+    (hp : ∀ i ∈ coordinates, 0 ≤ p i)
+    (hpsum : ∑ i ∈ coordinates, p i = 1)
+    (hσ : 0 &lt; σ) (hσ1 : σ ≤ 1) :
+    |((∑ i ∈ coordinates, Real.negMulLog (p i + σ)) +
+        η * ∑ i ∈ coordinates, objective i * p i) -
+      entropyValue coordinates η objective p| ≤ 4 * coordinates.card * Real.sqrt σ := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/Regret.lean.html#L626">OAI.EditApproximation.entropyValue</a></p></li><li id=L297><b>theorem</b> <code>OAI.EditApproximation.entropy_quadratic_hasDerivAt</code> <small>line 297</small></li><li id=L308><b>theorem</b> <code>OAI.EditApproximation.entropy_quadratic_convex</code> <small>line 308</small><div class="doc"><p>Negative entropy minus half the square is convex on the probability
+coordinate interval. This is the exact curvature bound used for the
+objective-gap estimate in the finite optimizer.</p></div><pre>theorem entropy_quadratic_convex :
+    ConvexOn ℝ (Set.Icc (0 : ℝ) 1) (fun z : ℝ =&gt; z * Real.log z - z ^ 2 / 2) := by
+…</pre></li><li id=L332><b>theorem</b> <code>OAI.EditApproximation.entropy_coordinate_strong_gap</code> <small>line 332</small><div class="doc"><p>The entropy coordinate gap is at least half the squared coordinate
+distance, including the competitor value zero by continuity.</p></div><pre>theorem entropy_coordinate_strong_gap (x y : ℝ)
+    (hx : 0 ≤ x) (hx1 : x ≤ 1) (hy : 0 &lt; y) (hy1 : y ≤ 1) :
+    (x - y) ^ 2 / 2 ≤
+      x * Real.log x - y * Real.log y - (Real.log y + 1) * (x - y) := by
+…</pre></li><li id=L352><b>theorem</b> <code>OAI.EditApproximation.finite_relative_entropy_sq_gap</code> <small>line 352</small><div class="doc"><p>Relative entropy dominates half the squared Euclidean distance on
+the finite probability simplex.</p></div><pre>theorem finite_relative_entropy_sq_gap {ι : Type*} (coordinates : Finset ι)
+    (p q : ι → ℝ)
+    (hp : ∀ i ∈ coordinates, 0 &lt; p i)
+    (hq : ∀ i ∈ coordinates, 0 ≤ q i)
+    (hpsum : ∑ i ∈ coordinates, p i = 1)
+    (hqsum : ∑ i ∈ coordinates, q i = 1) :
+    (∑ i ∈ coordinates, (q i - p i) ^ 2) / 2 ≤
+      ∑ i ∈ coordinates, q i * Real.log (q i / p i) := by
+…</pre></li><li id=L376><b>theorem</b> <code>OAI.EditApproximation.entropy_gap_to_l1</code> <small>line 376</small><div class="doc"><p>A true entropy-objective gap controls the <code>ℓ₁</code> error of a feasible
+mixture, with the manuscript's exact factor <code>sqrt (2d gap)</code>.</p></div><pre>theorem entropy_gap_to_l1 {ι : Type*} (coordinates : Finset ι)
+    (Q : Set (ι → ℝ)) (η : ℝ) (objective maximizer mixture : ι → ℝ)
+    (hconvex : Convex ℝ Q) (hmaxQ : maximizer ∈ Q) (hmixQ : mixture ∈ Q)
+    (hmax : ∀ i ∈ coordinates, 0 &lt; maximizer i)
+    (hmix : ∀ i ∈ coordinates, 0 ≤ mixture i)
+    (hmaxsum : ∑ i ∈ coordinates, maximizer i = 1)
+    (hmixsum : ∑ i ∈ coordinates, mixture i = 1)
+    (hmaximize : IsMaxOn (entropyValue coordinates η objective) Q maximizer) :
+    (∑ i ∈ coordinates, |mixture i - maximizer i|) ≤
+      Real.sqrt (2 * coordinates.card *
+        (entropyValue coordinates η objective maximizer -
+          entropyValue coordinates η objective mixture)) := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/Regret.lean.html#L626">OAI.EditApproximation.entropyValue</a></p></li><li id=L407><b>theorem</b> <code>OAI.EditApproximation.smoothing_gap_transfer</code> <small>line 407</small><div class="doc"><p>Converting a uniform smoothing error and a smoothed objective gap
+to a gap for the true entropy objective.</p></div><pre>theorem smoothing_gap_transfer (trueBest trueValue smoothBest smoothValue error gap : ℝ)
+    (hbest : trueBest ≤ smoothBest + error)
+    (hvalue : smoothValue ≤ trueValue + error)
+    (hgap : smoothBest - smoothValue ≤ gap) :
+    trueBest - trueValue ≤ gap + 2 * error := by linarith</pre></li><li id=L413><b>theorem</b> <code>OAI.EditApproximation.optimizer_work_budget_gap</code> <small>line 413</small></li><li id=L424><b>theorem</b> <code>OAI.EditApproximation.optimizer_smoothing_root</code> <small>line 424</small></li><li id=L432><b>theorem</b> <code>OAI.EditApproximation.optimizer_explicit_gap_budget</code> <small>line 432</small><div class="doc"><p>The explicit total objective-gap bound after the prescribed
+number of fixed-step updates.</p></div><pre>theorem optimizer_explicit_gap_budget (G d : ℝ) (hG : 4 ≤ G) (hd : d ≤ G) :
+    2 / G ^ 20 + 8 / G ^ 30 + 8 * d / G ^ 25 ≤ 12 / G ^ 20 := by
+…</pre></li><li id=L457><b>theorem</b> <code>OAI.EditApproximation.optimizer_final_l1_precision</code> <small>line 457</small><div class="doc"><p>The quantitative final <code>H^(-3)</code> precision calculation. The squared
+distance premise is supplied by the proved entropy/KL curvature bound.</p></div><pre>theorem optimizer_final_l1_precision (H G d distance gap : ℝ)
+    (hH : 4 ≤ H) (hHG : H ≤ G) (hd : 0 ≤ d) (hdG : d ≤ G)
+    (hsquared : distance ^ 2 ≤ 2 * d * gap) (hgap : gap ≤ 12 / G ^ 20) :
+    distance ≤ 1 / H ^ 3 := by
+…</pre></li><li id=L505><b>theorem</b> <code>OAI.EditApproximation.rationalLogApproximation_cast</code> <small>line 505</small><div class="doc"><p>Rational truncated logarithm used for the entropy-gradient
+calculation. Its evaluation uses only rational arithmetic.</p></div><pre>theorem rationalLogApproximation_cast (r : ℚ) (K : ℕ) :
+    (rationalLogApproximation r K : ℝ) =
+      2 * ∑ k ∈ range K,
+        ((((r : ℝ) - 1) / ((r : ℝ) + 1)) ^ (2 * k + 1) / (2 * k + 1)) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1210">OAI.EditApproximation.rationalLogApproximation</a></p></li><li id=L513><b>theorem</b> <code>OAI.EditApproximation.logarithm_symmetric_parameter_bound</code> <small>line 513</small></li><li id=L535><b>theorem</b> <code>OAI.EditApproximation.logarithm_series_error</code> <small>line 535</small><div class="doc"><p>Explicit logarithm-series remainder for the rational gradient
+routine. Mathlib's logarithm remainder is specialized to the bounded
+smoothed-coordinate interval. Its bound suffices for the prescribed
+polynomial truncation length.</p></div><pre>theorem logarithm_series_error (r σ : ℝ) (K : ℕ)
+    (hσ : 0 &lt; σ) (hσhalf : σ ≤ 1 / 2)
+    (hr : σ ≤ r) (hrupper : r ≤ 1 + σ) :
+    |Real.log r - 2 * ∑ k ∈ range K,
+        (((r - 1) / (r + 1)) ^ (2 * k + 1) / (2 * k + 1))| ≤
+      2 * Real.exp (-2 * K * σ) / σ := by
+…</pre></li><li id=L579><b>theorem</b> <code>OAI.EditApproximation.rationalLogApproximation_error</code> <small>line 579</small></li><li id=L587><b>theorem</b> <code>OAI.EditApproximation.logarithm_truncation_exponential_budget</code> <small>line 587</small></li><li id=L620><b>theorem</b> <code>OAI.EditApproximation.rationalLogApproximation_prescribed_precision</code> <small>line 620</small><div class="doc"><p>The prescribed rational logarithm computation has the required
+absolute gradient precision <code>G^(-20)</code> after <code>G^60</code> rational terms.</p></div><pre>theorem rationalLogApproximation_prescribed_precision (r : ℚ) (G : ℕ)
+    (hG : 4 ≤ G)
+    (hr : 1 / (G : ℝ) ^ 50 ≤ (r : ℝ))
+    (hrupper : (r : ℝ) ≤ 1 + 1 / (G : ℝ) ^ 50) :
+    |Real.log (r : ℝ) - (rationalLogApproximation r (G ^ 60) : ℝ)| ≤
+      1 / (G : ℝ) ^ 20 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1210">OAI.EditApproximation.rationalLogApproximation</a></p></li><li id=L648><b>theorem</b> <code>OAI.EditApproximation.finite_gradient_error</code> <small>line 648</small></li><li id=L667><b>theorem</b> <code>OAI.EditApproximation.approximate_gradient_linearization_loss</code> <small>line 667</small><div class="doc"><p>Enumerating the vertices with an approximate gradient loses at
+most <code>2e₀</code> in the true linearization, even against an arbitrary feasible
+mixture.</p></div><pre>theorem approximate_gradient_linearization_loss {ι : Type*} (coordinates : Finset ι)
+    (gradient approximateGradient selected competitor : ι → ℝ) (error : ℝ)
+    (hselected : ∀ i ∈ coordinates, 0 ≤ selected i)
+    (hcompetitor : ∀ i ∈ coordinates, 0 ≤ competitor i)
+    (hselectedSum : ∑ i ∈ coordinates, selected i = 1)
+    (hcompetitorSum : ∑ i ∈ coordinates, competitor i = 1)
+    (herror : ∀ i ∈ coordinates, |approximateGradient i - gradient i| ≤ error)
+    (hchoose : (∑ i ∈ coordinates, approximateGradient i * competitor i) ≤
+      ∑ i ∈ coordinates, approximateGradient i * selected i) :
+    (∑ i ∈ coordinates, gradient i * competitor i) -
+        (∑ i ∈ coordinates, gradient i * selected i) ≤ 2 * error := by
+…</pre></li><li id=L687><b>def</b> <code>OAI.EditApproximation.smoothedEntropyValue</code> <small>line 687</small></li><li id=L691><b>def</b> <code>OAI.EditApproximation.smoothedEntropyGradient</code> <small>line 691</small></li><li id=L696><b>theorem</b> <code>OAI.EditApproximation.smoothed_entropy_coordinate_upper</code> <small>line 696</small><div class="doc"><p>Tangent upper bound for a single smoothed entropy coordinate.</p></div><pre>theorem smoothed_entropy_coordinate_upper (x y σ linear : ℝ)
+    (hx : 0 ≤ x) (hy : 0 ≤ y) (hσ : 0 &lt; σ) :
+    (Real.negMulLog (y + σ) + linear * y) -
+        (Real.negMulLog (x + σ) + linear * x) ≤
+      (-Real.log (x + σ) - 1 + linear) * (y - x) := by
+…</pre></li><li id=L716><b>theorem</b> <code>OAI.EditApproximation.smoothed_entropy_coordinate_lower</code> <small>line 716</small><div class="doc"><p>A scalar smoothness bound obtained directly from <code>log u ≤ u-1</code>.
+The coefficient <code>1/σ</code> combines with the sharper simplex diameter below
+to give the manuscript's exact <code>2 ξ²/σ</code> remainder.</p></div><pre>theorem smoothed_entropy_coordinate_lower (x y σ linear : ℝ)
+    (hx : 0 ≤ x) (hy : 0 ≤ y) (hσ : 0 &lt; σ) :
+    (-Real.log (x + σ) - 1 + linear) * (y - x) - (y - x) ^ 2 / σ ≤
+      (Real.negMulLog (y + σ) + linear * y) -
+        (Real.negMulLog (x + σ) + linear * x) := by
+…</pre></li><li id=L738><b>theorem</b> <code>OAI.EditApproximation.probability_vectors_sq_distance_le_two</code> <small>line 738</small></li><li id=L756><b>theorem</b> <code>OAI.EditApproximation.smoothed_entropy_tangent_upper</code> <small>line 756</small></li><li id=L766><b>theorem</b> <code>OAI.EditApproximation.smoothed_entropy_mixture_lower</code> <small>line 766</small></li><li id=L816><b>theorem</b> <code>OAI.EditApproximation.smoothed_frank_wolfe_recurrence</code> <small>line 816</small><div class="doc"><p>The manuscript's fixed-step optimizer recurrence follows from the
+actual smoothed entropy objective and approximate gradient selection.</p></div><pre>theorem smoothed_frank_wolfe_recurrence {ι : Type*} (coordinates : Finset ι)
+    (σ ξ error : ℝ) (linear p selected best approximateGradient : ι → ℝ)
+    (hp : ∀ i ∈ coordinates, 0 ≤ p i)
+    (hselected : ∀ i ∈ coordinates, 0 ≤ selected i)
+    (hbest : ∀ i ∈ coordinates, 0 ≤ best i)
+    (hpsum : ∑ i ∈ coordinates, p i = 1)
+    (hselectedSum : ∑ i ∈ coordinates, selected i = 1)
+    (hbestSum : ∑ i ∈ coordinates, best i = 1)
+    (hσ : 0 &lt; σ) (hξ : 0 ≤ ξ) (hξ1 : ξ ≤ 1)
+    (hgradient : ∀ i ∈ coordinates,
+      |approximateGradient i - smoothedEntropyGradient σ linear p i| ≤ error)
+    (hchoose : (∑ i ∈ coordinates, approximateGradient i * best i) ≤
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L691">OAI.EditApproximation.smoothedEntropyGradient</a></p></li><li id=L856><b>theorem</b> <code>OAI.EditApproximation.rationalOptimizerIterate_cast_step</code> <small>line 856</small><div class="doc"><p>Casting the exact rational update gives precisely the analytic step.</p></div><pre>theorem rationalOptimizerIterate_cast_step {ι : Type*}
+    (initial : ι → ℚ) (selected : ℕ → ι → ℚ) (j : ℕ) :
+    (fun i =&gt; (rationalOptimizerIterate initial selected (j + 1) i : ℝ)) =
+      (fun i =&gt; (1 - frankWolfeStep j) * (rationalOptimizerIterate initial selected j i : ℝ) +
+        frankWolfeStep j * (selected j i : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L130">OAI.EditApproximation.rationalOptimizerIterate</a>, <a href="Numerics.lean.html#L21">OAI.EditApproximation.frankWolfeStep</a></p></li><li id=L865><b>theorem</b> <code>OAI.EditApproximation.rationalOptimizerIterate_probability</code> <small>line 865</small><div class="doc"><p>All exact rational iterates are probability vectors.</p></div><pre>theorem rationalOptimizerIterate_probability {ι : Type*} (coordinates : Finset ι)
+    (initial : ι → ℚ) (selected : ℕ → ι → ℚ)
+    (hinitial : ∀ i ∈ coordinates, (0 : ℝ) ≤ initial i)
+    (hinitialSum : ∑ i ∈ coordinates, (initial i : ℝ) = 1)
+    (hselected : ∀ j i, i ∈ coordinates → (0 : ℝ) ≤ selected j i)
+    (hselectedSum : ∀ j, ∑ i ∈ coordinates, (selected j i : ℝ) = 1) :
+    ∀ j, (∀ i ∈ coordinates, (0 : ℝ) ≤ rationalOptimizerIterate initial selected j i) ∧
+      (∑ i ∈ coordinates, (rationalOptimizerIterate initial selected j i : ℝ)) = 1 := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L130">OAI.EditApproximation.rationalOptimizerIterate</a></p></li><li id=L889><b>theorem</b> <code>OAI.EditApproximation.rationalOptimizerIterate_mem</code> <small>line 889</small><div class="doc"><p>Convex feasibility is preserved by the actual rational iterates.</p></div><pre>theorem rationalOptimizerIterate_mem {ι : Type*}
+    (Q : Set (ι → ℝ)) (initial : ι → ℚ) (selected : ℕ → ι → ℚ)
+    (hconvex : Convex ℝ Q) (hinitial : (fun i =&gt; (initial i : ℝ)) ∈ Q)
+    (hselected : ∀ j, (fun i =&gt; (selected j i : ℝ)) ∈ Q) :
+    ∀ j, (fun i =&gt; (rationalOptimizerIterate initial selected j i : ℝ)) ∈ Q := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L130">OAI.EditApproximation.rationalOptimizerIterate</a></p></li><li id=L904><b>theorem</b> <code>OAI.EditApproximation.rational_optimizer_smoothed_gap_bound</code> <small>line 904</small><div class="doc"><p>Objective convergence of the exact rational implementation follows
+from the proved smoothness and rational approximate-gradient choices.</p></div><pre>theorem rational_optimizer_smoothed_gap_bound {ι : Type*} (coordinates : Finset ι)
+    (σ error : ℝ) (linear best : ι → ℝ) (initial : ι → ℚ)
+    (selected : ℕ → ι → ℚ) (approximateGradient : ℕ → ι → ℝ)
+    (hinitial : ∀ i ∈ coordinates, (0 : ℝ) ≤ initial i)
+    (hinitialSum : ∑ i ∈ coordinates, (initial i : ℝ) = 1)
+    (hselected : ∀ j i, i ∈ coordinates → (0 : ℝ) ≤ selected j i)
+    (hselectedSum : ∀ j, ∑ i ∈ coordinates, (selected j i : ℝ) = 1)
+    (hbest : ∀ i ∈ coordinates, 0 ≤ best i)
+    (hbestSum : ∑ i ∈ coordinates, best i = 1) (hσ : 0 &lt; σ)
+    (hgradient : ∀ j i, i ∈ coordinates →
+      |approximateGradient j i - smoothedEntropyGradient σ linear
+        (fun i =&gt; (rationalOptimizerIterate initial selected j i : ℝ)) i| ≤ error)
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L691">OAI.EditApproximation.smoothedEntropyGradient</a>, <a href="Numerics.lean.html#L130">OAI.EditApproximation.rationalOptimizerIterate</a></p></li><li id=L937><b>theorem</b> <code>OAI.EditApproximation.rationalSmoothedGradient_precision</code> <small>line 937</small><div class="doc"><p>The actual rational gradient routine, including exact linear terms.</p></div><pre>theorem rationalSmoothedGradient_precision {ι : Type*} (coordinates : Finset ι)
+    (G : ℕ) (linear p : ι → ℚ) (hG : 4 ≤ G)
+    (hp : ∀ i ∈ coordinates, (0 : ℝ) ≤ p i)
+    (hpsum : ∑ i ∈ coordinates, (p i : ℝ) = 1) :
+    ∀ i ∈ coordinates,
+      |(rationalSmoothedGradient G linear p i : ℝ) -
+        smoothedEntropyGradient (1 / (G : ℝ) ^ 50)
+          (fun i =&gt; (linear i : ℝ)) (fun i =&gt; (p i : ℝ)) i| ≤ 1 / (G : ℝ) ^ 20 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1299">OAI.EditApproximation.rationalSmoothedGradient</a>, <a href="Numerics.lean.html#L691">OAI.EditApproximation.smoothedEntropyGradient</a></p></li><li id=L962><b>theorem</b> <code>OAI.EditApproximation.rational_optimizer_true_gap_precision</code> <small>line 962</small><div class="doc"><p>The prescribed number of exact rational updates reaches the true
+entropy-objective precision, with no assumed analytic recurrence.</p></div><pre>theorem rational_optimizer_true_gap_precision {ι : Type*} (coordinates : Finset ι)
+    (G : ℕ) (linear initial : ι → ℚ) (selected : ℕ → ι → ℚ) (best : ι → ℝ)
+    (hG : 4 ≤ G) (hdG : coordinates.card ≤ G)
+    (hinitial : ∀ i ∈ coordinates, (0 : ℝ) ≤ initial i)
+    (hinitialSum : ∑ i ∈ coordinates, (initial i : ℝ) = 1)
+    (hselected : ∀ j i, i ∈ coordinates → (0 : ℝ) ≤ selected j i)
+    (hselectedSum : ∀ j, ∑ i ∈ coordinates, (selected j i : ℝ) = 1)
+    (hbest : ∀ i ∈ coordinates, 0 ≤ best i)
+    (hbestSum : ∑ i ∈ coordinates, best i = 1)
+    (hchoose : ∀ j,
+      (∑ i ∈ coordinates, (rationalSmoothedGradient G linear
+        (rationalOptimizerIterate initial selected j) i : ℝ) * best i) ≤
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1299">OAI.EditApproximation.rationalSmoothedGradient</a>, <a href="Numerics.lean.html#L130">OAI.EditApproximation.rationalOptimizerIterate</a></p></li><li id=L1046><b>theorem</b> <code>OAI.EditApproximation.rational_optimizer_l1_precision</code> <small>line 1046</small><div class="doc"><p>The final distance guarantee for the prescribed rational updates.
+Only their concrete finite linearization choices remain as input.</p></div><pre>theorem rational_optimizer_l1_precision {ι : Type*} (coordinates : Finset ι)
+    (Q : Set (ι → ℝ)) (H G : ℕ) (linear initial : ι → ℚ)
+    (selected : ℕ → ι → ℚ) (maximizer : ι → ℝ)
+    (hH : 4 ≤ H) (hHG : H ≤ G) (hdG : coordinates.card ≤ G)
+    (hconvex : Convex ℝ Q) (hinitialQ : (fun i =&gt; (initial i : ℝ)) ∈ Q)
+    (hselectedQ : ∀ j, (fun i =&gt; (selected j i : ℝ)) ∈ Q)
+    (hmaxQ : maximizer ∈ Q)
+    (hinitial : ∀ i ∈ coordinates, (0 : ℝ) ≤ initial i)
+    (hinitialSum : ∑ i ∈ coordinates, (initial i : ℝ) = 1)
+    (hselected : ∀ j i, i ∈ coordinates → (0 : ℝ) ≤ selected j i)
+    (hselectedSum : ∀ j, ∑ i ∈ coordinates, (selected j i : ℝ) = 1)
+    (hmax : ∀ i ∈ coordinates, 0 &lt; maximizer i)
+…</pre></li><li id=L1094><b>theorem</b> <code>OAI.EditApproximation.finite_linearization_maximizes_convexHull</code> <small>line 1094</small><div class="doc"><p>Maximizing a finite list's linearization also maximizes it on the
+real convex hull.</p></div><pre>theorem finite_linearization_maximizes_convexHull {ι : Type*} (coordinates : Finset ι)
+    (vertices : Set (ι → ℝ)) (gradient selected : ι → ℝ)
+    (hchoose : ∀ p ∈ vertices,
+      (∑ i ∈ coordinates, gradient i * p i) ≤ ∑ i ∈ coordinates, gradient i * selected i) :
+    ∀ p ∈ convexHull ℝ vertices,
+      (∑ i ∈ coordinates, gradient i * p i) ≤ ∑ i ∈ coordinates, gradient i * selected i := by
+…</pre></li><li id=L1122><b>theorem</b> <code>OAI.EditApproximation.rationalLinearizationMaximizer_spec</code> <small>line 1122</small><div class="doc"><p>Executable finite rational comparisons, with the first listed
+maximizer selected in a tie. The fallback only applies to an empty list.</p></div><pre>theorem rationalLinearizationMaximizer_spec {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ)) (gradient : ι → ℚ) (hvertices : vertices ≠ []) :
+    rationalLinearizationMaximizer coordinates vertices gradient ∈ vertices ∧
+      ∀ p ∈ vertices, (∑ i ∈ coordinates, gradient i * p i) ≤
+        ∑ i ∈ coordinates, gradient i * rationalLinearizationMaximizer coordinates vertices gradient i := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1213">OAI.EditApproximation.rationalLinearizationMaximizer</a></p></li><li id=L1142><b>def</b> <code>OAI.EditApproximation.finiteOptimizerSelection</code> <small>line 1142</small><div class="doc"><p>The finite rational optimizer: every operation here is rational
+arithmetic, finite enumeration, or the prescribed finite logarithm sum.</p></div><pre>def finiteOptimizerSelection {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ)) (linear : ι → ℚ) (G j : ℕ) : ι → ℚ :=
+…</pre></li><li id=L1147><b>theorem</b> <code>OAI.EditApproximation.finiteRationalOptimizer_eq_iterate</code> <small>line 1147</small></li><li id=L1161><b>def</b> <code>OAI.EditApproximation.rationalVertexSet</code> <small>line 1161</small></li><li id=L1165><b>theorem</b> <code>OAI.EditApproximation.rationalVertexHull_probability</code> <small>line 1165</small><div class="doc"><p>Every vector in the listed real convex hull is a probability vector.</p></div><pre>theorem rationalVertexHull_probability {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ))
+    (hvertices : ∀ p ∈ vertices,
+      (∀ i ∈ coordinates, (0 : ℝ) ≤ p i) ∧ (∑ i ∈ coordinates, (p i : ℝ)) = 1) :
+    ∀ p ∈ convexHull ℝ (rationalVertexSet vertices),
+      (∀ i ∈ coordinates, 0 ≤ p i) ∧ (∑ i ∈ coordinates, p i) = 1 := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L1161">OAI.EditApproximation.rationalVertexSet</a></p></li><li id=L1186><b>theorem</b> <code>OAI.EditApproximation.finiteOptimizerSelection_maximizes</code> <small>line 1186</small><div class="doc"><p>Concrete finite vertex selection satisfies the required
+linearization inequality against every real feasible mixture.</p></div><pre>theorem finiteOptimizerSelection_maximizes {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ)) (linear : ι → ℚ) (G j : ℕ)
+    (hvertices : vertices ≠ []) :
+    ∀ best ∈ convexHull ℝ (rationalVertexSet vertices),
+      (∑ i ∈ coordinates, (rationalSmoothedGradient G linear
+        (finiteRationalOptimizer coordinates vertices linear G j) i : ℝ) * best i) ≤
+      ∑ i ∈ coordinates, (rationalSmoothedGradient G linear
+        (finiteRationalOptimizer coordinates vertices linear G j) i : ℝ) *
+        (finiteOptimizerSelection coordinates vertices linear G j i : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L1161">OAI.EditApproximation.rationalVertexSet</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1299">OAI.EditApproximation.rationalSmoothedGradient</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1321">OAI.EditApproximation.finiteRationalOptimizer</a>, <a href="Numerics.lean.html#L1142">OAI.EditApproximation.finiteOptimizerSelection</a></p></li><li id=L1205><b>theorem</b> <code>OAI.EditApproximation.finiteRationalOptimizer_l1_precision</code> <small>line 1205</small><div class="doc"><p>Accuracy of the executable rational optimizer at every positive
+entropy maximizer of its listed action hull.</p></div><pre>theorem finiteRationalOptimizer_l1_precision {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ)) (linear : ι → ℚ) (H : ℕ) (maximizer : ι → ℝ)
+    (hvertices : vertices ≠ []) (hH : 4 ≤ H)
+    (hprobability : ∀ p ∈ vertices,
+      (∀ i ∈ coordinates, (0 : ℝ) ≤ p i) ∧ (∑ i ∈ coordinates, (p i : ℝ)) = 1)
+    (hmaxQ : maximizer ∈ convexHull ℝ (rationalVertexSet vertices))
+    (hmax : ∀ i ∈ coordinates, 0 &lt; maximizer i)
+    (hmaximize : IsMaxOn (entropyValue coordinates 1 (fun i =&gt; (linear i : ℝ)))
+      (convexHull ℝ (rationalVertexSet vertices)) maximizer) :
+    (∑ i ∈ coordinates, |(finiteRationalOptimizer coordinates vertices linear
+      (H + coordinates.card + 2) ((H + coordinates.card + 2) ^ 80) i : ℝ) - maximizer i|) ≤
+        1 / (H : ℝ) ^ 3 := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L1161">OAI.EditApproximation.rationalVertexSet</a>, <a href="../Geometry/Regret.lean.html#L626">OAI.EditApproximation.entropyValue</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1321">OAI.EditApproximation.finiteRationalOptimizer</a></p></li><li id=L1246><b>theorem</b> <code>OAI.EditApproximation.rationalVertexHull_positive_witness</code> <small>line 1246</small><div class="doc"><p>Averaging the finite action list gives a feasible vector positive
+at every covered coordinate, including lists with repeated actions.</p></div><pre>theorem rationalVertexHull_positive_witness {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ)) (hvertices : vertices ≠ [])
+    (hnonnegative : ∀ p ∈ vertices, ∀ i ∈ coordinates, (0 : ℝ) ≤ p i)
+    (hcovered : ∀ i ∈ coordinates, ∃ p ∈ vertices, (0 : ℝ) &lt; p i) :
+    ∃ witness ∈ convexHull ℝ (rationalVertexSet vertices),
+      ∀ i ∈ coordinates, 0 &lt; witness i := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L1161">OAI.EditApproximation.rationalVertexSet</a></p></li><li id=L1278><b>theorem</b> <code>OAI.EditApproximation.finite_entropy_optimizer</code> <small>line 1278</small><div class="doc"><p>The finite optimizer accuracy theorem with exactly the manuscript's
+probability and coordinate-coverage assumptions. The returned point is
+the executable rational construction defined above.</p></div><pre>theorem finite_entropy_optimizer {ι : Type*} (coordinates : Finset ι)
+    (vertices : List (ι → ℚ)) (linear : ι → ℚ) (H : ℕ)
+    (hvertices : vertices ≠ []) (hH : 4 ≤ H)
+    (hprobability : ∀ p ∈ vertices,
+      (∀ i ∈ coordinates, (0 : ℝ) ≤ p i) ∧ (∑ i ∈ coordinates, (p i : ℝ)) = 1)
+    (hcovered : ∀ i ∈ coordinates, ∃ p ∈ vertices, (0 : ℝ) &lt; p i) :
+    ∃ maximizer ∈ convexHull ℝ (rationalVertexSet vertices),
+      IsMaxOn (entropyValue coordinates 1 (fun i =&gt; (linear i : ℝ)))
+        (convexHull ℝ (rationalVertexSet vertices)) maximizer ∧
+      (∑ i ∈ coordinates, |(finiteRationalOptimizer coordinates vertices linear
+        (H + coordinates.card + 2) ((H + coordinates.card + 2) ^ 80) i : ℝ) - maximizer i|) ≤
+          1 / (H : ℝ) ^ 3 := by
+…</pre><p class="refs">Mentions: <a href="Numerics.lean.html#L1161">OAI.EditApproximation.rationalVertexSet</a>, <a href="../Geometry/Regret.lean.html#L626">OAI.EditApproximation.entropyValue</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1321">OAI.EditApproximation.finiteRationalOptimizer</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/Circuits/CircuitComparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/Circuits/CircuitComparison.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">Circuits</a> / <span>CircuitComparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">Circuits</a>/<span>CircuitComparison.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/Circuits/CircuitComparison.lean#L1">source</a></p><div class="doc"><h3>Bounded-independence circuit comparison after Fourier correction</h3><p>The comparison uses the fixed-depth specialization of Mark Braverman,
+<em>Polylogarithmic independence fools AC⁰ circuits</em>, J. ACM 57 (2010), Article 28,
+Corollary 2 in the author's version. We use depth 22, with absolute constants
+and natural logarithms. Circuits below have actual finite syntax: literals
+and arbitrary finite-fan-in AND/OR gates. They are tree circuits, a subclass
+of the circuits covered by Braverman's theorem. The size counts both input
+occurrences and gates; the depth counts AND/OR levels.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>inductive</b> <code>OAI.TwoPointCorrelations.AC0Circuit</code> <small>line 23</small><div class="doc"><p>Finite AC⁰ syntax in negation normal form. Sharing is not needed for the
+finite residue tests; literals can have either polarity.</p></div><pre>inductive AC0Circuit (n : ℕ) where
+…</pre></li><li id=L31><b>def</b> <code>OAI.TwoPointCorrelations.AC0Circuit.eval</code> <small>line 31</small><div class="doc"><p>Evaluation on a Boolean input vector. Empty AND/OR gates are true/false.</p></div><pre>def eval {n : ℕ} : AC0Circuit n → BooleanCube n → Bool
+  | .literal i positive, x =&gt; if positive then x i else !(x i)
+  | .andGate children, x =&gt; decide (∀ i, eval (children i) x = true)
+  | .orGate children, x =&gt; decide (∃ i, eval (children i) x = true)
+
+/-- AND/OR depth, with literals at depth zero. -/</pre><p class="refs">Mentions: <a href="CircuitComparison.lean.html#L23">OAI.TwoPointCorrelations.AC0Circuit</a>, <a href="FourierCorrection.lean.html#L20">OAI.TwoPointCorrelations.BooleanCube</a>, <a href="CircuitComparison.lean.html#L37">OAI.TwoPointCorrelations.AC0Circuit.depth</a></p></li><li id=L37><b>def</b> <code>OAI.TwoPointCorrelations.AC0Circuit.depth</code> <small>line 37</small><div class="doc"><p>AND/OR depth, with literals at depth zero.</p></div><pre>def depth {n : ℕ} : AC0Circuit n → ℕ
+  | .literal _ _ =&gt; 0
+  | .andGate children =&gt; 1 + Finset.univ.sup (fun i =&gt; depth (children i))
+  | .orGate children =&gt; 1 + Finset.univ.sup (fun i =&gt; depth (children i))
+
+/-- Gates plus input occurrences. -/</pre><p class="refs">Mentions: <a href="CircuitComparison.lean.html#L23">OAI.TwoPointCorrelations.AC0Circuit</a></p></li><li id=L43><b>def</b> <code>OAI.TwoPointCorrelations.AC0Circuit.size</code> <small>line 43</small><div class="doc"><p>Gates plus input occurrences.</p></div><pre>def size {n : ℕ} : AC0Circuit n → ℕ
+  | .literal _ _ =&gt; 1
+  | .andGate children =&gt; 1 + ∑ i, size (children i)
+  | .orGate children =&gt; 1 + ∑ i, size (children i)</pre><p class="refs">Mentions: <a href="CircuitComparison.lean.html#L23">OAI.TwoPointCorrelations.AC0Circuit</a></p></li><li id=L48><b>lemma</b> <code>OAI.TwoPointCorrelations.AC0Circuit.size_pos</code> <small>line 48</small></li><li id=L52><b>def</b> <code>OAI.TwoPointCorrelations.AC0Circuit.indicator</code> <small>line 52</small><div class="doc"><p>Real indicator of the circuit accepting its input.</p></div><pre>noncomputable def indicator {n : ℕ} (c : AC0Circuit n) (x : BooleanCube n) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="CircuitComparison.lean.html#L23">OAI.TwoPointCorrelations.AC0Circuit</a>, <a href="FourierCorrection.lean.html#L20">OAI.TwoPointCorrelations.BooleanCube</a></p></li><li id=L55><b>lemma</b> <code>OAI.TwoPointCorrelations.AC0Circuit.abs_centered_indicator</code> <small>line 55</small></li><li id=L65><b>def</b> <code>OAI.TwoPointCorrelations.BravermanDepth22Input</code> <small>line 65</small><div class="doc"><p>Braverman's Corollary 2 at depth twenty-two. The constants absorb a
+choice of logarithm base. Distributions are represented by nonnegative
+densities relative to the uniform law on the Boolean cube.</p></div><pre>def BravermanDepth22Input : Prop :=
+…</pre></li><li id=L73><b>lemma</b> <code>OAI.TwoPointCorrelations.abs_cubeAverage_le</code> <small>line 73</small></li><li id=L82><b>lemma</b> <code>OAI.TwoPointCorrelations.circuit_event_le_totalVariation</code> <small>line 82</small><div class="doc"><p>For measures of equal total mass, an event difference is bounded by one
+half of the mean absolute density difference.</p></div><pre>lemma circuit_event_le_totalVariation {n : ℕ} (c : AC0Circuit n)
+    (f g : BooleanCube n → ℝ) (hmass : cubeAverage f = cubeAverage g) :
+    |cubeAverage (fun x =&gt; f x * c.indicator x) -
+      cubeAverage (fun x =&gt; g x * c.indicator x)| ≤
+        cubeAverage (fun x =&gt; |f x - g x|) / 2 := by
+…</pre><p class="refs">Mentions: <a href="CircuitComparison.lean.html#L23">OAI.TwoPointCorrelations.AC0Circuit</a>, <a href="FourierCorrection.lean.html#L20">OAI.TwoPointCorrelations.BooleanCube</a>, <a href="FourierCorrection.lean.html#L23">OAI.TwoPointCorrelations.cubeAverage</a></p></li><li id=L112><b>theorem</b> <code>OAI.TwoPointCorrelations.BravermanDepth22Input.fourier_comparison</code> <small>line 112</small><div class="doc"><p>Fourier correction followed by Braverman's published theorem compares
+the original density against uniform inputs, with the correction error
+made explicit.</p></div><pre>theorem BravermanDepth22Input.fourier_comparison (hBraverman : BravermanDepth22Input) :
+    ∃ K C : ℕ, 0 &lt; K ∧ 0 &lt; C ∧ ∀ (n : ℕ) (c : AC0Circuit n), c.depth ≤ 22 →
+      ∀ ε : ℝ, 0 &lt; ε → ε ≤ 1 / 2 → ∀ t : ℕ,
+        (K : ℝ) * (Real.log ((c.size : ℝ) / ε)) ^ C ≤ (t : ℝ) →
+        ∀ (f : BooleanCube n → ℝ) (a : ℝ),
+          (∀ x, 0 ≤ f x) → cubeAverage f = 1 → 0 ≤ a → lowWalshMass f t ≤ a →
+          |cubeAverage (fun x =&gt; f x * c.indicator x) - cubeAverage c.indicator| ≤
+            3 * a / 2 + ε := by
+…</pre><p class="refs">Mentions: <a href="CircuitComparison.lean.html#L65">OAI.TwoPointCorrelations.BravermanDepth22Input</a>, <a href="CircuitComparison.lean.html#L23">OAI.TwoPointCorrelations.AC0Circuit</a>, <a href="FourierCorrection.lean.html#L20">OAI.TwoPointCorrelations.BooleanCube</a>, <a href="FourierCorrection.lean.html#L23">OAI.TwoPointCorrelations.cubeAverage</a>, <a href="FourierCorrection.lean.html#L162">OAI.TwoPointCorrelations.lowWalshMass</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

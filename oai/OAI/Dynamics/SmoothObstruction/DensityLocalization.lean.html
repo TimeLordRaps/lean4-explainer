@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/DensityLocalization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/DensityLocalization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>DensityLocalization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>DensityLocalization.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/DensityLocalization.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>lemma</b> <code>OAI.SmoothObstruction.ChartDomination.density_two</code> <small>line 15</small></li><li id=L28><b>theorem</b> <code>OAI.SmoothObstruction.ChartDomination.local_two</code> <small>line 28</small><div class="doc"><p>A concrete relative local branch and the two numerical lower bounds give
+unnormalized domination by TWO in the original carrier measure. No choice of
+local derivative or branch has to be measurable.</p></div><pre>theorem local_two (μ : Measure X) (m : Measure E) [Measure.IsAddHaarMeasure m]
+    (d : E → ℝ) (Q G : Set X) (hQ : μ Qᶜ=0) (hGQ : G⊆Q) (hG : MeasurableSet G)
+    (e : X → E) (r : E → X) (he : Measurable e) (hr : Measurable r)
+    (hleft : ∀ x∈Q,r (e x)=x) (hcoords : μ.map e=m.withDensity (fun u =&gt; ENNReal.ofReal (d u)))
+    (f : X → X) (_ : Measurable f) (hfQ : MapsTo f G Q) (hinj : InjOn f G)
+    (hlocal : ∀ u∈coordinateSet e r G,∃ g : E → E,
+      HasFDerivAt g (fderiv ℝ g u) u ∧ (81/121:ℝ)≤|(fderiv ℝ g u).det| ∧
+      g =ᶠ[𝓝[coordinateSet e r G] u] (e ∘ f ∘ r))
+    (hd : ∀ u∈coordinateSet e r G,0≤d u ∧ (3/4:ℝ)*d u≤d (e (f (r u)))) :
+    (μ.restrict G).map f≤(2 : ℝ≥0∞) • μ := by
+…</pre><p class="refs">Mentions: <a href="DensityBounds.lean.html#L97">OAI.SmoothObstruction.ChartDomination.coordinateSet</a></p></li><li id=L73><b>theorem</b> <code>OAI.SmoothObstruction.ChartDensity.pair_cell_density</code> <small>line 73</small><div class="doc"><p>Product coordinates carry exactly the product of the ORIGINAL cell
+measures, with its unchanged chart density and no normalization.</p></div><pre>theorem pair_cell_density (hclosed : IsClosed (range I)) (μ : Measure M) [IsFiniteMeasure μ]
+    (hμ : SmoothPositiveDensity I μ) (a : M) :
+    ∃ f : E₀ → ℝ,ContDiffOn ℝ ∞ f (extChartAt I a).target ∧
+      (∀ u∈(extChartAt I a).target,0&lt;f u) ∧
+      ∀ Q : Set M,MeasurableSet Q → Q⊆(extChartAt I a).source →
+        let W := ChartDomination.coordinateSet (coordinates I a) (inverse I a) Q
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SmoothObstruction.lean.html#L57">OAI.SmoothObstruction.SmoothPositiveDensity</a>, <a href="DensityBounds.lean.html#L97">OAI.SmoothObstruction.ChartDomination.coordinateSet</a>, <a href="DensityBounds.lean.html#L194">OAI.SmoothObstruction.ChartDensity.coordinates</a>, <a href="DensityBounds.lean.html#L198">OAI.SmoothObstruction.ChartDensity.inverse</a></p></li><li id=L121><b>theorem</b> <code>OAI.SmoothObstruction.ChartDensity.pair_cell_two</code> <small>line 121</small><div class="doc"><p>The original-cell change of variables. The density is selected ONCE per
+atlas chart, before cells or retained pairs. Local branches are only required
+on the retained relative neighborhood, at every rank including zero.</p></div><pre>theorem pair_cell_two (hclosed : IsClosed (range I)) (μ : Measure M) [IsFiniteMeasure μ]
+    (hμ : SmoothPositiveDensity I μ) (a : M) :
+    ∃ f : E₀ → ℝ,ContDiffOn ℝ ∞ f (extChartAt I a).target ∧
+      (∀ u∈(extChartAt I a).target,0&lt;f u) ∧
+      ∀ Q : Set M,MeasurableSet Q → Q⊆(extChartAt I a).source →
+      ∀ G : Set (M×M),MeasurableSet G → G⊆Q×ˢQ →
+      ∀ Φ : M×M → M×M,Measurable Φ → MapsTo Φ G (Q×ˢQ) → InjOn Φ G →
+        let e := Prod.map (coordinates I a) (coordinates I a)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SmoothObstruction.lean.html#L57">OAI.SmoothObstruction.SmoothPositiveDensity</a>, <a href="DensityBounds.lean.html#L194">OAI.SmoothObstruction.ChartDensity.coordinates</a></p></li><li id=L197><b>theorem</b> <code>OAI.SmoothObstruction.DensityUniform.relative</code> <small>line 197</small><div class="doc"><p>Positive compact smooth-chart densities admit uniform relative, rather
+than absolute, estimates. Only continuity is used, valid up to boundary.</p></div><pre>theorem relative (K : Set E) (hK : IsCompact K) (f : E → ℝ)
+    (hf : ContinuousOn f K) (hpos : ∀ x∈K,0&lt;f x) {ε : ℝ} (hε : 0&lt;ε) :
+    ∃ δ : ℝ,0&lt;δ ∧ ∀ x∈K,∀ y∈K,dist x y&lt;δ → |f y-f x|≤ε*f x := by
+…</pre></li><li id=L215><b>theorem</b> <code>OAI.SmoothObstruction.DensityUniform.pair_lower</code> <small>line 215</small><div class="doc"><p>The density portion of the joint switch has a uniform three-quarter
+lower bound once both matched point pairs are sufficiently close.</p></div><pre>theorem pair_lower (K : Set E) (hK : IsCompact K) (f : E → ℝ)
+    (hf : ContinuousOn f K) (hpos : ∀ x∈K,0&lt;f x) :
+    ∃ δ : ℝ,0&lt;δ ∧ ∀ x∈K,∀ y∈K,∀ z∈K,∀ w∈K,
+      dist x z&lt;δ → dist y w&lt;δ → (3/4:ℝ)*(f x*f y)≤f z*f w := by
+…</pre></li><li id=L243><b>theorem</b> <code>OAI.SmoothObstruction.ChartDensity.original_law_two</code> <small>line 243</small><div class="doc"><p>The authentic local coordinate germs yield domination of the ORIGINAL
+cell-weighted experiment. Compact positive density is controlled before any
+partition or retained set is chosen. Zero-weight cells require no exception,
+and neither cells nor retained pairs are conditionally renormalized.</p></div><pre>theorem original_law_two (hclosed : IsClosed (range I))
+    (μ : Measure M) [IsProbabilityMeasure μ] (hμ : SmoothPositiveDensity I μ)
+    (a : ι → M) (K : ι → Set M) (hK : ∀ i,IsCompact (K i))
+    (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r : ℝ,0&lt;r ∧ ∀ {J : Type*} [Fintype J] [MeasurableSpace J]
+      [MeasurableSingletonClass J] (L : M → J) (c : M → ι) (chart : J → ι),
+      Measurable L → (∀ x,x∈K (c x)) → (∀ x,chart (L x)=c x) →
+      (∀ x y,L x=L y → ‖coordinates I (a (c x)) x-coordinates I (a (c x)) y‖&lt;r) →
+      ∀ (G : Set (M×M)) (Φ : M×M → M×M),MeasurableSet G → Measurable Φ →
+      (∀ u∈G,L u.1=L u.2 ∧ L (Φ u).1=L u.1 ∧ L (Φ u).2=L u.2) →
+      InjOn Φ G →
+      (∀ (j : J),let Q := L ⁻¹&#x27; {j}
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SmoothObstruction.lean.html#L57">OAI.SmoothObstruction.SmoothPositiveDensity</a>, <a href="DensityBounds.lean.html#L194">OAI.SmoothObstruction.ChartDensity.coordinates</a></p></li><li id=L336><b>theorem</b> <code>OAI.SmoothObstruction.ChartDensity.physical_original_law_two</code> <small>line 336</small><div class="doc"><p>Physical retained-pair germs in their old starting charts suffice for the
+original cell-weighted, unnormalized domination. The germ is only shrunk when
+passing to the original cell; no new partition labels are introduced.</p></div><pre>theorem physical_original_law_two (hclosed : IsClosed (range I))
+    (μ : Measure M) [IsProbabilityMeasure μ] (hμ : SmoothPositiveDensity I μ)
+    (a : ι → M) (K : ι → Set M) (hK : ∀ i,IsCompact (K i))
+    (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r : ℝ,0&lt;r ∧ ∀ {J : Type*} [Fintype J] [MeasurableSpace J]
+      [MeasurableSingletonClass J] (L : M → J) (c : M → ι) (chart : J → ι),
+      Measurable L → (∀ x,x∈K (c x)) → (∀ x,chart (L x)=c x) →
+      (∀ x y,L x=L y → ‖coordinates I (a (c x)) x-coordinates I (a (c x)) y‖&lt;r) →
+      ∀ (G : Set (M×M)) (Φ : M×M → M×M),MeasurableSet G → Measurable Φ →
+      (∀ u∈G,L u.1=L u.2 ∧ L (Φ u).1=L u.1 ∧ L (Φ u).2=L u.2) →
+      InjOn Φ G →
+      (∀ x y,(x,y)∈G →
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SmoothObstruction.lean.html#L57">OAI.SmoothObstruction.SmoothPositiveDensity</a>, <a href="DensityBounds.lean.html#L194">OAI.SmoothObstruction.ChartDensity.coordinates</a></p></li><li id=L394><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.original_coarse_germ</code> <small>line 394</small><div class="doc"><p>The original coarse partition is locally constant at every retained
+one-point input. This uses the original grid margin and fixed chart core only.</p></div><pre>lemma original_coarse_germ (a : ι → M) (c : M → ι) (P : M → C)
+    (x : M) (hx : x∈(chartAt H (a (c x))).source) (s δ : ℝ) (hs : 0&lt;s) (hδ : 0&lt;δ)
+    (hcore : ∀ y,dist y x ≤ s → c y=c x)
+    (hrec : ∀ y,c y=c x →
+      ‖(extChartAt I (a (c x))) y-(extChartAt I (a (c x))) x‖≤δ/4 → P y=P x) :
+    ∀ᶠ y in 𝓝 x,P y=P x := by
+…</pre></li><li id=L412><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.six_original_labels</code> <small>line 412</small><div class="doc"><p>Only the six original start/end labels are fixed near an input pair.
+No intermediate orbit-code refinement is used.</p></div><pre>lemma six_original_labels (S : Diffeomorph I I M M ∞) (P : M → C)
+    (a₀ x y : M) (n : ℕ)
+    (hx : x∈(extChartAt I a₀).source) (hy : y∈(extChartAt I a₀).source)
+    (hiX : (extChartAt I a₀) x∈interior (range I))
+    (hiY : (extChartAt I a₀) y∈interior (range I))
+    (hx₀ : ∀ᶠ z in 𝓝 x,P z=P x) (hy₀ : ∀ᶠ z in 𝓝 y,P z=P y)
+    (hxF : ∀ᶠ z in 𝓝 (S^[n] x),P z=P (S^[n] x))
+    (hyF : ∀ᶠ z in 𝓝 (S^[n] y),P z=P (S^[n] y))
+    (hxB : ∀ᶠ z in 𝓝 (S.symm^[n] x),P z=P (S.symm^[n] x))
+    (hyB : ∀ᶠ z in 𝓝 (S.symm^[n] y),P z=P (S.symm^[n] y)) :
+    ∀ᶠ t in 𝓝 ((extChartAt I a₀ x),(extChartAt I a₀ y)),
+      P ((extChartAt I a₀).symm t.1)=P x ∧ P ((extChartAt I a₀).symm t.2)=P y ∧
+…</pre></li><li id=L460><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.genuine_pair_switch</code> <small>line 460</small><div class="doc"><p>The genuine global pair switch at one scale. Every constant precedes the
+partition alphabets and ranks. Inputs are actual bilateral gauges, original
+grid margins, and explicit scalar budgets; the conclusion is unnormalized
+ORIGINAL-law domination, not an assumed Jacobian or switch certificate.</p></div><pre>theorem genuine_pair_switch (hclosed : IsClosed (range I))
+    (μ : Measure M) [IsProbabilityMeasure μ] (hμ : SmoothPositiveDensity I μ)
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    (s Dg : ℝ) (hs : 0&lt;s) (hDg : 0≤Dg) :
+    ∃ r₀ C₀ σ r₁ C₁ rg Cg β K₀F CreF C₁F K₀B CreB C₁B rμ : ℝ,
+      0&lt;r₀ ∧ 1≤C₀ ∧ 0&lt;σ ∧ 0&lt;r₁ ∧ 1≤C₁ ∧ 0&lt;rg ∧ 1≤Cg ∧ 0&lt;β ∧
+      1≤K₀F ∧ 0≤CreF ∧ 0≤C₁F ∧ 1≤K₀B ∧ 0≤CreB ∧ 0≤C₁B ∧ 0&lt;rμ ∧
+      ∀ {C J : Type*} [Fintype C] [MeasurableSpace C] [MeasurableSingletonClass C]
+        [Fintype J] [MeasurableSpace J] [MeasurableSingletonClass J]
+        (c : M → ι) (P : M → C) (L : M → J) (π : J → C) (chart : C → ι)
+        (G R V Wc Wp : Set M) (n : ℕ) (b R₀ Cext ε g α r δc δp H₀ : ℝ)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SmoothObstruction.lean.html#L57">OAI.SmoothObstruction.SmoothPositiveDensity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

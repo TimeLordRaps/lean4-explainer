@@ -1,0 +1,148 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Laplacian.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Laplacian.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Laplacian.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Laplacian.lean</span></code></h1><p class="muted">46 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Laplacian.lean#L1">source</a></p><div class="doc"><p>Algebraic facts about the weighted cell-adjacency Laplacian.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.Problem358.CellLaplacian.apply</code> <small>line 16</small><div class="doc"><p>The intercept derivative of the cell masses, written in coordinates.</p></div><pre>def apply (g : ι → ι → ℝ) (q : ι → ℝ) (i : ι) : ℝ :=
+…</pre></li><li id=L19><b>lemma</b> <code>OAI.Problem358.CellLaplacian.apply_const</code> <small>line 19</small></li><li id=L24><b>lemma</b> <code>OAI.Problem358.CellLaplacian.sum_apply</code> <small>line 24</small></li><li id=L36><b>lemma</b> <code>OAI.Problem358.CellLaplacian.energy_identity</code> <small>line 36</small></li><li id=L67><b>lemma</b> <code>OAI.Problem358.CellLaplacian.eq_of_positive_edge_of_apply_eq_zero</code> <small>line 67</small></li><li id=L85><b>lemma</b> <code>OAI.Problem358.CellLaplacian.constant_of_apply_eq_zero</code> <small>line 85</small><div class="doc"><p>Connectivity may be supplied by any graph whose edges have positive weights.</p></div><pre>lemma constant_of_apply_eq_zero
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (q : ι → ℝ) (hq : apply g q = 0) : ∃ c : ℝ, ∀ i, q i = c := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a></p></li><li id=L103><b>lemma</b> <code>OAI.Problem358.CellLaplacian.apply_eq_zero_iff_constant</code> <small>line 103</small></li><li id=L116><b>lemma</b> <code>OAI.Problem358.CellLaplacian.eq_zero_of_normalized_kernel</code> <small>line 116</small><div class="doc"><p>The mass-weighted normalization eliminates the constant kernel.</p></div><pre>lemma eq_zero_of_normalized_kernel
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m q : ι → ℝ) (hm : ∑ i, m i = 1)
+    (hq : apply g q = 0) (hmean : ∑ i, m i * q i = 0) : q = 0 := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a></p></li><li id=L130><b>lemma</b> <code>OAI.Problem358.CellLaplacian.pairing_symmetric</code> <small>line 130</small></li><li id=L154><b>def</b> <code>OAI.Problem358.CellLaplacian.linearMap</code> <small>line 154</small><div class="doc"><p>The cell Laplacian as an operator on Euclidean coordinate space.</p></div><pre>def linearMap (g : ι → ι → ℝ) :
+    EuclideanSpace ℝ ι →ₗ[ℝ] EuclideanSpace ℝ ι where
+…</pre></li><li id=L173><b>lemma</b> <code>OAI.Problem358.CellLaplacian.linearMap_apply</code> <small>line 173</small></li><li id=L176><b>lemma</b> <code>OAI.Problem358.CellLaplacian.linearMap_isSymmetric</code> <small>line 176</small></li><li id=L183><b>lemma</b> <code>OAI.Problem358.CellLaplacian.mem_range_iff_sum_eq_zero</code> <small>line 183</small><div class="doc"><p>The image of a connected symmetric cell Laplacian is the zero-sum hyperplane.</p></div><pre>lemma mem_range_iff_sum_eq_zero
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (z : EuclideanSpace ℝ ι) :
+    z ∈ LinearMap.range (linearMap g) ↔ ∑ i, z i = 0 := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L154">OAI.Problem358.CellLaplacian.linearMap</a></p></li><li id=L208><b>lemma</b> <code>OAI.Problem358.CellLaplacian.exists_apply_eq_of_sum_eq_zero</code> <small>line 208</small></li><li id=L219><b>lemma</b> <code>OAI.Problem358.CellLaplacian.apply_sub_const</code> <small>line 219</small></li><li id=L227><b>lemma</b> <code>OAI.Problem358.CellLaplacian.apply_sub</code> <small>line 227</small></li><li id=L236><b>lemma</b> <code>OAI.Problem358.CellLaplacian.existsUnique_normalized_solution</code> <small>line 236</small><div class="doc"><p>The mass-weighted normalization determines the solution of the cell equation uniquely.</p></div><pre>lemma existsUnique_normalized_solution
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m z : ι → ℝ) (hm : ∑ i, m i = 1) (hz : ∑ i, z i = 0) :
+    ∃! q : ι → ℝ, apply g q = z ∧ ∑ i, m i * q i = 0 := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a></p></li><li id=L266><b>def</b> <code>OAI.Problem358.CellLaplacian.weightedMean</code> <small>line 266</small><div class="doc"><p>The weighted intercept normalization functional.</p></div><pre>def weightedMean (m : ι → ℝ) : (ι → ℝ) →ₗ[ℝ] ℝ where
+…</pre></li><li id=L275><b>def</b> <code>OAI.Problem358.CellLaplacian.normalizedSpace</code> <small>line 275</small><div class="doc"><p>The hyperplane of intercepts with weighted average zero.</p></div><pre>def normalizedSpace (m : ι → ℝ) : Submodule ℝ (ι → ℝ) := (weightedMean m).ker</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L266">OAI.Problem358.CellLaplacian.weightedMean</a></p></li><li id=L277><b>lemma</b> <code>OAI.Problem358.CellLaplacian.mem_normalizedSpace</code> <small>line 277</small></li><li id=L281><b>def</b> <code>OAI.Problem358.CellLaplacian.coordinateLinearMap</code> <small>line 281</small><div class="doc"><p>The weighted Laplacian on coordinate functions, without a change of norm.</p></div><pre>def coordinateLinearMap (g : ι → ι → ℝ) : (ι → ℝ) →ₗ[ℝ] (ι → ℝ) where
+…</pre></li><li id=L298><b>lemma</b> <code>OAI.Problem358.CellLaplacian.coordinateLinearMap_apply</code> <small>line 298</small></li><li id=L302><b>def</b> <code>OAI.Problem358.CellLaplacian.normalizedLinearMap</code> <small>line 302</small><div class="doc"><p>The normalized mass Jacobian, with codomain the zero-sum mass variations.</p></div><pre>def normalizedLinearMap (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (m : ι → ℝ) : normalizedSpace m →ₗ[ℝ] normalizedSpace (fun _ : ι =&gt; 1) :=
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a></p></li><li id=L310><b>lemma</b> <code>OAI.Problem358.CellLaplacian.normalizedLinearMap_apply</code> <small>line 310</small></li><li id=L314><b>lemma</b> <code>OAI.Problem358.CellLaplacian.normalizedLinearMap_bijective</code> <small>line 314</small></li><li id=L342><b>def</b> <code>OAI.Problem358.CellLaplacian.normalizedEquiv</code> <small>line 342</small><div class="doc"><p>The invertible normalized cell-mass Jacobian.
+This is the continuous-linear-equivalence interface needed by the implicit function theorem.
+Its existence makes no assertion of a uniform bound on the inverse.</p></div><pre>def normalizedEquiv
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1) :
+    normalizedSpace m ≃L[ℝ] normalizedSpace (fun _ : ι =&gt; 1) :=
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a></p></li><li id=L351><b>lemma</b> <code>OAI.Problem358.CellLaplacian.normalizedEquiv_apply</code> <small>line 351</small></li><li id=L359><b>lemma</b> <code>OAI.Problem358.CellLaplacian.apply_normalizedEquiv_symm</code> <small>line 359</small><div class="doc"><p>Applying the inverse solves the normalized cell-mass equation.</p></div><pre>@[simp] lemma apply_normalizedEquiv_symm
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (z : normalizedSpace (fun _ : ι =&gt; 1)) :
+    apply g ((normalizedEquiv g hsym hnonneg G hG hpos m hm).symm z) = z :=
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li><li id=L369><b>lemma</b> <code>OAI.Problem358.CellLaplacian.normalizedEquiv_symm_weightedMean</code> <small>line 369</small><div class="doc"><p>The inverse automatically has the required weighted normalization.</p></div><pre>lemma normalizedEquiv_symm_weightedMean
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (z : normalizedSpace (fun _ : ι =&gt; 1)) :
+    ∑ i, m i * ((normalizedEquiv g hsym hnonneg G hG hpos m hm).symm z : ι → ℝ) i = 0 :=
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li><li id=L398><b>theorem</b> <code>OAI.Problem358.contDiffAt_unique_implicit_solution</code> <small>line 398</small><div class="doc"><p>A uniquely specified solution agrees locally with the implicit branch, and so inherits
+its regularity. No prior continuity of the selected solution is required.</p></div><pre>theorem contDiffAt_unique_implicit_solution
+    {n : ℕ∞ω} {F : P × Q → R} {s : P → Q} {p : P}
+    (hn : n ≠ 0) (hF : ContDiffAt ℝ n F (p, s p))
+    (hpartial : (fderiv ℝ F (p, s p) ∘L ContinuousLinearMap.inr ℝ P Q).IsInvertible)
+    (hzero : F (p, s p) = 0)
+    (hunique : ∀ᶠ x in 𝓝 p, ∀ q, F (x, q) = 0 → q = s x) :
+    ContDiffAt ℝ n s p := by
+…</pre></li><li id=L412><b>theorem</b> <code>OAI.Problem358.hasStrictFDerivAt_unique_implicit_solution</code> <small>line 412</small><div class="doc"><p>The derivative of the uniquely specified branch is the usual implicit derivative.</p></div><pre>theorem hasStrictFDerivAt_unique_implicit_solution
+    {n : ℕ∞ω} {F : P × Q → R} {s : P → Q} {p : P}
+    (hn : n ≠ 0) (hF : ContDiffAt ℝ n F (p, s p))
+    (hpartial : (fderiv ℝ F (p, s p) ∘L ContinuousLinearMap.inr ℝ P Q).IsInvertible)
+    (hzero : F (p, s p) = 0)
+    (hunique : ∀ᶠ x in 𝓝 p, ∀ q, F (x, q) = 0 → q = s x) :
+    HasStrictFDerivAt s
+      (-(fderiv ℝ F (p, s p) ∘L ContinuousLinearMap.inr ℝ P Q).inverse ∘L
+        (fderiv ℝ F (p, s p) ∘L ContinuousLinearMap.inl ℝ P Q)) p := by
+…</pre></li><li id=L429><b>theorem</b> <code>OAI.Problem358.eventually_eq_of_hasStrictFDerivAt_equiv</code> <small>line 429</small><div class="doc"><p>An invertible derivative makes the fiber of a map locally a singleton.</p></div><pre>theorem eventually_eq_of_hasStrictFDerivAt_equiv [CompleteSpace R]
+    {f : Q → R} {q : Q} (e : Q ≃L[ℝ] R)
+    (hf : HasStrictFDerivAt f e.toContinuousLinearMap q) :
+    ∀ᶠ r in 𝓝 q, f r = f q → r = q := by
+…</pre></li><li id=L445><b>theorem</b> <code>OAI.Problem358.CellLaplacian.partial_isInvertible_of_laplacian</code> <small>line 445</small><div class="doc"><p>Invertibility of the intercept partial derivative follows from the connected cell graph.</p></div><pre>theorem partial_isInvertible_of_laplacian [CompleteSpace P]
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (A : P × normalizedSpace m →L[ℝ] normalizedSpace (fun _ : ι =&gt; 1))
+    (hA : A ∘L ContinuousLinearMap.inr ℝ P (normalizedSpace m) =
+      (normalizedEquiv g hsym hnonneg G hG hpos m hm).toContinuousLinearMap) :
+    (A ∘L ContinuousLinearMap.inr ℝ P (normalizedSpace m)).IsInvertible := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li><li id=L459><b>theorem</b> <code>OAI.Problem358.CellLaplacian.contDiffAt_normalized_solution</code> <small>line 459</small><div class="doc"><p>The analytic hypothesis on the mass map and the algebraic cell graph together imply
+smooth dependence of its uniquely normalized solution on the sites.</p></div><pre>theorem contDiffAt_normalized_solution
+    {n : ℕ∞ω} (hn : n ≠ 0)
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (F : P × normalizedSpace m → normalizedSpace (fun _ : ι =&gt; 1))
+    (s : P → normalizedSpace m) (p : P)
+    (hF : ContDiffAt ℝ n F (p, s p))
+    (hA : fderiv ℝ F (p, s p) ∘L ContinuousLinearMap.inr ℝ P (normalizedSpace m) =
+      (normalizedEquiv g hsym hnonneg G hG hpos m hm).toContinuousLinearMap)
+    (hzero : F (p, s p) = 0)
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li><li id=L485><b>theorem</b> <code>OAI.Problem358.CellLaplacian.hasDerivAt_normalized_solution</code> <small>line 485</small><div class="doc"><p>Along a real parameter, the derivative of the prescribed normalized intercepts
+is the negative inverse mass Jacobian applied to the site variation.</p></div><pre>theorem hasDerivAt_normalized_solution
+    {n : ℕ∞ω} (hn : n ≠ 0)
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (F : ℝ × normalizedSpace m → normalizedSpace (fun _ : ι =&gt; 1))
+    (s : ℝ → normalizedSpace m) (t : ℝ)
+    (hF : ContDiffAt ℝ n F (t, s t))
+    (hA : fderiv ℝ F (t, s t) ∘L ContinuousLinearMap.inr ℝ ℝ (normalizedSpace m) =
+      (normalizedEquiv g hsym hnonneg G hG hpos m hm).toContinuousLinearMap)
+    (hzero : F (t, s t) = 0)
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li><li id=L509><b>theorem</b> <code>OAI.Problem358.CellLaplacian.laplacian_deriv_normalized_solution</code> <small>line 509</small><div class="doc"><p>The differentiated fixed-mass constraint, directly in cell coordinates.</p></div><pre>theorem laplacian_deriv_normalized_solution
+    {n : ℕ∞ω} (hn : n ≠ 0)
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (F : ℝ × normalizedSpace m → normalizedSpace (fun _ : ι =&gt; 1))
+    (s : ℝ → normalizedSpace m) (t : ℝ)
+    (hF : ContDiffAt ℝ n F (t, s t))
+    (hA : fderiv ℝ F (t, s t) ∘L ContinuousLinearMap.inr ℝ ℝ (normalizedSpace m) =
+      (normalizedEquiv g hsym hnonneg G hG hpos m hm).toContinuousLinearMap)
+    (hzero : F (t, s t) = 0)
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li><li id=L541><b>def</b> <code>OAI.Problem358.CellLaplacian.zeroSumProjection</code> <small>line 541</small><div class="doc"><p>A continuous linear projection onto zero-sum mass variations.</p></div><pre>def zeroSumProjection (m : ι → ℝ) (hm : ∑ i, m i = 1) :
+    (ι → ℝ) →L[ℝ] normalizedSpace (fun _ : ι =&gt; 1) :=
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a></p></li><li id=L564><b>theorem</b> <code>OAI.Problem358.CellLaplacian.zeroSumProjection_apply</code> <small>line 564</small></li><li id=L569><b>theorem</b> <code>OAI.Problem358.CellLaplacian.zeroSumProjection_eq</code> <small>line 569</small><div class="doc"><p>The projection fixes all genuine mass variations.</p></div><pre>theorem zeroSumProjection_eq (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (z : ι → ℝ) (hz : ∑ i, z i = 0) :
+    (zeroSumProjection m hm z : ι → ℝ) = z := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L541">OAI.Problem358.CellLaplacian.zeroSumProjection</a></p></li><li id=L576><b>def</b> <code>OAI.Problem358.CellLaplacian.massResidual</code> <small>line 576</small><div class="doc"><p>The mass residual for an ordinary coordinate-valued mass map.</p></div><pre>def massResidual {P : Type*} (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (M : P × normalizedSpace m → (ι → ℝ)) :
+    P × normalizedSpace m → normalizedSpace (fun _ : ι =&gt; 1) :=
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a></p></li><li id=L582><b>theorem</b> <code>OAI.Problem358.CellLaplacian.massResidual_coe</code> <small>line 582</small><div class="doc"><p>On probability mass vectors the projected residual is exactly the physical residual.</p></div><pre>theorem massResidual_coe {P : Type*} (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (M : P × normalizedSpace m → (ι → ℝ)) (x : P × normalizedSpace m)
+    (hM : ∑ i, M x i = 1) :
+    (massResidual m hm M x : ι → ℝ) = M x - m := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L576">OAI.Problem358.CellLaplacian.massResidual</a></p></li><li id=L589><b>theorem</b> <code>OAI.Problem358.CellLaplacian.massResidual_eq_zero_iff</code> <small>line 589</small></li><li id=L598><b>theorem</b> <code>OAI.Problem358.CellLaplacian.contDiffAt_massResidual</code> <small>line 598</small></li><li id=L603><b>theorem</b> <code>OAI.Problem358.CellLaplacian.hasFDerivAt_massResidual</code> <small>line 603</small></li><li id=L610><b>theorem</b> <code>OAI.Problem358.CellLaplacian.zeroSumProjection_laplacian</code> <small>line 610</small><div class="doc"><p>Projection does not alter a Laplacian derivative: its image already has zero sum.</p></div><pre>theorem zeroSumProjection_laplacian (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (q : normalizedSpace m) :
+    zeroSumProjection m hm (apply g q) = normalizedLinearMap g hsym m q := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L541">OAI.Problem358.CellLaplacian.zeroSumProjection</a>, <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a>, <a href="Laplacian.lean.html#L302">OAI.Problem358.CellLaplacian.normalizedLinearMap</a></p></li><li id=L619><b>theorem</b> <code>OAI.Problem358.CellLaplacian.massResidual_partial_eq</code> <small>line 619</small><div class="doc"><p>An ordinary coordinate derivative with Laplacian intercept part induces precisely
+the normalized continuous linear equivalence used by the implicit function theorem.</p></div><pre>theorem massResidual_partial_eq
+    (g : ι → ι → ℝ) (hsym : ∀ i j, g i j = g j i)
+    (hnonneg : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+    (hG : G.Connected) (hpos : ∀ i j, G.Adj i j → 0 &lt; g i j)
+    (m : ι → ℝ) (hm : ∑ i, m i = 1)
+    (A : P × normalizedSpace m →L[ℝ] (ι → ℝ))
+    (hA : ∀ q : normalizedSpace m, A (0, q) = apply g q) :
+    ((zeroSumProjection m hm) ∘L A) ∘L
+        ContinuousLinearMap.inr ℝ P (normalizedSpace m) =
+      (normalizedEquiv g hsym hnonneg G hG hpos m hm).toContinuousLinearMap := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a>, <a href="Laplacian.lean.html#L541">OAI.Problem358.CellLaplacian.zeroSumProjection</a>, <a href="Laplacian.lean.html#L342">OAI.Problem358.CellLaplacian.normalizedEquiv</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

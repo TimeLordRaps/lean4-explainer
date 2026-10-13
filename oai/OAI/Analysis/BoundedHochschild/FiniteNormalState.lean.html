@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/BoundedHochschild/FiniteNormalState.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/BoundedHochschild/FiniteNormalState.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">BoundedHochschild</a> / <span>FiniteNormalState.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">BoundedHochschild</a>/<span>FiniteNormalState.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/BoundedHochschild/FiniteNormalState.lean#L1">source</a></p><div class="doc"><h3>Normal states and the remaining tracial averaging step</h3><p>A normal state faithful on central projections is faithful on positive
+central elements. The property passes to its actual central corner.
+Composing such a state with a faithful normal positive central averaging
+map gives a faithful normal tracial state. Constructing that map from
+finiteness is a separate remaining theorem; no such map is postulated here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>lemma</b> <code>OAI.BoundedHochschild.KadisonRingrose.positive_contraction_zero_mul</code> <small>line 31</small><div class="doc"><p>A positive functional vanishing on a positive contraction annihilates its left multiples.</p></div><pre>lemma positive_contraction_zero_mul (ψ : M →ₚ[ℂ] ℂ) {c : M}
+    (hc0 : 0 ≤ c) (hc1 : c ≤ 1) (hψc : ψ c = 0) (b : M) : ψ (c * b) = 0 := by
+…</pre></li><li id=L44><b>lemma</b> <code>OAI.BoundedHochschild.KadisonRingrose.exists_null_support_projection</code> <small>line 44</small><div class="doc"><p>The support projection of a null positive contraction is null for a normal functional.</p></div><pre>lemma exists_null_support_projection (e : StrongDual ℂ X ≃ₗᵢ⋆[ℂ] M)
+    (ψ : M →ₚ[ℂ] ℂ) (hψ : TraceInPredual e ψ) {c : M}
+    (hc0 : 0 ≤ c) (hc1 : c ≤ 1) (hψc : ψ c = 0) :
+    ∃ r : M, IsSupportProjection c r ∧ ψ r = 0 := by
+…</pre><p class="refs">Mentions: <a href="PrimitiveAverages.lean.html#L32">OAI.BoundedHochschild.TraceInPredual</a>, <a href="NormalModulus.lean.html#L258">OAI.BoundedHochschild.IsSupportProjection</a></p></li><li id=L64><b>theorem</b> <code>OAI.BoundedHochschild.KadisonRingrose.normal_state_faithful_on_positive_center</code> <small>line 64</small><div class="doc"><p>Normality upgrades faithfulness on central projections to positive central elements.</p></div><pre>theorem normal_state_faithful_on_positive_center (e : StrongDual ℂ X ≃ₗᵢ⋆[ℂ] M)
+    (ψ : M →ₚ[ℂ] ℂ) (hψ : TraceInPredual e ψ)
+    (hfaith : ∀ p : M, IsStarProjection p → (∀ a : M, p * a = a * p) → ψ p = 0 → p = 0)
+    {a : M} (ha : 0 ≤ a) (hcentral : ∀ b : M, a * b = b * a) (hψa : ψ a = 0) :
+    a = 0 := by
+…</pre><p class="refs">Mentions: <a href="PrimitiveAverages.lean.html#L32">OAI.BoundedHochschild.TraceInPredual</a></p></li><li id=L91><b>theorem</b> <code>OAI.BoundedHochschild.KadisonRingrose.central_faithful_state_on_corner</code> <small>line 91</small><div class="doc"><p>A state faithful on the central subprojections of <code>p</code> induces a normal state
+faithful on all central projections of the actual corner <code>pMp</code>.</p></div><pre>theorem central_faithful_state_on_corner (e : StrongDual ℂ X ≃ₗᵢ⋆[ℂ] M)
+    {p : M} (hp : IsStarProjection p) (hc : ∀ a : M, p * a = a * p)
+    (hstate : HasCentralFaithfulNormalState e p) :
+    ∃ ψ : Corner p hp →ₚ[ℂ] ℂ,
+      TraceInPredual (cornerPredualEquiv p hp e) ψ ∧ ψ 1 = 1 ∧
+      ∀ q : Corner p hp, IsStarProjection q →
+        (∀ a : Corner p hp, q * a = a * q) → ψ q = 0 → q = 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteTraceCover.lean.html#L154">OAI.BoundedHochschild.KadisonRingrose.HasCentralFaithfulNormalState</a>, <a href="PrimitiveAverages.lean.html#L32">OAI.BoundedHochschild.TraceInPredual</a></p></li><li id=L113><b>theorem</b> <code>OAI.BoundedHochschild.KadisonRingrose.tracial_state_of_normal_center_average</code> <small>line 113</small><div class="doc"><p>Actual normal central averaging data convert a center-faithful state into a
+faithful normal trace. The existence of this averaging map is the remaining
+finite-algebra input.</p></div><pre>theorem tracial_state_of_normal_center_average (e : StrongDual ℂ X ≃ₗᵢ⋆[ℂ] M)
+    (ψ : M →ₚ[ℂ] ℂ) (hψ : TraceInPredual e ψ) (hψ1 : ψ 1 = 1)
+    (hfaith : ∀ p : M, IsStarProjection p → (∀ a : M, p * a = a * p) → ψ p = 0 → p = 0)
+    (E : M →L[ℂ] M) (hEnormal : HasPreadjoint e E)
+    (hEpositive : ∀ a : M, 0 ≤ a → 0 ≤ E a) (hE1 : E 1 = 1)
+    (hEcentral : ∀ a b : M, E a * b = b * E a)
+    (hEtracial : ∀ a b : M, E (a * b) = E (b * a))
+    (hEfaithful : ∀ a : M, E (star a * a) = 0 → a = 0) :
+    ∃ τ : M →ₚ[ℂ] ℂ, TraceInPredual e τ ∧ τ 1 = 1 ∧
+      (∀ a b : M, τ (a * b) = τ (b * a)) ∧
+      (∀ a : M, τ (star a * a) = 0 → a = 0) := by
+…</pre><p class="refs">Mentions: <a href="PrimitiveAverages.lean.html#L32">OAI.BoundedHochschild.TraceInPredual</a>, <a href="CochainLimits.lean.html#L285">OAI.BoundedHochschild.HasPreadjoint</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

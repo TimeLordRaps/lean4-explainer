@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/BlockBefore.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/BlockBefore.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>BlockBefore.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>BlockBefore.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/BlockBefore.lean#L1">source</a></p><div class="doc"><h3>The actual root output before switching a descendant block</h3><p>We follow one node through the recursive nonlinear evaluation.  The other
+child outputs contribute at most their total weight because they lie in a
+set of diameter at most one.  The error along the chosen path is the actual
+displacement of its ancestor maps at the comparison point.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.ReflexiveFixedPoints.weighted_focus_sum_le</code> <small>line 23</small><div class="doc"><p>Separate one term of a normalized weighted sum.  Only the other terms
+need to be bounded by one.</p></div><pre>theorem weighted_focus_sum_le {ι : Type*} (s : Finset ι) (w D : ι → ℝ)
+    (v : ι) (hv : v ∈ s)
+    (hw : ∀ i ∈ s, 0 ≤ w i) (hsum : ∑ i ∈ s, w i = 1)
+    (hD : ∀ i ∈ s, i ≠ v → D i ≤ 1) :
+    (∑ i ∈ s, w i * D i) ≤ w v * D v + (1 - w v) := by
+…</pre></li><li id=L49><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.pathDisplacement</code> <small>line 49</small><div class="doc"><p>Sum the actual displacement at the proper ancestors of the selected node.</p></div><pre>def pathDisplacement : (k : ℕ) → T.Node k → K → ℝ
+  | 0, _, _ =&gt; 0
+  | k + 1, v, z =&gt; pathDisplacement k (T.parent k v) z +
+      ‖(E.map k (T.parent k v) z : X) - z‖</pre></li><li id=L54><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.pathDisplacement_zero</code> <small>line 54</small></li><li id=L57><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.pathDisplacement_succ</code> <small>line 57</small></li><li id=L62><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.weightedPathDisplacement</code> <small>line 62</small><div class="doc"><p>The same ancestor displacements weighted by their actual root path mass.</p></div><pre>def weightedPathDisplacement : (k : ℕ) → T.Node k → K → ℝ
+  | 0, _, _ =&gt; 0
+  | k + 1, v, z =&gt; weightedPathDisplacement k (T.parent k v) z +
+      W.pathWeight k (T.parent k v) * ‖(E.map k (T.parent k v) z : X) - z‖</pre></li><li id=L67><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.weightedPathDisplacement_zero</code> <small>line 67</small></li><li id=L70><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.weightedPathDisplacement_succ</code> <small>line 70</small></li><li id=L75><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.pathDisplacement_nonneg</code> <small>line 75</small></li><li id=L81><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.weightedPathDisplacement_nonneg</code> <small>line 81</small></li><li id=L90><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.weightedPathDisplacement_le_pathDisplacement</code> <small>line 90</small><div class="doc"><p>Dropping path weights can only increase this sum of nonnegative errors.</p></div><pre>theorem weightedPathDisplacement_le_pathDisplacement (k : ℕ) (v : T.Node k) (z : K) :
+    E.weightedPathDisplacement k v z ≤ E.pathDisplacement k v z := by
+…</pre></li><li id=L102><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.collapse_focus_norm_sub_le</code> <small>line 102</small><div class="doc"><p>Focus one actual child while bounding all off-path child outputs by the
+diameter of the set.  The node map is used only through nonexpansiveness.</p></div><pre>theorem collapse_focus_norm_sub_le
+    (hdiam : ∀ a b : K, ‖(a : X) - b‖ ≤ 1)
+    (k : ℕ) (H : T.Node (k + 1) → K) (v : T.Node (k + 1)) (z : K) :
+    ‖(E.collapse k H (T.parent k v) : X) - z‖ ≤
+      W.weight k v * ‖(H v : X) - z‖ + (1 - W.weight k v) +
+        ‖(E.map k (T.parent k v) z : X) - z‖ := by
+…</pre></li><li id=L119><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.evaluate_focus_norm_sub_le</code> <small>line 119</small><div class="doc"><p>Follow one selected cutoff value through the actual nonlinear evaluation.
+No affinity or positive lower bound on path weights is used.</p></div><pre>theorem evaluate_focus_norm_sub_le
+    (hdiam : ∀ a b : K, ‖(a : X) - b‖ ≤ 1)
+    (k : ℕ) (H : T.Node k → K) (v : T.Node k) (z : K) :
+    ‖(E.evaluate k H : X) - z‖ ≤
+      W.pathWeight k v * ‖(H v : X) - z‖ + (1 - W.pathWeight k v) +
+        E.weightedPathDisplacement k v z := by
+…</pre></li><li id=L151><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.before_block_bound</code> <small>line 151</small><div class="doc"><p>The before-block root bound from the actual focused cutoff error and the
+actual unweighted ancestor displacement budget.</p></div><pre>theorem before_block_bound
+    (hdiam : ∀ a b : K, ‖(a : X) - b‖ ≤ 1)
+    (k : ℕ) (H : T.Node k → K) (v : T.Node k) (z : K) {e : ℝ}
+    (hfocused : ‖(H v : X) - z‖ ≤ e)
+    (hpath : E.pathDisplacement k v z ≤ e) :
+    ‖(E.evaluate k H : X) - z‖ ≤ 1 - W.pathWeight k v + 2 * e := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

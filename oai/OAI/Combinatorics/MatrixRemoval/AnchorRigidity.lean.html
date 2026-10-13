@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/AnchorRigidity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/AnchorRigidity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>AnchorRigidity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>AnchorRigidity.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/AnchorRigidity.lean#L1">source</a></p><div class="doc"><p>Finite combinatorial anchor rigidity under explicit density, sparsity,
+and mode-incidence hypotheses.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem348.AnchorRigidity.card_le_true_card_add_one</code> <small>line 15</small><div class="doc"><p>At most one zero leaves all but at most one position equal to one.</p></div><pre>theorem card_le_true_card_add_one {I : Type uI} [DecidableEq I]
+    (s : Finset I) (f : I → Bool)
+    (hz : (s.filter fun i =&gt; f i = false).card ≤ 1) :
+    s.card ≤ (s.filter fun i =&gt; f i = true).card + 1 := by
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.Problem348.AnchorRigidity.exists_common_true</code> <small>line 27</small><div class="doc"><p>Two columns with at most one zero share a one on any core of size at least three.</p></div><pre>theorem exists_common_true {I : Type uI} [DecidableEq I]
+    (s : Finset I) (f g : I → Bool) (hs : 3 ≤ s.card)
+    (hf : (s.filter fun i =&gt; f i = false).card ≤ 1)
+    (hg : (s.filter fun i =&gt; g i = false).card ≤ 1) :
+    ∃ i ∈ s, f i = true ∧ g i = true := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.Problem348.AnchorRigidity.one_sided</code> <small>line 50</small><div class="doc"><p>One-sided rigidity.  A dense anchor core on the row axis forces both axes
+into one mode.  The dummy predicate is only needed to permit one exceptional
+non-anchor column before the common mode has been identified.</p></div><pre>theorem one_sided
+    {I : Type uI} {J : Type uJ} {T : Type uT} [Fintype I] [Fintype J]
+    (B : I → J → Bool) (rowMode : I → Option T) (colMode : J → Option T)
+    (dummyCol : J → Prop) (core : Finset I)
+    (hcore : 6 ≤ core.card)
+    (core_anchor : ∀ i ∈ core, ∃ t, rowMode i = some t)
+    (core_zeros : ∀ j, (core.filter fun i =&gt; B i j = false).card ≤ 1)
+    (variable_sparse : ∀ j, colMode j = none → ¬ dummyCol j →
+      (core.filter fun i =&gt; B i j = true).card ≤ 4)
+    (dummy_unique : ∀ j k, dummyCol j → dummyCol k → j = k)
+    (cross_mode : ∀ i j t u, rowMode i = some t → colMode j = some u →
+      B i j = true → t = u)
+…</pre></li><li id=L133><b>def</b> <code>OAI.Problem348.AnchorRigidity.DenseAnchorCore</code> <small>line 133</small><div class="doc"><p>A dense core consists of at least six selected anchor positions.  Every
+opposite position has at most one zero on it, while a variable opposite
+position would have at most four ones.</p></div><pre>def DenseAnchorCore {I : Type uI} {J : Type uJ} {T : Type uT}
+    (B : I → J → Bool) (rowMode : I → Option T) (colMode : J → Option T)
+    (dummyCol : J → Prop) : Prop :=
+…</pre></li><li id=L145><b>theorem</b> <code>OAI.Problem348.AnchorRigidity.rigidity</code> <small>line 145</small><div class="doc"><p>Symmetric form of anchor rigidity: a dense anchor core on either axis
+suffices.  The no-shattering/order argument supplies this disjunction in the
+application to the 64 by 64 pattern.</p></div><pre>theorem rigidity
+    {I : Type uI} {J : Type uJ} {T : Type uT} [Fintype I] [Fintype J]
+    (B : I → J → Bool) (rowMode : I → Option T) (colMode : J → Option T)
+    (dummyRow : I → Prop) (dummyCol : J → Prop)
+    (hcore : DenseAnchorCore B rowMode colMode dummyCol ∨
+      DenseAnchorCore (fun j i =&gt; B i j) colMode rowMode dummyRow)
+    (dummy_row_unique : ∀ i k, dummyRow i → dummyRow k → i = k)
+    (dummy_col_unique : ∀ j k, dummyCol j → dummyCol k → j = k)
+    (cross_mode : ∀ i j t u, rowMode i = some t → colMode j = some u →
+      B i j = true → t = u)
+    (nonanchor_row_unit : ∀ i, rowMode i = none → ∀ j k t,
+      colMode j = some t → colMode k = some t →
+…</pre><p class="refs">Mentions: <a href="AnchorRigidity.lean.html#L133">OAI.Problem348.AnchorRigidity.DenseAnchorCore</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

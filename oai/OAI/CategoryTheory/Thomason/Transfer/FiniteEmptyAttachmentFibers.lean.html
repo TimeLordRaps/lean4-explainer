@@ -1,0 +1,264 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Transfer/FiniteEmptyAttachmentFibers.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Transfer/FiniteEmptyAttachmentFibers.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Transfer</a> / <span>FiniteEmptyAttachmentFibers.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Transfer</a>/<span>FiniteEmptyAttachmentFibers.lean</span></code></h1><p class="muted">45 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Transfer/FiniteEmptyAttachmentFibers.lean#L1">source</a></p><div class="doc"><h3>Unconditional full endpoint-fibre compatibility for actual attaching pushouts at either endpoint</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.omega_pushout_fibers</code> <small>line 22</small><div class="doc"><p>The fibre square is a pushout for the original unlabelled attachment,
+once its four strict labels commute.</p></div><pre>theorem omega_pushout_fibers (e : Fin 2)
+    {A B X Y : StrictOmegaCategory.{0}}
+    {i : A ⟶ B} {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j)
+    (pA : A ⟶ StrictPoset.category (Fin 2)) (pB : B ⟶ StrictPoset.category (Fin 2))
+    (pX : X ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hi : i ≫ pB = pA) (ha : a ≫ pX = pA)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = pX) :
+    IsPushout (labelFiberMap pA pB e i hi) (labelFiberMap pA pX e a ha)
+      (labelFiberMap pB pY e b hb) (labelFiberMap pX pY e j hj) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L36><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.finite_pushout_fibers</code> <small>line 36</small><div class="doc"><p>The same compatibility theorem uses the finite-category pushout itself.</p></div><pre>theorem finite_pushout_fibers (n : ℕ) (e : Fin 2)
+    {A B X Y : Truncated.{0} (n + 1)}
+    {i : A ⟶ B} {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j)
+    (pA : A ⟶ finiteInterval n) (pB : B ⟶ finiteInterval n)
+    (pX : X ⟶ finiteInterval n) (pY : Y ⟶ finiteInterval n)
+    (hi : i ≫ pB = pA) (ha : a ≫ pX = pA)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = pX) :
+    IsPushout
+      ((finiteLabelFiberFunctor n e).map (Over.homMk i hi : Over.mk pA ⟶ Over.mk pB))
+      ((finiteLabelFiberFunctor n e).map (Over.homMk a ha : Over.mk pA ⟶ Over.mk pX))
+      ((finiteLabelFiberFunctor n e).map (Over.homMk b hb : Over.mk pB ⟶ Over.mk pY))
+…</pre></li><li id=L66><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.omega_attachment_complement_iso</code> <small>line 66</small><div class="doc"><p>If both old labels are constant at the other endpoint, the new fibre
+maps isomorphically onto the fibre of the actual pushout.</p></div><pre>theorem omega_attachment_complement_iso (e d : Fin 2) (hed : d ≠ e)
+    {A B X Y : StrictOmegaCategory.{0}}
+    {i : A ⟶ B} {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j)
+    (pB : B ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hi : i ≫ pB = constantLabel A d)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = constantLabel X d) :
+    IsIso (labelFiberMap pB pY e b hb) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L103><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.omega_attachment_piece</code> <small>line 103</small><div class="doc"><p>The labelled fibre is precisely a pushout with the chosen full piece.</p></div><pre>theorem omega_attachment_piece (e : Fin 2)
+    {A B U X Y : StrictOmegaCategory.{0}}
+    {i : A ⟶ B} {iU : A ⟶ U} {u : U ⟶ B}
+    {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j) (hiU : iU ≫ u = i)
+    (pB : B ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hi : i ≫ pB = constantLabel A e)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = constantLabel X e)
+    (eU : U ≅ labelFiber pB e) (hu : eU.hom ≫ labelFiberInclusion pB e = u) :
+    IsPushout iU a
+      (eU.hom ≫ labelFiberMap pB pY e b hb)
+      ((constantFiberIso X e).inv ≫ labelFiberMap (constantLabel X e) pY e j hj) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L132><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.omega_attachment_piece_inclusion</code> <small>line 132</small><div class="doc"><p>The inclusion of the constructed piece into the original pushout is
+exactly its original structure map.</p></div><pre>theorem omega_attachment_piece_inclusion (e : Fin 2)
+    {B U X Y : StrictOmegaCategory.{0}} {u : U ⟶ B}
+    {b : B ⟶ Y} {j : X ⟶ Y}
+    (pB : B ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = constantLabel X e)
+    (eU : U ≅ labelFiber pB e) (hu : eU.hom ≫ labelFiberInclusion pB e = u) :
+    (eU.hom ≫ labelFiberMap pB pY e b hb) ≫ labelFiberInclusion pY e = u ≫ b ∧
+      ((constantFiberIso X e).inv ≫ labelFiberMap (constantLabel X e) pY e j hj) ≫
+        labelFiberInclusion pY e = j := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L161><b>theorem</b> <code>OAI.Thomason.Construction.ZeroFiber.omega_pushout_fibers</code> <small>line 161</small><div class="doc"><p>The fibre square is a pushout for the original unlabelled attachment,
+once its four strict labels commute.</p></div><pre>theorem omega_pushout_fibers
+    {A B X Y : StrictOmegaCategory.{0}}
+    {i : A ⟶ B} {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j)
+    (pA : A ⟶ StrictPoset.category (Fin 2)) (pB : B ⟶ StrictPoset.category (Fin 2))
+    (pX : X ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hi : i ≫ pB = pA) (ha : a ≫ pX = pA)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = pX) :
+    IsPushout (labelFiberMap pA pB 0 i hi) (labelFiberMap pA pX 0 a ha)
+      (labelFiberMap pB pY 0 b hb) (labelFiberMap pX pY 0 j hj) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L175><b>theorem</b> <code>OAI.Thomason.Construction.ZeroFiber.finite_pushout_fibers</code> <small>line 175</small><div class="doc"><p>The same compatibility theorem uses the finite-category pushout itself.</p></div><pre>theorem finite_pushout_fibers (n : ℕ)
+    {A B X Y : Truncated.{0} (n + 1)}
+    {i : A ⟶ B} {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j)
+    (pA : A ⟶ finiteInterval n) (pB : B ⟶ finiteInterval n)
+    (pX : X ⟶ finiteInterval n) (pY : Y ⟶ finiteInterval n)
+    (hi : i ≫ pB = pA) (ha : a ≫ pX = pA)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = pX) :
+    IsPushout
+      ((finiteLabelFiberFunctor n 0).map (Over.homMk i hi : Over.mk pA ⟶ Over.mk pB))
+      ((finiteLabelFiberFunctor n 0).map (Over.homMk a ha : Over.mk pA ⟶ Over.mk pX))
+      ((finiteLabelFiberFunctor n 0).map (Over.homMk b hb : Over.mk pB ⟶ Over.mk pY))
+…</pre></li><li id=L210><b>theorem</b> <code>OAI.Thomason.Construction.ZeroFiber.omega_attachment_piece</code> <small>line 210</small><div class="doc"><p>The labelled fibre is precisely a pushout with the chosen full piece.</p></div><pre>theorem omega_attachment_piece
+    {A B U X Y : StrictOmegaCategory.{0}}
+    {i : A ⟶ B} {iU : A ⟶ U} {u : U ⟶ B}
+    {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j) (hiU : iU ≫ u = i)
+    (pB : B ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hi : i ≫ pB = constantLabel A 0)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = constantLabel X 0)
+    (eU : U ≅ labelFiber pB 0) (hu : eU.hom ≫ labelFiberInclusion pB 0 = u) :
+    IsPushout iU a
+      (eU.hom ≫ labelFiberMap pB pY 0 b hb)
+      ((constantFiberIso X 0).inv ≫ labelFiberMap (constantLabel X 0) pY 0 j hj) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L239><b>theorem</b> <code>OAI.Thomason.Construction.ZeroFiber.omega_attachment_piece_inclusion</code> <small>line 239</small><div class="doc"><p>The inclusion of the constructed piece into the original pushout is
+exactly its original structure map.</p></div><pre>theorem omega_attachment_piece_inclusion
+    {B U X Y : StrictOmegaCategory.{0}} {u : U ⟶ B}
+    {b : B ⟶ Y} {j : X ⟶ Y}
+    (pB : B ⟶ StrictPoset.category (Fin 2)) (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = constantLabel X 0)
+    (eU : U ≅ labelFiber pB 0) (hu : eU.hom ≫ labelFiberInclusion pB 0 = u) :
+    (eU.hom ≫ labelFiberMap pB pY 0 b hb) ≫ labelFiberInclusion pY 0 = u ≫ b ∧
+      ((constantFiberIso X 0).inv ≫ labelFiberMap (constantLabel X 0) pY 0 j hj) ≫
+        labelFiberInclusion pY 0 = j := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L277><b>structure</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput</code> <small>line 277</small><div class="doc"><p>The finite-poset specialization of published sieve preservation.</p></div><pre>structure PublishedPosetSieveInput (h : NormalizedSimplexIdentities) [StrictColimitsInput] : Prop where
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictIsomorphisms.lean.html#L32">OAI.Thomason.Construction.NormalizedSimplexIdentities</a>, <a href="../Strict/UnderlyingCategory.lean.html#L33">OAI.Thomason.Construction.StrictColimitsInput</a></p></li><li id=L292><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_mono</code> <small>line 292</small><div class="doc"><p>The original categorified sieve map is monic.</p></div><pre>theorem omega_mono {P : Type} [PartialOrder P] [Finite P]
+    (A : Set P) (hA : IsLowerSet A) : Mono (h.posetMap (subposetInclusion A)) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L299><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_nerve_mono</code> <small>line 299</small><div class="doc"><p>Its actual Street nerve is a simplicial monomorphism.</p></div><pre>theorem omega_nerve_mono {P : Type} [PartialOrder P] [Finite P]
+    (A : Set P) (hA : IsLowerSet A) :
+    Mono (h.streetNerve.map (h.posetMap (subposetInclusion A))) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L308><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_source_fiber_iso</code> <small>line 308</small><div class="doc"><p>Relating the canonical fibre map to the map obtained by taking fibres
+of the original inclusion with its constant source label.</p></div><pre>theorem omega_source_fiber_iso {P : Type} [PartialOrder P] [Finite P]
+    (A : Set P) (hA : IsLowerSet A)
+    (hi : h.posetMap (subposetInclusion A) ≫ h.membershipLabel A hA =
+      constantLabel (h.categorification.obj (nerve A)) 0) :
+    IsIso (labelFiberMap (constantLabel (h.categorification.obj (nerve A)) 0)
+      (h.membershipLabel A hA) 0 (h.posetMap (subposetInclusion A)) hi) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L325><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_attachment_full_fiber</code> <small>line 325</small><div class="doc"><p>For every attaching functor, the old target is the actual full zero-fibre
+of a label on the pushout. The isomorphism commutes with the original map.</p></div><pre>theorem omega_attachment_full_fiber {P : Type} [PartialOrder P] [Finite P] (A : Set P) (hA : IsLowerSet A)
+    {X Y : StrictOmegaCategory.{0}}
+    {a : h.categorification.obj (nerve A) ⟶ X}
+    {b : h.categorification.obj (nerve P) ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout (h.posetMap (subposetInclusion A)) a b j) :
+    ∃ (pY : Y ⟶ StrictPoset.category (Fin 2)) (e : X ≅ labelFiber pY 0),
+      e.hom ≫ labelFiberInclusion pY 0 = j ∧
+      b ≫ pY = h.membershipLabel A hA ∧ j ≫ pY = constantLabel X 0 := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a>, <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L355><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_attachment_mono</code> <small>line 355</small><div class="doc"><p>Arbitrary attachments along these finite-poset sieves remain monic.</p></div><pre>theorem omega_attachment_mono {P : Type} [PartialOrder P] [Finite P] (A : Set P) (hA : IsLowerSet A)
+    {X Y : StrictOmegaCategory.{0}}
+    {a : h.categorification.obj (nerve A) ⟶ X}
+    {b : h.categorification.obj (nerve P) ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout (h.posetMap (subposetInclusion A)) a b j) : Mono j := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L383><b>def</b> <code>OAI.Thomason.Construction.subposetInclusionWithin</code> <small>line 383</small><div class="doc"><p>The inclusion between two full subposets with nested object sets.</p></div><pre>def subposetInclusionWithin {P : Type} [PartialOrder P]
+    (A U : Set P) (hAU : A ⊆ U) : A →o U where
+…</pre></li><li id=L389><b>def</b> <code>OAI.Thomason.Construction.restrictedOldIso</code> <small>line 389</small><div class="doc"><p>Restricting the ambient poset retains a canonically isomorphic old part.</p></div><pre>def restrictedOldIso {P : Type} [PartialOrder P]
+    (A U : Set P) (hAU : A ⊆ U) : A ≃o {x : U | x.val ∈ A} where
+…</pre></li><li id=L402><b>def</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.posetMapIso</code> <small>line 402</small><div class="doc"><p>Categorification carries an order isomorphism to an actual strict isomorphism.</p></div><pre>noncomputable def posetMapIso {E F : Type} [PartialOrder E] [PartialOrder F]
+    (e : E ≃o F) : h.categorification.obj (nerve E) ≅ h.categorification.obj (nerve F) where
+…</pre></li><li id=L420><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.subposetInclusionWithin_fac</code> <small>line 420</small><div class="doc"><p>The original nested inclusions commute after categorification.</p></div><pre>theorem subposetInclusionWithin_fac {P : Type} [PartialOrder P]
+    (A U : Set P) (hAU : A ⊆ U) :
+    h.posetMap (subposetInclusionWithin A U hAU) ≫ h.posetMap (subposetInclusion U) =
+      h.posetMap (subposetInclusion A) := by
+…</pre><p class="refs">Mentions: <a href="FiniteEmptyAttachmentFibers.lean.html#L383">OAI.Thomason.Construction.subposetInclusionWithin</a>, <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L436><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_piece_pushout</code> <small>line 436</small><div class="doc"><p>A containing sieve gives the corresponding smaller attachment as the
+actual full fibre in the original pushout.</p></div><pre>theorem omega_piece_pushout {P : Type} [PartialOrder P] [Finite P]
+    (A U : Set P) (hU : IsLowerSet U) (hAU : A ⊆ U)
+    {X Y : StrictOmegaCategory.{0}}
+    {a : h.categorification.obj (nerve A) ⟶ X}
+    {b : h.categorification.obj (nerve P) ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout (h.posetMap (subposetInclusion A)) a b j)
+    (pY : Y ⟶ StrictPoset.category (Fin 2))
+    (hb : b ≫ pY = h.membershipLabel U hU) (hj : j ≫ pY = constantLabel X 0) :
+    IsPushout (h.posetMap (subposetInclusionWithin A U hAU)) a
+      ((h.posetFiberMap U hU) ≫ labelFiberMap (h.membershipLabel U hU) pY 0 b hb)
+      ((constantFiberIso X 0).inv ≫ labelFiberMap (constantLabel X 0) pY 0 j hj) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a>, <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L383">OAI.Thomason.Construction.subposetInclusionWithin</a></p></li><li id=L459><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.omega_piece_label</code> <small>line 459</small><div class="doc"><p>The required compatible label exists for every containing sieve.</p></div><pre>theorem omega_piece_label {P : Type} [PartialOrder P]
+    (A U : Set P) (hU : IsLowerSet U) (hAU : A ⊆ U)
+    {X Y : StrictOmegaCategory.{0}}
+    {a : h.categorification.obj (nerve A) ⟶ X}
+    {b : h.categorification.obj (nerve P) ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout (h.posetMap (subposetInclusion A)) a b j) :
+    ∃ pY : Y ⟶ StrictPoset.category (Fin 2),
+      b ≫ pY = h.membershipLabel U hU ∧ j ≫ pY = constantLabel X 0 := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a>, <a href="../Strict/UnderlyingCategory.lean.html#L616">OAI.Thomason.Construction.StrictPoset.category</a></p></li><li id=L498><b>def</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.CouniversalStreetWeakEquivalence</code> <small>line 498</small><div class="doc"><p>Every cobase change of a strict map is a Street weak equivalence.</p></div><pre>def CouniversalStreetWeakEquivalence {A B : StrictOmegaCategory.{0}} (i : A ⟶ B) : Prop :=
+…</pre></li><li id=L505><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.greatestNew_couniversal</code> <small>line 505</small><div class="doc"><p>Stationary Gray prisms supply the greatest-new case.</p></div><pre>theorem greatestNew_couniversal {P : Type} [PartialOrder P] {A : Set P}
+    (R : SieveRetraction A) {x : P} (hx : SieveRetraction.GreatestNew (A := A) x)
+…</pre><p class="refs">Mentions: <a href="../Simplicial/CanonicalExtensionCartesian.lean.html#L244">OAI.Thomason.Construction.SieveRetraction</a>, <a href="../Simplicial/CanonicalExtensionCartesian.lean.html#L282">OAI.Thomason.Construction.SieveRetraction.GreatestNew</a></p></li><li id=L513><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.couniversal_of_two_sieve_cover</code> <small>line 513</small><div class="doc"><p>Couniversality glues over two containing sieves and their intersection.</p></div><pre>theorem couniversal_of_two_sieve_cover
+    (s : PublishedPosetSieveInput h)
+    (g : PublishedSimplicialGluingInput)
+    (kq : KanQuillenPublishedInput.{0})
+    {P : Type} [PartialOrder P] [Finite P]
+    (A U V : Set P) (hU : IsLowerSet U) (hV : IsLowerSet V)
+    (hAU : A ⊆ U) (hAV : A ⊆ V) (cover : ∀ x, x ∈ U ∨ x ∈ V)
+    (wU : h.CouniversalStreetWeakEquivalence (h.posetMap (subposetInclusionWithin A U hAU)))
+    (wV : h.CouniversalStreetWeakEquivalence (h.posetMap (subposetInclusionWithin A V hAV)))
+    (wI : h.CouniversalStreetWeakEquivalence (h.posetMap
+      (subposetInclusionWithin A (U ∩ V) (fun _x hx =&gt; ⟨hAU hx, hAV hx⟩)))) :
+    h.CouniversalStreetWeakEquivalence (h.posetMap (subposetInclusion A)) := by
+…</pre><p class="refs">Mentions: <a href="FiniteEmptyAttachmentFibers.lean.html#L277">OAI.Thomason.Construction.PublishedPosetSieveInput</a>, <a href="WeakFactorizationRecognition.lean.html#L128">OAI.Thomason.Construction.PublishedSimplicialGluingInput</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L383">OAI.Thomason.Construction.subposetInclusionWithin</a>, <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L595><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.couniversal_precompose_iso</code> <small>line 595</small><div class="doc"><p>Renaming the attaching source does not change couniversality.</p></div><pre>theorem couniversal_precompose_iso {A A&#x27; B : StrictOmegaCategory.{0}}
+    (e : A&#x27; ≅ A) (i : A ⟶ B) (hi : h.CouniversalStreetWeakEquivalence i) :
+    h.CouniversalStreetWeakEquivalence (e.hom ≫ i) := by
+…</pre></li><li id=L604><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.couniversal_of_isIso</code> <small>line 604</small><div class="doc"><p>Isomorphisms remain weak equivalences under arbitrary cobase change.</p></div><pre>theorem couniversal_of_isIso (kq : KanQuillenPublishedInput.{0})
+    {A B : StrictOmegaCategory.{0}} (i : A ⟶ B) [IsIso i] :
+    h.CouniversalStreetWeakEquivalence i := by
+…</pre></li><li id=L615><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.posetMap_isIso_of_all</code> <small>line 615</small><div class="doc"><p>A sieve containing every object induces an isomorphism.</p></div><pre>theorem posetMap_isIso_of_all {P : Type} [PartialOrder P]
+    (A : Set P) (hA : ∀ x, x ∈ A) : IsIso (h.posetMap (subposetInclusion A)) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L626><b>theorem</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.restrictedOldIso_fac</code> <small>line 626</small><div class="doc"><p>Compatibility of the canonical old-source renaming with the actual inclusion.</p></div><pre>theorem restrictedOldIso_fac {P : Type} [PartialOrder P]
+    (A U : Set P) (hAU : A ⊆ U) :
+    (h.posetMapIso (restrictedOldIso A U hAU)).hom ≫
+      h.posetMap (subposetInclusion {x : U | x.val ∈ A}) =
+      h.posetMap (subposetInclusionWithin A U hAU) := by
+…</pre><p class="refs">Mentions: <a href="FiniteEmptyAttachmentFibers.lean.html#L389">OAI.Thomason.Construction.restrictedOldIso</a>, <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L383">OAI.Thomason.Construction.subposetInclusionWithin</a></p></li><li id=L657><b>instance</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.inclusion_faithful</code> <small>line 657</small><div class="doc"><p>The truncation inclusion does not identify strict functors.</p></div><pre>instance inclusion_faithful (k : ℕ) : (StrictOmegaCategory.inclusion k).Faithful where
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictCompositeListReplacement.lean.html#L280">OAI.Thomason.Construction.StrictOmegaCategory.inclusion</a></p></li><li id=L661><b>instance</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.inclusion_full</code> <small>line 661</small><div class="doc"><p>Every ambient strict functor between truncated objects is a finite functor.</p></div><pre>instance inclusion_full (k : ℕ) : (StrictOmegaCategory.inclusion k).Full where
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictCompositeListReplacement.lean.html#L280">OAI.Thomason.Construction.StrictOmegaCategory.inclusion</a></p></li><li id=L665><b>def</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiber</code> <small>line 665</small><div class="doc"><p>A full endpoint fibre as an object of the original finite category.</p></div><pre>def finiteLabelFiber {C : Truncated (n + 1)} (p : C ⟶ finiteInterval n) (e : Fin 2) :
+    Truncated (n + 1) := (finiteLabelFiberFunctor n e).obj (Over.mk p)</pre><p class="refs">Mentions: <a href="../Strict/StrictCompositeListReplacement.lean.html#L269">OAI.Thomason.Construction.StrictOmegaCategory.Truncated</a>, <a href="StrictPushoutGeneration.lean.html#L27">OAI.Thomason.Construction.StrictOmegaCategory.finiteInterval</a>, <a href="StrictPushoutGeneration.lean.html#L34">OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiberFunctor</a></p></li><li id=L669><b>def</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiberMap</code> <small>line 669</small><div class="doc"><p>Restriction of a finite-dimensional strict functor to its full fibres.</p></div><pre>def finiteLabelFiberMap {C D : Truncated (n + 1)}
+    (p : C ⟶ finiteInterval n) (q : D ⟶ finiteInterval n) (e : Fin 2)
+    (f : C ⟶ D) (hf : f ≫ q = p) : finiteLabelFiber p e ⟶ finiteLabelFiber q e :=
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictCompositeListReplacement.lean.html#L269">OAI.Thomason.Construction.StrictOmegaCategory.Truncated</a>, <a href="StrictPushoutGeneration.lean.html#L27">OAI.Thomason.Construction.StrictOmegaCategory.finiteInterval</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L665">OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiber</a></p></li><li id=L675><b>def</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.finiteConstantLabel</code> <small>line 675</small><div class="doc"><p>A constant label in the finite category, on all cells.</p></div><pre>def finiteConstantLabel (C : Truncated (n + 1)) (e : Fin 2) : C ⟶ finiteInterval n :=
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictCompositeListReplacement.lean.html#L269">OAI.Thomason.Construction.StrictOmegaCategory.Truncated</a>, <a href="StrictPushoutGeneration.lean.html#L27">OAI.Thomason.Construction.StrictOmegaCategory.finiteInterval</a></p></li><li id=L679><b>def</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.finiteConstantFiberIso</code> <small>line 679</small><div class="doc"><p>The constant-label fibre retains the original finite-dimensional object.</p></div><pre>def finiteConstantFiberIso (C : Truncated (n + 1)) (e : Fin 2) :
+    finiteLabelFiber (finiteConstantLabel C e) e ≅ C where
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictCompositeListReplacement.lean.html#L269">OAI.Thomason.Construction.StrictOmegaCategory.Truncated</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L665">OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiber</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L675">OAI.Thomason.Construction.StrictOmegaCategory.finiteConstantLabel</a></p></li><li id=L692><b>theorem</b> <code>OAI.Thomason.Construction.ZeroFiber.finite_attachment_piece</code> <small>line 692</small><div class="doc"><p>A full finite-dimensional piece containing the attaching source has
+exactly the expected pushout, without assuming that inclusion preserves it.</p></div><pre>theorem finite_attachment_piece {n : ℕ}
+    {A B U X Y : Truncated.{0} (n + 1)}
+    {i : A ⟶ B} {iU : A ⟶ U} {u : U ⟶ B}
+    {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j) (hiU : iU ≫ u = i)
+    (pB : B ⟶ finiteInterval n) (pY : Y ⟶ finiteInterval n)
+    (hi : i ≫ pB = finiteConstantLabel A 0)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = finiteConstantLabel X 0)
+    (eU : U ≅ finiteLabelFiber pB 0) (hu : eU.hom ≫ labelFiberInclusion pB 0 = u) :
+    IsPushout iU a
+      (eU.hom ≫ finiteLabelFiberMap pB pY 0 b hb)
+      ((finiteConstantFiberIso X 0).inv ≫
+…</pre></li><li id=L739><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.finite_piece_pushout</code> <small>line 739</small><div class="doc"><p>The smaller categorified poset attachment is the actual full finite fibre.</p></div><pre>theorem finite_piece_pushout {P : Type} [PartialOrder P] [Finite P]
+    (A U : Set P) (hU : IsLowerSet U) (hAU : A ⊆ U)
+    {X Y : Truncated.{0} (n + 1)}
+    {a : (r.categorification h).obj (nerve A) ⟶ X}
+    {b : (r.categorification h).obj (nerve P) ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout (r.reflect.map (h.posetMap (subposetInclusion A))) a b j)
+    (pY : Y ⟶ finiteInterval n)
+    (hb : b ≫ pY = r.membershipLabel h U hU) (hj : j ≫ pY = finiteConstantLabel X 0) :
+    IsPushout (r.reflect.map (h.posetMap (subposetInclusionWithin A U hAU))) a
+      ((r.posetFiberMap h U hU) ≫ finiteLabelFiberMap (r.membershipLabel h U hU) pY 0 b hb)
+      ((finiteConstantFiberIso X 0).inv ≫
+        finiteLabelFiberMap (finiteConstantLabel X 0) pY 0 j hj) := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L383">OAI.Thomason.Construction.subposetInclusionWithin</a></p></li><li id=L770><b>theorem</b> <code>OAI.Thomason.Construction.PublishedPosetSieveInput.finite_piece_label</code> <small>line 770</small><div class="doc"><p>Construct the compatible label using the original finite pushout.</p></div><pre>theorem finite_piece_label {P : Type} [PartialOrder P]
+    (A U : Set P) (hU : IsLowerSet U) (hAU : A ⊆ U)
+    {X Y : Truncated.{0} (n + 1)}
+    {a : (r.categorification h).obj (nerve A) ⟶ X}
+    {b : (r.categorification h).obj (nerve P) ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout (r.reflect.map (h.posetMap (subposetInclusion A))) a b j) :
+    ∃ pY : Y ⟶ finiteInterval n,
+      b ≫ pY = r.membershipLabel h U hU ∧ j ≫ pY = finiteConstantLabel X 0 := by
+…</pre><p class="refs">Mentions: <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L803><b>def</b> <code>OAI.Thomason.Construction.NormalizedSimplexIdentities.FiniteCouniversalStreetWeakEquivalence</code> <small>line 803</small><div class="doc"><p>Cobase changes in the actual finite category are Street weak equivalences.</p></div><pre>def FiniteCouniversalStreetWeakEquivalence (h : NormalizedSimplexIdentities) (n : ℕ)
+    {A B : Truncated.{0} (n + 1)} (i : A ⟶ B) : Prop :=
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictIsomorphisms.lean.html#L32">OAI.Thomason.Construction.NormalizedSimplexIdentities</a></p></li><li id=L816><b>theorem</b> <code>OAI.Thomason.Construction.FiniteReflectionInput.greatestNew_couniversal</code> <small>line 816</small><div class="doc"><p>The finite stationary Gray prisms give the greatest-new base case.</p></div><pre>theorem greatestNew_couniversal {P : Type} [PartialOrder P] {A : Set P}
+    (R : SieveRetraction A) {x : P} (hx : SieveRetraction.GreatestNew (A := A) x)
+…</pre><p class="refs">Mentions: <a href="../Simplicial/CanonicalExtensionCartesian.lean.html#L244">OAI.Thomason.Construction.SieveRetraction</a>, <a href="../Simplicial/CanonicalExtensionCartesian.lean.html#L282">OAI.Thomason.Construction.SieveRetraction.GreatestNew</a></p></li><li id=L825><b>theorem</b> <code>OAI.Thomason.Construction.FiniteReflectionInput.couniversal_of_two_sieve_cover</code> <small>line 825</small><div class="doc"><p>The two-sieve induction step uses finite pushouts and ambient Street covers.</p></div><pre>theorem couniversal_of_two_sieve_cover
+    (s : PublishedPosetSieveInput h)
+    (g : PublishedSimplicialGluingInput)
+    (kq : KanQuillenPublishedInput.{0})
+    {P : Type} [PartialOrder P] [Finite P]
+    (A U V : Set P) (hU : IsLowerSet U) (hV : IsLowerSet V)
+    (hAU : A ⊆ U) (hAV : A ⊆ V) (cover : ∀ x, x ∈ U ∨ x ∈ V)
+    (wU : h.FiniteCouniversalStreetWeakEquivalence n
+      (r.reflect.map (h.posetMap (subposetInclusionWithin A U hAU))))
+    (wV : h.FiniteCouniversalStreetWeakEquivalence n
+      (r.reflect.map (h.posetMap (subposetInclusionWithin A V hAV))))
+    (wI : h.FiniteCouniversalStreetWeakEquivalence n (r.reflect.map (h.posetMap
+…</pre><p class="refs">Mentions: <a href="FiniteEmptyAttachmentFibers.lean.html#L277">OAI.Thomason.Construction.PublishedPosetSieveInput</a>, <a href="WeakFactorizationRecognition.lean.html#L128">OAI.Thomason.Construction.PublishedSimplicialGluingInput</a>, <a href="FiniteEmptyAttachmentFibers.lean.html#L383">OAI.Thomason.Construction.subposetInclusionWithin</a></p></li><li id=L922><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.finite_attachment_piece</code> <small>line 922</small><div class="doc"><p>A full finite-dimensional piece containing the attaching source has
+exactly the expected pushout, without assuming that inclusion preserves it.</p></div><pre>theorem finite_attachment_piece (e : Fin 2) {n : ℕ}
+    {A B U X Y : Truncated.{0} (n + 1)}
+    {i : A ⟶ B} {iU : A ⟶ U} {u : U ⟶ B}
+    {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j) (hiU : iU ≫ u = i)
+    (pB : B ⟶ finiteInterval n) (pY : Y ⟶ finiteInterval n)
+    (hi : i ≫ pB = finiteConstantLabel A e)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = finiteConstantLabel X e)
+    (eU : U ≅ finiteLabelFiber pB e) (hu : eU.hom ≫ labelFiberInclusion pB e = u) :
+    IsPushout iU a
+      (eU.hom ≫ finiteLabelFiberMap pB pY e b hb)
+      ((finiteConstantFiberIso X e).inv ≫
+…</pre></li><li id=L972><b>def</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiberInclusion</code> <small>line 972</small></li><li id=L976><b>theorem</b> <code>OAI.Thomason.Construction.StrictOmegaCategory.finiteLabelFiberMap_inclusion</code> <small>line 976</small></li><li id=L988><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.finite_piece_inclusion</code> <small>line 988</small></li><li id=L999><b>theorem</b> <code>OAI.Thomason.Construction.EndpointFiber.finite_attachment_complement_iso</code> <small>line 999</small><div class="doc"><p>The full fibre away from the old constant label is unchanged by the
+actual finite-dimensional pushout.</p></div><pre>theorem finite_attachment_complement_iso {n : ℕ} (e d : Fin 2) (hed : d ≠ e)
+    {A B X Y : Truncated.{0} (n+1)}
+    {i : A ⟶ B} {a : A ⟶ X} {b : B ⟶ Y} {j : X ⟶ Y}
+    (hp : IsPushout i a b j) (pB : B ⟶ finiteInterval n) (pY : Y ⟶ finiteInterval n)
+    (hi : i ≫ pB = finiteConstantLabel A d)
+    (hb : b ≫ pY = pB) (hj : j ≫ pY = finiteConstantLabel X d) :
+    IsIso (finiteLabelFiberMap pB pY e b hb) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

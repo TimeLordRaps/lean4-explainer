@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/FoulkesHowe/PlethysmDual.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/FoulkesHowe/PlethysmDual.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">FoulkesHowe</a> / <span>PlethysmDual.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">FoulkesHowe</a>/<span>PlethysmDual.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/FoulkesHowe/PlethysmDual.lean#L1">source</a></p><div class="doc"><h3>Lifting perfect duality through a symmetric power</h3><p>Composition of perfect pairings is separate from construction of the one-level pairing.  Supplying the one-level duality
+charts and their naturality gives the duality and adjoint-action identities for
+nested symmetric powers.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>def</b> <code>OAI.Problem346.PlethysmDual.liftDualEquiv</code> <small>line 26</small><div class="doc"><p>Lift a perfect-duality chart through a symmetric power using the canonical
+duality chart for that symmetric power.</p></div><pre>def liftDualEquiv (n : ℕ) (e : W ≃ₗ[ℂ] Module.Dual ℂ V)
+    (d : SymPow n (Module.Dual ℂ V) ≃ₗ[ℂ] Module.Dual ℂ (SymPow n V)) :
+    SymPow n W ≃ₗ[ℂ] Module.Dual ℂ (SymPow n V) :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L20">OAI.Problem346.SymPow</a></p></li><li id=L33><b>theorem</b> <code>OAI.Problem346.PlethysmDual.liftDualEquiv_adjoint</code> <small>line 33</small><div class="doc"><p>Adjointness is preserved when a perfect pairing is lifted through a
+symmetric power whose duality chart is natural for the given map.</p></div><pre>theorem liftDualEquiv_adjoint (n : ℕ) (e : W ≃ₗ[ℂ] Module.Dual ℂ V)
+    (d : SymPow n (Module.Dual ℂ V) ≃ₗ[ℂ] Module.Dual ℂ (SymPow n V))
+    (A : V →ₗ[ℂ] V) (A&#x27; : W →ₗ[ℂ] W)
+    (he : ∀ x y, e (A&#x27; x) y = e x (A y))
+    (hd : ∀ x y, d (symPowMap n A.dualMap x) y = d x (symPowMap n A y))
+    (x : SymPow n W) (y : SymPow n V) :
+    liftDualEquiv n e d (symPowMap n A&#x27; x) y =
+      liftDualEquiv n e d x (symPowMap n A y) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L20">OAI.Problem346.SymPow</a>, <a href="Functoriality.lean.html#L27">OAI.Problem346.symPowMap</a>, <a href="PlethysmDual.lean.html#L26">OAI.Problem346.PlethysmDual.liftDualEquiv</a></p></li><li id=L56><b>def</b> <code>OAI.Problem346.PlethysmDual.plethysmDualEquivOf</code> <small>line 56</small><div class="doc"><p>The duality chart for a plethysm is the composite of its inner and outer
+one-level duality charts.</p></div><pre>def plethysmDualEquivOf (outer inner : ℕ)
+    (e : SymPow inner (Module.Dual ℂ V) ≃ₗ[ℂ] Module.Dual ℂ (SymPow inner V))
+    (d : SymPow outer (Module.Dual ℂ (SymPow inner V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow outer (SymPow inner V))) :
+    SymPow outer (SymPow inner (Module.Dual ℂ V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow outer (SymPow inner V)) :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L20">OAI.Problem346.SymPow</a></p></li><li id=L67><b>theorem</b> <code>OAI.Problem346.PlethysmDual.plethysmDualEquivOf_adjoint</code> <small>line 67</small><div class="doc"><p>Naturality of each level gives the adjoint-action identity for the
+plethysm pairing.  The dual automorphism here is the ordinary dual map,
+not the inverse contragredient; this is precisely the adjoint identity.</p></div><pre>theorem plethysmDualEquivOf_adjoint (outer inner : ℕ)
+    (e : SymPow inner (Module.Dual ℂ V) ≃ₗ[ℂ] Module.Dual ℂ (SymPow inner V))
+    (d : SymPow outer (Module.Dual ℂ (SymPow inner V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow outer (SymPow inner V)))
+    (g : V ≃ₗ[ℂ] V)
+    (he : ∀ x y, e (symPowMap inner g.dualMap.toLinearMap x) y =
+      e x (symPowMap inner g.toLinearMap y))
+    (hd : ∀ x y,
+      d (symPowMap outer (symPowMap inner g.toLinearMap).dualMap x) y =
+      d x (symPowMap outer (symPowMap inner g.toLinearMap) y))
+    (x : SymPow outer (SymPow inner (Module.Dual ℂ V)))
+    (y : SymPow outer (SymPow inner V)) :
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L20">OAI.Problem346.SymPow</a>, <a href="Functoriality.lean.html#L27">OAI.Problem346.symPowMap</a></p></li><li id=L88><b>theorem</b> <code>OAI.Problem346.PlethysmDual.exists_embedding_of_dual_surjection</code> <small>line 88</small><div class="doc"><p>The comparison embedding follows formally from a surjection on the dual
+vector space and compatible perfect pairings on the two plethysms.</p></div><pre>theorem exists_embedding_of_dual_surjection (a b : ℕ)
+    [Module.IsReflexive ℂ (SymPow b (SymPow a V))]
+    [Module.IsReflexive ℂ (SymPow a (SymPow b V))]
+    (e : SymPow b (SymPow a (Module.Dual ℂ V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow b (SymPow a V)))
+    (f : SymPow a (SymPow b (Module.Dual ℂ V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow a (SymPow b V)))
+    (he : ∀ (g : V ≃ₗ[ℂ] V) x y,
+      e (plethysmAction b a g.dualMap x) y = e x (plethysmAction b a g y))
+    (hf : ∀ (g : V ≃ₗ[ℂ] V) x y,
+      f (plethysmAction a b g.dualMap x) y = f x (plethysmAction a b g y))
+    (μ : SymPow b (SymPow a (Module.Dual ℂ V)) →ₗ[ℂ]
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L20">OAI.Problem346.SymPow</a>, <a href="Actions.lean.html#L34">OAI.Problem346.plethysmAction</a></p></li><li id=L125><b>theorem</b> <code>OAI.Problem346.PlethysmDual.comparison_of_dual_charts</code> <small>line 125</small><div class="doc"><p>With finite-dimensionality and canonical-map naturality available, only the
+two perfect-duality charts and their adjointness remain to construct the
+comparison embedding from canonical surjectivity on the dual space.</p></div><pre>theorem comparison_of_dual_charts (a b : ℕ) [FiniteDimensional ℂ V]
+    (e : SymPow b (SymPow a (Module.Dual ℂ V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow b (SymPow a V)))
+    (f : SymPow a (SymPow b (Module.Dual ℂ V)) ≃ₗ[ℂ]
+      Module.Dual ℂ (SymPow a (SymPow b V)))
+    (he : ∀ (g : V ≃ₗ[ℂ] V) x y,
+      e (plethysmAction b a g.dualMap x) y = e x (plethysmAction b a g y))
+    (hf : ∀ (g : V ≃ₗ[ℂ] V) x y,
+      f (plethysmAction a b g.dualMap x) y = f x (plethysmAction a b g y))
+    (hsurj : ∃ μ : SymPow b (SymPow a (Module.Dual ℂ V)) →ₗ[ℂ]
+      SymPow a (SymPow b (Module.Dual ℂ V)),
+      IsFoulkesMap a b (Module.Dual ℂ V) μ ∧ Function.Surjective μ) :
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L20">OAI.Problem346.SymPow</a>, <a href="Actions.lean.html#L34">OAI.Problem346.plethysmAction</a>, <a href="../../../ComparatorChallenges/FoulkesHowe.lean.html#L36">OAI.Problem346.IsFoulkesMap</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

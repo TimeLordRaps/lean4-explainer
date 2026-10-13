@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/LowSpaceSubsetSum/Separators/SeparatorIncidence.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/LowSpaceSubsetSum/Separators/SeparatorIncidence.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">LowSpaceSubsetSum</a> / <a href="index.html">Separators</a> / <span>SeparatorIncidence.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">LowSpaceSubsetSum</a>/<a href="index.html">Separators</a>/<span>SeparatorIncidence.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/LowSpaceSubsetSum/Separators/SeparatorIncidence.lean#L1">source</a></p><div class="doc"><h3>Rounded separator incidence estimates</h3><p>The sharp entropy estimate remains useful after the integer cardinalities
+are rounded. We use a fixed compact interval and explicit constant error,
+so that rounding introduces a constant factor rather than exponential slack.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.LowSpaceSubsetSum.logb_two_eight</code> <small>line 16</small></li><li id=L21><b>theorem</b> <code>OAI.LowSpaceSubsetSum.hasDerivAt_binaryEntropy_compact</code> <small>line 21</small></li><li id=L31><b>theorem</b> <code>OAI.LowSpaceSubsetSum.binaryEntropy_deriv_bound</code> <small>line 31</small></li><li id=L47><b>theorem</b> <code>OAI.LowSpaceSubsetSum.binaryEntropy_lipschitz_compact</code> <small>line 47</small><div class="doc"><p>A fixed constant suffices for every density used by the rounded separator.</p></div><pre>theorem binaryEntropy_lipschitz_compact {p q : ℝ}
+    (hp : p ∈ Set.Icc (1 / 8) (7 / 8)) (hq : q ∈ Set.Icc (1 / 8) (7 / 8)) :
+    |binaryEntropy p - binaryEntropy q| ≤ 3 * |p - q| := by
+…</pre><p class="refs">Mentions: <a href="../Counting/Entropy.lean.html#L20">OAI.LowSpaceSubsetSum.binaryEntropy</a></p></li><li id=L57><b>def</b> <code>OAI.LowSpaceSubsetSum.separatorRationalAlpha</code> <small>line 57</small><div class="doc"><p>The floor-computed rational slope used in the sampling rule.</p></div><pre>noncomputable def separatorRationalAlpha (m : ℕ) : ℝ :=
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.LowSpaceSubsetSum.separatorRationalAlpha_error</code> <small>line 60</small></li><li id=L78><b>theorem</b> <code>OAI.LowSpaceSubsetSum.separatorRationalAlpha_eq_log_power</code> <small>line 78</small></li><li id=L85><b>theorem</b> <code>OAI.LowSpaceSubsetSum.separatorRationalAlpha_sample_error</code> <small>line 85</small><div class="doc"><p>Approximating the slope by its integer-log version costs at most one
+in the prescribed sample size whenever the block fits inside the mixer.</p></div><pre>theorem separatorRationalAlpha_sample_error {g m : ℕ} (hm : 0 &lt; m) (hgm : g ≤ m)
+    {k : ℝ} (hk : k ∈ Set.Icc (1 / 6) (1 / 3)) :
+    |(g : ℝ) * (1 / 2 + separatorRationalAlpha m * (k - 1 / 4)) -
+      (g : ℝ) * (k + separatorY k)| ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="SeparatorIncidence.lean.html#L57">OAI.LowSpaceSubsetSum.separatorRationalAlpha</a>, <a href="SeparatorEntropy.lean.html#L21">OAI.LowSpaceSubsetSum.separatorY</a></p></li><li id=L110><b>theorem</b> <code>OAI.LowSpaceSubsetSum.separator_sample_floor_error</code> <small>line 110</small><div class="doc"><p>The actual outer floor plus the rational-slope approximation satisfies
+the two-unit error used in the incidence theorem.</p></div><pre>theorem separator_sample_floor_error {g m e : ℕ} (hm : 0 &lt; m) (hgm : g ≤ m)
+    {k : ℝ} (hk : k ∈ Set.Icc (1 / 6) (1 / 3))
+    (he : (e : ℤ) = ⌊(g : ℝ) * (1 / 2 + separatorRationalAlpha m * (k - 1 / 4))⌋) :
+    |(e : ℝ) - (g : ℝ) * (k + separatorY k)| ≤ 2 := by
+…</pre><p class="refs">Mentions: <a href="SeparatorIncidence.lean.html#L57">OAI.LowSpaceSubsetSum.separatorRationalAlpha</a>, <a href="SeparatorEntropy.lean.html#L21">OAI.LowSpaceSubsetSum.separatorY</a></p></li><li id=L125><b>theorem</b> <code>OAI.LowSpaceSubsetSum.separator_density_bounds</code> <small>line 125</small></li><li id=L138><b>theorem</b> <code>OAI.LowSpaceSubsetSum.weighted_binaryEntropy_error</code> <small>line 138</small><div class="doc"><p>A weighted form avoids dividing a rounding error by a small block size.</p></div><pre>theorem weighted_binaryEntropy_error {a b p q : ℝ} (ha : 0 ≤ a)
+    (hp : p ∈ Set.Icc (1 / 8) (7 / 8)) (hq : q ∈ Set.Icc (1 / 8) (7 / 8)) :
+    |a * binaryEntropy p - b * binaryEntropy q| ≤
+      3 * |a * p - b * q| + 4 * |a - b| := by
+…</pre><p class="refs">Mentions: <a href="../Counting/Entropy.lean.html#L20">OAI.LowSpaceSubsetSum.binaryEntropy</a></p></li><li id=L170><b>theorem</b> <code>OAI.LowSpaceSubsetSum.choose_ratio_le_of_entropy_gap</code> <small>line 170</small><div class="doc"><p>The binomial entropy bounds turn an exponent gap into a ratio bound.</p></div><pre>theorem choose_ratio_le_of_entropy_gap (n d j : ℕ) (hjn : j ≤ n) (hjd : j ≤ d)
+    {T : ℝ} (hT : (n : ℝ) * binaryEntropy ((j : ℝ) / n) -
+      (d : ℝ) * binaryEntropy ((j : ℝ) / d) ≤ T) :
+    (n.choose j : ℝ) / (d.choose j : ℝ) ≤
+      ((d : ℝ) + 1) * (2 : ℝ) ^ T := by
+…</pre><p class="refs">Mentions: <a href="../Counting/Entropy.lean.html#L20">OAI.LowSpaceSubsetSum.binaryEntropy</a></p></li><li id=L195><b>theorem</b> <code>OAI.LowSpaceSubsetSum.rounded_separator_entropy_gap</code> <small>line 195</small><div class="doc"><p>Bounded rounding changes the difference of the two entropy exponents
+by at most <code>22</code>, uniformly over the entire allowed density interval.</p></div><pre>theorem rounded_separator_entropy_gap (g c e : ℕ) (hg : 64 ≤ g) (heven : 2 ∣ g)
+    (hce : c ≤ e) (heg : e ≤ g) {k : ℝ} (hk : k ∈ Set.Icc (1 / 6) (1 / 3))
+    (hc : |(c : ℝ) - (g : ℝ) * k| ≤ 1)
+    (he : |(e : ℝ) - (g : ℝ) * (k + separatorY k)| ≤ 2) :
+    ((g - c : ℕ) : ℝ) * binaryEntropy (((e - c : ℕ) : ℝ) / (g - c : ℕ)) -
+      ((g / 2 : ℕ) : ℝ) * binaryEntropy (((e - c : ℕ) : ℝ) / (g / 2 : ℕ)) ≤
+      (g : ℝ) * (1 - binaryEntropy (1 / 4)) + 22 := by
+…</pre><p class="refs">Mentions: <a href="SeparatorEntropy.lean.html#L21">OAI.LowSpaceSubsetSum.separatorY</a>, <a href="../Counting/Entropy.lean.html#L20">OAI.LowSpaceSubsetSum.binaryEntropy</a></p></li><li id=L284><b>theorem</b> <code>OAI.LowSpaceSubsetSum.rounded_separator_incidence_bound</code> <small>line 284</small><div class="doc"><p>The rounded separator incidence bound has only a linear polynomial
+factor. The constant is <code>11 * 2^22 = 46,137,344</code>.</p></div><pre>theorem rounded_separator_incidence_bound (g c e : ℕ) (hg : 64 ≤ g) (heven : 2 ∣ g)
+    (hce : c ≤ e) (heg : e ≤ g) (hjd : e - c ≤ g / 2)
+    {k : ℝ} (hk : k ∈ Set.Icc (1 / 6) (1 / 3))
+    (hc : |(c : ℝ) - (g : ℝ) * k| ≤ 1)
+    (he : |(e : ℝ) - (g : ℝ) * (k + separatorY k)| ≤ 2) :
+    11 * ((Nat.choose (g - c) (e - c) : ℝ) / Nat.choose (g / 2) (e - c)) ≤
+      (11 * 2 ^ 22 : ℝ) * ((g : ℝ) + 1) *
+        (2 : ℝ) ^ ((g : ℝ) * (1 - binaryEntropy (1 / 4))) := by
+…</pre><p class="refs">Mentions: <a href="SeparatorEntropy.lean.html#L21">OAI.LowSpaceSubsetSum.separatorY</a>, <a href="../Counting/Entropy.lean.html#L20">OAI.LowSpaceSubsetSum.binaryEntropy</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

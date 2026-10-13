@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TotientAsymptotic/PPTBadWitness.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TotientAsymptotic/PPTBadWitness.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">TotientAsymptotic</a> / <span>PPTBadWitness.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">TotientAsymptotic</a>/<span>PPTBadWitness.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TotientAsymptotic/PPTBadWitness.lean#L1">source</a></p><div class="doc"><p>The injective choice of nontrivial preimages used in Ford, Section 5,
+p. 25, between (5.20) and (5.21).  Candidate sets are partitioned by their
+totient value.  A singleton fiber uses its given nontrivial preimage; on a
+larger fiber, a cyclic permutation followed by multiplication by a fixed
+seed preimage supplies distinct nontrivial preimages.  The full fiber
+multiplicity is retained throughout this construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_finRotate_ne_self</code> <small>line 19</small></li><li id=L32><b>def</b> <code>OAI.TotientAsymptotic.pptFiniteRotation</code> <small>line 32</small></li><li id=L35><b>lemma</b> <code>OAI.TotientAsymptotic.pptFiniteRotation_ne_self</code> <small>line 35</small></li><li id=L47><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_rough_eq_of_dvd_same_totient</code> <small>line 47</small><div class="doc"><p>Two rough candidates of the same totient cannot properly divide one
+another.  The only alternative in the general totient lemma is doubling,
+which roughness excludes.</p></div><pre>lemma ppt_rough_eq_of_dvd_same_totient {d b c : ℕ} (hd : 0 &lt; d)
+    (hc : ∀ p : ℕ, p.Prime → p ∣ c → d+1 &lt; p)
+    (hφ : b.totient = c.totient) (hdiv : b ∣ c) : b = c := by
+…</pre></li><li id=L56><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_rough_eq_of_dvd_seed_multiple</code> <small>line 56</small></li><li id=L64><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_bad_witness_on_fiber</code> <small>line 64</small></li><li id=L121><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_injective_bad_preimages_seed_branch</code> <small>line 121</small><div class="doc"><p>The injective association retains its seed-multiple construction on
+every nonsingleton totient fiber. This is needed for normality exclusion.</p></div><pre>theorem ppt_injective_bad_preimages_seed_branch {d q : ℕ} (hd : 0 &lt; d)
+    (hqpos : 0 &lt; q) (hq : q.totient = d) (S : Finset ℕ)
+    (hS : ∀ n ∈ S, 0 &lt; n ∧ ∀ p : ℕ, p.Prime → p ∣ n → d+1 &lt; p)
+    (hbad : ∀ n ∈ S, ∃ u : ℕ, 0 &lt; u ∧ u.totient = d*n.totient ∧ ¬n ∣ u) :
+    ∃ F : ℕ → ℕ, Set.InjOn F (S : Set ℕ) ∧
+      (∀ n ∈ S, 0 &lt; F n ∧ (F n).totient = d*n.totient ∧ ¬n ∣ F n) ∧
+      ∀ n ∈ S, (∃ m ∈ S, m ≠ n ∧ m.totient = n.totient) →
+        ∃ c ∈ S, F n = c*q := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L42">OAI.TotientAsymptotic.m</a></p></li><li id=L167><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_injective_bad_preimages</code> <small>line 167</small><div class="doc"><p>The bad-preimage association is injective even when many candidates
+share one totient.  No injectivity of the totient function is assumed.</p></div><pre>theorem ppt_injective_bad_preimages {d q : ℕ} (hd : 0 &lt; d)
+    (hqpos : 0 &lt; q) (hq : q.totient = d) (S : Finset ℕ)
+    (hS : ∀ n ∈ S, 0 &lt; n ∧ ∀ p : ℕ, p.Prime → p ∣ n → d+1 &lt; p)
+    (hbad : ∀ n ∈ S, ∃ u : ℕ, 0 &lt; u ∧ u.totient = d*n.totient ∧ ¬n ∣ u) :
+    ∃ F : ℕ → ℕ, Set.InjOn F (S : Set ℕ) ∧
+      ∀ n ∈ S, 0 &lt; F n ∧ (F n).totient = d*n.totient ∧ ¬n ∣ F n := by
+…</pre></li><li id=L180><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_injective_failed_candidates</code> <small>line 180</small><div class="doc"><p>In particular, all failed candidates can be counted by distinct
+nontrivial target preimages.  The only arithmetic hypothesis on the seed
+is that it is a positive totient.</p></div><pre>theorem ppt_injective_failed_candidates {d : ℕ} (hd : IsTotient d) (S : Finset ℕ)
+    (hS : ∀ n ∈ S, 0 &lt; n ∧ ∀ p : ℕ, p.Prime → p ∣ n → d+1 &lt; p)
+    (hbad : ∀ n ∈ S, ¬FullFiber d n) :
+    ∃ F : ℕ → ℕ, Set.InjOn F (S : Set ℕ) ∧
+      ∀ n ∈ S, 0 &lt; F n ∧ (F n).totient = d*n.totient ∧ ¬n ∣ F n := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L13">OAI.TotientAsymptotic.IsTotient</a>, <a href="PublishedFiber.lean.html#L31">OAI.TotientAsymptotic.FullFiber</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

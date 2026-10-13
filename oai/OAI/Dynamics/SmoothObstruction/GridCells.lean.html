@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/GridCells.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/GridCells.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>GridCells.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>GridCells.lean</span></code></h1><p class="muted">31 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/GridCells.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.SmoothObstruction.GridMargin.street</code> <small>line 19</small><div class="doc"><p>The deleted street for one of N translated grids of the same mesh Nδ.</p></div><pre>def street (δ : ℝ) (N : ℕ) (k : Fin N) : Set ℝ :=
+…</pre></li><li id=L22><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.street_measurable</code> <small>line 22</small></li><li id=L28><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.centers_lt_eq</code> <small>line 28</small></li><li id=L39><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.street_disjoint</code> <small>line 39</small></li><li id=L62><b>theorem</b> <code>OAI.SmoothObstruction.GridMargin.exists_small_street</code> <small>line 62</small><div class="doc"><p>A translated regular grid with a quantitative margin for an arbitrary
+probability law; no replacement of the law by a conditioned one.</p></div><pre>theorem exists_small_street (μ : Measure ℝ) [IsProbabilityMeasure μ]
+    {δ : ℝ} (hδ : 0&lt;δ) {N : ℕ} (hN : 0&lt;N) :
+    ∃ k : Fin N,μ.real (street δ N k)≤(N:ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L19">OAI.SmoothObstruction.GridMargin.street</a></p></li><li id=L82><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.floor_stable</code> <small>line 82</small><div class="doc"><p>Within a retained scalar cell, a perturbation less than the full margin
+cannot change the integer cell index.</p></div><pre>lemma floor_stable {r a x y ε : ℝ} (hr : 0&lt;r)
+    (hx : ∀ j : ℤ,ε &lt; |x-(a+r*j)|) (hxy : |y-x|≤ε) :
+    ⌊(y-a)/r⌋=⌊(x-a)/r⌋ := by
+…</pre></li><li id=L112><b>theorem</b> <code>OAI.SmoothObstruction.GridMargin.exists_product_margins</code> <small>line 112</small><div class="doc"><p>Simultaneous product-coordinate margins for the original probability,
+with no conditioning on a good set. Each coordinate gets one translation.</p></div><pre>theorem exists_product_margins (μ : Measure X) [IsProbabilityMeasure μ]
+    (c : X → ι → ℝ) (hc : ∀ i,Measurable (fun x =&gt;  c x i))
+    {δ : ℝ} (hδ : 0 &lt; δ) {N : ℕ} (hN : 0 &lt; N) :
+    ∃ k : ι → Fin N,
+      μ.real (⋃ i,(fun x =&gt;  c x i) ⁻¹&#x27; street δ N (k i)) ≤ (Fintype.card ι:ℝ)/N := by
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L19">OAI.SmoothObstruction.GridMargin.street</a></p></li><li id=L132><b>def</b> <code>OAI.SmoothObstruction.GridMargin.gridIndex</code> <small>line 132</small><div class="doc"><p>The precise regular translated-grid label.</p></div><pre>noncomputable def gridIndex (δ : ℝ) (N : ℕ) (k : Fin N) (x : ℝ) : ℤ :=
+…</pre></li><li id=L135><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.measurable_gridIndex</code> <small>line 135</small></li><li id=L138><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.gridIndex_stable</code> <small>line 138</small></li><li id=L149><b>def</b> <code>OAI.SmoothObstruction.GridMargin.boundedLabel</code> <small>line 149</small><div class="doc"><p>Bounded integer labels are encoded without enlarging the physical cells.</p></div><pre>def boundedLabel (m : ℕ) (j : ℤ) : Fin (2*m+1) :=
+…</pre></li><li id=L152><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.boundedLabel_inj</code> <small>line 152</small></li><li id=L159><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.floor_bounds</code> <small>line 159</small></li><li id=L169><b>def</b> <code>OAI.SmoothObstruction.GridMargin.productLabel</code> <small>line 169</small><div class="doc"><p>Arbitrary bounded coordinates give a genuine finite measurable partition,
+with exactly this finite alphabet, rather than an assumed cardinal bound.</p></div><pre>noncomputable def productLabel (m : ℕ) (δ : ℝ) (N : ℕ) (k : ι → Fin N)
+    (c : X → ι → ℝ) (x : X) : ι → Fin (2*m+1) :=
+…</pre></li><li id=L174><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.measurable_productLabel</code> <small>line 174</small></li><li id=L182><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.productLabel_stable</code> <small>line 182</small></li><li id=L192><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.same_cell_coord</code> <small>line 192</small></li><li id=L204><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.productLabel_diameter</code> <small>line 204</small></li><li id=L215><b>lemma</b> <code>OAI.SmoothObstruction.GridMargin.productLabel_card</code> <small>line 215</small></li><li id=L227><b>theorem</b> <code>OAI.SmoothObstruction.GridMargin.exists_small_street_finite</code> <small>line 227</small><div class="doc"><p>Each finite original measure admits the same translated-street estimate,
+scaled by its original total mass. This is used on partition fibres without
+changing the final pair law.</p></div><pre>theorem exists_small_street_finite (μ : Measure ℝ) [IsFiniteMeasure μ]
+    {δ : ℝ} (hδ : 0&lt;δ) {N : ℕ} (hN : 0&lt;N) :
+    ∃ k : Fin N,μ.real (street δ N k)≤μ.real univ/(N:ℝ) := by
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L19">OAI.SmoothObstruction.GridMargin.street</a></p></li><li id=L249><b>theorem</b> <code>OAI.SmoothObstruction.GridMargin.exists_product_margins_finite</code> <small>line 249</small><div class="doc"><p>Simultaneous margins for a finite, not necessarily probability, law.</p></div><pre>theorem exists_product_margins_finite (μ : Measure X) [IsFiniteMeasure μ]
+    (c : X → ι → ℝ) (hc : ∀ i,Measurable (fun x =&gt; c x i))
+    {δ : ℝ} (hδ : 0&lt;δ) {N : ℕ} (hN : 0&lt;N) :
+    ∃ k : ι → Fin N,
+      μ.real (⋃ i,(fun x =&gt; c x i) ⁻¹&#x27; street δ N (k i)) ≤
+        (Fintype.card ι:ℝ)*μ.real univ/N := by
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L19">OAI.SmoothObstruction.GridMargin.street</a></p></li><li id=L273><b>theorem</b> <code>OAI.SmoothObstruction.GridMargin.fibrewise_margins</code> <small>line 273</small><div class="doc"><p>Independently translated grids in each fibre of a finite measurable
+partition retain the same original total-mass budget. The number of fibres
+does not multiply the loss.</p></div><pre>theorem fibrewise_margins (μ : Measure X) [IsProbabilityMeasure μ]
+    (P : X → C) (hP : Measurable P) (c : C → X → ι → ℝ)
+    (hc : ∀ a i,Measurable (fun x =&gt; c a x i))
+    {δ : ℝ} (hδ : 0&lt;δ) {N : ℕ} (hN : 0&lt;N) :
+    ∃ k : C → ι → Fin N,
+      μ.real (⋃ a,(P ⁻¹&#x27; {a}) ∩ ⋃ i,(fun x =&gt; c a x i) ⁻¹&#x27; street δ N (k a i)) ≤
+        (Fintype.card ι:ℝ)/N := by
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L19">OAI.SmoothObstruction.GridMargin.street</a></p></li><li id=L315><b>def</b> <code>OAI.SmoothObstruction.GridRefinement.label</code> <small>line 315</small></li><li id=L321><b>lemma</b> <code>OAI.SmoothObstruction.GridRefinement.measurable_label</code> <small>line 321</small></li><li id=L335><b>theorem</b> <code>OAI.SmoothObstruction.GridRefinement.exists_refinement</code> <small>line 335</small><div class="doc"><p>A genuine finite coordinate-grid refinement, with original-measure loss
+independent of the number of base fibres. Stability is quantitative and the
+cardinality is the actual finite alphabet cardinality.</p></div><pre>theorem exists_refinement (μ : Measure X) [IsProbabilityMeasure μ]
+    (P : X → C) (hP : Measurable P) (c : C → X → ι → ℝ)
+    (hc : ∀ a i,Measurable (fun x =&gt; c a x i))
+    (m : ℕ) {δ : ℝ} (hδ : 0&lt;δ) {N : ℕ} (hN : 0&lt;N) :
+    ∃ (k : C → ι → Fin N) (W : Set X),
+      MeasurableSet W ∧ μ.real W≤(Fintype.card ι:ℝ)/N ∧
+      Measurable (label P c m δ N k) ∧
+      (∀ x y,x∉W → P y=P x →
+        (∀ i,|c (P x) y i-c (P x) x i|≤δ/4) →
+        label P c m δ N k y=label P c m δ N k x) ∧
+      (∀ x y,label P c m δ N k x=label P c m δ N k y →
+        (∀ i,|((c (P x) x i-δ*(k (P x) i).val)/(δ*N))|≤(m:ℝ)) →
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L315">OAI.SmoothObstruction.GridRefinement.label</a></p></li><li id=L387><b>theorem</b> <code>OAI.SmoothObstruction.GridRefinement.exists_mixing_refinement</code> <small>line 387</small><div class="doc"><p>The retained product margins survive a complementary coordinate mix.
+Each output coordinate may follow either retained input, so this applies
+simultaneously to both actual orbit joins. Mass is still the original law.</p></div><pre>theorem exists_mixing_refinement (μ : Measure X) [IsProbabilityMeasure μ]
+    (P : X → C) (hP : Measurable P) (c : C → X → ι → ℝ)
+    (hc : ∀ a i,Measurable (fun x =&gt; c a x i))
+    (m : ℕ) {δ : ℝ} (hδ : 0 &lt; δ) {N : ℕ} (hN : 0 &lt; N) :
+    ∃ (k : C → ι → Fin N) (W : Set X),
+      MeasurableSet W ∧ μ.real W ≤ (Fintype.card ι:ℝ)/N ∧
+      Measurable (label P c m δ N k) ∧
+      (∀ x y z,x∉W → y∉W →
+        label P c m δ N k x=label P c m δ N k y → P z=P x →
+        (∀ i,|c (P x) z i-c (P x) x i| ≤ δ/4 ∨
+          |c (P x) z i-c (P x) y i| ≤ δ/4) →
+        label P c m δ N k z=label P c m δ N k x) ∧
+…</pre><p class="refs">Mentions: <a href="GridCells.lean.html#L315">OAI.SmoothObstruction.GridRefinement.label</a></p></li><li id=L446><b>lemma</b> <code>OAI.SmoothObstruction.ProductCells.norm_le_coords</code> <small>line 446</small></li><li id=L461><b>lemma</b> <code>OAI.SmoothObstruction.ProductCells.grid_range</code> <small>line 461</small></li><li id=L481><b>theorem</b> <code>OAI.SmoothObstruction.ProductCells.exists_cells</code> <small>line 481</small><div class="doc"><p>Finite product cells for arbitrary measurable geometric coordinates.
+The original probability law loses at most d/N near product streets. The
+number of cells is exactly the finite grid alphabet; no rank or orbit code
+is counted. Stability is stated in the physical coordinates needed for joins.</p></div><pre>theorem exists_cells (μ : Measure X) [IsProbabilityMeasure μ]
+    (P : X → C) (hP : Measurable P) (φ : C → X → E)
+    (hφ : ∀ c,Measurable (φ c)) (A : C → E ≃L[ℝ] E)
+    {D H F δ : ℝ} (hD : 0≤D) (hH : 0≤H) (hF : 0≤F) (hδ : 0&lt;δ)
+    (hbound : ∀ x,‖φ (P x) x‖≤D)
+    (hAi : ∀ c,‖(A c).symm.toContinuousLinearMap‖≤H)
+    (hA : ∀ c,‖(A c).toContinuousLinearMap‖≤F)
+    {N : ℕ} (hN : 0&lt;N) :
+    let m := ⌈H*D/(δ*N)+1⌉₊
+…</pre></li><li id=L552><b>theorem</b> <code>OAI.SmoothObstruction.ChartDensity.selected_coordinate_bound</code> <small>line 552</small><div class="doc"><p>A uniform selected-coordinate bound follows from the compact atlas,
+without any regularity assumption on the selection itself.</p></div><pre>theorem selected_coordinate_bound (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    (q : M → ι) (hqK : ∀ x,x∈K (q x)) :
+    ∃ D : ℝ,1≤D ∧ ∀ x,‖coordinates I (a (q x)) x‖≤D := by
+…</pre><p class="refs">Mentions: <a href="DensityBounds.lean.html#L194">OAI.SmoothObstruction.ChartDensity.coordinates</a></p></li><li id=L579><b>theorem</b> <code>OAI.SmoothObstruction.ChartDensity.exists_coarse_cells</code> <small>line 579</small><div class="doc"><p>Genuine finite coarse bins in a compact atlas. Their translated margins
+are estimated using the ORIGINAL measure, with no assumptions about its
+interaction with the good gauge set. Only the selected starting chart is
+part of the finite alphabet.</p></div><pre>theorem exists_coarse_cells [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (μ : Measure M) [IsProbabilityMeasure μ]
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    (q : M → ι) (hq : Measurable q) (hqK : ∀ x,x∈K (q x)) :
+    ∃ D : ℝ,1≤D ∧ ∀ {δ : ℝ},0&lt;δ → ∀ {N : ℕ},0&lt;N →
+      let m := ⌈D/(δ*N)+1⌉₊
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

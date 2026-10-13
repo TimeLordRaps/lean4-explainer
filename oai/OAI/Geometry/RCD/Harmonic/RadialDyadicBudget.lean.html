@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Harmonic/RadialDyadicBudget.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Harmonic/RadialDyadicBudget.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Harmonic</a> / <span>RadialDyadicBudget.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Harmonic</a>/<span>RadialDyadicBudget.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Harmonic/RadialDyadicBudget.lean#L1">source</a></p><div class="doc"><h3>Dyadic normalization of the radial mass estimate</h3><p>The coefficient of the inner source mass is a fixed positive dimensional
+constant times the inverse power of the radius. This preserves the signed
+volume increments when summing; monotonicity of the raw Euclidean volume
+profile is not imposed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.RegularPointCoordinates.radialCutoffCoefficient</code> <small>line 22</small></li><li id=L24><b>theorem</b> <code>OAI.RegularPointCoordinates.radialCutoffCoefficient_pos</code> <small>line 24</small></li><li id=L28><b>theorem</b> <code>OAI.RegularPointCoordinates.radialPower_height_dyadic</code> <small>line 28</small></li><li id=L35><b>theorem</b> <code>OAI.RegularPointCoordinates.radial_mass_normalized_le</code> <small>line 35</small><div class="doc"><p>Normalize the actual annular estimate using only the outer volume bound.</p></div><pre>theorem radial_mass_normalized_le {n r M V W curvature C : ℝ}
+    (hn : 0 &lt; n) (hr : 0 &lt; r) (hcurvature : 0 ≤ curvature)
+    (hW : W ≤ C * (2 * r) ^ n)
+    (hmass : ((r ^ (-n) - (2 * r) ^ (-n)) / n) * M ≤
+      r ^ (-n) * V - (2 * r) ^ (-n) * W +
+      curvature * ((r ^ (-n) - (2 * r) ^ (-n)) / n) * W) :
+    r ^ (-n) * M ≤ (radialCutoffCoefficient n)⁻¹ *
+      (r ^ (-n) * V - (2 * r) ^ (-n) * W) + curvature * C * (2 : ℝ) ^ n := by
+…</pre><p class="refs">Mentions: <a href="RadialDyadicBudget.lean.html#L22">OAI.RegularPointCoordinates.radialCutoffCoefficient</a></p></li><li id=L72><b>theorem</b> <code>OAI.RegularPointCoordinates.radial_mass_dyadic_budget</code> <small>line 72</small><div class="doc"><p>Signed dyadic volume increments and curvature control the total normalized
+source mass. The density need not be attained monotonically.</p></div><pre>theorem radial_mass_dyadic_budget {n C kappa omega density : ℝ}
+    {A M : ℕ → ℝ} (hn : 0 &lt; n)
+    (hA : Tendsto A atTop (𝓝 density)) (hdensity : density ≤ omega)
+    (hM : ∀ i, 0 ≤ M i)
+    (hmass : ∀ i, M i ≤ (radialCutoffCoefficient n)⁻¹ * (A (i + 1) - A i) +
+      kappa * (1 / 4 : ℝ) ^ i * C * (2 : ℝ) ^ n) :
+    Summable M ∧ (∑&#x27; i, M i) ≤ (radialCutoffCoefficient n)⁻¹ *
+      (omega - A 0 + (kappa * C * (2 : ℝ) ^ n * radialCutoffCoefficient n) * (4 / 3)) := by
+…</pre><p class="refs">Mentions: <a href="RadialDyadicBudget.lean.html#L22">OAI.RegularPointCoordinates.radialCutoffCoefficient</a></p></li><li id=L90><b>theorem</b> <code>OAI.RegularPointCoordinates.radial_mass_budget_of_outer_deficit</code> <small>line 90</small><div class="doc"><p>A uniform outer-volume deficit gives a uniform source budget, even at
+centers whose density is less than the Euclidean density.</p></div><pre>theorem radial_mass_budget_of_outer_deficit {Y : Type*} {n C kappa omega delta : ℝ}
+    {density : Y → ℝ} {A M : Y → ℕ → ℝ} (hn : 0 &lt; n)
+    (hA : ∀ y, Tendsto (A y) atTop (𝓝 (density y)))
+    (hdensity : ∀ y, density y ≤ omega) (houter : ∀ y, omega - delta ≤ A y 0)
+    (hM : ∀ y i, 0 ≤ M y i)
+    (hmass : ∀ y i, M y i ≤ (radialCutoffCoefficient n)⁻¹ * (A y (i + 1) - A y i) +
+      kappa * (1 / 4 : ℝ) ^ i * C * (2 : ℝ) ^ n) :
+    ∀ y, Summable (M y) ∧ (∑&#x27; i, M y i) ≤
+      (radialCutoffCoefficient n)⁻¹ * delta + kappa * C * (2 : ℝ) ^ n * (4 / 3) := by
+…</pre><p class="refs">Mentions: <a href="RadialDyadicBudget.lean.html#L22">OAI.RegularPointCoordinates.radialCutoffCoefficient</a></p></li><li id=L111><b>theorem</b> <code>OAI.RegularPointCoordinates.radial_mass_budget_uniformly_small</code> <small>line 111</small><div class="doc"><p>The uniform budget tends to zero along increasingly flat rescalings.</p></div><pre>theorem radial_mass_budget_uniformly_small {Y : Type*} {n C : ℝ}
+    {delta kappa : ℕ → ℝ} {M : ℕ → Y → ℕ → ℝ}
+    (hdelta : Tendsto delta atTop (𝓝 0)) (hkappa : Tendsto kappa atTop (𝓝 0))
+    (hbudget : ∀ ν y, (∑&#x27; i, M ν y i) ≤ (radialCutoffCoefficient n)⁻¹ * delta ν +
+      kappa ν * C * (2 : ℝ) ^ n * (4 / 3)) :
+    ∀ ε &gt; 0, ∀ᶠ ν in atTop, ∀ y, (∑&#x27; i, M ν y i) &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="RadialDyadicBudget.lean.html#L22">OAI.RegularPointCoordinates.radialCutoffCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

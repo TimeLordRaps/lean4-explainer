@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tracial/TracialCreationCoordinates.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tracial/TracialCreationCoordinates.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tracial</a> / <span>TracialCreationCoordinates.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tracial</a>/<span>TracialCreationCoordinates.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tracial/TracialCreationCoordinates.lean#L1">source</a></p><div class="doc"><p>Elementary reduced-word creation in the actual tracial base spaces.
+The normalized symmetry and corner Haar vectors are constructed, so the
+only word-model inputs are isometric tensor inclusions and their elementary
+multiplication and range formulas.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>structure</b> <code>OAI.KadisonSimilarity.ElementaryCreationFormulas</code> <small>line 16</small><div class="doc"><p>Elementary multiplication on two opposite reduced-word subspaces.
+This record carries no normalization or complete-prefix assumption.</p></div><pre>structure ElementaryCreationFormulas {EA ED H : Type*}
+    [NormedAddCommGroup EA] [InnerProductSpace ℂ EA]
+    [NormedAddCommGroup ED] [InnerProductSpace ℂ ED]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    (S : H →L[ℂ] H) (X : ℕ → H →L[ℂ] H) (s : EA) (x : ℕ → ED)
+    (DLead ALead : Submodule ℂ H) where
+…</pre></li><li id=L42><b>def</b> <code>OAI.KadisonSimilarity.TracialCornerGeometry.baseHaarLetter</code> <small>line 42</small><div class="doc"><p>The actual normalized corner Haar vector in the centered base space.</p></div><pre>def baseHaarLetter (n : ℕ) : centeredSubspace (G.baseVector D 1) :=
+…</pre><p class="refs">Mentions: <a href="TracialMatrixRealization.lean.html#L22">OAI.KadisonSimilarity.centeredSubspace</a></p></li><li id=L48><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCornerGeometry.baseHaarLetter_coe</code> <small>line 48</small></li><li id=L54><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCornerGeometry.norm_baseHaarLetter</code> <small>line 54</small><div class="doc"><p>The normalized trace and the exact initial-projection identity give
+Hilbert norm one for each positive Haar power.</p></div><pre>theorem norm_baseHaarLetter (n : ℕ) :
+    ‖G.baseHaarLetter D z ha htrace hhaar n‖ = 1 := by
+…</pre></li><li id=L84><b>abbrev</b> <code>OAI.KadisonSimilarity.TracialCreationFormulas</code> <small>line 84</small><div class="doc"><p>The standard free-product model supplies these elementary word
+identities. All letters and tensor factors are the actual centered tracial
+base spaces; no complete-prefix estimate is part of the data.</p></div><pre>abbrev TracialCreationFormulas (ALead : Submodule ℂ H) :=
+…</pre></li><li id=L97><b>def</b> <code>OAI.KadisonSimilarity.TracialCreationFormulas.toAlternatingCreationCoordinates</code> <small>line 97</small><div class="doc"><p>Normalize the elementary creation data using the proved norms of the
+actual symmetry and corner Haar vectors.</p></div><pre>def toAlternatingCreationCoordinates (hself : star s = s) (hsquare : s * s = 1)
+    (hτ : G.trace 1 = 1) :
+    AlternatingCreationCoordinates (centeredSubspace (G.baseVector A 1))
+      (centeredSubspace (G.baseVector D 1)) (G.left (s : P))
+      (fun n =&gt; G.left ((haarCornerLetter z a n : D) : P)) W.vacuumᗮ where
+…</pre><p class="refs">Mentions: <a href="../FreeProduct/WordPrefixRealization.lean.html#L24">OAI.KadisonSimilarity.AlternatingCreationCoordinates</a>, <a href="TracialMatrixRealization.lean.html#L22">OAI.KadisonSimilarity.centeredSubspace</a>, <a href="../FreeProduct/HaarCornerLetters.lean.html#L57">OAI.KadisonSimilarity.haarCornerLetter</a></p></li><li id=L118><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCreationFormulas.prefix_isometry</code> <small>line 118</small><div class="doc"><p>The actual alternating left multiplier is isometric on the nonvacuum
+head space. This is derived from the two elementary word formulas.</p></div><pre>theorem prefix_isometry (hself : star s = s) (hsquare : s * s = 1)
+    (hτ : G.trace 1 = 1) (m n : ℕ) (y : H) (hy : y ∈ W.vacuumᗮ) :
+    ‖G.left (tracialWordPrefix (ι := D.subtype) z a (s : P) m n) y‖ = ‖y‖ :=
+…</pre><p class="refs">Mentions: <a href="../FreeProduct/WordPrefixRealization.lean.html#L134">OAI.KadisonSimilarity.tracialWordPrefix</a></p></li><li id=L127><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCreationFormulas.prefix_bound</code> <small>line 127</small><div class="doc"><p>The actual prefix bound follows from algebra norms and holds uniformly
+in the Haar frequency.</p></div><pre>theorem prefix_bound (hself : star s = s) (hsquare : s * s = 1) (m n : ℕ) :
+    ‖G.left (tracialWordPrefix (ι := D.subtype) z a (s : P) m n)‖ ≤
+…</pre><p class="refs">Mentions: <a href="../FreeProduct/WordPrefixRealization.lean.html#L134">OAI.KadisonSimilarity.tracialWordPrefix</a></p></li><li id=L137><b>def</b> <code>OAI.KadisonSimilarity.TracialCreationFormulas.repeatedWordRealization</code> <small>line 137</small><div class="doc"><p>The concrete repeated-multiplicity insertion, together with raw word
+factorization and level actions, gives the propagation realization. Complete
+prefix isometry and uniform boundedness are both proved by this constructor.</p></div><pre>def repeatedWordRealization (hself : star s = s) (hsquare : s * s = 1)
+    (hτ : G.trace 1 = 1) (m : ℕ) (Y : H →L[ℂ] H)
+    (B₀ : G.baseSpace A →L[ℂ] G.baseSpace A)
+    (Bₖ : WordMultiplicity (G.baseVector A 1) (m + 1) →L[ℂ]
+      WordMultiplicity (G.baseVector A 1) (m + 1))
+    (word : ℕ → WordMultiplicity (G.baseVector A 1) (m + 1) →ₗᵢ[ℂ] H)
+    (small : G.baseSpace A →L[ℂ] H)
+    (hsmall : ∀ v, ‖small v‖ = Real.sqrt a * ‖v‖)
+    (hlevelzero : ∀ v, Y (small v) = small (B₀ v))
+    (hlevel : ∀ n v, Y (word n
+      (G.baseSymmetryRepeatedInclusion A s hzero hself hsquare hτ (m + 1) v)) =
+      word n (Bₖ (G.baseSymmetryRepeatedInclusion A s hzero hself hsquare hτ (m + 1) v)))
+…</pre><p class="refs">Mentions: <a href="../FreeProduct/WordMultiplicities.lean.html#L16">OAI.KadisonSimilarity.WordMultiplicity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

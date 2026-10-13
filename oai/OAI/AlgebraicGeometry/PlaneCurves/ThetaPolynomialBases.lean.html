@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/ThetaPolynomialBases.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/ThetaPolynomialBases.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>ThetaPolynomialBases.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>ThetaPolynomialBases.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/ThetaPolynomialBases.lean#L1">source</a></p><div class="doc"><h3>Specialized theta and polynomial bases of section spaces</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.Nagata.Workers.W10.polynomialSectionCoordinates</code> <small>line 21</small></li><li id=L27><b>theorem</b> <code>OAI.Nagata.Workers.W10.polynomialSectionCoordinates_apply</code> <small>line 27</small></li><li id=L34><b>def</b> <code>OAI.Nagata.Workers.W10.polynomialSectionBasisFromCoefficients</code> <small>line 34</small><div class="doc"><p>Conditional assembly from actual block coefficient maps and actual delta
+vectors. Each analytic input is exposed; no branch basis is supplied as a field.</p></div><pre>def polynomialSectionBasisFromCoefficients (τ γL γP : ℂ) (d m : ℤ) (P : ℂ → ℂ)
+    (I : Fin ((d / 3).toNat + 1) → Type*) [∀ j, Fintype (I j)] [∀ j, DecidableEq (I j)]
+    (c : ∀ j, coefficientSpace τ γL γP d m (j.val : ℤ) P →ₗ[ℂ] (I j → ℂ))
+    (hc : ∀ j, Function.Injective (c j))
+    (v : ∀ j, I j → coefficientSpace τ γL γP d m (j.val : ℤ) P)
+    (hv : ∀ j i, c j (v j i) = Pi.single i 1) :
+    Basis (Σ j, I j) ℂ (polynomialSections τ γL γP d m P) :=
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.Nagata.Workers.W10.polynomialSectionBasis_as_monomial</code> <small>line 46</small><div class="doc"><p>Every basis vector is the literal fiber monomial with its actual block section.</p></div><pre>theorem polynomialSectionBasis_as_monomial (τ γL γP : ℂ) (d m : ℤ) (P : ℂ → ℂ)
+    (I : Fin ((d / 3).toNat + 1) → Type*) [∀ j, Fintype (I j)] [∀ j, DecidableEq (I j)]
+    (c : ∀ j, coefficientSpace τ γL γP d m (j.val : ℤ) P →ₗ[ℂ] (I j → ℂ))
+    (hc : ∀ j, Function.Injective (c j))
+    (v : ∀ j, I j → coefficientSpace τ γL γP d m (j.val : ℤ) P)
+    (hv : ∀ j i, c j (v j i) = Pi.single i 1)
+    (j : Fin ((d / 3).toNat + 1)) (i : I j) :
+    (polynomialSectionBasisFromCoefficients τ γL γP d m P I c hc v hv ⟨j, i⟩).val =
+      Polynomial.monomial j.val (v j i).val := by
+…</pre><p class="refs">Mentions: <a href="ThetaPolynomialBases.lean.html#L34">OAI.Nagata.Workers.W10.polynomialSectionBasisFromCoefficients</a></p></li><li id=L81><b>def</b> <code>OAI.Nagata.Workers.W10.centeredThetaSectionBasis</code> <small>line 81</small><div class="doc"><p>The genuine centered source theta family is a basis for every real
+parameter 0 &lt; tau &lt; 1, with the literal nonintegral residue interval.</p></div><pre>def centeredThetaSectionBasis :
+    Basis (thetaIndices (σ - x₀ * (n : ℝ)) n) ℂ
+      (automorphicSections (τ : ℂ) n (ε * ((τ ^ σ : ℝ) : ℂ))) := by
+…</pre></li><li id=L99><b>theorem</b> <code>OAI.Nagata.Workers.W10.centeredThetaSectionBasis_apply</code> <small>line 99</small></li><li id=L107><b>theorem</b> <code>OAI.Nagata.Workers.W10.centeredThetaSectionBasis_local</code> <small>line 107</small><div class="doc"><p>Exact source series expression of the actual constructed basis vector.</p></div><pre>theorem centeredThetaSectionBasis_local
+    (K : thetaIndices (σ - x₀ * (n : ℝ)) n) (x : ℂ) :
+    (centeredThetaSectionBasis n hn σ x₀ hε hunit hτ hτone hC hU K).val
+      (((τ ^ x₀ : ℝ) : ℂ) * Complex.exp x) =
+    ∑&#x27; p : ℤ, normalizedThetaTerm (n : ℝ) ((K.val : ℝ) - σ + x₀ * (n : ℝ))
+      (K.val : ℝ) ε τ p x := by
+…</pre><p class="refs">Mentions: <a href="ThetaPolynomialBases.lean.html#L81">OAI.Nagata.Workers.W10.centeredThetaSectionBasis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

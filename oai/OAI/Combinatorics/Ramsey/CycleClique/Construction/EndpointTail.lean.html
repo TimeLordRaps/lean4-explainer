@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/Ramsey/CycleClique/Construction/EndpointTail.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/Ramsey/CycleClique/Construction/EndpointTail.lean.html"><link rel="stylesheet" href="../../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../../index.html">All corpora</a> | <a href="../../../../../index.html">Index</a> | <a href="../../../../../glossary.html">Glossary</a> | <a href="../../../../../find.html">Find</a> | <a href="../../../../../implications.html">Implications</a> | <a href="../../../../../annotate.html">Explanation guide</a> | <a href="../../../../../learning-path.html">Learning path</a> | <a href="../../../../../trust.html">Trust</a> | <a href="../../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../../index.html">Corpus home</a> / <a href="../../../../index.html">OAI</a> / <a href="../../../index.html">Combinatorics</a> / <a href="../../index.html">Ramsey</a> / <a href="../index.html">CycleClique</a> / <a href="index.html">Construction</a> / <span>EndpointTail.lean</span></nav></header><h1 class="path-title"><code><a href="../../../../index.html">OAI</a>/<a href="../../../index.html">Combinatorics</a>/<a href="../../index.html">Ramsey</a>/<a href="../index.html">CycleClique</a>/<a href="index.html">Construction</a>/<span>EndpointTail.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/Ramsey/CycleClique/Construction/EndpointTail.lean#L1">source</a></p><div class="doc"><p>The endpoint clique is a final segment, and its tail can be reordered.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>theorem</b> <code>OAI.CycleClique.Construction.successor_closed_final_segment</code> <small>line 10</small><div class="doc"><p>A nonempty successor-closed subset of a finite interval, excluding
+zero, starts immediately after a well-defined boundary index.</p></div><pre>theorem successor_closed_final_segment {r : ℕ} (P : Fin (r + 1) → Prop)
+    (hzero : ¬ P 0) (hlast : P (Fin.last r))
+    (hnext : ∀ i : Fin r, P i.castSucc → P i.succ) :
+    ∃ t : Fin r, ∀ i : Fin (r + 1), P i ↔ t.val &lt; i.val := by
+…</pre></li><li id=L52><b>theorem</b> <code>OAI.CycleClique.Construction.pathEnds_final_segment</code> <small>line 52</small></li><li id=L66><b>theorem</b> <code>OAI.CycleClique.Construction.spanningPath_permute_tail</code> <small>line 66</small><div class="doc"><p>Permuting the clique tail while fixing its first vertex preserves
+the path and all of its prefix.</p></div><pre>theorem spanningPath_permute_tail {V : Type*} [Fintype V]
+    {G : SimpleGraph V} {x : V} {W E : Finset V} {r : ℕ}
+    {f : Fin (r + 1) → V} (hf : IsSpanningPath G x W f)
+    (t : Fin r) (hfinal : ∀ i : Fin (r + 1), f i ∈ E ↔ t.val &lt; i.val)
+    (hclique : G.IsClique (E : Set V)) (σ : Equiv.Perm (Fin (r + 1)))
+    (hfix : ∀ i : Fin (r + 1), i.val ≤ t.val + 1 → σ i = i) :
+    IsSpanningPath G x W (f ∘ σ) := by
+…</pre><p class="refs">Mentions: <a href="PathEndpoints.lean.html#L14">OAI.CycleClique.Construction.IsSpanningPath</a></p></li><li id=L109><b>theorem</b> <code>OAI.CycleClique.Construction.spanningPath_swap_tail</code> <small>line 109</small><div class="doc"><p>Any tail vertex other than the first can be made last while the
+prefix and the first tail vertex stay fixed.</p></div><pre>theorem spanningPath_swap_tail {V : Type*} [Fintype V]
+    {G : SimpleGraph V} {x : V} {W E : Finset V} {r : ℕ}
+    {f : Fin (r + 1) → V} (hf : IsSpanningPath G x W f)
+    (t : Fin r) (hfinal : ∀ i : Fin (r + 1), f i ∈ E ↔ t.val &lt; i.val)
+    (hclique : G.IsClique (E : Set V)) (i : Fin (r + 1))
+    (hi : t.val + 1 &lt; i.val) :
+    ∃ g : Fin (r + 1) → V, IsSpanningPath G x W g ∧
+      g (Fin.last r) = f i ∧
+      ∀ j : Fin (r + 1), j.val ≤ t.val + 1 → g j = f j := by
+…</pre><p class="refs">Mentions: <a href="PathEndpoints.lean.html#L14">OAI.CycleClique.Construction.IsSpanningPath</a></p></li><li id=L136><b>theorem</b> <code>OAI.CycleClique.Construction.partial_endpoint_attachment</code> <small>line 136</small><div class="doc"><p>Every endpoint except the first vertex of the fixed clique tail
+has no neighbour in the preceding prefix except its attachment vertex.</p></div><pre>theorem partial_endpoint_attachment {V : Type*} [Fintype V]
+    {G : SimpleGraph V} {x : V} {W : Finset V} {r : ℕ}
+    {f : Fin (r + 1) → V} (hf : IsSpanningPath G x W f)
+    (t : Fin r)
+    (hfinal : ∀ i : Fin (r + 1), f i ∈ pathEnds G x W r ↔ t.val &lt; i.val)
+    (hclique : G.IsClique (pathEnds G x W r : Set V))
+    (hneighbors : ∀ e ∈ pathEnds G x W r, ∀ v, G.Adj e v → v ∈ W) :
+    ∀ w ∈ pathEnds G x W r, w ≠ f t.succ →
+      ∀ v, G.Adj w v → v ∈ pathEnds G x W r ∨ v = f t.castSucc := by
+…</pre><p class="refs">Mentions: <a href="PathEndpoints.lean.html#L14">OAI.CycleClique.Construction.IsSpanningPath</a>, <a href="PathEndpoints.lean.html#L20">OAI.CycleClique.Construction.pathEnds</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../../_assets/site.js"></script><script src="../../../../../_assets/lean2tex.js" defer></script><script src="../../../../../_assets/reader.js" defer></script></body></html>

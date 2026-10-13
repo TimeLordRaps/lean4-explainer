@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Estimates/MovingWeightBudget.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Estimates/MovingWeightBudget.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Estimates</a> / <span>MovingWeightBudget.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Estimates</a>/<span>MovingWeightBudget.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Estimates/MovingWeightBudget.lean#L1">source</a></p><div class="doc"><p>Finite endpoint transport from the actual logarithmic loss budget.
+Small relative errors are summed against losses, without charging a fixed
+error for every hierarchy level.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.LipschitzHilbert.exponential_weight_motion_from_increments</code> <small>line 14</small></li><li id=L56><b>theorem</b> <code>OAI.LipschitzHilbert.exponential_weight_motion_on_interval</code> <small>line 56</small><div class="doc"><p>The same transport bound on any interval of later endpoints.</p></div><pre>theorem exponential_weight_motion_on_interval (L M : ℕ → ℂ) (cost : ℕ → ℝ)
+    (start N : ℕ) (hstart : start ≤ N) (C D ε V : ℝ)
+    (hD : 0 ≤ D) (hε : 0 ≤ ε) (hV : 0 ≤ V)
+    (hL : ∀ j, start ≤ j → j ≤ N → (L j).re ≤ C)
+    (hM : ∀ j, start ≤ j → j ≤ N → (M j).re ≤ C)
+    (hzero : ‖M start-L start‖ ≤ D)
+    (hcost : ∀ j ∈ Finset.Ico start N, 0 ≤ cost j)
+    (hincr : ∀ j ∈ Finset.Ico start N, ‖L (j+1)-L j‖ ≤ cost j)
+    (hmove : ∀ j ∈ Finset.Ico start N,
+      ‖(M (j+1)-M j)-(L (j+1)-L j)‖ ≤ ε*cost j)
+    (hbudget : (∑ j ∈ Finset.Ico start N, cost j) ≤ V) :
+    ‖Complex.exp (M N)-Complex.exp (L N)‖ +
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.LipschitzHilbert.segmentLog_increment_motion</code> <small>line 89</small><div class="doc"><p>A moving endpoint increment is controlled by relative errors in the
+parent loss and boundary loss, with exactly the original weighted cost.</p></div><pre>theorem segmentLog_increment_motion (n n&#x27; R R&#x27; : ℕ → ℝ) (phase : ℕ → ℂ)
+    (a ε Z : ℝ) (start j : ℕ) (hs : start ≤ j)
+    (ha : 0 ≤ a) (hZ : 0 ≤ Z)
+    (hn : 0 &lt; n j) (hn1 : 0 &lt; n (j+1))
+    (hn&#x27; : 0 &lt; n&#x27; j) (hn1&#x27; : 0 &lt; n&#x27; (j+1))
+    (hP : |Real.log (n&#x27; j/n&#x27; (j+1))-Real.log (n j/n (j+1))| ≤
+      ε*Real.log (n j/n (j+1)))
+    (hR : |R&#x27; j-R j| ≤ ε*R j) (hz : ‖phase j‖ ≤ Z) :
+    ‖(segmentLog n&#x27; R&#x27; phase a start (j+1)-segmentLog n&#x27; R&#x27; phase a start j)-
+      (segmentLog n R phase a start (j+1)-segmentLog n R phase a start j)‖ ≤
+      ε*(a*Real.log (n j/n (j+1))+Z*R j) := by
+…</pre><p class="refs">Mentions: <a href="SegmentWeights.lean.html#L13">OAI.LipschitzHilbert.segmentLog</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

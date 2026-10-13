@@ -1,0 +1,1 @@
+window.l4shard("ea", [["AnswerLinter.contains_early_args",16,40],["Erdos1084.erdos_1084.variants.easy_upper_d2",206,58],["Erdos387.erdos_387.variants.easy",491,68],["Erdos999.erdos_999.variants.easy_direction",916,63]]);

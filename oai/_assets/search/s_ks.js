@@ -1,0 +1,1 @@
+window.l4shard("ks", [["OAI.CurrentKS.Input.encodeMatrix",3113,45],["OAI.CurrentKS.RationalEntry",3113,19],["OAI.CurrentKS.frame",3114,36],["OAI.SmoothObstruction.FiniteKSEntropy",18174,23],["OAI.SmoothObstruction.PhaseEntropy.finiteKS",18177,294]]);

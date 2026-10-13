@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/UniformKServer/RadiusRoster.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/UniformKServer/RadiusRoster.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">UniformKServer</a> / <span>RadiusRoster.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">UniformKServer</a>/<span>RadiusRoster.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/UniformKServer/RadiusRoster.lean#L1">source</a></p><div class="doc"><p>The first-hit estimate for the entire actual present roster.  The global
+roster may have far more than K² records. Only centers that can hit one of the
+two points incur a truncated-tail correction; all other coordinates remain
+in the actual independent product law.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.UniformKServer.RadiusRoster.candidate_count</code> <small>line 24</small><div class="doc"><p>Repeated centers are distinct chronological identities, not collapsed
+into a set of sites. This count therefore applies to the actual roster.</p></div><pre>theorem candidate_count (S : Finset I) (is : List I) (c : I → X) (r : ℝ)
+    (A : ℕ) (x y : X) (hr : 0 ≤ r) (hxy : dist x y ≤ r)
+    (hnodup : is.Nodup) (hsub : ∀ i ∈ is, i ∈ S)
+    (hage : ∀ i ∈ is, ChronologicalRoster.age S c r i &lt; A) :
+    (is.filter (fun i =&gt; decide (dist (c i) x ≤ 2*r ∨ dist (c i) y ≤ 2*r))).length ≤ A := by
+…</pre><p class="refs">Mentions: <a href="ChronologicalRoster.lean.html#L14">OAI.UniformKServer.ChronologicalRoster.age</a></p></li><li id=L50><b>theorem</b> <code>OAI.UniformKServer.RadiusRoster.hit_zero</code> <small>line 50</small><div class="doc"><p>Outside the geometric support the hit probability is exactly zero.
+The endpoint convention matches the zero tail at 2r.</p></div><pre>theorem hit_zero (lam r : ℝ) (hlam : 0 &lt; lam) (hr : 0 &lt; r) (c x y : X)
+    (hx : 2*r ≤ dist c x) (hy : 2*r ≤ dist c y) :
+    FirstHit.hitProbability (RadiusFirstHit.entry lam r c x y) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FirstHit.lean.html#L42">OAI.UniformKServer.FirstHit.hitProbability</a>, <a href="RadiusFirstHit.lean.html#L18">OAI.UniformKServer.RadiusFirstHit.entry</a></p></li><li id=L64><b>theorem</b> <code>OAI.UniformKServer.RadiusRoster.present_first_hit</code> <small>line 64</small><div class="doc"><p>Source lemma first-hit, with the real chronological age hypothesis rather
+than a false bound on the length of the whole present roster.</p></div><pre>theorem present_first_hit (S : Finset I) (is : List I) (c : I → X)
+    (K : ℕ) (hK : 2 ≤ K) (r : ℝ) (hr : 0 &lt; r) (x y : X)
+    (hxy : dist x y &lt; r/4) (hnodup : is.Nodup)
+    (hsub : ∀ i ∈ is, i ∈ S)
+    (hage : ∀ i ∈ is, ChronologicalRoster.age S c r i &lt; K^2) :
+    (FirstHit.experiment (is.map (fun i =&gt;
+      RadiusFirstHit.entry (Real.log (1+(K:ℝ)^2)) r (c i) x y))).expect
+      (fun ω =&gt; if FirstHit.firstSeparates _ ω then 1 else 0) ≤
+        2*Real.log (1+(K:ℝ)^2)*dist x y/r := by
+…</pre><p class="refs">Mentions: <a href="ChronologicalRoster.lean.html#L14">OAI.UniformKServer.ChronologicalRoster.age</a>, <a href="FirstHit.lean.html#L34">OAI.UniformKServer.FirstHit.experiment</a>, <a href="RadiusFirstHit.lean.html#L18">OAI.UniformKServer.RadiusFirstHit.entry</a>, <a href="FirstHit.lean.html#L38">OAI.UniformKServer.FirstHit.firstSeparates</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

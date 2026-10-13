@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/ConnectedCocycleGluing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/ConnectedCocycleGluing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>ConnectedCocycleGluing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>ConnectedCocycleGluing.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/ConnectedCocycleGluing.lean#L1">source</a></p><div class="doc"><h3>Connected gluing of the actual finite cocycle paths</h3><p>The paths for all finite cocycle coefficients use one partition. This lets
+the weighted sum be deformed continuously to one, with both Gram defects
+controlled throughout the deformation. The cyclic seam is retained exactly.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>lemma</b> <code>OAI.WeakPureInfiniteness.glued_product_commutator</code> <small>line 19</small></li><li id=L33><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_endomorphism_commutator</code> <small>line 33</small><div class="doc"><p>Transport a commutator through one step of the actual endomorphism.</p></div><pre>lemma clock_endomorphism_commutator (φ : E →⋆ₙₐ[ℂ] E)
+    (α : unitary E →* unitary E) (hα : ∀ u, (α u : E) = φ u)
+    (u : unitary E) (e f : E) (C η : ℝ)
+    (hc : ‖(u : E) * e - e * (u : E)‖ ≤ C)
+    (he : ‖φ e - f‖ ≤ η) :
+    ‖(α u : E) * f - f * (α u : E)‖ ≤ C + 2 * η := by
+…</pre></li><li id=L57><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_iterate_commutator</code> <small>line 57</small></li><li id=L76><b>def</b> <code>OAI.WeakPureInfiniteness.clockTailTime</code> <small>line 76</small><div class="doc"><p>Move from a chosen sampling time to the terminal time.</p></div><pre>def clockTailTime (a t : unitInterval) : unitInterval :=
+…</pre></li><li id=L82><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockTailTime_continuous</code> <small>line 82</small></li><li id=L87><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockTailTime_zero</code> <small>line 87</small></li><li id=L92><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockTailTime_one</code> <small>line 92</small></li><li id=L98><b>def</b> <code>OAI.WeakPureInfiniteness.clockCoefficientContraction</code> <small>line 98</small><div class="doc"><p>Coefficient contraction using the two paths on the same partition.</p></div><pre>def clockCoefficientContraction (α : unitary E →* unitary E) (hα : Continuous α)
+    {u v : unitary E} (p : Path u 1) (q : Path v 1) (a : unitInterval) (j : ℕ) :
+    Path (u * (α^[j]) (q a)) 1 where
+…</pre></li><li id=L108><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockCoefficientContraction_commutator</code> <small>line 108</small></li><li id=L127><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_connected_rohlin_polar_tolerance</code> <small>line 127</small><div class="doc"><p>Small diagonal commutators throughout a coefficient homotopy give a
+connected polar correction of its initial weighted sum.</p></div><pre>lemma exists_connected_rohlin_polar_tolerance [Nontrivial E]
+    {I : Type*} [Fintype I] [DecidableEq I] (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ ∀ (e : I → E),
+      (∀ i, IsStarProjection (e i)) → (∑ i, e i) = 1 →
+      (∀ i j, i ≠ j → e i * e j = 0) →
+      ∀ (v : I → unitInterval → unitary E),
+        (∀ i, Continuous (v i)) → (∀ i, v i 1 = 1) →
+        (∀ t i, ‖(v i t : E) * e i - e i * (v i t : E)‖ ≤ δ) →
+        ∃ u : unitary E, Joined (1 : unitary E) u ∧
+          ‖(u : E) - finiteRohlinSum (fun i =&gt; v i 0) e‖ &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="RohlinGluing.lean.html#L82">OAI.WeakPureInfiniteness.finiteRohlinSum</a></p></li><li id=L190><b>lemma</b> <code>OAI.WeakPureInfiniteness.finiteCocycleCoefficient_clock_step</code> <small>line 190</small><div class="doc"><p>The mesh estimate keeps the additive modulus error.</p></div><pre>lemma finiteCocycleCoefficient_clock_step (α : unitary E →* unitary E) (w : unitary E)
+    (hα : ∀ u v : unitary E, ‖(α u : E) - α v‖ ≤ ‖(u : E) - v‖)
+    {N : ℕ} (p : Path (finiteGroupCocycle α w N) 1)
+    (L ρ : ℝ) (hp : ∀ a b, ‖(p a : E) - p b‖ ≤ L * |(a : ℝ) - b| + ρ)
+    (k : ℕ) (a b : unitInterval) :
+    ‖(w : E) * α (finiteCocycleCoefficient α w p k a) -
+      finiteCocycleCoefficient α w p (k + 1) b‖ ≤ L * |(a : ℝ) - b| + ρ := by
+…</pre><p class="refs">Mentions: <a href="RowCocycleDefect.lean.html#L22">OAI.WeakPureInfiniteness.finiteGroupCocycle</a>, <a href="CocycleGluing.lean.html#L47">OAI.WeakPureInfiniteness.finiteCocycleCoefficient</a></p></li><li id=L205><b>def</b> <code>OAI.WeakPureInfiniteness.clockGridPoint</code> <small>line 205</small></li><li id=L211><b>def</b> <code>OAI.WeakPureInfiniteness.clockPeriodicCoefficient</code> <small>line 211</small></li><li id=L216><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockPeriodicCoefficient_zero</code> <small>line 216</small></li><li id=L227><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockPeriodicCoefficient_step</code> <small>line 227</small><div class="doc"><p>The last-to-first transition uses the exact endpoint equality, including
+the height-one case.</p></div><pre>lemma clockPeriodicCoefficient_step (α : unitary E →* unitary E) (w : unitary E)
+    (hα : ∀ u v : unitary E, ‖(α u : E) - α v‖ ≤ ‖(u : E) - v‖)
+    {N : ℕ} (hN : 0 &lt; N) (p : Path (finiteGroupCocycle α w N) 1)
+    (L ρ : ℝ) (hp : ∀ a b, ‖(p a : E) - p b‖ ≤ L * |(a : ℝ) - b| + ρ)
+    (k : ZMod N) :
+    ‖(w : E) * α (clockPeriodicCoefficient α w hN p k) -
+      clockPeriodicCoefficient α w hN p (k + 1)‖ ≤ L / N + ρ := by
+…</pre><p class="refs">Mentions: <a href="RowCocycleDefect.lean.html#L22">OAI.WeakPureInfiniteness.finiteGroupCocycle</a>, <a href="ConnectedCocycleGluing.lean.html#L211">OAI.WeakPureInfiniteness.clockPeriodicCoefficient</a></p></li><li id=L267><b>lemma</b> <code>OAI.WeakPureInfiniteness.connected_rohlin_cocycle_of_family</code> <small>line 267</small><div class="doc"><p>All paths on the same partition give a connected approximate
+coboundary. The finite tolerance can be chosen after the height.</p></div><pre>lemma connected_rohlin_cocycle_of_family [Nontrivial E]
+    {N : ℕ} [NeZero N] (hN : 0 &lt; N) (φ : E →⋆ₙₐ[ℂ] E)
+    (α : unitary E →* unitary E) (hco : ∀ u, (α u : E) = φ u)
+    (hcont : Continuous α)
+    (hα : ∀ u v : unitary E, ‖(α u : E) - α v‖ ≤ ‖(u : E) - v‖)
+    (w : unitary E) (e : ZMod N → E)
+    (he : ∀ k, IsStarProjection (e k))
+    (heo : ∀ k l, k ≠ l → e k * e l = 0)
+    (L ρ C η ε δ : ℝ) (hL : 0 ≤ L) (hρ : 0 ≤ ρ)
+    (hs : ∀ k, ‖φ (e k) - e (k + 1)‖ ≤ η)
+    (r : ∀ n : ℕ, n ≤ N → Path (finiteGroupCocycle α w n) 1)
+    (hr : ∀ n hn, ClockPathControl (r n hn) e L ρ C)
+…</pre><p class="refs">Mentions: <a href="RowCocycleDefect.lean.html#L22">OAI.WeakPureInfiniteness.finiteGroupCocycle</a>, <a href="ClockFragmentation.lean.html#L22">OAI.WeakPureInfiniteness.ClockPathControl</a></p></li><li id=L331><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_joint_connected_coboundary_at_height</code> <small>line 331</small><div class="doc"><p>All partition, path, and Gram hypotheses are discharged for the actual
+commuting full binary rows. Only the displayed mesh term remains.</p></div><pre>lemma exists_joint_connected_coboundary_at_height [Nontrivial E]
+    (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (m : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ u : unitary E, Joined (1 : unitary E) u ∧
+      ‖(binaryRowUnitary s t hs ht hsum htsum : E) * finiteRowShift s u - u‖ ≤
+        (320 * Real.pi) * Real.sqrt (2 ^ m : ℕ) / (2 ^ m : ℕ) + ε := by
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="RowCocycleDefect.lean.html#L81">OAI.WeakPureInfiniteness.binaryRowUnitary</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a></p></li><li id=L386><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_connected_binary_row_conjugacy</code> <small>line 386</small><div class="doc"><p>The finite-height mesh term tends to zero, with every other tolerance
+chosen only after the height. This is a genuine connected conjugacy result
+for two commuting full binary Cuntz rows.</p></div><pre>lemma exists_connected_binary_row_conjugacy [Nontrivial E]
+    (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ u : unitary E, Joined (1 : unitary E) u ∧
+      ∀ i, ‖(u : E) * s i * star (u : E) - t i‖ &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

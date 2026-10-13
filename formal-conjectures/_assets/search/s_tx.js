@@ -1,0 +1,1 @@
+window.l4shard("tx", [["Arxiv.«2507.17780».tx_graffiti_conjecture_1",34,60],["Arxiv.«2507.17780».tx_graffiti_conjecture_2",32,73],["Arxiv.«2507.17780».tx_graffiti_conjecture_3",35,48],["Arxiv.«2507.17780».tx_graffiti_conjecture_4",33,95]]);

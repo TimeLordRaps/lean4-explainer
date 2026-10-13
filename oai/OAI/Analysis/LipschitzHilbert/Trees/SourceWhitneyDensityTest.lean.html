@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceWhitneyDensityTest.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceWhitneyDensityTest.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceWhitneyDensityTest.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceWhitneyDensityTest.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceWhitneyDensityTest.lean#L1">source</a></p><div class="doc"><p>The actual parent witness furnishes an admissible density test at a
+length between sixteen and thirty-two Whitney lengths.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.LipschitzHilbert.SourceWhitney.center_mem_cell</code> <small>line 12</small></li><li id=L24><b>theorem</b> <code>OAI.LipschitzHilbert.SourceWhitney.exists_comparable_test_length</code> <small>line 24</small><div class="doc"><p>No compatibility of the horizontal grid origin with the packet
+length is assumed: the test length is selected in the source scale grid.</p></div><pre>theorem exists_comparable_test_length (ell0 r : ℝ) (hell0 : 0&lt;ell0) (hr : 0&lt;r) :
+    ∃ level : ℤ, 16*r≤ell0/scale level ∧ ell0/scale level&lt;32*r := by
+…</pre></li><li id=L39><b>theorem</b> <code>OAI.LipschitzHilbert.SourceWhitney.exists_whitney_density_test</code> <small>line 39</small><div class="doc"><p>A Whitney interval admitting a tile longer than thirty-two interval
+lengths has an actual density test containing its parent witness.</p></div><pre>theorem exists_whitney_density_test {ι : Type*} (tiles : Finset ι)
+    (tile : ι → OrdinaryDensityTile) (ell0 w W tau slope y : ℝ) (grid k j : ℤ)
+    (hell0 : 0&lt;ell0) (hW : 0&lt;W)
+    (hWhitney : Whitney tiles (fun i =&gt; (tile i).center.1)
+      (fun i =&gt; ell0/scale (tile i).level) k j)
+    (hshort : ∀ i∈tiles, ell0/scale (tile i).level≤tau)
+    (hcenter : ∀ i∈tiles, |(tile i).center.2-y-slope*(tile i).center.1|≤W/2)
+    (hslope : ∀ i∈tiles, slope∈scaledAngularCell (w/ell0) grid (tile i).level (tile i).cell)
+    (hlong : ∃ i∈tiles, 32*scale k&lt;ell0/scale (tile i).level) :
+    ∃ i∈tiles, ∃ test : OrdinaryDensityTest ell0 w W tau grid (tile i),
+      test.top.x=center k j ∧ test.top.y=y+slope*center k j ∧
+      test.top.slope=slope ∧ 16*scale k≤test.top.length ∧ test.top.length&lt;32*scale k := by
+…</pre><p class="refs">Mentions: <a href="SourceDensityModel.lean.html#L12">OAI.LipschitzHilbert.OrdinaryDensityTile</a>, <a href="SourceWhitneyIntervals.lean.html#L19">OAI.LipschitzHilbert.SourceWhitney.Whitney</a>, <a href="SourceDensityScaledForest.lean.html#L12">OAI.LipschitzHilbert.scaledAngularCell</a>, <a href="SourceDensityModel.lean.html#L17">OAI.LipschitzHilbert.OrdinaryDensityTest</a>, <a href="SourceWhitneyIntervals.lean.html#L14">OAI.LipschitzHilbert.SourceWhitney.center</a></p></li><li id=L87><b>theorem</b> <code>OAI.LipschitzHilbert.SourceWhitney.exists_whitney_cell_density</code> <small>line 87</small><div class="doc"><p>The test selected from the parent witness gives the manuscript's
+polynomial cell-density bound, simultaneously at every transverse index.</p></div><pre>theorem exists_whitney_cell_density {ι : Type*} (tiles : Finset ι)
+    (tile : ι → OrdinaryDensityTile) (ell0 w W tau slope y : ℝ) (grid k j : ℤ)
+    (hell0 : 0&lt;ell0) (hW : 0&lt;W)
+    (hWhitney : Whitney tiles (fun i =&gt; (tile i).center.1)
+      (fun i =&gt; ell0/scale (tile i).level) k j)
+    (hshort : ∀ i∈tiles, ell0/scale (tile i).level≤tau)
+    (hcenter : ∀ i∈tiles, |(tile i).center.2-y-slope*(tile i).center.1|≤W/2)
+    (hslope : ∀ i∈tiles, slope∈scaledAngularCell (w/ell0) grid (tile i).level (tile i).cell)
+    (hlong : ∃ i∈tiles, 32*scale k&lt;ell0/scale (tile i).level)
+    (E : Set (ℝ×ℝ)) (hE : MeasurableSet E) (u : ℝ×ℝ → ℝ) (hu : Measurable u)
+    (eta : ℝ) (heta : 0≤eta)
+    (hdensity : ∀ i∈tiles, (tile i).density ell0 w W tau grid E u≤eta) :
+…</pre><p class="refs">Mentions: <a href="SourceDensityModel.lean.html#L12">OAI.LipschitzHilbert.OrdinaryDensityTile</a>, <a href="SourceWhitneyIntervals.lean.html#L19">OAI.LipschitzHilbert.SourceWhitney.Whitney</a>, <a href="SourceDensityScaledForest.lean.html#L12">OAI.LipschitzHilbert.scaledAngularCell</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/LayeredFourPath.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/LayeredFourPath.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>LayeredFourPath.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>LayeredFourPath.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/LayeredFourPath.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.Problem335.LayeredFourPath.signedOccupation</code> <small>line 12</small><div class="doc"><p>Signed occupations, retaining the layer coordinate explicitly.</p></div><pre>def signedOccupation {T σ : Type*} (M : T → σ → ℕ) : T → σ → ℤ :=
+…</pre></li><li id=L16><b>def</b> <code>OAI.Problem335.LayeredFourPath.signedShift</code> <small>line 16</small><div class="doc"><p>Every path chooses exactly one coordinate in every layer.</p></div><pre>def signedShift {T σ : Type*} [DecidableEq σ]
+    (side : T → Bool) (p : T → σ) : T → σ → ℤ :=
+…</pre></li><li id=L21><b>def</b> <code>OAI.Problem335.LayeredFourPath.amplitude</code> <small>line 21</small><div class="doc"><p>The Fock coefficient of a layered path.</p></div><pre>def amplitude {T σ : Type*} [Fintype T]
+    (side : T → Bool) (M : T → σ → ℕ) (p : T → σ) : ℝ :=
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem335.LayeredFourPath.coordinate_matching_of_signedShift</code> <small>line 26</small><div class="doc"><p>Compatibility of global signed shifts gives the local pairing identity at every layer.</p></div><pre>theorem coordinate_matching_of_signedShift {T σ : Type*} [DecidableEq σ]
+    (side : T → Bool) (p q r s : T → σ)
+    (h : signedShift side p - signedShift side q =
+      signedShift side r - signedShift side s) (t : T) :
+    Finsupp.single (p t) (1 : ℤ) - Finsupp.single (q t) 1 =
+      Finsupp.single (r t) 1 - Finsupp.single (s t) 1 := by
+…</pre><p class="refs">Mentions: <a href="LayeredFourPath.lean.html#L16">OAI.Problem335.LayeredFourPath.signedShift</a></p></li><li id=L39><b>theorem</b> <code>OAI.Problem335.LayeredFourPath.local_shift_of_signedOccupation</code> <small>line 39</small><div class="doc"><p>An actual shifted source automatically satisfies the local occupation relation.</p></div><pre>theorem local_shift_of_signedOccupation {T σ : Type*} [DecidableEq σ]
+    (side : T → Bool) (M M&#x27; : T → σ → ℕ) (p q : T → σ)
+    (h : signedOccupation M&#x27; =
+      signedOccupation M + signedShift side p - signedShift side q) (t : T) :
+    LocalMoments.ShiftRelation (side t) (M t) (M&#x27; t) (p t) (q t) := by
+…</pre><p class="refs">Mentions: <a href="LayeredFourPath.lean.html#L12">OAI.Problem335.LayeredFourPath.signedOccupation</a>, <a href="LayeredFourPath.lean.html#L16">OAI.Problem335.LayeredFourPath.signedShift</a>, <a href="FourPathLocal.lean.html#L13">OAI.Problem335.LocalMoments.ShiftRelation</a></p></li><li id=L54><b>theorem</b> <code>OAI.Problem335.LayeredFourPath.amplitude_four_eq_local_product</code> <small>line 54</small><div class="doc"><p>The entire valid four-path coefficient is the product of the local occupation table.</p></div><pre>theorem amplitude_four_eq_local_product {T σ : Type*} [Fintype T] [DecidableEq σ]
+    (side : T → Bool) (M M&#x27; : T → σ → ℕ) (p q r s : T → σ)
+    (hmatch : signedShift side p - signedShift side q =
+      signedShift side r - signedShift side s)
+    (hshift : signedOccupation M&#x27; =
+      signedOccupation M + signedShift side p - signedShift side q) :
+    amplitude side M p * amplitude side M&#x27; q * amplitude side M r * amplitude side M&#x27; s =
+      ∏ t, LocalMoments.localPolynomial (side t) (M t) (p t) (q t) (r t) := by
+…</pre><p class="refs">Mentions: <a href="LayeredFourPath.lean.html#L16">OAI.Problem335.LayeredFourPath.signedShift</a>, <a href="LayeredFourPath.lean.html#L12">OAI.Problem335.LayeredFourPath.signedOccupation</a>, <a href="LayeredFourPath.lean.html#L21">OAI.Problem335.LayeredFourPath.amplitude</a>, <a href="FourPathLocal.lean.html#L39">OAI.Problem335.LocalMoments.localPolynomial</a></p></li><li id=L69><b>theorem</b> <code>OAI.Problem335.LayeredFourPath.zeroExtended_amplitude_four_le_local_product</code> <small>line 69</small><div class="doc"><p>Lift the valid-source identity to a zero extension. Missing shifted source occupations
+contribute zero, so an upper estimate needs no source-validity-closure hypothesis.</p></div><pre>theorem zeroExtended_amplitude_four_le_local_product
+    {I T σ : Type*} [Fintype T] [DecidableEq σ]
+    (side : T → Bool) (M : I → T → σ → ℕ)
+    (hinj : Function.Injective (fun i =&gt; signedOccupation (M i)))
+    (i : I) (p q r s : T → σ)
+    (hmatch : signedShift side p - signedShift side q =
+      signedShift side r - signedShift side s) :
+    amplitude side (M i) p *
+        Function.extend (fun k =&gt; signedOccupation (M k))
+          (fun k =&gt; amplitude side (M k) q) (fun _ =&gt; 0)
+          (signedOccupation (M i) + signedShift side p - signedShift side q) *
+      amplitude side (M i) r *
+…</pre><p class="refs">Mentions: <a href="LayeredFourPath.lean.html#L12">OAI.Problem335.LayeredFourPath.signedOccupation</a>, <a href="LayeredFourPath.lean.html#L16">OAI.Problem335.LayeredFourPath.signedShift</a>, <a href="LayeredFourPath.lean.html#L21">OAI.Problem335.LayeredFourPath.amplitude</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

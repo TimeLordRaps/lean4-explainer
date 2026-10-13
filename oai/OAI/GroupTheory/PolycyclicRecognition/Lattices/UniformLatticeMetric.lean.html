@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Lattices/UniformLatticeMetric.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Lattices/UniformLatticeMetric.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Lattices</a> / <span>UniformLatticeMetric.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Lattices</a>/<span>UniformLatticeMetric.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Lattices/UniformLatticeMetric.lean#L1">source</a></p><div class="doc"><h3>Uniform lattice metric comparison</h3><p>A discrete subgroup with a compact set of right-coset representatives is a
+uniform lattice. Its inclusion has a uniformly close section. This gives
+the discrete-group coarse comparison required in the duality endgame from
+a metric quasi-isometry to the ambient Lie group. Neither finite generation
+nor a recognition conclusion is built into the lattice definition.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.PolycyclicRecognition.IsUniformLattice</code> <small>line 28</small><div class="doc"><p>A uniform lattice, expressed by discreteness and a compact fundamental
+cover. Over a locally compact group this is equivalent to compactness of
+the coset quotient.</p></div><p class="refs">Distinct definitions of this name: <a href="../../../../ComparatorChallenges/PolycyclicRecognition.lean.html#L75">ComparatorChallenges/PolycyclicRecognition.lean:75</a> (same statement, different proof or body). Qualify references as OAI.PolycyclicRecognition.IsUniformLattice@path.</p><pre>def IsUniformLattice [TopologicalSpace G] (Λ : Subgroup G) : Prop :=
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.PolycyclicRecognition.IsUniformLattice.exists_covering_radius</code> <small>line 37</small><div class="doc"><p>Compactness of a fundamental cover gives a uniform distance to the
+lattice.</p></div><pre>theorem IsUniformLattice.exists_covering_radius {Λ : Subgroup G}
+    (hΛ : IsUniformLattice Λ) :
+    ∃ R : ℝ, 0 ≤ R ∧ ∀ g : G, ∃ γ : Λ, dist g (γ : G) ≤ R := by
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.PolycyclicRecognition.IsUniformLattice.finite_closedBall</code> <small>line 53</small><div class="doc"><p>A discrete subgroup has finite metric balls in a proper ambient group.</p></div><pre>theorem IsUniformLattice.finite_closedBall [ProperSpace G] {Λ : Subgroup G}
+    (hΛ : IsUniformLattice Λ) (R : ℝ) :
+    (closedBall (1 : Λ) R).Finite := by
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.PolycyclicRecognition.IsUniformLattice.exists_metric_section</code> <small>line 64</small><div class="doc"><p>A uniformly close lattice section has explicit coarse Lipschitz bounds.</p></div><pre>theorem IsUniformLattice.exists_metric_section {Λ : Subgroup G}
+    (hΛ : IsUniformLattice Λ) :
+    ∃ (r : G → Λ) (R : ℝ), 0 ≤ R ∧
+      (∀ g, dist g (r g : G) ≤ R) ∧
+      (∀ x y, dist (r x) (r y) ≤ dist x y + (R + R)) := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.PolycyclicRecognition.IsUniformLattice.nonempty_coarseEquivalence</code> <small>line 87</small><div class="doc"><p>A metric quasi-isometry to a group containing a uniform lattice gives
+the actual coarse equivalence with that lattice used by the algebraic
+duality comparison. All inverse and finite-difference estimates are proved.</p></div><pre>theorem IsUniformLattice.nonempty_coarseEquivalence [ProperSpace G]
+    {Λ : Subgroup G} (hΛ : IsUniformLattice Λ) (f : H → G)
+    (hfinite : ∀ R : ℝ, (closedBall (1 : H) R).Finite)
+    {K C K&#x27; C&#x27; E : ℝ} (hK : 0 ≤ K) (hK&#x27; : 0 ≤ K&#x27;)
+    (hupper : ∀ x y, dist (f x) (f y) ≤ K * dist x y + C)
+    (hlower : ∀ x y, dist x y ≤ K&#x27; * dist (f x) (f y) + C&#x27;)
+    (hsurj : ∀ g, ∃ x, dist g (f x) ≤ E) :
+    Nonempty (GroupCoarseEquivalence H Λ) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PolycyclicRecognition.lean.html#L44">OAI.PolycyclicRecognition.GroupCoarseEquivalence</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

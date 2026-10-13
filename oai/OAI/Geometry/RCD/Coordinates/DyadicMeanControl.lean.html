@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/DyadicMeanControl.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/DyadicMeanControl.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>DyadicMeanControl.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>DyadicMeanControl.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/DyadicMeanControl.lean#L1">source</a></p><div class="doc"><h3>Dyadic growth and relative error of actual mean Grams</h3><p>Adjacent relative estimates give an explicit outward growth bound and an
+error that is linear in the original splitting error. This is the bound
+needed when summing Gaussian annuli in a frame normalized at a small radius.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.RegularPointCoordinates.relative_sequence_growth</code> <small>line 23</small><div class="doc"><p>Adjacent relative bounds propagate outwards, retaining a factor of
+the small error in the difference from the initial value.</p></div><pre>theorem relative_sequence_growth {s : ℕ → ℝ} {δ : ℝ}
+    (hδ : 0 ≤ δ) (hδhalf : δ ≤ 1 / 2) (k : ℕ)
+    (hs : ∀ j ≤ k, 0 ≤ s j)
+    (hstep : ∀ j &lt; k, (1 - δ) * s (j + 1) ≤ s j ∧ s j ≤ (1 + δ) * s (j + 1)) :
+    s k ≤ 2 ^ k * s 0 ∧ |s k - s 0| ≤ 2 * δ * (2 ^ k - 1) * s 0 := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.RegularPointCoordinates.symmetric_norm_le_of_quadratic</code> <small>line 58</small><div class="doc"><p>A symmetric operator norm is controlled by all of its quadratic
+forms, with no extra dimension factor.</p></div><pre>theorem symmetric_norm_le_of_quadratic (A : E →L[ℝ] E) (hA : A.IsSymmetric)
+    {C : ℝ} (hC : 0 ≤ C) (hbound : ∀ v, |⟪v, A v⟫_ℝ| ≤ C * ‖v‖ ^ 2) :
+    ‖A‖ ≤ C := by
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_mean_relative_norm_le</code> <small>line 75</small><div class="doc"><p>A relative quadratic estimate for two actual means is an operator
+estimate in any exact normalizing frame for the reference mean.</p></div><pre>theorem normalized_mean_relative_norm_le (μ : Measure X) (hQ : QuadraticCheegerEnergy μ)
+    [CompleteSpace E] (U : E →L[ℝ] SobolevSpace μ hQ)
+    (s t : Set X) (hs : MeasurableSet s) (ht : MeasurableSet t)
+    (A : E ≃L[ℝ] E) (hA : IsExactMeanNormalization μ hQ U s hs A)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hrelative : ∀ v, |⟪v, sobolevMeanGram μ hQ U t ht v⟫_ℝ -
+      ⟪v, sobolevMeanGram μ hQ U s hs v⟫_ℝ| ≤
+        C * ⟪v, sobolevMeanGram μ hQ U s hs v⟫_ℝ) :
+    ‖sobolevMeanGram μ hQ (U.comp (A : E →L[ℝ] E)) t ht -
+      ContinuousLinearMap.id ℝ E‖ ≤ C := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L64">OAI.RegularPointCoordinates.QuadraticCheegerEnergy</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="GramNormalization.lean.html#L28">OAI.RegularPointCoordinates.IsExactMeanNormalization</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L120">OAI.RegularPointCoordinates.sobolevMeanGram</a></p></li><li id=L102><b>theorem</b> <code>OAI.RegularPointCoordinates.dyadic_mean_growth</code> <small>line 102</small><div class="doc"><p>Outward dyadic means of the same original harmonic map have linear
+relative error. Every adjacent premise comes from the proved
+normalization/Bishop--Gromov comparison.</p></div><pre>theorem dyadic_mean_growth {K : ℝ} (m : ℕ) (hX : NoncollapsedRCD K (m + 1) X)
+    {a : ℝ} (ha : 0 ≤ a)
+    (hBG : BallVolumeComparison (hausdorff (m + 1) X) (comparisonModelVolume m a))
+    (u : Fin (m + 1) → SobolevSpace (hausdorff (m + 1) X) hX.quadratic)
+    (p : X) {r ε : ℝ} (hr : 0 &lt; r) (hε : 0 ≤ ε)
+    (hsmall : ((m + 1 : ℕ) : ℝ) ^ 2 * (normalizationVolumeRatio m * ε) ≤ 1 / 2)
+    (k : ℕ) (hscale : ∀ j ≤ k, a * (3 * (2 ^ j * r)) ≤ 1)
+    (hnormal : ∀ j ≤ k, ∃ (A : Euclidean (m + 1) ≃L[ℝ] Euclidean (m + 1))
+      (w : X → Euclidean (m + 1)),
+      FirstOrderSplittingOn (hausdorff (m + 1) X) hX.quadratic p (2 ^ j * r) ε
+        (transformedColumn (hausdorff (m + 1) X) hX.quadratic u A) w ∧
+      IsExactMeanNormalization (hausdorff (m + 1) X) hX.quadratic
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L132">OAI.RegularPointCoordinates.NoncollapsedRCD</a>, <a href="../Metric/VolumeComparison.lean.html#L24">OAI.RegularPointCoordinates.BallVolumeComparison</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L39">OAI.RegularPointCoordinates.hausdorff</a>, <a href="../Metric/ComparisonModel.lean.html#L24">OAI.RegularPointCoordinates.comparisonModelVolume</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Metric/UniformVolumeRatio.lean.html#L14">OAI.RegularPointCoordinates.normalizationVolumeRatio</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="SplittingApproximation.lean.html#L35">OAI.RegularPointCoordinates.FirstOrderSplittingOn</a>, <a href="../Harmonic/TransformedColumns.lean.html#L19">OAI.RegularPointCoordinates.transformedColumn</a>, <a href="GramNormalization.lean.html#L28">OAI.RegularPointCoordinates.IsExactMeanNormalization</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

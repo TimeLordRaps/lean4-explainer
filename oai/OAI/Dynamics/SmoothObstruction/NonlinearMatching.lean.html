@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/NonlinearMatching.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/NonlinearMatching.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>NonlinearMatching.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>NonlinearMatching.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/NonlinearMatching.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.SmoothObstruction.SmoothRemainder.remainder</code> <small>line 20</small></li><li id=L23><b>lemma</b> <code>OAI.SmoothObstruction.SmoothRemainder.remainder_zero</code> <small>line 23</small></li><li id=L28><b>theorem</b> <code>OAI.SmoothObstruction.SmoothRemainder.remainder_lipschitz</code> <small>line 28</small><div class="doc"><p>The actual, rather than hypothesized, nonlinear remainder has the
+small Lipschitz constant needed by the boundary contraction.</p></div><pre>theorem remainder_lipschitz (f : E → F) {x : E} {δ C : ℝ}
+    (hC : 0≤C)
+    (hf : ∀ y∈closedBall x δ,DifferentiableAt ℝ f y)
+    (hder : ∀ y∈closedBall x δ,‖fderiv ℝ f y-fderiv ℝ f x‖≤C*‖y-x‖)
+    {u v : E} (hu : ‖u‖≤δ) (hv : ‖v‖≤δ) :
+    ‖remainder f x u-remainder f x v‖≤C*δ*‖u-v‖ := by
+…</pre><p class="refs">Mentions: <a href="NonlinearMatching.lean.html#L20">OAI.SmoothObstruction.SmoothRemainder.remainder</a></p></li><li id=L58><b>theorem</b> <code>OAI.SmoothObstruction.SmoothRemainder.uniform_on_compact</code> <small>line 58</small><div class="doc"><p>On a compact set strictly inside a C² coordinate domain, one common
+radius and one common constant work for all actual Taylor remainders.
+The estimate is uniform in the center and in the smaller tube radius.</p></div><pre>theorem uniform_on_compact (f : E → F) {U K : Set E}
+    (hU : IsOpen U) (hK : IsCompact K) (hKU : K⊆U)
+    (hf : ContDiffOn ℝ 2 f U) :
+    ∃ r C : ℝ,0&lt;r ∧ 0&lt;C ∧ ∀ x∈K,∀ δ : ℝ,δ≤r →
+      (∀ u v : E,‖u‖≤δ → ‖v‖≤δ →
+        ‖remainder f x u-remainder f x v‖≤C*δ*‖u-v‖) ∧
+      (∀ u : E,‖u‖≤δ → ‖remainder f x u‖≤C*‖u‖^2) := by
+…</pre><p class="refs">Mentions: <a href="NonlinearMatching.lean.html#L20">OAI.SmoothObstruction.SmoothRemainder.remainder</a></p></li><li id=L105><b>abbrev</b> <code>OAI.SmoothObstruction.ArrayRemainder.Paths</code> <small>line 105</small></li><li id=L106><b>abbrev</b> <code>OAI.SmoothObstruction.ArrayRemainder.Data</code> <small>line 106</small></li><li id=L111><b>def</b> <code>OAI.SmoothObstruction.ArrayRemainder.residual</code> <small>line 111</small><div class="doc"><p>Actual one-step Taylor residuals. The affine matching and terminal
+constraints really have zero residual.</p></div><pre>noncomputable def residual (f₁ : Fin n₁ → E → E) (f₂ : Fin n₂ → E → E)
+    (x₁ : Fin n₁ → E) (x₂ : Fin n₂ → E)
+    (v : Paths E n₁ n₂) : Data E H G n₁ n₂ :=
+…</pre><p class="refs">Mentions: <a href="NonlinearMatching.lean.html#L105">OAI.SmoothObstruction.ArrayRemainder.Paths</a>, <a href="NonlinearMatching.lean.html#L106">OAI.SmoothObstruction.ArrayRemainder.Data</a></p></li><li id=L117><b>lemma</b> <code>OAI.SmoothObstruction.ArrayRemainder.residual_zero</code> <small>line 117</small></li><li id=L122><b>theorem</b> <code>OAI.SmoothObstruction.ArrayRemainder.residual_lipschitz</code> <small>line 122</small></li><li id=L155><b>theorem</b> <code>OAI.SmoothObstruction.ArrayRemainder.residual_from_derivative</code> <small>line 155</small><div class="doc"><p>One common compact-domain Taylor estimate gives a residual Lipschitz
+constant independent of the number of orbit steps.</p></div><pre>theorem residual_from_derivative (f₁ : Fin n₁ → E → E) (f₂ : Fin n₂ → E → E)
+    (x₁ : Fin n₁ → E) (x₂ : Fin n₂ → E) {C δ : ℝ} (hC : 0≤C) (hδ : 0≤δ)
+    (hd₁ : ∀ t,∀ y∈closedBall (x₁ t) δ,DifferentiableAt ℝ (f₁ t) y)
+    (hd₂ : ∀ t,∀ y∈closedBall (x₂ t) δ,DifferentiableAt ℝ (f₂ t) y)
+    (h₁ : ∀ t,∀ y∈closedBall (x₁ t) δ,‖fderiv ℝ (f₁ t) y-fderiv ℝ (f₁ t) (x₁ t)‖≤C*‖y-x₁ t‖)
+    (h₂ : ∀ t,∀ y∈closedBall (x₂ t) δ,‖fderiv ℝ (f₂ t) y-fderiv ℝ (f₂ t) (x₂ t)‖≤C*‖y-x₂ t‖)
+    {u v : Paths E n₁ n₂} (hu : ‖u‖≤δ) (hv : ‖v‖≤δ) :
+    ‖residual (H:=H) (G:=G) f₁ f₂ x₁ x₂ u-residual f₁ f₂ x₁ x₂ v‖≤C*δ*‖u-v‖ :=
+…</pre><p class="refs">Mentions: <a href="NonlinearMatching.lean.html#L105">OAI.SmoothObstruction.ArrayRemainder.Paths</a>, <a href="NonlinearMatching.lean.html#L111">OAI.SmoothObstruction.ArrayRemainder.residual</a></p></li><li id=L169><b>theorem</b> <code>OAI.SmoothObstruction.ArrayRemainder.genuine_step</code> <small>line 169</small><div class="doc"><p>The nonlinear recurrence is exactly the actual coordinate orbit equation,
+not just a formal shadowing sequence.</p></div><pre>theorem genuine_step (f : E → E) (x x&#x27; v v&#x27; : E) (hbase : f x=x&#x27;)
+    (heq : v&#x27;-(fderiv ℝ f x) v=SmoothRemainder.remainder f x v) :
+    f (x+v)=x&#x27;+v&#x27; := by
+…</pre><p class="refs">Mentions: <a href="NonlinearMatching.lean.html#L20">OAI.SmoothObstruction.SmoothRemainder.remainder</a></p></li><li id=L190><b>theorem</b> <code>OAI.SmoothObstruction.NonlinearBoundary.solve</code> <small>line 190</small><div class="doc"><p>The boundary-inverse contraction from source section4. The ambient
+space can be a finite array with its supremum norm: no step-count factor
+is introduced. Uniqueness is on the larger radius δ, not just the sharp
+shadowing radius.</p></div><pre>theorem solve (L : E ≃L[ℝ] F) (R : E → F) (a : F)
+    {Q C r δ : ℝ} (hQ : 0 ≤ Q) (hC : 0 ≤ C) (hr : 0 ≤ r) (hδ : 0 &lt; δ)
+    (hL : ‖L.symm.toContinuousLinearMap‖ ≤ Q)
+    (ha : ‖a‖ ≤ C*r) (hR0 : R 0 = 0)
+    (hR : ∀ u ∈ closedBall (0 : E) δ, ∀ v ∈ closedBall (0 : E) δ,
+      ‖R u-R v‖ ≤ C*δ*‖u-v‖)
+    (hsmall : Q*C*δ ≤ 1/4) (hdata : Q*C*r ≤ δ/4) :
+    ∃ v : E, ‖v‖ ≤ δ/2 ∧ ‖v‖ ≤ 2*C*Q*r ∧ L v = a+R v ∧
+      ∀ u : E, ‖u‖ ≤ δ → L u = a+R u → u=v := by
+…</pre></li><li id=L252><b>theorem</b> <code>OAI.SmoothObstruction.NonlinearBoundary.nonlinear_linear_error</code> <small>line 252</small><div class="doc"><p>The nonlinear correction differs quadratically from the linear
+solution, with the exact inverse cost. This is the source estimate used
+for ideal coordinate exchange, once the sharp norm bound is inserted.</p></div><pre>theorem nonlinear_linear_error (L : E ≃L[ℝ] F) {R : E → F} {a : F}
+    {v : E} {Q C : ℝ} (hL : ‖L.symm.toContinuousLinearMap‖ ≤ Q)
+    (_hC : 0 ≤ C) (hR : ‖R v‖ ≤ C*‖v‖^2) (heq : L v=a+R v) :
+    ‖v-L.symm a‖ ≤ Q*C*‖v‖^2 := by
+…</pre></li><li id=L279><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.nonlinear_orbits</code> <small>line 279</small><div class="doc"><p>The finite boundary inverse and actual Taylor residual yield a genuine
+pair of nonlinear coordinate orbits, with a common middle point. All
+terminal equations remain exact. The derivative and propagation estimates
+are precisely the finite-window inputs, not the desired orbit conclusion.</p></div><pre>theorem nonlinear_orbits (L : (B₁.initialSpace × B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E)) {U K C r δ : ℝ}
+    (hU : 1≤U) (hK : ‖L.symm.toContinuousLinearMap‖≤K)
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖≤1/2)
+    (hs₁ : ∀ s u,s≤u → u≤n₁ → ‖(A₁.map u s).comp (B₁.slow s)‖≤U)
+    (hb₁ : ∀ s u,s≤u → u≤n₁ → ‖(A₁.map s u).comp (B₁.fast u)‖≤U)
+    (hs₂ : ∀ s u,s≤u → u≤n₂ → ‖(A₂.map u s).comp (B₂.slow s)‖≤U)
+    (hb₂ : ∀ s u,s≤u → u≤n₂ → ‖(A₂.map s u).comp (B₂.fast u)‖≤U)
+    (hJ₁ : ‖C₁.J‖≤U) (hP₁ : ‖C₁.P‖≤U)
+    (hJ₂ : ‖C₂.J‖≤U) (hP₂ : ‖C₂.P‖≤U)
+    (f₁ : Fin n₁ → E → E) (f₂ : Fin n₂ → E → E)
+    (x₁ : Fin (n₁+1) → E) (x₂ : Fin (n₂+1) → E)
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a></p></li><li id=L372><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.nonlinear_orbits_unique</code> <small>line 372</small><div class="doc"><p>The finite boundary inverse and actual Taylor residual yield a genuine
+pair of nonlinear coordinate orbits, with a common middle point. All
+terminal equations remain exact. The derivative and propagation estimates
+are precisely the finite-window inputs, not the desired orbit conclusion.</p></div><pre>theorem nonlinear_orbits_unique (L : (B₁.initialSpace × B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E)) {U K C r δ : ℝ}
+    (hU : 1≤U) (hK : ‖L.symm.toContinuousLinearMap‖≤K)
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖≤1/2)
+    (hs₁ : ∀ s u,s≤u → u≤n₁ → ‖(A₁.map u s).comp (B₁.slow s)‖≤U)
+    (hb₁ : ∀ s u,s≤u → u≤n₁ → ‖(A₁.map s u).comp (B₁.fast u)‖≤U)
+    (hs₂ : ∀ s u,s≤u → u≤n₂ → ‖(A₂.map u s).comp (B₂.slow s)‖≤U)
+    (hb₂ : ∀ s u,s≤u → u≤n₂ → ‖(A₂.map s u).comp (B₂.fast u)‖≤U)
+    (hJ₁ : ‖C₁.J‖≤U) (hP₁ : ‖C₁.P‖≤U)
+    (hJ₂ : ‖C₂.J‖≤U) (hP₂ : ‖C₂.P‖≤U)
+    (f₁ : Fin n₁ → E → E) (f₂ : Fin n₂ → E → E)
+    (x₁ : Fin (n₁+1) → E) (x₂ : Fin (n₂+1) → E)
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a></p></li><li id=L490><b>lemma</b> <code>OAI.SmoothObstruction.IdealExchange.annihilator_bound</code> <small>line 490</small><div class="doc"><p>Orthogonal gap control followed by an oblique complementary projector.
+This retains the reference inverse cost instead of silently treating the
+nonorthogonal slow/fast decomposition as orthogonal.</p></div><pre>lemma annihilator_bound (U V : Submodule ℝ E) (Q : E →L[ℝ] E)
+    {ε G : ℝ} (hG : 0≤G) (_hε : 0≤ε)
+    (hclose : ‖U.starProjection-V.starProjection‖≤ε)
+    (hQ : ‖Q‖≤G) (hzero : ∀ v∈V,Q v=0) (x : U) :
+    ‖Q (x:E)‖≤G*ε*‖x‖ := by
+…</pre></li><li id=L507><b>theorem</b> <code>OAI.SmoothObstruction.IdealExchange.graph_exchange_error</code> <small>line 507</small><div class="doc"><p>A pair of small endpoint graphs over nearby complementary spaces gives
+ideal exchange at time zero; the large full-window shadowing cost does not
+multiply the space-comparison error.</p></div><pre>theorem graph_exchange_error {A₀ : FiniteGreen.Evolution E}
+    (B₀ : FiniteGreen.Splitting A₀) (U V : Submodule ℝ E)
+    (C D : E →L[ℝ] E) (a : U) (b : V) (m : E)
+    {ε κ G R : ℝ} (hε : 0≤ε) (hκ : 0≤κ) (hG : 0≤G) (_hR : 0≤R)
+    (hcU : ‖U.starProjection-(B₀.slow 0).range.starProjection‖≤ε)
+    (hcV : ‖V.starProjection-(B₀.fast 0).range.starProjection‖≤ε)
+    (hC : ‖C‖≤κ) (hD : ‖D‖≤κ)
+    (hP : ‖B₀.slow 0‖≤G) (hQ : ‖B₀.fast 0‖≤G)
+    (ha : ‖a‖≤R) (hb : ‖b‖≤R)
+    (hm : (a:E)+C a-((b:E)+D b)=m) :
+    ‖((a:E)+C a)-B₀.slow 0 m‖≤2*G*(ε+κ)*R := by
+…</pre><p class="refs">Mentions: <a href="GreenOperator.lean.html#L21">OAI.SmoothObstruction.FiniteGreen.Evolution</a>, <a href="GreenOperator.lean.html#L111">OAI.SmoothObstruction.FiniteGreen.Splitting</a></p></li><li id=L559><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.linear_initial_error</code> <small>line 559</small><div class="doc"><p>Quantitative ideal exchange for the actual zero-forcing boundary inverse.
+The middle cost is O(exp(C b n)), separate from full-orbit exp(C g n).</p></div><pre>theorem linear_initial_error
+    (L : (B₁.initialSpace×B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E))
+    {K P ε κ : ℝ} (hK : ‖L.symm.toContinuousLinearMap‖≤K)
+    (hP : 0≤P) (hε : 0≤ε) (hκ : 0≤κ)
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖≤1/2)
+    (hc₁ : ‖B₁.initialSpace.starProjection-(B₀.slow 0).range.starProjection‖≤ε)
+    (hc₂ : ‖B₂.initialSpace.starProjection-(B₀.fast 0).range.starProjection‖≤ε)
+    (hk₁ : ‖C₁.kernel‖≤κ) (hk₂ : ‖C₂.kernel‖≤κ)
+    (hs : ‖B₀.slow 0‖≤P) (hf : ‖B₀.fast 0‖≤P)
+    (v₁ v₂ : ℕ → E) (m : E)
+    (hv₁ : ∀ t&lt;n₁,v₁ (t+1)=A₁.map (t+1) t (v₁ t))
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a></p></li><li id=L620><b>theorem</b> <code>OAI.SmoothObstruction.ArrayRemainder.residual_quadratic</code> <small>line 620</small><div class="doc"><p>The actual array residual is quadratic in the sup norm, with a constant
+independent of either window length. The smaller radius is the array norm.</p></div><pre>theorem residual_quadratic (f₁ : Fin n₁ → E → E) (f₂ : Fin n₂ → E → E)
+    (x₁ : Fin n₁ → E) (x₂ : Fin n₂ → E) {C δ : ℝ} (hC : 0≤C)
+    (hd₁ : ∀ t,∀ y∈closedBall (x₁ t) δ,DifferentiableAt ℝ (f₁ t) y)
+    (hd₂ : ∀ t,∀ y∈closedBall (x₂ t) δ,DifferentiableAt ℝ (f₂ t) y)
+    (h₁ : ∀ t,∀ y∈closedBall (x₁ t) δ,‖fderiv ℝ (f₁ t) y-fderiv ℝ (f₁ t) (x₁ t)‖≤C*‖y-x₁ t‖)
+    (h₂ : ∀ t,∀ y∈closedBall (x₂ t) δ,‖fderiv ℝ (f₂ t) y-fderiv ℝ (f₂ t) (x₂ t)‖≤C*‖y-x₂ t‖)
+    {v : Paths E n₁ n₂} (hv : ‖v‖≤δ) :
+    ‖residual (H:=H) (G:=G) f₁ f₂ x₁ x₂ v‖≤C*‖v‖^2 := by
+…</pre><p class="refs">Mentions: <a href="NonlinearMatching.lean.html#L105">OAI.SmoothObstruction.ArrayRemainder.Paths</a>, <a href="NonlinearMatching.lean.html#L111">OAI.SmoothObstruction.ArrayRemainder.residual</a></p></li><li id=L644><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.array_linear_initial_error</code> <small>line 644</small></li><li id=L687><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.array_nonlinear_initial_error</code> <small>line 687</small><div class="doc"><p>Linear graph-space error and nonlinear residual have DIFFERENT costs.
+In particular, no full-window inverse multiplies the common-bin gap error.</p></div><pre>theorem array_nonlinear_initial_error
+    (L : (B₁.initialSpace×B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E))
+    {K P ε κ Q C : ℝ} (hK : ‖L.symm.toContinuousLinearMap‖≤K)
+    (hP : 0≤P) (hε : 0≤ε) (hκ : 0≤κ) (hC : 0≤C)
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖≤1/2)
+    (hc₁ : ‖B₁.initialSpace.starProjection-(B₀.slow 0).range.starProjection‖≤ε)
+    (hc₂ : ‖B₂.initialSpace.starProjection-(B₀.fast 0).range.starProjection‖≤ε)
+    (hk₁ : ‖C₁.kernel‖≤κ) (hk₂ : ‖C₂.kernel‖≤κ)
+    (hs : ‖B₀.slow 0‖≤P) (hf : ‖B₀.fast 0‖≤P)
+    (R : Paths E n₁ n₂ → Data E H G n₁ n₂) (v : Paths E n₁ n₂) (m : E)
+    (hR : ‖R v‖≤C*‖v‖^2)
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a>, <a href="BoundaryMatching.lean.html#L596">OAI.SmoothObstruction.FiniteGreen.Matching.Paths</a>, <a href="BoundaryMatching.lean.html#L597">OAI.SmoothObstruction.FiniteGreen.Matching.Data</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

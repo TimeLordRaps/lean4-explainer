@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceSlotTails.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceSlotTails.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceSlotTails.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceSlotTails.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceSlotTails.lean#L1">source</a></p><div class="doc"><p>Fixed slope slots are summed before taking the source square or
+variation. Only the fixed slot count enters the union bound; empty
+slots are allowed. The polynomial threshold and exponential rate
+absorb this count uniformly before any packet family is chosen.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.LipschitzHilbert.source_slot_square_le</code> <small>line 18</small><div class="doc"><p>The square of the recombined positive scales costs the sum of the
+individual slot squares, with constant one.</p></div><pre>theorem source_slot_square_le {B N : ℕ} (f : Fin B → Fin N → ℝ) :
+    Real.sqrt (∑ j, (∑ b, f b j)^2) ≤
+      ∑ b, Real.sqrt (∑ j, f b j^2) := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.LipschitzHilbert.source_slot_packet_variation_le</code> <small>line 33</small><div class="doc"><p>Recombining slots before partial sums does not enlarge cubic
+variation beyond the sum of the separate slot variations.</p></div><pre>theorem source_slot_packet_variation_le {B N : ℕ} {E : Type*}
+    [NormedAddCommGroup E] (f : Fin B → Fin N → E) :
+    cubicVariation (packetPartialSum (fun j =&gt; ∑ b, f b j)) N ≤
+      ∑ b, cubicVariation (packetPartialSum (f b)) N := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/VariationSum.lean.html#L15">OAI.LipschitzHilbert.cubicVariation</a>, <a href="../Packets/VariationPacketL1.lean.html#L13">OAI.LipschitzHilbert.packetPartialSum</a></p></li><li id=L52><b>theorem</b> <code>OAI.LipschitzHilbert.source_slot_bad_subset</code> <small>line 52</small><div class="doc"><p>A positive extra threshold absorbs every fixed finite slot count,
+including zero slots.</p></div><pre>theorem source_slot_bad_subset {B : ℕ} {X : Type*}
+    (f : Fin B → X → ℝ) (F : X → ℝ) {small large : ℝ}
+    (_hsmall : 0 &lt; small) (hlarge : (B:ℝ)*small &lt; large)
+    (hF : ∀ x, |F x| ≤ ∑ b, |f b x|) :
+    {x | large ≤ |F x|} ⊆ ⋃ b, {x | small ≤ |f b x|} := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.LipschitzHilbert.source_slot_tail</code> <small>line 72</small><div class="doc"><p>General finite-slot union estimate, with an arbitrary reference
+mass (in the application it is the physical interval length).</p></div><pre>theorem source_slot_tail {B : ℕ} {X : Type*} [MeasurableSpace X]
+    (μ : Measure X) (f : Fin B → X → ℝ) (F : X → ℝ)
+    {small large : ℝ} (hsmall : 0 &lt; small)
+    (hlarge : (B:ℝ)*small &lt; large) (hF : ∀ x, |F x| ≤ ∑ b, |f b x|)
+    (δ mass : ℝ≥0∞) (htail : ∀ b, μ {x | small ≤ |f b x|} ≤ δ*mass) :
+    μ {x | large ≤ |F x|} ≤ (B:ℝ≥0∞)*δ*mass := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.LipschitzHilbert.eventually_source_fixed_slot_tail</code> <small>line 89</small><div class="doc"><p>The constants are chosen before the slot functions, underlying
+space or interval. One polynomial power and one exponential unit pay
+for the fixed number of slots.</p></div><pre>theorem eventually_source_fixed_slot_tail (B : ℕ) (a J : ℝ) :
+    ∀ᶠ L : ℝ in atTop,
+    ∀ (X : Type*) [MeasurableSpace X] (μ : Measure X)
+      (f : Fin B → X → ℝ) (F : X → ℝ) (mass : ℝ≥0∞),
+      (∀ x, |F x| ≤ ∑ b, |f b x|) →
+      (∀ b, μ {x | L^a ≤ |f b x|} ≤
+        ENNReal.ofReal (Real.exp (-(J+1)*L))*mass) →
+      μ {x | L^(a+1) ≤ |F x|} ≤ ENNReal.ofReal (Real.exp (-J*L))*mass := by
+…</pre></li><li id=L126><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.physical_centered_square_slot_tail</code> <small>line 126</small><div class="doc"><p>The actual centered positive squares of all narrow-label slots
+have one physical exceptional threshold. Each slot may have a different
+item type, including an empty item type at any scale.</p></div><pre>theorem physical_centered_square_slot_tail (hVariation : LepingleInput)
+    {lo hi : ℝ} (hlo : 0 &lt; lo) (hhi : 0 ≤ hi)
+    (B : ℕ) (q J : ℝ) (hq : 0 ≤ q) (hJ : 0 ≤ J) :
+    ∀ᶠ L : ℝ in atTop,
+    ∀ (N : ℕ) (κ : Type) (ι : Fin B → Fin N → Type)
+      [Fintype κ] [∀ b j, Fintype (ι b j)]
+      (P : ∀ b, SourceLatticePacket N κ (ι b)),
+      (∀ b, (P b).constant ≤ L^q) →
+    ∀ (d : Fin N → ℝ) (v : ℝ×ℝ → ℝ) (_hv : Measurable v)
+      (g : ℝ×ℝ → EuclideanSpace ℂ κ) (_hg : Measurable g) (_hg1 : ∀ z, ‖g z‖ ≤ 1),
+      (∀ j, 0 ≤ d j) → Monotone d →
+      (∀ b j u k y xi, |xi| &lt; (lo/(P b).topLength)*(2:ℝ)^j.val →
+…</pre><p class="refs">Mentions: <a href="../Estimates/PublishedInputs.lean.html#L159">OAI.LipschitzHilbert.LepingleInput</a>, <a href="../Packets/SourceLatticePacket.lean.html#L20">OAI.LipschitzHilbert.SourceLatticePacket</a>, <a href="../Packets/SourceLatticePacket.lean.html#L100">OAI.LipschitzHilbert.SourceLatticePacket.constant</a></p></li><li id=L161><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.physical_centered_masked_variation_slot_tail</code> <small>line 161</small><div class="doc"><p>The actual centered masked variations of the fixed narrow-label
+slots have a common physical tail. Recombining their packet bands is
+controlled by <code>source_slot_packet_variation_le</code>.</p></div><pre>theorem physical_centered_masked_variation_slot_tail (hVariation : LepingleInput)
+    {lo hi : ℝ} (hlo : 0 &lt; lo) (hhi : 0 ≤ hi)
+    (B : ℕ) (q J A cone : ℝ) (hq : 0 ≤ q) (hJ : 0 ≤ J)
+    (hA : 1 &lt; A) (hcone : 0 ≤ cone) :
+    ∀ᶠ L : ℝ in atTop,
+    ∀ (N : ℕ) (κ : Type) (ι : Fin B → Fin N → Type)
+      [Fintype κ] [∀ b j, Fintype (ι b j)]
+      (P : ∀ b, SourceLatticePacket N κ (ι b)),
+      (∀ b, (P b).constant ≤ L^q) →
+    ∀ (c : ∀ b j, ι b j → κ → ℂ) (hc : ∀ b j u k, ‖c b j u k‖ ≤ 1)
+      (alt : ∀ b j, ι b j → κ → SchwartzMap (ℝ×ℝ) ℂ)
+      (hAlt : ∀ b j u k,
+…</pre><p class="refs">Mentions: <a href="../Estimates/PublishedInputs.lean.html#L159">OAI.LipschitzHilbert.LepingleInput</a>, <a href="../Packets/SourceLatticePacket.lean.html#L20">OAI.LipschitzHilbert.SourceLatticePacket</a>, <a href="../Packets/SourceLatticePacket.lean.html#L100">OAI.LipschitzHilbert.SourceLatticePacket.constant</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

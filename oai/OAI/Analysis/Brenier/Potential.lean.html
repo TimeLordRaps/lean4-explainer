@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Potential.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Potential.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Potential.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Potential.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Potential.lean#L1">source</a></p><div class="doc"><p>Uniqueness of finite affine intercepts from connected full-support sources.
+This route uses finite-range continuity, not differentiability of moving cells.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Problem358.MaxPotential.potential</code> <small>line 15</small><div class="doc"><p>A finite maximum of affine functions, with slopes <code>y</code> and intercepts <code>c</code>.</p></div><pre>def potential (y : ι → V) (c : ι → ℝ) (x : V) : ℝ :=
+…</pre></li><li id=L18><b>theorem</b> <code>OAI.Problem358.MaxPotential.affine_le_potential</code> <small>line 18</small></li><li id=L22><b>theorem</b> <code>OAI.Problem358.MaxPotential.potential_le</code> <small>line 22</small></li><li id=L26><b>theorem</b> <code>OAI.Problem358.MaxPotential.affine_eq_potential</code> <small>line 26</small></li><li id=L31><b>theorem</b> <code>OAI.Problem358.MaxPotential.supporting_inequality</code> <small>line 31</small></li><li id=L37><b>theorem</b> <code>OAI.Problem358.MaxPotential.convexOn_potential</code> <small>line 37</small></li><li id=L49><b>theorem</b> <code>OAI.Problem358.MaxPotential.potential_sub_le</code> <small>line 49</small></li><li id=L66><b>theorem</b> <code>OAI.Problem358.MaxPotential.lipschitzWith_potential</code> <small>line 66</small></li><li id=L78><b>theorem</b> <code>OAI.Problem358.MaxPotential.continuous_potential</code> <small>line 78</small></li><li id=L88><b>theorem</b> <code>OAI.Problem358.MaxPotential.eventuallyEq_affine_of_strict</code> <small>line 88</small><div class="doc"><p>A strict active affine piece remains active in a neighborhood.</p></div><pre>theorem eventuallyEq_affine_of_strict (y : ι → V) (c : ι → ℝ) (x : V) (i : ι)
+    (h : ∀ j, j ≠ i → ⟪x, y j⟫ + c j &lt; ⟪x, y i⟫ + c i) :
+    potential y c =ᶠ[𝓝 x] (fun z =&gt; ⟪z, y i⟫ + c i) := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L106><b>theorem</b> <code>OAI.Problem358.MaxPotential.hasFDerivAt_of_strict</code> <small>line 106</small><div class="doc"><p>At a strict active cell the derivative is its site's inner-product functional.</p></div><pre>theorem hasFDerivAt_of_strict (y : ι → V) (c : ι → ℝ) (x : V) (i : ι)
+    (h : ∀ j, j ≠ i → ⟪x, y j⟫ + c j &lt; ⟪x, y i⟫ + c i) :
+    HasFDerivAt (potential y c) (innerSL ℝ (y i)) x := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L128><b>theorem</b> <code>OAI.Problem358.MaxPotential.potential_intercept_sub_le</code> <small>line 128</small></li><li id=L141><b>theorem</b> <code>OAI.Problem358.MaxPotential.norm_potential_intercept_sub_le</code> <small>line 141</small></li><li id=L151><b>theorem</b> <code>OAI.Problem358.MaxPotential.lipschitzWith_intercepts</code> <small>line 151</small></li><li id=L158><b>theorem</b> <code>OAI.Problem358.MaxPotential.norm_potential_le</code> <small>line 158</small></li><li id=L175><b>theorem</b> <code>OAI.Problem358.MaxPotential.integrable_potential</code> <small>line 175</small></li><li id=L184><b>theorem</b> <code>OAI.Problem358.MaxPotential.norm_integral_potential_sub_le</code> <small>line 184</small><div class="doc"><p>Integrating the potential preserves its uniform intercept continuity.</p></div><pre>theorem norm_integral_potential_sub_le (y : ι → V) (c b : ι → ℝ)
+    (hc : Integrable (potential y c) ρ) (hb : Integrable (potential y b) ρ) :
+    ‖(∫ x, potential y c x ∂ρ) - ∫ x, potential y b x ∂ρ‖ ≤
+      ‖c - b‖ * ρ.real Set.univ := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L195><b>theorem</b> <code>OAI.Problem358.MaxPotential.lipschitzWith_integral_potential</code> <small>line 195</small></li><li id=L204><b>theorem</b> <code>OAI.Problem358.MaxPotential.intercept_le_integral_potential</code> <small>line 204</small><div class="doc"><p>The elementary coercivity estimate for each intercept coordinate.</p></div><pre>theorem intercept_le_integral_potential (y : ι → V) (c : ι → ℝ) (L : NNReal)
+    (hy : ∀ i, ‖y i‖ ≤ L) (hρ : Integrable (fun x : V =&gt; ‖x‖) ρ) (i : ι) :
+    c i ≤ (∫ x, potential y c x ∂ρ) + (L : ℝ) * ∫ x, ‖x‖ ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L241><b>theorem</b> <code>OAI.Problem358.MaxPotential.convexOn_intercepts</code> <small>line 241</small><div class="doc"><p>Convexity in the intercept vector, as distinct from convexity in the source variable.</p></div><pre>theorem convexOn_intercepts (y : ι → V) (x : V) :
+    ConvexOn ℝ Set.univ (fun c =&gt; potential y c x) := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L260><b>theorem</b> <code>OAI.Problem358.MaxPotential.convexOn_integral_potential</code> <small>line 260</small></li><li id=L272><b>theorem</b> <code>OAI.Problem358.MaxPotential.convexOn_integral_potential_sub_weighted_sum</code> <small>line 272</small><div class="doc"><p>The complete normalized-cell variational objective is convex.</p></div><pre>theorem convexOn_integral_potential_sub_weighted_sum
+    (ρ : Measure V) (y : ι → V) (m : ι → ℝ)
+    (hint : ∀ c, Integrable (potential y c) ρ) :
+    ConvexOn ℝ Set.univ
+      (fun c =&gt; (∫ x, potential y c x ∂ρ) - ∑ i, m i * c i) := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L315><b>theorem</b> <code>OAI.Problem358.MaxPotential.eqOn_of_finite_ae_range</code> <small>line 315</small><div class="doc"><p>A continuous function with finite essential range is constant on every
+connected subset of the measure's support.</p></div><pre>theorem eqOn_of_finite_ae_range (ρ : Measure V) {K : Set V}
+    (hK : IsPreconnected K) (hKs : K ⊆ ρ.support)
+    {f : V → ℝ} (hf : Continuous f) {A : Set ℝ} (hA : A.Finite)
+    (hae : ∀ᵐ x ∂ρ, f x ∈ A) {x z : V} (hx : x ∈ K) (hz : z ∈ K) :
+    f x = f z := by
+…</pre></li><li id=L333><b>theorem</b> <code>OAI.Problem358.MaxPotential.intercept_sub_eq_of_common_selector</code> <small>line 333</small><div class="doc"><p>If the same positive-mass selector is active for two finite affine potentials,
+then their intercept difference is constant on the index set.</p></div><pre>theorem intercept_sub_eq_of_common_selector (ρ : Measure V) {K : Set V}
+    (hK : IsPreconnected K) (hKs : K ⊆ ρ.support)
+    (hKae : ∀ᵐ x ∂ρ, x ∈ K) (y : ι → V) (c b : ι → ℝ) (k : V → ι)
+    (hc : ∀ᵐ x ∂ρ, potential y c x = ⟪x, y (k x)⟫ + c (k x))
+    (hb : ∀ᵐ x ∂ρ, potential y b x = ⟪x, y (k x)⟫ + b (k x))
+    (hpos : ∀ i, ρ {x | k x = i} ≠ 0) (i j : ι) :
+    c i - b i = c j - b j := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L360><b>theorem</b> <code>OAI.Problem358.MaxPotential.intercept_eq_of_common_selector</code> <small>line 360</small><div class="doc"><p>Weighted normalization removes the common additive intercept constant.</p></div><pre>theorem intercept_eq_of_common_selector (ρ : Measure V) {K : Set V}
+    (hK : IsPreconnected K) (hKs : K ⊆ ρ.support)
+    (hKae : ∀ᵐ x ∂ρ, x ∈ K) (y : ι → V) (c b m : ι → ℝ) (k : V → ι)
+    (hsum : ∑ i, m i = 1) (hc0 : ∑ i, m i * c i = 0)
+    (hb0 : ∑ i, m i * b i = 0)
+    (hc : ∀ᵐ x ∂ρ, potential y c x = ⟪x, y (k x)⟫ + c (k x))
+    (hb : ∀ᵐ x ∂ρ, potential y b x = ⟪x, y (k x)⟫ + b (k x))
+    (hpos : ∀ i, ρ {x | k x = i} ≠ 0) : c = b := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L383><b>theorem</b> <code>OAI.Problem358.MaxPotential.potential_midpoint_le</code> <small>line 383</small><div class="doc"><p>Convexity of the maximum in its intercepts, at the midpoint.</p></div><pre>theorem potential_midpoint_le (y : ι → V) (c b : ι → ℝ) (x : V) :
+    potential y (fun i =&gt; (c i + b i) / 2) x ≤
+      (potential y c x + potential y b x) / 2 := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L393><b>theorem</b> <code>OAI.Problem358.MaxPotential.active_of_midpoint_eq</code> <small>line 393</small><div class="doc"><p>Equality in midpoint convexity forces a strict active index at one endpoint
+also to be active at the other endpoint.</p></div><pre>theorem active_of_midpoint_eq (y : ι → V) (c b : ι → ℝ) (x : V) (k : ι)
+    (hstrict : ∀ j, j ≠ k → ⟪x, y j⟫ + c j &lt; ⟪x, y k⟫ + c k)
+    (heq : potential y (fun i =&gt; (c i + b i) / 2) x =
+      (potential y c x + potential y b x) / 2) :
+    potential y b x = ⟪x, y k⟫ + b k := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L414><b>theorem</b> <code>OAI.Problem358.MaxPotential.ae_common_selector_of_integral_midpoint_eq</code> <small>line 414</small><div class="doc"><p>Integrated midpoint equality upgrades a strict selector at the first endpoint
+to a common almost-everywhere selector.</p></div><pre>theorem ae_common_selector_of_integral_midpoint_eq (ρ : Measure V)
+    (y : ι → V) (c b : ι → ℝ) (k : V → ι)
+    (hc : Integrable (potential y c) ρ) (hb : Integrable (potential y b) ρ)
+    (hm : Integrable (potential y (fun i =&gt; (c i + b i) / 2)) ρ)
+    (hstrict : ∀ᵐ x ∂ρ, ∀ j, j ≠ k x →
+      ⟪x, y j⟫ + c j &lt; ⟪x, y (k x)⟫ + c (k x))
+    (heq : (∫ x, potential y (fun i =&gt; (c i + b i) / 2) x ∂ρ) =
+      ((∫ x, potential y c x ∂ρ) + ∫ x, potential y b x ∂ρ) / 2) :
+    ∀ᵐ x ∂ρ, potential y b x = ⟪x, y (k x)⟫ + b (k x) := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L432><b>theorem</b> <code>OAI.Problem358.MaxPotential.integral_midpoint_eq_of_minimizers</code> <small>line 432</small><div class="doc"><p>Two normalized minimizers have equality in integrated midpoint convexity.</p></div><pre>theorem integral_midpoint_eq_of_minimizers (ρ : Measure V)
+    (y : ι → V) (c b m : ι → ℝ)
+    (hc0 : ∑ i, m i * c i = 0) (hb0 : ∑ i, m i * b i = 0)
+    (hint : ∀ a : ι → ℝ, Integrable (potential y a) ρ)
+    (hcmin : ∀ a : ι → ℝ, (∑ i, m i * a i) = 0 →
+      (∫ x, potential y c x ∂ρ) ≤ ∫ x, potential y a x ∂ρ)
+    (hbmin : ∀ a : ι → ℝ, (∑ i, m i * a i) = 0 →
+      (∫ x, potential y b x ∂ρ) ≤ ∫ x, potential y a x ∂ρ) :
+    (∫ x, potential y (fun i =&gt; (c i + b i) / 2) x ∂ρ) =
+      ((∫ x, potential y c x ∂ρ) + ∫ x, potential y b x ∂ρ) / 2 := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L462><b>theorem</b> <code>OAI.Problem358.MaxPotential.normalized_minimizer_unique</code> <small>line 462</small><div class="doc"><p>Uniqueness of normalized intercept minimizers.  The only geometric inputs are
+connected full support and almost-everywhere strictness of the chosen cells.
+No cell boundary differentiability or implicit-function theorem is required.</p></div><pre>theorem normalized_minimizer_unique (ρ : Measure V) {K : Set V}
+    (hK : IsPreconnected K) (hKs : K ⊆ ρ.support)
+    (hKae : ∀ᵐ x ∂ρ, x ∈ K) (y : ι → V) (c b m : ι → ℝ) (k : V → ι)
+    (hsum : ∑ i, m i = 1) (hc0 : ∑ i, m i * c i = 0)
+    (hb0 : ∑ i, m i * b i = 0)
+    (hint : ∀ a : ι → ℝ, Integrable (potential y a) ρ)
+    (hcmin : ∀ a : ι → ℝ, (∑ i, m i * a i) = 0 →
+      (∫ x, potential y c x ∂ρ) ≤ ∫ x, potential y a x ∂ρ)
+    (hbmin : ∀ a : ι → ℝ, (∑ i, m i * a i) = 0 →
+      (∫ x, potential y b x ∂ρ) ≤ ∫ x, potential y a x ∂ρ)
+    (hstrict : ∀ᵐ x ∂ρ, ∀ j, j ≠ k x →
+      ⟪x, y j⟫ + c j &lt; ⟪x, y (k x)⟫ + c (k x))
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

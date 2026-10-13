@@ -1,0 +1,154 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/SparseActivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/SparseActivity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>SparseActivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>SparseActivity.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/SparseActivity.lean#L1">source</a></p><div class="doc"><h3>Sparse activity in a finite branching construction</h3><p>Sparse/dense Fourier-mass estimates for <code>prop:finite-lower</code>.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.activeLeaves</code> <small>line 18</small><div class="doc"><p>The number of active leaves in the full <code>m</code>-ary tree of height <code>h</code>.
+A node is represented by its list of child indices, starting at the root.</p></div><pre>noncomputable def activeLeaves {m : ℕ} (A : List (Fin m) → Prop) : ℕ → ℕ
+  | 0 =&gt; if A [] then 1 else 0
+  | h + 1 =&gt; ∑ i : Fin m, activeLeaves (fun p =&gt; A (i :: p)) h
+
+/-- There is no active internal node with fewer than `b` active children. -/</pre></li><li id=L23><b>def</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.NoSparse</code> <small>line 23</small><div class="doc"><p>There is no active internal node with fewer than <code>b</code> active children.</p></div><pre>def NoSparse {m : ℕ} (b : ℕ) (A : List (Fin m) → Prop) : ℕ → Prop
+  | 0 =&gt; True
+  | h + 1 =&gt;
+      (A [] → b ≤ (Finset.univ.filter (fun i : Fin m =&gt; A [i])).card) ∧
+      ∀ i : Fin m, NoSparse b (fun p =&gt; A (i :: p)) h</pre></li><li id=L29><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.activeLeaves_lower</code> <small>line 29</small></li><li id=L56><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.weighted_active_bound</code> <small>line 56</small><div class="doc"><p>A weighted version of the sparse/dense activity dichotomy.
+The exceptional set may overlap the inactive set.  No disjointness assumptions
+on the tests used to bound exceptional mass are required.</p></div><pre>theorem weighted_active_bound {ι : Type*} [Fintype ι]
+    (H w μ : ι → ℝ) (active exceptional : ι → Prop)
+    (M ε K : ℝ) (hK : 0 &lt; K)
+    (hH : ∀ i, 0 ≤ H i) (hw : ∀ i, 0 ≤ w i)
+    (hμ : ∀ i, μ i ≤ 4)
+    (hzero : ∀ i, ¬ active i → μ i = 0)
+    (hdense : ∀ i, active i → ¬ exceptional i → K ≤ w i)
+    (hleaf : 2 * ∑ i, w i * H i ≤ M)
+    (hexceptional : (∑ i, if exceptional i then H i else 0) ≤ ε) :
+    (∑ i, μ i * H i) ≤ 4 * (ε + M / (2 * K)) := by
+…</pre></li><li id=L97><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.weighted_detection_bound</code> <small>line 97</small><div class="doc"><p>A nonnegative detector that accumulates at least one unit on every bad
+frequency bounds the total Fourier weight of those frequencies.</p></div><pre>theorem weighted_detection_bound {ι σ : Type*} [Fintype ι] [Fintype σ]
+    (H : ι → ℝ) (a : σ → ι → ℝ) (bad : ι → Prop)
+    (hH : ∀ i, 0 ≤ H i) (ha : ∀ s i, 0 ≤ a s i)
+    (hdetect : ∀ i, bad i → 1 ≤ ∑ s, a s i) :
+    (∑ i, if bad i then H i else 0) ≤ ∑ s, ∑ i, a s i * H i := by
+…</pre></li><li id=L118><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.weighted_union_bound</code> <small>line 118</small><div class="doc"><p>Union bound for nonnegative Fourier mass. Overlap between bad-node tests
+can only increase the sum on the right.</p></div><pre>theorem weighted_union_bound {ι ν : Type*} [Fintype ι] [Fintype ν]
+    (H : ι → ℝ) (bad : ν → ι → Prop) (hH : ∀ i, 0 ≤ H i) :
+    (∑ i, if ∃ v, bad v i then H i else 0) ≤
+      ∑ v, ∑ i, if bad v i then H i else 0 := by
+…</pre></li><li id=L143><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.exceptional_mass_of_detectors</code> <small>line 143</small><div class="doc"><p>Combining detectors at all nodes gives the exceptional-character mass
+estimate used before the sparse/dense dichotomy.</p></div><pre>theorem exceptional_mass_of_detectors {ι ν σ : Type*}
+    [Fintype ι] [Fintype ν] [Fintype σ]
+    (H : ι → ℝ) (a : ν → σ → ι → ℝ) (bad : ν → ι → Prop)
+    (B : ν → ℝ) (hH : ∀ i, 0 ≤ H i)
+    (ha : ∀ v s i, 0 ≤ a v s i)
+    (hdetect : ∀ v i, bad v i → 1 ≤ ∑ s, a v s i)
+    (hcost : ∀ v, (∑ s, ∑ i, a v s i * H i) ≤ B v) :
+    (∑ i, if ∃ v, bad v i then H i else 0) ≤ ∑ v, B v := by
+…</pre></li><li id=L160><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.sum_level_budget</code> <small>line 160</small><div class="doc"><p>At each depth there are <code>m^j</code> nodes, each with reciprocal-size budget.
+Thus the total over <code>k</code> internal levels is exactly <code>k</code> times the level budget.</p></div><pre>theorem sum_level_budget (m k : ℕ) (hm : m ≠ 0) (C : ℝ) :
+    (∑ j : Fin k, ∑ _v : Fin (m ^ (j : ℕ)), C / (m : ℝ) ^ (j : ℕ)) = k * C := by
+…</pre></li><li id=L173><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.root_bound_of_detectors</code> <small>line 173</small><div class="doc"><p>The finite obstruction's root estimate in terms of nonnegative Fourier
+weights and geometric detector bounds.</p></div><pre>theorem root_bound_of_detectors {ι ν σ : Type*}
+    [Fintype ι] [Fintype ν] [Fintype σ]
+    (H w μ : ι → ℝ) (active : ι → Prop) (bad : ν → ι → Prop)
+    (a : ν → σ → ι → ℝ) (B : ν → ℝ) (M ε K : ℝ)
+    (hK : 0 &lt; K) (hH : ∀ i, 0 ≤ H i) (hw : ∀ i, 0 ≤ w i)
+    (hμ : ∀ i, μ i ≤ 4) (hzero : ∀ i, ¬ active i → μ i = 0)
+    (hdense : ∀ i, active i → (¬ ∃ v, bad v i) → K ≤ w i)
+    (hleaf : 2 * ∑ i, w i * H i ≤ M)
+    (ha : ∀ v s i, 0 ≤ a v s i)
+    (hdetect : ∀ v i, bad v i → 1 ≤ ∑ s, a v s i)
+    (hcost : ∀ v, (∑ s, ∑ i, a v s i * H i) ≤ B v)
+    (hbudget : (∑ v, B v) ≤ ε) :
+…</pre></li><li id=L197><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.support_mass_identity</code> <small>line 197</small><div class="doc"><p>Counting active coordinates commutes with summing nonnegative Fourier
+weights. The identity itself does not require weight nonnegativity.</p></div><pre>theorem support_mass_identity {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (H : ι → ℝ) (activeLeaf : κ → ι → Prop) :
+    (∑ i, ((Finset.univ.filter (fun u =&gt; activeLeaf u i)).card : ℝ) * H i) =
+      ∑ u, ∑ i, if activeLeaf u i then H i else 0 := by
+…</pre></li><li id=L213><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.leaf_mass_bound</code> <small>line 213</small><div class="doc"><p>The per-leaf cyclic-average cost estimates imply the weighted leaf-mass
+bound. This is equation (finite-leaf-mass) before insertion of the tree costs.</p></div><pre>theorem leaf_mass_bound {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (H : ι → ℝ) (activeLeaf : κ → ι → Prop) (C : κ → ℝ) (M : ℝ)
+    (hleaf : ∀ u, 2 * (∑ i, if activeLeaf u i then H i else 0) ≤ C u)
+    (hbudget : (∑ u, C u) ≤ M) :
+    2 * (∑ i, ((Finset.univ.filter (fun u =&gt; activeLeaf u i)).card : ℝ) * H i) ≤ M := by
+…</pre></li><li id=L225><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.weighted_average_detection_bound</code> <small>line 225</small><div class="doc"><p>Unnormalized version of the detector bound, directly usable with a
+short interval of <code>J</code> translates. The index type need not itself have size
+<code>J</code>; the explicit lower average and total cost are the necessary hypotheses.</p></div><pre>theorem weighted_average_detection_bound {ι σ : Type*} [Fintype ι] [Fintype σ]
+    (H : ι → ℝ) (a : σ → ι → ℝ) (bad : ι → Prop) (V : σ → ℝ)
+    (J : ℝ) (hJ : 0 &lt; J) (hH : ∀ i, 0 ≤ H i)
+    (ha : ∀ s i, 0 ≤ a s i)
+    (hdetect : ∀ i, bad i → J ≤ ∑ s, a s i)
+    (hcost : ∀ s, (∑ i, a s i * H i) ≤ V s) :
+    (∑ i, if bad i then H i else 0) ≤ (∑ s, V s) / J := by
+…</pre></li><li id=L255><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.character_multiplier_le_four</code> <small>line 255</small><div class="doc"><p>Every spectral multiplier of a finite-group character is at most four.</p></div><pre>theorem character_multiplier_le_four {A : Type*} [AddCommGroup A] [Fintype A]
+    (χ : AddChar A ℂ) (z : A) : ‖1 - χ z‖ ^ 2 ≤ 4 := by
+…</pre></li><li id=L264><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.character_root_bound</code> <small>line 264</small><div class="doc"><p>Character-specialized root estimate. The root activity and multiplier
+are the actual complex character values, rather than unrelated predicates.
+This is the spectral aggregation step in the finite-tree obstruction.</p></div><pre>theorem character_root_bound {A κ ν σ : Type*}
+    [AddCommGroup A] [Fintype A] [Fintype κ] [Fintype ν] [Fintype σ]
+    (H : AddChar A ℂ → ℝ) (root : A)
+    (activeLeaf : κ → AddChar A ℂ → Prop) (bad : ν → AddChar A ℂ → Prop)
+    (a : ν → σ → AddChar A ℂ → ℝ) (B : ν → ℝ) (C : κ → ℝ)
+    (M ε K : ℝ) (hK : 0 &lt; K) (hH : ∀ χ, 0 ≤ H χ)
+    (hdense : ∀ χ, χ root ≠ 1 → (¬ ∃ v, bad v χ) →
+      K ≤ ((Finset.univ.filter (fun u =&gt; activeLeaf u χ)).card : ℝ))
+    (hleaf : ∀ u, 2 * (∑ χ, if activeLeaf u χ then H χ else 0) ≤ C u)
+    (hleafBudget : (∑ u, C u) ≤ M)
+    (ha : ∀ v s χ, 0 ≤ a v s χ)
+    (hdetect : ∀ v χ, bad v χ → 1 ≤ ∑ s, a v s χ)
+…</pre></li><li id=L302><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.character_multiplier_average</code> <small>line 302</small><div class="doc"><p>Full-period averaging detects a nontrivial character with multiplier two.
+Applied to a cyclic coordinate subgroup, this is the source's leaf test.</p></div><pre>theorem character_multiplier_average {A : Type*} [AddCommGroup A] [Fintype A]
+    (χ : AddChar A ℂ) :
+    (∑ z : A, ‖1 - χ z‖ ^ 2) / (Fintype.card A : ℝ) =
+      if χ = 0 then 0 else 2 := by
+…</pre></li><li id=L323><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.subgroup_average_spectral_mass</code> <small>line 323</small><div class="doc"><p>Averaging the Fourier expansion along any finite subgroup homomorphism
+is twice the Fourier weight of characters nontrivial on that subgroup.</p></div><pre>theorem subgroup_average_spectral_mass {A G : Type*}
+    [AddCommGroup A] [Fintype A] [AddCommGroup G] [Fintype G]
+    (φ : G →+ A) (H : AddChar A ℂ → ℝ) :
+    (∑ z : G, ∑ χ : AddChar A ℂ, ‖1 - χ (φ z)‖ ^ 2 * H χ) /
+        (Fintype.card G : ℝ) =
+      2 * ∑ χ : AddChar A ℂ, if χ.compAddMonoidHom φ = 0 then 0 else H χ := by
+…</pre></li><li id=L346><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.zmod_character_eq_zero_iff</code> <small>line 346</small><div class="doc"><p>A character on the finite cyclic group is trivial exactly when its value
+at the standard generator is one.</p></div><pre>theorem zmod_character_eq_zero_iff (Q : ℕ) [NeZero Q]
+    (χ : AddChar (ZMod Q) ℂ) : χ = 0 ↔ χ 1 = 1 := by
+…</pre></li><li id=L360><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.cyclic_average_spectral_mass</code> <small>line 360</small><div class="doc"><p>The coordinate version of the full-period leaf test, expressed using
+the image of the cyclic generator. No injectivity of the subgroup map is needed.</p></div><pre>theorem cyclic_average_spectral_mass {A : Type*}
+    [AddCommGroup A] [Fintype A]
+    (Q : ℕ) [NeZero Q] (φ : ZMod Q →+ A) (H : AddChar A ℂ → ℝ) :
+    (∑ z : ZMod Q, ∑ χ : AddChar A ℂ, ‖1 - χ (φ z)‖ ^ 2 * H χ) /
+        (Fintype.card (ZMod Q) : ℝ) =
+      2 * ∑ χ : AddChar A ℂ, if χ (φ 1) = 1 then 0 else H χ := by
+…</pre></li><li id=L375><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.cyclic_active_mass_le</code> <small>line 375</small><div class="doc"><p>A uniform upper bound on the displacement along a cyclic coordinate
+bounds twice the spectral mass active on that coordinate.</p></div><pre>theorem cyclic_active_mass_le {A : Type*} [AddCommGroup A] [Fintype A]
+    (Q : ℕ) [NeZero Q] (φ : ZMod Q →+ A) (H : AddChar A ℂ → ℝ) (C : ℝ)
+    (hcost : ∀ z : ZMod Q, (∑ χ, ‖1 - χ (φ z)‖ ^ 2 * H χ) ≤ C) :
+    2 * (∑ χ : AddChar A ℂ, if χ (φ 1) = 1 then 0 else H χ) ≤ C := by
+…</pre></li><li id=L392><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.root_bound_of_cyclic_leaf_tests</code> <small>line 392</small><div class="doc"><p>Cyclic leaf-coordinate translation bounds imply the character
+root estimate.</p></div><pre>theorem root_bound_of_cyclic_leaf_tests {A κ ν σ : Type*}
+    [AddCommGroup A] [Fintype A] [Fintype κ] [Fintype ν] [Fintype σ]
+    (Q : κ → ℕ) [∀ u, NeZero (Q u)] (φ : ∀ u, ZMod (Q u) →+ A)
+    (H : AddChar A ℂ → ℝ) (root : A) (bad : ν → AddChar A ℂ → Prop)
+    (a : ν → σ → AddChar A ℂ → ℝ) (B : ν → ℝ) (C : κ → ℝ)
+    (M ε K : ℝ) (hK : 0 &lt; K) (hH : ∀ χ, 0 ≤ H χ)
+    (hdense : ∀ χ, χ root ≠ 1 → (¬ ∃ v, bad v χ) →
+      K ≤ ((Finset.univ.filter (fun u =&gt; χ (φ u 1) ≠ 1)).card : ℝ))
+    (hleaf : ∀ u (z : ZMod (Q u)),
+      (∑ χ, ‖1 - χ (φ u z)‖ ^ 2 * H χ) ≤ C u)
+    (hleafBudget : (∑ u, C u) ≤ M)
+    (ha : ∀ v s χ, 0 ≤ a v s χ)
+…</pre></li><li id=L432><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.normalized_weighted_test_bound</code> <small>line 432</small><div class="doc"><p>Normalizing finitely many tests preserves a uniform test budget.</p></div><pre>theorem normalized_weighted_test_bound {ι σ : Type*}
+    [Fintype ι] [Fintype σ] [Nonempty σ]
+    (H : ι → ℝ) (a : σ → ι → ℝ) (B : ℝ)
+    (hcost : ∀ s, (∑ i, a s i * H i) ≤ B) :
+    (∑ s, ∑ i, (a s i / (Fintype.card σ : ℝ)) * H i) ≤ B := by
+…</pre></li><li id=L452><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TreeDistortion.FiniteMass.finite_spectral_root_bound</code> <small>line 452</small><div class="doc"><p>Complete finite spectral aggregation with concrete leaf and internal
+translations. Geometry supplies the stated translation budgets; short-period
+averaging supplies <code>hdetect</code>; branching supplies <code>hdense</code>. No additional
+Fourier-mass or exceptional-union assertion is assumed.</p></div><pre>theorem finite_spectral_root_bound {A κ ν σ : Type*}
+    [AddCommGroup A] [Fintype A] [Fintype κ] [Fintype ν]
+    [Fintype σ] [Nonempty σ]
+    (Q : κ → ℕ) [∀ u, NeZero (Q u)] (φ : ∀ u, ZMod (Q u) →+ A)
+    (H : AddChar A ℂ → ℝ) (root : A) (bad : ν → AddChar A ℂ → Prop)
+    (shift : ν → σ → A) (B : ν → ℝ) (C : κ → ℝ)
+    (M ε K : ℝ) (hK : 0 &lt; K) (hH : ∀ χ, 0 ≤ H χ)
+    (hdense : ∀ χ, χ root ≠ 1 → (¬ ∃ v, bad v χ) →
+      K ≤ ((Finset.univ.filter (fun u =&gt; χ (φ u 1) ≠ 1)).card : ℝ))
+    (hleaf : ∀ u (z : ZMod (Q u)),
+      (∑ χ, ‖1 - χ (φ u z)‖ ^ 2 * H χ) ≤ C u)
+    (hleafBudget : (∑ u, C u) ≤ M)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

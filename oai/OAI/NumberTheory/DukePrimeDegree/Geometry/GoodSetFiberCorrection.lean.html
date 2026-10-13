@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Geometry/GoodSetFiberCorrection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Geometry/GoodSetFiberCorrection.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Geometry</a> / <span>GoodSetFiberCorrection.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Geometry</a>/<span>GoodSetFiberCorrection.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Geometry/GoodSetFiberCorrection.lean#L1">source</a></p><div class="doc"><h3>Correcting a pair inside a large generic set</h3><p>The two initial points may be corrected by a changing element of the
+measure stabilizer.  Averaging the bad set along a fixed group patch
+gives a larger good set.  For two points in that larger set, a common
+group translation restores membership in the original generic set.
+No commutation with the averaging flow is needed for this selection.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.DukePrimeDegree.badOrbitFiberMass</code> <small>line 28</small></li><li id=L32><b>lemma</b> <code>OAI.DukePrimeDegree.badOrbitFiberMass_eq_measure</code> <small>line 32</small></li><li id=L45><b>lemma</b> <code>OAI.DukePrimeDegree.measurable_badOrbitFiberMass</code> <small>line 45</small></li><li id=L52><b>lemma</b> <code>OAI.DukePrimeDegree.lintegral_badOrbitFiberMass</code> <small>line 52</small><div class="doc"><p>Invariance gives the exact average bad-fiber mass.</p></div><pre>lemma lintegral_badOrbitFiberMass
+    (μ : Measure Y) [SFinite μ] (ρ : Measure H) [SFinite ρ]
+    (R : Y → H → Y) (hR : Measurable (Function.uncurry R))
+    (hinv : ∀ h, MeasurePreserving (fun x =&gt; R x h) μ μ)
+    (K : Set H) (G : Set Y) (hG : MeasurableSet G) :
+    (∫⁻ x, badOrbitFiberMass ρ R K G x ∂μ) = ρ K * μ Gᶜ := by
+…</pre><p class="refs">Mentions: <a href="GoodSetFiberCorrection.lean.html#L28">OAI.DukePrimeDegree.badOrbitFiberMass</a></p></li><li id=L75><b>theorem</b> <code>OAI.DukePrimeDegree.exists_goodOrbitFiber_set</code> <small>line 75</small><div class="doc"><p>The enlarged good set has an explicit complement bound and a
+pointwise fiber estimate, rather than only an almost-everywhere one.</p></div><pre>theorem exists_goodOrbitFiber_set
+    (μ : Measure Y) [SFinite μ] (ρ : Measure H) [SFinite ρ]
+    (R : Y → H → Y) (hR : Measurable (Function.uncurry R))
+    (hinv : ∀ h, MeasurePreserving (fun x =&gt; R x h) μ μ)
+    (K : Set H) (G : Set Y) (hG : MeasurableSet G)
+    (a : ℝ≥0∞) (ha : a ≠ 0) (hatop : a ≠ ⊤) :
+    ∃ E : Set Y, MeasurableSet E ∧
+      μ Eᶜ ≤ (ρ K * μ Gᶜ) / a ∧
+      ∀ x ∈ E, badOrbitFiberMass ρ R K G x &lt; a := by
+…</pre><p class="refs">Mentions: <a href="GoodSetFiberCorrection.lean.html#L28">OAI.DukePrimeDegree.badOrbitFiberMass</a></p></li><li id=L96><b>theorem</b> <code>OAI.DukePrimeDegree.exists_positive_goodOrbitFiber_set</code> <small>line 96</small><div class="doc"><p>A small original exceptional set leaves a genuinely positive-mass
+set of points with uniformly small bad fibers.</p></div><pre>theorem exists_positive_goodOrbitFiber_set
+    (μ : Measure Y) [IsProbabilityMeasure μ] (ρ : Measure H) [SFinite ρ]
+    (R : Y → H → Y) (hR : Measurable (Function.uncurry R))
+    (hinv : ∀ h, MeasurePreserving (fun x =&gt; R x h) μ μ)
+    (K : Set H) (G : Set Y) (hG : MeasurableSet G)
+    (a : ℝ≥0∞) (ha : a ≠ 0) (hatop : a ≠ ⊤)
+    (hbudget : (ρ K * μ Gᶜ) / a &lt; 1) :
+    ∃ E : Set Y, MeasurableSet E ∧ μ E ≠ 0 ∧
+      ∀ x ∈ E, badOrbitFiberMass ρ R K G x &lt; a := by
+…</pre><p class="refs">Mentions: <a href="GoodSetFiberCorrection.lean.html#L28">OAI.DukePrimeDegree.badOrbitFiberMass</a></p></li><li id=L124><b>theorem</b> <code>OAI.DukePrimeDegree.exists_common_goodOrbit_correction</code> <small>line 124</small><div class="doc"><p>A common bounded translation corrects both points.  The first
+correction is allowed to vary and need not commute with any flow.</p></div><pre>theorem exists_common_goodOrbit_correction
+    (ρ : Measure H) [ρ.IsMulLeftInvariant]
+    (R : Y → H → Y) (hR : ∀ x, Measurable (R x))
+    (K₀ K₁ : Set H) (hK : K₀ ⊆ K₁)
+    (G : Set Y) (hG : MeasurableSet G) (x y : Y) (b : H)
+    (hb : ∀ h ∈ K₀, b * h ∈ K₁)
+    (hsmall : badOrbitFiberMass ρ R K₁ G x +
+      badOrbitFiberMass ρ R K₁ G y &lt; ρ K₀) :
+    ∃ h ∈ K₀, R x h ∈ G ∧ R y (b * h) ∈ G := by
+…</pre><p class="refs">Mentions: <a href="GoodSetFiberCorrection.lean.html#L28">OAI.DukePrimeDegree.badOrbitFiberMass</a></p></li><li id=L159><b>theorem</b> <code>OAI.DukePrimeDegree.exists_common_goodOrbit_correction_of_fiber_bounds</code> <small>line 159</small><div class="doc"><p>The common correction applies uniformly to every pair in the
+fiber-good set and every sufficiently small correction.</p></div><pre>theorem exists_common_goodOrbit_correction_of_fiber_bounds
+    (ρ : Measure H) [ρ.IsMulLeftInvariant]
+    (R : Y → H → Y) (hR : ∀ x, Measurable (R x))
+    (K₀ K₁ : Set H) (hK : K₀ ⊆ K₁)
+    (G E : Set Y) (hG : MeasurableSet G)
+    (a : ℝ≥0∞) (hsize : a + a &lt; ρ K₀)
+    (hE : ∀ x ∈ E, badOrbitFiberMass ρ R K₁ G x ≤ a)
+    (x y : Y) (hx : x ∈ E) (hy : y ∈ E) (b : H)
+    (hb : ∀ h ∈ K₀, b * h ∈ K₁) :
+    ∃ h ∈ K₀, R x h ∈ G ∧ R y (b * h) ∈ G := by
+…</pre><p class="refs">Mentions: <a href="GoodSetFiberCorrection.lean.html#L28">OAI.DukePrimeDegree.badOrbitFiberMass</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

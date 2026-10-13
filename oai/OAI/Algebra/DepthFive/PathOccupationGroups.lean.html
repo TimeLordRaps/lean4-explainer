@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/PathOccupationGroups.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/PathOccupationGroups.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>PathOccupationGroups.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>PathOccupationGroups.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/PathOccupationGroups.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem335.selectedPathCoordinates</code> <small>line 14</small><div class="doc"><p>Coordinates of one path belonging to a fixed Boolean variable group,
+viewed in that group's own coordinate type.</p></div><pre>def selectedPathCoordinates (side : σ → Bool) (p : List σ) (b : Bool) :
+    Finset {x // side x = b} :=
+…</pre></li><li id=L18><b>theorem</b> <code>OAI.Problem335.mem_selectedPathCoordinates</code> <small>line 18</small></li><li id=L23><b>theorem</b> <code>OAI.Problem335.card_selectedPathCoordinates</code> <small>line 23</small></li><li id=L36><b>theorem</b> <code>OAI.Problem335.path_product_split</code> <small>line 36</small><div class="doc"><p>Partitioning a squarefree path product into its two coordinate groups.</p></div><pre>theorem path_product_split {R : Type*} [CommMonoid R]
+    (side : σ → Bool) (p : List σ) (hp : p.Nodup) (f g : σ → R) :
+    (p.map (fun x =&gt; if side x then f x else g x)).prod =
+      (∏ x ∈ selectedPathCoordinates side p true, f x.val) *
+        ∏ x ∈ selectedPathCoordinates side p false, g x.val := by
+…</pre><p class="refs">Mentions: <a href="PathOccupationGroups.lean.html#L14">OAI.Problem335.selectedPathCoordinates</a></p></li><li id=L60><b>theorem</b> <code>OAI.Problem335.pathAmplitude_sq_split</code> <small>line 60</small><div class="doc"><p>The squared Fock amplitude is exactly the product of the derivative
+occupations and successor multiplication occupations, on disjoint group types.</p></div><pre>theorem pathAmplitude_sq_split [Fintype σ] (side : σ → Bool)
+    (p : List σ) (hp : p.Nodup) (d : σ →₀ ℕ) :
+    ((p.map (occupationAmplitude side d)).prod) ^ 2 =
+      (∏ x ∈ selectedPathCoordinates side p true, (d x.val : ℝ)) *
+        ∏ x ∈ selectedPathCoordinates side p false, ((d x.val : ℝ) + 1) := by
+…</pre><p class="refs">Mentions: <a href="FockPaths.lean.html#L22">OAI.Problem335.occupationAmplitude</a>, <a href="PathOccupationGroups.lean.html#L14">OAI.Problem335.selectedPathCoordinates</a></p></li><li id=L70><b>theorem</b> <code>OAI.Problem335.card_selectedPathCoordinates_of_labels</code> <small>line 70</small><div class="doc"><p>Selecting coordinates from a path selects exactly the same number as
+selecting its layer labels.</p></div><pre>theorem card_selectedPathCoordinates_of_labels {ι : Type*} [DecidableEq ι]
+    (side : σ → Bool) (labels : List σ) (p : List (σ × ι × ι))
+    (hlabels : p.map Prod.fst = labels) (hnodup : labels.Nodup) (b : Bool) :
+    (selectedPathCoordinates (fun x : σ × ι × ι =&gt; side x.1) p b).card =
+      (labels.filter (fun x =&gt; side x == b)).length := by
+…</pre><p class="refs">Mentions: <a href="PathOccupationGroups.lean.html#L14">OAI.Problem335.selectedPathCoordinates</a></p></li><li id=L82><b>theorem</b> <code>OAI.Problem335.immPath_selectedCoordinates_card</code> <small>line 82</small><div class="doc"><p>Every actual IMM path selects one coordinate in each selected layer,
+including when the ambient layer has inactive endpoint coordinates.</p></div><pre>theorem immPath_selectedCoordinates_card (n : ℕ) (hn : 0 &lt; n)
+    (side : Fin n → Bool) (p : List (Fin n × Fin n × Fin n))
+    (hp : p ∈ immPaths n hn) (b : Bool) :
+    (selectedPathCoordinates (fun x : Fin n × Fin n × Fin n =&gt; side x.1) p b).card =
+      (Finset.univ.filter (fun t : Fin n =&gt; side t = b)).card := by
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="PathOccupationGroups.lean.html#L14">OAI.Problem335.selectedPathCoordinates</a></p></li><li id=L96><b>theorem</b> <code>OAI.Problem335.immPathAmplitude_sq_split</code> <small>line 96</small><div class="doc"><p>Concrete IMM first-trace path mass in the two independent occupation groups.</p></div><pre>theorem immPathAmplitude_sq_split (n : ℕ) (hn : 0 &lt; n)
+    (side : Fin n → Bool) (p : List (Fin n × Fin n × Fin n))
+    (hp : p ∈ immPaths n hn) (d : (Fin n × Fin n × Fin n) →₀ ℕ) :
+    ((p.map (occupationAmplitude (fun x =&gt; side x.1) d)).prod) ^ 2 =
+      (∏ x ∈ selectedPathCoordinates (fun x : Fin n × Fin n × Fin n =&gt; side x.1)
+        p true, (d x.val : ℝ)) *
+      ∏ x ∈ selectedPathCoordinates (fun x : Fin n × Fin n × Fin n =&gt; side x.1)
+        p false, ((d x.val : ℝ) + 1) :=
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="FockPaths.lean.html#L22">OAI.Problem335.occupationAmplitude</a>, <a href="PathOccupationGroups.lean.html#L14">OAI.Problem335.selectedPathCoordinates</a></p></li><li id=L107><b>def</b> <code>OAI.Problem335.complementaryPathCoordinates</code> <small>line 107</small><div class="doc"><p>Complement-fiber version, aligned with <code>bidegreeExponentsEquiv</code>.</p></div><pre>def complementaryPathCoordinates (side : σ → Bool) (p : List σ) :
+    Finset {x // ¬side x = true} :=
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.Problem335.mem_complementaryPathCoordinates</code> <small>line 111</small></li><li id=L116><b>theorem</b> <code>OAI.Problem335.path_product_split_complement</code> <small>line 116</small></li><li id=L134><b>theorem</b> <code>OAI.Problem335.pathAmplitude_sq_split_complement</code> <small>line 134</small></li><li id=L142><b>theorem</b> <code>OAI.Problem335.immPath_complementaryCoordinates_card</code> <small>line 142</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

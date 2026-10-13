@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Geometry/DiagonalCommutatorCurve.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Geometry/DiagonalCommutatorCurve.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Geometry</a> / <span>DiagonalCommutatorCurve.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Geometry</a>/<span>DiagonalCommutatorCurve.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Geometry/DiagonalCommutatorCurve.lean#L1">source</a></p><div class="doc"><h3>Diagonal commutator curves and maximal root blocks</h3><p>For a subgroup normalized by the split diagonal group, conjugating any
+member by a small diagonal and taking a commutator produces a curve in
+the subgroup. Its velocity has explicit entries. Root extraction then
+forces conjugated coordinate projections to preserve every maximal
+root block; connectedness gives global block preservation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.DukePrimeDegree.diagonalCommutatorCurve</code> <small>line 22</small></li><li id=L26><b>lemma</b> <code>OAI.DukePrimeDegree.diagonalCommutatorCurve_zero</code> <small>line 26</small></li><li id=L31><b>lemma</b> <code>OAI.DukePrimeDegree.diagonalCommutatorCurve_entry</code> <small>line 31</small></li><li id=L41><b>def</b> <code>OAI.DukePrimeDegree.diagonalCommutatorVelocity</code> <small>line 41</small><div class="doc"><p>The actual velocity of the diagonal commutator curve.</p></div><pre>def diagonalCommutatorVelocity {n : ℕ} (ell : Fin n → ℝ) (g : G n) :
+    Matrix (Fin n) (Fin n) ℝ :=
+…</pre></li><li id=L45><b>lemma</b> <code>OAI.DukePrimeDegree.hasDerivAt_diagonalCommutatorCurve</code> <small>line 45</small></li><li id=L61><b>lemma</b> <code>OAI.DukePrimeDegree.hasMatrixVelocity_diagonalCommutatorCurve</code> <small>line 61</small></li><li id=L68><b>def</b> <code>OAI.DukePrimeDegree.coordinateProjectionWeights</code> <small>line 68</small><div class="doc"><p>Integral zero-sum weights detecting the k-th coordinate projection.</p></div><pre>def coordinateProjectionWeights {n : ℕ} (k a : Fin n) : ℝ :=
+…</pre></li><li id=L71><b>lemma</b> <code>OAI.DukePrimeDegree.coordinateProjectionWeights_sum</code> <small>line 71</small></li><li id=L75><b>lemma</b> <code>OAI.DukePrimeDegree.diagonalCommutatorVelocity_coordinate</code> <small>line 75</small></li><li id=L100><b>theorem</b> <code>OAI.DukePrimeDegree.projection_products_zero_of_maximal_roots</code> <small>line 100</small><div class="doc"><p>If every nonzero root found in L belongs to r, conjugated coordinate
+projections have no entries between different r-blocks.</p></div><pre>theorem projection_products_zero_of_maximal_roots {n : ℕ}
+    (L : Subgroup (G n)) (hclosed : IsClosed (L : Set (G n)))
+    (hnormal : ∀ (ell : Fin n → ℝ) (hsum : ∑ a, ell a = 0) (t : ℝ),
+      ∀ g ∈ L, diagonalOneParameter ell hsum t * g * diagonalOneParameter ell hsum (-t) ∈ L)
+    (r : Setoid (Fin n))
+    (hmax : ∀ (a b : Fin n) (hab : a ≠ b) (c : ℝ), c ≠ 0 →
+      Matrix.SpecialLinearGroup.transvection hab c ∈ L → r a b)
+    (g : L) (a b : Fin n) (hab : ¬ r a b) (k : Fin n) :
+    g.val.val a k * g.val⁻¹.val k b = 0 := by
+…</pre></li><li id=L131><b>theorem</b> <code>OAI.DukePrimeDegree.blockIntersection_isOpen_of_maximal_roots</code> <small>line 131</small><div class="doc"><p>Root maximality makes the block-preserving subgroup open in the
+actual homogeneous orbit group L, including when L is disconnected.</p></div><pre>theorem blockIntersection_isOpen_of_maximal_roots {n : ℕ}
+    (L : Subgroup (G n)) (hclosed : IsClosed (L : Set (G n)))
+    (hnormal : ∀ (ell : Fin n → ℝ) (hsum : ∑ a, ell a = 0) (t : ℝ),
+      ∀ g ∈ L, diagonalOneParameter ell hsum t * g * diagonalOneParameter ell hsum (-t) ∈ L)
+    (r : Setoid (Fin n))
+    (hmax : ∀ (a b : Fin n) (hab : a ≠ b) (c : ℝ), c ≠ 0 →
+      Matrix.SpecialLinearGroup.transvection hab c ∈ L → r a b) :
+    IsOpen (((blockMatrixGroup r).comap L.subtype : Subgroup L) : Set L) :=
+…</pre><p class="refs">Mentions: <a href="../Dynamics/BlockOrbit.lean.html#L25">OAI.DukePrimeDegree.blockMatrixGroup</a></p></li><li id=L145><b>theorem</b> <code>OAI.DukePrimeDegree.connected_subgroup_le_blocks_of_maximal_roots</code> <small>line 145</small><div class="doc"><p>A connected, closed subgroup normalized by the split diagonal group
+preserves the partition given by its maximal root subgroups. This uses
+only the explicit commutator curves and connectedness.</p></div><pre>theorem connected_subgroup_le_blocks_of_maximal_roots {n : ℕ}
+    (L : Subgroup (G n)) [PreconnectedSpace L]
+    (hclosed : IsClosed (L : Set (G n)))
+    (hnormal : ∀ (ell : Fin n → ℝ) (hsum : ∑ a, ell a = 0) (t : ℝ),
+      ∀ g ∈ L, diagonalOneParameter ell hsum t * g * diagonalOneParameter ell hsum (-t) ∈ L)
+    (r : Setoid (Fin n))
+    (hmax : ∀ (a b : Fin n) (hab : a ≠ b) (c : ℝ), c ≠ 0 →
+      Matrix.SpecialLinearGroup.transvection hab c ∈ L → r a b) :
+    L ≤ blockMatrixGroup r :=
+…</pre><p class="refs">Mentions: <a href="../Dynamics/BlockOrbit.lean.html#L25">OAI.DukePrimeDegree.blockMatrixGroup</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("gc", [["Erdos535.NoConstantPairwiseGcdCoprimeSubsets",611,42],["Kurepa.kurepa_conjecture.gcd_reduction",1088,103],["Kurepa.kurepa_conjecture.variants.gcd",1088,96],["Kurepa.kurepa_conjecture.variants.gcd.first_cases",1088,141]]);

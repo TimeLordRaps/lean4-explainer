@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/BadPredecessorCount.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/BadPredecessorCount.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>BadPredecessorCount.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>BadPredecessorCount.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/BadPredecessorCount.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Problem337.indexed_predecessor_count</code> <small>line 11</small><div class="doc"><p>An indexed bipartite degree count. Repeated values of the maps retain
+separate indices in <code>I</code>, exactly as required by the divisor descent.</p></div><pre>theorem indexed_predecessor_count
+    {α β ι : Type*} [DecidableEq α] [DecidableEq β] [DecidableEq ι]
+    (U : Finset α) (H : Finset β) (I : Finset ι)
+    (r : ι → α → β) (w : ι → β → ℝ) (L : ℝ) (hL : 0 &lt; L)
+    (hleft : ∀ u ∈ U, L ≤ ((I.filter (fun i =&gt; r i u ∈ H)).card : ℝ))
+    (hright : ∀ i ∈ I, ∀ h ∈ H,
+      ((U.filter (fun u =&gt; r i u = h)).card : ℝ) ≤ w i h) :
+    (U.card : ℝ) ≤ (∑ i ∈ I, ∑ h ∈ H, w i h) / L := by
+…</pre></li><li id=L39><b>theorem</b> <code>OAI.Problem337.indexed_predecessor_count_with_exceptions</code> <small>line 39</small><div class="doc"><p>The degree count with an inherited set and an exceptional set removed.</p></div><pre>theorem indexed_predecessor_count_with_exceptions
+    {α β ι : Type*} [DecidableEq α] [DecidableEq β] [DecidableEq ι]
+    (S E B U : Finset α) (H : Finset β) (I : Finset ι)
+    (r : ι → α → β) (w : ι → β → ℝ) (L : ℝ) (hL : 0 &lt; L)
+    (hcover : S ⊆ E ∪ B ∪ U)
+    (hleft : ∀ u ∈ U, L ≤ ((I.filter (fun i =&gt; r i u ∈ H)).card : ℝ))
+    (hright : ∀ i ∈ I, ∀ h ∈ H,
+      ((U.filter (fun u =&gt; r i u = h)).card : ℝ) ≤ w i h) :
+    (S.card : ℝ) ≤ (E.card : ℝ) + (B.card : ℝ) +
+      (∑ i ∈ I, ∑ h ∈ H, w i h) / L := by
+…</pre></li><li id=L62><b>theorem</b> <code>OAI.Problem337.descent_bad_predecessor_count</code> <small>line 62</small><div class="doc"><p>The exact finite combinatorial inequality used to propagate bad numerators.
+<code>H</code> is the current bad set, <code>Hnext</code> the next bad set, and <code>E</code> the Fourier
+exception set. Fibers may be bounded by truncated divisor counts.</p></div><pre>theorem descent_bad_predecessor_count
+    {ι : Type*} [DecidableEq ι]
+    (H Hnext E : Finset ℕ) (I : Finset ι) (Y : ℝ) (ρ : ℝ)
+    (r : ι → ℕ → ℕ) (w : ι → ℕ → ℝ)
+    (hρ : 0 &lt; ρ) (hI : I.Nonempty)
+    (hinherit : ∀ u ∈ H, (u : ℝ) ≤ Y → u ∈ Hnext)
+    (hleft : ∀ u ∈ H, u ∉ E → Y &lt; (u : ℝ) →
+      ρ * (I.card : ℝ) / 2 ≤ ((I.filter (fun i =&gt; r i u ∈ Hnext)).card : ℝ))
+    (hright : ∀ i ∈ I, ∀ h ∈ Hnext,
+      ((H.filter (fun u =&gt; r i u = h)).card : ℝ) ≤ w i h) :
+    (H.card : ℝ) ≤ (E.card : ℝ) + (Hnext.card : ℝ) +
+      (2 / (ρ * (I.card : ℝ))) * (∑ i ∈ I, ∑ h ∈ Hnext, w i h) := by
+…</pre></li><li id=L104><b>theorem</b> <code>OAI.Problem337.predecessor_fiber_le_divisors</code> <small>line 104</small><div class="doc"><p>A fiber of a residue map consists of divisors of the shifted numerator.</p></div><pre>theorem predecessor_fiber_le_divisors
+    (H : Finset ℕ) (X : ℝ) (N h : ℕ) (r : ℕ → ℕ)
+    (hN : 0 &lt; N) (hX : ∀ u ∈ H, (u : ℝ) ≤ X)
+    (hdiv : ∀ u ∈ H, u ∣ N + r u) :
+    (H.filter (fun u =&gt; r u = h)).card ≤
+      ((N + h).divisors.filter (fun u : ℕ =&gt; (u : ℝ) ≤ X)).card := by
+…</pre></li><li id=L122><b>theorem</b> <code>OAI.Problem337.descent_bad_predecessor_divisor_count</code> <small>line 122</small><div class="doc"><p>The manuscript's bad-pair inequality, with actual truncated divisor counts.</p></div><pre>theorem descent_bad_predecessor_divisor_count
+    {ι : Type*} [DecidableEq ι]
+    (H Hnext E : Finset ℕ) (I : Finset ι) (X Y ρ : ℝ)
+    (r : ι → ℕ → ℕ) (N : ι → ℕ)
+    (hρ : 0 &lt; ρ) (hI : I.Nonempty)
+    (hX : ∀ u ∈ H, (u : ℝ) ≤ X)
+    (hN : ∀ i ∈ I, 0 &lt; N i)
+    (hdiv : ∀ i ∈ I, ∀ u ∈ H, u ∣ N i + r i u)
+    (hinherit : ∀ u ∈ H, (u : ℝ) ≤ Y → u ∈ Hnext)
+    (hleft : ∀ u ∈ H, u ∉ E → Y &lt; (u : ℝ) →
+      ρ * (I.card : ℝ) / 2 ≤ ((I.filter (fun i =&gt; r i u ∈ Hnext)).card : ℝ)) :
+    (H.card : ℝ) ≤ (E.card : ℝ) + (Hnext.card : ℝ) +
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

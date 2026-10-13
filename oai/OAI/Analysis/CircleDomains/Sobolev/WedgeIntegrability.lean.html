@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Sobolev/WedgeIntegrability.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Sobolev/WedgeIntegrability.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Sobolev</a> / <span>WedgeIntegrability.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Sobolev</a>/<span>WedgeIntegrability.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Sobolev/WedgeIntegrability.lean#L1">source</a></p><div class="doc"><h3>Joint integrability of the actual random wedge</h3><p>Tonelli and the pointwise expected-wedge bound prove joint integrability.
+Thus applying Fubini to the random staircase construction needs only
+measurable input fields and the original integrable wedge majorant.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.integrable_abs_planarWedge_of_memLp</code> <small>line 21</small><div class="doc"><p>Finite squared norms of the original planar covectors make their
+absolute wedge product integrable by Hölder's inequality.</p></div><pre>theorem integrable_abs_planarWedge_of_memLp
+    {X : Type*} [MeasurableSpace X] {μ : Measure X} {u v : X → ℝ × ℝ}
+    (hu : MemLp u 2 μ) (hv : MemLp v 2 μ) :
+    Integrable (fun z =&gt; |planarWedge (u z) (v z)|) μ := by
+…</pre><p class="refs">Mentions: <a href="../Selection/WedgeEstimate.lean.html#L15">OAI.CircleDomainRigidity.FiniteTransfer.planarWedge</a></p></li><li id=L33><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.integrable_nonnegative_prod_of_inner_bound</code> <small>line 33</small></li><li id=L56><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.integrable_shiftLaw_pair_of_continuous</code> <small>line 56</small><div class="doc"><p>Every continuous two-shift integrand is integrable for the actual
+compactly supported product shift law.</p></div><pre>theorem integrable_shiftLaw_pair_of_continuous {h : ℝ} (hh : 0 &lt; h)
+    {f : ℝ × ℝ → ℝ} (hf : Continuous f) :
+    Integrable f ((shiftLaw h).prod (shiftLaw h)) := by
+…</pre><p class="refs">Mentions: <a href="../Probability/RandomShifts.lean.html#L22">OAI.CircleDomainRigidity.FiniteTransfer.shiftLaw</a></p></li><li id=L65><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.measurable_staircaseCovector</code> <small>line 65</small></li><li id=L82><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.integrable_staircase_pair_density</code> <small>line 82</small><div class="doc"><p>Joint integrability follows from the original wedge and cutoff
+terms; it is not assumed before interchanging the spatial and shift
+integrals.</p></div><pre>theorem integrable_staircase_pair_density
+    {X : Type*} [MeasurableSpace X] {μ : Measure X} [SFinite μ]
+    (u v c : X → ℝ × ℝ) (x y χ : X → ℝ)
+    (hu : Measurable u) (hv : Measurable v) (hc : Measurable c)
+    (hx : Measurable x) (hy : Measurable y) (hχ : Measurable χ)
+    {h δ : ℝ} (hh : 0 &lt; h) (hδ : 0 &lt; δ) (hδh : δ &lt; h / 4)
+    (hχ0 : ∀ z, 0 ≤ χ z) (hχ1 : ∀ z, χ z ≤ 1)
+    (hbound : Integrable (fun z =&gt; |planarWedge (u z) (v z)| +
+      h * (|planarWedge (u z) (c z)| + |planarWedge (c z) (v z)|)) μ) :
+    Integrable (fun p : (ℝ × ℝ) × X =&gt; |planarWedge
+      (staircaseCovector h δ (χ p.2) p.1.1 (x p.2) (u p.2) (c p.2))
+      (staircaseCovector h δ (χ p.2) p.1.2 (y p.2) (v p.2) (c p.2))|)
+…</pre><p class="refs">Mentions: <a href="../Selection/WedgeEstimate.lean.html#L15">OAI.CircleDomainRigidity.FiniteTransfer.planarWedge</a>, <a href="../Selection/ExpectedWedges.lean.html#L17">OAI.CircleDomainRigidity.FiniteTransfer.staircaseCovector</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

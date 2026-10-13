@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Characters/PolynomialCellVariation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Characters/PolynomialCellVariation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Characters</a> / <span>PolynomialCellVariation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Characters</a>/<span>PolynomialCellVariation.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Characters/PolynomialCellVariation.lean#L1">source</a></p><div class="doc"><h3>Actual interval pieces and smooth polynomial weights</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Ostmann.exists_rootCell_partition</code> <small>line 15</small><div class="doc"><p>Root comparisons give an exact interval decomposition of any increasing
+integer sampling grid. Equality endpoints retain their own code.</p></div><pre>theorem exists_rootCell_partition (S : Finset ℝ) (N : ℕ) (u : ℕ → ℝ)
+    (hu : Monotone u) :
+    ∃ (a K : (S → Ordering) → ℕ) (e : Fin N ≃ Σ i, Fin (K i)),
+      (∀ i (j : Fin (K i)), (e.symm ⟨i, j⟩).val = a i + j.val) ∧
+      (∀ i (j : Fin (K i)), rootCellCode S (u (a i + j.val)) = i) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialRootCells.lean.html#L21">OAI.Ostmann.rootCellCode</a></p></li><li id=L26><b>theorem</b> <code>OAI.Ostmann.discreteVariation_polynomial_cell</code> <small>line 26</small><div class="doc"><p>Including derivative roots among the cuts proves the required variation
+bound for a compactly supported smooth factor evaluated on the polynomial.</p></div><pre>theorem discreteVariation_polynomial_cell (P : Polynomial ℝ) (S : Finset ℝ)
+    (hroots : ∀ r ∈ P.derivative.roots, r ∈ S)
+    (u : ℕ → ℝ) (hu : Monotone u) (N : ℕ)
+    (hcode : rootCellCode S (u 0) = rootCellCode S (u (N - 1)))
+    (Φ : ℝ → ℂ) (lo hi B D : ℝ) (hlohi : lo ≤ hi) (hD : 0 ≤ D)
+    (hbound : ∀ x, ‖Φ x‖ ≤ B)
+    (hlip : ∀ x y, ‖Φ x - Φ y‖ ≤ D * |x - y|)
+    (hlo : Φ lo = 0) (hhi : Φ hi = 0)
+    (hout : ∀ x, x &lt; lo ∨ hi &lt; x → Φ x = 0) :
+    discreteVariation (fun j =&gt; Φ (P.eval (u j))) N ≤ B + D * (hi - lo) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialRootCells.lean.html#L21">OAI.Ostmann.rootCellCode</a>, <a href="WeightedPhaseExtraction.lean.html#L12">OAI.Ostmann.discreteVariation</a></p></li><li id=L49><b>theorem</b> <code>OAI.Ostmann.discreteVariation_polynomial_product_cell</code> <small>line 49</small><div class="doc"><p>The same explicit root set works simultaneously for all smooth factors.</p></div><pre>theorem discreteVariation_polynomial_product_cell (n : ℕ) (P : Fin n → Polynomial ℝ)
+    (S : Finset ℝ) (hroots : ∀ i r, r ∈ (P i).derivative.roots → r ∈ S)
+    (u : ℕ → ℝ) (hu : Monotone u) (N : ℕ)
+    (hcode : rootCellCode S (u 0) = rootCellCode S (u (N - 1)))
+    (Φ : Fin n → ℝ → ℂ) (lo hi B D : Fin n → ℝ)
+    (hlohi : ∀ i, lo i ≤ hi i) (hB : ∀ i, 0 ≤ B i) (hD : ∀ i, 0 ≤ D i)
+    (hbound : ∀ i x, ‖Φ i x‖ ≤ B i)
+    (hlip : ∀ i x y, ‖Φ i x - Φ i y‖ ≤ D i * |x - y|)
+    (hlo : ∀ i, Φ i (lo i) = 0) (hhi : ∀ i, Φ i (hi i) = 0)
+    (hout : ∀ i x, x &lt; lo i ∨ hi i &lt; x → Φ i x = 0) :
+    discreteVariation (fun j =&gt; ∏ i, Φ i ((P i).eval (u j))) N ≤
+      ∏ i, (2 * B i + D i * (hi i - lo i)) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialRootCells.lean.html#L21">OAI.Ostmann.rootCellCode</a>, <a href="WeightedPhaseExtraction.lean.html#L12">OAI.Ostmann.discreteVariation</a></p></li><li id=L74><b>theorem</b> <code>OAI.Ostmann.polynomial_nonneg_iff_of_root_cell</code> <small>line 74</small><div class="doc"><p>On a root cell, polynomial inequality supports really are constant.</p></div><pre>theorem polynomial_nonneg_iff_of_root_cell (P : Polynomial ℝ) (S : Finset ℝ)
+    (hroots : ∀ r ∈ P.roots, r ∈ S) {x y : ℝ}
+    (hcode : rootCellCode S x = rootCellCode S y) :
+    0 ≤ P.eval x ↔ 0 ≤ P.eval y := by
+…</pre><p class="refs">Mentions: <a href="PolynomialRootCells.lean.html#L21">OAI.Ostmann.rootCellCode</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

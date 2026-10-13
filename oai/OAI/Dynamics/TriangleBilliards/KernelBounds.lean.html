@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/TriangleBilliards/KernelBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/TriangleBilliards/KernelBounds.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">TriangleBilliards</a> / <span>KernelBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">TriangleBilliards</a>/<span>KernelBounds.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/TriangleBilliards/KernelBounds.lean#L1">source</a></p><div class="doc"><p>The positive-kernel L² bound for chartwise smoothing, including
+the integral inequality and Tonelli.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.sqrt_sq</code> <small>line 24</small></li><li id=L29><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.lintegral_sq_le_mass</code> <small>line 29</small><div class="doc"><p>Cauchy–Schwarz against the constant one, including infinite measures.</p></div><pre>lemma lintegral_sq_le_mass {α : Type uAlpha} [MeasurableSpace α]
+    (μ : Measure α) {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) :
+    (∫⁻ x, f x ∂μ) ^ (2 : ℕ) ≤ (∫⁻ x, f x ^ (2 : ℕ) ∂μ) * μ univ := by
+…</pre></li><li id=L46><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.lintegral_kernel_sq</code> <small>line 46</small><div class="doc"><p>Weighted Cauchy–Schwarz in a form that does not need integrability
+assumptions: any infinite expressions remain in ℝ≥0∞.</p></div><pre>lemma lintegral_kernel_sq {α : Type uAlpha} [MeasurableSpace α]
+    (μ : Measure α) {k f : α → ℝ≥0∞} (hk : AEMeasurable k μ)
+    (hf : AEMeasurable f μ) :
+    (∫⁻ x, k x * f x ∂μ) ^ (2 : ℕ) ≤
+      (∫⁻ x, k x ∂μ) * (∫⁻ x, k x * f x ^ (2 : ℕ) ∂μ) := by
+…</pre></li><li id=L60><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.kernel_schur_sq</code> <small>line 60</small><div class="doc"><p>Schur's L² bound. Bounds for the absolute kernel integral in each
+variable control the squared L² seminorm of its positive majorant.</p></div><pre>lemma kernel_schur_sq {α : Type uAlpha} {β : Type uBeta} [MeasurableSpace α] [MeasurableSpace β]
+    (μ : Measure α) (ν : Measure β) [SFinite μ] [SFinite ν]
+    {K : α → β → ℝ≥0∞} (hK : Measurable (Function.uncurry K))
+    {f : β → ℝ≥0∞} (hf : Measurable f) {A B : ℝ≥0∞}
+    (hrow : ∀ x, ∫⁻ y, K x y ∂ν ≤ A)
+    (hcol : ∀ y, ∫⁻ x, K x y ∂μ ≤ B) :
+    ∫⁻ x, (∫⁻ y, K x y * f y ∂ν) ^ (2 : ℕ) ∂μ ≤
+      A * B * ∫⁻ y, f y ^ (2 : ℕ) ∂ν := by
+…</pre></li><li id=L94><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.kernel_integral_schur_sq</code> <small>line 94</small><div class="doc"><p>The Schur bound for a vector-valued integral with a scalar kernel
+majorant. It also covers norm-preserving parallel transports between fibers.</p></div><pre>lemma kernel_integral_schur_sq {α : Type uAlpha} {β : Type uBeta} {E : Type uE}
+    [MeasurableSpace α] [MeasurableSpace β]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (μ : Measure α) (ν : Measure β) [SFinite μ] [SFinite ν]
+    {K : α → β → ℝ≥0∞} (hK : Measurable (Function.uncurry K))
+    {f : β → ℝ≥0∞} (hf : Measurable f) {A B : ℝ≥0∞}
+    (hrow : ∀ x, ∫⁻ y, K x y ∂ν ≤ A)
+    (hcol : ∀ y, ∫⁻ x, K x y ∂μ ≤ B)
+    {F : α → β → E} (hF : ∀ x y, ‖F x y‖ₑ ≤ K x y * f y) :
+    ∫⁻ x, ‖∫ y, F x y ∂ν‖ₑ ^ (2 : ℕ) ∂μ ≤
+      A * B * ∫⁻ y, f y ^ (2 : ℕ) ∂ν := by
+…</pre></li><li id=L115><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.fiber_kernel_integral_schur_sq</code> <small>line 115</small><div class="doc"><p>Fiberwise Schur with the genuine product measure. The kernel acts
+only on the spatial variable, while the additional fiber variable is kept
+parallel. A measure-preserving fiber substitution can subsequently be used
+for unfolded reflected terms.</p></div><pre>lemma fiber_kernel_integral_schur_sq {α : Type uAlpha} {β : Type uBeta} {γ : Type uGamma} {E : Type uE}
+    [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (μ : Measure α) (ν : Measure β) (σ : Measure γ)
+    [SFinite μ] [SFinite ν] [SFinite σ]
+    {K : α → β → ℝ≥0∞} (hK : Measurable (Function.uncurry K))
+    {f : β × γ → ℝ≥0∞} (hf : Measurable f) {A B : ℝ≥0∞}
+    (hrow : ∀ x, ∫⁻ y, K x y ∂ν ≤ A)
+    (hcol : ∀ y, ∫⁻ x, K x y ∂μ ≤ B)
+    {F : (α × γ) → β → E} (hFm : StronglyMeasurable (Function.uncurry F))
+    (hF : ∀ x c y, ‖F (x, c) y‖ₑ ≤ K x y * f (y, c)) :
+    ∫⁻ p, ‖∫ y, F p y ∂ν‖ₑ ^ (2 : ℕ) ∂μ.prod σ ≤
+…</pre></li><li id=L143><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.memLp_kernel_integral</code> <small>line 143</small><div class="doc"><p>In particular, genuine strongly measurable kernel integrals map L²
+to L² whenever both Schur constants are finite.</p></div><pre>lemma memLp_kernel_integral {α : Type uAlpha} {β : Type uBeta} {E : Type uE} {G : Type uG}
+    [MeasurableSpace α] [MeasurableSpace β]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup G]
+    (μ : Measure α) (ν : Measure β) [SFinite μ] [SFinite ν]
+    {K : α → β → ℝ≥0∞} (hK : Measurable (Function.uncurry K))
+    {f : β → G} (hf : StronglyMeasurable f) (hf₂ : MemLp f 2 ν)
+    {A B : ℝ≥0∞} (hA : A ≠ ⊤) (hB : B ≠ ⊤)
+    (hrow : ∀ x, ∫⁻ y, K x y ∂ν ≤ A)
+    (hcol : ∀ y, ∫⁻ x, K x y ∂μ ≤ B)
+    {F : α → β → E} (hFm : StronglyMeasurable (Function.uncurry F))
+    (hF : ∀ x y, ‖F x y‖ₑ ≤ K x y * ‖f y‖ₑ) :
+…</pre></li><li id=L169><b>lemma</b> <code>OAI.TriangularBilliards.Analytic.integrable_kernel_ae</code> <small>line 169</small><div class="doc"><p>The row integrals used above genuinely exist almost everywhere;
+the preceding L² estimate is not exploiting the default value of an
+undefined Bochner integral.</p></div><pre>lemma integrable_kernel_ae {α : Type uAlpha} {β : Type uBeta} {E : Type uE} {G : Type uG}
+    [MeasurableSpace α] [MeasurableSpace β]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup G]
+    (μ : Measure α) (ν : Measure β) [SFinite μ] [SFinite ν]
+    {K : α → β → ℝ≥0∞} (hK : Measurable (Function.uncurry K))
+    {f : β → G} (hf : StronglyMeasurable f) (hf₂ : MemLp f 2 ν)
+    {A B : ℝ≥0∞} (hA : A ≠ ⊤) (hB : B ≠ ⊤)
+    (hrow : ∀ x, ∫⁻ y, K x y ∂ν ≤ A)
+    (hcol : ∀ y, ∫⁻ x, K x y ∂μ ≤ B)
+    {F : α → β → E} (hFm : StronglyMeasurable (Function.uncurry F))
+    (hF : ∀ x y, ‖F x y‖ₑ ≤ K x y * ‖f y‖ₑ) :
+    ∀ᵐ x ∂μ, Integrable (F x) ν := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

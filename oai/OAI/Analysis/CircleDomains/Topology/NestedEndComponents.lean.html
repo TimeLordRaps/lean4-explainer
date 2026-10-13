@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Topology/NestedEndComponents.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Topology/NestedEndComponents.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Topology</a> / <span>NestedEndComponents.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Topology</a>/<span>NestedEndComponents.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Topology/NestedEndComponents.lean#L1">source</a></p><div class="doc"><h3>Nested target collars and complementary components</h3><p>The end-component argument uses compactness twice: a nested sequence of
+continua has connected intersection, and a connected subset of a finite
+disjoint closed cover stays in the piece containing its initial point.
+These are proved here for the actual target sphere. No uniformization or
+boundary-extension statement is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.CircleDomainRigidity.nested_sphere_sets_eventually_subset</code> <small>line 22</small></li><li id=L30><b>theorem</b> <code>OAI.CircleDomainRigidity.isConnected_nested_sphere_intersection</code> <small>line 30</small></li><li id=L52><b>theorem</b> <code>OAI.CircleDomainRigidity.connectedComponentIn_subset_finite_closed_piece</code> <small>line 52</small><div class="doc"><p>A component of a subset of a finite disjoint closed union stays in
+the unique piece that contains the chosen point. The pieces need not
+themselves be connected.</p></div><pre>theorem connectedComponentIn_subset_finite_closed_piece
+    {I : Type*} [Finite I] {E : Set Sphere}
+    (C : I → Set Sphere) (hC : ∀ i, IsClosed (C i))
+    (hdisj : Pairwise (Disjoint on C)) (hcover : E ⊆ ⋃ i, C i)
+    {i : I} {p : Sphere} (hp : p ∈ E) (hpi : p ∈ C i) :
+    connectedComponentIn E p ⊆ C i := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L81><b>theorem</b> <code>OAI.CircleDomainRigidity.connectedComponentIn_eq_nested_end</code> <small>line 81</small><div class="doc"><p>The nested target disks for an end form exactly one complementary
+component once the finite image cores give the closed covers.</p></div><pre>theorem connectedComponentIn_eq_nested_end
+    {I : ℕ → Type*} [∀ n, Finite (I n)] {E : Set Sphere}
+    (C : (n : ℕ) → I n → Set Sphere) (b : (n : ℕ) → I n)
+    (hclosed : ∀ n i, IsClosed (C n i))
+    (hconn : ∀ n, IsConnected (C n (b n)))
+    (hdisj : ∀ n, Pairwise (Disjoint on C n))
+    (hcover : ∀ n, E ⊆ ⋃ i, C n i)
+    (hnest : Antitone (fun n =&gt; C n (b n)))
+    (hmiss : (⋂ n, C n (b n)) ⊆ E)
+    {p : Sphere} (hp : p ∈ ⋂ n, C n (b n)) :
+    connectedComponentIn E p = ⋂ n, C n (b n) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L101><b>theorem</b> <code>OAI.CircleDomainRigidity.nested_end_subset_interior</code> <small>line 101</small><div class="doc"><p>Strict nesting traps the limiting end inside every earlier collar.</p></div><pre>theorem nested_end_subset_interior
+    {C : ℕ → Set Sphere} (hstrict : ∀ n, C (n + 1) ⊆ interior (C n)) (n : ℕ) :
+    (⋂ k, C k) ⊆ interior (C n) :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

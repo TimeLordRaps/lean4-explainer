@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/Collision.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/Collision.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>Collision.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>Collision.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/Collision.lean#L1">source</a></p><div class="doc"><h3>Fixed-curve holomorphic collision bounds</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Nagata.W20.order_collision_of_holomorphic_factorization</code> <small>line 20</small><div class="doc"><p>A quantitative holomorphic collision theorem. The total vanishing order
+is k times the number of centers, with no convergence assumption on quotients.</p></div><pre>theorem order_collision_of_holomorphic_factorization {ι : Type*} [Fintype ι]
+    (ξ : ℕ → ι → ℂ) (k : ℕ) (H G : ℕ → ℂ → ℂ) (f : ℂ → ℂ)
+    {r M : ℝ} (hr : 0 &lt; r)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξbound : ∀ᶠ n in atTop, ∀ i, ‖ξ n i‖ ≤ r / 2)
+    (hf : DifferentiableOn ℂ f (ball 0 r))
+    (hlim : ∀ z ∈ ball (0 : ℂ) r, Tendsto (fun n =&gt; H n z) atTop (𝓝 (f z)))
+    (hG : ∀ n, DiffContOnCl ℂ (G n) (ball 0 r))
+    (hfactor : ∀ n, ∀ z ∈ closedBall (0 : ℂ) r,
+      H n z = (∏ i, (z - ξ n i) ^ k) * G n z)
+    (hupper : ∀ᶠ n in atTop, ∀ z ∈ sphere (0 : ℂ) r, ‖H n z‖ ≤ M) :
+    (↑(k * Fintype.card ι) : ℕ∞) ≤ analyticOrderAt f 0 := by
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.Nagata.W20.collision_of_locally_uniform_limit_and_factorizations</code> <small>line 54</small><div class="doc"><p>Collision on an actual open complex domain. Locally uniform convergence
+supplies holomorphicity of the limit and the required uniform boundary bound;
+only the genuine holomorphic factorizations remain as explicit inputs.</p></div><pre>theorem collision_of_locally_uniform_limit_and_factorizations
+    {ι : Type*} [Fintype ι] {U : Set ℂ} (hU : IsOpen U)
+    (ξ : ℕ → ι → ℂ) (k : ℕ) (H G : ℕ → ℂ → ℂ) (f : ℂ → ℂ)
+    {r : ℝ} (hr : 0 &lt; r) (hsub : closedBall (0 : ℂ) r ⊆ U)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hH : ∀ n, DifferentiableOn ℂ (H n) U)
+    (hlim : TendstoLocallyUniformlyOn H f atTop U)
+    (hG : ∀ n, DifferentiableOn ℂ (G n) U)
+    (hfactor : ∀ n, ∀ z ∈ U, H n z = (∏ i, (z - ξ n i) ^ k) * G n z) :
+    (↑(k * Fintype.card ι) : ℕ∞) ≤ analyticOrderAt f 0 := by
+…</pre></li><li id=L99><b>theorem</b> <code>OAI.Nagata.W20.holomorphic_collision_order</code> <small>line 99</small><div class="doc"><p>Colliding q distinct zeros of order at least k produces a zero of order
+at least q*k in the locally uniform holomorphic limit.</p></div><pre>theorem holomorphic_collision_order {q : ℕ} {U : Set ℂ}
+    (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (ξ : ℕ → Fin q → ℂ) (k : ℕ) (H : ℕ → ℂ → ℂ) (f : ℂ → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (hH : ∀ n, DifferentiableOn ℂ (H n) U)
+    (hlim : TendstoLocallyUniformlyOn H f atTop U)
+    (horder : ∀ n i, (k : ℕ∞) ≤ analyticOrderAt (H n) (ξ n i)) :
+    (↑(q * k) : ℕ∞) ≤ analyticOrderAt f 0 := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.Nagata.W20.holomorphic_collision_jets</code> <small>line 124</small><div class="doc"><p>Derivative form of the collision theorem, matching the row conditions
+of the manuscript's fixed-surface jet map.</p></div><pre>theorem holomorphic_collision_jets {q : ℕ} {U : Set ℂ}
+    (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (ξ : ℕ → Fin q → ℂ) (k : ℕ) (H : ℕ → ℂ → ℂ) (f : ℂ → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (hH : ∀ n, DifferentiableOn ℂ (H n) U)
+    (hlim : TendstoLocallyUniformlyOn H f atTop U)
+    (horder : ∀ n i, (k : ℕ∞) ≤ analyticOrderAt (H n) (ξ n i)) :
+    ∀ ℓ &lt; q * k, iteratedDeriv ℓ f 0 = 0 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

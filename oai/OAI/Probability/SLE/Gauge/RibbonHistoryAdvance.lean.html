@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/RibbonHistoryAdvance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/RibbonHistoryAdvance.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>RibbonHistoryAdvance.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>RibbonHistoryAdvance.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/RibbonHistoryAdvance.lean#L1">source</a></p><div class="doc"><p>An actual successful passage gives another admissible stopped ribbon
+history. Inverse coordinates are used only on the compact physical patch
+where the successful path is contained.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.SLEExactGauge.strict_before_attained_front</code> <small>line 16</small></li><li id=L32><b>def</b> <code>OAI.SLEExactGauge.RibbonHistory.futureCoordinates</code> <small>line 32</small></li><li id=L36><b>def</b> <code>OAI.SLEExactGauge.RibbonHistory.advanceCoordinates</code> <small>line 36</small></li><li id=L40><b>def</b> <code>OAI.SLEExactGauge.RibbonHistory.futureTrace</code> <small>line 40</small></li><li id=L45><b>lemma</b> <code>OAI.SLEExactGauge.RibbonHistory.tip_in_stepCompact</code> <small>line 45</small></li><li id=L55><b>lemma</b> <code>OAI.SLEExactGauge.RibbonHistory.futureCoordinates_zero</code> <small>line 55</small></li><li id=L68><b>theorem</b> <code>OAI.SLEExactGauge.RibbonHistory.successful_continuation</code> <small>line 68</small><div class="doc"><p>The completed actual trace retains continuous ribbon coordinates,
+the narrow core, and the strict first-front property required for the
+next application of the uniform step theorem.</p></div><pre>theorem RibbonHistory.successful_continuation
+    {C L : ℝ≥0} {ε : ℝ} (d : RibbonHistory C L ε)
+    (hε : ε ≤ 1 / 8) (hL : 0 &lt; L)
+    (S : ℝ≥0)
+    (hfirst : firstFrontTime
+      (fun t =&gt; longitudinalCoordinate d.chart closedRibbon d.front
+        (d.trace (d.time + t))) 1 = (S : WithTop ℝ≥0))
+    (hhit : longitudinalCoordinate d.chart closedRibbon d.front
+      (d.trace (d.time + S)) = 1)
+    (hS : 0 &lt; S)
+    (hpath : MapsTo (fun t =&gt; d.trace (d.time + t)) (Icc 0 S)
+      (physicalPassageRegion d.stepChart ribbonStepCompact C ε (ε / L)))
+…</pre><p class="refs">Mentions: <a href="UniformActualRibbonPassage.lean.html#L20">OAI.SLEExactGauge.RibbonHistory</a></p></li><li id=L210><b>theorem</b> <code>OAI.SLEExactGauge.RibbonHistory.next_history_of_stepEvent</code> <small>line 210</small><div class="doc"><p>A successful full step produces the actual history at the next
+integer front, with the same driver, trace, and Loewner maps. The only
+new geometric data are the deterministic bounds on the next patch.</p></div><pre>theorem RibbonHistory.next_history_of_stepEvent
+    {C L : ℝ≥0} {ε : ℝ} (d : RibbonHistory C L ε)
+    (hε : ε ≤ 1 / 8) (hL : 0 &lt; L) (κ v c : ℝ)
+    (hstep : d.futureTrace ∈ d.stepEvent κ v c)
+    (hupper : LipschitzOnWith C d.chart (ribbonStepPatch (d.front + 1)))
+    (hlower : ∀ u ∈ ribbonStepPatch (d.front + 1),
+      ∀ v ∈ ribbonStepPatch (d.front + 1), dist u v ≤ L * dist (d.chart u) (d.chart v)) :
+    ∃ d&#x27; : RibbonHistory C L ε,
+      d&#x27;.front = d.front + 1 ∧
+      d&#x27;.time = d.time + frontTime
+        (fun t =&gt; longitudinalCoordinate d.chart closedRibbon d.front (d.futureTrace t)) 1 ∧
+      d&#x27;.chart = d.chart ∧ d&#x27;.U = d.U ∧ d&#x27;.trace = d.trace ∧
+…</pre><p class="refs">Mentions: <a href="UniformActualRibbonPassage.lean.html#L20">OAI.SLEExactGauge.RibbonHistory</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

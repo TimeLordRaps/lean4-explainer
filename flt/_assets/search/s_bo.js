@@ -1,0 +1,1 @@
+window.l4shard("bo", [["Algebra.UniformlyBoundedRank",18,45],["FLT.Bosses.B1",63,40],["FLT.Bosses.B2",63,43],["FLT.Bosses.B3",63,50],["FLT.Bosses.B3_implies_B2",63,80],["FLT.Bosses.B4",63,54],["FLT.Bosses.B4_implies_B3",63,83],["FLT.Bosses.B4_proof",63,98],["Module.UniformlyBoundedRank",101,46],["rootDiscrBound",195,110]]);

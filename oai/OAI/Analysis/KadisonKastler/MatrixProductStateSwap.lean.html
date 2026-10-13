@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/MatrixProductStateSwap.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/MatrixProductStateSwap.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>MatrixProductStateSwap.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>MatrixProductStateSwap.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/MatrixProductStateSwap.lean#L1">source</a></p><div class="doc"><h3>Product moments put finite block swaps in the state centralizer</h3><p>The finite calculation needs only the three-block product formula and
+equal moments on the two blocks being exchanged. Strong density then
+extends the resulting identities from local matrix algebras to their
+generated von Neumann algebra.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.KadisonKastler.unitary_conjugation_mul</code> <small>line 28</small></li><li id=L38><b>theorem</b> <code>OAI.KadisonKastler.matrix_functional_invariant_of_entries</code> <small>line 38</small><div class="doc"><p>Equality on the matrix-unit coefficients implies equality on the
+whole finite matrix algebra.</p></div><pre>theorem matrix_functional_invariant_of_entries
+    (E : MatrixUnitSystem ι A) (φ : A →ₗ[ℂ] ℂ) (u : unitary A)
+    (hφ : ∀ i j, φ ((u : A) * E.entry i j * star (u : A)) = φ (E.entry i j))
+    (x : A) (hx : x ∈ E.algebra) :
+    φ ((u : A) * x * star (u : A)) = φ x := by
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.KadisonKastler.finiteMatrixBlockSwap_product_invariant</code> <small>line 49</small><div class="doc"><p>Three-block product moments are invariant under swapping the two
+equal-state blocks, with an arbitrary finite complement left in place.</p></div><pre>theorem finiteMatrixBlockSwap_product_invariant
+    (E : MatrixUnitSystem (ι × ι) A) (C : MatrixUnitSystem κ A)
+    (hEC : ∀ i j k l, Commute (E.entry i j) (C.entry k l))
+    (φ : A →ₗ[ℂ] ℂ) (α : ι → ι → ℂ) (β : κ → κ → ℂ)
+    (hφ : ∀ i j k l r s,
+      φ (E.entry (i, j) (k, l) * C.entry r s) = α i k * α j l * β r s)
+    (x : A) (hx : x ∈ (E.product C hEC).algebra) :
+    φ ((finiteMatrixBlockSwap E : A) * x * star (finiteMatrixBlockSwap E : A)) = φ x := by
+…</pre><p class="refs">Mentions: <a href="MatrixBlockSwap.lean.html#L79">OAI.KadisonKastler.finiteMatrixBlockSwap</a></p></li><li id=L75><b>theorem</b> <code>OAI.KadisonKastler.finiteMatrixBlockSwap_product_centralizes</code> <small>line 75</small><div class="doc"><p>Product moments imply centralization on the finite joint algebra.</p></div><pre>theorem finiteMatrixBlockSwap_product_centralizes
+    (E : MatrixUnitSystem (ι × ι) A) (C : MatrixUnitSystem κ A)
+    (hEC : ∀ i j k l, Commute (E.entry i j) (C.entry k l))
+    (φ : A →ₗ[ℂ] ℂ) (α : ι → ι → ℂ) (β : κ → κ → ℂ)
+    (hφ : ∀ i j k l r s,
+      φ (E.entry (i, j) (k, l) * C.entry r s) = α i k * α j l * β r s)
+    (x : A) (hx : x ∈ (E.product C hEC).algebra) :
+    φ ((finiteMatrixBlockSwap E : A) * x) = φ (x * finiteMatrixBlockSwap E) := by
+…</pre><p class="refs">Mentions: <a href="MatrixBlockSwap.lean.html#L79">OAI.KadisonKastler.finiteMatrixBlockSwap</a></p></li><li id=L93><b>theorem</b> <code>OAI.KadisonKastler.finiteMatrixBlockSwap_conjugate_left_entry</code> <small>line 93</small><div class="doc"><p>In the product of two commuting copies, the block swap carries each
+left matrix unit to the corresponding right matrix unit.</p></div><pre>theorem finiteMatrixBlockSwap_conjugate_left_entry
+    (E F : MatrixUnitSystem ι A)
+    (hEF : ∀ i j k l, Commute (E.entry i j) (F.entry k l)) (i j : ι) :
+    (finiteMatrixBlockSwap (E.product F hEF) : A) * E.entry i j *
+      star (finiteMatrixBlockSwap (E.product F hEF) : A) = F.entry i j := by
+…</pre><p class="refs">Mentions: <a href="MatrixBlockSwap.lean.html#L79">OAI.KadisonKastler.finiteMatrixBlockSwap</a></p></li><li id=L102><b>theorem</b> <code>OAI.KadisonKastler.finiteMatrixBlockSwap_conjugate_left_hom</code> <small>line 102</small></li><li id=L113><b>theorem</b> <code>OAI.KadisonKastler.finiteMatrixBlockSwap_independent</code> <small>line 113</small><div class="doc"><p>Independence of the remote block on matrix units implies the desired
+factorization for every observable in the original finite block.</p></div><pre>theorem finiteMatrixBlockSwap_independent
+    (E F : MatrixUnitSystem ι A)
+    (hEF : ∀ i j k l, Commute (E.entry i j) (F.entry k l))
+    (φ : A →ₗ[ℂ] ℂ) (b : A)
+    (hfar : ∀ i j, φ (F.entry i j * b) = φ (E.entry i j) * φ b)
+    (a : A) (ha : a ∈ E.algebra) :
+    φ (((finiteMatrixBlockSwap (E.product F hEF) : A) * a *
+      star (finiteMatrixBlockSwap (E.product F hEF) : A)) * b) = φ a * φ b := by
+…</pre><p class="refs">Mentions: <a href="MatrixBlockSwap.lean.html#L79">OAI.KadisonKastler.finiteMatrixBlockSwap</a></p></li><li id=L135><b>def</b> <code>OAI.KadisonKastler.productVectorLinear</code> <small>line 135</small><div class="doc"><p>The linear vector functional used by the finite product calculation.</p></div><pre>def productVectorLinear (Ω : H) : (H →L[ℂ] H) →ₗ[ℂ] ℂ where
+…</pre></li><li id=L142><b>theorem</b> <code>OAI.KadisonKastler.productStateCentralizes_generated</code> <small>line 142</small><div class="doc"><p>Centralization on a dense star algebra extends to its actual
+bicommutant. This uses the proved unbounded strong-density theorem.</p></div><pre>theorem productStateCentralizes_generated
+    (S : StarSubalgebra ℂ (H →L[ℂ] H)) (Ω : H) (u : H →L[ℂ] H)
+    (hS : ∀ x ∈ S, productVectorState Ω (u * x) = productVectorState Ω (x * u)) :
+    ProductStateCentralizes (generatedVonNeumannAlgebra S) Ω u := by
+…</pre><p class="refs">Mentions: <a href="ProductStateCentralizer.lean.html#L20">OAI.KadisonKastler.productVectorState</a>, <a href="ProductStateCentralizer.lean.html#L31">OAI.KadisonKastler.ProductStateCentralizes</a>, <a href="PublishedKaplansky.lean.html#L41">OAI.KadisonKastler.generatedVonNeumannAlgebra</a></p></li><li id=L167><b>theorem</b> <code>OAI.KadisonKastler.productStateCentralizes_of_local</code> <small>line 167</small><div class="doc"><p>Stage-by-stage finite centralization supplies centralization on the
+von Neumann algebra generated by the increasing local algebras.</p></div><pre>theorem productStateCentralizes_of_local
+    (S : ℕ → StarSubalgebra ℂ (H →L[ℂ] H)) (hmono : Monotone S)
+    (Ω : H) (u : H →L[ℂ] H)
+    (hS : ∀ n x, x ∈ S n → productVectorState Ω (u * x) = productVectorState Ω (x * u)) :
+    ProductStateCentralizes (generatedVonNeumannAlgebra (⨆ n, S n)) Ω u := by
+…</pre><p class="refs">Mentions: <a href="ProductStateCentralizer.lean.html#L20">OAI.KadisonKastler.productVectorState</a>, <a href="ProductStateCentralizer.lean.html#L31">OAI.KadisonKastler.ProductStateCentralizes</a>, <a href="PublishedKaplansky.lean.html#L41">OAI.KadisonKastler.generatedVonNeumannAlgebra</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

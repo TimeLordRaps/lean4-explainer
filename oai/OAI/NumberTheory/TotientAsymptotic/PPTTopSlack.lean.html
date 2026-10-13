@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TotientAsymptotic/PPTTopSlack.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TotientAsymptotic/PPTTopSlack.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">TotientAsymptotic</a> / <span>PPTTopSlack.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">TotientAsymptotic</a>/<span>PPTTopSlack.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TotientAsymptotic/PPTTopSlack.lean#L1">source</a></p><div class="doc"><p>The comparison exponent for the original large head.  Here the remaining
+surviving coordinates come from the entire geometric tail, so the top
+simplex budget replaces the row at a later prime.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_top_embedding_index</code> <small>line 16</small></li><li id=L32><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_sum_shifted_fin_indices</code> <small>line 32</small></li><li id=L52><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_surviving_top_sum_le</code> <small>line 52</small><div class="doc"><p>Deletion of arbitrary ordered tail coordinates does not increase the
+top simplex sum, including when no tail coordinate survives.</p></div><pre>lemma ppt_surviving_top_sum_le {k n : ℕ} (ι : Fin k ↪o Fin n)
+    (v : Fin n → ℝ) (hv : ∀ j, 0 ≤ v j) :
+    (∑ r : Fin k, a (r.val+1)*v (ι r)) ≤
+      ∑ j : Fin n, a (j.val+1)*v j := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L23">OAI.TotientAsymptotic.a</a></p></li><li id=L72><b>lemma</b> <code>OAI.TotientAsymptotic.ppt_gridded_surviving_top</code> <small>line 72</small></li><li id=L104><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_relaxed_surviving_top_slack</code> <small>line 104</small><div class="doc"><p>The large-head branch uses the original top budget, with the exact
+same inverse-cube loss after the head normalization error.</p></div><pre>theorem ppt_relaxed_surviving_top_slack {m n k : ℕ} {budget c T headError e : ℝ}
+    {v : Fin n → ℝ} (hv : v ∈ relaxedGeometricFamily m n budget c)
+    (ι : Fin k ↪o Fin n) (ν : ℕ → ℝ)
+    (hT : 0 &lt; T) (hhead : budget ≤ T+headError)
+    (herr : 4*headError ≤ (rowContractionError m/2)*T)
+    (hgrid : ∀ r : Fin k, ν (r.val+1) ≤ v (ι r)/T+e) :
+    (∑ r ∈ Finset.Icc 1 k, a r*ν r) ≤
+      1-rowContractionError m/8+e*(∑ r ∈ Finset.Icc 1 k, a r) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L42">OAI.TotientAsymptotic.m</a>, <a href="GeometricCube.lean.html#L11">OAI.TotientAsymptotic.relaxedGeometricFamily</a>, <a href="StrictContractionCost.lean.html#L11">OAI.TotientAsymptotic.rowContractionError</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L23">OAI.TotientAsymptotic.a</a></p></li><li id=L121><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_relaxed_surviving_top_exponent</code> <small>line 121</small><div class="doc"><p>This is the exact published exponent for a surviving head outside the
+tail vector; <code>b = 1</code> is allowed and has an empty weighted sum.</p></div><pre>theorem ppt_relaxed_surviving_top_exponent {m n b : ℕ}
+    {budget c T headError e w S z : ℝ} {v : Fin n → ℝ}
+    (hv : v ∈ relaxedGeometricFamily m n budget c)
+    (ι : Fin (b-1) ↪o Fin n) (ν μ : ℕ → ℝ)
+    (hT : 0 &lt; T) (hBz : B z ≠ 0) (hhead : budget ≤ T+headError)
+    (herr : 4*headError ≤ (rowContractionError m/2)*T)
+    (hgrid : ∀ r : Fin (b-1), ν (r.val+1) ≤ v (ι r)/T+e)
+    (hwidth : ∀ r ∈ Finset.Icc 1 (b-1), ν r-μ r ≤ w)
+    (herror : e*(∑ r ∈ Finset.Icc 1 (b-1), a r)+2*(b-1 : ℕ)*w+
+      Real.sqrt (B S/B z)*(∑ i ∈ Finset.Icc 2 b, ((i : ℝ)*Real.log i+i)) ≤
+        rowContractionError m/16) :
+    -2+(∑ r ∈ Finset.Icc 1 (b-1),
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L42">OAI.TotientAsymptotic.m</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L75">OAI.TotientAsymptotic.w</a>, <a href="GeometricCube.lean.html#L11">OAI.TotientAsymptotic.relaxedGeometricFamily</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L39">OAI.TotientAsymptotic.B</a>, <a href="StrictContractionCost.lean.html#L11">OAI.TotientAsymptotic.rowContractionError</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L23">OAI.TotientAsymptotic.a</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

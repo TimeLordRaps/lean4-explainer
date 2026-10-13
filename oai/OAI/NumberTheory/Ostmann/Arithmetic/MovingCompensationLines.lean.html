@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/MovingCompensationLines.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/MovingCompensationLines.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>MovingCompensationLines.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>MovingCompensationLines.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/MovingCompensationLines.lean#L1">source</a></p><div class="doc"><h3>Compensation divisibility is the current internal-prime line condition</h3><p>The equivalence below is used before imposing integrality of the new giant.
+Thus the line condition recovers the original compensation division instead
+of merely being a consequence of an already integral history.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Ostmann.pairwise_coprime_list_prod_dvd_iff</code> <small>line 16</small></li><li id=L31><b>theorem</b> <code>OAI.Ostmann.compensation_dvd_iff_numerator</code> <small>line 31</small></li><li id=L50><b>theorem</b> <code>OAI.Ostmann.movingSlotLine_prime_zero_iff</code> <small>line 50</small><div class="doc"><p>The cleared line and the actual current numerator have the same zero
+test modulo an internal prime. Only the earlier path must be integral.</p></div><pre>theorem movingSlotLine_prime_zero_iff {σ : Type*} {p : ℕ} [Fact p.Prime]
+    (value : σ → ℕ) (path : List (MovingSlotReversal σ))
+    (current : MovingSlotReversal σ) (XL XR : ℕ)
+    (hvalid : MovingSlotPathIntegral value path (XL, XR))
+    (hu : ∀ s ∈ path, MovingSlotReversal.naturalReduction p value s.polynomial.u ≠ 0) :
+    let φ := MovingSlotReversal.naturalReduction p value
+…</pre><p class="refs">Mentions: <a href="MovingSlotPolynomials.lean.html#L106">OAI.Ostmann.MovingSlotReversal</a>, <a href="MovingSlotRealization.lean.html#L88">OAI.Ostmann.MovingSlotPathIntegral</a>, <a href="MovingSlotRealization.lean.html#L46">OAI.Ostmann.MovingSlotReversal.naturalReduction</a></p></li><li id=L79><b>theorem</b> <code>OAI.Ostmann.moving_compensation_division_iff_lines</code> <small>line 79</small><div class="doc"><p>At a supported transfer node, the internal-prime congruences are
+equivalent to the original compensation-product divisibility.</p></div><pre>theorem moving_compensation_division_iff_lines {σ : Type*}
+    (value : σ → ℕ) (path : List (MovingSlotReversal σ))
+    (current : MovingSlotReversal σ) (XL XR Q : ℕ)
+    (hvalid : MovingSlotPathIntegral value path (XL, XR))
+    (hprime : ∀ i ∈ current.compensationSlots, (value i).Prime)
+    (hpair : (current.compensationSlots.map value).Pairwise Nat.Coprime)
+    (hs : ∀ i ∈ current.compensationSlots, ¬ value i ∣ current.rootFrequency.natAbs)
+    (hu : ∀ i ∈ current.compensationSlots, ∀ s ∈ path,
+      MovingSlotReversal.naturalReduction (value i) value s.polynomial.u ≠ 0)
+    (hN : current.integerNumerator value (movingSlotNaturalPath value path (XL, XR)) =
+      current.rootFrequency * Q) :
+    MovingSlotReversal.naturalProduct value current.compensationSlots ∣ Q ↔
+…</pre><p class="refs">Mentions: <a href="MovingSlotPolynomials.lean.html#L106">OAI.Ostmann.MovingSlotReversal</a>, <a href="MovingSlotRealization.lean.html#L88">OAI.Ostmann.MovingSlotPathIntegral</a>, <a href="MovingSlotRealization.lean.html#L46">OAI.Ostmann.MovingSlotReversal.naturalReduction</a>, <a href="MovingSlotRealization.lean.html#L83">OAI.Ostmann.movingSlotNaturalPath</a>, <a href="MovingSlotRealization.lean.html#L13">OAI.Ostmann.MovingSlotReversal.naturalProduct</a></p></li><li id=L111><b>theorem</b> <code>OAI.Ostmann.MovingSlotData.integral_compensation_lines</code> <small>line 111</small><div class="doc"><p>Every internal-prime line of the original integral tree vanishes. This
+uses the actual occurrence path and allows a prime to represent several nodes.</p></div><pre>theorem MovingSlotData.integral_compensation_lines {σ : Type*}
+    (tier : σ → ℕ) (value : σ → ℕ) (hprime : ∀ i, (value i).Prime)
+    (hdisjoint : ∀ i j, tier i ≠ tier j → value i ≠ value j)
+    {n : ℕ} (T : MovingSlotData σ n) (hlevels : T.Levels tier)
+    (hfreq : ∀ i, T.Frequencies (fun s =&gt; (s : ZMod (value i)) ≠ 0))
+    (XL XR : ℕ) (hI : T.Integral value XL XR) :
+    ∀ o ∈ T.occurrences, ∀ i ∈ o.current.compensationSlots,
+      let φ := MovingSlotReversal.naturalReduction (value i) value
+…</pre><p class="refs">Mentions: <a href="MovingSlotOccurrences.lean.html#L12">OAI.Ostmann.MovingSlotData</a>, <a href="MovingSlotRealization.lean.html#L46">OAI.Ostmann.MovingSlotReversal.naturalReduction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

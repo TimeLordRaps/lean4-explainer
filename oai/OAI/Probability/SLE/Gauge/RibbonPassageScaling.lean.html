@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/RibbonPassageScaling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/RibbonPassageScaling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>RibbonPassageScaling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>RibbonPassageScaling.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/RibbonPassageScaling.lean#L1">source</a></p><div class="doc"><p>Positive affine rescaling of the physical one-step passage.  A mesh
+<code>v</code> becomes <code>ell * v</code>; its normalized sausage mass is multiplied by
+<code>ell ^ dimension κ</code>, exactly as in the width-rescaled ribbon statement.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.affine</code> <small>line 19</small><div class="doc"><p>Translate and dilate the physical coordinates without changing the
+curve parameter.</p></div><pre>def affine (a : ℂ) (ell : ℝ) (z : ℂ) : ℂ := a + (ell : ℂ) * z</pre></li><li id=L21><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.affine_dist</code> <small>line 21</small></li><li id=L26><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.affine_bijective</code> <small>line 26</small></li><li id=L40><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.affine_volume</code> <small>line 40</small><div class="doc"><p>Planar area scales by the square of the physical length scale, also
+for sets for which no measurability has been assumed.</p></div><pre>theorem affine_volume (a : ℂ) {ell : ℝ} (hell : 0 ≤ ell) (S : Set ℂ) :
+    volume (affine a ell &#x27;&#x27; S) = ENNReal.ofReal (ell ^ 2) * volume S := by
+…</pre><p class="refs">Mentions: <a href="RibbonPassageScaling.lean.html#L19">OAI.SLEExactGauge.RibbonPassageScaling.affine</a></p></li><li id=L50><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.sourceSausageSet_affine</code> <small>line 50</small><div class="doc"><p>The full sausage, including its intersection with a physical middle
+strip, scales exactly under a positive affine map.</p></div><pre>theorem sourceSausageSet_affine
+    (a : ℂ) {ell : ℝ} (hell : 0 &lt; ell) (γ : ℝ≥0 → ℂ) (s t : ℝ≥0) (v : ℝ) :
+    sourceSausageSet (fun u =&gt; affine a ell (γ u)) s t (ell * v) =
+      affine a ell &#x27;&#x27; sourceSausageSet γ s t v := by
+…</pre><p class="refs">Mentions: <a href="../TracePosCombined.lean.html#L580">OAI.SLEExactGauge.sourceSausageSet</a>, <a href="RibbonPassageScaling.lean.html#L19">OAI.SLEExactGauge.RibbonPassageScaling.affine</a></p></li><li id=L65><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.segmentSausageCharge_affine</code> <small>line 65</small></li><li id=L88><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.affine_mass_threshold_iff</code> <small>line 88</small><div class="doc"><p>The prescribed mass threshold scales by <code>ell^d</code>.</p></div><pre>theorem affine_mass_threshold_iff
+    (κ : ℝ) (a : ℂ) {ell : ℝ} (hell : 0 &lt; ell)
+    (γ : ℝ≥0 → ℂ) (s t : ℝ≥0) {v : ℝ} (hv : 0 &lt; v) (R : Set ℂ) (c : ℝ) :
+    ENNReal.ofReal (c * ell ^ dimension κ) ≤
+        segmentSausageCharge κ (fun u =&gt; affine a ell (γ u)) s t (ell * v)
+          (affine a ell &#x27;&#x27; R) ↔
+      ENNReal.ofReal c ≤ segmentSausageCharge κ γ s t v R := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L13">OAI.SLEExactGauge.dimension</a>, <a href="../Mass/StoppedConformalPassageMass.lean.html#L16">OAI.SLEExactGauge.segmentSausageCharge</a>, <a href="RibbonPassageScaling.lean.html#L19">OAI.SLEExactGauge.RibbonPassageScaling.affine</a></p></li><li id=L102><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.firstFrontTime_affine</code> <small>line 102</small><div class="doc"><p>Pulling back the longitudinal coordinate leaves the actual first-front
+clock unchanged. Spatial rescaling does not change curve order.</p></div><pre>theorem firstFrontTime_affine
+    (a : ℂ) (ell : ℝ) (γ : ℝ≥0 → ℂ) (p p&#x27; : ℂ → ℝ)
+    (hp : ∀ z, p&#x27; (affine a ell z) = p z) :
+    firstFrontTime (fun t =&gt; p&#x27; (affine a ell (γ t))) 1 =
+      firstFrontTime (fun t =&gt; p (γ t)) 1 := by
+…</pre><p class="refs">Mentions: <a href="RibbonPassageScaling.lean.html#L19">OAI.SLEExactGauge.RibbonPassageScaling.affine</a></p></li><li id=L113><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.frontSuccess_affine_iff</code> <small>line 113</small><div class="doc"><p>Affine scaling preserves all actual front-success conditions, including
+whole-prefix containment and the terminal offset.</p></div><pre>theorem frontSuccess_affine_iff
+    {Ω : Type*} (η : ℕ → Ω → ℝ≥0 → ℂ) (p p&#x27; : ℕ → ℂ → ℝ)
+    (σ : Ω → ℝ≥0) (V : ℕ → Set ℂ) (b : ℕ → ℂ) (ε : ℝ)
+    (a : ℂ) {ell : ℝ} (hell : 0 &lt; ell) (n : ℕ)
+    (hp : ∀ z, p&#x27; n (affine a ell z) = p n z) :
+    FrontSuccess (fun j ω t =&gt; affine a ell (η j ω t)) p&#x27; σ
+        (fun j =&gt; affine a ell &#x27;&#x27; V j) (fun j =&gt; affine a ell (b j)) (ell * ε) n =
+      FrontSuccess η p σ V b ε n := by
+…</pre><p class="refs">Mentions: <a href="RibbonPassageScaling.lean.html#L19">OAI.SLEExactGauge.RibbonPassageScaling.affine</a></p></li><li id=L142><b>theorem</b> <code>OAI.SLEExactGauge.RibbonPassageScaling.frontSuccess_mass_probability_affine</code> <small>line 142</small><div class="doc"><p>The complete one-step event has the same probability after simultaneous
+spatial, mesh and mass rescaling. This is a deterministic event identity;
+the trace law need not itself have been scaled.</p></div><pre>theorem frontSuccess_mass_probability_affine
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (η : ℕ → Ω → ℝ≥0 → ℂ) (p p&#x27; : ℕ → ℂ → ℝ)
+    (σ : Ω → ℝ≥0) (V : ℕ → Set ℂ) (b : ℕ → ℂ) (ε : ℝ)
+    (a : ℂ) {ell : ℝ} (hell : 0 &lt; ell) (n : ℕ)
+    (hp : ∀ z, p&#x27; n (affine a ell z) = p n z)
+    (κ : ℝ) (R : Set ℂ) {v : ℝ} (hv : 0 &lt; v) (c : ℝ) :
+    P {ω | ω ∈ FrontSuccess (fun j ω t =&gt; affine a ell (η j ω t)) p&#x27; σ
+          (fun j =&gt; affine a ell &#x27;&#x27; V j) (fun j =&gt; affine a ell (b j)) (ell * ε) n ∧
+        ENNReal.ofReal (c * ell ^ dimension κ) ≤
+          segmentSausageCharge κ (fun t =&gt; affine a ell (η n ω t)) (σ ω)
+            (frontTime (fun t =&gt; p&#x27; n (affine a ell (η n ω t))) 1)
+…</pre><p class="refs">Mentions: <a href="RibbonPassageScaling.lean.html#L19">OAI.SLEExactGauge.RibbonPassageScaling.affine</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L13">OAI.SLEExactGauge.dimension</a>, <a href="../Mass/StoppedConformalPassageMass.lean.html#L16">OAI.SLEExactGauge.segmentSausageCharge</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

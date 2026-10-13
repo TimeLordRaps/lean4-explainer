@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/Bounds/BadCatalogCost.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/Bounds/BadCatalogCost.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">Bounds</a> / <span>BadCatalogCost.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">Bounds</a>/<span>BadCatalogCost.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/Bounds/BadCatalogCost.lean#L1">source</a></p><div class="doc"><h3>The cost of the complete short-word catalog</h3><p>Numerical primes are summed by reciprocal weight, rather than counted as
+additional symbols.  This leaves only signs, equality classes, row records,
+and tuple/padding flags.  The bound includes every length and every slot
+count up to the stated budgets, including invalid codes.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.TwoPointCorrelations.CrudeWordCode.badReciprocalCost</code> <small>line 25</small><div class="doc"><p>The finite cost left after one nondegenerate prime relation is imposed.</p></div><pre>noncomputable def badReciprocalCost (c : CrudeWordCode R N R) (VP VQ : ℝ) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="CrudeWordCounting.lean.html#L35">OAI.TwoPointCorrelations.CrudeWordCode</a></p></li><li id=L30><b>lemma</b> <code>OAI.TwoPointCorrelations.CrudeWordCode.badReciprocalCost_nonneg</code> <small>line 30</small></li><li id=L35><b>lemma</b> <code>OAI.TwoPointCorrelations.CrudeWordCode.tuple_padding_class_count</code> <small>line 35</small></li><li id=L42><b>lemma</b> <code>OAI.TwoPointCorrelations.CrudeWordCode.class_count_le_slots</code> <small>line 42</small></li><li id=L50><b>lemma</b> <code>OAI.TwoPointCorrelations.CrudeWordCode.class_mass_le</code> <small>line 50</small><div class="doc"><p>Tuple and padding classes together use at most one reciprocal mass per slot.</p></div><pre>lemma class_mass_le (c : CrudeWordCode R N R) {VP VQ A : ℝ}
+    (hP : 0 ≤ VP) (hQ : 0 ≤ VQ) (hPA : VP ≤ A) (hQA : VQ ≤ A)
+    (hA : 1 ≤ A) :
+    VP ^ Fintype.card c.tupleClasses *
+      VQ ^ Fintype.card {z : c.usedClasses // z ∉ c.tupleClasses} ≤ A ^ N := by
+…</pre><p class="refs">Mentions: <a href="CrudeWordCounting.lean.html#L35">OAI.TwoPointCorrelations.CrudeWordCode</a></p></li><li id=L67><b>def</b> <code>OAI.TwoPointCorrelations.badCatalogCost</code> <small>line 67</small><div class="doc"><p>All lengths, all actual slot counts, and all finite equality codes.</p></div><pre>noncomputable def badCatalogCost (s T : ℕ) (VP VQ : ℝ) : ℝ :=
+…</pre></li><li id=L71><b>lemma</b> <code>OAI.TwoPointCorrelations.short_log_le_square</code> <small>line 71</small></li><li id=L77><b>lemma</b> <code>OAI.TwoPointCorrelations.short_polynomial_exp_bound</code> <small>line 77</small></li><li id=L91><b>lemma</b> <code>OAI.TwoPointCorrelations.short_crudeWordCode_bound</code> <small>line 91</small><div class="doc"><p>Unlike the coarser pattern estimate, this bound does not need <code>R ≤ N</code>;
+empty or invalid codes may therefore be retained in the catalog.</p></div><pre>lemma short_crudeWordCode_bound (R N s : ℕ) (L C : ℝ)
+    (hlog : 1 ≤ Real.log L) (hR : R ≤ s)
+    (hslots : (N : ℝ) ≤ C * s * Real.log L)
+    (hN : (N : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hspoly : (s : ℝ) + 1 ≤ L ^ (2 : ℕ)) :
+    (Fintype.card (CrudeWordCode R N R) : ℝ) ≤
+      Real.exp ((1 + 5 * C) * s * (Real.log L) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="CrudeWordCounting.lean.html#L35">OAI.TwoPointCorrelations.CrudeWordCode</a></p></li><li id=L126><b>lemma</b> <code>OAI.TwoPointCorrelations.short_badReciprocalCost_bound</code> <small>line 126</small><div class="doc"><p>The reciprocal masses and the choice of one relation cost only an
+additional <code>exp ((8 + 2 C) s log² L)</code> for a fixed code.</p></div><pre>lemma short_badReciprocalCost_bound {R N s : ℕ} (c : CrudeWordCode R N R)
+    (VP VQ L C : ℝ) (hs : 1 ≤ s) (hL : 1 ≤ L) (hlog : 1 ≤ Real.log L)
+    (hR : R ≤ s) (hslots : (N : ℝ) ≤ C * s * Real.log L)
+    (hN : (N : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hspoly : (s : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hP : 0 ≤ VP) (hQ : 0 ≤ VQ)
+    (hPupper : VP ≤ L ^ (2 : ℕ)) (hQupper : VQ ≤ L ^ (2 : ℕ)) :
+    c.badReciprocalCost VP VQ ≤
+      Real.exp ((8 + 2 * C) * s * (Real.log L) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="CrudeWordCounting.lean.html#L35">OAI.TwoPointCorrelations.CrudeWordCode</a></p></li><li id=L184><b>lemma</b> <code>OAI.TwoPointCorrelations.short_badCode_sum_bound</code> <small>line 184</small><div class="doc"><p>Sum over every code of one fixed length and slot count.</p></div><pre>lemma short_badCode_sum_bound (R N s : ℕ) (VP VQ L C : ℝ)
+    (hs : 1 ≤ s) (hL : 1 ≤ L) (hlog : 1 ≤ Real.log L)
+    (hR : R ≤ s) (hslots : (N : ℝ) ≤ C * s * Real.log L)
+    (hN : (N : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hspoly : (s : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hP : 0 ≤ VP) (hQ : 0 ≤ VQ)
+    (hPupper : VP ≤ L ^ (2 : ℕ)) (hQupper : VQ ≤ L ^ (2 : ℕ)) :
+    (∑ c : CrudeWordCode R N R, c.badReciprocalCost VP VQ) ≤
+      Real.exp ((9 + 7 * C) * s * (Real.log L) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="CrudeWordCounting.lean.html#L35">OAI.TwoPointCorrelations.CrudeWordCode</a></p></li><li id=L210><b>theorem</b> <code>OAI.TwoPointCorrelations.badCatalogCost_exp_bound</code> <small>line 210</small><div class="doc"><p>The complete catalog, including both bounded integer parameters, has
+the required <code>exp (O(s log² L))</code> reciprocal cost.</p></div><pre>theorem badCatalogCost_exp_bound (s T : ℕ) (VP VQ L C : ℝ)
+    (hs : 1 ≤ s) (hL : 1 ≤ L) (hlog : 1 ≤ Real.log L)
+    (hslots : (T : ℝ) ≤ C * s * Real.log L)
+    (hT : (T : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hspoly : (s : ℝ) + 1 ≤ L ^ (2 : ℕ))
+    (hP : 0 ≤ VP) (hQ : 0 ≤ VQ)
+    (hPupper : VP ≤ L ^ (2 : ℕ)) (hQupper : VQ ≤ L ^ (2 : ℕ)) :
+    badCatalogCost s T VP VQ ≤
+      Real.exp ((13 + 7 * C) * s * (Real.log L) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="BadCatalogCost.lean.html#L67">OAI.TwoPointCorrelations.badCatalogCost</a></p></li><li id=L254><b>theorem</b> <code>OAI.TwoPointCorrelations.eventually_badCatalogCost_exp_bound</code> <small>line 254</small><div class="doc"><p>The polynomial side conditions in the finite estimate follow from the
+actual short-word and slot budgets once the scale is sufficiently large.</p></div><pre>theorem eventually_badCatalogCost_exp_bound (C : ℝ) (hC : 0 ≤ C) :
+    ∀ᶠ L : ℝ in atTop, ∀ (s T : ℕ) (VP VQ : ℝ),
+      1 ≤ s → (s : ℝ) ≤ L ^ (1 / 10 : ℝ) →
+      (T : ℝ) ≤ C * s * Real.log L →
+      0 ≤ VP → 0 ≤ VQ → VP ≤ L ^ (2 : ℕ) → VQ ≤ L ^ (2 : ℕ) →
+      badCatalogCost s T VP VQ ≤
+        Real.exp ((13 + 7 * C) * s * (Real.log L) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="BadCatalogCost.lean.html#L67">OAI.TwoPointCorrelations.badCatalogCost</a></p></li><li id=L292><b>theorem</b> <code>OAI.TwoPointCorrelations.eventually_badCatalog_decay</code> <small>line 292</small><div class="doc"><p>The full short-word enumeration is dominated by the single prime
+saving. This is the numerical end of the prohibited-site density estimate.</p></div><pre>theorem eventually_badCatalog_decay (C : ℝ) (hC : 0 ≤ C) :
+    ∀ᶠ L : ℝ in atTop, ∀ (s T : ℕ) (VP VQ H B total : ℝ),
+      1 ≤ s → (s : ℝ) ≤ L ^ (1 / 10 : ℝ) →
+      (T : ℝ) ≤ C * s * Real.log L →
+      0 ≤ VP → 0 ≤ VQ → VP ≤ L ^ (2 : ℕ) → VQ ≤ L ^ (2 : ℕ) →
+      Real.exp (L ^ (199 / 200 : ℝ)) ≤ H → 1 ≤ B → B ≤ Real.exp L →
+      total ≤ badCatalogCost s T VP VQ * (H⁻¹ + (1 + Real.log B) / H) →
+      total ≤ Real.exp (-(1 / 2 : ℝ) * L ^ (199 / 200 : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="BadCatalogCost.lean.html#L67">OAI.TwoPointCorrelations.badCatalogCost</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

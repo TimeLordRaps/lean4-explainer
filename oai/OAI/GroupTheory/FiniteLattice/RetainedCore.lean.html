@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/FiniteLattice/RetainedCore.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/FiniteLattice/RetainedCore.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">GroupTheory</a> / <a href="index.html">FiniteLattice</a> / <span>RetainedCore.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">GroupTheory</a>/<a href="index.html">FiniteLattice</a>/<span>RetainedCore.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/FiniteLattice/RetainedCore.lean#L1">source</a></p><div class="doc"><p>A relative normal core retains a nonabelian simple quotient when the adjoining
+subgroups normalize suitable normal full preimages and centralize their images
+in the quotient.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.FiniteLattice.RetainedCore.least_full_preimage_stable</code> <small>line 23</small><div class="doc"><p>Minimality plus full image forces stability under every compatible pair
+of genuine group automorphisms. No invariance is assumed of <code>Q</code>.</p></div><pre>theorem least_full_preimage_stable
+    (f : M →* H) (Q : Subgroup M) [Q.Normal]
+    (hfull : Q.map f = ⊤)
+    (hleast : ∀ B : Subgroup M, B.Normal → B.map f = ⊤ → Q ≤ B)
+    (a : M ≃* M) (b : H ≃* H)
+    (hcompat : ∀ x, f (a x) = b (f x)) :
+    ∀ x ∈ Q, a x ∈ Q := by
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.FiniteLattice.RetainedCore.least_full_preimage_map_eq</code> <small>line 48</small></li><li id=L73><b>def</b> <code>OAI.FiniteLattice.RetainedCore.Statement</code> <small>line 73</small><div class="doc"><p>A relative normal core maps onto a nonabelian simple quotient.
+The subgroups <code>T i</code> lie in <code>R₀</code>; their ambient images are used for normalization
+and commutators. The normal core inside the generated subgroup <code>W</code> is
+transported back to <code>R₀</code>. The finite indexing type may be empty.</p></div><pre>def Statement (D : Type*) [Group D] [Finite D]
+    (R₀ : Subgroup D) (C : Subgroup R₀) [C.Normal]
+    [IsSimpleGroup (R₀ ⧸ C)]
+    (ι : Type*) [Finite ι] (L : ι → Subgroup D)
+    (T : ι → Subgroup R₀) : Prop :=
+…</pre></li><li id=L90><b>theorem</b> <code>OAI.FiniteLattice.RetainedCore.exists_least_full_preimage</code> <small>line 90</small><div class="doc"><p>A least normal full preimage, with equality-shaped minimality.</p></div><pre>theorem exists_least_full_preimage [Finite M] [Group.IsPerfect H]
+    (f : M →* H) (hf : Function.Surjective f) :
+    ∃ Q : Subgroup M, Q.Normal ∧ Q.map f = ⊤ ∧
+      ∀ B : Subgroup M, B.Normal → B.map f = ⊤ → Q ≤ B := by
+…</pre></li><li id=L102><b>def</b> <code>OAI.FiniteLattice.RetainedCore.embeddedConj</code> <small>line 102</small><div class="doc"><p>Restrict ambient conjugation to an embedded subgroup, without assuming
+that conjugation preserves the larger group into which that subgroup embeds.</p></div><pre>noncomputable def embeddedConj {D : Type*} [Group D]
+    (K : Subgroup M) (j : M →* D) (hj : Function.Injective j)
+    (g : D) (hg : g ∈ Subgroup.normalizer (K.map j : Set D)) : K ≃* K :=
+…</pre></li><li id=L108><b>theorem</b> <code>OAI.FiniteLattice.RetainedCore.embeddedConj_val</code> <small>line 108</small></li><li id=L122><b>theorem</b> <code>OAI.FiniteLattice.RetainedCore.least_inside_normal_eq</code> <small>line 122</small><div class="doc"><p>The least full preimage inside a normal subgroup equals that inside
+its ambient group. The quotient may be any perfect group.</p></div><pre>theorem least_inside_normal_eq [Finite M] [Group.IsPerfect H]
+    (f : M →* H) (Q : Subgroup M) [Q.Normal]
+    (hQ : Q.map f = ⊤)
+    (hminQ : ∀ B : Subgroup M, B.Normal → B.map f = ⊤ → Q ≤ B)
+    (K : Subgroup M) [K.Normal]
+    (hK : K.map f = ⊤)
+    (B : Subgroup K) [B.Normal]
+    (hB : B.map (f.comp K.subtype) = ⊤)
+    (hminB : ∀ A : Subgroup K, A.Normal →
+      A.map (f.comp K.subtype) = ⊤ → B ≤ A) :
+    B.map K.subtype = Q := by
+…</pre></li><li id=L162><b>theorem</b> <code>OAI.FiniteLattice.RetainedCore.retained_core</code> <small>line 162</small><div class="doc"><p>The relative normal core retains the entire nonabelian simple quotient.</p></div><pre>theorem retained_core (D : Type*) [Group D] [Finite D]
+    (R₀ : Subgroup D) (C : Subgroup R₀) [C.Normal]
+    [IsSimpleGroup (R₀ ⧸ C)]
+    (ι : Type*) [Finite ι] (L : ι → Subgroup D)
+    (T : ι → Subgroup R₀) : Statement D R₀ C ι L T := by
+…</pre><p class="refs">Mentions: <a href="RetainedCore.lean.html#L73">OAI.FiniteLattice.RetainedCore.Statement</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

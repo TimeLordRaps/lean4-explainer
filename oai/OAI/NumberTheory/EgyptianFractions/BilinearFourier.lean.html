@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/BilinearFourier.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/BilinearFourier.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>BilinearFourier.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>BilinearFourier.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/BilinearFourier.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.Problem337.residueFourier</code> <small>line 10</small><div class="doc"><p>The positive-sign discrete Fourier transform, convenient for residue products.</p></div><pre>def residueFourier {q : ℕ} [NeZero q] (β : ZMod q → ℂ) (x : ZMod q) : ℂ :=
+…</pre></li><li id=L13><b>lemma</b> <code>OAI.Problem337.residue_character_orthogonality</code> <small>line 13</small></li><li id=L23><b>theorem</b> <code>OAI.Problem337.residueFourier_parseval</code> <small>line 23</small><div class="doc"><p>Parseval's identity for the positive-sign transform on all residue classes.</p></div><pre>theorem residueFourier_parseval {q : ℕ} [NeZero q] (β : ZMod q → ℂ) :
+    (∑ x : ZMod q, ‖residueFourier β x‖ ^ 2) =
+      (q : ℝ) * ∑ y : ZMod q, ‖β y‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="BilinearFourier.lean.html#L10">OAI.Problem337.residueFourier</a></p></li><li id=L51><b>theorem</b> <code>OAI.Problem337.residueFourier_parseval_unit</code> <small>line 51</small><div class="doc"><p>A unit frequency preserves the Parseval identity, also for composite moduli.</p></div><pre>theorem residueFourier_parseval_unit {q : ℕ} [NeZero q]
+    (β : ZMod q → ℂ) (c : (ZMod q)ˣ) :
+    (∑ x : ZMod q, ‖residueFourier β ((c : ZMod q) * x)‖ ^ 2) =
+      (q : ℝ) * ∑ y : ZMod q, ‖β y‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="BilinearFourier.lean.html#L10">OAI.Problem337.residueFourier</a></p></li><li id=L62><b>theorem</b> <code>OAI.Problem337.residue_bilinear_bound</code> <small>line 62</small><div class="doc"><p>The bilinear additive-character bound used for random prime products.
+No primality hypothesis on the modulus is needed; the frequency is a unit.</p></div><pre>theorem residue_bilinear_bound {q : ℕ} [NeZero q]
+    (α β : ZMod q → ℂ) (c : (ZMod q)ˣ) :
+    ‖∑ x : ZMod q, ∑ y : ZMod q,
+      α x * β y * ZMod.stdAddChar ((c : ZMod q) * x * y)‖ ≤
+      Real.sqrt (q : ℝ) * Real.sqrt (∑ x : ZMod q, ‖α x‖ ^ 2) *
+        Real.sqrt (∑ y : ZMod q, ‖β y‖ ^ 2) := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.Problem337.residue_bilinear_finset_bound</code> <small>line 86</small><div class="doc"><p>Equal finite sets give the classical <code>sqrt(q) * |H|</code> bilinear estimate.</p></div><pre>theorem residue_bilinear_finset_bound {q : ℕ} [NeZero q]
+    (H : Finset (ZMod q)) (c : (ZMod q)ˣ) :
+    ‖∑ x ∈ H, ∑ y ∈ H, ZMod.stdAddChar ((c : ZMod q) * x * y)‖ ≤
+      Real.sqrt (q : ℝ) * (H.card : ℝ) := by
+…</pre></li><li id=L103><b>lemma</b> <code>OAI.Problem337.probability_sum_sq_le</code> <small>line 103</small><div class="doc"><p>A probability vector bounded by <code>A</code> has squared ℓ² norm at most <code>A</code>.</p></div><pre>lemma probability_sum_sq_le {ι : Type*} [Fintype ι]
+    (α : ι → ℝ) (A : ℝ) (hα : ∀ x, 0 ≤ α x)
+    (hA : ∀ x, α x ≤ A) (hsum : ∑ x, α x = 1) :
+    ∑ x, α x ^ 2 ≤ A := by
+…</pre></li><li id=L114><b>theorem</b> <code>OAI.Problem337.residue_bilinear_probability_bound</code> <small>line 114</small><div class="doc"><p>The version for probability vectors used after controlling atom sizes in
+random products.</p></div><pre>theorem residue_bilinear_probability_bound {q : ℕ} [NeZero q]
+    (α β : ZMod q → ℝ) (A B : ℝ) (c : (ZMod q)ˣ)
+    (hα : ∀ x, 0 ≤ α x) (hβ : ∀ y, 0 ≤ β y)
+    (hA : ∀ x, α x ≤ A) (hB : ∀ y, β y ≤ B)
+    (hsα : ∑ x, α x = 1) (hsβ : ∑ y, β y = 1) :
+    ‖∑ x : ZMod q, ∑ y : ZMod q,
+      (α x : ℂ) * (β y : ℂ) * ZMod.stdAddChar ((c : ZMod q) * x * y)‖ ≤
+      Real.sqrt (q : ℝ) * Real.sqrt A * Real.sqrt B := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

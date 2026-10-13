@@ -1,0 +1,1 @@
+window.l4shard("za", [["OAI.Nagata.ProjectiveGeometry.supportLocus_isConfigurationZariskiClosed",11479,228],["OAI.Nagata.W27.affineZariski",11530,357],["OAI.Paper170.ofZarankiewiczParametrization",13301,86]]);

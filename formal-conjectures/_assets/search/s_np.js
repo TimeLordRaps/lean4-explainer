@@ -1,0 +1,1 @@
+window.l4shard("np", [["ComplexityTheory.NP",112,93],["ComplexityTheory.NP_ne_coNP",113,53],["ComplexityTheory.P_ne_NP",113,45],["ComplexityTheory.P_subset_coNP",113,91],["ComplexityTheory.coNP",112,102]]);

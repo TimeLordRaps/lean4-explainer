@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/SupportVisitPaths.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/SupportVisitPaths.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>SupportVisitPaths.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>SupportVisitPaths.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/SupportVisitPaths.lean#L1">source</a></p><div class="doc"><h3>Outward, switch, and return paths</h3><p>The actual three curves are concatenated, retaining their exact heights and
+the logarithmic switch error. This statement is independent of how the
+switch estimate is obtained and is used below for the Cartan root curves.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.PolycyclicRecognition.flowPath</code> <small>line 22</small></li><li id=L30><b>def</b> <code>OAI.PolycyclicRecognition.supportVisitPath</code> <small>line 30</small><div class="doc"><p>The specified outward-switch-return path, with no choice of curves.</p></div><pre>def supportVisitPath (d : ℝ → G) (hd : Continuous d) (hzero : d 0 = 1)
+    (f : ℝ → G) (hf : Continuous f) (hf₀ : f 0 = 1) (n d₀ : G) (r b : ℝ) :
+    Path (n * d₀) (n * f b * d₀) :=
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.PolycyclicRecognition.supportVisitPath_apply_congr</code> <small>line 45</small><div class="doc"><p>Pointwise changes of representation preserve the specified visit curve.</p></div><pre>theorem supportVisitPath_apply_congr
+    (d d&#x27; f f&#x27; : ℝ → G) (hd : Continuous d) (hd&#x27; : Continuous d&#x27;)
+    (hd₀ : d 0 = 1) (hd₀&#x27; : d&#x27; 0 = 1)
+    (hf : Continuous f) (hf&#x27; : Continuous f&#x27;) (hf₀ : f 0 = 1) (hf₀&#x27; : f&#x27; 0 = 1)
+    (he_d : ∀ t, d t = d&#x27; t) (he_f : ∀ t, f t = f&#x27; t)
+    (n k k&#x27; : G) (he_k : k = k&#x27;) (r b : ℝ) (t : unitInterval) :
+    supportVisitPath d hd hd₀ f hf hf₀ n k r b t =
+      supportVisitPath d&#x27; hd&#x27; hd₀&#x27; f&#x27; hf&#x27; hf₀&#x27; n k&#x27; r b t := by
+…</pre><p class="refs">Mentions: <a href="SupportVisitPaths.lean.html#L30">OAI.PolycyclicRecognition.supportVisitPath</a></p></li><li id=L61><b>theorem</b> <code>OAI.PolycyclicRecognition.continuous_supportVisitPath_sample</code> <small>line 61</small><div class="doc"><p>Every fixed time sample depends continuously on the initial sheet and
+the switch amplitude.</p></div><pre>theorem continuous_supportVisitPath_sample
+    (d : ℝ → G) (hd : Continuous d) (hzero : d 0 = 1)
+    (f : ℝ → G) (hf : Continuous f) (hf₀ : f 0 = 1)
+    {Y : Type*} [TopologicalSpace Y] (n : Y → G) (hn : Continuous n)
+    (b : Y → ℝ) (hb : Continuous b) (d₀ : G) (r : ℝ) (t : unitInterval) :
+    Continuous (fun y =&gt; supportVisitPath d hd hzero f hf hf₀ (n y) d₀ r (b y) t) := by
+…</pre><p class="refs">Mentions: <a href="SupportVisitPaths.lean.html#L30">OAI.PolycyclicRecognition.supportVisitPath</a></p></li><li id=L89><b>theorem</b> <code>OAI.PolycyclicRecognition.supportVisitPath_uniform_bound</code> <small>line 89</small><div class="doc"><p>Concatenate a support leg, a height-zero switch, and the reverse leg.
+The constants are uniform over both the translated sheet and the pivot.</p></div><pre>theorem supportVisitPath_uniform_bound
+    (π : G →* Multiplicative W) (d : ℝ → G) (hd : Continuous d) (hzero : d 0 = 1)
+    (hmul : ∀ s t, d (s + t) = d s * d t)
+    {E : Set W} (hE : Convex ℝ E) {w₀ w₁ : W} (hw₀ : w₀ ∈ E) (hw₁ : w₁ ∈ E)
+    (hπd : ∀ t, (π (d t)).toAdd = t • (w₁ - w₀)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (r : ℝ), 0 ≤ r → ∀ (n d₀ : G),
+      π n = 1 → (π d₀).toAdd = r • w₀ →
+      ∀ (f : ℝ → G) (hf : Continuous f) (hf₀ : f 0 = 1), (∀ t, π (f t) = 1) →
+      ∀ (b κ : ℝ), 0 ≤ κ →
+      (∀ s ∈ Set.Icc (0 : ℝ) 1, ∀ t ∈ Set.Icc (0 : ℝ) 1,
+        dist (n * f (s * b) * (d₀ * d r)) (n * f (t * b) * (d₀ * d r)) ≤ κ) →
+      PathMetricBound (supportVisitPath d hd hzero f hf hf₀ n d₀ r b)
+…</pre><p class="refs">Mentions: <a href="CoarsePathConcatenation.lean.html#L19">OAI.PolycyclicRecognition.PathMetricBound</a>, <a href="SupportVisitPaths.lean.html#L30">OAI.PolycyclicRecognition.supportVisitPath</a></p></li><li id=L162><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_support_visit_path_bound</code> <small>line 162</small><div class="doc"><p>The explicit visit path also supplies the existential interface.</p></div><pre>theorem exists_support_visit_path_bound
+    (π : G →* Multiplicative W) (d : ℝ → G) (hd : Continuous d) (hzero : d 0 = 1)
+    (hmul : ∀ s t, d (s + t) = d s * d t)
+    {E : Set W} (hE : Convex ℝ E) {w₀ w₁ : W} (hw₀ : w₀ ∈ E) (hw₁ : w₁ ∈ E)
+    (hπd : ∀ t, (π (d t)).toAdd = t • (w₁ - w₀)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (r : ℝ), 0 ≤ r → ∀ (n d₀ : G),
+      π n = 1 → (π d₀).toAdd = r • w₀ →
+      ∀ (f : ℝ → G), Continuous f → f 0 = 1 → (∀ t, π (f t) = 1) →
+      ∀ (b κ : ℝ), 0 ≤ κ →
+      (∀ s ∈ Set.Icc (0 : ℝ) 1, ∀ t ∈ Set.Icc (0 : ℝ) 1,
+        dist (n * f (s * b) * (d₀ * d r)) (n * f (t * b) * (d₀ * d r)) ≤ κ) →
+      ∃ p : Path (n * d₀) (n * f b * d₀),
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

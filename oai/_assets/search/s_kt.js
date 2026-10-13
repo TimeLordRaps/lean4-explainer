@@ -1,0 +1,1 @@
+window.l4shard("kt", [["OAI.QuantitativeVanDerWaerden.fixed_color_kthRoot_tendsto",16490,48],["OAI.QuantitativeVanDerWaerden.kthRoot_tendsto",16488,35],["OAI.QuantitativeVanDerWaerden.kthRoot_tendsto_of_cyclicLowerBound",16429,36],["OAI.QuantitativeVanDerWaerden.tendsto_kthRoot_of_eventually_rpow_bound",16497,37]]);

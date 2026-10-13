@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/ThreeTorus/CyclicPrediction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/ThreeTorus/CyclicPrediction.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">ThreeTorus</a> / <span>CyclicPrediction.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">ThreeTorus</a>/<span>CyclicPrediction.lean</span></code></h1><p class="muted">34 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/ThreeTorus/CyclicPrediction.lean#L1">source</a></p><div class="doc"><p>Repeated blocks, prediction budgets, physical Laurent polynomials, and actual cyclic approximation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>inductive</b> <code>OAI.ThreeTorus.ActualColoredBlocks</code> <small>line 17</small><div class="doc"><p>A finite trace of actual centered blocks. <code>A</code> is exactly the sum of their
+estimators. This data retains each anchor and each physical passage.</p></div><pre>inductive ActualColoredBlocks {m : ℕ} (C : ColoredState (Fin m)) :
+    ColoredState (Fin m) → ℕ → Equiv.Perm TripleTorus → (UnitAddCircle → ℂ) → Prop
+  | nil : ActualColoredBlocks C C 0 (Equiv.refl _) (fun _ =&gt; 0)
+  | snoc {E F : ColoredState (Fin m)} {k : ℕ} {α β : Equiv.Perm TripleTorus}
+      {A D : UnitAddCircle → ℂ} (h : ActualColoredBlocks C E k α A)
+      (hb : ActualColoredBlock E F β D) :
+      ActualColoredBlocks C F (k+1) (α.trans β) (fun z =&gt; A z+D z)
+
+namespace ActualColoredBlocks
+variable {m : ℕ} {C E : ColoredState (Fin m)} {k : ℕ} {α : Equiv.Perm TripleTorus}
+    {A : UnitAddCircle → ℂ} (h : ActualColoredBlocks C E k α A)
+include h</pre><p class="refs">Mentions: <a href="TrackedPackets.lean.html#L1301">OAI.ThreeTorus.ColoredState</a>, <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a>, <a href="FiniteBlocks.lean.html#L534">OAI.ThreeTorus.ActualColoredBlock</a></p></li><li id=L29><b>lemma</b> <code>OAI.ThreeTorus.ActualColoredBlocks.continuous</code> <small>line 29</small></li><li id=L33><b>lemma</b> <code>OAI.ThreeTorus.ActualColoredBlocks.preserves</code> <small>line 33</small></li><li id=L37><b>lemma</b> <code>OAI.ThreeTorus.ActualColoredBlocks.physicalError_eq</code> <small>line 37</small></li><li id=L44><b>lemma</b> <code>OAI.ThreeTorus.ActualColoredBlocks.estimator_continuous</code> <small>line 44</small></li><li id=L48><b>lemma</b> <code>OAI.ThreeTorus.ActualColoredBlocks.estimator_smooth</code> <small>line 48</small></li><li id=L53><b>lemma</b> <code>OAI.ThreeTorus.ActualColoredBlocks.estimator_reflection</code> <small>line 53</small></li><li id=L59><b>lemma</b> <code>OAI.ThreeTorus.integral_blockPreviousError_eq</code> <small>line 59</small></li><li id=L68><b>lemma</b> <code>OAI.ThreeTorus.block_increment_budget</code> <small>line 68</small></li><li id=L79><b>theorem</b> <code>OAI.ThreeTorus.actual_repeated_blocks</code> <small>line 79</small><div class="doc"><p>Source04's repeated blocks, with every new center formed from the actual
+current densities. Physical transport, not a spectral model, keeps the mass
+strictly below two. No future uniform strength bound is required.</p></div><pre>theorem actual_repeated_blocks {m : ℕ} (C : ColoredState (Fin m))
+    (τR : Fin m → Fin m) (hτR : Involutive τR) (hrC : C.Reflection τR)
+    (tags : Fin m → ℂ) (htags : ∀ r, ‖tags r‖ ≤ 1)
+    (htrR : ∀ r, tags (τR r) = conj (tags r))
+    {delta ε κ : ℝ} (hd : 0 &lt; delta) (hd1 : delta ≤ 1/100) (hε : 0 &lt; ε) (hκ : 0 &lt; κ)
+    (hmass : (∫ z, blockTotal C.density z ∂phaseHaar) &lt; 2) (K : ℕ) :
+    ∃ E : ColoredState (Fin m), ∃ α : Equiv.Perm TripleTorus, ∃ A : UnitAddCircle → ℂ,
+      ActualColoredBlocks C E K α A ∧
+      (∀ r, physicalError (C.vector r) (E.vector r ∘ α) &lt; ε) ∧
+      ((∫ z, Real.sqrt (blockTotal C.density z) ∂phaseHaar)-400*(K:ℝ)*delta^2 ≤
+        ∫ z, Real.sqrt (blockTotal E.density z) ∂phaseHaar) ∧
+      ((∫ z, blockPreviousError E.density tags A K z ∂phaseHaar) ≤ (K:ℝ)*(5/delta)) ∧
+…</pre><p class="refs">Mentions: <a href="TrackedPackets.lean.html#L1301">OAI.ThreeTorus.ColoredState</a>, <a href="PredictionModels.lean.html#L52">OAI.ThreeTorus.blockTotal</a>, <a href="BlockMoments.lean.html#L60">OAI.ThreeTorus.phaseHaar</a>, <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a>, <a href="CyclicPrediction.lean.html#L17">OAI.ThreeTorus.ActualColoredBlocks</a>, <a href="PhysicalJets.lean.html#L377">OAI.ThreeTorus.physicalError</a>, <a href="PredictionModels.lean.html#L396">OAI.ThreeTorus.blockPreviousError</a></p></li><li id=L144><b>lemma</b> <code>OAI.ThreeTorus.exists_prediction_budget</code> <small>line 144</small><div class="doc"><p>δ and K are fixed before any block strengths or lengths, with the exact
+source choice K=ceil(10/(ε²δ)).</p></div><pre>lemma exists_prediction_budget {ε τ : ℝ} (hε : 0 &lt; ε) (hτ : 0 &lt; τ) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ δ ≤ 1/100 ∧
+      let K := ⌈10/(ε^2*δ)⌉₊
+…</pre></li><li id=L181><b>lemma</b> <code>OAI.ThreeTorus.averaged_prediction_identity</code> <small>line 181</small></li><li id=L209><b>theorem</b> <code>OAI.ThreeTorus.actual_density_prediction</code> <small>line 209</small><div class="doc"><p>The source prediction estimate, for actual reflected packet passages.
+The smooth-neighborhood requirement is not included here: it remains to be
+threaded through the passage selection before exporting Proposition 4.1.</p></div><pre>theorem actual_density_prediction {m : ℕ} (C : ColoredState (Fin m))
+    (τR : Fin m → Fin m) (hτR : Involutive τR) (hrC : C.Reflection τR)
+    (tags : Fin m → ℂ) (htags : ∀ r, ‖tags r‖ ≤ 1)
+    (htrR : ∀ r, tags (τR r) = conj (tags r))
+    {ε τ η κ : ℝ} (hε : 0 &lt; ε) (hτ : 0 &lt; τ) (hη : 0 &lt; η) (hκ : 0 &lt; κ)
+    (hmass : (∫ z, blockTotal C.density z ∂phaseHaar) &lt; 2) :
+    ∃ E : ColoredState (Fin m), ∃ α : Equiv.Perm TripleTorus,
+      ∃ Ψ : UnitAddCircle → ℂ, ∃ K : ℕ, ∃ A : UnitAddCircle → ℂ,
+      0 &lt; K ∧ ActualColoredBlocks C E K α A ∧ Ψ = (fun z =&gt; A z/(K:ℂ)) ∧
+      (∀ r, physicalError (C.vector r) (E.vector r ∘ α) &lt; η) ∧
+      ((∫ z, Real.sqrt (blockTotal C.density z) ∂phaseHaar)-τ &lt;
+        ∫ z, Real.sqrt (blockTotal E.density z) ∂phaseHaar) ∧
+…</pre><p class="refs">Mentions: <a href="TrackedPackets.lean.html#L1301">OAI.ThreeTorus.ColoredState</a>, <a href="PredictionModels.lean.html#L52">OAI.ThreeTorus.blockTotal</a>, <a href="BlockMoments.lean.html#L60">OAI.ThreeTorus.phaseHaar</a>, <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a>, <a href="CyclicPrediction.lean.html#L17">OAI.ThreeTorus.ActualColoredBlocks</a>, <a href="PhysicalJets.lean.html#L377">OAI.ThreeTorus.physicalError</a></p></li><li id=L259><b>def</b> <code>OAI.ThreeTorus.ColoredState.weightedVector</code> <small>line 259</small><div class="doc"><p>Literal packet spectral calculus, evaluated in the current coordinates.</p></div><pre>def weightedVector (a : C.Index → UnitAddCircle → ℂ) (x : TripleTorus) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a></p></li><li id=L263><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.weightedVector_continuous</code> <small>line 263</small></li><li id=L272><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.weighted_packet_spectral</code> <small>line 272</small></li><li id=L290><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.weightedVector_energy</code> <small>line 290</small></li><li id=L328><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.weightedVector_sub</code> <small>line 328</small></li><li id=L333><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.weightedVector_tags</code> <small>line 333</small></li><li id=L343><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.weighted_density_colors</code> <small>line 343</small></li><li id=L368><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.physical_prediction_energy</code> <small>line 368</small><div class="doc"><p>The density prediction error is exactly the squared physical L² error
+for the literal packet multiplier; no cyclic-space calculus is assumed.</p></div><pre>lemma physical_prediction_energy (b : Fin m → ℂ) {Ψ : UnitAddCircle → ℂ}
+    (hΨ : Continuous Ψ) :
+    (∫ x, ‖C.weightedVector (fun _ =&gt; Ψ) x-∑ r, b r*C.vector r x‖^2 ∂tripleVolume) =
+      ∑ r, ∫ z, C.density r z*‖Ψ z-b r‖^2 ∂phaseHaar := by
+…</pre><p class="refs">Mentions: <a href="Twists.lean.html#L19">OAI.ThreeTorus.tripleVolume</a>, <a href="BlockMoments.lean.html#L60">OAI.ThreeTorus.phaseHaar</a></p></li><li id=L393><b>def</b> <code>OAI.ThreeTorus.ColoredState.laurent</code> <small>line 393</small><div class="doc"><p>A finite Laurent polynomial in the actual twist Koopman operator.</p></div><pre>def laurent (c : ℤ →₀ ℂ) (x : TripleTorus) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a></p></li><li id=L397><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.laurent_eq_multiplier</code> <small>line 397</small></li><li id=L410><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.laurent_continuous</code> <small>line 410</small></li><li id=L417><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.multiplier_error_bound</code> <small>line 417</small></li><li id=L444><b>lemma</b> <code>OAI.ThreeTorus.ColoredState.exists_laurent_approx</code> <small>line 444</small><div class="doc"><p>Continuous spectral multiplication lies in the physical cyclic space,
+proved by actual finite Laurent approximants, with any squared L² tolerance.</p></div><pre>lemma exists_laurent_approx {Ψ : UnitAddCircle → ℂ} (hΨ : Continuous Ψ)
+    {ε : ℝ} (he : 0 &lt; ε) :
+    ∃ c : ℤ →₀ ℂ, physicalError (C.weightedVector (fun _ =&gt; Ψ)) (C.laurent c) &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="PhysicalJets.lean.html#L377">OAI.ThreeTorus.physicalError</a></p></li><li id=L485><b>lemma</b> <code>OAI.ThreeTorus.physicalError_symm</code> <small>line 485</small></li><li id=L489><b>lemma</b> <code>OAI.ThreeTorus.physicalError_const_mul</code> <small>line 489</small></li><li id=L495><b>lemma</b> <code>OAI.ThreeTorus.physicalError_tagged_sum</code> <small>line 495</small></li><li id=L517><b>theorem</b> <code>OAI.ThreeTorus.actual_cyclic_prediction</code> <small>line 517</small><div class="doc"><p>Actual finite Laurent approximation to the OLD tagged packet sum after
+reflected signal blocks. Neither a cyclic-space oracle nor a formal spectral
+operator is used: the witness is a literal finite sum of twist iterates.</p></div><pre>theorem actual_cyclic_prediction {m : ℕ} (C : ColoredState (Fin m))
+    (τR : Fin m → Fin m) (hτR : Involutive τR) (hrC : C.Reflection τR)
+    (tags : Fin m → ℂ) (htags : ∀ r, ‖tags r‖ ≤ 1)
+    (htrR : ∀ r, tags (τR r) = conj (tags r))
+    {ε τ η κ : ℝ} (hε : 0 &lt; ε) (hτ : 0 &lt; τ) (hη : 0 &lt; η) (hκ : 0 &lt; κ)
+    (hmass : (∫ z, blockTotal C.density z ∂phaseHaar) &lt; 2) :
+    ∃ E : ColoredState (Fin m), ∃ α : Equiv.Perm TripleTorus,
+      ∃ c : ℤ →₀ ℂ, ∃ K : ℕ, ∃ A : UnitAddCircle → ℂ,
+      0 &lt; K ∧ ActualColoredBlocks C E K α A ∧
+      (∀ r, physicalError (C.vector r) (E.vector r ∘ α) &lt; η) ∧
+      ((∫ z, Real.sqrt (blockTotal C.density z) ∂phaseHaar)-τ &lt;
+        ∫ z, Real.sqrt (blockTotal E.density z) ∂phaseHaar) ∧
+…</pre><p class="refs">Mentions: <a href="TrackedPackets.lean.html#L1301">OAI.ThreeTorus.ColoredState</a>, <a href="PredictionModels.lean.html#L52">OAI.ThreeTorus.blockTotal</a>, <a href="BlockMoments.lean.html#L60">OAI.ThreeTorus.phaseHaar</a>, <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a>, <a href="CyclicPrediction.lean.html#L17">OAI.ThreeTorus.ActualColoredBlocks</a>, <a href="PhysicalJets.lean.html#L377">OAI.ThreeTorus.physicalError</a></p></li><li id=L577><b>lemma</b> <code>OAI.ThreeTorus.physicalDist_const_mul</code> <small>line 577</small></li><li id=L582><b>lemma</b> <code>OAI.ThreeTorus.finite_weighted_dist_le</code> <small>line 582</small></li><li id=L597><b>theorem</b> <code>OAI.ThreeTorus.exists_colored_separation_small</code> <small>line 597</small><div class="doc"><p>The TWO separating passages simultaneously approximate the total vector,
+its arbitrarily tagged test, and total density. Tags are fixed BEFORE choice.</p></div><pre>theorem exists_colored_separation_small {n : ℕ} (F : PassagePackets (Fin n))
+    (hd : ∀ i j, i ≠ j → F.m i = F.m j → Disjoint (F.cylinderCore i) (F.cylinderCore j))
+    (τ : Fin n → Fin n) (hτ : Involutive τ) (hr : F.Reflection τ)
+    (b : Fin n → ℂ) (Q : PhysicalJetData) (frame : PhysicalFrame)
+    {ε κ ζ : ℝ} (hε : 0 &lt; ε) (hκ : 0 &lt; κ) (hζ : 0 &lt; ζ) :
+    ∃ C : ColoredState (Fin n), ∃ α : Equiv.Perm TripleTorus, ∃ frame&#x27; : PhysicalFrame,
+      Continuous α ∧ MeasurePreserving α tripleVolume tripleVolume ∧
+      frame&#x27;.chart=frame.chart.trans α ∧ C.Reflection τ ∧
+      (∃ δ : ℝ, 0 &lt; δ ∧ δ &lt; 1/8 ∧ δ &lt; κ ∧ C.packets.GoodArc δ) ∧
+      Q.Close ζ frame F.V frame&#x27; C.packets.V ∧
+      physicalDist (finitePacketVector F.m F.A) (C.totalVector ∘ α) &lt; ε ∧
+      physicalDist (fun x =&gt; ∑ i, b i*packet (F.m i) (F.A i) x)
+…</pre><p class="refs">Mentions: <a href="PassageFamilies.lean.html#L854">OAI.ThreeTorus.PassagePackets</a>, <a href="SymmetricPackets.lean.html#L1041">OAI.ThreeTorus.PhysicalJetData</a>, <a href="PhysicalJets.lean.html#L260">OAI.ThreeTorus.PhysicalFrame</a>, <a href="TrackedPackets.lean.html#L1301">OAI.ThreeTorus.ColoredState</a>, <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a>, <a href="Twists.lean.html#L19">OAI.ThreeTorus.tripleVolume</a>, <a href="PacketAlgebra.lean.html#L207">OAI.ThreeTorus.physicalDist</a>, <a href="FlatPackets.lean.html#L524">OAI.ThreeTorus.finitePacketVector</a>, <a href="Twists.lean.html#L22">OAI.ThreeTorus.packet</a></p></li><li id=L658><b>theorem</b> <code>OAI.ThreeTorus.exists_prediction_ready</code> <small>line 658</small><div class="doc"><p>Full source05 preparation through BOTH support-separating passages. The
+same arbitrary tags, reality, physical errors and total density are retained.</p></div><pre>theorem exists_prediction_ready (F : MeasurablePackets)
+    {τ : F.Index → F.Index} (hr : F.Reflection τ)
+    {δ l u : ℝ} (hδ : 0 ≤ δ) (hd : δ &lt; 1/2) (hdl : δ &lt; l) (hud : u &lt; 1-δ)
+    (hsupp : F.Supported l u)
+    (V : ℝ → ℝ) (hp : Periodic V 1) (hs : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) V)
+    (hv : ∀ x ∈ Ioo δ (1-δ), 0 &lt; deriv V x)
+    (hflat : F.spectrum (fun z =&gt; (hp.lift z:UnitAddCircle))=phaseHaar)
+    {h : TripleTorus → ℂ} (hh : Continuous h) (hrh : ∀ x, conj (h x)=h x)
+    (hch : ∫ x, h x ∂tripleVolume=0) (hbh : ∀ x, ‖h x‖ ≤ 1)
+    (Q : PhysicalJetData) (frame : PhysicalFrame)
+    {ε κ ζ : ℝ} (hε : 0 &lt; ε) (hκ : 0 &lt; κ) (hζ : 0 &lt; ζ) :
+    ∃ n : ℕ, ∃ C : ColoredState (Fin n), ∃ ρ : Fin n → Fin n,
+…</pre><p class="refs">Mentions: <a href="Prediction.lean.html#L458">OAI.ThreeTorus.MeasurablePackets</a>, <a href="BlockMoments.lean.html#L60">OAI.ThreeTorus.phaseHaar</a>, <a href="Twists.lean.html#L16">OAI.ThreeTorus.TripleTorus</a>, <a href="Twists.lean.html#L19">OAI.ThreeTorus.tripleVolume</a>, <a href="SymmetricPackets.lean.html#L1041">OAI.ThreeTorus.PhysicalJetData</a>, <a href="PhysicalJets.lean.html#L260">OAI.ThreeTorus.PhysicalFrame</a>, <a href="TrackedPackets.lean.html#L1301">OAI.ThreeTorus.ColoredState</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

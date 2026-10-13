@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/NormalCoefficients.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/NormalCoefficients.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>NormalCoefficients.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>NormalCoefficients.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/NormalCoefficients.lean#L1">source</a></p><div class="doc"><h3>Principal restrictions and local normal coefficient families</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.Nagata.W18.not_dvd_remainder_of_maximal_power</code> <small>line 24</small><div class="doc"><p>A factorization that cannot be extended by another <code>G</code> has a remainder
+not divisible by <code>G</code>. This implication needs no domain assumption.</p></div><pre>theorem not_dvd_remainder_of_maximal_power {A : Type*} [CommRing A]
+    (G S T : A) (j : ℕ) (hfactor : S = G ^ j * T)
+    (hmaximal : ¬G ^ (j + 1) ∣ S) : ¬G ∣ T := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.Nagata.W18.residue_ne_zero_of_maximal_power</code> <small>line 33</small><div class="doc"><p>Maximal extracted powers give nonzero residues in the genuine quotient.</p></div><pre>theorem residue_ne_zero_of_maximal_power {A : Type*} [CommRing A]
+    (G S T : A) (j : ℕ) (hfactor : S = G ^ j * T)
+    (hmaximal : ¬G ^ (j + 1) ∣ S) :
+    Ideal.Quotient.mk (Ideal.span ({G} : Set A)) T ≠ 0 := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Nagata.W18.residue_ne_zero_of_not_dvd</code> <small>line 42</small><div class="doc"><p>The direct form needed when maximal factorization returns <code>¬G ∣ T</code>.</p></div><pre>theorem residue_ne_zero_of_not_dvd {A : Type*} [CommRing A]
+    (G T : A) (hT : ¬G ∣ T) :
+    Ideal.Quotient.mk (Ideal.span ({G} : Set A)) T ≠ 0 := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.Nagata.W18.principal_quotient_isDomain</code> <small>line 50</small><div class="doc"><p>A prime hypersurface ideal supplies the expected domain structure.
+The preceding nonzero-residue statements hold even without this hypothesis.</p></div><pre>theorem principal_quotient_isDomain {A : Type*} [CommRing A]
+    (G : A) (hprime : (Ideal.span ({G} : Set A)).IsPrime) :
+    IsDomain (A ⧸ Ideal.span ({G} : Set A)) := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.Nagata.W18.principal_normal_polynomial_ne_zero</code> <small>line 56</small><div class="doc"><p>The selected normal polynomial is nonzero over the hypersurface quotient.</p></div><pre>theorem principal_normal_polynomial_ne_zero {A : Type*} [CommRing A]
+    (s : Finset ℕ) (G : A) (S T : ℕ → A) (j : ℕ → ℕ) (u : ℕ)
+    (hne : s.Nonempty) (hweight : ∀ a ∈ s, a + j a = u)
+    (hfactor : ∀ a ∈ s, S a = G ^ j a * T a)
+    (hmaximal : ∀ a ∈ s, ¬G ^ (j a + 1) ∣ S a) :
+    (∑ a ∈ s, Polynomial.monomial (j a)
+      (Ideal.Quotient.mk (Ideal.span ({G} : Set A)) (T a))) ≠ 0 := by
+…</pre></li><li id=L69><b>theorem</b> <code>OAI.Nagata.W18.principal_diagonal_polynomial_ne_zero</code> <small>line 69</small><div class="doc"><p>Direct interface for maximal-factorization APIs returning indivisible remainders.</p></div><pre>theorem principal_diagonal_polynomial_ne_zero {A : Type*} [CommRing A]
+    (s : Finset ℕ) (G : A) (T : ℕ → A) (j : ℕ → ℕ) (u : ℕ)
+    (hne : s.Nonempty) (hweight : ∀ a ∈ s, a + j a = u)
+    (hT : ∀ a ∈ s, ¬G ∣ T a) :
+    (∑ a ∈ s, Polynomial.monomial (j a)
+      (Ideal.Quotient.mk (Ideal.span ({G} : Set A)) (T a))) ≠ 0 := by
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.Nagata.W18.mvPolynomial_normal_polynomial_ne_zero</code> <small>line 80</small><div class="doc"><p>Specialization to genuine multivariable coordinate polynomials.</p></div><pre>theorem mvPolynomial_normal_polynomial_ne_zero {K σ : Type*} [Field K]
+    (s : Finset ℕ) (G : MvPolynomial σ K) (S T : ℕ → MvPolynomial σ K)
+    (j : ℕ → ℕ) (u : ℕ)
+    (hne : s.Nonempty) (hweight : ∀ a ∈ s, a + j a = u)
+    (hfactor : ∀ a ∈ s, S a = G ^ j a * T a)
+    (hmaximal : ∀ a ∈ s, ¬G ^ (j a + 1) ∣ S a) :
+    (∑ a ∈ s, Polynomial.monomial (j a)
+      (Ideal.Quotient.mk (Ideal.span ({G} : Set (MvPolynomial σ K))) (T a))) ≠ 0 :=
+…</pre></li><li id=L91><b>theorem</b> <code>OAI.Nagata.W18.restriction_annihilates_principal</code> <small>line 91</small><div class="doc"><p>A chart ring map annihilating <code>G</code> annihilates its principal ideal.</p></div><pre>theorem restriction_annihilates_principal {A B : Type*} [CommRing A] [CommRing B]
+    (G : A) (f : A →+* B) (hG : f G = 0) :
+    ∀ a ∈ Ideal.span ({G} : Set A), f a = 0 := by
+…</pre></li><li id=L99><b>def</b> <code>OAI.Nagata.W18.principalRestriction</code> <small>line 99</small><div class="doc"><p>The induced chart restriction on the genuine hypersurface quotient.</p></div><pre>def principalRestriction {A B : Type*} [CommRing A] [CommRing B]
+    (G : A) (f : A →+* B) (hG : f G = 0) :
+    A ⧸ Ideal.span ({G} : Set A) →+* B :=
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.Nagata.W18.principalRestriction_residue</code> <small>line 105</small><div class="doc"><p>A quotient coefficient restricts to the original coefficient's chart value.</p></div><pre>theorem principalRestriction_residue {A B : Type*} [CommRing A] [CommRing B]
+    (G : A) (f : A →+* B) (hG : f G = 0) (a : A) :
+    principalRestriction G f hG (Ideal.Quotient.mk (Ideal.span ({G} : Set A)) a) =
+      f a := rfl</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L99">OAI.Nagata.W18.principalRestriction</a></p></li><li id=L112><b>theorem</b> <code>OAI.Nagata.W18.selected_coefficient_restriction</code> <small>line 112</small><div class="doc"><p>Extracting a selected coefficient and then restricting agrees with its
+original chart restriction. No injectivity of the chart ring map is assumed.</p></div><pre>theorem selected_coefficient_restriction {A B : Type*} [CommRing A] [CommRing B]
+    (s : Finset ℕ) (G : A) (T : ℕ → A) (j : ℕ → ℕ) (u : ℕ)
+    (hweight : ∀ a ∈ s, a + j a = u)
+    (f : A →+* B) (hG : f G = 0) (a : ℕ) (ha : a ∈ s) :
+    principalRestriction G f hG
+      ((∑ b ∈ s, Polynomial.monomial (j b)
+        (Ideal.Quotient.mk (Ideal.span ({G} : Set A)) (T b))).coeff (j a)) =
+      f (T a) := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L99">OAI.Nagata.W18.principalRestriction</a></p></li><li id=L136><b>def</b> <code>OAI.Nagata.W18.bivariateToNested</code> <small>line 136</small><div class="doc"><p>Coordinate 0 is the base variable U; coordinate 1 is the fiber variable W.</p></div><pre>def bivariateToNested : MvPolynomial (Fin 2) K →+* Polynomial (Polynomial K) :=
+…</pre></li><li id=L141><b>def</b> <code>OAI.Nagata.W18.nestedToBivariate</code> <small>line 141</small><div class="doc"><p>The inverse substitution sends inner X to coordinate 0 and outer X to 1.</p></div><pre>def nestedToBivariate : Polynomial (Polynomial K) →+* MvPolynomial (Fin 2) K :=
+…</pre></li><li id=L145><b>theorem</b> <code>OAI.Nagata.W18.nestedToBivariate_comp_bivariateToNested</code> <small>line 145</small></li><li id=L153><b>theorem</b> <code>OAI.Nagata.W18.bivariateToNested_comp_nestedToBivariate</code> <small>line 153</small></li><li id=L168><b>def</b> <code>OAI.Nagata.W18.bivariateNestedEquiv</code> <small>line 168</small><div class="doc"><p>The two concrete polynomial coordinate rings are isomorphic.</p></div><pre>def bivariateNestedEquiv : MvPolynomial (Fin 2) K ≃+* Polynomial (Polynomial K) :=
+…</pre></li><li id=L173><b>theorem</b> <code>OAI.Nagata.W18.eval_bivariateToNested</code> <small>line 173</small><div class="doc"><p>Explicit compatibility of both coordinate evaluations.</p></div><pre>theorem eval_bivariateToNested (a c : K) (F : MvPolynomial (Fin 2) K) :
+    ((bivariateToNested F).eval (Polynomial.C c)).eval a =
+      MvPolynomial.eval ![a, c] F := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L136">OAI.Nagata.W18.bivariateToNested</a></p></li><li id=L188><b>theorem</b> <code>OAI.Nagata.W18.nestedPointIdeal_mem_iff</code> <small>line 188</small><div class="doc"><p>The generated point ideal is exactly the evaluation kernel, not a
+substitute notion of multiplicity.</p></div><pre>theorem nestedPointIdeal_mem_iff (a c : K) (H : Polynomial (Polynomial K)) :
+    H ∈ nestedPointIdeal a c ↔ (H.eval (Polynomial.C c)).eval a = 0 :=
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L192><b>theorem</b> <code>OAI.Nagata.W18.pointIdeal_map_bivariateNestedEquiv</code> <small>line 192</small></li><li id=L212><b>theorem</b> <code>OAI.Nagata.W18.nested_order_of_affine_order</code> <small>line 212</small><div class="doc"><p>The source ordinary multiplicity hypothesis supplies the nested ideal power.</p></div><pre>theorem nested_order_of_affine_order (a c : K) (m : ℕ)
+    (F : MvPolynomial (Fin 2) K)
+    (hF : Nagata.AffineMultiplicity.orderAtLeast ![a, c] m F) :
+    bivariateToNested F ∈ (nestedPointIdeal a c) ^ m := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L136">OAI.Nagata.W18.bivariateToNested</a>, <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L220><b>theorem</b> <code>OAI.Nagata.W18.affine_top_coefficient_base_divisibility</code> <small>line 220</small></li><li id=L227><b>theorem</b> <code>OAI.Nagata.W18.affine_fiber_power_divides</code> <small>line 227</small></li><li id=L250><b>def</b> <code>OAI.Nagata.W18.normalCoefficientFamily</code> <small>line 250</small><div class="doc"><p>The actual finite normal polynomial <code>Σ_{j≤J} q_j(U) W^j</code>.</p></div><pre>def normalCoefficientFamily {K : Type*} [CommRing K]
+    (J : ℕ) (q : ℕ → Polynomial K) : Polynomial (Polynomial K) :=
+…</pre></li><li id=L255><b>theorem</b> <code>OAI.Nagata.W18.normalCoefficientFamily_coeff</code> <small>line 255</small><div class="doc"><p>Coefficient extraction identifies the finite list with the polynomial.</p></div><pre>theorem normalCoefficientFamily_coeff {K : Type*} [CommRing K]
+    (J : ℕ) (q : ℕ → Polynomial K) (j : ℕ) (hj : j ≤ J) :
+    (normalCoefficientFamily J q).coeff j = q j := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L250">OAI.Nagata.W18.normalCoefficientFamily</a></p></li><li id=L263><b>theorem</b> <code>OAI.Nagata.W18.normalCoefficientFamily_natDegree_le</code> <small>line 263</small><div class="doc"><p>The finite list has the required fiber degree bound, even with zero coefficients.</p></div><pre>theorem normalCoefficientFamily_natDegree_le {K : Type*} [CommRing K]
+    (J : ℕ) (q : ℕ → Polynomial K) :
+    (normalCoefficientFamily J q).natDegree ≤ J := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L250">OAI.Nagata.W18.normalCoefficientFamily</a></p></li><li id=L271><b>theorem</b> <code>OAI.Nagata.W18.family_top_base_divisibility</code> <small>line 271</small><div class="doc"><p>Surface order at arbitrary <code>(a,c)</code> forces order <code>m-J</code> of the top list coefficient.</p></div><pre>theorem family_top_base_divisibility {K : Type*} [CommRing K]
+    (J : ℕ) (q : ℕ → Polynomial K) (a c : K) (m : ℕ)
+    (hH : normalCoefficientFamily J q ∈ (nestedPointIdeal a c) ^ m) :
+    (X - C a) ^ (m - J) ∣ q J := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L250">OAI.Nagata.W18.normalCoefficientFamily</a>, <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L281><b>theorem</b> <code>OAI.Nagata.W18.all_coefficients_base_divisibility_at_zero</code> <small>line 281</small><div class="doc"><p>At zero fiber displacement, every coefficient has the base-order bound.
+No degree assumption is needed for this statement.</p></div><pre>theorem all_coefficients_base_divisibility_at_zero {K : Type*} [CommRing K]
+    (H : Polynomial (Polynomial K)) (a : K) (m : ℕ)
+    (hH : H ∈ (nestedPointIdeal a 0) ^ m) (j : ℕ) :
+    (X - C a) ^ (m - j) ∣ H.coeff j := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L289><b>theorem</b> <code>OAI.Nagata.W18.family_coefficient_base_divisibility_at_zero</code> <small>line 289</small><div class="doc"><p>Finite-list version of the nine-zero coefficient condition.</p></div><pre>theorem family_coefficient_base_divisibility_at_zero {K : Type*} [CommRing K]
+    (J : ℕ) (q : ℕ → Polynomial K) (a : K) (m j : ℕ) (hj : j ≤ J)
+    (hH : normalCoefficientFamily J q ∈ (nestedPointIdeal a 0) ^ m) :
+    (X - C a) ^ (m - j) ∣ q j := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L250">OAI.Nagata.W18.normalCoefficientFamily</a>, <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L298><b>theorem</b> <code>OAI.Nagata.W18.surface_order_penultimate_coefficient</code> <small>line 298</small><div class="doc"><p>The actual surface ideal condition supplies the square-case penultimate
+fiber coefficient identity, retaining the nonzero leading coefficient.</p></div><pre>theorem surface_order_penultimate_coefficient {K : Type*} [Field K]
+    (H : Polynomial (Polynomial K)) (a c : K) (m : ℕ) (hm : 0 &lt; m)
+    (hdeg : H.natDegree ≤ m) (hH : H ∈ (nestedPointIdeal a c) ^ m)
+    (htop : (H.coeff m).eval a ≠ 0) :
+    (H.coeff (m - 1)).eval a = (-(m : K) * (H.coeff m).eval a) * c := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L309><b>theorem</b> <code>OAI.Nagata.W18.family_penultimate_coefficient</code> <small>line 309</small><div class="doc"><p>Finite normal coefficient list version of the square-case fiber identity.</p></div><pre>theorem family_penultimate_coefficient {K : Type*} [Field K]
+    (q : ℕ → Polynomial K) (a c : K) (m : ℕ) (hm : 0 &lt; m)
+    (hH : normalCoefficientFamily m q ∈ (nestedPointIdeal a c) ^ m)
+    (htop : (q m).eval a ≠ 0) :
+    (q (m - 1)).eval a = (-(m : K) * (q m).eval a) * c := by
+…</pre><p class="refs">Mentions: <a href="NormalCoefficients.lean.html#L250">OAI.Nagata.W18.normalCoefficientFamily</a>, <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

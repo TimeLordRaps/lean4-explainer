@@ -1,0 +1,1 @@
+window.l4shard("ec", [["SimpleGraph.averageEccentricity",1474,34],["SimpleGraph.computable_eccent",1474,57],["SimpleGraph.ecc",1473,122],["SimpleGraph.eccSet",1473,147],["SimpleGraph.eccent_eq_computable",1474,66],["SimpleGraph.maxEccentricityVertices",1474,29],["WrittenOnTheWallII.GraphConjecture103.wowii103Counterexample_averageEccentricity",1540,63]]);

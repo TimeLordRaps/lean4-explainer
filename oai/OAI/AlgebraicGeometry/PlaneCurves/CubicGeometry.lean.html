@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/CubicGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/CubicGeometry.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>CubicGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>CubicGeometry.lean</span></code></h1><p class="muted">24 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/CubicGeometry.lean#L1">source</a></p><div class="doc"><h3>Cubic relations, closed embeddings, image containment, and gradients</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Nagata.W21.cubicSectionProduct_mem</code> <small>line 21</small></li><li id=L55><b>theorem</b> <code>OAI.Nagata.W21.exists_cubicRelation_of_degreeNine_dimension</code> <small>line 55</small><div class="doc"><p>The actual evaluation coordinates satisfy a nonzero homogeneous cubic,
+conditional only here on the separately proved degree-nine section dimension.</p></div><pre>theorem exists_cubicRelation_of_degreeNine_dimension {τ γ : ℂ}
+    (b : Fin 3 → automorphicSections τ 3 γ)
+    [Module.Finite ℂ (automorphicSections τ 9 (γ ^ 3))]
+    (hdim : Module.finrank ℂ (automorphicSections τ 9 (γ ^ 3)) ≤ 9) :
+    ∃ P : MvPolynomial (Fin 3) ℂ,
+      P ≠ 0 ∧ P.IsHomogeneous 3 ∧
+      MvPolynomial.aeval (fun i ↦ (b i).val) P = 0 := by
+…</pre></li><li id=L70><b>theorem</b> <code>OAI.Nagata.W21.exists_cubicEquation_of_degreeNine_dimension</code> <small>line 70</small><div class="doc"><p>The cubic equation vanishes at every actual evaluation vector, including
+all lifts used by the projective quotient map.</p></div><pre>theorem exists_cubicEquation_of_degreeNine_dimension {τ γ : ℂ}
+    (b : Fin 3 → automorphicSections τ 3 γ)
+    [Module.Finite ℂ (automorphicSections τ 9 (γ ^ 3))]
+    (hdim : Module.finrank ℂ (automorphicSections τ 9 (γ ^ 3)) ≤ 9) :
+    ∃ P : MvPolynomial (Fin 3) ℂ,
+      P ≠ 0 ∧ P.IsHomogeneous 3 ∧ ∀ z : ℂ,
+      MvPolynomial.aeval (fun i ↦ (b i).val z) P = 0 := by
+…</pre></li><li id=L104><b>theorem</b> <code>OAI.Nagata.W21.continuous_cubicCoverMap</code> <small>line 104</small><div class="doc"><p>Continuity into the canonical complex projective topology.</p></div><pre>theorem continuous_cubicCoverMap {τ γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections τ 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval τ 3 γ z)) = 2) :
+    Continuous (cubicCoverMap b hbase) := by
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.Nagata.W21.continuous_cubicTorusMap</code> <small>line 117</small><div class="doc"><p>The descended actual torus map is continuous for both canonical quotient topologies.</p></div><pre>theorem continuous_cubicTorusMap (τ : ℂˣ) {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (τ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval τ 3 γ z)) = 2) :
+    Continuous (cubicTorusMap τ b hbase) :=
+…</pre></li><li id=L125><b>theorem</b> <code>OAI.Nagata.W21.isCompact_cubicTorusMap_range</code> <small>line 125</small><div class="doc"><p>The image is compact for every admissible period.</p></div><pre>theorem isCompact_cubicTorusMap_range {τ : ℝ} (hτ : 0 &lt; τ) (hτ1 : τ &lt; 1)
+    {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections
+      (Nagata.Workers.W05.positivePeriod τ hτ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval (τ : ℂ) 3 γ z)) = 2) :
+    IsCompact (Set.range (cubicTorusMap (Nagata.Workers.W05.positivePeriod τ hτ) b hbase)) := by
+…</pre><p class="refs">Mentions: <a href="TorusCharts.lean.html#L108">OAI.Nagata.Workers.W05.positivePeriod</a></p></li><li id=L146><b>theorem</b> <code>OAI.Nagata.W21.cubicTorusMap_on_curve</code> <small>line 146</small><div class="doc"><p>A homogeneous equation vanishing on the evaluation coordinates vanishes
+on the canonical representative of every image point.</p></div><pre>theorem cubicTorusMap_on_curve (τ : ℂˣ) {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (τ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval τ 3 γ z)) = 2)
+    {d : ℕ} (G : NonzeroHomogeneousForm d)
+    (hG : ∀ z : ℂ, z ≠ 0 → MvPolynomial.eval (cubicEvaluationVector b z) G.polynomial = 0)
+    (q : TorusPoint τ) : MvPolynomial.eval (cubicTorusMap τ b hbase q).rep G.polynomial = 0 := by
+…</pre><p class="refs">Mentions: <a href="MultiplierBundles.lean.html#L121">OAI.Nagata.W21.TorusPoint</a></p></li><li id=L164><b>def</b> <code>OAI.Nagata.W21.cubicCurveMap</code> <small>line 164</small><div class="doc"><p>The actual projective curve-valued map, without a surjectivity claim.</p></div><pre>noncomputable def cubicCurveMap (τ : ℂˣ) {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (τ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval τ 3 γ z)) = 2)
+    {d : ℕ} (G : NonzeroHomogeneousForm d)
+    (hG : ∀ z : ℂ, z ≠ 0 → MvPolynomial.eval (cubicEvaluationVector b z) G.polynomial = 0) :
+    TorusPoint τ → AssociatedBundle.CurvePoint G :=
+…</pre><p class="refs">Mentions: <a href="MultiplierBundles.lean.html#L121">OAI.Nagata.W21.TorusPoint</a></p></li><li id=L173><b>theorem</b> <code>OAI.Nagata.W21.continuous_cubicCurveMap</code> <small>line 173</small></li><li id=L184><b>theorem</b> <code>OAI.Nagata.W21.exists_cubicForm_of_degreeNine_dimension</code> <small>line 184</small><div class="doc"><p>The dimension argument supplies an actual nonzero homogeneous cubic with
+the pointwise vanishing needed by the curve-valued map.</p></div><pre>theorem exists_cubicForm_of_degreeNine_dimension {τ γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections τ 3 γ))
+    [Module.Finite ℂ (automorphicSections τ 9 (γ ^ 3))]
+    (hdim : Module.finrank ℂ (automorphicSections τ 9 (γ ^ 3)) ≤ 9) :
+    ∃ G : NonzeroHomogeneousForm 3, ∀ z : ℂ, z ≠ 0 →
+      MvPolynomial.eval (cubicEvaluationVector b z) G.polynomial = 0 := by
+…</pre></li><li id=L208><b>def</b> <code>OAI.Nagata.W21.sectionLinePolynomial</code> <small>line 208</small><div class="doc"><p>The literal projective linear equation corresponding to a section.</p></div><pre>def sectionLinePolynomial {τ γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections τ 3 γ))
+    (f : automorphicSections τ 3 γ) : MvPolynomial (Fin 3) ℂ :=
+…</pre></li><li id=L213><b>theorem</b> <code>OAI.Nagata.W21.sectionLinePolynomial_homogeneous</code> <small>line 213</small></li><li id=L221><b>theorem</b> <code>OAI.Nagata.W21.sectionLinePolynomial_eval</code> <small>line 221</small><div class="doc"><p>Evaluating the actual linear equation recovers the section itself.</p></div><pre>theorem sectionLinePolynomial_eval {τ γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections τ 3 γ))
+    (f : automorphicSections τ 3 γ) (z : ℂ) :
+    MvPolynomial.eval (cubicEvaluationVector b z) (sectionLinePolynomial b f) = f.val z := by
+…</pre><p class="refs">Mentions: <a href="CubicGeometry.lean.html#L208">OAI.Nagata.W21.sectionLinePolynomial</a></p></li><li id=L232><b>theorem</b> <code>OAI.Nagata.W21.sectionLinePolynomial_ne_zero</code> <small>line 232</small><div class="doc"><p>A nonzero actual section gives a nonzero projective line equation.</p></div><pre>theorem sectionLinePolynomial_ne_zero {τ γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections τ 3 γ))
+    {f : automorphicSections τ 3 γ} (hf : f ≠ 0) : sectionLinePolynomial b f ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="CubicGeometry.lean.html#L208">OAI.Nagata.W21.sectionLinePolynomial</a></p></li><li id=L244><b>theorem</b> <code>OAI.Nagata.W21.sectionLinePolynomial_vanishes_at_image</code> <small>line 244</small><div class="doc"><p>A zero of the section maps to a point on the literal projective line.</p></div><pre>theorem sectionLinePolynomial_vanishes_at_image (τ : ℂˣ) {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (τ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval τ 3 γ z)) = 2)
+    (f : automorphicSections (τ : ℂ) 3 γ) (z : ℂˣ) (hz : f.val z = 0) :
+    MvPolynomial.eval (cubicCoverMap b hbase z).rep (sectionLinePolynomial b f) = 0 := by
+…</pre><p class="refs">Mentions: <a href="CubicGeometry.lean.html#L208">OAI.Nagata.W21.sectionLinePolynomial</a></p></li><li id=L273><b>theorem</b> <code>OAI.Nagata.W21.cubicTorusMap_isClosedEmbedding</code> <small>line 273</small><div class="doc"><p>Compactness and actual projective Hausdorffness turn the proved injectivity
+into a closed embedding, with both spaces carrying their canonical topologies.</p></div><pre>theorem cubicTorusMap_isClosedEmbedding {τ : ℝ} (hτ : 0 &lt; τ) (hτ1 : τ &lt; 1)
+    {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (positivePeriod τ hτ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval (τ : ℂ) 3 γ z)) = 2)
+    (hsep : ∀ z w : ℂˣ, ¬ torusOrbitSetoid (positivePeriod τ hτ) z w →
+      Module.finrank ℂ (LinearMap.ker (sectionTwoEval (τ : ℂ) 3 γ z w)) = 1) :
+    Topology.IsClosedEmbedding (cubicTorusMap (positivePeriod τ hτ) b hbase) := by
+…</pre><p class="refs">Mentions: <a href="MultiplierBundles.lean.html#L105">OAI.Nagata.W21.torusOrbitSetoid</a></p></li><li id=L286><b>theorem</b> <code>OAI.Nagata.W21.cubicTorusMap_range_isConnected</code> <small>line 286</small><div class="doc"><p>The actual image is connected, independently of any Chow theorem.</p></div><pre>theorem cubicTorusMap_range_isConnected (τ : ℂˣ) {γ : ℂ}
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (τ : ℂ) 3 γ))
+    (hbase : ∀ z : ℂ, z ≠ 0 →
+      Module.finrank ℂ (LinearMap.ker (sectionEval τ 3 γ z)) = 2) :
+    IsConnected (Set.range (cubicTorusMap τ b hbase)) := by
+…</pre></li><li id=L294><b>theorem</b> <code>OAI.Nagata.W21.positivePeriod_norm_lt</code> <small>line 294</small></li><li id=L301><b>theorem</b> <code>OAI.Nagata.W21.cubicMapFromDimensions_isClosedEmbedding</code> <small>line 301</small><div class="doc"><p>The closed embedding statement with all divisor-kernel hypotheses reduced
+to the actual D1/D2/D3 section dimensions. These dimensions remain explicit.</p></div><pre>theorem cubicMapFromDimensions_isClosedEmbedding {τ : ℝ} (hτ : 0 &lt; τ) (hτ1 : τ &lt; 1)
+    {γ : ℂ} (hγ : γ ≠ 0)
+    (b : Module.Basis (Fin 3) ℂ (automorphicSections (positivePeriod τ hτ : ℂ) 3 γ))
+    (h1 : ∀ δ : ℂ, δ ≠ 0 → Module.finrank ℂ (automorphicSections (τ : ℂ) 1 δ) = 1)
+    (h2 : ∀ δ : ℂ, δ ≠ 0 → Module.finrank ℂ (automorphicSections (τ : ℂ) 2 δ) = 2) :
+    Topology.IsClosedEmbedding
+      (cubicMapFromDimensions (positivePeriod τ hτ) (positivePeriod_norm_lt hτ hτ1) hγ b h2) := by
+…</pre><p class="refs">Mentions: <a href="CubicGeometry.lean.html#L294">OAI.Nagata.W21.positivePeriod_norm_lt</a></p></li><li id=L331><b>theorem</b> <code>OAI.Nagata.W21.actualCubicMap_isClosedEmbedding</code> <small>line 331</small><div class="doc"><p>The actual theta map is a topological closed embedding; all section
+dimension assumptions have been discharged by the genuine Laurent basis.</p></div><pre>theorem actualCubicMap_isClosedEmbedding {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    {γ : ℂ} (hγ : γ ≠ 0) : Topology.IsClosedEmbedding (actualCubicMap hτ hτone hγ) := by
+…</pre></li><li id=L338><b>theorem</b> <code>OAI.Nagata.W21.actualCubicMap_range_isConnected</code> <small>line 338</small></li><li id=L345><b>theorem</b> <code>OAI.Nagata.W21.exists_actualCubicForm</code> <small>line 345</small><div class="doc"><p>An actual nonzero homogeneous cubic vanishes on every evaluation vector,
+with no dimension, finiteness or basis assumption left.</p></div><pre>theorem exists_actualCubicForm {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    {γ : ℂ} (hγ : γ ≠ 0) :
+    ∃ G : NonzeroHomogeneousForm 3, ∀ z : ℂ, z ≠ 0 →
+      MvPolynomial.eval (cubicEvaluationVector (actualCubicBasis hτ hτone hγ) z)
+        G.polynomial = 0 := by
+…</pre></li><li id=L360><b>theorem</b> <code>OAI.Nagata.W21.exists_actualCubic_image_containment</code> <small>line 360</small><div class="doc"><p>The closed embedded torus is contained in the actual cubic zero locus.
+This is containment only, not equality or smoothness of that zero locus.</p></div><pre>theorem exists_actualCubic_image_containment {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    {γ : ℂ} (hγ : γ ≠ 0) :
+    ∃ G : NonzeroHomogeneousForm 3, ∀ q : TorusPoint (cubicPeriod hτ),
+      MvPolynomial.eval (actualCubicMap hτ hτone hγ q).rep G.polynomial = 0 := by
+…</pre><p class="refs">Mentions: <a href="MultiplierBundles.lean.html#L121">OAI.Nagata.W21.TorusPoint</a></p></li><li id=L422><b>theorem</b> <code>OAI.Nagata.W21.exists_threePointLine_through_image</code> <small>line 422</small><div class="doc"><p>Through every image point there is an actual line with three distinct image
+points. The line does not vanish identically on the torus.</p></div><pre>theorem exists_threePointLine_through_image {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    {γ : ℂ} (hγ : γ ≠ 0) (q : TorusPoint (cubicPeriod hτ)) :
+    ∃ (L : MvPolynomial (Fin 3) ℂ) (p : Fin 3 → PlanePoint),
+      L ≠ 0 ∧ L.IsHomogeneous 1 ∧ Function.Injective p ∧
+      p 0 = actualCubicMap hτ hτone hγ q ∧
+      (∀ i, p i ∈ Set.range (actualCubicMap hτ hτone hγ)) ∧
+      (∀ i, MvPolynomial.eval (p i).rep L = 0) ∧
+      ∃ z : ℂ, z ≠ 0 ∧
+        MvPolynomial.eval (cubicEvaluationVector (actualCubicBasis hτ hτone hγ) z) L ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="MultiplierBundles.lean.html#L121">OAI.Nagata.W21.TorusPoint</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

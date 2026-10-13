@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanGroupBoxes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanGroupBoxes.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>CartanGroupBoxes.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>CartanGroupBoxes.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanGroupBoxes.lean#L1">source</a></p><div class="doc"><h3>Actual group boxes for the Cartan word model</h3><p>The finite Cartan construction supplies the bases, bracket bounds, nilpotence
+and support exponents used here. The only external group facts are the two
+explicit published exponential inputs. In particular no box multiplication or
+volume estimate is an assumption.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>def</b> <code>OAI.PolycyclicRecognition.CartanWordModel.boxBasis</code> <small>line 29</small><div class="doc"><p>The actual scaled word basis, selected before taking its exponential image.</p></div><pre>def boxBasis (E : Set W) (β : M.Bases) (r : ℝ) :
+    Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H) :=
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a></p></li><li id=L35><b>def</b> <code>OAI.PolycyclicRecognition.CartanWordModel.groupBox</code> <small>line 35</small><div class="doc"><p>A Cartan group box is the exponential image of its scaled coordinate cube.</p></div><pre>def groupBox {G : Type*} (Exp : cartanRootIdeal H → G)
+    (E : Set W) (β : M.Bases) (r R : ℝ) : Set G :=
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a></p></li><li id=L49><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_groupBox_product_bound</code> <small>line 49</small><div class="doc"><p>A uniform product estimate for the actual Cartan boxes. No assumptions
+about compactness or convexity of the template are needed for this part.</p></div><pre>theorem exists_groupBox_product_bound
+    (dynkin : NilpotentDynkinExpansionInput EN N)
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Set W) (β : M.Bases),
+      IsMaximizingColumnBasis (wordListCoordinates M.letter M.wordList b₀)
+        (M.boxCost T hunimod eW E) β.val →
+      ∀ r : ℝ, 0 ≤ r → ∀ n : ℕ, ∀ R : ℝ, 0 ≤ R → ∀ g : Fin n → N,
+      (∀ i, g i ∈ M.groupBox T hunimod eW (Exp ∘ eN) E β r R) →
+      (List.ofFn g).prod ∈ M.groupBox T hunimod eW (Exp ∘ eN) E β r
+        (C * (1 + (n : ℝ)) ^ M.bound * (1 + R) ^ M.bound) := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a>, <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a></p></li><li id=L66><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.groupBox_inv_mem</code> <small>line 66</small><div class="doc"><p>Inversion requires no extra group input beyond the intrinsic exponential.</p></div><pre>theorem groupBox_inv_mem (E : Set W) (β : M.Bases) (r R : ℝ) {g : N}
+    (hg : g ∈ M.groupBox T hunimod eW (Exp ∘ eN) E β r R) :
+    g⁻¹ ∈ M.groupBox T hunimod eW (Exp ∘ eN) E β r R :=
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_groupBox_haar_volume</code> <small>line 75</small><div class="doc"><p>Exact Haar volume in a maximizing actual word basis. All scaling and
+support factors have been derived from the Cartan model.</p></div><pre>theorem exists_groupBox_haar_volume
+    (haarInput : NilpotentExponentialHaarInput EN N)
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ μ : Measure N, μ.IsHaarMeasure ∧
+      ∀ (E : Set W) (β : M.Bases),
+      columnBasisWeight (M.boxCost T hunimod eW E) β.val =
+        (M.supportIn T hunimod eW).templateSupport E →
+      ∀ (r R : ℝ), 0 ≤ R →
+        μ (M.groupBox T hunimod eW (Exp ∘ eN) E β r R) =
+          ENNReal.ofReal |(columnBasisMatrix (wordListCoordinates M.letter M.wordList b₀)
+            β.val).det| *
+          ENNReal.ofReal (Real.exp (r * (M.supportIn T hunimod eW).templateSupport E)) *
+…</pre><p class="refs">Mentions: <a href="../Analysis/NilpotentHaarInput.lean.html#L31">OAI.PolycyclicRecognition.NilpotentExponentialHaarInput</a>, <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L27">OAI.PolycyclicRecognition.columnBasisWeight</a>, <a href="WeightedColumnBasis.lean.html#L24">OAI.PolycyclicRecognition.columnBasisMatrix</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a></p></li><li id=L100><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_groupBox_haar_bounds</code> <small>line 100</small><div class="doc"><p>Uniform two-sided Haar estimates for all maximizing group boxes.</p></div><pre>theorem exists_groupBox_haar_bounds
+    (haarInput : NilpotentExponentialHaarInput EN N)
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ (μ : Measure N) (c C : ℝ), μ.IsHaarMeasure ∧ 0 &lt; c ∧ 0 &lt; C ∧
+      ∀ (E : Set W) (β : M.Bases),
+      IsMaximizingColumnBasis (wordListCoordinates M.letter M.wordList b₀)
+        (M.boxCost T hunimod eW E) β.val →
+      ∀ (r R : ℝ), 0 ≤ R →
+        ENNReal.ofReal c *
+          ENNReal.ofReal (Real.exp (r * (M.supportIn T hunimod eW).templateSupport E)) *
+          ENNReal.ofReal (2 * R) ^ finrank ℝ (cartanRootIdeal H) ≤
+            μ (M.groupBox T hunimod eW (Exp ∘ eN) E β r R) ∧
+…</pre><p class="refs">Mentions: <a href="../Analysis/NilpotentHaarInput.lean.html#L31">OAI.PolycyclicRecognition.NilpotentExponentialHaarInput</a>, <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

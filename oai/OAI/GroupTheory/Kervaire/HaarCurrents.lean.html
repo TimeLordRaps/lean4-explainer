@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/Kervaire/HaarCurrents.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/Kervaire/HaarCurrents.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">GroupTheory</a> / <a href="index.html">Kervaire</a> / <span>HaarCurrents.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">GroupTheory</a>/<a href="index.html">Kervaire</a>/<span>HaarCurrents.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/Kervaire/HaarCurrents.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>lemma</b> <code>OAI.KervaireHaarFlow.hasCompactSupport_of_compact</code> <small>line 28</small></li><li id=L32><b>lemma</b> <code>OAI.KervaireHaarFlow.continuous_integrable</code> <small>line 32</small></li><li id=L37><b>lemma</b> <code>OAI.KervaireHaarFlow.hasDerivAt_integral_compact</code> <small>line 37</small><div class="doc"><p>Compactness supplies the domination needed for differentiation with respect to a real
+parameter. This lemma only assumes actual joint continuity and actual pointwise derivatives.</p></div><pre>lemma hasDerivAt_integral_compact {f df : ℝ → S → E}
+    (hf : Continuous (Function.uncurry f)) (hd : Continuous (Function.uncurry df))
+    (hfd : ∀ t x, HasDerivAt (fun u ↦ f u x) (df t x) t) (t : ℝ) :
+    HasDerivAt (fun u ↦ ∫ x, f u x ∂μ) (∫ x, df t x ∂μ) t := by
+…</pre></li><li id=L58><b>lemma</b> <code>OAI.KervaireHaarFlow.integral_deriv_eq_zero_of_invariant</code> <small>line 58</small><div class="doc"><p>The infinitesimal form of invariance under a measure-preserving flow.</p></div><pre>lemma integral_deriv_eq_zero_of_invariant {f df : ℝ → S → E}
+    (hf : Continuous (Function.uncurry f)) (hd : Continuous (Function.uncurry df))
+    (hfd : ∀ t x, HasDerivAt (fun u ↦ f u x) (df t x) t)
+    (hinv : ∀ t, (∫ x, f t x ∂μ) = ∫ x, f 0 x ∂μ) (t : ℝ) :
+    (∫ x, df t x ∂μ) = 0 := by
+…</pre></li><li id=L79><b>lemma</b> <code>OAI.KervaireClosedCurrent.contDiff_multilinear_eval</code> <small>line 79</small><div class="doc"><p>Smoothness of simultaneous evaluation, including a varying multilinear map.</p></div><pre>lemma contDiff_multilinear_eval {n : ℕ}
+    {f : E → ContinuousMultilinearMap ℝ (fun _ : Fin n ↦ E) F}
+    {V : Fin n → E → E} (hf : ContDiff ℝ ∞ f) (hV : ∀ i, ContDiff ℝ ∞ (V i)) :
+    ContDiff ℝ ∞ (fun x ↦ f x (V · x)) := by
+…</pre></li><li id=L108><b>lemma</b> <code>OAI.KervaireClosedCurrent.contDiff_eval_fields</code> <small>line 108</small><div class="doc"><p>Evaluation of a smooth form on smooth vector fields is smooth.</p></div><pre>lemma contDiff_eval_fields {n : ℕ} {form : E → E [⋀^Fin n]→L[ℝ] F}
+    {V : Fin n → E → E} (hf : ContDiff ℝ ∞ form) (hV : ∀ i, ContDiff ℝ ∞ (V i)) :
+    ContDiff ℝ ∞ (fun x ↦ form x (V · x)) := by
+…</pre></li><li id=L128><b>lemma</b> <code>OAI.KervaireCurrentHomotopy.integral_eval_constant</code> <small>line 128</small><div class="doc"><p>A moving-frame homotopy formula for a closed current, proved from the actual exterior
+derivative identity and differentiation under a compact-parameter integral.</p></div><pre>lemma integral_eval_constant {n : ℕ} {e : S → E} (he : Continuous e)
+    {form : (ℝ × E) → (ℝ × E) [⋀^Fin (n+1)]→L[ℝ] ℝ}
+    (hf : ContDiff ℝ ∞ form)
+    {V : Fin (n+2) → (ℝ × E) → (ℝ × E)} (hV : ∀ i, ContDiff ℝ ∞ (V i))
+    (hVzero : ∀ p, V 0 p = (1, 0))
+    (hdiv : ∀ (t : ℝ) (i : Fin (n+2)), i ≠ 0 → ∀ (g : (ℝ × E) → ℝ),
+      ContDiff ℝ ∞ g →
+      (∫ x, fderiv ℝ g (t,e x) (V i (t,e x)) ∂μ) = 0)
+    (hbracket : ∀ (t : ℝ) (x : S) (i j : Fin (n+1)), i ≤ j →
+      form (t,e x) (Matrix.vecCons (lieBracket ℝ (V i.castSucc) (V j.succ) (t,e x))
+        (j.removeNth (i.castSucc.removeNth (fun l ↦ V l (t,e x))))) = 0)
+    (hclosed : ∀ (t : ℝ) (x : S),
+…</pre></li><li id=L200><b>def</b> <code>OAI.KervaireHaarFlow.expFlow</code> <small>line 200</small><div class="doc"><p>The genuine exponential flow in the unitary group.</p></div><pre>def expFlow (a : skewAdjoint.submodule ℝ B) (t : ℝ) : unitary B :=
+…</pre></li><li id=L211><b>lemma</b> <code>OAI.KervaireHaarFlow.integral_unitary_fderiv_mul_eq_zero</code> <small>line 211</small><div class="doc"><p>Right-invariant vector fields on a compact unitary group have zero Haar divergence.
+The derivative is the ambient Fréchet derivative.</p></div><pre>lemma integral_unitary_fderiv_mul_eq_zero {g : B → ℝ} (hg : ContDiff ℝ ∞ g)
+    (a : skewAdjoint.submodule ℝ B) :
+    (∫ x : unitary B, fderiv ℝ g (x : B) ((x : B) * a) ∂μ) = 0 := by
+…</pre></li><li id=L240><b>def</b> <code>OAI.KervaireUnitaryHaarCurrent.liftField</code> <small>line 240</small><div class="doc"><p>The autonomous lift of a right-translation field to the time cylinder.</p></div><pre>def liftField (a : B) : (ℝ × B) →L[ℝ] (ℝ × B) :=
+…</pre></li><li id=L244><b>lemma</b> <code>OAI.KervaireUnitaryHaarCurrent.liftField_apply</code> <small>line 244</small></li><li id=L246><b>lemma</b> <code>OAI.KervaireUnitaryHaarCurrent.bracket_lift</code> <small>line 246</small></li><li id=L252><b>lemma</b> <code>OAI.KervaireUnitaryHaarCurrent.bracket_time_lift</code> <small>line 252</small></li><li id=L256><b>lemma</b> <code>OAI.KervaireUnitaryHaarCurrent.bracket_lift_time</code> <small>line 256</small></li><li id=L265><b>lemma</b> <code>OAI.KervaireUnitaryHaarCurrent.integral_liftField_eq_zero</code> <small>line 265</small></li><li id=L285><b>lemma</b> <code>OAI.KervaireCompactUnitary.isCompact_unitary</code> <small>line 285</small></li><li id=L293><b>lemma</b> <code>OAI.KervaireCompactUnitary.compactSpace</code> <small>line 293</small><div class="doc"><p>The unitary group of a finite-dimensional complex C⋆-algebra is compact.</p></div><pre>lemma compactSpace : CompactSpace (unitary B) :=
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

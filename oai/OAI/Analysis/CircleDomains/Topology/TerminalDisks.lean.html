@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Topology/TerminalDisks.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Topology/TerminalDisks.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Topology</a> / <span>TerminalDisks.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Topology</a>/<span>TerminalDisks.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Topology/TerminalDisks.lean#L1">source</a></p><div class="doc"><h3>Selecting finite terminal neighborhoods with simultaneous band control</h3><p>Section 2, Step 2 of the Koebe manuscript first fixes finitely many
+terminal points and then chooses their neighborhoods, before choosing
+the staircase width. Here positive-radius metric balls are selected
+inside prescribed neighborhoods with pairwise disjoint closed balls.
+Their physical coordinate values lie in the boundary bands enlarged
+by <code>h</code>; hence all shifted staircases have oscillation at most <code>a + 4h</code>
+there, simultaneously for every staircase width.</p><p>For the complex plane these selected balls are actual round disks.
+On a general quotient metric sphere they are only metric neighborhoods:
+the separate smooth-contour construction is still needed to obtain
+physical smooth Jordan boundaries around non-point fibers.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.exists_disjoint_closedBalls_in_neighborhoods</code> <small>line 33</small><div class="doc"><p>Finitely many distinct points have disjoint closed-ball
+neighborhoods inside arbitrary prescribed neighborhoods, with any
+prescribed positive upper bounds for their radii.</p></div><pre>theorem exists_disjoint_closedBalls_in_neighborhoods
+    {X I : Type*} [MetricSpace X] [Fintype I]
+    (p : I → X) (hp : Injective p) (O : I → Set X)
+    (hO : ∀ i, O i ∈ 𝓝 (p i)) (ρ : I → ℝ) (hρ : ∀ i, 0 &lt; ρ i) :
+    ∃ r : I → ℝ, (∀ i, 0 &lt; r i ∧ r i &lt; ρ i) ∧
+      (∀ i, closedBall (p i) (r i) ⊆ O i) ∧
+      Pairwise (Disjoint on fun i =&gt; closedBall (p i) (r i)) := by
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.eventually_mem_enlarged_boundary_band</code> <small>line 68</small><div class="doc"><p>The values near a boundary point lie in its actual liminf/limsup
+band enlarged by any positive margin.</p></div><pre>theorem eventually_mem_enlarged_boundary_band
+    {X : Type*} [TopologicalSpace X] {G : Set X} {f : X → ℝ} {M : ℝ}
+    (hM : ∀ y ∈ G, |f y| ≤ M) (x : X) {h : ℝ} (hh : 0 &lt; h) :
+    ∀ᶠ y in 𝓝[G] x,
+      liminf f (𝓝[G] x) - h &lt; f y ∧ f y &lt; limsup f (𝓝[G] x) + h := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.exists_terminal_balls_with_band_control</code> <small>line 87</small><div class="doc"><p>Actual finite-radius selection, with all nonsingular coordinate
+band bounds imposed at once. <code>active i j</code> specifies which coordinates
+need a real branch at terminal point <code>i</code>; the physical domain and branch
+may depend on that terminal point, as for periodic coordinates.</p></div><pre>theorem exists_terminal_balls_with_band_control
+    {X I J : Type*} [MetricSpace X] [Fintype I] [Fintype J]
+    (p : I → X) (hp : Injective p) (O : I → Set X)
+    (hO : ∀ i, O i ∈ 𝓝 (p i)) (ρ : I → ℝ) (hρ : ∀ i, 0 &lt; ρ i)
+    (G : I → Set X) (f : I → J → X → ℝ) (M : I → J → ℝ)
+    (hM : ∀ i j y, y ∈ G i → |f i j y| ≤ M i j)
+    (active : I → J → Prop) {h : ℝ} (hh : 0 &lt; h) :
+    ∃ r : I → ℝ, (∀ i, 0 &lt; r i ∧ r i &lt; ρ i) ∧
+      (∀ i, closedBall (p i) (r i) ⊆ O i) ∧
+      Pairwise (Disjoint on fun i =&gt; closedBall (p i) (r i)) ∧
+      ∀ i j, active i j → ∀ y ∈ closedBall (p i) (r i) ∩ G i,
+        liminf (f i j) (𝓝[G i] (p i)) - h &lt; f i j y ∧
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.abs_sub_le_of_enlarged_boundary_band</code> <small>line 117</small><div class="doc"><p>Enlarging the coordinate band by <code>h</code> at each end gives oscillation
+at most its band budget plus <code>2h</code>.</p></div><pre>theorem abs_sub_le_of_enlarged_boundary_band
+    {X : Type*} [TopologicalSpace X] {G : Set X} {f : X → ℝ}
+    {s x y : X} {a h : ℝ}
+    (hband : limsup f (𝓝[G] s) - liminf f (𝓝[G] s) ≤ a)
+    (hx : liminf f (𝓝[G] s) - h &lt; f x ∧ f x &lt; limsup f (𝓝[G] s) + h)
+    (hy : liminf f (𝓝[G] s) - h &lt; f y ∧ f y &lt; limsup f (𝓝[G] s) + h) :
+    |f x - f y| ≤ a + 2 * h := by
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.terminal_staircase_oscillation_le</code> <small>line 130</small><div class="doc"><p>The terminal oscillation estimate is uniform in the staircase
+width. Thus disk neighborhoods can be fixed before taking that width
+to zero, exactly as required in Step 2.</p></div><pre>theorem terminal_staircase_oscillation_le
+    {X : Type*} [TopologicalSpace X] {G : Set X} {f : X → ℝ}
+    {s x y : X} {a h : ℝ} (hh : 0 &lt; h)
+    (hband : limsup f (𝓝[G] s) - liminf f (𝓝[G] s) ≤ a)
+    (hx : liminf f (𝓝[G] s) - h &lt; f x ∧ f x &lt; limsup f (𝓝[G] s) + h)
+    (hy : liminf f (𝓝[G] s) - h &lt; f y ∧ f y &lt; limsup f (𝓝[G] s) + h)
+    (δ θ : ℝ) :
+    |shiftedStaircase h δ θ (f x) - shiftedStaircase h δ θ (f y)| ≤ a + 4 * h := by
+…</pre><p class="refs">Mentions: <a href="../Selection/ShiftedStaircase.lean.html#L23">OAI.CircleDomainRigidity.FiniteTransfer.shiftedStaircase</a></p></li><li id=L147><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.exists_terminal_balls_with_uniform_staircase_oscillation</code> <small>line 147</small><div class="doc"><p>The radii are chosen once for all staircase widths and shifts.
+Any subsequently constructed physical terminal contour lying in these
+closed balls inherits the paper's <code>a + 4h</code> oscillation bound.</p></div><pre>theorem exists_terminal_balls_with_uniform_staircase_oscillation
+    {X I J : Type*} [MetricSpace X] [Fintype I] [Fintype J]
+    (p : I → X) (hp : Injective p) (O : I → Set X)
+    (hO : ∀ i, O i ∈ 𝓝 (p i)) (ρ : I → ℝ) (hρ : ∀ i, 0 &lt; ρ i)
+    (G : I → Set X) (f : I → J → X → ℝ) (M : I → J → ℝ)
+    (hM : ∀ i j y, y ∈ G i → |f i j y| ≤ M i j)
+    (active : I → J → Prop) (a : I → J → ℝ)
+    (hbudget : ∀ i j, active i j →
+      limsup (f i j) (𝓝[G i] (p i)) - liminf (f i j) (𝓝[G i] (p i)) ≤ a i j)
+    {h : ℝ} (hh : 0 &lt; h) :
+    ∃ r : I → ℝ, (∀ i, 0 &lt; r i ∧ r i &lt; ρ i) ∧
+      (∀ i, closedBall (p i) (r i) ⊆ O i) ∧
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

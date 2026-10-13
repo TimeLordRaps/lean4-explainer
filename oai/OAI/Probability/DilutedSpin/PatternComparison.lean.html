@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/PatternComparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/PatternComparison.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>PatternComparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>PatternComparison.lean</span></code></h1><p class="muted">45 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/PatternComparison.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>def</b> <code>OAI.DilutedSpinGlass.BooleanPolynomial.truth</code> <small>line 11</small></li><li id=L12><b>def</b> <code>OAI.DilutedSpinGlass.BooleanPolynomial.monomial</code> <small>line 12</small></li><li id=L13><b>def</b> <code>OAI.DilutedSpinGlass.BooleanPolynomial.coefficient</code> <small>line 13</small></li><li id=L17><b>lemma</b> <code>OAI.DilutedSpinGlass.BooleanPolynomial.interpolation</code> <small>line 17</small></li><li id=L36><b>lemma</b> <code>OAI.DilutedSpinGlass.BooleanPolynomial.product_expansion</code> <small>line 36</small></li><li id=L53><b>theorem</b> <code>OAI.DilutedSpinGlass.BooleanPolynomial.expansion</code> <small>line 53</small><div class="doc"><p>Every predicate of a finite sharing profile is a finite real linear
+combination of positive sharing requirements. No endpoint mark is needed.</p></div><pre>theorem expansion (F : (R → Bool) → ℝ) (y : R → Bool) :
+    F y = ∑ s : Finset R, coefficient F s * monomial s y := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L13">OAI.DilutedSpinGlass.BooleanPolynomial.coefficient</a>, <a href="PatternComparison.lean.html#L12">OAI.DilutedSpinGlass.BooleanPolynomial.monomial</a></p></li><li id=L78><b>def</b> <code>OAI.DilutedSpinGlass.extractionProbe</code> <small>line 78</small><div class="doc"><p>The exact probe sequence of pert:parameters, indexed from zero.</p></div><pre>noncomputable def extractionProbe (j : ℕ) : ℝ := 1 / ((j:ℝ)+4)</pre></li><li id=L80><b>theorem</b> <code>OAI.DilutedSpinGlass.extractionProbe_pos</code> <small>line 80</small></li><li id=L84><b>theorem</b> <code>OAI.DilutedSpinGlass.extractionProbe_le_half</code> <small>line 84</small></li><li id=L90><b>theorem</b> <code>OAI.DilutedSpinGlass.extractionProbe_tendsto</code> <small>line 90</small></li><li id=L100><b>theorem</b> <code>OAI.DilutedSpinGlass.coefficients_tendsto_zero_of_uniform_remainders</code> <small>line 100</small><div class="doc"><p>Real finite-remainder extraction. This avoids both a complex normal-family
+argument and a subsequence of limiting coefficients: all coefficients tend to
+zero directly. The same base function is tested at every probe, as required by
+the Poisson add-one identity.</p></div><pre>theorem coefficients_tendsto_zero_of_uniform_remainders
+    (H : ℕ → ℝ → ℝ) (a : ℕ → ℕ → ℝ) (B : ℕ → ℝ) (C : ℝ)
+    (_hB : ∀ k, 0 ≤ B k) (hC : 0 ≤ C)
+    (hR : ∀ N k t, t ∈ Icc (0:ℝ) (1/2) →
+      |H N t - ∑ i ∈ Finset.range (k+1), a N i * t^i| ≤ B k * t^(k+1))
+    (err : ℕ → ℕ → ℝ) (herr : ∀ j, Tendsto (err j) atTop (𝓝 0))
+    (hsmall : ∀ j N, |H N (extractionProbe j)| ≤
+      C * extractionProbe j ^ (j+4) + err j N) :
+    ∀ k, Tendsto (fun N =&gt; a N k) atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L78">OAI.DilutedSpinGlass.extractionProbe</a></p></li><li id=L175><b>theorem</b> <code>OAI.DilutedSpinGlass.integral_polynomial_remainder</code> <small>line 175</small><div class="doc"><p>Uniform finite Taylor remainders survive an arbitrary probability-space
+average. This is a plain Bochner integral statement, not an analyticity axiom.</p></div><pre>theorem integral_polynomial_remainder {Z : Type*} [MeasurableSpace Z]
+    (μ : Measure Z) [IsProbabilityMeasure μ] (F : Z → ℝ) (a : ℕ → Z → ℝ)
+    (hF : Integrable F μ) (ha : ∀ j, Integrable (a j) μ) (k : ℕ) (t R : ℝ)
+    (hR : ∀ z, |F z - ∑ j ∈ Finset.range (k+1), a j z*t^j| ≤ R) :
+    |(∫ z, F z ∂μ) - ∑ j ∈ Finset.range (k+1), (∫ z, a j z ∂μ)*t^j| ≤ R := by
+…</pre></li><li id=L191><b>theorem</b> <code>OAI.DilutedSpinGlass.integral_difference_bound</code> <small>line 191</small></li><li id=L210><b>lemma</b> <code>OAI.DilutedSpinGlass.limsup_sqrt_error_bound</code> <small>line 210</small></li><li id=L241><b>lemma</b> <code>OAI.DilutedSpinGlass.limsup_finite_linear_bound</code> <small>line 241</small></li><li id=L270><b>lemma</b> <code>OAI.DilutedSpinGlass.squeeze_triangle_grid_zero</code> <small>line 270</small><div class="doc"><p>First take each fixed-grid limsup, then the grid limit, and only then
+let the arbitrary regularity cutoff tend to zero.</p></div><pre>lemma squeeze_triangle_grid_zero (a : ℕ → ℝ) (C : ℝ) (ha : ∀ n, 0 ≤ a n)
+    (hC : 0 ≤ C) (b : ℝ → ℕ → ℝ)
+    (hb : ∀ η, 0&lt;η → Tendsto (b η) atTop (𝓝 (C*η)))
+    (hbound : ∀ η, 0&lt;η → ∀ n, a n ≤ b η n) :
+    Tendsto a atTop (𝓝 0) := by
+…</pre></li><li id=L301><b>def</b> <code>OAI.DilutedSpinGlass.Pattern.sign</code> <small>line 301</small><div class="doc"><p>The manuscript's ±1 spin, represented by Bool.</p></div><pre>def sign (s : Bool) : ℝ := if s then 1 else -1</pre></li><li id=L303><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.abs_sign</code> <small>line 303</small></li><li id=L304><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.sign_sq</code> <small>line 304</small></li><li id=L306><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.sign_indicator</code> <small>line 306</small></li><li id=L309><b>def</b> <code>OAI.DilutedSpinGlass.Pattern.character</code> <small>line 309</small></li><li id=L311><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.abs_character</code> <small>line 311</small></li><li id=L314><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.character_empty</code> <small>line 314</small></li><li id=L318><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.character_kernel</code> <small>line 318</small><div class="doc"><p>Fourier inversion kernel on replica-spin patterns.</p></div><pre>theorem character_kernel {ι : Type*} [Fintype ι] [DecidableEq ι] (e f : ι → Bool) :
+    (∑ S : Finset ι, character S e * character S f) =
+      if e=f then (2 : ℝ) ^ Fintype.card ι else 0 := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L309">OAI.DilutedSpinGlass.Pattern.character</a></p></li><li id=L341><b>def</b> <code>OAI.DilutedSpinGlass.Pattern.moment</code> <small>line 341</small><div class="doc"><p>Moments include all replica subsets, not only pair overlaps.</p></div><pre>noncomputable def moment {ι : Type*} [Fintype ι] [DecidableEq ι] (P : (ι → Bool) → ℝ) (S : Finset ι) : ℝ :=
+…</pre></li><li id=L345><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.inversion</code> <small>line 345</small><div class="doc"><p>Exact Walsh inversion for an arbitrary signed pattern mass.</p></div><pre>theorem inversion {ι : Type*} [Fintype ι] [DecidableEq ι] (P : (ι → Bool) → ℝ) (e : ι → Bool) :
+    P e = (∑ S : Finset ι, moment P S * character S e) / (2 : ℝ)^Fintype.card ι := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L341">OAI.DilutedSpinGlass.Pattern.moment</a>, <a href="PatternComparison.lean.html#L309">OAI.DilutedSpinGlass.Pattern.character</a></p></li><li id=L360><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.variation_le_moments</code> <small>line 360</small><div class="doc"><p>The total variation discrepancy costs one per nonempty multioverlap.
+Both masses have the same total, so the empty Fourier coefficient cancels.</p></div><pre>theorem variation_le_moments {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P Q : (ι → Bool) → ℝ) (htotal : ∑ e, P e = ∑ e, Q e) :
+    (∑ e, |P e-Q e|) ≤
+      ∑ S ∈ (Finset.univ : Finset (Finset ι)).erase ∅, |moment P S-moment Q S| := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L341">OAI.DilutedSpinGlass.Pattern.moment</a></p></li><li id=L390><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.product_variation_step</code> <small>line 390</small><div class="doc"><p>Exact coordinatewise product telescoping, in a form usable for different
+probability laws at different message labels.</p></div><pre>theorem product_variation_step {α β : Type*} [Fintype α] [Fintype β]
+    (P Q : α → ℝ) (U V : β → ℝ)
+    (hP : ∀ x, 0 ≤ P x) (hV : ∀ y, 0 ≤ V y)
+    (hPt : ∑ x, P x = 1) (hVt : ∑ y, V y = 1) :
+    (∑ x, ∑ y, |P x*U y-Q x*V y|) ≤
+      (∑ x, |P x-Q x|) + ∑ y, |U y-V y| := by
+…</pre></li><li id=L411><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.observable_variation</code> <small>line 411</small><div class="doc"><p>Testing a spin pattern by a bounded observable costs twice the total variation.</p></div><pre>theorem observable_variation {α : Type*} [Fintype α] (P Q f : α → ℝ)
+    (hf : ∀ x, |f x| ≤ 1) :
+    |(∑ x, P x*f x)-(∑ x, Q x*f x)| ≤ ∑ x, |P x-Q x| := by
+…</pre></li><li id=L425><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.product_variation</code> <small>line 425</small><div class="doc"><p>Tensorization with the sharp linear number of independent labels.</p></div><pre>theorem product_variation {α : Type*} [Fintype α]
+    (P Q : α → ℝ) (hP : ∀ x, 0 ≤ P x) (hQ : ∀ x, 0 ≤ Q x)
+    (hPt : ∑ x, P x = 1) (hQt : ∑ x, Q x = 1) (a : ℕ) :
+    (∑ x : Fin a → α, |(∏ i, P (x i))-(∏ i, Q (x i))|) ≤
+      (a : ℝ) * ∑ x, |P x-Q x| := by
+…</pre></li><li id=L451><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.pattern_replacement</code> <small>line 451</small><div class="doc"><p>The deterministic empirical-pattern comparison in comp:patterns.
+The hypotheses are probability masses, and the conclusion involves ALL
+nonempty replica-subset moments, with no assumption of decorrelation.</p></div><pre>theorem pattern_replacement {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P Q : (ι → Bool) → ℝ) (hP : ∀ x, 0 ≤ P x) (hQ : ∀ x, 0 ≤ Q x)
+    (hPt : ∑ x, P x = 1) (hQt : ∑ x, Q x = 1) (a : ℕ)
+    (f : (Fin a → (ι → Bool)) → ℝ) (hf : ∀ x, |f x| ≤ 1) :
+    |(∑ x, (∏ i, P (x i))*f x)-(∑ x, (∏ i, Q (x i))*f x)| ≤
+      (a : ℝ) * ∑ S ∈ (Finset.univ : Finset (Finset ι)).erase ∅, |moment P S-moment Q S| := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L341">OAI.DilutedSpinGlass.Pattern.moment</a></p></li><li id=L462><b>def</b> <code>OAI.DilutedSpinGlass.Pattern.empirical</code> <small>line 462</small><div class="doc"><p>Empirical law of the replica pattern at a uniformly sampled site.</p></div><pre>noncomputable def empirical {ι : Type*} [Fintype ι] {N : ℕ}
+    (σ : Fin N → ι → Bool) (e : ι → Bool) : ℝ := by
+…</pre></li><li id=L467><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.empirical_nonneg</code> <small>line 467</small></li><li id=L471><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.empirical_total</code> <small>line 471</small><div class="doc"><p>The normalization uses N&gt;=1, as required for reservoir sizes.</p></div><pre>theorem empirical_total {ι : Type*} [Fintype ι] [DecidableEq ι] {N : ℕ} (hN : 0 &lt; N)
+    (σ : Fin N → ι → Bool) : (∑ e, empirical σ e) = 1 := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L462">OAI.DilutedSpinGlass.Pattern.empirical</a></p></li><li id=L482><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.empirical_moment</code> <small>line 482</small></li><li id=L503><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.mass_le_one</code> <small>line 503</small></li><li id=L509><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.mass_abs_average</code> <small>line 509</small></li><li id=L518><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.bounded_integrable</code> <small>line 518</small></li><li id=L524><b>def</b> <code>OAI.DilutedSpinGlass.Pattern.meanMass</code> <small>line 524</small><div class="doc"><p>The unconditional spin-pattern distribution, not a conditional law.</p></div><pre>noncomputable def meanMass (P : Ω → α → ℝ) (x : α) : ℝ := ∫ ω, P ω x ∂μ
+…</pre></li><li id=L527><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.meanMass_nonneg</code> <small>line 527</small></li><li id=L530><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.meanMass_total</code> <small>line 530</small></li><li id=L543><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.meanMass_moment</code> <small>line 543</small><div class="doc"><p>Averaging the empirical law reproduces the expected multioverlaps.</p></div><pre>theorem meanMass_moment {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P : Ω → (ι → Bool) → ℝ) (hm : ∀ x, Measurable (fun ω =&gt; P ω x))
+    (hP : ∀ ω x, 0 ≤ P ω x) (hPt : ∀ ω, ∑ x, P ω x = 1) (S : Finset ι) :
+    moment (meanMass (μ := μ) P) S = ∫ ω, moment (P ω) S ∂μ := by
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L341">OAI.DilutedSpinGlass.Pattern.moment</a>, <a href="PatternComparison.lean.html#L524">OAI.DilutedSpinGlass.Pattern.meanMass</a></p></li><li id=L557><b>theorem</b> <code>OAI.DilutedSpinGlass.Pattern.expected_pattern_replacement</code> <small>line 557</small><div class="doc"><p>The integrated empirical-pattern comparison, valid for arbitrary reservoir
+root laws. This is comp:pattern-error; conditioning on independent new
+insertion disorder can subsequently be performed without changing the bound.</p></div><pre>theorem expected_pattern_replacement {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P : Ω → (ι → Bool) → ℝ) (hm : ∀ x, Measurable (fun ω =&gt; P ω x))
+    (hP : ∀ ω x, 0 ≤ P ω x) (hPt : ∀ ω, ∑ x, P ω x = 1)
+    (a : ℕ) (f : (Fin a → (ι → Bool)) → ℝ) (hf : ∀ x, |f x| ≤ 1) :
+    |(∫ ω, ∑ x, (∏ i, P ω (x i))*f x ∂μ) -
+      (∑ x, (∏ i, meanMass (μ := μ) P (x i))*f x)| ≤
+…</pre><p class="refs">Mentions: <a href="PatternComparison.lean.html#L524">OAI.DilutedSpinGlass.Pattern.meanMass</a></p></li><li id=L612><b>lemma</b> <code>OAI.DilutedSpinGlass.limsup_finite_bound</code> <small>line 612</small></li><li id=L638><b>lemma</b> <code>OAI.DilutedSpinGlass.series_double_limit</code> <small>line 638</small><div class="doc"><p>Uniform summable remainders commute with the ordered limsup/grid limits.
+No diagonal exchange of the two limits is used.</p></div><pre>lemma series_double_limit (a : ℕ → ℕ → ℝ) (f : ℕ → ℕ → ℕ → ℝ)
+    (c tail : ℕ → ℝ) (ha : ∀ L n, 0≤a L n)
+    (hab : ∀ L, IsBoundedUnder (·≤·) atTop (a L))
+    (hc : ∀ k, 0≤c k) (hf : ∀ k L, IsBoundedUnder (·≤·) atTop (f k L))
+    (hflim : ∀ k, Tendsto (fun L =&gt; limsup (f k L) atTop) atTop (𝓝 0))
+    (htail : Tendsto tail atTop (𝓝 0))
+    (h : ∀ K L n, a L n≤tail K+∑ k∈Finset.range K, c k*f k L n) :
+    Tendsto (fun L =&gt; limsup (a L) atTop) atTop (𝓝 0) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

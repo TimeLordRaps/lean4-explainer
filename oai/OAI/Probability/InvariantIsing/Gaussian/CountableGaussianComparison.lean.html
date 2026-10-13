@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Gaussian/CountableGaussianComparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Gaussian/CountableGaussianComparison.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Gaussian</a> / <span>CountableGaussianComparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Gaussian</a>/<span>CountableGaussianComparison.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Gaussian/CountableGaussianComparison.lean#L1">source</a></p><div class="doc"><p>Gaussian mean comparison for the actual countable spin/cascade-leaf prior.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>lemma</b> <code>OAI.InvariantIsing.finite_cylinder_mean_increment_le</code> <small>line 15</small></li><li id=L65><b>lemma</b> <code>OAI.InvariantIsing.cylinder_cgf_restriction_mean_tendsto</code> <small>line 65</small></li><li id=L83><b>theorem</b> <code>OAI.InvariantIsing.countable_cylinder_mean_increment_le</code> <small>line 83</small><div class="doc"><p>The finite Gaussian mean estimate passes to countable leaf priors.
+The two endpoint variance caps ensure convergence of their actual means.</p></div><pre>theorem countable_cylinder_mean_increment_le {X : Type*} [MeasurableSpace X] [Countable X]
+    [MeasurableSingletonClass X] (ν : Measure X) [IsProbabilityMeasure ν]
+    (C A : X → ℕ →₀ ℝ) {B₀ B₁ K : ℝ}
+    (hC : ∀ x, (C x).sum (fun _ c =&gt; c ^ 2) ≤ B₀)
+    (hCA : ∀ x, (C x + A x).sum (fun _ c =&gt; c ^ 2) ≤ B₁)
+    (hK : ∀ s ∈ Set.Icc (0 : ℝ) 1, ∀ x y,
+      |cylinderCross (A x) (C y + s • A y)| ≤ K) :
+    |(∫ g : ℕ → ℝ, cgf (fun x =&gt; cylinderField (C x + A x) g) ν 1 ∂gaussianCoordinates) -
+      ∫ g : ℕ → ℝ, cgf (fun x =&gt; cylinderField (C x) g) ν 1 ∂gaussianCoordinates| ≤ 2 * K := by
+…</pre></li><li id=L118><b>lemma</b> <code>OAI.InvariantIsing.cylinder_log_partition_mean_base</code> <small>line 118</small></li><li id=L134><b>theorem</b> <code>OAI.InvariantIsing.countable_cylinder_log_mean_increment_le</code> <small>line 134</small><div class="doc"><p>The Gaussian mean comparison holds with the actual deterministic base
+energy and any countable probability prior, including cascade-leaf weights.</p></div><pre>theorem countable_cylinder_log_mean_increment_le {X : Type*} [MeasurableSpace X] [Countable X]
+    [MeasurableSingletonClass X] (ν : Measure X) [IsProbabilityMeasure ν]
+    (H : X → ℝ) (hH : Integrable (fun x =&gt; Real.exp (H x)) ν)
+    (C A : X → ℕ →₀ ℝ) {B₀ B₁ K : ℝ}
+    (hC : ∀ x, (C x).sum (fun _ c =&gt; c ^ 2) ≤ B₀)
+    (hCA : ∀ x, (C x + A x).sum (fun _ c =&gt; c ^ 2) ≤ B₁)
+    (hK : ∀ s ∈ Set.Icc (0 : ℝ) 1, ∀ x y,
+      |cylinderCross (A x) (C y + s • A y)| ≤ K) :
+    |(∫ g : ℕ → ℝ, Real.log (∫ x, Real.exp (H x + cylinderField (C x + A x) g) ∂ν)
+        ∂gaussianCoordinates) -
+      ∫ g : ℕ → ℝ, Real.log (∫ x, Real.exp (H x + cylinderField (C x) g) ∂ν)
+        ∂gaussianCoordinates| ≤ 2 * K := by
+…</pre></li><li id=L151><b>lemma</b> <code>OAI.InvariantIsing.cylinderCross_add_right</code> <small>line 151</small><p class="refs">Distinct definitions of this name: <a href="../Arrays/TensorWardCorrectionBound.lean.html#L110">OAI/Probability/InvariantIsing/Arrays/TensorWardCorrectionBound.lean:110</a> (same statement, different proof or body). Qualify references as OAI.InvariantIsing.cylinderCross_add_right@path.</p></li><li id=L158><b>lemma</b> <code>OAI.InvariantIsing.cylinderCross_segment_bound</code> <small>line 158</small><div class="doc"><p>Endpoint mixed-cross bounds control the whole coefficient segment.</p></div><pre>lemma cylinderCross_segment_bound {X : Type*} (A C : X → ℕ →₀ ℝ) {L : ℝ}
+    (h₀ : ∀ x y, |cylinderCross (A x - C x) (C y)| ≤ L)
+    (h₁ : ∀ x y, |cylinderCross (A x - C x) (A y)| ≤ L)
+    {s : ℝ} (hs : s ∈ Set.Icc (0 : ℝ) 1) (x y : X) :
+    |cylinderCross (A x - C x) (C y + s • (A y - C y))| ≤ L := by
+…</pre></li><li id=L182><b>theorem</b> <code>OAI.InvariantIsing.countable_cylinder_log_mean_compare</code> <small>line 182</small><div class="doc"><p>The form used for rotation comparison: any two bounded-variance
+coefficient families on the actual countable prior can be compared from
+mixed cross-covariances of their increment with the two endpoints.</p></div><pre>theorem countable_cylinder_log_mean_compare {X : Type*} [MeasurableSpace X] [Countable X]
+    [MeasurableSingletonClass X] (ν : Measure X) [IsProbabilityMeasure ν]
+    (H : X → ℝ) (hH : Integrable (fun x =&gt; Real.exp (H x)) ν)
+    (A C : X → ℕ →₀ ℝ) {B₀ B₁ L : ℝ}
+    (hC : ∀ x, (C x).sum (fun _ c =&gt; c ^ 2) ≤ B₀)
+    (hA : ∀ x, (A x).sum (fun _ c =&gt; c ^ 2) ≤ B₁)
+    (h₀ : ∀ x y, |cylinderCross (A x - C x) (C y)| ≤ L)
+    (h₁ : ∀ x y, |cylinderCross (A x - C x) (A y)| ≤ L) :
+    |(∫ g : ℕ → ℝ, Real.log (∫ x, Real.exp (H x + cylinderField (A x) g) ∂ν)
+        ∂gaussianCoordinates) -
+      ∫ g : ℕ → ℝ, Real.log (∫ x, Real.exp (H x + cylinderField (C x) g) ∂ν)
+        ∂gaussianCoordinates| ≤ 2 * L := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

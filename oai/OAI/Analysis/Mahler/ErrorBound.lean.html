@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/ErrorBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/ErrorBound.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>ErrorBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>ErrorBound.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/ErrorBound.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.SymmetricMahler.radial_power_bound</code> <small>line 11</small><div class="doc"><p>Exponential majorization on the outer interval.</p></div><pre>theorem radial_power_bound {m r : ℝ} (hm : 2 ≤ m) (hr : 0 ≤ r) (hr1 : r ≤ 1) :
+    r ^ (2*m-3/2 : ℝ) ≤ exp (-m*(1-r)) := by
+…</pre></li><li id=L33><b>def</b> <code>OAI.SymmetricMahler.radialDerivative</code> <small>line 33</small><div class="doc"><p>The radial derivative formula on 0&lt;r&lt;1.
+Its removable value at r=0 is not asserted by this definition.</p></div><pre>noncomputable def radialDerivative (r : ℝ) : ℝ :=
+…</pre></li><li id=L36><b>lemma</b> <code>OAI.SymmetricMahler.log_le_half</code> <small>line 36</small></li><li id=L42><b>lemma</b> <code>OAI.SymmetricMahler.radial_log_lower</code> <small>line 42</small></li><li id=L53><b>theorem</b> <code>OAI.SymmetricMahler.radial_derivative_lower</code> <small>line 53</small><div class="doc"><p>A concrete global positive lower bound for the radial derivative.</p></div><pre>theorem radial_derivative_lower {r : ℝ} (hr : 0 &lt; r) (hr1 : r &lt; 1) :
+    4/Real.pi^2 ≤ radialDerivative r := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L33">OAI.SymmetricMahler.radialDerivative</a></p></li><li id=L64><b>lemma</b> <code>OAI.SymmetricMahler.boundary_layer_log_lower</code> <small>line 64</small><div class="doc"><p>The logarithmic boundary layer starts at 1-log(m)/m.</p></div><pre>lemma boundary_layer_log_lower {m r : ℝ} (hm : 1 &lt; m)
+    (hr : 0 &lt; r) (hr1 : r &lt; 1) (hlayer : 1-log m/m ≤ r) :
+    log m/2 ≤ log ((1+r)/(1-r)) := by
+…</pre></li><li id=L83><b>theorem</b> <code>OAI.SymmetricMahler.boundary_layer_derivative_lower</code> <small>line 83</small><div class="doc"><p>The estimate M'≥c log m holds with c=2/π².</p></div><pre>theorem boundary_layer_derivative_lower {m r : ℝ} (hm : 1 &lt; m)
+    (hr : 0 &lt; r) (hr1 : r &lt; 1) (hlayer : 1-log m/m ≤ r) :
+    (2/Real.pi^2)*log m ≤ radialDerivative r := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L33">OAI.SymmetricMahler.radialDerivative</a></p></li><li id=L104><b>theorem</b> <code>OAI.SymmetricMahler.radial_increment_lower</code> <small>line 104</small><div class="doc"><p>The global M-increment estimate obtained from the actual radial derivative,
+with only open-interval derivatives required, including when the left endpoint is 0.</p></div><pre>theorem radial_increment_lower {M : ℝ → ℝ} {a b : ℝ}
+    (ha : 0 ≤ a) (hab : a ≤ b) (hb : b &lt; 1)
+    (hcont : ContinuousOn M (Icc a b))
+    (hderiv : ∀ x ∈ Ioo a b, HasDerivAt M (radialDerivative x) x) :
+    (4/Real.pi^2)*(b-a) ≤ M b-M a := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L33">OAI.SymmetricMahler.radialDerivative</a></p></li><li id=L119><b>theorem</b> <code>OAI.SymmetricMahler.boundary_layer_increment_lower</code> <small>line 119</small><div class="doc"><p>The strengthened increment estimate inside the logarithmic boundary layer.</p></div><pre>theorem boundary_layer_increment_lower {M : ℝ → ℝ} {m a b : ℝ}
+    (hm : 1 &lt; m) (ha : 0 ≤ a) (hab : a ≤ b) (hb : b &lt; 1)
+    (hlayer : 1-log m/m ≤ a)
+    (hcont : ContinuousOn M (Icc a b))
+    (hderiv : ∀ x ∈ Ioo a b, HasDerivAt M (radialDerivative x) x) :
+    ((2/Real.pi^2)*log m)*(b-a) ≤ M b-M a := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L33">OAI.SymmetricMahler.radialDerivative</a></p></li><li id=L141><b>def</b> <code>OAI.SymmetricMahler.errorIntegrand</code> <small>line 141</small><div class="doc"><p>The unscaled error integrand.</p></div><pre>noncomputable def errorIntegrand (M : ℝ → ℝ) (r₀ m r : ℝ) : ℝ :=
+…</pre></li><li id=L146><b>theorem</b> <code>OAI.SymmetricMahler.error_integrand_outer_bound</code> <small>line 146</small><div class="doc"><p>Pointwise domination by the exactly integrated outer-tail kernel.
+Here c is the lower slope for M on the boundary layer.</p></div><pre>theorem error_integrand_outer_bound {M : ℝ → ℝ} {r₀ m c b r : ℝ}
+    (hm : 2 ≤ m) (hc : 0 &lt; c) (hr : 0 ≤ r) (hbr : b &lt; r) (hr1 : r &lt; 1)
+    (hincrement : c*(r-b) ≤ M r-M r₀) :
+    errorIntegrand M r₀ m r ≤ sqrt (2/c) *
+      (m*exp (-m*(1-r))*sqrt ((1-r)/(r-b))) := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li><li id=L181><b>theorem</b> <code>OAI.SymmetricMahler.outer_error_integrable</code> <small>line 181</small><div class="doc"><p>Integrability of the original outer error follows from the singular majorant;
+measurability is explicit so no unproved integrability is hidden in the integral.</p></div><pre>theorem outer_error_integrable {M : ℝ → ℝ} {r₀ m c b : ℝ}
+    (hM : Measurable M) (hm : 2 ≤ m) (hc : 0 &lt; c) (hb : 0 ≤ b) (hb1 : b &lt; 1)
+    (hincrement : ∀ r ∈ Ioo b 1, c*(r-b) ≤ M r-M r₀) :
+    IntervalIntegrable (errorIntegrand M r₀ m) volume b 1 := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li><li id=L204><b>theorem</b> <code>OAI.SymmetricMahler.outer_error_integral_bound</code> <small>line 204</small><div class="doc"><p>The outer portion of the error integral, with an explicit constant.</p></div><pre>theorem outer_error_integral_bound {M : ℝ → ℝ} {r₀ m c b : ℝ}
+    (hM : Measurable M) (hm : 2 ≤ m) (hc : 0 &lt; c) (hb : 0 ≤ b) (hb1 : b &lt; 1)
+    (hincrement : ∀ r ∈ Ioo b 1, c*(r-b) ≤ M r-M r₀) :
+    (∫ r in b..(1 : ℝ), errorIntegrand M r₀ m r) ≤
+      sqrt (2/c)*(1+4/exp 1) := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li><li id=L230><b>theorem</b> <code>OAI.SymmetricMahler.error_integrand_inner_bound</code> <small>line 230</small><div class="doc"><p>The inner error is controlled by an integrable square-root singularity.</p></div><pre>theorem error_integrand_inner_bound {M : ℝ → ℝ} {r₀ m c b r : ℝ}
+    (hm : 2 ≤ m) (hc : 0 &lt; c) (hr : 0 ≤ r) (hr₀ : r₀ &lt; r)
+    (hrb : r ≤ b) (_hb1 : b ≤ 1)
+    (hincrement : c*(r-r₀) ≤ M r-M r₀) :
+    errorIntegrand M r₀ m r ≤
+      (m*b^(2*m-3/2 : ℝ)/sqrt c)*(1/sqrt (r-r₀)) := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li><li id=L262><b>theorem</b> <code>OAI.SymmetricMahler.inner_error_integrable</code> <small>line 262</small><div class="doc"><p>Integrability of the inner portion follows from the square-root majorant.</p></div><pre>theorem inner_error_integrable {M : ℝ → ℝ} {r₀ m c b : ℝ}
+    (hM : Measurable M) (hm : 2 ≤ m) (hc : 0 &lt; c)
+    (hr₀ : 0 ≤ r₀) (hr₀b : r₀ ≤ b) (hb1 : b ≤ 1)
+    (hincrement : ∀ r ∈ Ioc r₀ b, c*(r-r₀) ≤ M r-M r₀) :
+    IntervalIntegrable (errorIntegrand M r₀ m) volume r₀ b := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li><li id=L284><b>theorem</b> <code>OAI.SymmetricMahler.inner_error_integral_bound</code> <small>line 284</small><div class="doc"><p>The bound on the inner portion of the error integral, with its constant.</p></div><pre>theorem inner_error_integral_bound {M : ℝ → ℝ} {r₀ m c b : ℝ}
+    (hM : Measurable M) (hm : 2 ≤ m) (hc : 0 &lt; c)
+    (hr₀ : 0 ≤ r₀) (hr₀b : r₀ ≤ b) (hb1 : b ≤ 1)
+    (hincrement : ∀ r ∈ Ioc r₀ b, c*(r-r₀) ≤ M r-M r₀) :
+    (∫ r in r₀..b, errorIntegrand M r₀ m r) ≤ 2*m*b^(2*m-3/2 : ℝ)/sqrt c := by
+…</pre><p class="refs">Mentions: <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

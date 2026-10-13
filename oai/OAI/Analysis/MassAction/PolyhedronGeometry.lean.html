@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/PolyhedronGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/PolyhedronGeometry.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>PolyhedronGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>PolyhedronGeometry.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/PolyhedronGeometry.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>lemma</b> <code>OAI.Problem326.continuous_dot</code> <small>line 12</small></li><li id=L16><b>lemma</b> <code>OAI.Problem326.dot_add_right</code> <small>line 16</small></li><li id=L19><b>lemma</b> <code>OAI.Problem326.dot_smul_right</code> <small>line 19</small></li><li id=L22><b>lemma</b> <code>OAI.Problem326.dot_isLinearMap</code> <small>line 22</small></li><li id=L28><b>lemma</b> <code>OAI.Problem326.IsFinitePolyhedron.isClosed</code> <small>line 28</small></li><li id=L36><b>lemma</b> <code>OAI.Problem326.IsFinitePolyhedron.convex</code> <small>line 36</small></li><li id=L44><b>lemma</b> <code>OAI.Problem326.finiteAffine_superlevel_isFinitePolyhedron</code> <small>line 44</small></li><li id=L61><b>lemma</b> <code>OAI.Problem326.finiteAffine_superlevel_isClosed</code> <small>line 61</small></li><li id=L66><b>lemma</b> <code>OAI.Problem326.finiteAffine_superlevel_convex</code> <small>line 66</small></li><li id=L73><b>lemma</b> <code>OAI.Problem326.finiteAffine_plateau_eq</code> <small>line 73</small><div class="doc"><p>A capped finite lower envelope has a polyhedral maximum set.
+This interface is independent of the choice of finite-minimum notation.</p></div><pre>lemma finiteAffine_plateau_eq {ι : Type uIota}
+    (a : ι → (Fin d → ℝ)) (c : ι → ℝ) (F : (Fin d → ℝ) → ℝ) (M : ℝ)
+    (hlower : ∀ x j, F x ≤ dot (a j) x + c j)
+    (hattained : ∀ x, ∃ j, F x = dot (a j) x + c j)
+    (hceiling : ∀ x, F x ≤ M) :
+    {x | F x = M} = {x | ∀ j, M ≤ dot (a j) x + c j} := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L54">OAI.Problem326.dot</a></p></li><li id=L88><b>lemma</b> <code>OAI.Problem326.finiteAffine_plateau_isFinitePolyhedron</code> <small>line 88</small></li><li id=L99><b>lemma</b> <code>OAI.Problem326.compact_polyhedron_of_affine_barriers</code> <small>line 99</small><div class="doc"><p>Finite affine barriers which exclude the boundary of a compact set
+produce a compact convex polyhedron in its interior.</p></div><pre>lemma compact_polyhedron_of_affine_barriers {ι : Type uIota} [Fintype ι]
+    (a : ι → (Fin d → ℝ)) (c : ι → ℝ) (M : ℝ)
+    (B : Set (Fin d → ℝ)) (x0 : Fin d → ℝ)
+    (hB : IsCompact B) (hx0B : x0 ∈ interior B)
+    (hx0 : ∀ j, M ≤ dot (a j) x0 + c j)
+    (hboundary : ∀ x ∈ frontier B, ∃ j, dot (a j) x + c j &lt; M) :
+    ∃ K : Set (Fin d → ℝ), IsCompact K ∧ Convex ℝ K ∧
+      IsFinitePolyhedron K ∧ x0 ∈ K ∧ K ⊆ interior B ∧
+      ∀ x, x ∈ K ↔ ∀ j, M ≤ dot (a j) x + c j := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L54">OAI.Problem326.dot</a>, <a href="Model.lean.html#L57">OAI.Problem326.IsFinitePolyhedron</a></p></li><li id=L125><b>lemma</b> <code>OAI.Problem326.compact_polyhedron_of_zero_active_slope</code> <small>line 125</small><div class="doc"><p>A zero slope active at the initial point supplies the ceiling level.
+Excluding zero active slopes on the boundary gives all geometric conclusions.</p></div><pre>lemma compact_polyhedron_of_zero_active_slope {ι : Type uIota} [Fintype ι]
+    (a : ι → (Fin d → ℝ)) (c : ι → ℝ) (j0 : ι)
+    (B : Set (Fin d → ℝ)) (x0 : Fin d → ℝ)
+    (hB : IsCompact B) (hx0B : x0 ∈ interior B)
+    (hzero : a j0 = 0)
+    (hactive0 : ∀ j, dot (a j0) x0 + c j0 ≤ dot (a j) x0 + c j)
+    (hboundary : ∀ x ∈ frontier B, ∀ j,
+      (∀ k, dot (a j) x + c j ≤ dot (a k) x + c k) → a j ≠ 0) :
+    ∃ K : Set (Fin d → ℝ), IsCompact K ∧ Convex ℝ K ∧
+      IsFinitePolyhedron K ∧ x0 ∈ K ∧ K ⊆ interior B ∧
+      ∀ x, x ∈ K ↔ ∀ j, c j0 ≤ dot (a j) x + c j := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L54">OAI.Problem326.dot</a>, <a href="Model.lean.html#L57">OAI.Problem326.IsFinitePolyhedron</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

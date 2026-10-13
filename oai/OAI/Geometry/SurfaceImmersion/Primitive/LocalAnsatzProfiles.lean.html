@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/SurfaceImmersion/Primitive/LocalAnsatzProfiles.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/SurfaceImmersion/Primitive/LocalAnsatzProfiles.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">SurfaceImmersion</a> / <a href="index.html">Primitive</a> / <span>LocalAnsatzProfiles.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">SurfaceImmersion</a>/<a href="index.html">Primitive</a>/<span>LocalAnsatzProfiles.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/SurfaceImmersion/Primitive/LocalAnsatzProfiles.lean#L1">source</a></p><div class="doc"><p>The leading jets of the supported local ansatz are the geometric profiles
+of the initial periodic primitive.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.globalCoefficients</code> <small>line 23</small><div class="doc"><p>Retain the actual coefficient values when a supported local family has
+already been proved smooth after extension by zero.</p></div><pre>def globalCoefficients (U : ℕ → Family O E)
+    (hU : ∀ i, ContDiff ℝ ∞ (fun y : A × ℝ =&gt; (U i).val y.1 (y.2 : Period))) :
+    ℕ → PeriodicExpansion.Family A E := fun i =&gt; ⟨(U i).val,hU i⟩</pre><p class="refs">Mentions: <a href="LocalPeriodicFamilies.lean.html#L27">OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Family</a>, <a href="PeriodicFamilies.lean.html#L31">OAI.ClosedSurfaceR4.PeriodicExpansion.Family</a></p></li><li id=L27><b>lemma</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.globalCoefficients_finiteAnsatz</code> <small>line 27</small></li><li id=L33><b>lemma</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.global_angle_eq_local</code> <small>line 33</small></li><li id=L46><b>lemma</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Geometry.initial_global_angle</code> <small>line 46</small><div class="doc"><p>The leading angular correction is the mean-zero velocity primitive.</p></div><pre>lemma initial_global_angle (W : PeriodicExpansion.Family A E)
+    (hW : W.val = g.initial.val) {p : A} (hp : p ∈ O) (t : Period) :
+    W.angle.val p t = g.V.val p t-average (g.V.val p) := by
+…</pre><p class="refs">Mentions: <a href="PeriodicFamilies.lean.html#L31">OAI.ClosedSurfaceR4.PeriodicExpansion.Family</a></p></li><li id=L54><b>lemma</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Geometry.initial_global_longitudinal</code> <small>line 54</small><div class="doc"><p>Adding the leading angular correction to the old longitudinal derivative
+gives precisely the prescribed velocity profile <code>X</code>.</p></div><pre>lemma initial_global_longitudinal {F : A → E} (W : PeriodicExpansion.Family A E)
+    (hW : W.val = g.initial.val) (dx : A)
+    (hX : ∀ p ∈ O, fderiv ℝ F p dx = g.X₀ p+average (g.V.val p))
+    {p : A} (hp : p ∈ O) (t : Period) :
+    directionalMap F dx p+W.angle.val p t = g.longitudinal.val p t := by
+…</pre><p class="refs">Mentions: <a href="PeriodicFamilies.lean.html#L31">OAI.ClosedSurfaceR4.PeriodicExpansion.Family</a></p></li><li id=L67><b>lemma</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Geometry.initial_global_angle_angle</code> <small>line 67</small><div class="doc"><p>The second angular derivative of the primitive is the angular derivative
+of the actual velocity loop, including its normalization by the mean.</p></div><pre>lemma initial_global_angle_angle (W : PeriodicExpansion.Family A E)
+    (hW : W.val = g.initial.val) {p : A} (hp : p ∈ O) (t : Period) :
+    W.angle.angle.val p t = g.V.angle.val p t := by
+…</pre><p class="refs">Mentions: <a href="PeriodicFamilies.lean.html#L31">OAI.ClosedSurfaceR4.PeriodicExpansion.Family</a></p></li><li id=L84><b>lemma</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Geometry.initial_global_longitudinal_slow</code> <small>line 84</small><div class="doc"><p>Slow differentiation of the actual leading profile gives <code>X_y</code>, rather
+than a separately supplied approximation.</p></div><pre>lemma initial_global_longitudinal_slow {F : A → E} (hF : ContDiff ℝ ∞ F)
+    (W : PeriodicExpansion.Family A E) (hW : W.val = g.initial.val) (dx : A)
+    (hX : ∀ p ∈ O, fderiv ℝ F p dx = g.X₀ p+average (g.V.val p))
+    {p : A} (hp : p ∈ O) (s : ℝ) :
+    directionalMap (directionalMap F dx) dy p+
+      (W.angle.slow dy).val p (s : Period) =
+        (g.longitudinal.slow dy).val p (s : Period) := by
+…</pre><p class="refs">Mentions: <a href="PeriodicFamilies.lean.html#L31">OAI.ClosedSurfaceR4.PeriodicExpansion.Family</a></p></li><li id=L111><b>theorem</b> <code>OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Geometry.compact_initial_ansatz_profiles</code> <small>line 111</small><div class="doc"><p>All five leading-jet estimates for the same globally smooth local ansatz.
+The hypotheses are the actual fixed coefficients and their defining primitive
+identity; no derivative asymptotic is assumed.</p></div><pre>theorem compact_initial_ansatz_profiles {F : A → E} (hF : ContDiff ℝ ∞ F)
+    (U : ℕ → Family O E)
+    (hU : ∀ i, ContDiff ℝ ∞ (fun y : A × ℝ =&gt; (U i).val y.1 (y.2 : Period)))
+    (hinit : U 0 = g.initial) {Q : Set A} (hQ : IsCompact Q) (hQO : Q ⊆ O)
+    (ℓ : A →L[ℝ] ℝ) (dx : A) (hx : ℓ dx = 1) (hy : ℓ dy = 0)
+    (hX : ∀ p ∈ O, fderiv ℝ F p dx = g.X₀ p+average (g.V.val p))
+    (hY : ∀ p ∈ O, fderiv ℝ F p dy = g.Y p) (n : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ z : ℝ, 0 &lt; z → z ≤ 1 → ∀ p ∈ Q,
+      let f := finiteAnsatz F U ℓ (n+1) z
+…</pre><p class="refs">Mentions: <a href="LocalPeriodicFamilies.lean.html#L27">OAI.ClosedSurfaceR4.LocalPeriodicExpansion.Family</a>, <a href="LocalPeriodicFiniteAnsatz.lean.html#L17">OAI.ClosedSurfaceR4.LocalPeriodicExpansion.finiteAnsatz</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,157 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Games/Derivatives.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Games/Derivatives.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Games</a> / <span>Derivatives.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Games</a>/<span>Derivatives.lean</span></code></h1><p class="muted">63 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Games/Derivatives.lean#L1">source</a></p><div class="doc"><h3>Actual Hybrid derivative energy in product coordinates</h3><p>Parseval and affine restriction merge the selected Fourier coefficients over
+each actual compressed frequency. For a product splitting, explicit linear
+equivalences identify the quotient by the first factor with the second factor,
+and the first-factor subspace with its original space. Reindexing the frequency
+sum therefore introduces no multiplicity or normalization factor.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.spectralProjector</code> <small>line 19</small><div class="doc"><p>Actual normalized Fourier projector onto the indices satisfying <code>P</code>.</p></div><pre>def spectralProjector (P : (F →ₗ[F2] E) → Prop) (f : (E →ₗ[F2] F) → ℝ) :
+    (E →ₗ[F2] F) → ℝ :=
+…</pre></li><li id=L23><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.linearCoeff_spectralProjector</code> <small>line 23</small></li><li id=L32><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.spectralProjector_energy</code> <small>line 32</small></li><li id=L42><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.spectralProjector_energy_le</code> <small>line 42</small></li><li id=L50><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.function_eq_of_linearCoeff_eq</code> <small>line 50</small></li><li id=L58><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.spectralProjector_comp</code> <small>line 58</small></li><li id=L68><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridProjector</code> <small>line 68</small></li><li id=L72><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridDerivative</code> <small>line 72</small></li><li id=L77><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.rankProjector</code> <small>line 77</small></li><li id=L81><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.mapDerivative</code> <small>line 81</small></li><li id=L85><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.rankProjector_energy</code> <small>line 85</small></li><li id=L92><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.selectorMultiplicity</code> <small>line 92</small></li><li id=L96><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.selector_energy_sum</code> <small>line 96</small></li><li id=L110><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.selector_energy_sum_le</code> <small>line 110</small></li><li id=L125><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.linearCoeff_mapDerivative</code> <small>line 125</small></li><li id=L143><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.mapDerivative_energy_eq_coefficients</code> <small>line 143</small></li><li id=L154><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.mapDerivative_energy_le</code> <small>line 154</small><div class="doc"><p>A.10 on actual normalized derivative norms.</p></div><pre>theorem mapDerivative_energy_le (X : F →ₗ[F2] E)
+    [Fintype (X.ker →ₗ[F2] (E ⧸ X.range))]
+    (f : (E →ₗ[F2] F) → ℝ) (d : ℕ)
+    (hdegree : ∀ Y : F →ₗ[F2] E,
+      d &lt; Module.finrank F2 Y.range → linearCoeff f Y = 0) :
+    (𝔼 N, mapDerivative X f N ^ 2) ≤
+      (2 : ℝ) ^ (2 * Module.finrank F2 X.range * (d - Module.finrank F2 X.range)) *
+        (𝔼 M, rankProjector X f M ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L81">OAI.MaxCutGames.Appendix.Derivatives.mapDerivative</a>, <a href="Derivatives.lean.html#L77">OAI.MaxCutGames.Appendix.Derivatives.rankProjector</a></p></li><li id=L170><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.mapDerivative_energy_eq_weighted_energy</code> <small>line 170</small><div class="doc"><p>The coefficient-energy definition from the weighted estimate is exactly
+the normalized squared norm of the actual map derivative.</p></div><pre>theorem mapDerivative_energy_eq_weighted_energy (X : F →ₗ[F2] E)
+    (f : (E →ₗ[F2] F) → ℝ) :
+    (𝔼 N, mapDerivative X f N ^ 2) = WeightedFourthMoment.energy (linearCoeff f) X := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L81">OAI.MaxCutGames.Appendix.Derivatives.mapDerivative</a>, <a href="CoordinateTransport.lean.html#L763">OAI.MaxCutGames.Appendix.WeightedFourthMoment.energy</a></p></li><li id=L181><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.weighted_fourth_derivative_energy</code> <small>line 181</small><div class="doc"><p>The corrected weighted fourth-moment estimate for genuine derivative
+norms, with the normalized primal measure and counting frequency measure.</p></div><pre>theorem weighted_fourth_derivative_energy (f : (E →ₗ[F2] F) → ℝ) (d : ℕ)
+    (hdegree : ∀ Y : F →ₗ[F2] E,
+      d &lt; Module.finrank F2 Y.range → linearCoeff f Y = 0) :
+    (∑ X : F →ₗ[F2] E, ((2 : ℝ)⁻¹) ^ (8 * d * Module.finrank F2 X.range) *
+      (𝔼 N, mapDerivative X f N ^ 2) ^ 2) ≤ 2 * (𝔼 M, f M ^ 2) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L81">OAI.MaxCutGames.Appendix.Derivatives.mapDerivative</a></p></li><li id=L196><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.spectralProjector_restriction</code> <small>line 196</small></li><li id=L221><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.spectralProjector_restriction_moment_average</code> <small>line 221</small></li><li id=L236><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridDerivative_energy_average</code> <small>line 236</small></li><li id=L243><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.HybridIndex</code> <small>line 243</small></li><li id=L247><b>instance</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridIndexFintype</code> <small>line 247</small></li><li id=L256><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridMomentSum</code> <small>line 256</small></li><li id=L260><b>def</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridSelectorEnergy</code> <small>line 260</small></li><li id=L265><b>theorem</b> <code>OAI.MaxCutGames.Appendix.Derivatives.hybridMomentSum_le_of_uniform_energy</code> <small>line 265</small></li><li id=L318><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.linearCoeff_hybridDerivative</code> <small>line 318</small><div class="doc"><p>The coefficient of an actual Hybrid derivative is the translated sum over
+the actual Hybrid selector and quotient-compression fiber.</p></div><pre>theorem linearCoeff_hybridDerivative
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ)
+    (Z : B →ₗ[F2] (E ⧸ A)) :
+    linearCoeff (hybridDerivative A B T f) Z =
+      ∑ S : F →ₗ[F2] E,
+        if LinearIdentities.Hybrid S A B ∧ Restriction.compressFrequency A B S = Z
+        then linearCoeff f S * (linearTraceCharacter S T).re else 0 := by
+…</pre></li><li id=L336><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_energy_eq_coefficients</code> <small>line 336</small><div class="doc"><p>Exact normalized derivative energy, with counting measure on frequencies.</p></div><pre>theorem hybridDerivative_energy_eq_coefficients
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ) :
+    (𝔼 N, hybridDerivative A B T f N ^ 2) =
+      ∑ Z : B →ₗ[F2] (E ⧸ A),
+        (∑ S : F →ₗ[F2] E,
+          if LinearIdentities.Hybrid S A B ∧ Restriction.compressFrequency A B S = Z
+          then linearCoeff f S * (linearTraceCharacter S T).re else 0) ^ 2 := by
+…</pre></li><li id=L357><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.leftRangeEquiv</code> <small>line 357</small><div class="doc"><p>The first factor, regarded as its actual coordinate subspace.</p></div><pre>def leftRangeEquiv : B ≃ₗ[R] LinearMap.range (LinearMap.inl R B C) where
+…</pre></li><li id=L368><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.leftRangeEquiv_coe</code> <small>line 368</small></li><li id=L372><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.quotientRightMap</code> <small>line 372</small><div class="doc"><p>The second projection descends through the first-factor quotient.</p></div><pre>def quotientRightMap :
+    ((A × U) ⧸ LinearMap.range (LinearMap.inl R A U)) →ₗ[R] U :=
+…</pre></li><li id=L378><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.quotientRightMap_mkQ</code> <small>line 378</small></li><li id=L384><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.quotientRightEquiv</code> <small>line 384</small><div class="doc"><p>The quotient by the first coordinate has the second coordinate as a
+canonical linear presentation.</p></div><pre>def quotientRightEquiv :
+    ((A × U) ⧸ LinearMap.range (LinearMap.inl R A U)) ≃ₗ[R] U where
+…</pre></li><li id=L403><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.quotientRightEquiv_mkQ</code> <small>line 403</small></li><li id=L408><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.productFrequencyEquiv</code> <small>line 408</small><div class="doc"><p>The exact change of frequency coordinates for a product restriction.</p></div><pre>def productFrequencyEquiv :
+    ((LinearMap.range (LinearMap.inl R B C)) →ₗ[R]
+      ((A × U) ⧸ LinearMap.range (LinearMap.inl R A U))) ≃ (B →ₗ[R] U) where
+…</pre></li><li id=L436><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.productFrequencyEquiv_compressFrequency</code> <small>line 436</small><div class="doc"><p>Actual quotient compression becomes the block compression.</p></div><pre>@[simp] theorem productFrequencyEquiv_compressFrequency
+    (S : (B × C) →ₗ[F2] (A × U)) :
+    productFrequencyEquiv (Restriction.compressFrequency
+      (LinearMap.range (LinearMap.inl F2 A U))
+      (LinearMap.range (LinearMap.inl F2 B C)) S) =
+      (LinearMap.snd F2 A U).comp (S.comp (LinearMap.inl F2 B C)) := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L408">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.productFrequencyEquiv</a></p></li><li id=L448><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.compressFrequency_eq_iff_product</code> <small>line 448</small><div class="doc"><p>Equality of actual compressed frequencies is exactly equality of blocks.</p></div><pre>theorem compressFrequency_eq_iff_product
+    (S : (B × C) →ₗ[F2] (A × U))
+    (Z : (LinearMap.range (LinearMap.inl F2 B C)) →ₗ[F2]
+      ((A × U) ⧸ LinearMap.range (LinearMap.inl F2 A U))) :
+    Restriction.compressFrequency (LinearMap.range (LinearMap.inl F2 A U))
+      (LinearMap.range (LinearMap.inl F2 B C)) S = Z ↔
+    (LinearMap.snd F2 A U).comp (S.comp (LinearMap.inl F2 B C)) =
+      productFrequencyEquiv Z := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L408">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.productFrequencyEquiv</a></p></li><li id=L469><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_product_energy_eq_coefficients</code> <small>line 469</small><div class="doc"><p>The actual Hybrid derivative energy in product coordinates. The sum is
+over ordinary block frequencies, with no quotient or basis multiplicity.</p></div><pre>theorem hybridDerivative_product_energy_eq_coefficients
+    (T : (A × U) →ₗ[F2] (B × C))
+    (f : ((A × U) →ₗ[F2] (B × C)) → ℝ) :
+    (𝔼 N, hybridDerivative (LinearMap.range (LinearMap.inl F2 A U))
+      (LinearMap.range (LinearMap.inl F2 B C)) T f N ^ 2) =
+      ∑ Z : B →ₗ[F2] U,
+        (∑ S : (B × C) →ₗ[F2] (A × U),
+          if LinearIdentities.Hybrid S (LinearMap.range (LinearMap.inl F2 A U))
+              (LinearMap.range (LinearMap.inl F2 B C)) ∧
+              (LinearMap.snd F2 A U).comp (S.comp (LinearMap.inl F2 B C)) = Z
+          then linearCoeff f S * (linearTraceCharacter S T).re else 0) ^ 2 := by
+…</pre></li><li id=L511><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis</code> <small>line 511</small><div class="doc"><p>Fourier synthesis in the actual trace-character orthonormal basis.</p></div><pre>def synthesis (a : (F →ₗ[F2] E) → ℝ) : (E →ₗ[F2] F) → ℝ :=
+…</pre></li><li id=L514><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.coeff_synthesis</code> <small>line 514</small></li><li id=L521><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis_coeff</code> <small>line 521</small></li><li id=L526><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.eq_of_coeff_eq</code> <small>line 526</small></li><li id=L532><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis_inner</code> <small>line 532</small><div class="doc"><p>Exact inner product of arbitrary synthesized coefficient arrays.</p></div><pre>theorem synthesis_inner (a b : (F →ₗ[F2] E) → ℝ) :
+    (𝔼 X, synthesis a X * synthesis b X) = ∑ T, a T * b T := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L511">OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis</a></p></li><li id=L538><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis_energy</code> <small>line 538</small><div class="doc"><p>Exact squared norm, used for every restricted KMS component.</p></div><pre>theorem synthesis_energy (a : (F →ₗ[F2] E) → ℝ) :
+    (𝔼 X, synthesis a X ^ 2) = ∑ T, a T ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L511">OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis</a></p></li><li id=L544><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.component</code> <small>line 544</small><div class="doc"><p>The component formed by retaining precisely the actual frequencies in P.</p></div><pre>def component (P : (F →ₗ[F2] E) → Prop) (f : (E →ₗ[F2] F) → ℝ) :
+    (E →ₗ[F2] F) → ℝ :=
+…</pre></li><li id=L548><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.coeff_component</code> <small>line 548</small></li><li id=L553><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.component_energy</code> <small>line 553</small></li><li id=L561><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.component_energy_le</code> <small>line 561</small></li><li id=L568><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.component_inner_self</code> <small>line 568</small></li><li id=L577><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.component_comp</code> <small>line 577</small></li><li id=L586><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.component_orthogonal</code> <small>line 586</small><div class="doc"><p>Components of disjoint frequency classes are genuinely orthogonal.</p></div><pre>theorem component_orthogonal (P Q : (F →ₗ[F2] E) → Prop)
+    (hPQ : ∀ T, ¬ (P T ∧ Q T)) (f g : (E →ₗ[F2] F) → ℝ) :
+    (𝔼 X, component P f X * component Q g X) = 0 := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L544">OAI.MaxCutGames.Inverse.KMSAnalytic.component</a></p></li><li id=L599><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.rankComponent</code> <small>line 599</small><div class="doc"><p>The rank-level component uses actual image dimension.</p></div><pre>def rankComponent (i : ℕ) (f : (E →ₗ[F2] F) → ℝ) : (E →ₗ[F2] F) → ℝ :=
+…</pre></li><li id=L602><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.rankComponent_energy</code> <small>line 602</small></li><li id=L640><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybrid_frequency_rank</code> <small>line 640</small><div class="doc"><p>The actual selector implies the exact rank loss for the actual
+compressed Fourier frequency.</p></div><pre>theorem hybrid_frequency_rank (A : Submodule F2 E) (B : Submodule F2 F)
+    (S : F →ₗ[F2] E) (hS : LinearIdentities.Hybrid S A B) :
+    Module.finrank F2 (Restriction.compressFrequency A B S).range + order A B =
+      Module.finrank F2 S.range := by
+…</pre></li><li id=L656><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.linearCoeff_hybridDerivative_rankComponent_eq_zero</code> <small>line 656</small><div class="doc"><p>A rank-<code>i</code> component has no derivative coefficient away from the
+exact compressed rank plus the order.</p></div><pre>theorem linearCoeff_hybridDerivative_rankComponent_eq_zero
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ) (i : ℕ)
+    (Z : B →ₗ[F2] (E ⧸ A))
+    (hZ : Module.finrank F2 Z.range + order A B ≠ i) :
+    linearCoeff (hybridDerivative A B T (rankComponent i f)) Z = 0 := by
+…</pre></li><li id=L677><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_rankComponent_eq_zero_of_lt_order</code> <small>line 677</small><div class="doc"><p>If the order is larger than the selected rank, the actual derivative
+vanishes, including all affine translates.</p></div><pre>theorem hybridDerivative_rankComponent_eq_zero_of_lt_order
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ) (i : ℕ)
+    (hi : i &lt; order A B) :
+    hybridDerivative A B T (rankComponent i f) = 0 := by
+…</pre></li><li id=L689><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_rankComponent_energy_eq_support</code> <small>line 689</small><div class="doc"><p>Parseval restricted to the exact rank-loss equality.</p></div><pre>theorem hybridDerivative_rankComponent_energy_eq_support
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ) (i : ℕ) :
+    (𝔼 N, hybridDerivative A B T (rankComponent i f) N ^ 2) =
+      ∑ Z : B →ₗ[F2] (E ⧸ A) with Module.finrank F2 Z.range + order A B = i,
+        linearCoeff (hybridDerivative A B T (rankComponent i f)) Z ^ 2 := by
+…</pre></li><li id=L707><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_rankComponent_energy_eq_rank</code> <small>line 707</small><div class="doc"><p>Exact normalized energy is supported on compressed frequencies of rank
+<code>i - order A B</code>. This also holds above the order cutoff since every
+coefficient then vanishes.</p></div><pre>theorem hybridDerivative_rankComponent_energy_eq_rank
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ) (i : ℕ) :
+    (𝔼 N, hybridDerivative A B T (rankComponent i f) N ^ 2) =
+      ∑ Z : B →ₗ[F2] (E ⧸ A) with Module.finrank F2 Z.range = i - order A B,
+        linearCoeff (hybridDerivative A B T (rankComponent i f)) Z ^ 2 := by
+…</pre></li><li id=L725><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_rankComponent_energy_eq_rank_fibers</code> <small>line 725</small><div class="doc"><p>The rank-restricted exact energy written in the actual compressed
+Fourier fibers used by the analytic estimate.</p></div><pre>theorem hybridDerivative_rankComponent_energy_eq_rank_fibers
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    [Fintype (B →ₗ[F2] (E ⧸ A))]
+    (T : E →ₗ[F2] F) (f : (E →ₗ[F2] F) → ℝ) (i : ℕ) :
+    (𝔼 N, hybridDerivative A B T (rankComponent i f) N ^ 2) =
+      ∑ Z : B →ₗ[F2] (E ⧸ A) with Module.finrank F2 Z.range = i - order A B,
+        (∑ S : F →ₗ[F2] E,
+          if LinearIdentities.Hybrid S A B ∧ Restriction.compressFrequency A B S = Z
+          then linearCoeff (rankComponent i f) S * (linearTraceCharacter S T).re
+          else 0) ^ 2 := by
+…</pre></li><li id=L746><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.productFrequencyEquiv_finrank</code> <small>line 746</small><div class="doc"><p>The explicit change from quotient frequencies to blocks preserves rank.</p></div><pre>theorem productFrequencyEquiv_finrank
+    (Z : (LinearMap.range (LinearMap.inl F2 B C)) →ₗ[F2]
+      ((A × U) ⧸ LinearMap.range (LinearMap.inl F2 A U))) :
+    Module.finrank F2 (productFrequencyEquiv Z).range = Module.finrank F2 Z.range := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L408">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.productFrequencyEquiv</a></p></li><li id=L758><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.product_restriction_order</code> <small>line 758</small><div class="doc"><p>The intrinsic restriction order agrees with the two fixed block dimensions.</p></div><pre>theorem product_restriction_order :
+    order (LinearMap.range (LinearMap.inl F2 A U))
+      (LinearMap.range (LinearMap.inl F2 B C)) =
+      Module.finrank F2 A + Module.finrank F2 C := by
+…</pre></li><li id=L771><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybridDerivative_rankComponent_product_energy_eq_rank_fibers</code> <small>line 771</small><div class="doc"><p>The actual derivative energy, restricted to the exact ordinary block rank.</p></div><pre>theorem hybridDerivative_rankComponent_product_energy_eq_rank_fibers
+    (T : (A × U) →ₗ[F2] (B × C))
+    (f : ((A × U) →ₗ[F2] (B × C)) → ℝ) (i : ℕ) :
+    (𝔼 N, hybridDerivative (LinearMap.range (LinearMap.inl F2 A U))
+      (LinearMap.range (LinearMap.inl F2 B C)) T (rankComponent i f) N ^ 2) =
+      ∑ Z : B →ₗ[F2] U with
+          Module.finrank F2 Z.range = i - (Module.finrank F2 A + Module.finrank F2 C),
+        (∑ S : (B × C) →ₗ[F2] (A × U),
+          if LinearIdentities.Hybrid S (LinearMap.range (LinearMap.inl F2 A U))
+              (LinearMap.range (LinearMap.inl F2 B C)) ∧
+              (LinearMap.snd F2 A U).comp (S.comp (LinearMap.inl F2 B C)) = Z
+          then linearCoeff (rankComponent i f) S * (linearTraceCharacter S T).re
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

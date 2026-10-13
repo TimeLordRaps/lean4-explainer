@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/KazhdanLusztig/GradedModules.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/KazhdanLusztig/GradedModules.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">KazhdanLusztig</a> / <span>GradedModules.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">KazhdanLusztig</a>/<span>GradedModules.lean</span></code></h1><p class="muted">37 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/KazhdanLusztig/GradedModules.lean#L1">source</a></p><div class="doc"><p>Graded polynomial modules, projective presentations, finite homogeneous generators and uniqueness of minimal covers.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.KLInvariance.Graded.eq_top_of_positive_smul_sup</code> <small>line 20</small><div class="doc"><p>Graded Nakayama in its generation form. The submodule is closed under
+actual homogeneous components, rather than assumed to be the whole module.</p></div><pre>theorem eq_top_of_positive_smul_sup
+    (𝓐 : ℤ → Submodule k A) (𝓜 : ℤ → Submodule k M)
+    [DirectSum.Decomposition 𝓜] [SetLike.GradedSMul 𝓐 𝓜]
+    (d₀ : ℤ) (hbound : ∀ j &lt; d₀, 𝓜 j = ⊥)
+    (N : Submodule A M) (hN : ∀ n m, m ∈ N → (DirectSum.decompose 𝓜 m n : M) ∈ N)
+    (hgen : N ⊔ positiveIdeal 𝓐 • (⊤ : Submodule A M) = ⊤) : N = ⊤ := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L286">OAI.KLInvariance.Graded.positiveIdeal</a></p></li><li id=L99><b>theorem</b> <code>OAI.KLInvariance.Graded.component_smul_homogeneous</code> <small>line 99</small><div class="doc"><p>Projection of a scalar multiple of a homogeneous vector.</p></div><pre>theorem component_smul_homogeneous
+    (𝓐 : ℤ → Submodule k A) (𝓜 : ℤ → Submodule k M)
+    [DirectSum.Decomposition 𝓐] [DirectSum.Decomposition 𝓜]
+    [SetLike.GradedSMul 𝓐 𝓜] (a : A) (m : M) (d n : ℤ) (hm : m ∈ 𝓜 d) :
+    component 𝓜 n (a • m) = component 𝓐 (n-d) a • m := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L280">OAI.KLInvariance.Graded.component</a></p></li><li id=L129><b>theorem</b> <code>OAI.KLInvariance.Graded.exists_finite_homogeneous_generators</code> <small>line 129</small><div class="doc"><p>Finite generation can be made homogeneous using the actual finite
+support decomposition of each generator.</p></div><pre>theorem exists_finite_homogeneous_generators
+    (𝓜 : ℤ → Submodule k M) [DirectSum.Decomposition 𝓜] [Module.Finite A M] :
+    ∃ t : Finset M, Submodule.span A (t : Set M) = ⊤ ∧
+      ∀ m ∈ t, ∃ d : ℤ, m ∈ 𝓜 d := by
+…</pre></li><li id=L156><b>theorem</b> <code>OAI.KLInvariance.Graded.homogeneous_span_components</code> <small>line 156</small><div class="doc"><p>The span of finitely many homogeneous vectors is closed under each
+component, as required for graded Nakayama.</p></div><pre>theorem homogeneous_span_components {ι : Type*} [Fintype ι]
+    (𝓐 : ℤ → Submodule k A) (𝓜 : ℤ → Submodule k M)
+    [DirectSum.Decomposition 𝓐] [DirectSum.Decomposition 𝓜]
+    [SetLike.GradedSMul 𝓐 𝓜] (v : ι → M) (d : ι → ℤ)
+    (hv : ∀ i, v i ∈ 𝓜 (d i)) (n : ℤ) (m : M)
+    (hm : m ∈ Submodule.span A (Set.range v)) :
+    component 𝓜 n m ∈ Submodule.span A (Set.range v) := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L280">OAI.KLInvariance.Graded.component</a></p></li><li id=L173><b>theorem</b> <code>OAI.KLInvariance.Graded.quotient_smul_of_scalar_mod</code> <small>line 173</small><div class="doc"><p>Reduction of a scalar modulo the augmentation ideal gives precisely
+its scalar-field action on the reduced module.</p></div><pre>theorem quotient_smul_of_scalar_mod (I : Ideal A) (a : A) (c : k)
+    (hac : a-algebraMap k A c ∈ I) (m : M) :
+    (I • (⊤ : Submodule A M)).mkQ (a • m) =
+      c • (I • (⊤ : Submodule A M)).mkQ m := by
+…</pre></li><li id=L191><b>theorem</b> <code>OAI.KLInvariance.Graded.linearIndependent_of_projective_cover</code> <small>line 191</small><div class="doc"><p>A finite free cover of a projective module, minimal at any proper
+augmentation ideal of a noetherian domain, is injective. The determinant
+form of Nakayama removes the complementary torsion-free kernel.</p></div><pre>theorem linearIndependent_of_projective_cover {ι : Type*} [Fintype ι]
+    [IsDomain A] [IsNoetherianRing A] [Module.Projective A M]
+    (I : Ideal A) (hI : I ≠ ⊤)
+    (hscalar : ∀ a : A, ∃ c : k, a-algebraMap k A c ∈ I)
+    (v : ι → M) (hspan : Submodule.span A (Set.range v) = ⊤)
+    (hind : LinearIndependent k
+      (fun i =&gt; (I • (⊤ : Submodule A M)).mkQ (v i))) :
+    LinearIndependent A v := by
+…</pre></li><li id=L245><b>theorem</b> <code>OAI.KLInvariance.Graded.quotient_span_of_scalar_mod</code> <small>line 245</small><div class="doc"><p>Images of any finite generating family span the augmentation quotient
+as a vector space over the degree-zero field.</p></div><pre>theorem quotient_span_of_scalar_mod {ι : Type*} [Fintype ι]
+    (I : Ideal A) (hscalar : ∀ a : A, ∃ c : k, a-algebraMap k A c ∈ I)
+    (v : ι → M) (hv : Submodule.span A (Set.range v) = ⊤) :
+    Submodule.span k (Set.range (fun i =&gt; (I • (⊤ : Submodule A M)).mkQ (v i))) = ⊤ := by
+…</pre></li><li id=L268><b>theorem</b> <code>OAI.KLInvariance.Graded.exists_homogeneous_basis_of_scalar_mod</code> <small>line 268</small></li><li id=L328><b>def</b> <code>OAI.KLInvariance.Graded.nonnegativeAugmentation</code> <small>line 328</small><div class="doc"><p>The augmentation for a nonnegatively supported integer grading is
+actual degree-zero projection.</p></div><pre>noncomputable def nonnegativeAugmentation
+    (𝓐 : ℤ → Submodule k A) [DirectSum.Decomposition 𝓐]
+    [SetLike.GradedMonoid 𝓐] (hneg : ∀ j &lt; 0, 𝓐 j = ⊥) : A →+* A where
+…</pre></li><li id=L376><b>theorem</b> <code>OAI.KLInvariance.Graded.positiveIdeal_eq_augmentation_ker</code> <small>line 376</small><div class="doc"><p>The positive ideal is exactly the augmentation kernel.</p></div><pre>theorem positiveIdeal_eq_augmentation_ker
+    (𝓐 : ℤ → Submodule k A) [DirectSum.Decomposition 𝓐]
+    [SetLike.GradedMonoid 𝓐] (hneg : ∀ j &lt; 0, 𝓐 j = ⊥) :
+    positiveIdeal 𝓐 = RingHom.ker (nonnegativeAugmentation 𝓐 hneg) := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L286">OAI.KLInvariance.Graded.positiveIdeal</a>, <a href="GradedModules.lean.html#L328">OAI.KLInvariance.Graded.nonnegativeAugmentation</a></p></li><li id=L400><b>theorem</b> <code>OAI.KLInvariance.Graded.exists_homogeneous_basis_connected</code> <small>line 400</small></li><li id=L426><b>abbrev</b> <code>OAI.KLInvariance.Graded.polynomialGrading</code> <small>line 426</small><div class="doc"><p>The actual polynomial grading, with each variable in degree one, on
+integer degrees as used for shifted stalks.</p></div><pre>abbrev polynomialGrading (k : Type*) [Field k] (σ : Type*) :=
+…</pre></li><li id=L429><b>instance</b> <code>OAI.KLInvariance.Graded.polynomialGrading_decomposition</code> <small>line 429</small></li><li id=L433><b>instance</b> <code>OAI.KLInvariance.Graded.polynomialGrading_monoid</code> <small>line 433</small></li><li id=L437><b>theorem</b> <code>OAI.KLInvariance.Graded.polynomialGrading_negative</code> <small>line 437</small></li><li id=L452><b>theorem</b> <code>OAI.KLInvariance.Graded.polynomialGrading_zero</code> <small>line 452</small></li><li id=L472><b>theorem</b> <code>OAI.KLInvariance.Graded.exists_homogeneous_basis_polynomial</code> <small>line 472</small></li><li id=L491><b>def</b> <code>OAI.KLInvariance.ReverseFiltration.scalarQuotientMap</code> <small>line 491</small></li><li id=L498><b>theorem</b> <code>OAI.KLInvariance.ReverseFiltration.scalarQuotientMap_surjective</code> <small>line 498</small></li><li id=L507><b>def</b> <code>OAI.KLInvariance.ReverseFiltration.scalarKernelMap</code> <small>line 507</small><div class="doc"><p>Multiplication by the actual nonzero label identifies the kernel of
+coordinate reduction with a free module.</p></div><pre>def scalarKernelMap (a : A) (ι : Type ui) :
+    (ι → A) →ₗ[A] LinearMap.ker (scalarQuotientMap a ι) where
+…</pre><p class="refs">Mentions: <a href="GradedModules.lean.html#L491">OAI.KLInvariance.ReverseFiltration.scalarQuotientMap</a></p></li><li id=L517><b>theorem</b> <code>OAI.KLInvariance.ReverseFiltration.scalarKernelMap_bijective</code> <small>line 517</small></li><li id=L531><b>theorem</b> <code>OAI.KLInvariance.ReverseFiltration.scalarKernel_projective</code> <small>line 531</small></li><li id=L538><b>theorem</b> <code>OAI.KLInvariance.ReverseFiltration.exists_scalar_presentation</code> <small>line 538</small><div class="doc"><p>Every finite free module over A/(a) has an actual free A-presentation
+with projective kernel; no projective-dimension hypothesis is inserted.</p></div><pre>theorem exists_scalar_presentation (a : A) (ha : a≠0)
+    (P : Type up) [AddCommGroup P] [Module A P]
+    [Module (A ⧸ Ideal.span {a}) P] [IsScalarTower A (A ⧸ Ideal.span {a}) P]
+    [Module.Free (A ⧸ Ideal.span {a}) P] [Module.Finite (A ⧸ Ideal.span {a}) P] :
+    ∃ (ι : Type up), Finite ι ∧ ∃ g : (ι → A) →ₗ[A] P,
+      Function.Surjective g ∧ Module.Projective A (LinearMap.ker g) := by
+…</pre></li><li id=L561><b>theorem</b> <code>OAI.KLInvariance.ReverseFiltration.kernel_projective_of_free_scalar_quotient</code> <small>line 561</small><div class="doc"><p>The reverse-filtration kernel is projective when the edge image is
+actually finite free over the hypersurface quotient.</p></div><pre>theorem kernel_projective_of_free_scalar_quotient
+    (a : A) (ha : a≠0) {F : Type*} [AddCommGroup F] [Module A F]
+    [Module.Projective A F]
+    {P : Type up} [AddCommGroup P] [Module A P]
+    [Module (A ⧸ Ideal.span {a}) P] [IsScalarTower A (A ⧸ Ideal.span {a}) P]
+    [Module.Free (A ⧸ Ideal.span {a}) P] [Module.Finite (A ⧸ Ideal.span {a}) P]
+    (f : F →ₗ[A] P) (hf : Function.Surjective f) :
+    Module.Projective A (LinearMap.ker f) := by
+…</pre></li><li id=L587><b>theorem</b> <code>OAI.KLInvariance.Graded.exists_homogeneous_minimal_generators</code> <small>line 587</small></li><li id=L1051><b>structure</b> <code>OAI.KLInvariance.Graded.ModuleData</code> <small>line 1051</small><div class="doc"><p>Actual finite nonnegatively graded modules; no character or duality property
+is folded into this data.</p></div><pre>structure ModuleData (𝓐 : ℤ → Submodule k A) where
+…</pre></li><li id=L1064><b>instance</b> <code>OAI.KLInvariance.Graded.(instance at line 1064)</code> <small>line 1064</small></li><li id=L1070><b>instance</b> <code>OAI.KLInvariance.Graded.ModuleData.(instance at line 1070)</code> <small>line 1070</small></li><li id=L1071><b>instance</b> <code>OAI.KLInvariance.Graded.ModuleData.(instance at line 1071)</code> <small>line 1071</small></li><li id=L1073><b>structure</b> <code>OAI.KLInvariance.Graded.ModuleData.Hom</code> <small>line 1073</small></li><li id=L1077><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.sub</code> <small>line 1077</small></li><li id=L1089><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.quotient</code> <small>line 1089</small></li><li id=L1101><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.pi</code> <small>line 1101</small></li><li id=L1112><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.kernel</code> <small>line 1112</small></li><li id=L1117><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.range</code> <small>line 1117</small></li><li id=L1122><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.scalarQuotient</code> <small>line 1122</small></li><li id=L1163><b>def</b> <code>OAI.KLInvariance.Graded.ModuleData.free</code> <small>line 1163</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

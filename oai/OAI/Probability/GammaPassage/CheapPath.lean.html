@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/CheapPath.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/CheapPath.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>CheapPath.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>CheapPath.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/CheapPath.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>lemma</b> <code>OAI.GammaFPP.trace_edge_length</code> <small>line 10</small></li><li id=L18><b>lemma</b> <code>OAI.GammaFPP.pathCost_trace_edge_sum</code> <small>line 18</small></li><li id=L26><b>lemma</b> <code>OAI.GammaFPP.pathCost_eq_distinct_edgeSum</code> <small>line 26</small><div class="doc"><p>Only a trail's traversal sum can be replaced by its distinct-edge set sum.</p></div><pre>lemma pathCost_eq_distinct_edgeSum (w : Edge → ℝ) (p : Vertex) (ds : List Step)
+    (hn : ((trace p ds).map traversalEdge).Nodup) :
+    pathCost w p ds = ∑ e ∈ ((trace p ds).map traversalEdge).toFinset, w e := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.cheap_path_probability</code> <small>line 38</small><div class="doc"><p>Genuine Gamma lower tail for any fixed trail, with arbitrary real threshold.
+The positive parameter s uses the native MGF at theta=-s.</p></div><pre>theorem GammaEnvironment.cheap_path_probability
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (s : ℝ) (hsp : 0 &lt; s) (p : Vertex) (ds : List Step)
+    (hn : ((trace p ds).map traversalEdge).Nodup) (t : ℝ) :
+    P {ω | pathCost (fun e =&gt; τ e ω) p ds ≤ t} ≤
+      (ENNReal.ofReal ((rate / (rate + s)) ^ shape)) ^ ds.length /
+        ENNReal.ofReal (Real.exp (-s * t)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li><li id=L56><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.cheap_path_probability_real</code> <small>line 56</small><div class="doc"><p>Conversion keeps the upper bound finite before passing to real probability.</p></div><pre>theorem GammaEnvironment.cheap_path_probability_real
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (s : ℝ) (hsp : 0 &lt; s) (p : Vertex) (ds : List Step)
+    (hn : ((trace p ds).map traversalEdge).Nodup) (t : ℝ) :
+    P.real {ω | pathCost (fun e =&gt; τ e ω) p ds ≤ t} ≤
+      ((rate / (rate + s)) ^ shape) ^ ds.length * Real.exp (s * t) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li><li id=L78><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.cheap_path_family_probability</code> <small>line 78</small><div class="doc"><p>The probability that a finite family contains a cheap trail is bounded by
+its cardinality times the single-trail estimate.</p></div><pre>theorem GammaEnvironment.cheap_path_family_probability
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (s : ℝ) (hsp : 0 &lt; s) (p : Vertex) (F : Finset (List Step)) (n : ℕ)
+    (hF : ∀ ds ∈ F, ((trace p ds).map traversalEdge).Nodup ∧ ds.length = n)
+    (t : ℝ) :
+    P {ω | ∃ ds ∈ F, pathCost (fun e =&gt; τ e ω) p ds ≤ t} ≤
+      (F.card : ℝ≥0∞) * ((ENNReal.ofReal ((rate / (rate + s)) ^ shape)) ^ n /
+        ENNReal.ofReal (Real.exp (-s * t))) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

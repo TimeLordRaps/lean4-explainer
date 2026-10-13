@@ -1,0 +1,1 @@
+window.l4shard("ts", [["C_Ts",3,292],["tsum_czRemainder'",0,737],["tsum_eLpNorm_czRemainder'_le",0,1034],["tsum_eLpNorm_czRemainder_le",0,1043],["tsum_integral_K_le",0,1409],["tsum_volume_czBall3_le",0,1010]]);

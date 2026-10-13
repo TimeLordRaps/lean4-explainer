@@ -1,0 +1,1 @@
+window.l4shard("af", [["WeierstrassCurve.Affine.Point.equivOfEq",171,179],["WeierstrassCurve.Affine.Point.equivVariableChange",171,209],["WeierstrassCurve.Affine.Point.mapVariableChange",171,190],["WeierstrassCurve.Affine.Point.mapVariableChangeFun",171,143],["WeierstrassCurve.Affine.variableChange_equation",171,126],["WeierstrassCurve.Affine.variableChange_negY_ne",171,63]]);

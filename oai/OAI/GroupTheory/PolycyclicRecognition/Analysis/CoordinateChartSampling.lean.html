@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/CoordinateChartSampling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/CoordinateChartSampling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>CoordinateChartSampling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>CoordinateChartSampling.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/CoordinateChartSampling.lean#L1">source</a></p><div class="doc"><h3>The coordinate maps of the actual two-factor chart samples</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.PolycyclicRecognition.model_binary_dynkin</code> <small>line 16</small><div class="doc"><p>A Lie-algebra identification transports the same binary Dynkin formula.</p></div><pre>theorem model_binary_dynkin
+    {L L&#x27; N : Type*} [LieRing L] [LieAlgebra ℝ L]
+    [LieRing L&#x27;] [LieAlgebra ℝ L&#x27;] [Group N]
+    (e : L ≃ₗ⁅ℝ⁆ L&#x27;) (Exp : L&#x27; → N) {c : ℕ} (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, Exp (finiteDynkinPolynomial a ![x, y]) = Exp x * Exp y)
+    (x y : L) :
+    Exp (e (finiteDynkinPolynomial a ![x, y])) = Exp (e x) * Exp (e y) := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a></p></li><li id=L31><b>theorem</b> <code>OAI.PolycyclicRecognition.exp_basis_dynkinProduct</code> <small>line 31</small><div class="doc"><p>The coordinate Dynkin product maps to the actual group product.</p></div><pre>theorem exp_basis_dynkinProduct
+    {L N : Type*} [LieRing L] [LieAlgebra ℝ L] [Group N]
+    {n c : ℕ} (b : Basis (Fin n) ℝ L) (Exp : L → N)
+    (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, Exp (finiteDynkinPolynomial a ![x, y]) = Exp x * Exp y)
+    (x y : Fin n → ℝ) :
+    Exp (b.equivFun.symm (dynkinProduct a (basisBracket b) x y)) =
+      Exp (b.equivFun.symm x) * Exp (b.equivFun.symm y) := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a>, <a href="../Algebra/PolynomialGroupLaws.lean.html#L31">OAI.PolycyclicRecognition.dynkinProduct</a>, <a href="../Geometry/CoordinateLieBrackets.lean.html#L45">OAI.PolycyclicRecognition.basisBracket</a></p></li><li id=L50><b>def</b> <code>OAI.PolycyclicRecognition.coordinateChartPoint</code> <small>line 50</small><div class="doc"><p>The chart sample uses the actual factor exponentials and includes the
+deterministic enlarged suffix.</p></div><pre>def coordinateChartPoint (p : NormalizedPair G Λ) (x : G)
+    (ι : N →* G) (κ : D →* G) (ExpN : LN → N) (ExpD : LD → D)
+    (bN : Basis (Fin n) ℝ LN) (bD : Basis (Fin d) ℝ LD) (k : N)
+    (z : (Fin n → ℝ) × (Fin d → ℝ)) : NormalizedPair G Λ :=
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a></p></li><li id=L59><b>theorem</b> <code>OAI.PolycyclicRecognition.coordinateChartPoint_right</code> <small>line 59</small><div class="doc"><p>The second-factor coordinate translation is exactly the normalized
+action of the corresponding fixed group element.</p></div><pre>theorem coordinateChartPoint_right
+    (p : NormalizedPair G Λ) (x : G) (ι : N →* G) (κ : D →* G)
+    (ExpN : LN → N) (ExpD : LD → D)
+    (bN : Basis (Fin n) ℝ LN) (bD : Basis (Fin d) ℝ LD) (k : N)
+    {c : ℕ} (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, ExpD (finiteDynkinPolynomial a ![x, y]) = ExpD x * ExpD y)
+    (v : LD) (z : (Fin n → ℝ) × (Fin d → ℝ)) :
+    (κ (ExpD v))⁻¹ • coordinateChartPoint p x ι κ ExpN ExpD bN bD k z =
+      coordinateChartPoint p x ι κ ExpN ExpD bN bD k
+        (z.1, dynkinProduct a (basisBracket bD) z.2 (bD.equivFun v)) := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a>, <a href="CoordinateChartSampling.lean.html#L50">OAI.PolycyclicRecognition.coordinateChartPoint</a>, <a href="../Algebra/PolynomialGroupLaws.lean.html#L31">OAI.PolycyclicRecognition.dynkinProduct</a>, <a href="../Geometry/CoordinateLieBrackets.lean.html#L45">OAI.PolycyclicRecognition.basisBracket</a></p></li><li id=L76><b>theorem</b> <code>OAI.PolycyclicRecognition.coordinateChartPoint_normal</code> <small>line 76</small><div class="doc"><p>The first-factor move has precisely the suffix-conjugated coordinate
+parameter appearing in interior slack. Its expression is derived from the
+actual factor action, rather than assumed as a coordinate identity.</p></div><pre>theorem coordinateChartPoint_normal
+    (p : NormalizedPair G Λ) (x : G) (ι : N →* G) (κ : D →* G)
+    (φ : D →* MulAut N)
+    (hφ : ∀ d n, ι (φ d n) = κ d * ι n * (κ d)⁻¹)
+    (ExpN : LN → N) (ExpD : LD → D) (logN : N → LN)
+    (hlog : ∀ n, ExpN (logN n) = n)
+    (bN : Basis (Fin n) ℝ LN) (bD : Basis (Fin d) ℝ LD) (k u : N)
+    {c : ℕ} (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, ExpN (finiteDynkinPolynomial a ![x, y]) = ExpN x * ExpN y)
+    (z : (Fin n → ℝ) × (Fin d → ℝ)) :
+    (ι u)⁻¹ • coordinateChartPoint p x ι κ ExpN ExpD bN bD k z =
+      coordinateChartPoint p x ι κ ExpN ExpD bN bD k
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a>, <a href="CoordinateChartSampling.lean.html#L50">OAI.PolycyclicRecognition.coordinateChartPoint</a></p></li><li id=L98><b>theorem</b> <code>OAI.PolycyclicRecognition.coordinateChartPoint_normal_of_exponential_action</code> <small>line 98</small><div class="doc"><p>When the factor action on exponentials has been identified, its exact
+coordinate move is the double Dynkin product controlled by interior slack.
+No logarithm of a group product is left as an extra assumption.</p></div><pre>theorem coordinateChartPoint_normal_of_exponential_action
+    (p : NormalizedPair G Λ) (x : G) (ι : N →* G) (κ : D →* G)
+    (φ : D →* MulAut N)
+    (hφ : ∀ d n, ι (φ d n) = κ d * ι n * (κ d)⁻¹)
+    (ExpN : LN → N) (ExpD : LD → D)
+    (hneg : ∀ v, ExpN (-v) = (ExpN v)⁻¹)
+    (A : LD → LN → LN)
+    (hact : ∀ d v, φ (ExpD d) (ExpN v) = ExpN (A d v))
+    (bN : Basis (Fin n) ℝ LN) (bD : Basis (Fin d) ℝ LD) (k v : LN)
+    {c : ℕ} (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, ExpN (finiteDynkinPolynomial a ![x, y]) = ExpN x * ExpN y)
+    (z : (Fin n → ℝ) × (Fin d → ℝ)) :
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a></p></li><li id=L125><b>theorem</b> <code>OAI.PolycyclicRecognition.continuous_coordinateChartPoint</code> <small>line 125</small><div class="doc"><p>Continuity of the factor charts gives continuity of the joint sample.</p></div><pre>theorem continuous_coordinateChartPoint [ProperSpace G]
+    (p : NormalizedPair G Λ) (x : G) (ι : N →* G) (κ : D →* G)
+    (ExpN : LN → N) (ExpD : LD → D)
+    (bN : Basis (Fin n) ℝ LN) (bD : Basis (Fin d) ℝ LD) (k : N)
+    (hN : Continuous (fun z =&gt; ι (ExpN (bN.equivFun.symm z))))
+    (hD : Continuous (fun z =&gt; κ (ExpD (bD.equivFun.symm z)))) :
+    Continuous (coordinateChartPoint p x ι κ ExpN ExpD bN bD k) := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="CoordinateChartSampling.lean.html#L50">OAI.PolycyclicRecognition.coordinateChartPoint</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

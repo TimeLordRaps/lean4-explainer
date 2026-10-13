@@ -1,0 +1,1 @@
+window.l4shard("lp", [["Arxiv.«2607.03582».lpSum",42,53],["Arxiv.«2607.03582».volume_lpSum_eq_of_isParallelogramAtOrigin",42,86],["Arxiv.«2607.03582».volume_lpSum_le",42,75],["Erdos681.IsLPF",702,31],["exponentialCharacter_memLp",1581,61]]);

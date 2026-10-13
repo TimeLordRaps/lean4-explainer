@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/TwoWayAutomata/ImageBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/TwoWayAutomata/ImageBound.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">TwoWayAutomata</a> / <span>ImageBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">TwoWayAutomata</a>/<span>ImageBound.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/TwoWayAutomata/ImageBound.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.TwoWayComplementation.single_edge_cost</code> <small>line 12</small><div class="doc"><p>Exponential cost of a single edge for every finite source monoid and label type.</p></div><pre>theorem single_edge_cost (h : ℕ) :
+    ∀ {A : Type u} {H : Type v} [Monoid A] [Finite A] [Finite H] {m : ℕ},
+      Nat.card H = h → 2 ≤ h →
+      ∀ (ι : A →ₙ* Diagram m) (φ : A →* RelationMonoid H), Function.Surjective φ →
+      (∀ a b, (ι a, ι b) ∈ Diagram.inclusion m → (φ b).toRel ⊆ (φ a).toRel) →
+      (∀ σ : Equiv.Perm H, ∃ p : Aˣ, φ p = (permutationUnit σ).val) →
+      ∀ a, IsIdempotentElem a → ∀ x y : H, x ≠ y →
+      (φ a).toRel = SetRel.id ∪ {(x, y)} →
+      lossBound h ≤ ((ι 1).missing (ι a)).ncard := by
+…</pre><p class="refs">Mentions: <a href="Diagram.lean.html#L11">OAI.TwoWayComplementation.Diagram</a>, <a href="RelationMonoid.lean.html#L87">OAI.TwoWayComplementation.RelationMonoid</a>, <a href="Diagram.lean.html#L34">OAI.TwoWayComplementation.Diagram.inclusion</a>, <a href="Amplification.lean.html#L122">OAI.TwoWayComplementation.permutationUnit</a>, <a href="Amplification.lean.html#L10">OAI.TwoWayComplementation.lossBound</a></p></li><li id=L180><b>theorem</b> <code>OAI.TwoWayComplementation.minimal_unital_corner</code> <small>line 180</small><div class="doc"><p>A surjection has a unital identity corner with unit lifts for every target unit.</p></div><pre>theorem minimal_unital_corner {A M : Type*} [Semigroup A] [Finite A] [Monoid M]
+    (θ : A →ₙ* M) (hθ : Function.Surjective θ) :
+    ∃ d : A, ∃ hd : IsIdempotentElem d, ∃ ψ : hd.Corner →* M,
+      Function.Surjective ψ ∧ (∀ w, ψ w = θ w.val) ∧
+      ∀ u : Mˣ, ∃ p : hd.Cornerˣ, ψ p = u.val := by
+…</pre></li><li id=L209><b>theorem</b> <code>OAI.TwoWayComplementation.identity_pair_idempotent</code> <small>line 209</small><div class="doc"><p>Identity plus a single pair is always an idempotent relation.</p></div><pre>theorem identity_pair_idempotent {H : Type*} (x y : H) :
+    IsIdempotentElem (RelationMonoid.ofRel (SetRel.id ∪ {(x, y)})) := by
+…</pre><p class="refs">Mentions: <a href="RelationMonoid.lean.html#L93">OAI.TwoWayComplementation.RelationMonoid.ofRel</a></p></li><li id=L219><b>theorem</b> <code>OAI.TwoWayComplementation.order_reversing_image_bound_finite</code> <small>line 219</small><div class="doc"><p>A surjective order-reversing multiplicative image has exponential cost.</p></div><pre>theorem order_reversing_image_bound_finite {H : Type*} [Finite H]
+    (m : ℕ) (_hm : 1 ≤ m) (hh : 2 ≤ Nat.card H)
+    (S : Set (Diagram m)) (hidentity : Diagram.identity m ∈ S)
+    (hclosed : ∀ ⦃a b⦄, a ∈ S → b ∈ S → Diagram.comp a b ∈ S)
+    (φ : S → SetRel H H) (hsurj : Function.Surjective φ)
+    (hmul : ∀ a b : S,
+      φ ⟨Diagram.comp a.val b.val, hclosed a.property b.property⟩ = φ a ○ φ b)
+    (hreverse : ∀ a b : S, (a.val, b.val) ∈ Diagram.inclusion m → φ b ⊆ φ a) :
+    lossBound (Nat.card H) ≤ 2 * m := by
+…</pre><p class="refs">Mentions: <a href="Diagram.lean.html#L11">OAI.TwoWayComplementation.Diagram</a>, <a href="Diagram.lean.html#L31">OAI.TwoWayComplementation.Diagram.identity</a>, <a href="Diagram.lean.html#L24">OAI.TwoWayComplementation.Diagram.comp</a>, <a href="Diagram.lean.html#L34">OAI.TwoWayComplementation.Diagram.inclusion</a>, <a href="Amplification.lean.html#L10">OAI.TwoWayComplementation.lossBound</a></p></li><li id=L268><b>theorem</b> <code>OAI.TwoWayComplementation.order_reversing_image_bound</code> <small>line 268</small><div class="doc"><p>The order-reversing image bound for a finite label domain.</p></div><pre>theorem order_reversing_image_bound
+    (m h : ℕ) (_hm : 1 ≤ m) (hh : 2 ≤ h)
+    (S : Set (Diagram m)) (hidentity : Diagram.identity m ∈ S)
+    (hclosed : ∀ ⦃a b⦄, a ∈ S → b ∈ S → Diagram.comp a b ∈ S)
+    (φ : S → SetRel (Fin h) (Fin h)) (hsurj : Function.Surjective φ)
+    (hmul : ∀ a b : S,
+      φ ⟨Diagram.comp a.val b.val, hclosed a.property b.property⟩ = φ a ○ φ b)
+    (hreverse : ∀ a b : S, (a.val, b.val) ∈ Diagram.inclusion m → φ b ⊆ φ a) :
+    lossBound h ≤ 2 * m := by
+…</pre><p class="refs">Mentions: <a href="Diagram.lean.html#L11">OAI.TwoWayComplementation.Diagram</a>, <a href="Diagram.lean.html#L31">OAI.TwoWayComplementation.Diagram.identity</a>, <a href="Diagram.lean.html#L24">OAI.TwoWayComplementation.Diagram.comp</a>, <a href="Diagram.lean.html#L34">OAI.TwoWayComplementation.Diagram.inclusion</a>, <a href="Amplification.lean.html#L10">OAI.TwoWayComplementation.lossBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

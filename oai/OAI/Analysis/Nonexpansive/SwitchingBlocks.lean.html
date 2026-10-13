@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/SwitchingBlocks.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/SwitchingBlocks.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>SwitchingBlocks.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>SwitchingBlocks.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/SwitchingBlocks.lean#L1">source</a></p><div class="doc"><h3>Actual whole-block switches and their vector telescope</h3><p>The ordered descendant interval determines the actual before/after root states.
+All leaf increments come from the same cutoff experiment.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.ReflexiveFixedPoints.OrderedTree.sum_descendants_eq_Ico</code> <small>line 23</small><div class="doc"><p>Reindex a sum over an actual descendant fiber by its consecutive natural
+interval.</p></div><pre>theorem sum_descendants_eq_Ico (T : OrderedTree)
+    {k N : ℕ} (h : k ≤ N) (v : T.Node k)
+    {A : Type*} [AddCommMonoid A] (f : ℕ → A) :
+    (∑ s ∈ T.descendants h v, f s.val) =
+      ∑ i ∈ Finset.Ico (T.descendantLo h v) (T.descendantHi h v), f i := by
+…</pre><p class="refs">Mentions: <a href="OrderedTree.lean.html#L17">OAI.ReflexiveFixedPoints.OrderedTree</a></p></li><li id=L53><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.beforeBlock</code> <small>line 53</small><div class="doc"><p>The actual root just before the entire descendant block switches.</p></div><pre>noncomputable def beforeBlock {k N : ℕ} (h : k ≤ N)
+    (y : T.Node N → K) (b : K) (v : T.Node k) : K :=
+…</pre></li><li id=L58><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.afterBlock</code> <small>line 58</small><div class="doc"><p>The actual root just after the entire descendant block switches.</p></div><pre>noncomputable def afterBlock {k N : ℕ} (h : k ≤ N)
+    (y : T.Node N → K) (b : K) (v : T.Node k) : K :=
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.switchLeaves_beforeBlock</code> <small>line 64</small><div class="doc"><p>At the before-block cutoff, a leaf is unchanged exactly when its depth-k
+ancestor is at or to the left of the block's node.</p></div><pre>theorem switchLeaves_beforeBlock {k N : ℕ} (h : k ≤ N)
+    (y : T.Node N → K) (b : K) (v : T.Node k) (s : T.Node N) :
+    E.switchLeaves N y b (T.descendantHi h v) s =
+      if T.ancestorLE h s ≤ v then y s else b := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.switchLeaves_afterBlock</code> <small>line 72</small><div class="doc"><p>At the after-block cutoff, a leaf is unchanged exactly when its depth-k
+ancestor is strictly to the left of the block's node.</p></div><pre>theorem switchLeaves_afterBlock {k N : ℕ} (h : k ≤ N)
+    (y : T.Node N → K) (b : K) (v : T.Node k) (s : T.Node N) :
+    E.switchLeaves N y b (T.descendantLo h v) s =
+      if T.ancestorLE h s &lt; v then y s else b := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.switchLeaves_beforeBlock_of_descendant</code> <small>line 79</small><div class="doc"><p>A node's own descendants are all unchanged immediately before its block.</p></div><pre>theorem switchLeaves_beforeBlock_of_descendant {k N : ℕ} (h : k ≤ N)
+    (y : T.Node N → K) (b : K) (v : T.Node k) (s : T.Node N)
+    (hs : T.ancestorLE h s = v) :
+    E.switchLeaves N y b (T.descendantHi h v) s = y s := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.pathWeight_smul_switchVector</code> <small>line 87</small><div class="doc"><p>Multiplying the actual normalized increment by its positive path weight
+recovers exactly the actual before-minus-after single-leaf difference.</p></div><pre>theorem pathWeight_smul_switchVector (N : ℕ) (y : T.Node N → K) (b : K)
+    (s : T.Node N) :
+    W.pathWeight N s • E.switchVector N y b s =
+      (E.switchRoot N y b (s.val + 1) : X) - E.switchRoot N y b s.val := by
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.switchVector_block_telescope</code> <small>line 96</small><div class="doc"><p>The sum of the actual normalized leaf increments over a descendant block
+is exactly its actual before-minus-after root difference.</p></div><pre>theorem switchVector_block_telescope {k N : ℕ} (h : k ≤ N)
+    (y : T.Node N → K) (b : K) (v : T.Node k) :
+    (∑ s ∈ T.descendants h v, W.pathWeight N s • E.switchVector N y b s) =
+      (E.beforeBlock h y b v : X) - E.afterBlock h y b v := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

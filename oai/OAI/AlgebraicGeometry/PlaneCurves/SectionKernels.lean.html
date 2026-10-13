@@ -1,0 +1,158 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/SectionKernels.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/SectionKernels.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>SectionKernels.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>SectionKernels.lean</span></code></h1><p class="muted">27 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/SectionKernels.lean#L1">source</a></p><div class="doc"><h3>Necessary sections, actual expressions, jets, and kernels</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>abbrev</b> <code>OAI.Nagata.W20.ActualSection</code> <small>line 21</small></li><li id=L25><b>def</b> <code>OAI.Nagata.W20.localScalar</code> <small>line 25</small><div class="doc"><p>The actual fixed local covering-space expression in logarithmic coordinates.</p></div><pre>def localScalar {τ γL γP : ℂ} {d : ℤ} {m : ℕ} {P : ℂ → ℂ}
+    (F : ActualSection τ γL γP d m P) (z₀ x y : ℂ) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L30><b>def</b> <code>OAI.Nagata.W20.actualTransverse</code> <small>line 30</small><div class="doc"><p>The finite coefficient formula for the b-th transverse derivative at y=0.</p></div><pre>def actualTransverse {τ γL γP : ℂ} {d : ℤ} {m : ℕ} {P : ℂ → ℂ}
+    (F : ActualSection τ γL γP d m P) (z₀ : ℂ) (b : ℕ) (x : ℂ) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L37><b>theorem</b> <code>OAI.Nagata.W20.scalarExpression_eq_sum_range</code> <small>line 37</small><div class="doc"><p>A bounded polynomial section has exactly the expected finite sum in the
+covering frame, including all zero coefficients and the degree-zero block.</p></div><pre>theorem scalarExpression_eq_sum_range {τ γL γP : ℂ} {d : ℤ} {m : ℕ}
+    {P : ℂ → ℂ} (F : ActualSection τ γL γP d m P) (z v : ℂ) :
+    scalarExpression F.val z v =
+      ∑ j ∈ Finset.range ((d / 3).toNat + 1), F.val.coeff j z * v ^ j := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L52><b>theorem</b> <code>OAI.Nagata.W20.localScalar_eq_sum_exp</code> <small>line 52</small><div class="doc"><p>The logarithmic fiber coordinate yields exponential monomials exactly.</p></div><pre>theorem localScalar_eq_sum_exp {τ γL γP : ℂ} {d : ℤ} {m : ℕ}
+    {P : ℂ → ℂ} (F : ActualSection τ γL γP d m P) (z₀ x y : ℂ) :
+    localScalar F z₀ x y =
+      ∑ j ∈ Finset.range ((d / 3).toNat + 1),
+        F.val.coeff j (z₀ * Complex.exp x) * Complex.exp ((j : ℂ) * y) := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="SectionKernels.lean.html#L25">OAI.Nagata.W20.localScalar</a></p></li><li id=L62><b>theorem</b> <code>OAI.Nagata.W20.actualTransverse_eq_derivative</code> <small>line 62</small><div class="doc"><p>This proves that the finite coefficient formula is the actual repeated
+y derivative of the genuine local scalar expression.</p></div><pre>theorem actualTransverse_eq_derivative {τ γL γP : ℂ} {d : ℤ} {m : ℕ}
+    {P : ℂ → ℂ} (F : ActualSection τ γL γP d m P) (z₀ x : ℂ) (b : ℕ) :
+    actualTransverse F z₀ b x = iteratedDeriv b (fun y =&gt; localScalar F z₀ x y) 0 := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="SectionKernels.lean.html#L30">OAI.Nagata.W20.actualTransverse</a>, <a href="SectionKernels.lean.html#L25">OAI.Nagata.W20.localScalar</a></p></li><li id=L81><b>theorem</b> <code>OAI.Nagata.W20.logarithmicCoefficient_differentiable</code> <small>line 81</small><div class="doc"><p>Each coefficient is holomorphic after the actual common logarithmic
+coordinate change; z₀≠0 guarantees the chart remains in the punctured plane.</p></div><pre>theorem logarithmicCoefficient_differentiable {τ γL γP : ℂ} {d : ℤ} {m : ℕ}
+    {P : ℂ → ℂ} (F : ActualSection τ γL γP d m P)
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z) {z₀ : ℂ} (hz₀ : z₀ ≠ 0) (j : ℕ) :
+    Differentiable ℂ (fun x =&gt; F.val.coeff j (z₀ * Complex.exp x)) := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L92><b>theorem</b> <code>OAI.Nagata.W20.actualTransverse_differentiable</code> <small>line 92</small><div class="doc"><p>The transverse expressions needed in collision are genuine entire
+holomorphic functions, proved from the actual coefficient-space definition.</p></div><pre>theorem actualTransverse_differentiable {τ γL γP : ℂ} {d : ℤ} {m : ℕ}
+    {P : ℂ → ℂ} (F : ActualSection τ γL γP d m P)
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z) {z₀ : ℂ} (hz₀ : z₀ ≠ 0) (b : ℕ) :
+    Differentiable ℂ (actualTransverse F z₀ b) := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="SectionKernels.lean.html#L30">OAI.Nagata.W20.actualTransverse</a></p></li><li id=L100><b>theorem</b> <code>OAI.Nagata.W20.actualTransverse_add</code> <small>line 100</small></li><li id=L107><b>theorem</b> <code>OAI.Nagata.W20.actualTransverse_smul</code> <small>line 107</small></li><li id=L115><b>def</b> <code>OAI.Nagata.W20.actualTransverseLinear</code> <small>line 115</small><div class="doc"><p>A transverse expression is a linear function of the actual polynomial
+section, before any choice of basis.</p></div><pre>def actualTransverseLinear {τ γL γP : ℂ} {d : ℤ} {m : ℕ} {P : ℂ → ℂ}
+    (z₀ : ℂ) (b : ℕ) : ActualSection τ γL γP d m P →ₗ[ℂ] (ℂ → ℂ) where
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L135><b>def</b> <code>OAI.Nagata.W20.actualJetMap</code> <small>line 135</small><div class="doc"><p>The actual manuscript jet map on the concrete polynomial section space.
+Its linearity follows from proved holomorphicity and differentiation rules.</p></div><pre>def actualJetMap {τ γL γP : ℂ} {d : ℤ} {m : ℕ} {P : ℂ → ℂ}
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z) {z₀ : ℂ} (hz₀ : z₀ ≠ 0) (q : ℕ) :
+    ActualSection τ γL γP d m P →ₗ[ℂ] (Nagata.Workers.W30.JetIndex q m → ℂ) where
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="PolynomialJets.lean.html#L25">OAI.Nagata.Workers.W30.JetIndex</a></p></li><li id=L158><b>theorem</b> <code>OAI.Nagata.W20.actualJetMap_apply_eq_mixed_derivative</code> <small>line 158</small><div class="doc"><p>The constructed linear map is exactly the mixed partial derivative
+operator in the fixed local frame, not merely a matrix given a matching name.</p></div><pre>theorem actualJetMap_apply_eq_mixed_derivative {τ γL γP : ℂ} {d : ℤ} {m : ℕ}
+    {P : ℂ → ℂ} (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0) {q : ℕ}
+    (F : ActualSection τ γL γP d m P) (row : Nagata.Workers.W30.JetIndex q m) :
+    actualJetMap hP hz₀ q F row =
+      iteratedDeriv row.2.val (fun x =&gt;
+        iteratedDeriv row.1.val (fun y =&gt; localScalar F z₀ x y) 0) 0 := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="PolynomialJets.lean.html#L25">OAI.Nagata.Workers.W30.JetIndex</a>, <a href="SectionKernels.lean.html#L135">OAI.Nagata.W20.actualJetMap</a>, <a href="SectionKernels.lean.html#L25">OAI.Nagata.W20.localScalar</a></p></li><li id=L190><b>def</b> <code>OAI.Nagata.W20.transverseExpression</code> <small>line 190</small><div class="doc"><p>The local scalar expression of the b-th transverse derivative, written
+in a fixed finite family of actual holomorphic functions.</p></div><pre>def transverseExpression {ι : Type*} [Fintype ι] {m : ℕ}
+    (basis : ι → Fin m → ℂ → ℂ) (c : ι → ℂ) (b : Fin m) (z : ℂ) : ℂ :=
+…</pre></li><li id=L194><b>theorem</b> <code>OAI.Nagata.W20.transverseExpression_smul</code> <small>line 194</small></li><li id=L200><b>theorem</b> <code>OAI.Nagata.W20.transverseExpression_differentiableOn</code> <small>line 200</small><div class="doc"><p>Finite linear combinations retain holomorphicity of the local basis.</p></div><pre>theorem transverseExpression_differentiableOn {ι : Type*} [Fintype ι]
+    {m : ℕ} {U : Set ℂ} (basis : ι → Fin m → ℂ → ℂ)
+    (hbasis : ∀ i b, DifferentiableOn ℂ (basis i b) U)
+    (c : ι → ℂ) (b : Fin m) :
+    DifferentiableOn ℂ (transverseExpression basis c b) U := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L190">OAI.Nagata.W20.transverseExpression</a></p></li><li id=L211><b>def</b> <code>OAI.Nagata.W20.coefficientJetMap</code> <small>line 211</small><div class="doc"><p>The manuscript's actual finite row shape, with entries obtained by
+complex differentiation of the local basis functions.</p></div><pre>def coefficientJetMap {ι : Type*} [Fintype ι] (q m : ℕ)
+    (basis : ι → Fin m → ℂ → ℂ) :
+    (ι → ℂ) →ₗ[ℂ] (Nagata.Workers.W30.JetIndex q m → ℂ) where
+…</pre><p class="refs">Mentions: <a href="PolynomialJets.lean.html#L25">OAI.Nagata.Workers.W30.JetIndex</a></p></li><li id=L225><b>theorem</b> <code>OAI.Nagata.W20.coefficientJetMap_apply_eq_derivative</code> <small>line 225</small><div class="doc"><p>The derivative-entry matrix agrees with differentiating the synthesized
+local scalar expression. This is an actual bridge, not the definition of
+geometric multiplicity.</p></div><pre>theorem coefficientJetMap_apply_eq_derivative {ι : Type*} [Fintype ι]
+    {q m : ℕ} {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (basis : ι → Fin m → ℂ → ℂ)
+    (hbasis : ∀ i b, DifferentiableOn ℂ (basis i b) U)
+    (c : ι → ℂ) (row : Nagata.Workers.W30.JetIndex q m) :
+    coefficientJetMap q m basis c row =
+      iteratedDeriv row.2.val (transverseExpression basis c row.1) 0 := by
+…</pre><p class="refs">Mentions: <a href="PolynomialJets.lean.html#L25">OAI.Nagata.Workers.W30.JetIndex</a>, <a href="SectionKernels.lean.html#L211">OAI.Nagata.W20.coefficientJetMap</a>, <a href="SectionKernels.lean.html#L190">OAI.Nagata.W20.transverseExpression</a></p></li><li id=L248><b>theorem</b> <code>OAI.Nagata.W20.nonzero_collision_jet_kernel</code> <small>line 248</small><div class="doc"><p>One normalized subsequence works for every transverse order b and every
+jet row simultaneously. The conclusion is a genuine nonzero vector in the
+kernel of the actual derivative matrix, with no factorization assumption.</p></div><pre>theorem nonzero_collision_jet_kernel {ι : Type*} [Fintype ι]
+    {q m : ℕ} {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (basis : ι → Fin m → ℂ → ℂ)
+    (hbasis : ∀ i b, DifferentiableOn ℂ (basis i b) U)
+    (c : ℕ → ι → ℂ) (hcnorm : ∀ n, ‖c n‖ = 1)
+    (ξ : ℕ → Fin q → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (horder : ∀ n (b : Fin m) i, (↑(m - b.val) : ℕ∞) ≤
+      analyticOrderAt (transverseExpression basis (c n) b) (ξ n i)) :
+    ∃ c₀ : ι → ℂ, ‖c₀‖ = 1 ∧ c₀ ≠ 0 ∧ coefficientJetMap q m basis c₀ = 0 := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L190">OAI.Nagata.W20.transverseExpression</a>, <a href="SectionKernels.lean.html#L211">OAI.Nagata.W20.coefficientJetMap</a></p></li><li id=L287><b>theorem</b> <code>OAI.Nagata.W20.nonzero_collision_jet_kernel_of_nonzero</code> <small>line 287</small><div class="doc"><p>Nonzero input coefficient vectors can be normalized without weakening
+any analytic-order lower bound. Thus the normalization hypothesis in the
+compactness lemma is discharged for actual nonzero vectors.</p></div><pre>theorem nonzero_collision_jet_kernel_of_nonzero {ι : Type*} [Fintype ι]
+    {q m : ℕ} {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (basis : ι → Fin m → ℂ → ℂ)
+    (hbasis : ∀ i b, DifferentiableOn ℂ (basis i b) U)
+    (c : ℕ → ι → ℂ) (hc : ∀ n, c n ≠ 0)
+    (ξ : ℕ → Fin q → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (horder : ∀ n (b : Fin m) i, (↑(m - b.val) : ℕ∞) ≤
+      analyticOrderAt (transverseExpression basis (c n) b) (ξ n i)) :
+    ∃ c₀ : ι → ℂ, ‖c₀‖ = 1 ∧ c₀ ≠ 0 ∧ coefficientJetMap q m basis c₀ = 0 := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L190">OAI.Nagata.W20.transverseExpression</a>, <a href="SectionKernels.lean.html#L211">OAI.Nagata.W20.coefficientJetMap</a></p></li><li id=L329><b>theorem</b> <code>OAI.Nagata.W20.actualTransverse_basis_repr</code> <small>line 329</small><div class="doc"><p>Basis coordinates reconstruct the actual transverse expression.</p></div><pre>theorem actualTransverse_basis_repr {ι : Type*} [Fintype ι]
+    {τ γL γP : ℂ} {d : ℤ} {m : ℕ} {P : ℂ → ℂ}
+    (B : Basis ι ℂ (ActualSection τ γL γP d m P))
+    (F : ActualSection τ γL γP d m P) (z₀ : ℂ) (b : Fin m) (x : ℂ) :
+    transverseExpression (fun i b =&gt; actualTransverse (B i) z₀ b.val)
+      (fun i =&gt; B.repr F i) b x = actualTransverse F z₀ b.val x := by
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="SectionKernels.lean.html#L190">OAI.Nagata.W20.transverseExpression</a>, <a href="SectionKernels.lean.html#L30">OAI.Nagata.W20.actualTransverse</a></p></li><li id=L339><b>theorem</b> <code>OAI.Nagata.W20.actual_nonzero_collision_kernel</code> <small>line 339</small></li><li id=L392><b>theorem</b> <code>OAI.Nagata.W20.actual_kernel_from_local_powerSeries</code> <small>line 392</small><div class="doc"><p>Concrete local power-series multiplicity implies a nonzero element of the
+actual Wτ jet kernel. The input is vanishing of genuine convergent Taylor
+coefficients, not vanishing of the desired output jets.</p></div><pre>theorem actual_kernel_from_local_powerSeries {ι : Type*} [Fintype ι]
+    {τ γL γP : ℂ} {d : ℤ} {m q : ℕ} {P : ℂ → ℂ}
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0)
+    (B : Basis ι ℂ (ActualSection τ γL γP d m P))
+    (F : ℕ → ActualSection τ γL γP d m P) (hF : ∀ n, F n ≠ 0)
+    {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (ξ : ℕ → Fin q → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (S : ℕ → Fin q → FormalMultilinearSeries ℂ (ℂ × ℂ) ℂ)
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L436><b>theorem</b> <code>OAI.Nagata.W20.actual_kernel_of_every_configuration</code> <small>line 436</small><div class="doc"><p>Universal necessary-W existence with genuine local Taylor multiplicity
+forces a nonzero vector in the actual section jet kernel, at one fixed τ.</p></div><pre>theorem actual_kernel_of_every_configuration {ι : Type*} [Fintype ι]
+    {τ γL γP : ℂ} {d : ℤ} {m q : ℕ} {P : ℂ → ℂ}
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0)
+    (B : Basis ι ℂ (ActualSection τ γL γP d m P))
+    {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (hEvery : ∀ p : Fin q → ℂ, Function.Injective p → (∀ i, p i ∈ U) →
+      ∃ F : ActualSection τ γL γP d m P, F ≠ 0 ∧
+        ∀ i, Nagata.Workers.W28.HasAnalyticOrderAtLeast (𝕜 := ℂ)
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="AnalyticScaling.lean.html#L55">OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast</a></p></li><li id=L461><b>theorem</b> <code>OAI.Nagata.W20.not_every_configuration_of_injective_actualJetMap</code> <small>line 461</small><div class="doc"><p>In particular, an injective actual jet map excludes the universal
+necessary-W property. This formulation needs no choice across degeneration
+parameters: every parameter is fixed before applying the theorem.</p></div><pre>theorem not_every_configuration_of_injective_actualJetMap {ι : Type*} [Fintype ι]
+    {τ γL γP : ℂ} {d : ℤ} {m q : ℕ} {P : ℂ → ℂ}
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0)
+    (B : Basis ι ℂ (ActualSection τ γL γP d m P))
+    {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (hJ : Function.Injective (actualJetMap (τ := τ) (γL := γL) (γP := γP)
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a>, <a href="SectionKernels.lean.html#L135">OAI.Nagata.W20.actualJetMap</a></p></li><li id=L493><b>theorem</b> <code>OAI.Nagata.W20.actual_kernel_from_local_polynomial_multiplicity</code> <small>line 493</small><div class="doc"><p>Local analytic polynomial representatives turn ordinary maximal-ideal-power
+multiplicity into the Taylor hypotheses of the actual section kernel theorem.</p></div><pre>theorem actual_kernel_from_local_polynomial_multiplicity {ι : Type*} [Fintype ι]
+    {τ γL γP : ℂ} {d : ℤ} {m q : ℕ} {P : ℂ → ℂ}
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0)
+    (B : Basis ι ℂ (ActualSection τ γL γP d m P))
+    (F : ℕ → ActualSection τ γL γP d m P) (hF : ∀ n, F n ≠ 0)
+    {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (ξ : ℕ → Fin q → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (A : ℕ → Fin q → MvPolynomial (Fin 2) ℂ)
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li><li id=L528><b>theorem</b> <code>OAI.Nagata.W20.actual_kernel_from_local_polynomial_with_frame</code> <small>line 528</small><div class="doc"><p>The same genuine polynomial multiplicity bridge allows an analytic local
+frame factor, including all holomorphic units used by the manuscript.</p></div><pre>theorem actual_kernel_from_local_polynomial_with_frame {ι : Type*} [Fintype ι]
+    {τ γL γP : ℂ} {d : ℤ} {m q : ℕ} {P : ℂ → ℂ}
+    (hP : ∀ z, z ≠ 0 → DifferentiableAt ℂ P z)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0)
+    (B : Basis ι ℂ (ActualSection τ γL γP d m P))
+    (F : ℕ → ActualSection τ γL γP d m P) (hF : ∀ n, F n ≠ 0)
+    {U : Set ℂ} (hU : IsOpen U) (h0 : (0 : ℂ) ∈ U)
+    (ξ : ℕ → Fin q → ℂ)
+    (hξlim : ∀ i, Tendsto (fun n =&gt; ξ n i) atTop (𝓝 0))
+    (hξinj : ∀ n, Function.Injective (ξ n))
+    (hξmem : ∀ n i, ξ n i ∈ U)
+    (A : ℕ → Fin q → MvPolynomial (Fin 2) ℂ)
+…</pre><p class="refs">Mentions: <a href="SectionKernels.lean.html#L21">OAI.Nagata.W20.ActualSection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

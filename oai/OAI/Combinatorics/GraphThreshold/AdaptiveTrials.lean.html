@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/GraphThreshold/AdaptiveTrials.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/GraphThreshold/AdaptiveTrials.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">GraphThreshold</a> / <span>AdaptiveTrials.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">GraphThreshold</a>/<span>AdaptiveTrials.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/GraphThreshold/AdaptiveTrials.lean#L1">source</a></p><div class="doc"><h3>Finite adaptive trials</h3><p>The draws are independent, but whether an attempt succeeds may depend on the
+entire current state. The head-tail identity below performs the conditioning
+explicitly. No independence assumption is made about success indicators.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.LeanBlast.SecondKahnKalai.trialSplitEquiv</code> <small>line 24</small><div class="doc"><p>Split a finite draw sequence into its first draw and remaining sequence.</p></div><pre>def trialSplitEquiv (Ω : Type v) (n : ℕ) : Ω × (Fin n → Ω) ≃ (Fin (n + 1) → Ω) where
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.FiniteLaw.iid_weight_cons</code> <small>line 36</small></li><li id=L41><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.FiniteLaw.iid_expectation_succ</code> <small>line 41</small><div class="doc"><p>Exact finite conditional-expectation identity for a fresh independent draw.</p></div><pre>theorem iid_expectation_succ (μ : FiniteLaw Ω) (n : ℕ)
+    (f : (Fin (n + 1) → Ω) → ℝ) :
+    (μ.iid (n + 1)).expectation f =
+      μ.expectation (fun head =&gt; (μ.iid n).expectation (fun tail =&gt; f (Fin.cases head tail))) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="Basic.lean.html#L16">OAI.LeanBlast.SecondKahnKalai.FiniteLaw.expectation</a></p></li><li id=L61><b>def</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptiveRun</code> <small>line 61</small><div class="doc"><p>A deterministic adaptive update iterated over a finite sequence of draws.</p></div><pre>def adaptiveRun (step : State → Ω → State) :
+    (n : ℕ) → State → (Fin n → Ω) → State
+  | 0, state, _ =&gt; state
+  | n + 1, state, draws =&gt; adaptiveRun step n (step state (draws 0)) (fun i =&gt; draws i.succ)
+
+/-- Number of failed attempts along the actual adaptive state trajectory. -/</pre></li><li id=L67><b>def</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptiveFailureCount</code> <small>line 67</small><div class="doc"><p>Number of failed attempts along the actual adaptive state trajectory.</p></div><pre>def adaptiveFailureCount (step : State → Ω → State) (bad : State → Ω → Bool) :
+    (n : ℕ) → State → (Fin n → Ω) → ℕ
+  | 0, _, _ =&gt; 0
+  | n + 1, state, draws =&gt;
+      (if bad state (draws 0) then 1 else 0) +
+        adaptiveFailureCount step bad n (step state (draws 0)) (fun i =&gt; draws i.succ)
+
+/-- A uniform state-dependent failure bound controls expected total failures.
+This proof conditions at every step on the actual preceding draw and state. -/</pre></li><li id=L76><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptiveFailureCount_expectation_le</code> <small>line 76</small><div class="doc"><p>A uniform state-dependent failure bound controls expected total failures.
+This proof conditions at every step on the actual preceding draw and state.</p></div><pre>theorem adaptiveFailureCount_expectation_le [Fintype Ω]
+    (μ : FiniteLaw Ω) (step : State → Ω → State) (bad : State → Ω → Bool)
+    (q : ℝ) (hbad : ∀ state, μ.prob (fun draw =&gt; bad state draw = true) ≤ q)
+    (n : ℕ) (initial : State) :
+    (μ.iid n).expectation (fun draws =&gt; (adaptiveFailureCount step bad n initial draws : ℝ)) ≤
+      (n : ℝ) * q := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="AdaptiveTrials.lean.html#L67">OAI.LeanBlast.SecondKahnKalai.adaptiveFailureCount</a></p></li><li id=L114><b>def</b> <code>OAI.LeanBlast.SecondKahnKalai.rankFailure</code> <small>line 114</small><div class="doc"><p>Once the rank is zero, later draws are declared successful for the purpose
+of counting failures. Before then, success means a strict rank decrease.</p></div><pre>def rankFailure (rank : State → ℕ) (step : State → Ω → State)
+    (state : State) (draw : Ω) : Bool :=
+…</pre></li><li id=L118><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptiveRun_rank_le</code> <small>line 118</small></li><li id=L129><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptiveRun_rank_failure_bound</code> <small>line 129</small><div class="doc"><p>On a trajectory that is still incomplete, every nonfailed attempt consumes
+at least one unit of rank. The conclusion includes the final positive rank.</p></div><pre>theorem adaptiveRun_rank_failure_bound (rank : State → ℕ) (step : State → Ω → State)
+    (hstep : ∀ state draw, rank (step state draw) ≤ rank state)
+    (n : ℕ) (initial : State) (draws : Fin n → Ω)
+    (hincomplete : rank (adaptiveRun step n initial draws) ≠ 0) :
+    n + rank (adaptiveRun step n initial draws) ≤
+      rank initial + adaptiveFailureCount step (rankFailure rank step) n initial draws := by
+…</pre><p class="refs">Mentions: <a href="AdaptiveTrials.lean.html#L61">OAI.LeanBlast.SecondKahnKalai.adaptiveRun</a>, <a href="AdaptiveTrials.lean.html#L67">OAI.LeanBlast.SecondKahnKalai.adaptiveFailureCount</a>, <a href="AdaptiveTrials.lean.html#L114">OAI.LeanBlast.SecondKahnKalai.rankFailure</a></p></li><li id=L158><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.rankFailure_probability_le</code> <small>line 158</small></li><li id=L174><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptive_incomplete_many_failures</code> <small>line 174</small><div class="doc"><p>Noncompletion by time <code>4*s</code> forces at least <code>3*s+1</code> failed attempts.</p></div><pre>theorem adaptive_incomplete_many_failures (rank : State → ℕ) (step : State → Ω → State)
+    (hstep : ∀ state draw, rank (step state draw) ≤ rank state)
+    (s : ℕ) (initial : State) (hinitial : rank initial ≤ s)
+    (draws : Fin (4 * s) → Ω)
+    (hincomplete : rank (adaptiveRun step (4 * s) initial draws) ≠ 0) :
+    3 * s + 1 ≤ adaptiveFailureCount step (rankFailure rank step) (4 * s) initial draws := by
+…</pre><p class="refs">Mentions: <a href="AdaptiveTrials.lean.html#L61">OAI.LeanBlast.SecondKahnKalai.adaptiveRun</a>, <a href="AdaptiveTrials.lean.html#L67">OAI.LeanBlast.SecondKahnKalai.adaptiveFailureCount</a>, <a href="AdaptiveTrials.lean.html#L114">OAI.LeanBlast.SecondKahnKalai.rankFailure</a></p></li><li id=L186><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptive_rank_completion</code> <small>line 186</small><div class="doc"><p>Adaptive finite completion bound. Only fresh draws are independent.
+The chance of progress can depend arbitrarily on the current state.
+The case <code>s=0</code> is included.</p></div><pre>theorem adaptive_rank_completion [Fintype Ω] (μ : FiniteLaw Ω)
+    (rank : State → ℕ) (step : State → Ω → State)
+    (hstep : ∀ state draw, rank (step state draw) ≤ rank state)
+    (hprogress : ∀ state, rank state ≠ 0 →
+      (3 / 4 : ℝ) ≤ μ.prob (fun draw =&gt; rank (step state draw) &lt; rank state))
+    (s : ℕ) (initial : State) (hinitial : rank initial ≤ s) :
+    (2 / 3 : ℝ) ≤ (μ.iid (4 * s)).prob
+      (fun draws =&gt; rank (adaptiveRun step (4 * s) initial draws) = 0) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="AdaptiveTrials.lean.html#L61">OAI.LeanBlast.SecondKahnKalai.adaptiveRun</a></p></li><li id=L228><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.adaptive_counter_completion</code> <small>line 228</small><div class="doc"><p>Counter form for the tree reduction: counters never decrease, and while
+fewer than <code>s</code> successful rounds have occurred the chance of an increase is
+at least three quarters. No finite-state assumption is needed.</p></div><pre>theorem adaptive_counter_completion [Fintype Ω] (μ : FiniteLaw Ω)
+    (counter : State → ℕ) (step : State → Ω → State)
+    (hstep : ∀ state draw, counter state ≤ counter (step state draw))
+    (s : ℕ)
+    (hprogress : ∀ state, counter state &lt; s →
+      (3 / 4 : ℝ) ≤ μ.prob (fun draw =&gt; counter state &lt; counter (step state draw)))
+    (initial : State) :
+    (2 / 3 : ℝ) ≤ (μ.iid (4 * s)).prob
+      (fun draws =&gt; s ≤ counter (adaptiveRun step (4 * s) initial draws)) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="AdaptiveTrials.lean.html#L61">OAI.LeanBlast.SecondKahnKalai.adaptiveRun</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

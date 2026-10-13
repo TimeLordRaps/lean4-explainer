@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/BoundedSequence.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/BoundedSequence.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>BoundedSequence.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>BoundedSequence.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/BoundedSequence.lean#L1">source</a></p><div class="doc"><h3>Bounded sequences, spectral clipping and trace-to-strong transfer</h3><p>The sequence algebra is the ordinary C*-algebra of bounded functions on
+the discrete natural numbers. Evaluation commutes with the spectral
+cutoff. A trace quotient therefore kills the discarded part as soon as
+the quotient norm satisfies the desired cutoff bound.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>abbrev</b> <code>OAI.KadisonKastler.BoundedSequence</code> <small>line 24</small></li><li id=L26><b>instance</b> <code>OAI.KadisonKastler.boundedSequenceCStarAlgebra</code> <small>line 26</small></li><li id=L29><b>def</b> <code>OAI.KadisonKastler.boundedSequenceEval</code> <small>line 29</small></li><li id=L40><b>theorem</b> <code>OAI.KadisonKastler.boundedSequenceEval_apply</code> <small>line 40</small></li><li id=L53><b>theorem</b> <code>OAI.KadisonKastler.spectralClip_sequence_apply</code> <small>line 53</small><div class="doc"><p>The algebraic spectral clip evaluates to the clip of each coordinate.</p></div><pre>theorem spectralClip_sequence_apply {β : ℝ} (hβ : 0 &lt; β)
+    (x : BoundedSequence B) (j : ℕ) :
+    spectralClip β x j = spectralClip β (x j) :=
+…</pre><p class="refs">Mentions: <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="SpectralClipping.lean.html#L72">OAI.KadisonKastler.spectralClip</a></p></li><li id=L61><b>theorem</b> <code>OAI.KadisonKastler.sequence_discard_quotient_zero</code> <small>line 61</small><div class="doc"><p>Clipping a bounded sequence at a bound for its quotient norm changes
+it by an element of the quotient kernel.</p></div><pre>theorem sequence_discard_quotient_zero (π : BoundedSequence B →⋆ₐ[ℂ] Q)
+    {β : ℝ} (hβ : 0 &lt; β) (x : BoundedSequence B) (hx : ‖π x‖ ≤ β) :
+    π (x - spectralClip β x) = 0 :=
+…</pre><p class="refs">Mentions: <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="SpectralClipping.lean.html#L72">OAI.KadisonKastler.spectralClip</a></p></li><li id=L69><b>def</b> <code>OAI.KadisonKastler.traceTwoNorm</code> <small>line 69</small><div class="doc"><p>The tracial two-seminorm, on the faithful tracial algebra in use.</p></div><pre>def traceTwoNorm {B : Type*} [CStarAlgebra B] (τ : FaithfulTracialState B) (x : B) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a></p></li><li id=L75><b>def</b> <code>OAI.KadisonKastler.TraceStrongContinuous</code> <small>line 75</small><div class="doc"><p>Continuity from the tracial two-norm to the strong topology on each
+norm-bounded ball. This is the exact normal-representation property used
+by the clipping argument; no existence assertion is made here.</p></div><pre>def TraceStrongContinuous {B H : Type*} [CStarAlgebra B]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    (τ : FaithfulTracialState B) (ρ : B →⋆ₐ[ℂ] (H →L[ℂ] H)) : Prop :=
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a></p></li><li id=L83><b>theorem</b> <code>OAI.KadisonKastler.TraceStrongContinuous.tendsto</code> <small>line 83</small><div class="doc"><p>The continuity property transfers two-small bounded sequences to
+strongly small sequences in the given representation.</p></div><pre>theorem TraceStrongContinuous.tendsto {B H J : Type*} [CStarAlgebra B]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    {τ : FaithfulTracialState B} {ρ : B →⋆ₐ[ℂ] (H →L[ℂ] H)}
+    (hρ : TraceStrongContinuous τ ρ) (l : Filter J) (x : J → B)
+    {C : ℝ} (hC : 0 ≤ C) (hx : ∀ j, ‖x j‖ ≤ C)
+    (h2 : Tendsto (fun j =&gt; traceTwoNorm τ (x j)) l (𝓝 0)) (z : H) :
+    Tendsto (fun j =&gt; ρ (x j) z) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="BoundedSequence.lean.html#L75">OAI.KadisonKastler.TraceStrongContinuous</a>, <a href="BoundedSequence.lean.html#L69">OAI.KadisonKastler.traceTwoNorm</a></p></li><li id=L97><b>def</b> <code>OAI.KadisonKastler.IsTraceQuotient</code> <small>line 97</small><div class="doc"><p>The precise quotient-kernel condition needed for discarded sequences.</p></div><pre>def IsTraceQuotient {B Q : Type*} [CStarAlgebra B] [CStarAlgebra Q]
+    (τ : FaithfulTracialState B) (l : Filter ℕ)
+    (π : BoundedSequence B →⋆ₐ[ℂ] Q) : Prop :=
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a></p></li><li id=L104><b>theorem</b> <code>OAI.KadisonKastler.IsTraceQuotient.strong_zero</code> <small>line 104</small><div class="doc"><p>A zero quotient class acts strongly as zero in every representation
+with the trace continuity property.</p></div><pre>theorem IsTraceQuotient.strong_zero {B Q H : Type*} [CStarAlgebra B] [CStarAlgebra Q]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    {τ : FaithfulTracialState B} {l : Filter ℕ}
+    {π : BoundedSequence B →⋆ₐ[ℂ] Q} (hπ : IsTraceQuotient τ l π)
+    {ρ : B →⋆ₐ[ℂ] (H →L[ℂ] H)} (hρ : TraceStrongContinuous τ ρ)
+    (x : BoundedSequence B) (hx : π x = 0) (z : H) :
+    Tendsto (fun j =&gt; ρ (x j) z) l (𝓝 0) :=
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="BoundedSequence.lean.html#L97">OAI.KadisonKastler.IsTraceQuotient</a>, <a href="BoundedSequence.lean.html#L75">OAI.KadisonKastler.TraceStrongContinuous</a></p></li><li id=L125><b>theorem</b> <code>OAI.KadisonKastler.IsTraceQuotient.spectralDiscard_strong_zero</code> <small>line 125</small><div class="doc"><p>Quotient clipping gives the actual strong error on every fixed vector.</p></div><pre>theorem IsTraceQuotient.spectralDiscard_strong_zero
+    {τ : FaithfulTracialState B} {l : Filter ℕ}
+    {π : BoundedSequence B →⋆ₐ[ℂ] Q} (hπ : IsTraceQuotient τ l π)
+    {ρ : B →⋆ₐ[ℂ] (H →L[ℂ] H)} (hρ : TraceStrongContinuous τ ρ)
+    {β : ℝ} (hβ : 0 &lt; β) (x : BoundedSequence B) (hx : ‖π x‖ ≤ β) (z : H) :
+    Tendsto (fun j =&gt; ρ (x j - spectralClip β (x j)) z) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="BoundedSequence.lean.html#L97">OAI.KadisonKastler.IsTraceQuotient</a>, <a href="BoundedSequence.lean.html#L75">OAI.KadisonKastler.TraceStrongContinuous</a>, <a href="SpectralClipping.lean.html#L72">OAI.KadisonKastler.spectralClip</a></p></li><li id=L138><b>theorem</b> <code>OAI.KadisonKastler.IsTraceQuotient.spectralDiscard_mul_strong_zero</code> <small>line 138</small><div class="doc"><p>Right multiplication by any bounded sequence keeps the discarded
+part in the kernel. This is the moving-vector transfer needed before
+estimating the remaining unitary commutator.</p></div><pre>theorem IsTraceQuotient.spectralDiscard_mul_strong_zero
+    {τ : FaithfulTracialState B} {l : Filter ℕ}
+    {π : BoundedSequence B →⋆ₐ[ℂ] Q} (hπ : IsTraceQuotient τ l π)
+    {ρ : B →⋆ₐ[ℂ] (H →L[ℂ] H)} (hρ : TraceStrongContinuous τ ρ)
+    {β : ℝ} (hβ : 0 &lt; β) (x v : BoundedSequence B) (hx : ‖π x‖ ≤ β) (z : H) :
+    Tendsto (fun j =&gt; ρ (x j - spectralClip β (x j)) (ρ (v j) z)) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="BoundedSequence.lean.html#L97">OAI.KadisonKastler.IsTraceQuotient</a>, <a href="BoundedSequence.lean.html#L75">OAI.KadisonKastler.TraceStrongContinuous</a>, <a href="SpectralClipping.lean.html#L72">OAI.KadisonKastler.spectralClip</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

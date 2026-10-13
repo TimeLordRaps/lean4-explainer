@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/StarEquivTraceTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/StarEquivTraceTransport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>StarEquivTraceTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>StarEquivTraceTransport.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/StarEquivTraceTransport.lean#L1">source</a></p><div class="doc"><h3>Tracial and bounded strong transport by a factor isomorphism</h3><p>Uniqueness of the normalized finite-factor trace makes an algebraic
+star-isomorphism preserve the tracial two-norm. The concrete finite-vector
+trace formulas then give strong-operator continuity on every bounded ball,
+in both directions. No continuity of the isomorphism is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>theorem</b> <code>OAI.KadisonKastler.trace_starAlgEquiv</code> <small>line 30</small><div class="doc"><p>An algebraic star-isomorphism out of a II₁ factor preserves normalized
+faithful tracial states.</p></div><pre>theorem trace_starAlgEquiv
+    (hM : Generator.IsII1Factor M.toStarSubalgebra)
+    (τM : FaithfulTracialState (Algebra M)) (τN : FaithfulTracialState (Algebra N))
+    (e : Algebra M ≃⋆ₐ[ℂ] Algebra N) (x : Algebra M) :
+    τN.toLinearMap (e x) = τM.toLinearMap x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FactorGeneration.lean.html#L23">OAI.Generator.IsII1Factor</a>, <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a></p></li><li id=L38><b>theorem</b> <code>OAI.KadisonKastler.traceTwoNorm_starAlgEquiv</code> <small>line 38</small><div class="doc"><p>Consequently the same isomorphism is an isometry for the two-norm.</p></div><pre>theorem traceTwoNorm_starAlgEquiv
+    (hM : Generator.IsII1Factor M.toStarSubalgebra)
+    (τM : FaithfulTracialState (Algebra M)) (τN : FaithfulTracialState (Algebra N))
+    (e : Algebra M ≃⋆ₐ[ℂ] Algebra N) (x : Algebra M) :
+    traceTwoNorm τN (e x) = traceTwoNorm τM x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FactorGeneration.lean.html#L23">OAI.Generator.IsII1Factor</a>, <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="BoundedSequence.lean.html#L69">OAI.KadisonKastler.traceTwoNorm</a></p></li><li id=L49><b>theorem</b> <code>OAI.KadisonKastler.starAlgEquiv_tendsto_strong_of_bounded</code> <small>line 49</small><div class="doc"><p>Strong convergence of any norm-bounded net is preserved.</p></div><pre>theorem starAlgEquiv_tendsto_strong_of_bounded
+    (hM : Generator.IsII1Factor M.toStarSubalgebra)
+    (τM : FaithfulTracialState (Algebra M)) (τN : FaithfulTracialState (Algebra N))
+    (hτM : FiniteVectorTrace τM) (hτN : FiniteVectorTrace τN)
+    (e : Algebra M ≃⋆ₐ[ℂ] Algebra N)
+    {I : Type*} {l : Filter I} (x : I → Algebra M) (a : Algebra M)
+    {C : ℝ} (hC : 0 ≤ C) (hx : ∀ i, ‖x i‖ ≤ C)
+    (hs : ∀ ξ, Tendsto (fun i =&gt; (x i : H →L[ℂ] H) ξ) l
+      (𝓝 ((a : H →L[ℂ] H) ξ))) :
+    ∀ η, Tendsto (fun i =&gt; (e (x i) : K →L[ℂ] K) η) l
+      (𝓝 ((e a : K →L[ℂ] K) η)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FactorGeneration.lean.html#L23">OAI.Generator.IsII1Factor</a>, <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="ConcreteTraceTransfer.lean.html#L29">OAI.KadisonKastler.FiniteVectorTrace</a></p></li><li id=L81><b>theorem</b> <code>OAI.KadisonKastler.starAlgEquiv_tendsto_strong_iff_of_bounded</code> <small>line 81</small><div class="doc"><p>The bounded strong-operator topologies agree under a star-isomorphism
+between two concrete II₁ factors.</p></div><pre>theorem starAlgEquiv_tendsto_strong_iff_of_bounded
+    (hM : Generator.IsII1Factor M.toStarSubalgebra)
+    (hN : Generator.IsII1Factor N.toStarSubalgebra)
+    (τM : FaithfulTracialState (Algebra M)) (τN : FaithfulTracialState (Algebra N))
+    (hτM : FiniteVectorTrace τM) (hτN : FiniteVectorTrace τN)
+    (e : Algebra M ≃⋆ₐ[ℂ] Algebra N)
+    {I : Type*} {l : Filter I} (x : I → Algebra M) (a : Algebra M)
+    {C : ℝ} (hC : 0 ≤ C) (hx : ∀ i, ‖x i‖ ≤ C) :
+    (∀ ξ, Tendsto (fun i =&gt; (x i : H →L[ℂ] H) ξ) l
+      (𝓝 ((a : H →L[ℂ] H) ξ))) ↔
+    (∀ η, Tendsto (fun i =&gt; (e (x i) : K →L[ℂ] K) η) l
+      (𝓝 ((e a : K →L[ℂ] K) η))) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FactorGeneration.lean.html#L23">OAI.Generator.IsII1Factor</a>, <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="ConcreteTraceTransfer.lean.html#L29">OAI.KadisonKastler.FiniteVectorTrace</a></p></li><li id=L111><b>def</b> <code>OAI.KadisonKastler.starAlgEquivOrderIso</code> <small>line 111</small><div class="doc"><p>The order isomorphism underlying an algebraic star-isomorphism.</p></div><pre>def starAlgEquivOrderIso (e : A ≃⋆ₐ[ℂ] B) : A ≃o B where
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.KadisonKastler.starAlgEquiv_isLUB_image</code> <small>line 117</small><div class="doc"><p>Every existing supremum is preserved. In particular this is the
+order formulation of normality for bounded increasing operator nets.</p></div><pre>theorem starAlgEquiv_isLUB_image (e : A ≃⋆ₐ[ℂ] B) {s : Set A} {a : A}
+    (ha : IsLUB s a) : IsLUB (e &#x27;&#x27; s) (e a) :=
+…</pre></li><li id=L122><b>theorem</b> <code>OAI.KadisonKastler.starAlgEquiv_isLUB_range</code> <small>line 122</small><div class="doc"><p>A convenient net-indexed version of supremum preservation.</p></div><pre>theorem starAlgEquiv_isLUB_range (e : A ≃⋆ₐ[ℂ] B) {I : Type*}
+    (x : I → A) {a : A} (ha : IsLUB (Set.range x) a) :
+    IsLUB (Set.range (fun i =&gt; e (x i))) (e a) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Mass/LevelRadonSupport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Mass/LevelRadonSupport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Mass</a> / <span>LevelRadonSupport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Mass</a>/<span>LevelRadonSupport.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Mass/LevelRadonSupport.lean#L1">source</a></p><div class="doc"><p>Actual past support of every convex-tail Radon limit.  Compact tests
+separated from the past trace vanish at all sufficiently high levels.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.level_density_eventually_zero_on_compact</code> <small>line 18</small></li><li id=L48><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.halfPlane_level_test_eventually_zero_off_past</code> <small>line 48</small></li><li id=L78><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.convex_level_test_eventually_zero_off_past</code> <small>line 78</small><div class="doc"><p>Every compact test away from the actual past vanishes on every late
+convex tail.  The coefficients may be arbitrary: no normalization is used.</p></div><pre>lemma convex_level_test_eventually_zero_off_past
+    {Ω : Type*} {κ : ℝ} {B : ℝ≥0 → Ω → ℝ}
+    {γ : Ω → ℝ≥0 → ℂ} {G F : Ω → ℝ≥0 → ℂ → ℂ} (ω : Ω)
+    (hBc : Continuous (fun s =&gt; B s ω))
+    (hw : IsCapacityTwoWitness (fun s =&gt; Real.sqrt κ * B s ω) (γ ω) (G ω) (F ω))
+    (t : ℝ≥0) (f : C_c(upperHalfPlane,ℝ))
+    (hf : ∀ z ∈ tsupport f, (z : ℂ) ∉ γ ω &#x27;&#x27; Icc 0 t)
+    (u : ℕ → ℝ) (hu : Tendsto u atTop atTop)
+    (s : ℕ → Finset ℕ) (w : ℕ → ℕ → ℝ) :
+    ∀ᶠ n in atTop, ∫ z, f z ∂convexLevelMeasure κ B γ G u s w n t ω = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="LevelRadonExtraction.lean.html#L18">OAI.SLEExactGauge.Multipoint.convexLevelMeasure</a></p></li><li id=L117><b>theorem</b> <code>OAI.SLEExactGauge.Multipoint.convex_level_radon_limit_carried_by_past</code> <small>line 117</small><div class="doc"><p>Any vague limit of the actual convex level measures at a finite time
+is carried by the actual trace up to that time.</p></div><pre>theorem convex_level_radon_limit_carried_by_past
+    {Ω : Type*} {κ : ℝ} {B : ℝ≥0 → Ω → ℝ}
+    {γ : Ω → ℝ≥0 → ℂ} {G F : Ω → ℝ≥0 → ℂ → ℂ} (ω : Ω)
+    (hBc : Continuous (fun s =&gt; B s ω))
+    (hw : IsCapacityTwoWitness (fun s =&gt; Real.sqrt κ * B s ω) (γ ω) (G ω) (F ω))
+    (t : ℝ≥0) (u : ℕ → ℝ) (hu : Tendsto u atTop atTop)
+    (s : ℕ → Finset ℕ) (w : ℕ → ℕ → ℝ) (ν : Measure upperHalfPlane) [ν.Regular]
+    (hlim : ∀ f : C_c(upperHalfPlane,ℝ),
+      Tendsto (fun n =&gt; ∫ z, f z ∂convexLevelMeasure κ B γ G u s w n t ω)
+        atTop (𝓝 (∫ z, f z ∂ν))) :
+    ν {z : upperHalfPlane | (z : ℂ) ∉ γ ω &#x27;&#x27; Icc 0 t} = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="LevelRadonExtraction.lean.html#L18">OAI.SLEExactGauge.Multipoint.convexLevelMeasure</a></p></li><li id=L134><b>theorem</b> <code>OAI.SLEExactGauge.Multipoint.convex_level_radon_limit_zero_at_zero</code> <small>line 134</small></li><li id=L160><b>theorem</b> <code>OAI.SLEExactGauge.Multipoint.ae_common_level_radon_limits_carried_by_past</code> <small>line 160</small><div class="doc"><p>The support conclusion holds simultaneously for the prescribed
+countable list of finite times on the same vague-convergence event.</p></div><pre>theorem ae_common_level_radon_limits_carried_by_past
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    {κ : ℝ} {B : ℝ≥0 → Ω → ℝ}
+    {γ : Ω → ℝ≥0 → ℂ} {G F : Ω → ℝ≥0 → ℂ → ℂ}
+    (hBc : ∀ ω, Continuous (fun s =&gt; B s ω))
+    (hw : ∀ ω, IsCapacityTwoWitness
+      (fun s =&gt; Real.sqrt κ * B s ω) (γ ω) (G ω) (F ω))
+    (t : ℕ → ℝ≥0) (u : ℕ → ℝ) (hu : Tendsto u atTop atTop)
+    (s : ℕ → Finset ℕ) (w : ℕ → ℕ → ℝ) (ν : ℕ → Ω → Measure upperHalfPlane)
+    (hν : ∀ j ω, (ν j ω).Regular)
+    (hlim : ∀ᵐ ω ∂P, ∀ j (f : C_c(upperHalfPlane,ℝ)),
+      Tendsto (fun n =&gt; ∫ z, f z ∂convexLevelMeasure κ B γ G u s w n (t j) ω)
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="LevelRadonExtraction.lean.html#L18">OAI.SLEExactGauge.Multipoint.convexLevelMeasure</a></p></li><li id=L180><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.past_inter_surviving_subset_segment</code> <small>line 180</small></li><li id=L191><b>theorem</b> <code>OAI.SLEExactGauge.Multipoint.increment_le_restrict_trace_segment</code> <small>line 191</small><div class="doc"><p>A positive increment dominated by the past mass and by the remaining
+mass is carried by the new segment. This is the deterministic consequence
+of past support and the conditional-kernel future support.</p></div><pre>theorem increment_le_restrict_trace_segment
+    (γ : ℝ≥0 → ℂ) (s t : ℝ≥0) (η μpast μfuture ν : Measure upperHalfPlane)
+    (hηpast : η ≤ μpast) (hηfuture : η ≤ μfuture) (hην : η ≤ ν)
+    (hpast : μpast {z : upperHalfPlane | (z : ℂ) ∉ γ &#x27;&#x27; Icc 0 t} = 0)
+    (hfuture : μfuture {z : upperHalfPlane | (z : ℂ) ∉ survivingDomain γ s} = 0) :
+    η ≤ ν.restrict {z : upperHalfPlane | (z : ℂ) ∈ γ &#x27;&#x27; Icc s t} := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

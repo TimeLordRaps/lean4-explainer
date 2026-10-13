@@ -1,0 +1,176 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Games/KMSFourthMomentMixedRestriction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Games/KMSFourthMomentMixedRestriction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Games</a> / <span>KMSFourthMomentMixedRestriction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Games</a>/<span>KMSFourthMomentMixedRestriction.lean</span></code></h1><p class="muted">40 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Games/KMSFourthMomentMixedRestriction.lean#L1">source</a></p><div class="doc"><p>Exact partial restrictions in product coordinates. Translating the full map
+shifts both the fixed and free coordinates. The latter shift preserves every
+actual Fourier slice energy, so finite differences of translated functions
+cost only the finite Cauchy factor already present before restriction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict</code> <small>line 25</small><div class="doc"><p>Fix the first product block, leaving the second block free.</p></div><pre>def partialRestrict (f : ((A × I) →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F) :
+    (I →ₗ[F2] F) → ℝ := fun X =&gt; f (a.coprod X)</pre></li><li id=L28><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict_apply</code> <small>line 28</small></li><li id=L33><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.coprod_add_shift</code> <small>line 33</small><div class="doc"><p>The two coordinate shifts reassemble to the original full-map shift.</p></div><pre>theorem coprod_add_shift (a : A →ₗ[F2] F) (X : I →ₗ[F2] F)
+    (Z : (A × I) →ₗ[F2] F) :
+    a.coprod X + Z =
+      (a + Z.comp (LinearMap.inl F2 A I)).coprod
+        (X + Z.comp (LinearMap.inr F2 A I)) := by
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict_translate</code> <small>line 49</small><div class="doc"><p>Restriction of a translate shifts the fixed and the free blocks.</p></div><pre>theorem partialRestrict_translate
+    (f : ((A × I) →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F)
+    (Z : (A × I) →ₗ[F2] F) :
+    partialRestrict (fun Y =&gt; f (Y + Z)) a =
+      fun X =&gt; partialRestrict f (a + Z.comp (LinearMap.inl F2 A I))
+        (X + Z.comp (LinearMap.inr F2 A I)) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentMixedRestriction.lean.html#L25">OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict</a></p></li><li id=L62><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict_sub_sum</code> <small>line 62</small><div class="doc"><p>Partial restriction commutes exactly with a finite difference.</p></div><pre>theorem partialRestrict_sub_sum {J : Type*} [Fintype J]
+    (f : ((A × I) →ₗ[F2] F) → ℝ)
+    (g : J → ((A × I) →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F) :
+    partialRestrict (fun Y =&gt; f Y - ∑ j, g j Y) a =
+      fun X =&gt; partialRestrict f a X - ∑ j, partialRestrict (g j) a X := rfl
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentMixedRestriction.lean.html#L25">OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict</a></p></li><li id=L73><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.sliceEnergy_partialRestrict_translate</code> <small>line 73</small><div class="doc"><p>The free-block translation has unit Fourier phase, leaving only the
+shift of the fixed block in the slice energy.</p></div><pre>theorem sliceEnergy_partialRestrict_translate
+    (P : (F →ₗ[F2] I) → Prop)
+    (f : ((A × I) →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F)
+    (Z : (A × I) →ₗ[F2] F) :
+    sliceEnergy P (partialRestrict (fun Y =&gt; f (Y + Z)) a) =
+      sliceEnergy P (partialRestrict f (a + Z.comp (LinearMap.inl F2 A I))) := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticSmallInvariant.lean.html#L708">OAI.MaxCutGames.Inverse.KMSFourthMoment.sliceEnergy</a>, <a href="KMSFourthMomentMixedRestriction.lean.html#L25">OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict</a></p></li><li id=L83><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.sliceEnergy_partialRestrict_sub_translates_le</code> <small>line 83</small><div class="doc"><p>The exact finite Cauchy bound after fixing a product block. Each
+correction function is evaluated at its own translated fixed block.</p></div><pre>theorem sliceEnergy_partialRestrict_sub_translates_le {J : Type*} [Fintype J]
+    (P : (F →ₗ[F2] I) → Prop)
+    (f : ((A × I) →ₗ[F2] F) → ℝ)
+    (g : J → ((A × I) →ₗ[F2] F) → ℝ)
+    (a : A →ₗ[F2] F) (Z : J → (A × I) →ₗ[F2] F) :
+    sliceEnergy P (partialRestrict (fun Y =&gt; f Y - ∑ j, g j (Y + Z j)) a) ≤
+      2 * (sliceEnergy P (partialRestrict f a) +
+        (Fintype.card J : ℝ) * ∑ j, sliceEnergy P
+          (partialRestrict (g j) (a + (Z j).comp (LinearMap.inl F2 A I)))) := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticSmallInvariant.lean.html#L708">OAI.MaxCutGames.Inverse.KMSFourthMoment.sliceEnergy</a>, <a href="KMSFourthMomentMixedRestriction.lean.html#L25">OAI.MaxCutGames.Inverse.KMSFourthMoment.partialRestrict</a></p></li><li id=L121><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.frequencyBlockEquiv</code> <small>line 121</small><div class="doc"><p>Splitting the fixed and free frequency blocks is an exact bijection.</p></div><pre>def frequencyBlockEquiv : ((F →ₗ[F2] A) × (F →ₗ[F2] I)) ≃
+    (F →ₗ[F2] (A × I)) where
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sum_frequency_blocks</code> <small>line 130</small><div class="doc"><p>The free frequency can be summed first, with no multiplicity factor.</p></div><pre>theorem sum_frequency_blocks {M : Type*} [AddCommMonoid M]
+    [Fintype (F →ₗ[F2] A)] [Fintype (F →ₗ[F2] I)]
+    [Fintype (F →ₗ[F2] (A × I))]
+    (g : (F →ₗ[F2] (A × I)) → M) :
+    ∑ S, g S = ∑ T : F →ₗ[F2] I, ∑ alpha : F →ₗ[F2] A, g (alpha.prod T) := by
+…</pre></li><li id=L146><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.partialRestrict_eq_synthesis</code> <small>line 146</small><div class="doc"><p>Fixing a primal block merges exactly its dual frequency block.</p></div><pre>theorem partialRestrict_eq_synthesis
+    (h : ((A × I) →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F) :
+    partialRestrict h a = synthesis (fun T : F →ₗ[F2] I =&gt;
+      ∑ alpha : F →ₗ[F2] A,
+        linearCoeff h (alpha.prod T) * (linearTraceCharacter alpha a).re) := by
+…</pre></li><li id=L165><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.coeff_partialRestrict</code> <small>line 165</small><div class="doc"><p>The actual partial-restriction coefficient is an unnormalized frequency
+merge; normalized Fourier expectation introduces no additional factor.</p></div><pre>theorem coeff_partialRestrict
+    (h : ((A × I) →ₗ[F2] F) → ℝ) (a : A →ₗ[F2] F)
+    (T : F →ₗ[F2] I) :
+    linearCoeff (partialRestrict h a) T =
+      ∑ alpha : F →ₗ[F2] A,
+        linearCoeff h (alpha.prod T) * (linearTraceCharacter alpha a).re := by
+…</pre></li><li id=L190><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.coordinateOfData</code> <small>line 190</small></li><li id=L195><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.primalA</code> <small>line 195</small></li><li id=L198><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.primalW</code> <small>line 198</small></li><li id=L201><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.primalD</code> <small>line 201</small></li><li id=L207><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sum_compressedFiber</code> <small>line 207</small></li><li id=L234><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sum_alpha_hybrid_term</code> <small>line 234</small><div class="doc"><p>One sum over the fixed frequency block is precisely the Fourier
+coefficient of the actual partially restricted small component.</p></div><pre>theorem sum_alpha_hybrid_term (z : B →ₗ[F2] W) (hz : Function.Surjective z)
+    (κ : (A × (W × C)) →ₗ[F2] (A × (W × D))) (hκ : Function.Injective κ)
+    (f : ((A × (W × D)) →ₗ[F2] (B × C)) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f)
+    (T : (A × (W × D)) →ₗ[F2] (B × C))
+    (ψ : Extension (C := C) z) (v : C →ₗ[F2] D) :
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSAnalyticSmallInvariant.lean.html#L110">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.Extension</a></p></li><li id=L268><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.hybrid_fiber_coefficient_factorization</code> <small>line 268</small><div class="doc"><p>Exact phase/frequency factorization in the adapted fiber. Every
+coefficient on the right belongs to the actual mixed partial restriction.</p></div><pre>theorem hybrid_fiber_coefficient_factorization
+    (z : B →ₗ[F2] W) (hz : Function.Surjective z)
+    (κ : (A × (W × C)) →ₗ[F2] (A × (W × D))) (hκ : Function.Injective κ)
+    (f : ((A × (W × D)) →ₗ[F2] (B × C)) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f)
+    (T : (A × (W × D)) →ₗ[F2] (B × C)) :
+    (∑ S : {S : (B × C) →ₗ[F2] (A × (W × D)) //
+        compressBlock S = z.prod (0 : B →ₗ[F2] D)},
+      (if LinearIdentities.Hybrid S.val
+          (LinearMap.range (LinearMap.inl F2 A (W × D)))
+          (LinearMap.range (LinearMap.inl F2 B C)) then
+        linearCoeff (rankComponent (Module.finrank F2 (A × (W × C))) f) S.val else 0) *
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a></p></li><li id=L317><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.phase_weighted_sum_sq_le</code> <small>line 317</small><div class="doc"><p>Unit-bounded squared phases cost at most the number of summands in the
+finite Cauchy--Schwarz inequality.</p></div><pre>theorem phase_weighted_sum_sq_le {Ψ : Type*} (s : Finset Ψ)
+    (b H : Ψ → ℝ) (hb : ∀ ψ ∈ s, b ψ ^ 2 ≤ 1) :
+    (∑ ψ ∈ s, b ψ * H ψ) ^ 2 ≤ (s.card : ℝ) * ∑ ψ ∈ s, H ψ ^ 2 := by
+…</pre></li><li id=L329><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.phase_sum_sq_le_card_sq</code> <small>line 329</small><div class="doc"><p>A finite sum of phases has square at most the squared cardinality.
+The statement also covers an empty indexing type.</p></div><pre>theorem phase_sum_sq_le_card_sq {V : Type*} [Fintype V]
+    (a : V → ℝ) (ha : ∀ v, a v ^ 2 ≤ 1) :
+    (∑ v, a v) ^ 2 ≤ (Fintype.card V : ℝ) ^ 2 := by
+…</pre></li><li id=L339><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sum_fiber_phase_sq_le</code> <small>line 339</small><div class="doc"><p>Summing the Cauchy--Schwarz bounds over the disjoint restriction fibers
+loses only the largest fiber cardinality.</p></div><pre>theorem sum_fiber_phase_sq_le {Ψ Z : Type*} [Fintype Ψ] [Fintype Z]
+    (r : Ψ → Z) (b H : Ψ → ℝ) (maxFiber : ℕ)
+    (hb : ∀ ψ, b ψ ^ 2 ≤ 1)
+    (hcard : ∀ z, (Finset.univ.filter (fun ψ =&gt; r ψ = z)).card ≤ maxFiber) :
+    (∑ z, (∑ ψ with r ψ = z, b ψ * H ψ) ^ 2) ≤
+      (maxFiber : ℝ) * ∑ ψ, H ψ ^ 2 := by
+…</pre></li><li id=L364><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sum_fiber_product_sq_le</code> <small>line 364</small><div class="doc"><p>The hybrid coefficient factorization has energy bounded by the squared
+number of complementary choices times the extension-fiber size and the
+original mixed coefficient energy. No phase cancellation is assumed.</p></div><pre>theorem sum_fiber_product_sq_le {V Ψ Z : Type*}
+    [Fintype V] [Fintype Ψ] [Fintype Z]
+    (r : Ψ → Z) (a : V → ℝ) (b H : Ψ → ℝ) (maxFiber : ℕ)
+    (ha : ∀ v, a v ^ 2 ≤ 1) (hb : ∀ ψ, b ψ ^ 2 ≤ 1)
+    (hcard : ∀ z, (Finset.univ.filter (fun ψ =&gt; r ψ = z)).card ≤ maxFiber) :
+    (∑ z, ((∑ v, a v) * (∑ ψ with r ψ = z, b ψ * H ψ)) ^ 2) ≤
+      (Fintype.card V : ℝ) ^ 2 * (maxFiber : ℝ) * ∑ ψ, H ψ ^ 2 := by
+…</pre></li><li id=L402><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.card_restriction_fiber_eq</code> <small>line 402</small><div class="doc"><p>The restriction fiber has exactly as many elements as the maps on its
+complement, before any finite-field cardinality formula is applied.</p></div><pre>theorem card_restriction_fiber_eq {R B C W : Type*} [Ring R]
+    [AddCommGroup B] [Module R B] [AddCommGroup C] [Module R C]
+    [AddCommGroup W] [Module R W]
+    [Fintype ((B × C) →ₗ[R] W)] [Fintype (C →ₗ[R] W)]
+    (z : B →ₗ[R] W) :
+    (Finset.univ.filter (fun ψ : (B × C) →ₗ[R] W =&gt;
+      ψ.comp (LinearMap.inl R B C) = z)).card = Fintype.card (C →ₗ[R] W) := by
+…</pre></li><li id=L420><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.natCard_extension</code> <small>line 420</small><div class="doc"><p>The exact number of extensions is independent of the prescribed map.</p></div><pre>theorem natCard_extension (z : B →ₗ[F2] W) :
+    Nat.card (Extension (C := C) z) =
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticSmallInvariant.lean.html#L110">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.Extension</a></p></li><li id=L427><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.card_restriction_fiber</code> <small>line 427</small><div class="doc"><p>The same exact count in the filtered form used by the fiber Cauchy bound.</p></div><pre>theorem card_restriction_fiber [Fintype ((B × C) →ₗ[F2] W)]
+    (z : B →ₗ[F2] W) :
+    (Finset.univ.filter (fun ψ : (B × C) →ₗ[F2] W =&gt;
+      ψ.comp (LinearMap.inl F2 B C) = z)).card =
+        2 ^ (Module.finrank F2 C * Module.finrank F2 W) := by
+…</pre></li><li id=L444><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.card_linearMap_eq</code> <small>line 444</small><div class="doc"><p>Exact binary cardinality of the unrestricted complementary map space.</p></div><pre>theorem card_linearMap_eq [Fintype (C →ₗ[F2] D)] :
+    Fintype.card (C →ₗ[F2] D) =
+      2 ^ (Module.finrank F2 C * Module.finrank F2 D) := by
+…</pre></li><li id=L452><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.natCard_injective_le</code> <small>line 452</small><div class="doc"><p>Ordered independent complementary choices are no more numerous than
+all maps on the complementary domain; there is no basis-orbit quotient.</p></div><pre>theorem natCard_injective_le :
+    Nat.card {v : C →ₗ[F2] D // Function.Injective v} ≤
+      2 ^ (Module.finrank F2 C * Module.finrank F2 D) := by
+…</pre></li><li id=L466><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.card_injective_le</code> <small>line 466</small></li><li id=L479><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.natCard_rank_subspaces_le</code> <small>line 479</small><div class="doc"><p>Choose one ordered basis for each image. The resulting encoding gives
+the dimension-sensitive image count, rather than the count of all subspaces.</p></div><pre>theorem natCard_rank_subspaces_le (q : ℕ) :
+    Nat.card {W : Submodule F2 U // Module.finrank F2 W = q} ≤
+      2 ^ (q * Module.finrank F2 U) := by
+…</pre></li><li id=L486><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.card_rank_subspaces_le</code> <small>line 486</small></li><li id=L495><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.count_exponent_le</code> <small>line 495</small><div class="doc"><p>The three counting costs leave nonnegative slack in the ambient
+dimension exponent. The complementary image space has dimension <code>q + d</code>.</p></div><pre>theorem count_exponent_le (a b q d : ℕ) :
+    q * (q + d) + (b * d) * 2 + b * q ≤ (2 * b + q) * (a + q + d) := by
+…</pre></li><li id=L504><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.count_budget_le</code> <small>line 504</small><div class="doc"><p>The actual nonnegative counts fit the mixed Fourier denominator.
+The bound also permits real-valued upper estimates for those counts.</p></div><pre>theorem count_budget_le (a b q d : ℕ) (countW countV extensionFactor : ℝ)
+    (hv0 : 0 ≤ countV) (he0 : 0 ≤ extensionFactor)
+    (hw : countW ≤ (2 : ℝ) ^ (q * (q + d)))
+    (hv : countV ≤ (2 : ℝ) ^ (b * d))
+    (he : extensionFactor ≤ (2 : ℝ) ^ (b * q)) :
+    countW * countV ^ 2 * extensionFactor ≤
+      (2 : ℝ) ^ ((2 * b + q) * (a + q + d)) := by
+…</pre></li><li id=L527><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.count_budget_le_of_dimension</code> <small>line 527</small><div class="doc"><p>Ambient-dimension form of the same budget, with the split dimension
+identity supplied by the adapted coordinates.</p></div><pre>theorem count_budget_le_of_dimension (a b q d ell : ℕ)
+    (hell : ell = a + q + d) (countW countV extensionFactor : ℝ)
+    (hv0 : 0 ≤ countV) (he0 : 0 ≤ extensionFactor)
+    (hw : countW ≤ (2 : ℝ) ^ (q * (ell - a)))
+    (hv : countV ≤ (2 : ℝ) ^ (b * d))
+    (he : extensionFactor ≤ (2 : ℝ) ^ (b * q)) :
+    countW * countV ^ 2 * extensionFactor ≤ (2 : ℝ) ^ ((2 * b + q) * ell) := by
+…</pre></li><li id=L566><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sliceEnergy_fixed_snd</code> <small>line 566</small><div class="doc"><p>An actual slice fixing the last frequency block is parametrized by all
+first blocks, with no multiplicity or normalization factor.</p></div><pre>theorem sliceEnergy_fixed_snd (ν : F →ₗ[F2] C)
+    (g : ((W × C) →ₗ[F2] F) → ℝ) :
+    sliceEnergy (fun T =&gt; (LinearMap.snd F2 W C).comp T = ν) g =
+      ∑ ψ : F →ₗ[F2] W, linearCoeff g (ψ.prod ν) ^ 2 := by
+…</pre></li><li id=L598><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sliceEnergy_snd_eq_sum</code> <small>line 598</small></li><li id=L614><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.sum_extensions_eq_filter</code> <small>line 614</small><div class="doc"><p>Summing over actual extensions is exactly the corresponding filtered
+frequency sum. This identity applies to phases and squared coefficients.</p></div><pre>theorem sum_extensions_eq_filter (z : B →ₗ[R] W)
+    [Fintype (Extension (C := C) z)] (H : ((B × C) →ₗ[R] W) → M) :
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticSmallInvariant.lean.html#L110">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.Extension</a></p></li><li id=L650><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.adaptedFiberCoefficient</code> <small>line 650</small></li><li id=L662><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.traceCharacter_re_sq</code> <small>line 662</small></li><li id=L670><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.adapted_image_energy_le_mixed</code> <small>line 670</small><div class="doc"><p>The contribution of all surjective compressed maps onto one fixed image
+is bounded by the actual mixed-slice energy, with its exact extension count.</p></div><pre>theorem adapted_image_energy_le_mixed
+    (κ : (A × (W × C)) →ₗ[F2] (A × (W × D))) (hκ : Function.Injective κ)
+    (f : ((A × (W × D)) →ₗ[F2] (B × C)) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f)
+    (T : (A × (W × D)) →ₗ[F2] (B × C)) :
+    (∑ z ∈ Finset.univ.filter (fun z : B →ₗ[F2] W =&gt; Function.Surjective z), adaptedFiberCoefficient z f T ^ 2) ≤
+      (Fintype.card (C →ₗ[F2] D) : ℝ) ^ 2 * (Fintype.card (C →ₗ[F2] W) : ℝ) *
+        sliceEnergy (fun U : (B × C) →ₗ[F2] (W × C) =&gt;
+          (LinearMap.snd F2 W C).comp U = LinearMap.snd F2 B C)
+          (partialRestrict (smallComponent κ f) (primalA T)) := by
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSFourthMomentMixedRestriction.lean.html#L650">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.adaptedFiberCoefficient</a>, <a href="KMSFourthMomentMixedRestriction.lean.html#L195">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.primalA</a></p></li><li id=L730><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.adapted_image_energy_le_of_mixed</code> <small>line 730</small><div class="doc"><p>The conditional analytic step uses an actual mixed-slice bound as its
+only analytic hypothesis.</p></div><pre>theorem adapted_image_energy_le_of_mixed
+    (κ : (A × (W × C)) →ₗ[F2] (A × (W × D))) (hκ : Function.Injective κ)
+    (f : ((A × (W × D)) →ₗ[F2] (B × C)) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f)
+    (T : (A × (W × D)) →ₗ[F2] (B × C)) (H : ℝ)
+    (hH : sliceEnergy (fun U : (B × C) →ₗ[F2] (W × C) =&gt;
+        (LinearMap.snd F2 W C).comp U = LinearMap.snd F2 B C)
+      (partialRestrict (smallComponent κ f) (primalA T)) ≤ H) :
+    (∑ z ∈ Finset.univ.filter (fun z : B →ₗ[F2] W =&gt; Function.Surjective z), adaptedFiberCoefficient z f T ^ 2) ≤
+      (Fintype.card (C →ₗ[F2] D) : ℝ) ^ 2 * (Fintype.card (C →ₗ[F2] W) : ℝ) * H := by
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSFourthMomentMixedRestriction.lean.html#L195">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.primalA</a>, <a href="KMSFourthMomentMixedRestriction.lean.html#L650">OAI.MaxCutGames.Inverse.KMSAnalyticHybridEnergy.adaptedFiberCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

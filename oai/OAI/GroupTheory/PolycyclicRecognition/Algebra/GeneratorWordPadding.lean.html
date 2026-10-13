@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/GeneratorWordPadding.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/GeneratorWordPadding.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>GeneratorWordPadding.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>GeneratorWordPadding.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/GeneratorWordPadding.lean#L1">source</a></p><div class="doc"><h3>Fixed-length generator words and their consecutive prefixes</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.PolycyclicRecognition.generatorGroupWord_zero_padding</code> <small>line 15</small><div class="doc"><p>Appending zero-amplitude letters changes no prefix product.</p></div><pre>theorem generatorGroupWord_zero_padding
+    (hzero : Exp 0 = 1)
+    (i₀ : I) (u : List (I × ℝ)) (n j : ℕ) :
+    generatorGroupWord X Exp ((u ++ List.replicate n (i₀, 0)).take j) =
+      generatorGroupWord X Exp (u.take j) := by
+…</pre><p class="refs">Mentions: <a href="GeneratorConjugation.lean.html#L21">OAI.PolycyclicRecognition.generatorGroupWord</a></p></li><li id=L25><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_fixed_length_generator_word</code> <small>line 25</small><div class="doc"><p>A bounded-length generator word can be padded to one prescribed length,
+preserving its amplitude bound and all previous prefix products.</p></div><pre>theorem exists_fixed_length_generator_word
+    (hzero : Exp 0 = 1)
+    (i₀ : I) (u : List (I × ℝ)) {N : ℕ} (hlen : u.length ≤ N)
+    {C : ℝ} (hC : 0 ≤ C) (hamp : ∀ z ∈ u, |z.2| ≤ C) :
+    ∃ v : List (I × ℝ), v.length = N ∧ (∀ z ∈ v, |z.2| ≤ C) ∧
+      generatorGroupWord X Exp v = generatorGroupWord X Exp u ∧
+      ∀ j, generatorGroupWord X Exp (v.take j) = generatorGroupWord X Exp (u.take j) := by
+…</pre><p class="refs">Mentions: <a href="GeneratorConjugation.lean.html#L21">OAI.PolycyclicRecognition.generatorGroupWord</a></p></li><li id=L45><b>theorem</b> <code>OAI.PolycyclicRecognition.generatorGroupWord_take_succ</code> <small>line 45</small><div class="doc"><p>Consecutive prefix products differ by precisely the next generator.</p></div><pre>theorem generatorGroupWord_take_succ
+    (u : List (I × ℝ)) (j : ℕ) (hj : j &lt; u.length) :
+    generatorGroupWord X Exp (u.take (j + 1)) =
+      generatorGroupWord X Exp (u.take j) * Exp (u[j].2 • X u[j].1) := by
+…</pre><p class="refs">Mentions: <a href="GeneratorConjugation.lean.html#L21">OAI.PolycyclicRecognition.generatorGroupWord</a></p></li><li id=L54><b>theorem</b> <code>OAI.PolycyclicRecognition.generator_prefix_log_chain</code> <small>line 54</small><div class="doc"><p>Logarithms of the actual prefixes have the required endpoints and edges.</p></div><pre>theorem generator_prefix_log_chain
+    (hinj : Function.Injective Exp) (hzero : Exp 0 = 1)
+    (u : List (I × ℝ)) {N : ℕ} (hu : u.length = N)
+    (k : ℕ → L) (hk : ∀ j, Exp (k j) = generatorGroupWord X Exp (u.take j))
+    (v : L) (hend : generatorGroupWord X Exp u = Exp v) :
+    k 0 = 0 ∧ k N = v ∧ ∀ j (hj : j &lt; u.length),
+      Exp (k (j + 1)) = Exp (k j) * Exp (u[j].2 • X u[j].1) := by
+…</pre><p class="refs">Mentions: <a href="GeneratorConjugation.lean.html#L21">OAI.PolycyclicRecognition.generatorGroupWord</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

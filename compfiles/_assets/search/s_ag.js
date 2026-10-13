@@ -1,0 +1,1 @@
+window.l4shard("ag", [["Imo1998P2.AgreedTriple",73,66],["Imo1998P2.AgreedTriple.contestant",73,70],["Imo1998P2.AgreedTriple.judgePair",73,75],["Imo1998P2.JudgePair.Agree",73,56],["Imo1998P2.agreedContestants",73,60]]);

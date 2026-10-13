@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Simplicial/WeakPathSurjectivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Simplicial/WeakPathSurjectivity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Simplicial</a> / <span>WeakPathSurjectivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Simplicial</a>/<span>WeakPathSurjectivity.lean</span></code></h1><p class="muted">54 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Simplicial/WeakPathSurjectivity.lean#L1">source</a></p><div class="doc"><h3>Exact cubical boundary extensions and simplicial nullhomotopies</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.boundaryNullhomotopyOfExtension</code> <small>line 28</small><div class="doc"><p>Restrict the simultaneous cube contraction through a given extension.
+This is a homotopy of the whole cubical boundary, with both endpoints exact.</p></div><pre>def boundaryNullhomotopyOfExtension {X : SSet.{0}} (n : ℕ)
+    (a : (boundary n : SSet.{0}) ⟶ X) (d : obj (n+1) ⟶ X)
+    (hd : (boundary n).ι ≫ d = a) :
+    SSet.Homotopy (SSet.const (d.app _ (initialVertex (n+1)))) a := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L517">OAI.Thomason.Construction.RealizedCube.boundary</a>, <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="KanContractedFamilyLifting.lean.html#L700">OAI.Thomason.Construction.RealizedCube.initialVertex</a></p></li><li id=L37><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.kan_boundary_extension_iff_nullhomotopy</code> <small>line 37</small><div class="doc"><p>The whole cubical boundary has an exact extension in a Kan complex
+if and only if its given map has an actual simplicial nullhomotopy.</p></div><pre>theorem kan_boundary_extension_iff_nullhomotopy {X : SSet.{0}} [SSet.KanComplex X]
+    (n : ℕ) (a : (boundary n : SSet.{0}) ⟶ X) :
+    (∃ d : obj (n+1) ⟶ X, (boundary n).ι ≫ d = a) ↔
+      ∃ x : X _⦋0⦌, Nonempty (SSet.Homotopy (SSet.const x) a) := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L517">OAI.Thomason.Construction.RealizedCube.boundary</a>, <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a></p></li><li id=L67><b>def</b> <code>OAI.Thomason.Construction.realizationUnitHomotopy</code> <small>line 67</small><div class="doc"><p>A continuous homotopy between realized simplicial maps gives an actual
+simplicial homotopy after the realization/singular unit. Its evaluation is
+exact; no weak-equivalence assertion about that unit is used.</p></div><pre>def realizationUnitHomotopy {A X : SSet.{0}} {f g : A ⟶ X}
+    (H : (SSet.toTop.map f).hom.Homotopy (SSet.toTop.map g).hom) :
+    SSet.Homotopy (f ≫ sSetTopAdj.unit.app X) (g ≫ sSetTopAdj.unit.app X) where
+…</pre></li><li id=L99><b>theorem</b> <code>OAI.Thomason.Construction.realizationUnitHomotopy_evaluate</code> <small>line 99</small><div class="doc"><p>The singular carrier retains the complete original continuous homotopy.</p></div><pre>theorem realizationUnitHomotopy_evaluate {A X : SSet.{0}} {f g : A ⟶ X}
+    (H : (SSet.toTop.map f).hom.Homotopy (SSet.toTop.map g).hom)
+    (t : unitInterval) (x : SSet.toTop.obj A) :
+    evaluateSingularCylinder (realizationUnitHomotopy H).h (t, x) = H (t, x) :=
+…</pre><p class="refs">Mentions: <a href="../Gray/SingularCylinderEquivalence.lean.html#L176">OAI.Thomason.Construction.evaluateSingularCylinder</a>, <a href="WeakPathSurjectivity.lean.html#L67">OAI.Thomason.Construction.realizationUnitHomotopy</a></p></li><li id=L108><b>theorem</b> <code>OAI.Thomason.Construction.finite_singular_homotopy_support</code> <small>line 108</small><div class="doc"><p>For a finite parameter complex, the entire continuous homotopy gives
+one finite singular subcomplex, with both original endpoint maps retained
+exactly after the unit. It does not assert an approximation in <code>X</code> itself.</p></div><pre>theorem finite_singular_homotopy_support {A X : SSet.{0}} [A.Finite] {f g : A ⟶ X}
+    (H : (SSet.toTop.map f).hom.Homotopy (SSet.toTop.map g).hom) :
+    ∃ S : (TopCat.toSSet.obj (SSet.toTop.obj X)).Subcomplex,
+      SSet.Finite S.toSSet ∧ ∃ (fS gS : A ⟶ S.toSSet) (HS : SSet.Homotopy fS gS),
+        fS ≫ S.ι = f ≫ sSetTopAdj.unit.app X ∧
+        gS ≫ S.ι = g ≫ sSetTopAdj.unit.app X ∧
+        HS.h ≫ S.ι = (realizationUnitHomotopy H).h := by
+…</pre><p class="refs">Mentions: <a href="WeakPathSurjectivity.lean.html#L67">OAI.Thomason.Construction.realizationUnitHomotopy</a></p></li><li id=L157><b>theorem</b> <code>OAI.Thomason.Construction.finite_singular_nullhomotopy_support</code> <small>line 157</small><div class="doc"><p>A continuous nullhomotopy of a finite simplicial family has an exact
+simplicial nullhomotopy in one finite subcomplex of the singular realization.
+The given family is retained after the unit. Moving this witness into <code>X</code>
+itself requires approximation.</p></div><pre>theorem finite_singular_nullhomotopy_support {A X : SSet.{0}} [A.Finite]
+    (v : A _⦋0⦌) (x : X _⦋0⦌) (a : A ⟶ X)
+    (H : (ContinuousMap.const (SSet.toTop.obj A) (RealizationPrism.vertexPoint X x)).Homotopy
+      (SSet.toTop.map a).hom) :
+    ∃ S : (TopCat.toSSet.obj (SSet.toTop.obj X)).Subcomplex,
+      SSet.Finite S.toSSet ∧ ∃ (xS : S.toSSet _⦋0⦌) (aS : A ⟶ S.toSSet),
+        aS ≫ S.ι = a ≫ sSetTopAdj.unit.app X ∧
+        Nonempty (SSet.Homotopy (SSet.const xS) aS) := by
+…</pre><p class="refs">Mentions: <a href="FixedInternalPathMaps.lean.html#L738">OAI.Thomason.Construction.RealizationPrism.vertexPoint</a></p></li><li id=L209><b>theorem</b> <code>OAI.Thomason.Construction.kan_lift_iff_contracted_fiber_extension</code> <small>line 209</small><div class="doc"><p>For every monomorphic relative lifting problem over an explicitly
+contracted base, extension of the transported boundary inside its actual
+simplicial fibre is equivalent to an exact lift in the original total space.
+The same chosen retraction is a strict retraction on that fibre.</p></div><pre>theorem kan_lift_iff_contracted_fiber_extension {A K E B : SSet.{0}}
+    (v : B _⦋0⦌) (C : SSet.Homotopy (SSet.const v) (𝟙 B))
+    (hC : ∀ L : SSet.{0}, (SSet.const (X := L) v) ▷ Δ[1] ≫ C.h =
+…</pre></li><li id=L281><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.boundary_lift_iff_fiber_nullhomotopy</code> <small>line 281</small><div class="doc"><p>An arbitrary cubical boundary square over a finite cube lifts exactly
+if and only if its transported boundary has a simplicial nullhomotopy in
+the initial Kan fibre. All maps in the square and its boundary are retained.</p></div><pre>theorem boundary_lift_iff_fiber_nullhomotopy {E : SSet.{0}} (m n : ℕ)
+    (p : E ⟶ obj m) [HomotopicalAlgebra.Fibration p]
+    (a : (boundary n : SSet.{0}) ⟶ E) (b : obj (n+1) ⟶ obj m)
+    (hab : a ≫ p = (boundary n).ι ≫ b) :
+    ∃ r : E ⟶ (simplicialPointFiber p (initialVertex m)).toSSet,
+      (simplicialPointFiber p (initialVertex m)).ι ≫ r = 𝟙 _ ∧
+      ((∃ d : obj (n+1) ⟶ E, (boundary n).ι ≫ d = a ∧ d ≫ p = b) ↔
+        ∃ x, Nonempty (SSet.Homotopy (SSet.const x) (a ≫ r))) := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="SimplexCubeRetract.lean.html#L517">OAI.Thomason.Construction.RealizedCube.boundary</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanContractedFamilyLifting.lean.html#L700">OAI.Thomason.Construction.RealizedCube.initialVertex</a></p></li><li id=L316><b>theorem</b> <code>OAI.Thomason.Construction.kan_endpoint_fibers_homotopy_inverse</code> <small>line 316</small><div class="doc"><p>The two endpoint fibres of a Kan fibration over the interval have
+actual simplicial homotopy inverse maps. Both maps are realization weak
+equivalences, without any acyclic-Kan-lifting hypothesis.</p></div><pre>theorem kan_endpoint_fibers_homotopy_inverse {E : SSet.{0}}
+    (p : E ⟶ (Δ[1] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    ∃ (f : (simplicialPointFiber p (initialSimplexVertex 1)).toSSet ⟶
+          (simplicialPointFiber p (finalSimplexVertex 1)).toSSet)
+      (g : (simplicialPointFiber p (finalSimplexVertex 1)).toSSet ⟶
+          (simplicialPointFiber p (initialSimplexVertex 1)).toSSet),
+      realizationWeakEquivalences f ∧ realizationWeakEquivalences g ∧
+      Nonempty (SSet.Homotopy (𝟙 _) (f ≫ g)) ∧
+      Nonempty (SSet.Homotopy (g ≫ f) (𝟙 _)) := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="KanFiberComponentTransport.lean.html#L158">OAI.Thomason.Construction.finalSimplexVertex</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L355><b>theorem</b> <code>OAI.Thomason.Construction.kan_endpoint_fibers_exact_extension</code> <small>line 355</small><div class="doc"><p>A single weak simplicial transport map simultaneously preserves and
+reflects exact extension problems for every monomorphism, hence all
+higher boundaries. This assertion is stronger than transporting W-status.</p></div><pre>theorem kan_endpoint_fibers_exact_extension {E : SSet.{0}}
+    (p : E ⟶ (Δ[1] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    ∃ f : (simplicialPointFiber p (initialSimplexVertex 1)).toSSet ⟶
+        (simplicialPointFiber p (finalSimplexVertex 1)).toSSet,
+      realizationWeakEquivalences f ∧
+      ∀ (A K : SSet.{0}) (i : A ⟶ K) (_ : Mono i)
+        (a : A ⟶ (simplicialPointFiber p (initialSimplexVertex 1)).toSSet),
+        (∃ d : K ⟶ (simplicialPointFiber p (initialSimplexVertex 1)).toSSet, i ≫ d = a) ↔
+          (∃ d : K ⟶ (simplicialPointFiber p (finalSimplexVertex 1)).toSSet, i ≫ d = a ≫ f) := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="KanFiberComponentTransport.lean.html#L158">OAI.Thomason.Construction.finalSimplexVertex</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L390><b>theorem</b> <code>OAI.Thomason.Construction.kan_interval_fibers_homotopy_inverse</code> <small>line 390</small><div class="doc"><p>Pullback identifies transport along any base interval with the actual
+endpoint homotopy equivalence. No contractibility of the ambient base is required.</p></div><pre>theorem kan_interval_fibers_homotopy_inverse {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (g : (Δ[1] : SSet.{0}) ⟶ B) :
+    ∃ (f : (simplicialPointFiber p (g.app _ (initialSimplexVertex 1))).toSSet ⟶
+          (simplicialPointFiber p (g.app _ (finalSimplexVertex 1))).toSSet)
+      (r : (simplicialPointFiber p (g.app _ (finalSimplexVertex 1))).toSSet ⟶
+          (simplicialPointFiber p (g.app _ (initialSimplexVertex 1))).toSSet),
+      realizationWeakEquivalences f ∧ realizationWeakEquivalences r ∧
+      Nonempty (SSet.Homotopy (𝟙 _) (f ≫ r)) ∧
+      Nonempty (SSet.Homotopy (r ≫ f) (𝟙 _)) := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="KanFiberComponentTransport.lean.html#L158">OAI.Thomason.Construction.finalSimplexVertex</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L425><b>theorem</b> <code>OAI.Thomason.Construction.kan_fiber_boundary_extension_iff_of_interval</code> <small>line 425</small><div class="doc"><p>In every degree, exact boundary extension in the fibre is invariant
+along an arbitrary base interval. Both implications produce exact fillers.</p></div><pre>theorem kan_fiber_boundary_extension_iff_of_interval {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (g : (Δ[1] : SSet.{0}) ⟶ B) (n : ℕ) :
+    (∀ a : (SSet.boundary n : SSet.{0}) ⟶
+        (simplicialPointFiber p (g.app _ (initialSimplexVertex 1))).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ _, (SSet.boundary n).ι ≫ d = a) ↔
+    (∀ a : (SSet.boundary n : SSet.{0}) ⟶
+        (simplicialPointFiber p (g.app _ (finalSimplexVertex 1))).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ _, (SSet.boundary n).ι ≫ d = a) := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="KanFiberComponentTransport.lean.html#L158">OAI.Thomason.Construction.finalSimplexVertex</a></p></li><li id=L455><b>theorem</b> <code>OAI.Thomason.Construction.kan_fiber_boundary_extension_iff_of_edge</code> <small>line 455</small><div class="doc"><p>Exact higher fibre extensions are constant on a simplicial edge.</p></div><pre>theorem kan_fiber_boundary_extension_iff_of_edge {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] {x y : B _⦋0⦌} (e : SSet.Edge x y) (n : ℕ) :
+    (∀ a : (SSet.boundary n : SSet.{0}) ⟶ (simplicialPointFiber p x).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ _, (SSet.boundary n).ι ≫ d = a) ↔
+    (∀ a : (SSet.boundary n : SSet.{0}) ⟶ (simplicialPointFiber p y).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ _, (SSet.boundary n).ι ≫ d = a) := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a></p></li><li id=L491><b>theorem</b> <code>OAI.Thomason.Construction.kan_fiber_boundary_extension_iff_of_realization_path</code> <small>line 491</small><div class="doc"><p>A continuous path between realized base vertices transports every
+higher exact fibre extension test. Only the proved component comparison
+is used to pass to a finite edge zigzag.</p></div><pre>theorem kan_fiber_boundary_extension_iff_of_realization_path {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] {x y : B _⦋0⦌}
+    (h : Path (RealizationPrism.vertexPoint B x) (RealizationPrism.vertexPoint B y)) (n : ℕ) :
+    (∀ a : (SSet.boundary n : SSet.{0}) ⟶ (simplicialPointFiber p x).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ _, (SSet.boundary n).ι ≫ d = a) ↔
+    (∀ a : (SSet.boundary n : SSet.{0}) ⟶ (simplicialPointFiber p y).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ _, (SSet.boundary n).ι ≫ d = a) := by
+…</pre><p class="refs">Mentions: <a href="FixedInternalPathMaps.lean.html#L738">OAI.Thomason.Construction.RealizationPrism.vertexPoint</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a></p></li><li id=L528><b>theorem</b> <code>OAI.Thomason.Construction.simplex_boundary_lifting_of_initial_fiber</code> <small>line 528</small><div class="doc"><p>For a Kan fibration over a standard simplex, a prescribed boundary
+lifts exactly whenever all boundaries of that degree extend in the initial
+vertex fibre. The proof transports the whole boundary along the stationary
+base contraction, extends in the fibre, and lifts the return cylinder.</p></div><pre>theorem simplex_boundary_lifting_of_initial_fiber {E : SSet.{0}} (m n : ℕ)
+    (p : E ⟶ (Δ[m] : SSet.{0})) [HomotopicalAlgebra.Fibration p]
+    (hF : ∀ a : (SSet.boundary n : SSet.{0}) ⟶
+        (simplicialPointFiber p (initialSimplexVertex m)).toSSet,
+      ∃ d : (Δ[n] : SSet.{0}) ⟶ (simplicialPointFiber p (initialSimplexVertex m)).toSSet,
+        (SSet.boundary n).ι ≫ d = a) :
+    HasLiftingProperty (SSet.boundary n).ι p := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a></p></li><li id=L579><b>theorem</b> <code>OAI.Thomason.Construction.initial_fiber_extension_of_simplex_boundary_lifting</code> <small>line 579</small><div class="doc"><p>The exact converse: boundary lifting against the fibration restricts
+to boundary extension in its literal initial fibre.</p></div><pre>theorem initial_fiber_extension_of_simplex_boundary_lifting {E : SSet.{0}} (m n : ℕ)
+    (p : E ⟶ (Δ[m] : SSet.{0}))
+    (hp : HasLiftingProperty (SSet.boundary n).ι p)
+    (a : (SSet.boundary n : SSet.{0}) ⟶
+      (simplicialPointFiber p (initialSimplexVertex m)).toSSet) :
+    ∃ d : (Δ[n] : SSet.{0}) ⟶ (simplicialPointFiber p (initialSimplexVertex m)).toSSet,
+      (SSet.boundary n).ι ≫ d = a := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a></p></li><li id=L599><b>theorem</b> <code>OAI.Thomason.Construction.simplex_boundary_lifting_iff_initial_fiber</code> <small>line 599</small><div class="doc"><p>For every degree, lifting over a standard simplex is precisely the
+extension problem in its initial Kan fibre.</p></div><pre>theorem simplex_boundary_lifting_iff_initial_fiber {E : SSet.{0}} (m n : ℕ)
+    (p : E ⟶ (Δ[m] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    HasLiftingProperty (SSet.boundary n).ι p ↔
+      ∀ a : (SSet.boundary n : SSet.{0}) ⟶
+          (simplicialPointFiber p (initialSimplexVertex m)).toSSet,
+        ∃ d : (Δ[n] : SSet.{0}) ⟶ (simplicialPointFiber p (initialSimplexVertex m)).toSSet,
+          (SSet.boundary n).ι ≫ d = a :=
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a></p></li><li id=L611><b>theorem</b> <code>OAI.Thomason.Construction.simplex_boundary_lifting_iff_fiber_nullhomotopies</code> <small>line 611</small><div class="doc"><p>The remaining local higher lifting step is EXACTLY a simplicial
+nullhomotopy in the initial fibre. No continuous approximation is assumed.</p></div><pre>theorem simplex_boundary_lifting_iff_fiber_nullhomotopies {E : SSet.{0}} (m n : ℕ)
+    (p : E ⟶ (Δ[m] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    HasLiftingProperty (SSet.boundary n).ι p ↔
+      ∀ a : (SSet.boundary n : SSet.{0}) ⟶
+          (simplicialPointFiber p (initialSimplexVertex m)).toSSet,
+        ∃ x, Nonempty (SSet.Homotopy (SSet.const x) a) := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a></p></li><li id=L644><b>abbrev</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.Faces</code> <small>line 644</small></li><li id=L646><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.omitted</code> <small>line 646</small></li><li id=L649><b>abbrev</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.Remainder</code> <small>line 649</small></li><li id=L652><b>abbrev</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.HornFaces</code> <small>line 652</small></li><li id=L655><b>instance</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.(instance at line 655)</code> <small>line 655</small></li><li id=L658><b>instance</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.(instance at line 658)</code> <small>line 658</small></li><li id=L661><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.topFace</code> <small>line 661</small></li><li id=L665><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.vertexFace</code> <small>line 665</small></li><li id=L669><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.vertex_ne_top</code> <small>line 669</small></li><li id=L675><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.vertex</code> <small>line 675</small></li><li id=L681><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.top</code> <small>line 681</small></li><li id=L687><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.inclusion</code> <small>line 687</small></li><li id=L690><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.addVertex</code> <small>line 690</small></li><li id=L700><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.addVertex_proper</code> <small>line 700</small></li><li id=L711><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.addVertexHorn</code> <small>line 711</small></li><li id=L715><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.rank</code> <small>line 715</small></li><li id=L725><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.edgeSection</code> <small>line 725</small></li><li id=L736><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.toPoint</code> <small>line 736</small></li><li id=L739><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.fromPoint</code> <small>line 739</small></li><li id=L742><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.intervalStart</code> <small>line 742</small></li><li id=L744><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.identity_le_addVertex</code> <small>line 744</small></li><li id=L747><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.section_rank_le_addVertex</code> <small>line 747</small></li><li id=L759><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.identity_le_addVertexHorn</code> <small>line 759</small></li><li id=L762><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.point_le_addVertexHorn</code> <small>line 762</small></li><li id=L766><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.nerveMap_mono</code> <small>line 766</small></li><li id=L777><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.intervalStart_anodyne</code> <small>line 777</small></li><li id=L803><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.hornFaces_inclusion_anodyne</code> <small>line 803</small><div class="doc"><p>After removal of the omitted facet, the full horn face-poset inclusion
+is anodyne. The proof is the two explicit ordered homotopies of the pair.</p></div><pre>theorem hornFaces_inclusion_anodyne (n : ℕ) (k : Fin (n + 2)) :
+    SSet.anodyneExtensions (nerveMap (inclusion n k).monotone.functor) := by
+…</pre><p class="refs">Mentions: <a href="WeakPathSurjectivity.lean.html#L687">OAI.Thomason.Construction.SubdivisionHornFaces.inclusion</a></p></li><li id=L857><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.omitted_subset_cases</code> <small>line 857</small></li><li id=L873><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.remainderInclusion</code> <small>line 873</small></li><li id=L876><b>def</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.removeOmitted</code> <small>line 876</small></li><li id=L895><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.removeOmitted_inclusion</code> <small>line 895</small></li><li id=L900><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.identity_le_removeOmitted</code> <small>line 900</small></li><li id=L910><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.remainder_inclusion_anodyne</code> <small>line 910</small><div class="doc"><p>The omitted facet is an up-beat vertex of the full face poset. Removing
+it induces an anodyne nerve inclusion by a stationary ordered homotopy.</p></div><pre>theorem remainder_inclusion_anodyne (n : ℕ) (k : Fin (n + 2)) :
+    SSet.anodyneExtensions (nerveMap (remainderInclusion n k).monotone.functor) := by
+…</pre><p class="refs">Mentions: <a href="WeakPathSurjectivity.lean.html#L873">OAI.Thomason.Construction.SubdivisionHornFaces.remainderInclusion</a></p></li><li id=L937><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionHornFaces.full_hornFaces_inclusion_anodyne</code> <small>line 937</small><div class="doc"><p>The actual inclusion of the full horn face poset in the full simplex
+face poset is anodyne, in every positive dimension and for every horn.</p></div><pre>theorem full_hornFaces_inclusion_anodyne (n : ℕ) (k : Fin (n + 2)) :
+    SSet.anodyneExtensions (nerveMap
+      ((remainderInclusion n k).comp (inclusion n k)).monotone.functor) := by
+…</pre><p class="refs">Mentions: <a href="WeakPathSurjectivity.lean.html#L873">OAI.Thomason.Construction.SubdivisionHornFaces.remainderInclusion</a>, <a href="WeakPathSurjectivity.lean.html#L687">OAI.Thomason.Construction.SubdivisionHornFaces.inclusion</a></p></li><li id=L962><b>theorem</b> <code>OAI.Thomason.Construction.fundamentalGroup_map_surjective</code> <small>line 962</small><div class="doc"><p>Surjectivity on the actual first homotopy group implies surjectivity of
+Mathlib's fundamental-group map under the explicit comparison.</p></div><pre>theorem fundamentalGroup_map_surjective {X Y : Type} [TopologicalSpace X]
+    [TopologicalSpace Y] (f : C(X, Y)) (x : X)
+    (hf : Function.Surjective (HomotopyMaps.groupMap f 1 x)) :
+    Function.Surjective (FundamentalGroup.map f x) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L150">OAI.Thomason.Construction.HomotopyMaps.groupMap</a></p></li><li id=L973><b>theorem</b> <code>OAI.Thomason.Construction.weak_path_homotopy_surjective</code> <small>line 973</small><div class="doc"><p>A weak homotopy equivalence lifts any path up to homotopy relative to
+its specified endpoints. This uses only component injectivity and π₁ surjectivity.</p></div><pre>theorem weak_path_homotopy_surjective {X Y : Type} [TopologicalSpace X]
+    [TopologicalSpace Y] (f : C(X, Y)) (hf : IsWeakHomotopyEquivalence f)
+    {x₀ x₁ : X} (γ : Path (f x₀) (f x₁)) :
+    ∃ α : Path x₀ x₁, (α.map f.continuous).Homotopic γ := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L197">OAI.Thomason.Construction.IsWeakHomotopyEquivalence</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

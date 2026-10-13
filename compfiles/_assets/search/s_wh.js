@@ -1,0 +1,1 @@
+window.l4shard("wh", [["Imo1974P4.Rect.one_le_whiteCount",29,117],["Imo1974P4.Rect.whiteCount",29,61],["Imo1974P4.Rect.whiteCount_add_blackCount",29,110],["Imo1974P4.isWhite",29,54],["Imo1974P4.sum_whiteCount",29,154]]);

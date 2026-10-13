@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/RibbonCoordinateLimit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/RibbonCoordinateLimit.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>RibbonCoordinateLimit.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>RibbonCoordinateLimit.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/RibbonCoordinateLimit.lean#L1">source</a></p><div class="doc"><p>Strict half-plane location and actual moving ribbon regions for the
+compact coordinate limits. The middle region has the manuscript's fixed
+longitudinal interval <code>(1/3,2/3)</code> and transverse width.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.open_nonnegative_height_subset_upperHalfPlane</code> <small>line 17</small><div class="doc"><p>An open planar set in the closed upper half-plane cannot meet its
+boundary line.</p></div><pre>theorem open_nonnegative_height_subset_upperHalfPlane
+    (U : Set ℂ) (hU : IsOpen U) (hheight : ∀ z ∈ U, 0 ≤ z.im) :
+    U ⊆ upperHalfPlane := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li><li id=L37><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.uniform_limit_interior_upperHalfPlane</code> <small>line 37</small><div class="doc"><p>Uniform limits of admissible embedded ribbon patches still have
+strictly positive height at every interior coordinate point.</p></div><pre>theorem uniform_limit_interior_upperHalfPlane
+    (hpublished : PublishedPlanarDiskOpenness)
+    (Pₙ : ℕ → ℂ → ℂ) (P : ℂ → ℂ) (K : Set ℂ)
+    (hP : ContinuousOn P K) (hi : InjOn P K)
+    (hconv : TendstoUniformlyOn Pₙ P atTop K)
+    (hheight : ∀ n z, z ∈ K → 0 ≤ (Pₙ n z).im) :
+    MapsTo P (interior K) upperHalfPlane := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/PublishedPlanarDiskOpenness.lean.html#L16">OAI.SLEExactGauge.PublishedPlanarDiskOpenness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li><li id=L56><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.exists_bilip_halfPlane_subsequence</code> <small>line 56</small><div class="doc"><p>The compactness output needed for a local ribbon patch includes
+strict limiting height, without a separate positivity assumption.</p></div><pre>theorem exists_bilip_halfPlane_subsequence
+    (hpublished : PublishedPlanarDiskOpenness)
+    (Pₙ : ℕ → ℂ → ℂ) (K : Set ℂ) (hK : IsCompact K)
+    (x₀ : ℂ) (hx₀ : x₀ ∈ K) (C L : ℝ≥0) (R : ℝ)
+    (hupper : ∀ n, LipschitzOnWith C (Pₙ n) K)
+    (hlower : ∀ n x, x ∈ K → ∀ y, y ∈ K → dist x y ≤ L * dist (Pₙ n x) (Pₙ n y))
+    (htip : ∀ n, ‖Pₙ n x₀‖ ≤ R)
+    (hheight : ∀ n z, z ∈ K → 0 ≤ (Pₙ n z).im) :
+    ∃ P : ℂ → ℂ, ∃ φ : ℕ → ℕ, StrictMono φ ∧
+      TendstoUniformlyOn (fun n =&gt; Pₙ (φ n)) P atTop K ∧
+      LipschitzOnWith C P K ∧
+      (∀ x ∈ K, ∀ y ∈ K, dist x y ≤ L * dist (P x) (P y)) ∧
+…</pre><p class="refs">Mentions: <a href="../Geometry/PublishedPlanarDiskOpenness.lean.html#L16">OAI.SLEExactGauge.PublishedPlanarDiskOpenness</a></p></li><li id=L76><b>def</b> <code>OAI.SLEExactGauge.RibbonCoordinates.physicalMiddleRegion</code> <small>line 76</small><div class="doc"><p>The actual physical middle strip in the source's local coordinates.</p></div><pre>def physicalMiddleRegion (P : ℂ → ℂ) (K : Set ℂ) (k ε : ℝ) : Set ℂ :=
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.eventual_middle_region_inclusion</code> <small>line 81</small><div class="doc"><p>Strict transverse margin on a compact common physical patch implies
+that its moving longitudinal band is in the actual moving middle strip.</p></div><pre>theorem eventual_middle_region_inclusion
+    (Pₙ : ℕ → ℂ → ℂ) (P : ℂ → ℂ) (K U : Set ℂ) (L : ℝ≥0) (k ε : ℝ)
+    (hconv : TendstoUniformlyOn Pₙ P atTop K)
+    (hlower : ∀ n x, x ∈ K → ∀ y, y ∈ K → dist x y ≤ L * dist (Pₙ n x) (Pₙ n y))
+    (hU : IsCompact (closure U)) (hUP : closure U ⊆ P &#x27;&#x27; K)
+    (hcover : ∀ᶠ n in atTop, closure U ⊆ Pₙ n &#x27;&#x27; K)
+    (hwidth : ∀ z ∈ closure U, |(coordinateInverse P K z).im| &lt; ε) :
+    ∀ᶠ n in atTop,
+      U ∩ {z | (1 / 3 : ℝ) &lt; longitudinalCoordinate (Pₙ n) K k z ∧
+        longitudinalCoordinate (Pₙ n) K k z &lt; 2 / 3} ⊆
+      physicalMiddleRegion (Pₙ n) K k ε := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateCompactness.lean.html#L16">OAI.SLEExactGauge.RibbonCoordinates.coordinateInverse</a>, <a href="RibbonCoordinateCompactness.lean.html#L215">OAI.SLEExactGauge.RibbonCoordinates.longitudinalCoordinate</a>, <a href="RibbonCoordinateLimit.lean.html#L76">OAI.SLEExactGauge.RibbonCoordinates.physicalMiddleRegion</a></p></li><li id=L109><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.source_terminal_offset</code> <small>line 109</small><div class="doc"><p>Physical terminal control with the inverse patch constant gives the
+source's transverse coordinate bound at the attained front.</p></div><pre>theorem source_terminal_offset
+    (P : ℂ → ℂ) (K : Set ℂ) (L : ℝ≥0) (k ε : ℝ) (z : ℂ)
+    (hL : 0 &lt; L)
+    (hlower : ∀ x ∈ K, ∀ y ∈ K, dist x y ≤ L * dist (P x) (P y))
+    (hbase : ((k + 1 : ℝ) : ℂ) ∈ K) (hz : z ∈ P &#x27;&#x27; K)
+    (hp : longitudinalCoordinate P K k z = 1)
+    (hd : dist z (P ((k + 1 : ℝ) : ℂ)) &lt; ε / (4 * (L : ℝ))) :
+    (coordinateInverse P K z).re = k + 1 ∧
+      |(coordinateInverse P K z).im| &lt; ε / 4 := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateCompactness.lean.html#L215">OAI.SLEExactGauge.RibbonCoordinates.longitudinalCoordinate</a>, <a href="RibbonCoordinateCompactness.lean.html#L16">OAI.SLEExactGauge.RibbonCoordinates.coordinateInverse</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

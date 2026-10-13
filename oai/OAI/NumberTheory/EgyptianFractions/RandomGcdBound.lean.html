@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RandomGcdBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RandomGcdBound.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RandomGcdBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RandomGcdBound.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RandomGcdBound.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.Problem337.RandomProducts.large_gcd_probability_le_exp</code> <small>line 12</small><div class="doc"><p>A concrete large-gcd probability estimate for uniform samples from a prime set.
+This retains all sample multiplicities, and uses only finite counting.</p></div><pre>theorem large_gcd_probability_le_exp (P : Finset ℕ) (t u : ℕ) (S V : ℝ)
+    (hP : P.Nonempty) (hS : 1 &lt; S) (hV : 0 ≤ V)
+    (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hmax : ∀ p ∈ P, (p : ℝ) ≤ S ^ 101)
+    (ht : (t : ℝ) ≤ S) (hhits : ((P.filter (fun p =&gt; p ∣ u)).card : ℝ) ≤ S)
+    (hsize : S ^ 99 ≤ (P.card : ℝ)) :
+    (((sampleWords P t).filter (fun f =&gt;
+      Real.exp ((2 / 25 : ℝ) * V) &lt; (Nat.gcd (∏ i, f i) u : ℝ))).card : ℝ) /
+        (P.card : ℝ) ^ t ≤ Real.exp (-V / 20) := by
+…</pre><p class="refs">Mentions: <a href="HitCount.lean.html#L11">OAI.Problem337.RandomProducts.sampleWords</a></p></li><li id=L59><b>theorem</b> <code>OAI.Problem337.RandomProducts.large_frequency_gcd_probability_le_exp</code> <small>line 59</small><div class="doc"><p>The same estimate permits a small fixed frequency factor in the gcd.</p></div><pre>theorem large_frequency_gcd_probability_le_exp (P : Finset ℕ) (t u l : ℕ) (S V : ℝ)
+    (hP : P.Nonempty) (hS : 1 &lt; S) (hV : 0 ≤ V)
+    (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hmax : ∀ p ∈ P, (p : ℝ) ≤ S ^ 101)
+    (ht : (t : ℝ) ≤ S) (hhits : ((P.filter (fun p =&gt; p ∣ u)).card : ℝ) ≤ S)
+    (hsize : S ^ 99 ≤ (P.card : ℝ)) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (V / 200)) :
+    (((sampleWords P t).filter (fun f =&gt;
+      Real.exp (V / 10) &lt; (Nat.gcd (l * ∏ i, f i) u : ℝ))).card : ℝ) /
+        (P.card : ℝ) ^ t ≤ Real.exp (-V / 20) := by
+…</pre><p class="refs">Mentions: <a href="HitCount.lean.html#L11">OAI.Problem337.RandomProducts.sampleWords</a></p></li><li id=L107><b>theorem</b> <code>OAI.Problem337.RandomProducts.small_reduced_modulus_probability_le</code> <small>line 107</small><div class="doc"><p>Reduced moduli below <code>exp (0.9 V)</code> form an exponentially small set of samples.
+This is the random-gcd estimate used before applying bilinear Fourier cancellation.</p></div><pre>theorem small_reduced_modulus_probability_le (P : Finset ℕ) (t u l : ℕ) (S V : ℝ)
+    (hP : P.Nonempty) (hS : 1 &lt; S) (hV : 0 ≤ V) (huexp : (u : ℝ) = Real.exp V)
+    (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hmax : ∀ p ∈ P, (p : ℝ) ≤ S ^ 101)
+    (ht : (t : ℝ) ≤ S) (hhits : ((P.filter (fun p =&gt; p ∣ u)).card : ℝ) ≤ S)
+    (hsize : S ^ 99 ≤ (P.card : ℝ)) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (V / 200)) :
+    (((sampleWords P t).filter (fun f =&gt;
+      ((u / Nat.gcd (l * ∏ i, f i) u : ℕ) : ℝ) &lt; Real.exp (9 * V / 10))).card : ℝ) /
+        (P.card : ℝ) ^ t ≤ Real.exp (-V / 20) := by
+…</pre><p class="refs">Mentions: <a href="HitCount.lean.html#L11">OAI.Problem337.RandomProducts.sampleWords</a></p></li><li id=L151><b>theorem</b> <code>OAI.Problem337.RandomProducts.random_gcd_exception_bound</code> <small>line 151</small><div class="doc"><p>The random-gcd bound with exactly the prime sampling scale used in the manuscript.
+No asymptotic number-theory result is hidden: existence and cardinality of the prime set
+are explicit hypotheses, while the entire exceptional-event estimate is proved.</p></div><pre>theorem random_gcd_exception_bound (P : Finset ℕ) (t u l : ℕ) (S V : ℝ)
+    (hP : P.Nonempty) (hS : 2 ≤ S) (hV : 0 ≤ V) (hVS : V ≤ S)
+    (huexp : (u : ℝ) = Real.exp V) (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hinterval : ∀ p ∈ P, S ^ 100 ≤ (p : ℝ) ∧ (p : ℝ) ≤ 2 * S ^ 100)
+    (ht : (t : ℝ) ≤ S) (hsize : S ^ 99 ≤ (P.card : ℝ)) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (V / 200)) :
+    (((sampleWords P t).filter (fun f =&gt;
+      ((u / Nat.gcd (l * ∏ i, f i) u : ℕ) : ℝ) &lt; Real.exp (9 * V / 10))).card : ℝ) /
+        (P.card : ℝ) ^ t ≤ Real.exp (-V / 20) := by
+…</pre><p class="refs">Mentions: <a href="HitCount.lean.html#L11">OAI.Problem337.RandomProducts.sampleWords</a></p></li><li id=L192><b>theorem</b> <code>OAI.Problem337.RandomProducts.random_gcd_exception_bound_wide</code> <small>line 192</small><div class="doc"><p>The random-gcd bound with exactly the prime sampling scale used in the manuscript.
+No asymptotic number-theory result is hidden: existence and cardinality of the prime set
+are explicit hypotheses, while the entire exceptional-event estimate is proved.</p></div><pre>theorem random_gcd_exception_bound_wide (P : Finset ℕ) (t u l : ℕ) (S V : ℝ)
+    (hP : P.Nonempty) (hS : 2 ≤ S) (hV : 0 ≤ V) (hVS : V ≤ S)
+    (huexp : (u : ℝ) = Real.exp V) (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hinterval : ∀ p ∈ P, S ^ 100 ≤ (p : ℝ) ∧ (p : ℝ) ≤ S ^ 101)
+    (ht : (t : ℝ) ≤ S) (hsize : S ^ 99 ≤ (P.card : ℝ)) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (V / 200)) :
+    (((sampleWords P t).filter (fun f =&gt;
+      ((u / Nat.gcd (l * ∏ i, f i) u : ℕ) : ℝ) &lt; Real.exp (9 * V / 10))).card : ℝ) /
+        (P.card : ℝ) ^ t ≤ Real.exp (-V / 20) := by
+…</pre><p class="refs">Mentions: <a href="HitCount.lean.html#L11">OAI.Problem337.RandomProducts.sampleWords</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

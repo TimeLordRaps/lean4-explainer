@@ -1,0 +1,154 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Games/KMSFourthMomentZoomInvariant.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Games/KMSFourthMomentZoomInvariant.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Games</a> / <span>KMSFourthMomentZoomInvariant.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Games</a>/<span>KMSFourthMomentZoomInvariant.lean</span></code></h1><p class="muted">51 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Games/KMSFourthMomentZoomInvariant.lean#L1">source</a></p><div class="doc"><p>Point restrictions inherit basis invariance in the remaining coordinates.
+Translations split into a shift of the fixed point and a translation of the
+remaining matrix; both identities are exact, with no probability loss.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.pointAppend_comp_basis</code> <small>line 21</small></li><li id=L29><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.pointRestrict_invariant</code> <small>line 29</small><div class="doc"><p>Fixing a column preserves invariance under changes of the other columns.</p></div><pre>theorem pointRestrict_invariant (f : ((E × F2) →ₗ[F2] F) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f) (a : F) :
+    KMSBasisInvariant.IsBasisInvariant (pointRestrict f a) := by
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSAnalyticSmallInvariant.lean.html#L328">OAI.MaxCutGames.Inverse.KMSAnalytic.pointRestrict</a></p></li><li id=L37><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.pointAppend_add</code> <small>line 37</small></li><li id=L55><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.pointRestrict_translate</code> <small>line 55</small><div class="doc"><p>A translation of the full matrix merely translates the remaining
+coordinates and shifts the fixed primal value.</p></div><pre>theorem pointRestrict_translate (f : ((E × F2) →ₗ[F2] F) → ℝ)
+    (Z : (E × F2) →ₗ[F2] F) (a : F) :
+    pointRestrict (fun Y =&gt; f (Y + Z)) a =
+      fun X =&gt; pointRestrict f (a + Z (0, 1))
+        (X + Z.comp (LinearMap.inl F2 E F2)) := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticSmallInvariant.lean.html#L328">OAI.MaxCutGames.Inverse.KMSAnalytic.pointRestrict</a></p></li><li id=L90><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</code> <small>line 90</small><div class="doc"><p>All affine restrictions with at most r prescribed input/output dimensions
+have normalized squared density at most ε. The dimension sum avoids any
+truncated-subtraction ambiguity.</p></div><pre>def AffineDensityBound (r : ℕ) (ε : ℝ) (f : (E →ₗ[F2] F) → ℝ) : Prop :=
+…</pre></li><li id=L102><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound.mono</code> <small>line 102</small><div class="doc"><p>A stronger restriction budget supplies every smaller budget.</p></div><pre>theorem AffineDensityBound.mono {r s : ℕ} (hrs : r ≤ s) (ε : ℝ)
+    (f : (E →ₗ[F2] F) → ℝ) (hf : AffineDensityBound s ε f) :
+    AffineDensityBound r ε f := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L90">OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L110><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound.homogeneous</code> <small>line 110</small><div class="doc"><p>The homogeneous output restriction required for Lemma 3.19 is an actual
+special case, using the identity domain quotient and zero affine center.</p></div><pre>theorem AffineDensityBound.homogeneous [FiniteDimensional F2 E]
+    (r : ℕ) (ε : ℝ) (f : (E →ₗ[F2] F) → ℝ)
+    (hf : AffineDensityBound r ε f) : HomogeneousRestrictionBound r ε f := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L90">OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L120><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound.pointRestrict</code> <small>line 120</small><div class="doc"><p>Fixing one additional primal column consumes exactly one dimension of
+local-density budget. Its prescribed value is arbitrary, including zero.</p></div><pre>theorem AffineDensityBound.pointRestrict [FiniteDimensional F2 E]
+    (r : ℕ) (ε : ℝ) (f : ((E × F2) →ₗ[F2] F) → ℝ)
+    (hf : AffineDensityBound (r + 1) ε f) (a : F) :
+    AffineDensityBound r ε (pointRestrict f a) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L90">OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L164><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound.domain_equiv</code> <small>line 164</small><div class="doc"><p>Exact ambient coordinate transport of all sampled affine restrictions.</p></div><pre>theorem AffineDensityBound.domain_equiv
+    [FiniteDimensional F2 E] [FiniteDimensional F2 E&#x27;]
+    (r : ℕ) (ε : ℝ) (f : (E →ₗ[F2] F) → ℝ)
+    (hf : AffineDensityBound r ε f) (e : E ≃ₗ[F2] E&#x27;) :
+    AffineDensityBound r ε (fun X : E&#x27; →ₗ[F2] F =&gt; f (X.comp e.toLinearMap)) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L90">OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L179><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound.codomain_pullback</code> <small>line 179</small><div class="doc"><p>Homogeneous codomain restriction uses its actual codimension budget.</p></div><pre>theorem AffineDensityBound.codomain_pullback
+    [FiniteDimensional F2 B] (r s : ℕ) (ε : ℝ)
+    (f : (E →ₗ[F2] F) → ℝ) (hf : AffineDensityBound (r + s) ε f)
+    (K : B →ₗ[F2] F) (hK : Function.Injective K)
+    (hdimK : Module.finrank F2 F ≤ Module.finrank F2 B + s) :
+    AffineDensityBound r ε (fun X : E →ₗ[F2] B =&gt; f (K.comp X)) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L90">OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L223><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSFourthMoment.mixed_bound_of_character_bound</code> <small>line 223</small><div class="doc"><p>The actual mixed norm for arbitrary prescribed fixed points. The rank cap
+and scalar constants are chosen before either ambient dimension.</p></div><pre>theorem mixed_bound_of_character_bound (R : ℕ) (H ε : ℝ)
+    (hH : 0 ≤ H) (hε : 0 ≤ ε) (π : I →ₗ[F2] J) (ν : F →ₗ[F2] J)
+    (hπ : Function.Surjective π)
+    (hbase : ∀ (E : Type u) [AddCommGroup E] [Module F2 E]
+      [FiniteDimensional F2 E] [Fintype E],
+      ∀ (ι : I →ₗ[F2] E), Function.Injective ι →
+      ∀ (f : (E →ₗ[F2] F) → ℝ), KMSBasisInvariant.IsBasisInvariant f →
+      AffineDensityBound (Module.finrank F2 I) ε f →
+      (2 : ℝ) ^ ((Module.finrank F2 I + Module.finrank F2 J) * Module.finrank F2 E) *
+        fixedFrequencyEnergy ι f π ν ≤ H * ε) :
+    ∀ (n : ℕ) (E : Type u) [AddCommGroup E] [Module F2 E]
+      [FiniteDimensional F2 E] [Fintype E]
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L90">OAI.MaxCutGames.Inverse.KMSFourthMoment.AffineDensityBound</a></p></li><li id=L342><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.sum_comp_eq_fiber_card</code> <small>line 342</small><div class="doc"><p>Exact sum of a function constant on the fibers of a finite map.</p></div><pre>theorem sum_comp_eq_fiber_card (p : A → J) (b : J → ℝ) :
+    (∑ x, b (p x)) =
+      ∑ j, ((Finset.univ.filter fun x =&gt; p x = j).card : ℝ) * b j := by
+…</pre></li><li id=L357><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.sum_sq_eq_fiber_card</code> <small>line 357</small></li><li id=L364><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.sum_sq_eq_uniform_fiber_card</code> <small>line 364</small><div class="doc"><p>If every orbit has the same size, its multiplicity factors out exactly.</p></div><pre>theorem sum_sq_eq_uniform_fiber_card (p : A → J) (a : A → ℝ) (b : J → ℝ)
+    (hab : ∀ x, a x = b (p x)) (n : ℕ)
+    (hn : ∀ j, (Finset.univ.filter fun x =&gt; p x = j).card = n) :
+    (∑ x, a x ^ 2) = (n : ℝ) * ∑ j, b j ^ 2 := by
+…</pre></li><li id=L376><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fiber_constant_energy_cross_mul</code> <small>line 376</small><div class="doc"><p>Two coefficient arrays with the same orbit values have exactly the ratio
+of their orbit multiplicities. Cross multiplication includes zero-energy
+functions without dividing by their norm.</p></div><pre>theorem fiber_constant_energy_cross_mul (p : A → J) (q : B → J)
+    (hp : Function.Surjective p) (hq : Function.Surjective q)
+    (a : A → ℝ) (b : B → ℝ)
+    (hab : ∀ x y, p x = q y → a x = b y)
+    (nA nB : ℕ)
+    (hA : ∀ j, (Finset.univ.filter fun x =&gt; p x = j).card = nA)
+    (hB : ∀ j, (Finset.univ.filter fun y =&gt; q y = j).card = nB) :
+    (nB : ℝ) * (∑ x, a x ^ 2) = (nA : ℝ) * ∑ y, b y ^ 2 := by
+…</pre></li><li id=L408><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis_energy_grouped</code> <small>line 408</small><div class="doc"><p>Parseval grouped by any genuine finite classification of frequencies.</p></div><pre>theorem synthesis_energy_grouped (p : (F →ₗ[F2] E) → J)
+    (a : (F →ₗ[F2] E) → ℝ) (b : J → ℝ) (hab : ∀ S, a S = b (p S)) :
+    (𝔼 X, synthesis a X ^ 2) =
+      ∑ j, ((Finset.univ.filter fun S =&gt; p S = j).card : ℝ) * b j ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L511">OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis</a></p></li><li id=L418><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis_energy_by_kernel</code> <small>line 418</small><div class="doc"><p>In particular, basis-invariant coefficients may be grouped by their
+actual kernels. The invariance premise is supplied separately by the proved
+change-of-basis theorem, not by any inverse or hypercontractive hypothesis.</p></div><pre>theorem synthesis_energy_by_kernel [Fintype (Submodule F2 F)]
+    (a : (F →ₗ[F2] E) → ℝ) (b : Submodule F2 F → ℝ)
+    (hab : ∀ S, a S = b S.ker) :
+    (𝔼 X, synthesis a X ^ 2) =
+      ∑ K : Submodule F2 F,
+        ((Finset.univ.filter fun S : F →ₗ[F2] E =&gt; S.ker = K).card : ℝ) * b K ^ 2 :=
+…</pre><p class="refs">Mentions: <a href="Derivatives.lean.html#L511">OAI.MaxCutGames.Inverse.KMSAnalytic.synthesis</a></p></li><li id=L439><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</code> <small>line 439</small></li><li id=L446><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</code> <small>line 446</small></li><li id=L449><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.RankFrequency</code> <small>line 449</small></li><li id=L452><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.FullFrequency</code> <small>line 452</small></li><li id=L456><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel</code> <small>line 456</small></li><li id=L459><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel</code> <small>line 459</small></li><li id=L462><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel_val</code> <small>line 462</small></li><li id=L465><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel_val</code> <small>line 465</small></li><li id=L489><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.ker_comp_mkQ</code> <small>line 489</small><div class="doc"><p>Composing an injective map with the quotient projection has exactly the
+prescribed kernel.</p></div><pre>theorem ker_comp_mkQ (K : Submodule R F) (J : (F ⧸ K) →ₗ[R] E)
+    (hJ : Function.Injective J) : (J.comp K.mkQ).ker = K := by
+…</pre></li><li id=L496><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.fixedKernelEquivQuotientInjection</code> <small>line 496</small><div class="doc"><p>Every map with kernel <code>K</code> factors uniquely through an injective quotient
+map; the inverse sends that quotient map to its composition with <code>K.mkQ</code>.</p></div><pre>def fixedKernelEquivQuotientInjection (K : Submodule R F) :
+    {S : F →ₗ[R] E // S.ker = K} ≃
+      {J : (F ⧸ K) →ₗ[R] E // Function.Injective J} where
+…</pre></li><li id=L513><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.fixedKernelEquiv_apply_mkQ</code> <small>line 513</small></li><li id=L518><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.fixedKernelEquiv_symm_apply</code> <small>line 518</small></li><li id=L523><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.range_forward</code> <small>line 523</small><div class="doc"><p>Quotient factorization leaves the image subspace unchanged.</p></div><pre>theorem range_forward (K : Submodule R F)
+    (S : {S : F →ₗ[R] E // S.ker = K}) :
+    (fixedKernelEquivQuotientInjection K S).val.range = S.val.range :=
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L496">OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.fixedKernelEquivQuotientInjection</a></p></li><li id=L529><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.finrank_range_forward</code> <small>line 529</small><div class="doc"><p>The quotient lift has the same rank as the original map.</p></div><pre>theorem finrank_range_forward (K : Submodule R F)
+    (S : {S : F →ₗ[R] E // S.ker = K}) :
+    Module.finrank R (fixedKernelEquivQuotientInjection K S).val.range =
+      Module.finrank R S.val.range := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L496">OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.fixedKernelEquivQuotientInjection</a></p></li><li id=L536><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.fixedKernel_finrank_eq_quotient</code> <small>line 536</small><div class="doc"><p>A prescribed kernel fixes the rank to the dimension of its quotient.</p></div><pre>theorem fixedKernel_finrank_eq_quotient (K : Submodule R F)
+    (S : {S : F →ₗ[R] E // S.ker = K}) :
+    Module.finrank R S.val.range = Module.finrank R (F ⧸ K) := by
+…</pre></li><li id=L544><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.range_comp_mkQ</code> <small>line 544</small><div class="doc"><p>Surjectivity of the quotient projection preserves the range of any map
+defined on the quotient.</p></div><pre>theorem range_comp_mkQ (K : Submodule R F) (J : (F ⧸ K) →ₗ[R] E) :
+    (J.comp K.mkQ).range = J.range := by
+…</pre></li><li id=L556><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.quotientInjection_comp_finrank</code> <small>line 556</small><div class="doc"><p>The inverse factorization of an injection has quotient dimension as its
+rank. In the finite-dimensional binary case this is the ordinary finite rank.</p></div><pre>theorem quotientInjection_comp_finrank (K : Submodule R F)
+    (J : (F ⧸ K) →ₗ[R] E) (hJ : Function.Injective J) :
+    Module.finrank R (J.comp K.mkQ).range = Module.finrank R (F ⧸ K) := by
+…</pre></li><li id=L563><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.natCard_fixedKernel_eq_injectiveQuotient</code> <small>line 563</small><div class="doc"><p>Exact fixed-kernel count, stated without requiring a chosen enumeration.</p></div><pre>theorem natCard_fixedKernel_eq_injectiveQuotient (K : Submodule R F) :
+    Nat.card {S : F →ₗ[R] E // S.ker = K} =
+      Nat.card {J : (F ⧸ K) →ₗ[R] E // Function.Injective J} :=
+…</pre></li><li id=L569><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalyticKernelCount.card_fixedKernel_eq_injectiveQuotient</code> <small>line 569</small><div class="doc"><p>The same counting equality for any finite enumerations of the two sides.</p></div><pre>theorem card_fixedKernel_eq_injectiveQuotient (K : Submodule R F)
+    [Fintype {S : F →ₗ[R] E // S.ker = K}]
+    [Fintype {J : (F ⧸ K) →ₗ[R] E // Function.Injective J}] :
+    Fintype.card {S : F →ₗ[R] E // S.ker = K} =
+      Fintype.card {J : (F ⧸ K) →ₗ[R] E // Function.Injective J} :=
+…</pre></li><li id=L598><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.quotientEquiv</code> <small>line 598</small><div class="doc"><p>Equal quotient dimension gives an actual linear equivalence.</p></div><pre>def quotientEquiv (K : KernelClass F I) : (F ⧸ K.val) ≃ₗ[F2] I :=
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L603><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel_surjective</code> <small>line 603</small><div class="doc"><p>Every kernel of the prescribed codimension occurs among rank-<code>dim I</code>
+maps into any ambient space whose dimension is at least <code>dim I</code>.</p></div><pre>theorem rankKernel_surjective
+    (hdim : Module.finrank F2 I ≤ Module.finrank F2 E) :
+    Function.Surjective (rankKernel (F := F) (E := E) (I := I)) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L456">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel</a></p></li><li id=L619><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel_surjective</code> <small>line 619</small><div class="doc"><p>Every kernel of the prescribed codimension occurs among surjections onto
+the comparison space, including the zero-dimensional case.</p></div><pre>theorem fullKernel_surjective :
+    Function.Surjective (fullKernel (F := F) (I := I)) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L459">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel</a></p></li><li id=L643><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSInjectionCount.F2</code> <small>line 643</small></li><li id=L649><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSInjectionCount.beta</code> <small>line 649</small><div class="doc"><p>The actual number of injective linear maps, with no asymptotic convention.</p></div><pre>def beta : ℕ := Nat.card {J : I →ₗ[F2] E // Function.Injective J}</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L643">OAI.MaxCutGames.Inverse.KMSInjectionCount.F2</a></p></li><li id=L652><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSInjectionCount.injectiveEquivIndependent</code> <small>line 652</small><div class="doc"><p>A domain basis turns injective maps into independent image families.</p></div><pre>def injectiveEquivIndependent {ι : Type*} (b : Module.Basis ι F2 I) :
+    {J : I →ₗ[F2] E // Function.Injective J} ≃
+      {s : ι → E // LinearIndependent F2 s} where
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L643">OAI.MaxCutGames.Inverse.KMSInjectionCount.F2</a></p></li><li id=L666><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSInjectionCount.beta_eq_product</code> <small>line 666</small><div class="doc"><p>Exact binary injection count, including the zero-dimensional domain.</p></div><pre>theorem beta_eq_product [FiniteDimensional F2 I] [Finite E]
+    (hdim : Module.finrank F2 I ≤ Module.finrank F2 E) :
+    beta I E = ∏ j : Fin (Module.finrank F2 I),
+      (2 ^ Module.finrank F2 E - 2 ^ j.val) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L643">OAI.MaxCutGames.Inverse.KMSInjectionCount.F2</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L649">OAI.MaxCutGames.Inverse.KMSInjectionCount.beta</a></p></li><li id=L700><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.injectionEquivOfDomainEquiv</code> <small>line 700</small><div class="doc"><p>Changing the domain by a linear equivalence preserves the set of actual
+injective linear maps.</p></div><pre>def injectionEquivOfDomainEquiv (e : J ≃ₗ[F2] I) :
+    {u : J →ₗ[F2] E // Function.Injective u} ≃
+      {u : I →ₗ[F2] E // Function.Injective u} where
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L722><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fixedKernelEquivInjection</code> <small>line 722</small><div class="doc"><p>A fixed-kernel fiber is in explicit bijection with injections from the
+comparison space. This includes the zero-dimensional comparison space.</p></div><pre>def fixedKernelEquivInjection (K : KernelClass F I) :
+    {S : F →ₗ[F2] E // S.ker = K.val} ≃
+      {J : I →ₗ[F2] E // Function.Injective J} :=
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L729><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.natCard_fixedKernel_eq_beta</code> <small>line 729</small><div class="doc"><p>Exact fixed-kernel count, without a chosen finite enumeration.</p></div><pre>theorem natCard_fixedKernel_eq_beta (K : KernelClass F I) :
+    Nat.card {S : F →ₗ[F2] E // S.ker = K.val} = beta I E :=
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L734><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankFiberEquivFixedKernel</code> <small>line 734</small><div class="doc"><p>The kernel condition already forces the rank condition.</p></div><pre>def rankFiberEquivFixedKernel (K : KernelClass F I) :
+    {S : RankFrequency F E I // rankKernel S = K} ≃
+      {S : F →ₗ[F2] E // S.ker = K.val} where
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L449">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.RankFrequency</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L456">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L751><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.surjective_of_kernel_class</code> <small>line 751</small><div class="doc"><p>A map into the comparison space with this kernel has full range.</p></div><pre>theorem surjective_of_kernel_class (K : KernelClass F I)
+    (T : F →ₗ[F2] I) (hT : T.ker = K.val) : Function.Surjective T := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L759><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullFiberEquivFixedKernel</code> <small>line 759</small><div class="doc"><p>The kernel condition already forces surjectivity onto the comparison
+space.</p></div><pre>def fullFiberEquivFixedKernel (K : KernelClass F I) :
+    {T : FullFrequency F I // fullKernel T = K} ≃
+      {T : F →ₗ[F2] I // T.ker = K.val} where
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L452">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.FullFrequency</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L459">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a></p></li><li id=L774><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel_fiber_card</code> <small>line 774</small><div class="doc"><p>Every rank-frequency kernel fiber has the same actual cardinality.</p></div><pre>theorem rankKernel_fiber_card [Fintype (F →ₗ[F2] E)]
+    (K : KernelClass F I) :
+    (Finset.univ.filter (fun S : RankFrequency F E I =&gt; rankKernel S = K)).card =
+      beta I E := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L449">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.RankFrequency</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L456">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.rankKernel</a></p></li><li id=L788><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel_fiber_card</code> <small>line 788</small><div class="doc"><p>Every surjective-frequency kernel fiber has the square injection count.</p></div><pre>theorem fullKernel_fiber_card [Fintype (F →ₗ[F2] I)]
+    (K : KernelClass F I) :
+    (Finset.univ.filter (fun T : FullFrequency F I =&gt; fullKernel T = K)).card =
+      beta I I := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentZoomInvariant.lean.html#L439">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.F2</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L446">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.KernelClass</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L452">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.FullFrequency</a>, <a href="KMSFourthMomentZoomInvariant.lean.html#L459">OAI.MaxCutGames.Inverse.KMSKernelFiberCard.fullKernel</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,91 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/BoundaryStrip.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/BoundaryStrip.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>BoundaryStrip.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>BoundaryStrip.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/BoundaryStrip.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.Problem358.volume_convex_boundary_strip_le</code> <small>line 14</small><div class="doc"><p>The right boundary strip of a compact real interval has length at most
+its translation distance, even when the interval is shorter than that distance.</p></div><pre>theorem volume_convex_boundary_strip_le
+    {I : Set ℝ} (hI : IsCompact I) (hc : Convex ℝ I)
+    {h : ℝ} (hh : 0 ≤ h) :
+    volume {t | t ∈ I ∧ t + h ∉ I} ≤ ENNReal.ofReal h := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.Problem358.prod_measure_boundary_strip_le</code> <small>line 38</small><div class="doc"><p>Fubini converts the one-dimensional strip estimate into a product estimate.
+The hypotheses describe exactly the interval fibers needed by coordinate slicing.</p></div><pre>theorem prod_measure_boundary_strip_le
+    {X : Type*} [MeasurableSpace X] (μ : Measure X)
+    {K : Set (X × ℝ)} (hK : MeasurableSet K)
+    (hproj : MeasurableSet (Prod.fst &#x27;&#x27; K))
+    (hcompact : ∀ x, IsCompact {t : ℝ | (x, t) ∈ K})
+    (hconvex : ∀ x, Convex ℝ {t : ℝ | (x, t) ∈ K})
+    {h : ℝ} (hh : 0 ≤ h) :
+    (μ.prod volume) {p | p ∈ K ∧ (p.1, p.2 + h) ∉ K} ≤
+      ENNReal.ofReal h * μ (Prod.fst &#x27;&#x27; K) := by
+…</pre></li><li id=L69><b>theorem</b> <code>OAI.Problem358.isCompact_vertical_fiber</code> <small>line 69</small><div class="doc"><p>A vertical fiber of a compact set is compact.</p></div><pre>theorem isCompact_vertical_fiber
+    {X : Type*} [TopologicalSpace X] [T2Space X]
+    {K : Set (X × ℝ)} (hK : IsCompact K) (x : X) :
+    IsCompact {t : ℝ | (x, t) ∈ K} := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.Problem358.compact_convex_prod_boundary_strip_le</code> <small>line 89</small><div class="doc"><p>The vertical boundary strip of a compact convex body has product measure
+at most its width times the measure of the transverse projection.</p></div><pre>theorem compact_convex_prod_boundary_strip_le
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [MeasurableSpace X] [BorelSpace X] [SecondCountableTopology X]
+    (μ : Measure X) {K : Set (X × ℝ)}
+    (hK : IsCompact K) (hc : Convex ℝ K) {h : ℝ} (hh : 0 ≤ h) :
+    (μ.prod volume) {p | p ∈ K ∧ (p.1, p.2 + h) ∉ K} ≤
+      ENNReal.ofReal h * μ (Prod.fst &#x27;&#x27; K) := by
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.Problem358.norm_integral_compact_convex_boundary_strip_le</code> <small>line 106</small><div class="doc"><p>Any uniformly bounded integrand has an <code>O(h)</code> integral on the excluded strip.</p></div><pre>theorem norm_integral_compact_convex_boundary_strip_le
+    {X G : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [MeasurableSpace X] [BorelSpace X] [SecondCountableTopology X]
+    [NormedAddCommGroup G] [NormedSpace ℝ G]
+    (μ : Measure X) {K : Set (X × ℝ)}
+    (hK : IsCompact K) (hc : Convex ℝ K)
+    (hproj : μ (Prod.fst &#x27;&#x27; K) ≠ ∞)
+    {h C : ℝ} (hh : 0 ≤ h) (hC : 0 ≤ C)
+    {f : X × ℝ → G} (hf : ∀ p ∈ K, ‖f p‖ ≤ C) :
+    ‖∫ p in {p | p ∈ K ∧ (p.1, p.2 + h) ∉ K}, f p ∂(μ.prod volume)‖ ≤
+      C * h * μ.real (Prod.fst &#x27;&#x27; K) := by
+…</pre></li><li id=L135><b>theorem</b> <code>OAI.Problem358.boundary_strip_le_of_coordinate_split</code> <small>line 135</small><div class="doc"><p>The strip estimate transports through any measure-preserving linear coordinate
+split. This separates geometric slicing from the choice of Euclidean coordinates.</p></div><pre>theorem boundary_strip_le_of_coordinate_split
+    {V X : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [MeasurableSpace V] [BorelSpace V]
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [MeasurableSpace X] [BorelSpace X] [SecondCountableTopology X]
+    (e : V ≃L[ℝ] (X × ℝ)) (η : Measure V) (μ : Measure X)
+    (hpres : MeasurePreserving e η (μ.prod volume))
+    {v : V} (hv : e v = (0, 1))
+    {K : Set V} (hK : IsCompact K) (hc : Convex ℝ K)
+    {h : ℝ} (hh : 0 ≤ h) :
+    η {x | x ∈ K ∧ x + h • v ∉ K} ≤
+      ENNReal.ofReal h * μ (Prod.fst &#x27;&#x27; (e &#x27;&#x27; K)) := by
+…</pre></li><li id=L179><b>theorem</b> <code>OAI.Problem358.convex_contraction_add_mem</code> <small>line 179</small><div class="doc"><p>Contracting toward a point gives a translated core in a convex set.</p></div><pre>theorem convex_contraction_add_mem {K : Set V} (hK : Convex ℝ K)
+    {p e x : V} (hx : x ∈ K) (hpe : p + e ∈ K)
+    {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    (1 - t) • x + t • p + t • e ∈ K := by
+…</pre></li><li id=L187><b>theorem</b> <code>OAI.Problem358.convex_contraction_subset_shift_core</code> <small>line 187</small><div class="doc"><p>The contracted image is in the forward translation core.</p></div><pre>theorem convex_contraction_subset_shift_core {K : Set V} (hK : Convex ℝ K)
+    {p e : V} (hp : p ∈ K) (hpe : p + e ∈ K)
+    {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    (fun x =&gt; (1 - t) • x + t • p) &#x27;&#x27; K ⊆
+      {x | x ∈ K ∧ x + t • e ∈ K} := by
+…</pre></li><li id=L202><b>theorem</b> <code>OAI.Problem358.measureReal_contraction_image</code> <small>line 202</small><div class="doc"><p>The Haar measure of an affine contraction, in real-valued form.</p></div><pre>theorem measureReal_contraction_image (K : Set V) (p : V) {t : ℝ}
+    (ht1 : t ≤ 1) :
+    μ.real ((fun x =&gt; (1 - t) • x + t • p) &#x27;&#x27; K) =
+      (1 - t) ^ Module.finrank ℝ V * μ.real K := by
+…</pre></li><li id=L220><b>theorem</b> <code>OAI.Problem358.measureReal_convex_shift_strip_le</code> <small>line 220</small><div class="doc"><p>A geometric boundary strip is controlled by the volume lost under contraction.</p></div><pre>theorem measureReal_convex_shift_strip_le {K : Set V} (hKc : IsCompact K)
+    (hK : Convex ℝ K) {p e : V} (hp : p ∈ K) (hpe : p + e ∈ K)
+    {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    μ.real {x | x ∈ K ∧ x + t • e ∉ K} ≤
+      (1 - (1 - t) ^ Module.finrank ℝ V) * μ.real K := by
+…</pre></li><li id=L243><b>theorem</b> <code>OAI.Problem358.measureReal_convex_shift_strip_le_linear</code> <small>line 243</small><div class="doc"><p>Bernoulli gives a dimension-linear bound for the boundary strip.</p></div><pre>theorem measureReal_convex_shift_strip_le_linear {K : Set V} (hKc : IsCompact K)
+    (hK : Convex ℝ K) {p e : V} (hp : p ∈ K) (hpe : p + e ∈ K)
+    {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    μ.real {x | x ∈ K ∧ x + t • e ∉ K} ≤
+      Module.finrank ℝ V * t * μ.real K := by
+…</pre></li><li id=L257><b>theorem</b> <code>OAI.Problem358.measureReal_convex_shift_strip_le_of_closedBall</code> <small>line 257</small><div class="doc"><p>Interior-ball specialization of the boundary estimate for small translations.</p></div><pre>theorem measureReal_convex_shift_strip_le_of_closedBall {K : Set V}
+    (hKc : IsCompact K) (hK : Convex ℝ K) {p : V} {r : ℝ} (hr : 0 &lt; r)
+    (hball : Metric.closedBall p r ⊆ K) {v : V} (hv : ‖v‖ ≤ 1)
+    {h : ℝ} (hh0 : 0 ≤ h) (hhr : h ≤ r) :
+    μ.real {x | x ∈ K ∧ x + h • v ∉ K} ≤
+      Module.finrank ℝ V * (h / r) * μ.real K := by
+…</pre></li><li id=L277><b>theorem</b> <code>OAI.Problem358.measureReal_convex_shift_strip_le_all</code> <small>line 277</small><div class="doc"><p>A single linear constant controls every translation length, not only small ones.</p></div><pre>theorem measureReal_convex_shift_strip_le_all {K : Set V}
+    (hKc : IsCompact K) (hK : Convex ℝ K) {p : V} {r : ℝ} (hr : 0 &lt; r)
+    (hball : Metric.closedBall p r ⊆ K) {v : V} (hv : ‖v‖ ≤ 1)
+    {h : ℝ} (hh : 0 ≤ h) :
+    μ.real {x | x ∈ K ∧ x + h • v ∉ K} ≤
+      (max (Module.finrank ℝ V : ℝ) 1 * μ.real K / r) * h := by
+…</pre></li><li id=L306><b>theorem</b> <code>OAI.Problem358.exists_convex_boundary_strip_constant</code> <small>line 306</small><div class="doc"><p>Every compact convex body has a uniform linear boundary-strip constant.</p></div><pre>theorem exists_convex_boundary_strip_constant {K : Set V}
+    (hKc : IsCompact K) (hK : Convex ℝ K) (hKi : (interior K).Nonempty) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (v : V), ‖v‖ ≤ 1 → ∀ h : ℝ, 0 ≤ h →
+      μ.real {x | x ∈ K ∧ x + h • v ∉ K} ≤ C * h := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Derivation/NormAttainingGrothendieck.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Derivation/NormAttainingGrothendieck.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Derivation</a> / <span>NormAttainingGrothendieck.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Derivation</a>/<span>NormAttainingGrothendieck.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Derivation/NormAttainingGrothendieck.lean#L1">source</a></p><div class="doc"><p>The norm-attaining case of the little Grothendieck inequality.
+The unitary paths and their quadratic estimates are constructed explicitly.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.KadisonSimilarity.exists_normAttainingState</code> <small>line 18</small><div class="doc"><p>At a norm-attaining unit, the supporting vector functional is a state.</p></div><pre>theorem exists_normAttainingState (T : A →L[ℂ] H) (hT : ‖T‖ ≤ 1)
+    (h1 : ‖T 1‖ = 1) :
+    ∃ f : A →ₚ[ℂ] ℂ, f 1 = 1 ∧ ∀ a, f a = inner ℂ (T 1) (T a) := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.KadisonSimilarity.contraction_sqrt_complement</code> <small>line 41</small><div class="doc"><p>The two conjugate unitary paths give a quadratic contraction estimate.</p></div><pre>theorem contraction_sqrt_complement (T : A →L[ℂ] H) (hT : ‖T‖ ≤ 1)
+    (a : A) (ha : IsSelfAdjoint a) (hna : ‖a‖ ≤ 1) :
+    ‖T a‖ ^ 2 + ‖T (CFC.sqrt (1 - a ^ 2))‖ ^ 2 ≤ 1 := by
+…</pre></li><li id=L69><b>theorem</b> <code>OAI.KadisonSimilarity.sqrt_complement_remainder</code> <small>line 69</small><div class="doc"><p>A scalar square-root expansion with a uniform quadratic remainder.</p></div><pre>theorem sqrt_complement_remainder (s : ℝ) (hs0 : 0 ≤ s) (hs1 : s ≤ 1 / 2) :
+    |1 - Real.sqrt (1 - s) - s / 2| ≤ s ^ 2 := by
+…</pre></li><li id=L85><b>def</b> <code>OAI.KadisonSimilarity.cfcSqrtRemainder</code> <small>line 85</small><div class="doc"><p>The fourth-order remainder for the unitary path, still expressed in
+one continuous functional calculus.</p></div><pre>def cfcSqrtRemainder (a : A) (t : ℝ) : A :=
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.KadisonSimilarity.norm_cfcSqrtRemainder_le</code> <small>line 89</small></li><li id=L106><b>theorem</b> <code>OAI.KadisonSimilarity.cfcSqrtRemainder_eq</code> <small>line 106</small><div class="doc"><p>Interpret the scalar remainder as the actual square-root error.</p></div><pre>theorem cfcSqrtRemainder_eq (a : A) (ha : IsSelfAdjoint a) (t : ℝ)
+    (hpos : 0 ≤ 1 - (t • a) ^ 2) :
+    cfcSqrtRemainder a t =
+      1 - CFC.sqrt (1 - (t • a) ^ 2) - (t ^ 2 / 2) • a ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="NormAttainingGrothendieck.lean.html#L85">OAI.KadisonSimilarity.cfcSqrtRemainder</a></p></li><li id=L131><b>theorem</b> <code>OAI.KadisonSimilarity.le_of_scaled_quadratic_approximations</code> <small>line 131</small><div class="doc"><p>A fourth-order error disappears after dividing the quadratic term.</p></div><pre>theorem le_of_scaled_quadratic_approximations {x y : ℝ}
+    (h : ∀ t : ℝ, 0 &lt; t → t ≤ 1 / 2 → t ^ 2 * x ≤ t ^ 2 * y + 2 * t ^ 4) :
+    x ≤ y := by
+…</pre></li><li id=L150><b>theorem</b> <code>OAI.KadisonSimilarity.normAttaining_selfAdjoint_contraction</code> <small>line 150</small><div class="doc"><p>The unitary-path estimate recovers the square bound on self-adjoint contractions.</p></div><pre>theorem normAttaining_selfAdjoint_contraction (T : A →L[ℂ] H) (hT : ‖T‖ ≤ 1)
+    (h1 : ‖T 1‖ = 1) (a : A) (ha : IsSelfAdjoint a) (hna : ‖a‖ ≤ 1) :
+    ‖T a‖ ^ 2 ≤ (inner ℂ (T 1) (T (a ^ 2))).re := by
+…</pre></li><li id=L189><b>theorem</b> <code>OAI.KadisonSimilarity.normAttaining_selfAdjoint</code> <small>line 189</small><div class="doc"><p>Homogeneity removes the contraction restriction.</p></div><pre>theorem normAttaining_selfAdjoint (T : A →L[ℂ] H) (hT : ‖T‖ ≤ 1)
+    (h1 : ‖T 1‖ = 1) (a : A) (ha : IsSelfAdjoint a) :
+    ‖T a‖ ^ 2 ≤ (inner ℂ (T 1) (T (a ^ 2))).re := by
+…</pre></li><li id=L208><b>theorem</b> <code>OAI.KadisonSimilarity.normAttaining_grothendieck</code> <small>line 208</small><div class="doc"><p>Haagerup's norm-attaining inequality, obtained from the real and imaginary parts.</p></div><pre>theorem normAttaining_grothendieck (T : A →L[ℂ] H) (hT : ‖T‖ ≤ 1)
+    (h1 : ‖T 1‖ = 1) :
+    ∃ f : A →ₚ[ℂ] ℂ, f 1 = 1 ∧
+      ∀ a, ‖T a‖ ^ 2 ≤ (f (star a * a)).re + (f (a * star a)).re := by
+…</pre></li><li id=L232><b>theorem</b> <code>OAI.KadisonSimilarity.unitaryNormAttaining_grothendieck</code> <small>line 232</small><div class="doc"><p>Transport the norm-attaining inequality from the identity to a unitary.</p></div><pre>theorem unitaryNormAttaining_grothendieck (T : A →L[ℂ] H) (hT : ‖T‖ ≤ 1)
+    (u : unitary A) (hu : ‖T (u : A)‖ = 1) :
+    ∃ f g : A →ₚ[ℂ] ℂ, f 1 = 1 ∧ g 1 = 1 ∧
+      ∀ a, ‖T a‖ ^ 2 ≤ (f (star a * a)).re + (g (a * star a)).re := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

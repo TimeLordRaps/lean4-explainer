@@ -1,0 +1,1 @@
+window.l4shard("dy", [["BSD.weak_birch_swinnerton_dyer_conjecture",56,67],["BSD.weak_birch_swinnerton_dyer_conjecture_rat",56,74],["SymbolicDynamics.blockComplexity",1509,55],["SymbolicDynamics.blockComplexity_const",1509,68],["SymbolicDynamics.blockEntropy",1509,64],["SymbolicDynamics.blockEntropy_const",1509,77]]);

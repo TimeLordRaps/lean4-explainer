@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction/Kernels.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction/Kernels.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">TraceReconstruction</a> / <span>Kernels.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">TraceReconstruction</a>/<span>Kernels.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction/Kernels.lean#L1">source</a></p><div class="doc"><h3>Kernels</h3><p>Constrained rank-gap sums, correlated anchor kernels, window kernels, lattice Laplace sums, and geometric degree bounds.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.TraceReconstruction.constrained_sum_product_le</code> <small>line 20</small><div class="doc"><p>Eliminate one output gap by its prescribed total before dropping the
+other rank constraints. This is the exact finite summation step used in
+the conditional rank-kernel estimate.</p></div><pre>theorem constrained_sum_product_le (r L : ℕ)
+    (f : Fin (r + 1) → Fin (L + 1) → ℝ)
+    (hf : ∀ i k, 0 ≤ f i k) (M : ℝ) (hM : 0 ≤ M)
+    (hbound : ∀ k, f 0 k ≤ M) :
+    (∑ z : Fin (r + 1) → Fin (L + 1),
+      if ∑ j, (z j).val = L then ∏ j, f j (z j) else 0) ≤
+        M * ∏ i : Fin r, ∑ k, f i.succ k := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.TraceReconstruction.constrained_cross_kernel_le</code> <small>line 58</small><div class="doc"><p>The product of two rank kernels has one scalar denominator factor,
+one uniform gap factor and independent one-dimensional cross-overlaps.</p></div><pre>theorem constrained_cross_kernel_le (r L : ℕ)
+    (f g : Fin (r + 1) → Fin (L + 1) → ℝ)
+    (hf : ∀ i k, 0 ≤ f i k) (hg : ∀ i k, 0 ≤ g i k)
+    (M : ℝ) (hM : 0 ≤ M) (hbound : ∀ k, f 0 k * g 0 k ≤ M) :
+    (∑ z : Fin (r + 1) → Fin (L + 1),
+      if ∑ j, (z j).val = L then (∏ j, f j (z j)) * (∏ j, g j (z j)) else 0) ≤
+        M * ∏ i : Fin r, ∑ k, f i.succ k * g i.succ k := by
+…</pre></li><li id=L88><b>def</b> <code>OAI.TraceReconstruction.jointKernel</code> <small>line 88</small><div class="doc"><p>Mixture of conditional products; <code>p</code> is the common displacement law.</p></div><pre>def jointKernel (p : Ω → ℝ) (a : Ω → I → ℝ) (b : Ω → J → ℝ)
+    (i : I) (j : J) : ℝ := ∑ w, p w * a w i * b w j
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.TraceReconstruction.jointKernel_nonneg</code> <small>line 92</small></li><li id=L99><b>theorem</b> <code>OAI.TraceReconstruction.sum_jointKernel</code> <small>line 99</small></li><li id=L115><b>theorem</b> <code>OAI.TraceReconstruction.jointKernel_le</code> <small>line 115</small></li><li id=L131><b>theorem</b> <code>OAI.TraceReconstruction.correlated_anchor_square_sum</code> <small>line 131</small><div class="doc"><p>The joint squared-sum estimate retaining the common jitter. In the
+manuscript A=L/(omega*sqrt(T*t)) and B=M/(omega*sqrt(t)),
+up to the explicit absolute binomial constants.</p></div><pre>theorem correlated_anchor_square_sum
+    (p : Ω → ℝ) (a : Ω → I → ℝ) (b : Ω → J → ℝ)
+    (L M A B : ℝ)
+    (hp0 : ∀ w, 0 ≤ p w) (hp1 : ∑ w, p w = 1)
+    (ha0 : ∀ w i, 0 ≤ a w i) (hb0 : ∀ w j, 0 ≤ b w j)
+    (ha1 : ∀ w, ∑ i, a w i = L) (hb1 : ∀ w, ∑ j, b w j = M)
+    (hB : 0 ≤ B) (hb : ∀ w j, b w j ≤ B)
+    (hA : ∀ i, ∑ w, p w * a w i ≤ A) :
+    ∑ i, ∑ j, (jointKernel p a b i j) ^ 2 ≤ (A * B) * (L * M) := by
+…</pre><p class="refs">Mentions: <a href="Kernels.lean.html#L88">OAI.TraceReconstruction.jointKernel</a></p></li><li id=L162><b>theorem</b> <code>OAI.TraceReconstruction.binomial_overlap_truncate</code> <small>line 162</small><div class="doc"><p>Truncating output ranks cannot increase a binomial cross-overlap.</p></div><pre>theorem binomial_overlap_truncate (g h L : ℕ) {p : ℝ}
+    (hp : p ∈ Set.Icc 0 1) :
+    (∑ k : Fin (L + 1), binomialMass g p k * binomialMass h p k) ≤
+      ∑ k ∈ Finset.range (h + 1), binomialMass g p k * binomialMass h p k := by
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L657">OAI.TraceReconstruction.binomialMass</a></p></li><li id=L182><b>theorem</b> <code>OAI.TraceReconstruction.binomial_gaussian_overlap_general</code> <small>line 182</small><div class="doc"><p>Gaussian cross-overlap with the prefactor attached to either prescribed
+first length, removing the order restriction in the tilting proof.</p></div><pre>theorem binomial_gaussian_overlap_general (g h L : ℕ) {p : ℝ}
+    (hp : p ∈ Set.Ico (1 / 2 : ℝ) 1) (hS : 0 &lt; g + h) :
+    (∑ k : Fin (L + 1), binomialMass g p k * binomialMass h p k) ≤
+      Real.sqrt (2 / (((g : ℝ) + 1) * p * (1 - p))) *
+        Real.exp (-((g : ℝ) - h) ^ 2 / (16 * ((g : ℝ) + h))) := by
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L657">OAI.TraceReconstruction.binomialMass</a></p></li><li id=L212><b>def</b> <code>OAI.TraceReconstruction.rankKernel</code> <small>line 212</small><div class="doc"><p>The exact conditional rank kernel, including the fixed count
+normalization, before any coarse-gap estimates or restrictions.</p></div><pre>def rankKernel (r n l : ℕ) (p : ℝ) (g : Fin (r + 1) → ℕ)
+    (z : Fin (r + 1) → Fin (l + 1)) : ℝ :=
+…</pre></li><li id=L219><b>theorem</b> <code>OAI.TraceReconstruction.rankKernel_cross_le</code> <small>line 219</small><div class="doc"><p>Largest-gap elimination for the conditional rank kernel. The displayed
+constant is absolute; no asymptotic proposal or Stirling theorem is assumed.</p></div><pre>theorem rankKernel_cross_le (r n l : ℕ) {p : ℝ}
+    (hp : p ∈ Set.Ico (1 / 2 : ℝ) 1) (hl : l ≤ n)
+    (hmean : (n : ℝ) * p = l) (hv : 1 ≤ (n : ℝ) * p * (1 - p))
+    (g h : Fin (r + 1) → ℕ) :
+    (∑ z : Fin (r + 1) → Fin (l - r + 1),
+      if ∑ j, (z j).val = l - r then
+        (p ^ r / binomialMass n p l) ^ 2 *
+          (∏ j, binomialMass (g j) p (z j)) *
+          (∏ j, binomialMass (h j) p (z j)) else 0) ≤
+      (4608 * n / ((g 0 : ℝ) + 1)) *
+        ∏ i : Fin r, ∑ k : Fin (l - r + 1),
+          binomialMass (g i.succ) p k * binomialMass (h i.succ) p k := by
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L657">OAI.TraceReconstruction.binomialMass</a></p></li><li id=L279><b>theorem</b> <code>OAI.TraceReconstruction.fairSeries_total</code> <small>line 279</small></li><li id=L284><b>theorem</b> <code>OAI.TraceReconstruction.fairSeries_sum_finite_le_one</code> <small>line 284</small></li><li id=L294><b>def</b> <code>OAI.TraceReconstruction.windowKernel</code> <small>line 294</small></li><li id=L297><b>theorem</b> <code>OAI.TraceReconstruction.windowKernel_nonneg</code> <small>line 297</small></li><li id=L300><b>theorem</b> <code>OAI.TraceReconstruction.windowKernel_sup</code> <small>line 300</small></li><li id=L309><b>theorem</b> <code>OAI.TraceReconstruction.windowKernel_sum</code> <small>line 309</small></li><li id=L321><b>theorem</b> <code>OAI.TraceReconstruction.windowKernel_energy</code> <small>line 321</small></li><li id=L334><b>def</b> <code>OAI.TraceReconstruction.jointWindowKernel</code> <small>line 334</small></li><li id=L338><b>theorem</b> <code>OAI.TraceReconstruction.windowKernel_average</code> <small>line 338</small></li><li id=L352><b>theorem</b> <code>OAI.TraceReconstruction.jointWindowKernel_nonneg</code> <small>line 352</small></li><li id=L359><b>theorem</b> <code>OAI.TraceReconstruction.jointWindowKernel_sup</code> <small>line 359</small></li><li id=L380><b>theorem</b> <code>OAI.TraceReconstruction.jointWindowKernel_sum</code> <small>line 380</small></li><li id=L413><b>theorem</b> <code>OAI.TraceReconstruction.jointWindowKernel_energy</code> <small>line 413</small></li><li id=L440><b>theorem</b> <code>OAI.TraceReconstruction.sum_inverse_sqrt</code> <small>line 440</small><div class="doc"><p>Elementary discrete integral comparison, including the singular first cell.</p></div><pre>theorem sum_inverse_sqrt (N : ℕ) :
+    (∑ k ∈ Finset.range N, (Real.sqrt (k+1:ℝ))⁻¹) ≤ 2*Real.sqrt N := by
+…</pre></li><li id=L457><b>theorem</b> <code>OAI.TraceReconstruction.exp_gap_lower</code> <small>line 457</small></li><li id=L467><b>theorem</b> <code>OAI.TraceReconstruction.sum_exp_decay</code> <small>line 467</small></li><li id=L489><b>theorem</b> <code>OAI.TraceReconstruction.coarse_laplace_sum</code> <small>line 489</small><div class="doc"><p>The uniform lattice Laplace estimate used by the initial-pair construction, with an absolute constant.</p></div><pre>theorem coarse_laplace_sum {h : ℝ} (hh : 0 &lt; h) (h1 : h ≤ 1) (M : ℕ) :
+    (∑ k ∈ Finset.range M, (Real.sqrt (k+1:ℝ))⁻¹ *
+      Real.exp (-h*(k+1:ℝ))) ≤ 6/Real.sqrt h := by
+…</pre></li><li id=L558><b>theorem</b> <code>OAI.TraceReconstruction.coarse_simplex_sum</code> <small>line 558</small><div class="doc"><p>Exponential tilting removes the coarse-gap simplex constraint without a dimension loss.</p></div><pre>theorem coarse_simplex_sum (r M : ℕ) {h u : ℝ} (hh : 0&lt;h) (h1 : h≤1) :
+    (∑ v : Fin r → Fin M, if (∑ i, ((v i).val+1:ℝ)) ≤ u then
+      ∏ i, (Real.sqrt ((v i).val+1:ℝ))⁻¹ else 0) ≤
+      Real.exp (h*u) * (6/Real.sqrt h)^r := by
+…</pre></li><li id=L602><b>theorem</b> <code>OAI.TraceReconstruction.degree_series_bound</code> <small>line 602</small><div class="doc"><p>The degree-series estimate in the common-mass argument, with no asymptotic notation.</p></div><pre>theorem degree_series_bound (a : ℝ) (N : ℕ) :
+    (∑ r ∈ Finset.range N, a^r / (Real.sqrt (r:ℝ))^r)^2 ≤
+      2 * Real.exp (2*a^2) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

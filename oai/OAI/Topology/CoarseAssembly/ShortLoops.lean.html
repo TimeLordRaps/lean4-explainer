@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Topology/CoarseAssembly/ShortLoops.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Topology/CoarseAssembly/ShortLoops.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Topology</a> / <a href="index.html">CoarseAssembly</a> / <span>ShortLoops.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Topology</a>/<a href="index.html">CoarseAssembly</a>/<span>ShortLoops.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Topology/CoarseAssembly/ShortLoops.lean#L1">source</a></p><div class="doc"><h3>Short loops and the Rips edge cocycle</h3><p>The combinatorial step in §4 of the coarse Novikov manuscript. The only
+hypothesis on the charge is vanishing on short closed graph walks, exactly
+the output required from the manuscript's small-loop lemma. This is a
+conditional combinatorial result, not an assumption about analytic K-homology.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.CoarseAssembly.walkCharge</code> <small>line 20</small><div class="doc"><p>Sum an integer edge charge along an actual graph walk.</p></div><pre>def walkCharge (a : V → V → ℤ) : {u v : V} → G.Walk u v → ℤ
+  | _, _, .nil =&gt; 0
+  | u, _, .cons (v := v) _ p =&gt; a u v + walkCharge a p</pre></li><li id=L24><b>theorem</b> <code>OAI.CoarseAssembly.walkCharge_nil</code> <small>line 24</small></li><li id=L27><b>theorem</b> <code>OAI.CoarseAssembly.walkCharge_cons</code> <small>line 27</small></li><li id=L31><b>theorem</b> <code>OAI.CoarseAssembly.walkCharge_append</code> <small>line 31</small></li><li id=L38><b>theorem</b> <code>OAI.CoarseAssembly.walkCharge_reverse</code> <small>line 38</small></li><li id=L47><b>theorem</b> <code>OAI.CoarseAssembly.walkCharge_abs_le_length</code> <small>line 47</small><div class="doc"><p>Pointwise unit charges give the elementary length bound used to control
+both the winding number and the word length in the small-loop argument.</p></div><pre>theorem walkCharge_abs_le_length (a : V → V → ℤ)
+    (ha : ∀ u v, G.Adj u v → |a u v| ≤ 1) {u v : V} (p : G.Walk u v) :
+    |walkCharge a p| ≤ (p.length : ℤ) := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a></p></li><li id=L61><b>theorem</b> <code>OAI.CoarseAssembly.walkCharge_eq_of_short_loops</code> <small>line 61</small><div class="doc"><p>Vanishing short loops makes the charge independent of the chosen short
+path. The two paths are compared by concatenating one with the reverse of
+the other, exactly as in Proposition 4.1.</p></div><pre>theorem walkCharge_eq_of_short_loops (a : V → V → ℤ)
+    (ha : ∀ u v, G.Adj u v → a v u = -a u v) (r : ℕ)
+    (hloop : ∀ u (p : G.Walk u u), p.length ≤ 2 * r → walkCharge a p = 0)
+    {u v : V} (p q : G.Walk u v) (hp : p.length ≤ r) (hq : q.length ≤ r) :
+    walkCharge a p = walkCharge a q := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a></p></li><li id=L76><b>def</b> <code>OAI.CoarseAssembly.ripsGraph</code> <small>line 76</small><div class="doc"><p>The graph of the edges of the Rips complex of a connected graph at scale
+<code>r</code>. Connectedness is supplied to results, because graph distance is zero
+between disconnected vertices in Mathlib's natural-valued convention.</p></div><pre>def ripsGraph (G : SimpleGraph V) (r : ℕ) : SimpleGraph V where
+…</pre></li><li id=L81><b>def</b> <code>OAI.CoarseAssembly.shortestWalk</code> <small>line 81</small></li><li id=L84><b>theorem</b> <code>OAI.CoarseAssembly.shortestWalk_length</code> <small>line 84</small></li><li id=L90><b>def</b> <code>OAI.CoarseAssembly.ripsCharge</code> <small>line 90</small><div class="doc"><p>The charge assigned to an oriented Rips edge, extended to all vertex
+pairs by choosing shortest graph walks.</p></div><pre>noncomputable def ripsCharge (hG : G.Connected) (a : V → V → ℤ) (u v : V) : ℤ :=
+…</pre></li><li id=L93><b>theorem</b> <code>OAI.CoarseAssembly.ripsCharge_eq_walkCharge</code> <small>line 93</small></li><li id=L104><b>theorem</b> <code>OAI.CoarseAssembly.ripsCharge_antisymm</code> <small>line 104</small><div class="doc"><p>The Rips charge is antisymmetric whenever loops of length at most <code>2r</code>
+have zero charge.</p></div><pre>theorem ripsCharge_antisymm (hG : G.Connected) (a : V → V → ℤ)
+    (ha : ∀ u v, G.Adj u v → a v u = -a u v) (r : ℕ)
+    (hloop : ∀ u (p : G.Walk u u), p.length ≤ 2 * r → walkCharge a p = 0)
+    {u v : V} (huv : G.dist u v ≤ r) :
+    ripsCharge hG a v u = -ripsCharge hG a u v := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a>, <a href="ShortLoops.lean.html#L90">OAI.CoarseAssembly.ripsCharge</a></p></li><li id=L116><b>theorem</b> <code>OAI.CoarseAssembly.ripsCharge_triangle</code> <small>line 116</small><div class="doc"><p>Every triangle in the Rips complex has zero total charge, assuming
+vanishing of graph loops of length at most <code>3r</code>. This is the cocycle identity
+needed for the circle-valued winding test.</p></div><pre>theorem ripsCharge_triangle (hG : G.Connected) (a : V → V → ℤ) (r : ℕ)
+    (hloop : ∀ u (p : G.Walk u u), p.length ≤ 3 * r → walkCharge a p = 0)
+    {u v w : V} (huv : G.dist u v ≤ r) (hvw : G.dist v w ≤ r)
+    (hwu : G.dist w u ≤ r) :
+    ripsCharge hG a u v + ripsCharge hG a v w + ripsCharge hG a w u = 0 := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a>, <a href="ShortLoops.lean.html#L90">OAI.CoarseAssembly.ripsCharge</a></p></li><li id=L130><b>theorem</b> <code>OAI.CoarseAssembly.ripsCharge_on_edge</code> <small>line 130</small><div class="doc"><p>Unit graph edges retain their original charges in the Rips cocycle.</p></div><pre>theorem ripsCharge_on_edge (hG : G.Connected) (a : V → V → ℤ)
+    (ha : ∀ u v, G.Adj u v → a v u = -a u v) (r : ℕ) (hr : 1 ≤ r)
+    (hloop : ∀ u (p : G.Walk u u), p.length ≤ 2 * r → walkCharge a p = 0)
+    {u v : V} (h : G.Adj u v) : ripsCharge hG a u v = a u v := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a>, <a href="ShortLoops.lean.html#L90">OAI.CoarseAssembly.ripsCharge</a></p></li><li id=L139><b>theorem</b> <code>OAI.CoarseAssembly.ripsCharge_on_walk</code> <small>line 139</small><div class="doc"><p>In particular, the same boundary walk has the same winding charge after
+passing to a Rips scale.</p></div><pre>theorem ripsCharge_on_walk (hG : G.Connected) (a : V → V → ℤ)
+    (ha : ∀ u v, G.Adj u v → a v u = -a u v) (r : ℕ) (hr : 1 ≤ r)
+    (hloop : ∀ u (p : G.Walk u u), p.length ≤ 2 * r → walkCharge a p = 0)
+    {u v : V} (p : G.Walk u v) :
+    walkCharge (ripsCharge hG a) p = walkCharge a p := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a>, <a href="ShortLoops.lean.html#L90">OAI.CoarseAssembly.ripsCharge</a></p></li><li id=L152><b>theorem</b> <code>OAI.CoarseAssembly.exists_rips_cocycle</code> <small>line 152</small><div class="doc"><p>The finite-scale combinatorial conclusion used in the paper: a charge-one
+boundary and vanishing of loops through length <code>3r</code> give an antisymmetric
+integer Rips cocycle that still evaluates to one on that boundary.</p></div><pre>theorem exists_rips_cocycle (hG : G.Connected) (a : V → V → ℤ)
+    (ha : ∀ u v, G.Adj u v → a v u = -a u v) (r : ℕ) (hr : 1 ≤ r)
+    (hloop : ∀ u (p : G.Walk u u), p.length ≤ 3 * r → walkCharge a p = 0)
+    {u : V} (boundary : G.Walk u u) (hboundary : walkCharge a boundary = 1) :
+    ∃ b : V → V → ℤ,
+      (∀ x y, G.dist x y ≤ r → b y x = -b x y) ∧
+      (∀ x y z, G.dist x y ≤ r → G.dist y z ≤ r → G.dist z x ≤ r →
+        b x y + b y z + b z x = 0) ∧ walkCharge b boundary = 1 := by
+…</pre><p class="refs">Mentions: <a href="ShortLoops.lean.html#L20">OAI.CoarseAssembly.walkCharge</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

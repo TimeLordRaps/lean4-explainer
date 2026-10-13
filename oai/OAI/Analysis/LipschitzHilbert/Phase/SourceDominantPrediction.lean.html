@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/SourceDominantPrediction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/SourceDominantPrediction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>SourceDominantPrediction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>SourceDominantPrediction.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/SourceDominantPrediction.lean#L1">source</a></p><div class="doc"><p>Actual dominant-path coordinates for the source prediction. The path
+amplitude stays unshrunk; only the complementary children are shrunk.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.LipschitzHilbert.diagonalModulation_inverse</code> <small>line 22</small><div class="doc"><p>Removing the snapshot path carrier is an exact isometry.</p></div><pre>theorem diagonalModulation_inverse (f : κ → ℝ) (v : EuclideanSpace ℂ κ) (b : ℝ) :
+    diagonalModulation (fun k =&gt; -f k) (diagonalModulation f v b) b = v := by
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.LipschitzHilbert.source_path_prediction_identity</code> <small>line 32</small><div class="doc"><p>Exact dominant coordinates for a finite normalized prediction. The
+rotation may be the inverse of the actual path carrier.</p></div><pre>theorem source_path_prediction_identity
+    (l : ι → ℝ) (X : ι → EuclideanSpace ℂ κ) (lam : ι → ℂ)
+    (i₀ : ι) (U : EuclideanSpace ℂ κ →ₗᵢ[ℂ] EuclideanSpace ℂ κ)
+    {p μ : ℝ} (hp : 0 &lt; p) (hl : 0 &lt; l i₀) (hlam : lam i₀ ≠ 0) :
+    let Y := (l i₀)^(1/p) • U (X i₀)
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.LipschitzHilbert.source_path_vector_motion</code> <small>line 84</small><div class="doc"><p>The scaled source amplitude is the actual path vector, including
+its child fraction. No lower bound on that fraction is needed.</p></div><pre>theorem source_path_vector_motion {n n&#x27; c c&#x27; p μ ε K : ℝ}
+    (hn : 0 &lt; n) (hn&#x27; : 0 &lt; n&#x27;) (hc : 0 &lt; c) (hc&#x27; : 0 &lt; c&#x27;)
+    (hcn : c ≤ n) (hp : 0 &lt; p) (hμ : 0 ≤ μ) (hε : 0 ≤ ε)
+    (hK : n^μ ≤ K) (f : κ → ℝ) (b : ℝ) (A A&#x27; : EuclideanSpace ℂ κ)
+    (hscaled : ‖massPowerScale n&#x27; c&#x27; (-(1/p)) (μ-1+1/p) • A&#x27;-
+      diagonalModulation f (massPowerScale n c (-(1/p)) (μ-1+1/p) • A) b‖ ≤
+      ε*(c/n)^(1/p)*c^μ) :
+    ‖(c&#x27;/n&#x27;)^(1/p) • diagonalModulation (fun k =&gt; -f k) (c&#x27;^(μ-1) • A&#x27;) b-
+      (c/n)^(1/p) • (c^(μ-1) • A)‖ ≤ ε*K := by
+…</pre><p class="refs">Mentions: <a href="SourcePredictionMotion.lean.html#L14">OAI.LipschitzHilbert.massPowerScale</a></p></li><li id=L131><b>theorem</b> <code>OAI.LipschitzHilbert.source_path_vector_size</code> <small>line 131</small><div class="doc"><p>Snapshot path size and its moved counterpart use the same parent
+mass scale as the off-path coefficient budget.</p></div><pre>theorem source_path_vector_size {n c p μ C K : ℝ}
+    (hn : 0 &lt; n) (hc : 0 &lt; c) (hcn : c ≤ n) (hp : 0 &lt; p)
+    (hμ : 0 ≤ μ) (hC : 0 ≤ C) (hsize : C*n^μ ≤ K)
+    (A : EuclideanSpace ℂ κ) (hA : ‖A‖ ≤ C*c) :
+    ‖(c/n)^(1/p) • (c^(μ-1) • A)‖ ≤ K := by
+…</pre></li><li id=L153><b>theorem</b> <code>OAI.LipschitzHilbert.source_off_path_residual_order</code> <small>line 153</small><div class="doc"><p>The one-sided source shrink bounds add over precisely the complementary
+children; no comparison of the full path denominator is assumed.</p></div><pre>theorem source_off_path_residual_order
+    {n n&#x27; p μ ε : ℝ} (hn : 0 &lt; n) (hn&#x27; : 0 &lt; n&#x27;)
+    (c c&#x27; : ι → ℝ) (hc : ∀ i, 0 &lt; c i) (hc&#x27; : ∀ i, 0 &lt; c&#x27; i)
+    (hp : 0 &lt; p) (hε : 0 ≤ ε) (f : ι → κ → ℝ) (b : ℝ)
+    (A A&#x27; : ι → EuclideanSpace ℂ κ)
+    (hscaled : ∀ i,
+      ‖massPowerScale n&#x27; (c&#x27; i) (-(1/p)) (μ-1+1/p) • A&#x27; i-
+        diagonalModulation (f i)
+          (massPowerScale n (c i) (-(1/p)) (μ-1+1/p) • A i) b‖ ≤
+        ε*(c i/n)^(1/p)*(c i)^μ) :
+    (∑ i, (c i/n)*‖(c i)^(μ-1) • radialShrink (2*ε*c i) (A i)‖^p) ≤
+      ∑ i, (c&#x27; i/n&#x27;)*‖(c&#x27; i)^(μ-1) • A&#x27; i‖^p := by
+…</pre><p class="refs">Mentions: <a href="SourcePredictionMotion.lean.html#L14">OAI.LipschitzHilbert.massPowerScale</a>, <a href="../Estimates/RadialShrink.lean.html#L25">OAI.LipschitzHilbert.radialShrink</a></p></li><li id=L168><b>theorem</b> <code>OAI.LipschitzHilbert.source_numerator_term_bound</code> <small>line 168</small></li><li id=L181><b>theorem</b> <code>OAI.LipschitzHilbert.source_off_path_coordinate_size</code> <small>line 181</small><div class="doc"><p>The removed path phase and carrier do not change the off-path size.</p></div><pre>theorem source_off_path_coordinate_size {n μ ε K C u : ℝ}
+    (hn : 0 &lt; n) (hε : 0 ≤ ε) (hK : 0 ≤ K) (hC : 0 ≤ C) (hsize : C*n^μ ≤ K)
+    (c : ι → ℝ) (hc : ∀ i, 0 &lt; c i) (hmass : ∑ i, c i/n ≤ u)
+    (f : ι → κ → ℝ) (b : ℝ) (U : EuclideanSpace ℂ κ →ₗᵢ[ℂ] EuclideanSpace ℂ κ)
+    (A : ι → EuclideanSpace ℂ κ) (lam : ι → ℂ)
+    (hlam : ∀ i, ‖lam i‖ ≤ 1) (hA : ∀ i, ‖A i‖ ≤ C*c i)
+    (pathLam : ℂ) (hpath : pathLam ≠ 0) :
+    ‖(scalarPhase pathLam)⁻¹ • U (∑ i, ((n^(μ-1):ℝ):ℂ) •
+      (lam i • diagonalModulation (f i) (radialShrink (2*ε*c i) (A i)) b))‖ ≤ K*u := by
+…</pre><p class="refs">Mentions: <a href="ScalarPhase.lean.html#L52">OAI.LipschitzHilbert.scalarPhase</a>, <a href="../Estimates/RadialShrink.lean.html#L25">OAI.LipschitzHilbert.radialShrink</a></p></li><li id=L207><b>theorem</b> <code>OAI.LipschitzHilbert.source_off_path_coordinate_motion</code> <small>line 207</small><div class="doc"><p>Simultaneously rotate all complementary children into the path frame.
+The coefficient of the error still vanishes with their total mass.</p></div><pre>theorem source_off_path_coordinate_motion
+    {n n&#x27; μ ε K C q u : ℝ} (hn : 0 &lt; n) (_hn&#x27; : 0 &lt; n&#x27;)
+    (hε : 0 ≤ ε) (hK : 0 ≤ K) (_hC : 0 ≤ C) (hpower : n^μ ≤ K)
+    (hsize : C*n^μ ≤ K) (hq0 : 0 ≤ q) (hq1 : q &lt; 1)
+    (c : ι → ℝ) (hc : ∀ i, 0 &lt; c i) (hmass : ∑ i, c i/n ≤ u)
+    (f : ι → κ → ℝ) (b : ℝ) (U : EuclideanSpace ℂ κ →ₗᵢ[ℂ] EuclideanSpace ℂ κ)
+    (A A&#x27; : ι → EuclideanSpace ℂ κ) (lam lam&#x27; : ι → ℂ)
+    (hlam : ∀ i, ‖lam i‖ ≤ 1) (hA : ∀ i, ‖A i‖ ≤ C*c i)
+    (hmove : ∀ i,
+      ‖((n&#x27;^(μ-1):ℝ):ℂ) • (lam&#x27; i • A&#x27; i)-
+        ((n^(μ-1):ℝ):ℂ) • (lam i • diagonalModulation (f i) (A i) b)‖ ≤
+        ε*K*(c i/n))
+…</pre></li><li id=L256><b>theorem</b> <code>OAI.LipschitzHilbert.source_dominant_coordinate_control</code> <small>line 256</small><div class="doc"><p>The original child-mass error bounds imply all dominant-path errors
+at once, with no assumed residual ordering. The scalar-coefficient bounds
+are supplied by the complementary-mass theorem.</p></div><pre>theorem source_dominant_coordinate_control
+    {n n&#x27; p μ ε K C q u : ℝ} (hn : 0 &lt; n) (hn&#x27; : 0 &lt; n&#x27;)
+    (hp : 0 &lt; p) (hμ : 0 ≤ μ) (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
+    (hK : 0 ≤ K) (hC : 0 ≤ C) (hpower : n^μ ≤ K) (hsize : C*n^μ ≤ K)
+    (c c&#x27; : ι → ℝ) (hc : ∀ i, 0 &lt; c i) (hc&#x27; : ∀ i, 0 &lt; c&#x27; i)
+    (i₀ : ι) (hcn : c i₀ ≤ n)
+    (hmass : ∑ i : RemainderIndex i₀, c i/n ≤ u)
+    (f : ι → κ → ℝ) (b : ℝ)
+    (A A&#x27; : ι → EuclideanSpace ℂ κ) (lam lam&#x27; : ι → ℂ)
+    (hlam : ∀ i, ‖lam i‖ ≤ 1) (hpath : lam i₀ ≠ 0)
+    (hq0 : 0 ≤ q) (hq1 : q &lt; 1) (hqε : q ≤ ε)
+    (hphase : ‖lam&#x27; i₀-lam i₀‖ ≤ q*‖lam i₀‖)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

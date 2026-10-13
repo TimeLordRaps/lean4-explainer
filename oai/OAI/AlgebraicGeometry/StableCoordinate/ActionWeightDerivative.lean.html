@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/StableCoordinate/ActionWeightDerivative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/StableCoordinate/ActionWeightDerivative.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">StableCoordinate</a> / <span>ActionWeightDerivative.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">StableCoordinate</a>/<span>ActionWeightDerivative.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/StableCoordinate/ActionWeightDerivative.lean#L1">source</a></p><div class="doc"><h3>Differentiating a polynomial action commuting with fiber scaling</h3><p>The manuscript's lifting argument obtains a polynomial additive action on the
+line-bundle torsor which commutes with its multiplicative fiber scaling. This
+file proves the coefficient-level implication: differentiation at parameter
+zero preserves every integral fiber-weight space. The commutation hypothesis
+is an equality of genuine ring maps into a two-parameter polynomial/Laurent
+ring, not a hypothesis that the differentiated map already preserves weights.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>def</b> <code>OAI.StableCoordinate.ActionWeightDerivative.swap</code> <small>line 29</small><div class="doc"><p>Interchange the ordinary polynomial parameter and the Laurent parameter.</p></div><pre>def swap : Polynomial (LaurentPolynomial A) →+* LaurentPolynomial (Polynomial A) :=
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.StableCoordinate.ActionWeightDerivative.coeff_coeff_swap</code> <small>line 34</small><div class="doc"><p>The interchange map transposes the two coefficient indices.</p></div><pre>theorem coeff_coeff_swap (p : Polynomial (LaurentPolynomial A)) (m : ℕ) (n : ℤ) :
+    ((swap p).coeff n).coeff m = (p.coeff m).coeff n := by
+…</pre><p class="refs">Mentions: <a href="ActionWeightDerivative.lean.html#L29">OAI.StableCoordinate.ActionWeightDerivative.swap</a></p></li><li id=L52><b>def</b> <code>OAI.StableCoordinate.ActionWeightDerivative.swapAlgHom</code> <small>line 52</small><div class="doc"><p>The parameter interchange respects an arbitrary coefficient algebra.</p></div><pre>def swapAlgHom : Polynomial (LaurentPolynomial A) →ₐ[k] LaurentPolynomial (Polynomial A) where
+…</pre></li><li id=L65><b>def</b> <code>OAI.StableCoordinate.ActionWeightDerivative.CommutesWithWeights</code> <small>line 65</small><div class="doc"><p>A polynomial family commutes with a Laurent weight coaction if the two
+orders of applying their coefficient maps agree, after interchanging parameters.</p></div><pre>def CommutesWithWeights (ρ : A →ₐ[k] LaurentPolynomial A)
+    (α : A →ₐ[k] Polynomial A) : Prop :=
+…</pre></li><li id=L71><b>theorem</b> <code>OAI.StableCoordinate.ActionWeightDerivative.commute_coeff</code> <small>line 71</small><div class="doc"><p>The two-parameter commutation identity can be read coefficient by coefficient.</p></div><pre>theorem commute_coeff (ρ : A →ₐ[k] LaurentPolynomial A) (α : A →ₐ[k] Polynomial A)
+    (hcomm : CommutesWithWeights ρ α) (a : A) (m : ℕ) (n : ℤ) :
+    (ρ ((α a).coeff m)).coeff n = (α ((ρ a).coeff n)).coeff m := by
+…</pre><p class="refs">Mentions: <a href="ActionWeightDerivative.lean.html#L65">OAI.StableCoordinate.ActionWeightDerivative.CommutesWithWeights</a></p></li><li id=L82><b>theorem</b> <code>OAI.StableCoordinate.ActionWeightDerivative.coeff_preserves_weight</code> <small>line 82</small><div class="doc"><p>Every parameter coefficient of an equivariant polynomial family preserves
+an integral weight, including negative weights.</p></div><pre>theorem coeff_preserves_weight (ρ : A →ₐ[k] LaurentPolynomial A)
+    (α : A →ₐ[k] Polynomial A) (hcomm : CommutesWithWeights ρ α)
+    {a : A} {n : ℤ} (ha : ρ a = AddMonoidAlgebra.single n a) (m : ℕ) :
+    ρ ((α a).coeff m) = AddMonoidAlgebra.single n ((α a).coeff m) := by
+…</pre><p class="refs">Mentions: <a href="ActionWeightDerivative.lean.html#L65">OAI.StableCoordinate.ActionWeightDerivative.CommutesWithWeights</a></p></li><li id=L94><b>theorem</b> <code>OAI.StableCoordinate.ActionWeightDerivative.commutesWithWeights_of_generators</code> <small>line 94</small><div class="doc"><p>It suffices to check equivariance coefficientwise on a set of algebra
+generators. This converts frame-coordinate weights into equivariance of the
+whole lifted polynomial action.</p></div><pre>theorem commutesWithWeights_of_generators {σ : Type*}
+    (ρ : A →ₐ[k] LaurentPolynomial A) (α : A →ₐ[k] Polynomial A)
+    (g : σ → A) (w : σ → ℤ) (hgen : Algebra.adjoin k (Set.range g) = ⊤)
+    (hρ : ∀ i, ρ (g i) = AddMonoidAlgebra.single (w i) (g i))
+    (hα : ∀ i m, ρ ((α (g i)).coeff m) =
+      AddMonoidAlgebra.single (w i) ((α (g i)).coeff m)) :
+    CommutesWithWeights ρ α := by
+…</pre><p class="refs">Mentions: <a href="ActionWeightDerivative.lean.html#L65">OAI.StableCoordinate.ActionWeightDerivative.CommutesWithWeights</a></p></li><li id=L124><b>theorem</b> <code>OAI.StableCoordinate.ActionWeightDerivative.derivation_preserves_weight</code> <small>line 124</small><div class="doc"><p>Differentiation at parameter zero preserves all weights. The derivation
+may be supplied by any proved additive-action/LND correspondence.</p></div><pre>theorem derivation_preserves_weight (ρ : A →ₐ[k] LaurentPolynomial A)
+    (α : A →ₐ[k] Polynomial A) (hcomm : CommutesWithWeights ρ α)
+    (D : Derivation k A A) (hD : ∀ a, D a = (α a).coeff 1)
+    {a : A} {n : ℤ} (ha : ρ a = AddMonoidAlgebra.single n a) :
+    ρ (D a) = AddMonoidAlgebra.single n (D a) := by
+…</pre><p class="refs">Mentions: <a href="ActionWeightDerivative.lean.html#L65">OAI.StableCoordinate.ActionWeightDerivative.CommutesWithWeights</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

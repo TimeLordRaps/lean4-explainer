@@ -1,0 +1,1 @@
+window.l4shard("da", [["Erdos441.erdos_441.variants.chen_dai_infinitely_often",540,101],["Erdos441.erdos_441.variants.chen_dai_upper_bound",540,129],["Erdos785.erdos_785.variants.danzer",769,92],["FermatCatalanConjecture.fermat_catalan.variants.darmon_granville",928,68],["Hall.danilov",1029,77],["SheafOfModules.VectorBundleData",1447,39]]);

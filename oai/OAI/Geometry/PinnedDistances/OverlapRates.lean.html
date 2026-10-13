@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/PinnedDistances/OverlapRates.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/PinnedDistances/OverlapRates.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">PinnedDistances</a> / <span>OverlapRates.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">PinnedDistances</a>/<span>OverlapRates.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/PinnedDistances/OverlapRates.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L36><b>theorem</b> <code>OAI.WeakPinned.small_overlap_rate</code> <small>line 36</small><div class="doc"><p>The scalar limiting step for small overlap, with fixed positive τ and H.</p></div><pre>theorem small_overlap_rate (n η U A D : ℕ → ℝ) (θ : ℝ) (hθ : 0 &lt; θ)
+    (hn : Tendsto n atTop atTop) (hη : Tendsto η atTop (𝓝 0))
+    (hη0 : ∀ j, 0 ≤ η j) (hU : ∀ j, 0 ≤ U j) (hA : ∀ j, 0 ≤ A j) (hD : ∀ j, 0 ≤ D j)
+    (hbound : ∀ τ H : ℝ, 0 &lt; τ → τ ≤ 1 → 0 ≤ H → ∀ᶠ j in atTop,
+      D j ≤ (2*(1/Real.log (n j))/τ^2+2*(1/Real.log (n j))/(θ-η j)+((θ+η j)/(θ-η j)-1))*U j +
+        (2*τ/(θ-η j)+(2-2*((θ-η j)/(θ+η j/8))))*A j +
+        4*(1/Real.log (n j))*H + 32*Real.exp (-H/2)) :
+    Tendsto (fun j =&gt; D j/(U j+A j+1)) atTop (𝓝 0) := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.WeakPinned.arithmetic_small_overlap_rate</code> <small>line 124</small><div class="doc"><p>Application of the scalar rate to the genuinely prepared arithmetic graphs,
+with no degree bound on the sequence of number fields.</p></div><pre>theorem arithmetic_small_overlap_rate (hθ : 0&lt;θ)
+    (hn : Tendsto (fun j =&gt; (Fintype.card (V j) : ℝ)) atTop atTop)
+    (hη : Tendsto η atTop (𝓝 0)) (hη0 : ∀ j, 0≤η j)
+    (hG : ∀ j, PreparedGraph (V j) (I j) (G j) θ γ c (η j))
+    (t : ∀ j, I j → K j)
+    (ht : ∀ j e y, y ∈ (G j).targets e →
+      (Z₁ j ((G j).source e)-Z₁ j y)*(Z₂ j ((G j).source e)-Z₂ j y)=t j e) :
+    Tendsto (fun j =&gt; smallOverlapScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j) c /
+      (overlapScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j)+potentialScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j)+1))
+      atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="IncomingFibers.lean.html#L333">OAI.WeakPinned.PreparedGraph</a>, <a href="ArithmeticGraphs.lean.html#L301">OAI.WeakPinned.smallOverlapScale</a>, <a href="ArithmeticGraphs.lean.html#L298">OAI.WeakPinned.overlapScale</a>, <a href="ArithmeticGraphs.lean.html#L299">OAI.WeakPinned.potentialScale</a></p></li><li id=L158><b>def</b> <code>OAI.WeakPinned.Core.Fibers.retainedWeight</code> <small>line 158</small></li><li id=L160><b>def</b> <code>OAI.WeakPinned.Core.Fibers.retainedSet</code> <small>line 160</small></li><li id=L163><b>lemma</b> <code>OAI.WeakPinned.Core.Fibers.retainedWeight_nonneg</code> <small>line 163</small></li><li id=L168><b>lemma</b> <code>OAI.WeakPinned.Core.Fibers.retainedWeight_le</code> <small>line 168</small></li><li id=L175><b>lemma</b> <code>OAI.WeakPinned.Core.Fibers.sum_retainedWeight</code> <small>line 175</small></li><li id=L180><b>lemma</b> <code>OAI.WeakPinned.Core.Fibers.retainedSet_size</code> <small>line 180</small></li><li id=L187><b>lemma</b> <code>OAI.WeakPinned.Core.Fibers.retained_domination</code> <small>line 187</small></li><li id=L207><b>lemma</b> <code>OAI.WeakPinned.PreparedGraph.uniform_domination</code> <small>line 207</small></li><li id=L221><b>def</b> <code>OAI.WeakPinned.fiberVariance</code> <small>line 221</small></li><li id=L224><b>def</b> <code>OAI.WeakPinned.incomingVariance</code> <small>line 224</small></li><li id=L231><b>theorem</b> <code>OAI.WeakPinned.sampling_variance_rates</code> <small>line 231</small><div class="doc"><p>Both source sampling families satisfy the proved vanishing arithmetic
+variance estimate, on every sequence of prepared models. No uniform degree
+bound on the number fields is used.</p></div><pre>theorem sampling_variance_rates (hθ : 0&lt;θ) (hγ : 0&lt;γ) (hγ1 : γ&lt;1) (hcγ : c&lt;γ)
+    (hn : Tendsto (fun j =&gt; (Fintype.card (V j):ℝ)) atTop atTop)
+    (hη : Tendsto η atTop (𝓝 0)) (hη0 : ∀ j, 0≤η j) (hηb : ∀ j, η j≤θ/2)
+    (hG : ∀ j, PreparedGraph (V j) (I j) (G j) θ γ c (η j))
+    (t : ∀ j, I j → K j) (ht : ∀ j e y, y ∈ (G j).targets e →
+      (Z₁ j ((G j).source e)-Z₁ j y)*(Z₂ j ((G j).source e)-Z₂ j y)=t j e) :
+    Tendsto (fun j =&gt; fiberVariance G c Z₁ Z₂ h₁ h₂ j /
+      (overlapScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j)+potentialScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j)+1)) atTop (𝓝 0) ∧
+    Tendsto (fun j =&gt; incomingVariance G γ c Z₁ Z₂ h₁ h₂ j /
+      (overlapScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j)+potentialScale (Z₁ j) (Z₂ j) (h₁ j) (h₂ j)+1)) atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="IncomingFibers.lean.html#L333">OAI.WeakPinned.PreparedGraph</a>, <a href="OverlapRates.lean.html#L221">OAI.WeakPinned.fiberVariance</a>, <a href="ArithmeticGraphs.lean.html#L298">OAI.WeakPinned.overlapScale</a>, <a href="ArithmeticGraphs.lean.html#L299">OAI.WeakPinned.potentialScale</a>, <a href="OverlapRates.lean.html#L224">OAI.WeakPinned.incomingVariance</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

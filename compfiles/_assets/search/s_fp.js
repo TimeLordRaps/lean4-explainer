@@ -1,0 +1,1 @@
+window.l4shard("fp", [["Imo2023P3.Fpoly",137,391],["Usa2018P6.usa2018p6_aux.card_fp_restrictPerm",298,1972],["Usa2018P6.usa2018p6_aux.card_fp_symm_succ",298,1814],["Usa2018P6.usa2018p6_aux.fp_symm_zero",298,1870],["Usa2018P6.usa2018p6_aux.fpfDecomposeEquiv",298,2135],["Usa2018P6.usa2018p6_aux.fpfSubtype",298,1650],["Usa2018P6.usa2018p6_aux.fpf_symm_succ",298,1780]]);

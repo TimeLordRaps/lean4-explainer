@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/GridCoordinateFilling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/GridCoordinateFilling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>GridCoordinateFilling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>GridCoordinateFilling.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/GridCoordinateFilling.lean#L1">source</a></p><div class="doc"><h3>Smooth coordinate fillings from the actual boundary grids</h3><p>The contour theorem gives one possible active label at each boundary.
+The reciprocal-grid calculation turns its avoidance conclusions into
+inactive-lattice avoidance for the actual local real branches. Thus the
+smooth filling theorem applies at all sufficiently small widths.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.frontier_realJordanInterior</code> <small>line 21</small></li><li id=L26><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.branch_avoids_lattice_on_real_boundary</code> <small>line 26</small></li><li id=L47><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.eventually_filled_coordinates_from_boundary_grids</code> <small>line 47</small><div class="doc"><p>The active label and all inactive lattice-avoidance premises are
+constructed from the physical contour output. Only the actual local
+branches and collar agreement remain as coordinate data.</p></div><pre>theorem eventually_filled_coordinates_from_boundary_grids
+    {I : Type*} [Fintype I] {n N : ℕ} (hn : 0 &lt; n)
+    (H : I → ℂ ≃ₜ ℂ)
+    (hH : Pairwise (Disjoint on fun i =&gt; closure (jordanInterior (H i))))
+    {X : Type*} [TopologicalSpace X] (U : Set X) (hU : IsOpen U)
+    (f : Fin n → X → ℝ) (hf : ∀ l, ContinuousOn (f l) U) (q : ℂ → X)
+    (hUq : ∀ i z, z ∈ frontier (jordanInterior (H i)) → q z ∈ U)
+    (θ : Fin n → ℝ)
+    (hgrid : ∀ i, ∃ k : ℕ, ∀ l : Fin n, l.val ≠ k →
+      Disjoint (frontier (jordanInterior (H i)))
+        (q ⁻¹&#x27; (⋃ j, reciprocalBandLevel U (f l) (θ l) N j)))
+    (O : I → Set (ℝ × ℝ)) (hO : ∀ i, IsOpen (O i))
+…</pre><p class="refs">Mentions: <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a>, <a href="../Topology/CompatibleFillingDisks.lean.html#L23">OAI.CircleDomainRigidity.FiniteTransfer.reciprocalBandLevel</a></p></li><li id=L84><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.eventually_fill_actual_cutoff_coordinates</code> <small>line 84</small><div class="doc"><p>For real coordinates, the collars and their branch agreement are
+constructed directly from the region where the actual cutoff equals one.</p></div><pre>theorem eventually_fill_actual_cutoff_coordinates
+    {I : Type*} [Fintype I] {n N : ℕ} (hn : 0 &lt; n)
+    (H : I → ℂ ≃ₜ ℂ)
+    (hH : Pairwise (Disjoint on fun i =&gt; closure (jordanInterior (H i))))
+    {G : Set (ℝ × ℝ)} (hG : IsOpen G)
+    (u : Fin n → (ℝ × ℝ) → ℝ) (hu : ∀ l, ContDiffOn ℝ ∞ (u l) G)
+    (χ : (ℝ × ℝ) → ℝ) (hχ : ContDiff ℝ ∞ χ)
+    (hboundary : ∀ i z, z ∈ frontier (jordanInterior (H i)) →
+      Complex.equivRealProdCLM z ∈ G ∩ interior {x | χ x = 1})
+    {X : Type*} [TopologicalSpace X] (U : Set X) (hU : IsOpen U)
+    (f : Fin n → X → ℝ) (hf : ∀ l, ContinuousOn (f l) U) (q : ℂ → X)
+    (hUq : ∀ i z, z ∈ frontier (jordanInterior (H i)) → q z ∈ U)
+…</pre><p class="refs">Mentions: <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

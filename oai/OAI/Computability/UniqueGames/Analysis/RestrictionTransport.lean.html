@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Analysis/RestrictionTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Analysis/RestrictionTransport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Analysis</a> / <span>RestrictionTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Analysis</a>/<span>RestrictionTransport.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Analysis/RestrictionTransport.lean#L1">source</a></p><div class="doc"><h3>Exact transport of nested affine restrictions</h3><p>The nested quotient-domain/range inclusion has exactly the effective
+annihilator and target obtained by comap and map. Its parameterization is
+linearly equivalent to the direct effective restriction, independently of
+any Fourier frequency. Thus normalized second moments and the outer average
+of their squares agree while retaining the full affine translate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>def</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nestedEmbedding</code> <small>line 33</small><div class="doc"><p>Compose the two actual quotient-domain and target-subspace embeddings.</p></div><pre>def nestedEmbedding (A : Submodule F2 E) (B : Submodule F2 F)
+    (C : Submodule F2 (E ⧸ A)) (D : Submodule F2 B) :
+    Parameter C D →ₗ[F2] (E →ₗ[F2] F) :=
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nestedEmbedding_injective</code> <small>line 38</small></li><li id=L47><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.exists_nested_embed_iff</code> <small>line 47</small><div class="doc"><p>Exact effective annihilator and target of a nested restriction.</p></div><pre>theorem exists_nested_embed_iff (A : Submodule F2 E) (B : Submodule F2 F)
+    (C : Submodule F2 (E ⧸ A)) (D : Submodule F2 B) (M : E →ₗ[F2] F) :
+    (∃ N : Parameter C D, nestedEmbedding A B C D N = M) ↔
+      C.comap A.mkQ ≤ M.ker ∧ M.range ≤ D.map B.subtype := by
+…</pre><p class="refs">Mentions: <a href="RestrictionTransport.lean.html#L33">OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nestedEmbedding</a></p></li><li id=L99><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nested_range_eq</code> <small>line 99</small><div class="doc"><p>Nested and effective direct restrictions describe exactly the same perturbations.</p></div><pre>theorem nested_range_eq (A : Submodule F2 E) (B : Submodule F2 F)
+    (C : Submodule F2 (E ⧸ A)) (D : Submodule F2 B) :
+    (nestedEmbedding A B C D).range =
+      (embedding (C.comap A.mkQ) (D.map B.subtype)).range := by
+…</pre><p class="refs">Mentions: <a href="RestrictionTransport.lean.html#L33">OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nestedEmbedding</a></p></li><li id=L116><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.exists_range_preimage</code> <small>line 116</small></li><li id=L120><b>def</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.sameRangeEquiv</code> <small>line 120</small><div class="doc"><p>The actual linear change of parameters between two injective presentations.</p></div><pre>def sameRangeEquiv (f : P →ₗ[K] G) (g : Q →ₗ[K] G)
+    (hf : Function.Injective f) (hg : Function.Injective g)
+    (h : f.range = g.range) : P ≃ₗ[K] Q := by
+…</pre></li><li id=L150><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.sameRangeEquiv_commutes</code> <small>line 150</small></li><li id=L159><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.expect_eq_of_same_range</code> <small>line 159</small><div class="doc"><p>Injective parameter changes preserve normalized uniform expectations.</p></div><pre>theorem expect_eq_of_same_range (f : P →ₗ[K] G) (g : Q →ₗ[K] G)
+    (hf : Function.Injective f) (hg : Function.Injective g)
+    (h : f.range = g.range) (observable : G → ℝ) :
+    (𝔼 x, observable (f x)) = 𝔼 y, observable (g y) := by
+…</pre></li><li id=L167><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.restriction_secondMoment_eq_of_same_range</code> <small>line 167</small><div class="doc"><p>Preserve second moments at the same full ambient translate.</p></div><pre>theorem restriction_secondMoment_eq_of_same_range
+    (f : P →ₗ[K] G) (g : Q →ₗ[K] G)
+    (hf : Function.Injective f) (hg : Function.Injective g)
+    (h : f.range = g.range) (observable : G → ℝ) (T : G) :
+    (𝔼 x, observable (T + f x) ^ 2) = 𝔼 y, observable (T + g y) ^ 2 :=
+…</pre></li><li id=L175><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.restriction_energySquare_average_eq_of_same_range</code> <small>line 175</small><div class="doc"><p>Preserve the outer mean of squared restriction energies, with the square outside.</p></div><pre>theorem restriction_energySquare_average_eq_of_same_range [Fintype G]
+    (f : P →ₗ[K] G) (g : Q →ₗ[K] G)
+    (hf : Function.Injective f) (hg : Function.Injective g)
+    (h : f.range = g.range) (observable : G → ℝ) :
+    (𝔼 T, (𝔼 x, observable (T + f x) ^ 2) ^ 2) =
+      𝔼 T, (𝔼 y, observable (T + g y) ^ 2) ^ 2 := by
+…</pre></li><li id=L193><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nested_restriction_secondMoment_eq</code> <small>line 193</small><div class="doc"><p>The genuine nested affine restriction has the effective direct second moment.</p></div><pre>theorem nested_restriction_secondMoment_eq
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    (C : Submodule F2 (E ⧸ A)) (D : Submodule F2 B)
+    (h : (E →ₗ[F2] F) → ℝ) (T : E →ₗ[F2] F) :
+    (𝔼 N : Parameter C D, h (T + nestedEmbedding A B C D N) ^ 2) =
+      𝔼 M : Parameter (C.comap A.mkQ) (D.map B.subtype),
+        h (T + embed (C.comap A.mkQ) (D.map B.subtype) M) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="RestrictionTransport.lean.html#L33">OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nestedEmbedding</a></p></li><li id=L210><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nested_restriction_energySquare_average_eq</code> <small>line 210</small><div class="doc"><p>Squared normalized energies also agree before averaging over the full translate.</p></div><pre>theorem nested_restriction_energySquare_average_eq [Fintype (E →ₗ[F2] F)]
+    (A : Submodule F2 E) (B : Submodule F2 F)
+    (C : Submodule F2 (E ⧸ A)) (D : Submodule F2 B)
+    (h : (E →ₗ[F2] F) → ℝ) :
+    (𝔼 T, (𝔼 N, h (T + nestedEmbedding A B C D N) ^ 2) ^ 2) =
+      𝔼 T, (𝔼 M, h (T + embed (C.comap A.mkQ) (D.map B.subtype) M) ^ 2) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="RestrictionTransport.lean.html#L33">OAI.UniqueGamesTheorem.Appendix.RestrictionTransport.nestedEmbedding</a></p></li><li id=L228><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.LinearIdentities.a5_preimage_eq_ker</code> <small>line 228</small><div class="doc"><p>A subspace disjoint from the image has exactly the original kernel as preimage.</p></div><pre>theorem a5_preimage_eq_ker (X : W →ₗ[K] V) (A₀ : Submodule K V)
+    (hd : Disjoint A₀ (LinearMap.range X)) : A₀.comap X = LinearMap.ker X := by
+…</pre></li><li id=L240><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.LinearIdentities.a5_range_domRestrict_eq_of_cover</code> <small>line 240</small><div class="doc"><p>Restricting to a subspace that covers the domain modulo the kernel preserves the image.</p></div><pre>theorem a5_range_domRestrict_eq_of_cover (X : W →ₗ[K] V) (B₀ : Submodule K W)
+    (hc : B₀ ⊔ LinearMap.ker X = ⊤) :
+    LinearMap.range (X.domRestrict B₀) = LinearMap.range X := by
+…</pre></li><li id=L252><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.LinearIdentities.a5_effective_annihilator</code> <small>line 252</small><div class="doc"><p>The A.5 compressed image pulls back to its exact effective annihilator.</p></div><pre>theorem a5_effective_annihilator (X : W →ₗ[K] V)
+    (A₀ A : Submodule K V) (B₀ : Submodule K W)
+    (hA : A₀ ⊔ LinearMap.range X = A)
+    (hc : B₀ ⊔ LinearMap.ker X = ⊤) :
+    (LinearMap.range (compress X A₀ B₀)).comap A₀.mkQ = A := by
+…</pre><p class="refs">Mentions: <a href="Identities.lean.html#L182">OAI.UniqueGamesTheorem.Appendix.LinearIdentities.compress</a></p></li><li id=L261><b>theorem</b> <code>OAI.UniqueGamesTheorem.Appendix.LinearIdentities.a5_effective_codomain</code> <small>line 261</small><div class="doc"><p>The A.5 compressed kernel maps to its exact effective codomain.</p></div><pre>theorem a5_effective_codomain (X : W →ₗ[K] V)
+    (A₀ : Submodule K V) (B B₀ : Submodule K W)
+    (hd : Disjoint A₀ (LinearMap.range X))
+    (hB : B₀ ⊓ LinearMap.ker X = B) :
+    (LinearMap.ker (compress X A₀ B₀)).map B₀.subtype = B := by
+…</pre><p class="refs">Mentions: <a href="Identities.lean.html#L182">OAI.UniqueGamesTheorem.Appendix.LinearIdentities.compress</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/AngularBoundary.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/AngularBoundary.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>AngularBoundary.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>AngularBoundary.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/AngularBoundary.lean#L1">source</a></p><div class="doc"><p>Boundary masses formed from actual top sets in a common angular ancestor.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.index_eq_of_add</code> <small>line 18</small></li><li id=L28><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.index_eq_of_le</code> <small>line 28</small></li><li id=L34><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.eligible_of_add</code> <small>line 34</small></li><li id=L44><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.eligible_of_le</code> <small>line 44</small></li><li id=L51><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.cellTops_subset_ancestor</code> <small>line 51</small><div class="doc"><p>Tops in a descendant cell remain eligible and lie in its actual ancestor.</p></div><pre>theorem cellTops_subset_ancestor (g : AngularGrid) (tops : Finset ι)
+    (slope precision : ι → ℝ) (cutoff : ℝ) (hp : ∀ i ∈ tops, 0 ≤ precision i)
+    {base level : ℕ} (hle : base ≤ level) (s : ℝ) :
+    g.cellTops tops slope precision cutoff level (g.index level s) ⊆
+      g.cellTops tops slope precision cutoff base (g.index base s) := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L63><b>def</b> <code>OAI.LipschitzHilbert.AngularGrid.outsideNearTops</code> <small>line 63</small><div class="doc"><p>The extra tops come from nearby next-level cells outside the immediate
+parent, and all belong to the same block ancestor.</p></div><pre>def outsideNearTops (g : AngularGrid) (tops : Finset ι) (slope precision : ι → ℝ)
+    (cutoff : ℝ) (base level : ℕ) (gap s : ℝ) : Finset ι := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L71><b>def</b> <code>OAI.LipschitzHilbert.AngularGrid.boundaryTops</code> <small>line 71</small></li><li id=L77><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.parent_subset_boundary</code> <small>line 77</small></li><li id=L84><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.boundary_subset_ancestor</code> <small>line 84</small></li><li id=L96><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.neighbor_cell_subset_boundary</code> <small>line 96</small><div class="doc"><p>Each neighboring child within the block ancestor is fully included in
+this boundary mass. This is the inclusion used by weighted selection.</p></div><pre>theorem neighbor_cell_subset_boundary (g : AngularGrid) (tops : Finset ι)
+    (slope precision : ι → ℝ) (cutoff : ℝ) (hp : ∀ i ∈ tops, 0 ≤ precision i)
+    {base level : ℕ} (hle : base ≤ level) (gap s t : ℝ)
+    (hancestor : g.index base t = g.index base s)
+    (hnear : g.neighbors (level + 1) gap (g.index (level + 1) s) (g.index (level + 1) t)) :
+    g.cellTops tops slope precision cutoff (level + 1) (g.index (level + 1) t) ⊆
+      g.boundaryTops tops slope precision cutoff base level gap s := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L118><b>def</b> <code>OAI.LipschitzHilbert.AngularGrid.boundaryMass</code> <small>line 118</small></li><li id=L123><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.boundary_mass_eq</code> <small>line 123</small><div class="doc"><p>The union defining the boundary has no double counting.</p></div><pre>theorem boundary_mass_eq (g : AngularGrid) (tops : Finset ι)
+    (slope precision : ι → ℝ) (cutoff : ℝ) (weight : ι → X → ℝ)
+    (base level : ℕ) (gap s : ℝ) (x : X) :
+    g.boundaryMass tops slope precision cutoff weight base level gap s x =
+      g.mass tops slope precision cutoff weight level (g.index level s) x +
+      ∑ i ∈ g.outsideNearTops tops slope precision cutoff base level gap s, weight i x := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L137><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.boundary_mass_bounds</code> <small>line 137</small><div class="doc"><p>The immediate child, parent, boundary and block ancestor have ordered masses.</p></div><pre>theorem boundary_mass_bounds (g : AngularGrid) (tops : Finset ι)
+    (slope precision : ι → ℝ) (cutoff : ℝ) (weight : ι → X → ℝ)
+    (hp : ∀ i ∈ tops, 0 ≤ precision i) (hw : ∀ i x, 0 ≤ weight i x)
+    {base level : ℕ} (hle : base ≤ level) (gap s : ℝ) (x : X) :
+    g.mass tops slope precision cutoff weight (level + 1) (g.index (level + 1) s) x ≤
+        g.mass tops slope precision cutoff weight level (g.index level s) x ∧
+    g.mass tops slope precision cutoff weight level (g.index level s) x ≤
+        g.boundaryMass tops slope precision cutoff weight base level gap s x ∧
+    g.boundaryMass tops slope precision cutoff weight base level gap s x ≤
+        g.mass tops slope precision cutoff weight base (g.index base s) x := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L160><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.cellTops_disjoint</code> <small>line 160</small><div class="doc"><p>Distinct angular cells have disjoint eligible top sets.</p></div><pre>theorem cellTops_disjoint (g : AngularGrid) (tops : Finset ι)
+    (slope precision : ι → ℝ) (cutoff : ℝ) (level : ℕ) {a b : ℤ} (hab : a ≠ b) :
+    Disjoint (g.cellTops tops slope precision cutoff level a)
+      (g.cellTops tops slope precision cutoff level b) := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L172><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.sum_cell_mass_le_boundary</code> <small>line 172</small><div class="doc"><p>A finite collection of child cells included in the boundary consumes
+at most its mass. In particular this pays for a closed graph neighborhood.</p></div><pre>theorem sum_cell_mass_le_boundary (g : AngularGrid) (tops : Finset ι)
+    (slope precision : ι → ℝ) (cutoff : ℝ) (weight : ι → X → ℝ)
+    (hw : ∀ i x, 0 ≤ weight i x) (base level : ℕ) (gap s : ℝ) (cells : Finset ℤ)
+    (hsub : ∀ c ∈ cells, g.cellTops tops slope precision cutoff (level + 1) c ⊆
+      g.boundaryTops tops slope precision cutoff base level gap s) (x : X) :
+    (∑ c ∈ cells, g.mass tops slope precision cutoff weight (level + 1) c x) ≤
+      g.boundaryMass tops slope precision cutoff weight base level gap s x := by
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

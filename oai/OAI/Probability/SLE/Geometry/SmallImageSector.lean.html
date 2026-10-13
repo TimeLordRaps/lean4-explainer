@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Geometry/SmallImageSector.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Geometry/SmallImageSector.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Geometry</a> / <span>SmallImageSector.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Geometry</a>/<span>SmallImageSector.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Geometry/SmallImageSector.lean#L1">source</a></p><div class="doc"><p>The central-sector extension of <code>es:good-semicircle</code>. The already proved
+omitted-value estimate gives a universal constant <code>4096 * π</code> in place of the
+sharper constant <code>6</code> in the manuscript; this suffices for the splice.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>lemma</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.log_norm_fderiv_le_of_height</code> <small>line 18</small></li><li id=L50><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.central_sector_log_bound</code> <small>line 50</small><div class="doc"><p>Uniform comparison with the top of the selected semicircle on the central
+sector. The straight segment stays above height <code>B/16</code>.</p></div><pre>theorem central_sector_log_bound
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {B : ℝ} (hB : 0 &lt; B)
+    {z : ℂ} (hzlow : B / 8 ≤ ‖z‖) (hzup : ‖z‖ ≤ B)
+    (hzim : ‖z‖ / 2 ≤ z.im) :
+    Real.log ‖F z - a‖ ≤ Real.log ‖F ((B : ℂ) * Complex.I) - a‖ + 4096 * Real.pi := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.central_sector_norm_bound</code> <small>line 89</small></li><li id=L106><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.exists_arbitrarily_small_image_sector</code> <small>line 106</small><div class="doc"><p>Semicircles and their central sectors can be made arbitrarily small in
+parameter space while preserving a uniform image bound.</p></div><pre>theorem exists_arbitrarily_small_image_sector
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {r A t₀ : ℝ} {β : ℝ → ℂ}
+    (hr : 0 &lt; r) (hA : 2 * Real.pi ^ 2 &lt; A)
+    (ht₀ : 0 &lt; t₀) (hβ : ContinuousOn β (Icc 0 t₀)) (hβ₀ : β 0 = 0)
+    (hβH : ∀ t ∈ Ioc 0 t₀, 0 &lt; (β t).im)
+    (hsmall : ∀ t ∈ Ioc 0 t₀, ‖F (β t) - a‖ ≤ r * Real.exp (-A)) :
+    ∀ δ : ℝ, 0 &lt; δ → ∃ B ∈ Ioo 0 δ,
+      (∀ θ ∈ Ioo 0 Real.pi,
+        ‖F ((B : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)) - a‖ ≤
+          r * Real.exp (-A + Real.pi * Real.sqrt (2 * A))) ∧
+…</pre></li><li id=L134><b>lemma</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.sector_exponential_lt_quarter</code> <small>line 134</small></li><li id=L157><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.exists_arbitrarily_small_quarter_image_sector</code> <small>line 157</small><div class="doc"><p>A fixed sufficiently deep guide segment provides the small semicircle
+and central sector used to splice the initial passage.</p></div><pre>theorem exists_arbitrarily_small_quarter_image_sector
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {r t₀ : ℝ} {β : ℝ → ℂ}
+    (hr : 0 &lt; r) (ht₀ : 0 &lt; t₀) (hβ : ContinuousOn β (Icc 0 t₀)) (hβ₀ : β 0 = 0)
+    (hβH : ∀ t ∈ Ioc 0 t₀, 0 &lt; (β t).im)
+    (hsmall : ∀ t ∈ Ioc 0 t₀, ‖F (β t) - a‖ ≤ r * Real.exp (-65536)) :
+    ∀ δ : ℝ, 0 &lt; δ → ∃ B ∈ Ioo 0 δ,
+      (∀ θ ∈ Ioo 0 Real.pi,
+        ‖F ((B : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)) - a‖ &lt; r / 4) ∧
+      ∀ z : ℂ, B / 8 ≤ ‖z‖ → ‖z‖ ≤ B → ‖z‖ / 2 ≤ z.im → ‖F z - a‖ &lt; r / 4 := by
+…</pre></li><li id=L187><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.access_guide_has_arbitrarily_small_quarter_image_sector</code> <small>line 187</small><div class="doc"><p>Full access-guide formulation: convergence to the omitted boundary value
+itself supplies the initial short segment needed above.</p></div><pre>theorem access_guide_has_arbitrarily_small_quarter_image_sector
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {r T : ℝ} {β : ℝ → ℂ}
+    (hr : 0 &lt; r) (hT : 0 &lt; T) (hβ : ContinuousOn β (Icc 0 T)) (hβ₀ : β 0 = 0)
+    (hβH : ∀ t ∈ Ioc 0 T, 0 &lt; (β t).im)
+    (hlimit : Tendsto (F ∘ β) (𝓝[&gt;] 0) (𝓝 a)) :
+    ∀ δ : ℝ, 0 &lt; δ → ∃ B ∈ Ioo 0 δ,
+      (∀ θ ∈ Ioo 0 Real.pi,
+        ‖F ((B : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)) - a‖ &lt; r / 4) ∧
+      ∀ z : ℂ, B / 8 ≤ ‖z‖ → ‖z‖ ≤ B → ‖z‖ / 2 ≤ z.im → ‖F z - a‖ &lt; r / 4 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

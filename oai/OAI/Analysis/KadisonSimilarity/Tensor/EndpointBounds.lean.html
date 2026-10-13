@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tensor/EndpointBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tensor/EndpointBounds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tensor</a> / <span>EndpointBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tensor</a>/<span>EndpointBounds.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tensor/EndpointBounds.lean#L1">source</a></p><div class="doc"><h3>The endpoint matrix-unit estimate from a supporting projection</h3><p>For the coefficient tests it suffices to move a self-adjoint supporting
+projection across the inner product. This gives the required dimension factor
+without invoking the full tracial commutation theorem.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.KadisonSimilarity.norm_tensorWord</code> <small>line 25</small><div class="doc"><p>The tensor norm on elementary words is exactly the product of letter norms.</p></div><pre>theorem norm_tensorWord : ∀ (n : ℕ) (x : Fin n → E),
+    ‖tensorWord x‖ = ∏ i, ‖x i‖ := by
+…</pre><p class="refs">Mentions: <a href="TensorWords.lean.html#L50">OAI.KadisonSimilarity.tensorWord</a></p></li><li id=L40><b>theorem</b> <code>OAI.KadisonSimilarity.norm_completedTensorWord</code> <small>line 40</small><div class="doc"><p>Completion preserves the elementary tensor norm.</p></div><pre>theorem norm_completedTensorWord {n : ℕ} (x : Fin n → E) :
+    ‖completedTensorWord x‖ = ∏ i, ‖x i‖ := by
+…</pre><p class="refs">Mentions: <a href="TensorWords.lean.html#L72">OAI.KadisonSimilarity.completedTensorWord</a></p></li><li id=L46><b>theorem</b> <code>OAI.KadisonSimilarity.norm_completedTensorWord_le_matrix_units</code> <small>line 46</small><div class="doc"><p>The normalized matrix-unit bound multiplies over all tensor letters.</p></div><pre>theorem norm_completedTensorWord_le_matrix_units {n : ℕ} (x : Fin n → E)
+    (m : ℝ) (hm : 0 &lt; m) (hx : ∀ i, ‖x i‖ ≤ m ^ (-(1 : ℝ) / 2)) :
+    ‖completedTensorWord x‖ ≤ m ^ (-(n : ℝ) / 2) := by
+…</pre><p class="refs">Mentions: <a href="TensorWords.lean.html#L72">OAI.KadisonSimilarity.completedTensorWord</a></p></li><li id=L64><b>theorem</b> <code>OAI.KadisonSimilarity.supported_coefficient_eq</code> <small>line 64</small><div class="doc"><p>A supporting projection transfers to the source through an intertwiner.</p></div><pre>theorem supported_coefficient_eq
+    (Y : H →L[ℂ] K) (p : H →L[ℂ] H) (q : K →L[ℂ] K)
+    (hq : q.adjoint = q) (hintertwine : q.comp Y = Y.comp p)
+    (a : K) (ha : q a = a) (Ω : H) :
+    inner ℂ a (Y Ω) = inner ℂ a (Y (p Ω)) := by
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.KadisonSimilarity.norm_supported_coefficient_le</code> <small>line 81</small><div class="doc"><p>The norm cost depends on the two supported vectors. In the matrix-unit
+application each endpoint vector has norm equal to the inverse square root of
+the matrix dimension.</p></div><pre>theorem norm_supported_coefficient_le
+    (Y : H →L[ℂ] K) (p : H →L[ℂ] H) (q : K →L[ℂ] K)
+    (hq : q.adjoint = q) (hintertwine : q.comp Y = Y.comp p)
+    (a : K) (ha : q a = a) (Ω : H) :
+    ‖inner ℂ a (Y Ω)‖ ≤ ‖Y‖ * (‖a‖ * ‖p Ω‖) := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.KadisonSimilarity.matrix_unit_endpoint_bound</code> <small>line 95</small><div class="doc"><p>Combining the supporting projection with the matrix-unit vector norms
+produces exactly the exponent used to eliminate long cycles.</p></div><pre>theorem matrix_unit_endpoint_bound
+    (Y : H →L[ℂ] K) (p : H →L[ℂ] H) (q : K →L[ℂ] K)
+    (hq : q.adjoint = q) (hintertwine : q.comp Y = Y.comp p)
+    (a : K) (ha : q a = a) (Ω : H)
+    (m : ℝ) (hm : 0 &lt; m) (k l : ℕ)
+    (htest : ‖a‖ ≤ m ^ (-((l : ℝ) + 1) / 2))
+    (hsource : ‖p Ω‖ ≤ m ^ (-((k : ℝ) + 1) / 2)) :
+    ‖inner ℂ a (Y Ω)‖ ≤ ‖Y‖ * m ^ (-1 - ((k : ℝ) + l) / 2) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

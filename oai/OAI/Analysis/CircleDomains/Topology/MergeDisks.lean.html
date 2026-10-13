@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Topology/MergeDisks.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Topology/MergeDisks.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Topology</a> / <span>MergeDisks.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Topology</a>/<span>MergeDisks.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Topology/MergeDisks.lean#L1">source</a></p><div class="doc"><h3>Merging finite physical disk families away from an obstacle</h3><p>Section 2, Step 3 of the Koebe manuscript merges overlapping preliminary
+disks without introducing intersections of new boundaries with the lower
+grid obstacle. A regular cutoff gives the same merge directly: if <code>Q</code> is
+their compact union and its boundary misses <code>F</code>, then <code>Q</code> is relatively
+clopen in <code>F ∪ Q</code>. The established contour construction applied to that
+larger obstacle covers all of <code>Q</code> by disjoint smooth Jordan disks.
+No transversality or general-position input is required.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.CircleDomainRigidity.isClosed_diff_of_frontier_disjoint</code> <small>line 24</small><div class="doc"><p>A compact region whose frontier misses a closed obstacle is relatively
+clopen after it is adjoined to that obstacle.</p></div><p class="refs">Distinct definitions of this name: <a href="../Modulus/WeightedAnnularCollars.lean.html#L16">OAI/Analysis/CircleDomains/Modulus/WeightedAnnularCollars.lean:16</a> (different statement). Qualify references as OAI.CircleDomainRigidity.isClosed_diff_of_frontier_disjoint@path.</p><pre>theorem isClosed_diff_of_frontier_disjoint
+    {Q F : Set ℂ} (hQ : IsClosed Q) (hF : IsClosed F)
+    (hboundary : Disjoint (frontier Q) F) : IsClosed (F \ Q) := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_smooth_jordan_cover_of_frontier_avoidance</code> <small>line 41</small><div class="doc"><p>Smooth and fill a compact region while keeping every new boundary
+away from a closed obstacle. Disjointness is for the full closed fills.</p></div><pre>theorem exists_smooth_jordan_cover_of_frontier_avoidance
+    (hsard : SmoothPlanarSard) (hschoenflies : PlanarSchoenflies)
+    {Q F V : Set ℂ} (hQ : IsCompact Q) (hF : IsClosed F)
+    (hboundary : Disjoint (frontier Q) F)
+    (hV : IsOpen V) (hQV : Q ⊆ V) (hVconn : IsPreconnected Vᶜ)
+    (hVunbounded : ¬ Bornology.IsBounded Vᶜ) :
+    ∃ (f : ℂ → ℝ) (t : ℝ)
+      (γ : ConnectedComponents {z // f z = t} → Circle → ℂ)
+      (H : ConnectedComponents {z // f z = t} → ℂ ≃ₜ ℂ)
+      (s : Set (ConnectedComponents {z // f z = t})),
+      s.Finite ∧ (Q ⊆ ⋃ i ∈ s, jordanInterior (H i)) ∧
+      s.Pairwise (fun i j =&gt; Disjoint (closure (jordanInterior (H i)))
+…</pre><p class="refs">Mentions: <a href="../Sobolev/SmoothContours.lean.html#L65">OAI.CircleDomainRigidity.SmoothPlanarSard</a>, <a href="JordanContours.lean.html#L44">OAI.CircleDomainRigidity.PlanarSchoenflies</a>, <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a></p></li><li id=L72><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_merged_smooth_jordan_disks</code> <small>line 72</small><div class="doc"><p>Merge any finite family of closed Jordan disks, including overlapping
+ones, into disjoint smooth closed fills in the same container. It suffices
+that the original boundary curves miss the obstacle.</p></div><pre>theorem exists_merged_smooth_jordan_disks
+    (hsard : SmoothPlanarSard) (hschoenflies : PlanarSchoenflies)
+    {I : Type*} [Finite I] (D : I → ℂ ≃ₜ ℂ)
+    {F V : Set ℂ} (hF : IsClosed F)
+    (havoid : ∀ i, Disjoint (frontier (jordanInterior (D i))) F)
+    (hV : IsOpen V) (hDV : ∀ i, closure (jordanInterior (D i)) ⊆ V)
+    (hVconn : IsPreconnected Vᶜ) (hVunbounded : ¬ Bornology.IsBounded Vᶜ) :
+    ∃ (f : ℂ → ℝ) (t : ℝ)
+      (γ : ConnectedComponents {z // f z = t} → Circle → ℂ)
+      (H : ConnectedComponents {z // f z = t} → ℂ ≃ₜ ℂ)
+      (s : Set (ConnectedComponents {z // f z = t})),
+      s.Finite ∧ (⋃ i, closure (jordanInterior (D i))) ⊆ (⋃ i ∈ s, jordanInterior (H i)) ∧
+…</pre><p class="refs">Mentions: <a href="../Sobolev/SmoothContours.lean.html#L65">OAI.CircleDomainRigidity.SmoothPlanarSard</a>, <a href="JordanContours.lean.html#L44">OAI.CircleDomainRigidity.PlanarSchoenflies</a>, <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

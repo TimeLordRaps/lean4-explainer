@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Arrays/NSpinTensorBackwardDerivative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Arrays/NSpinTensorBackwardDerivative.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Arrays</a> / <span>NSpinTensorBackwardDerivative.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Arrays</a>/<span>NSpinTensorBackwardDerivative.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Arrays/NSpinTensorBackwardDerivative.lean#L1">source</a></p><div class="doc"><p>Coordinate derivatives through the actual finite Gaussian cascade recursion.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.InvariantIsing.hasDerivAt_logMean_of_bounded_derivative</code> <small>line 16</small><div class="doc"><p>The bounded coordinate derivative gives a local exponential dominator,
+even when the terminal itself is unbounded.</p></div><pre>lemma hasDerivAt_logMean_of_bounded_derivative
+    {A : Type*} [MeasurableSpace A] (μ : Measure A) [IsProbabilityMeasure μ]
+    (F D : ℝ → A → ℝ) (hF : ∀ s, Measurable (F s)) (hD : ∀ s, Measurable (D s))
+    {K : ℝ} (hK : 0 ≤ K) (hbound : ∀ s a, |D s a| ≤ K)
+    (hd : ∀ s a, HasDerivAt (fun q =&gt; F q a) (D s a) s)
+    {b : ℝ} (hb : b ≠ 0) (t : ℝ)
+    (hi : Integrable (fun a =&gt; Real.exp (b * F t a)) μ) :
+    HasDerivAt (fun s =&gt; logMean b μ (F s))
+      (∫ a, D t a ∂μ.tilted (fun a =&gt; b * F t a)) t := by
+…</pre></li><li id=L68><b>lemma</b> <code>OAI.InvariantIsing.tensorCascadeBackward_step</code> <small>line 68</small></li><li id=L81><b>theorem</b> <code>OAI.InvariantIsing.tensorAncestorMarkKernel_eq_tilted</code> <small>line 81</small><div class="doc"><p>The normalized retained mark transition is exactly the Gaussian tilt
+by the next actual backward value.</p></div><pre>theorem tensorAncestorMarkKernel_eq_tilted {N m k : ℕ} (hN : 0 &lt; N)
+    (eig : Fin N → ℝ) (U : Rotation N) (c : Fin N → ℝ)
+    (I : Fin m → Finset (Fin N)) (degree : Fin k → Fin m → ℕ) (amplitude : Fin k → ℝ)
+    (n : ℕ) (b : ℕ → ℝ) (v : ℕ → SpinTensorIndex I degree → ℝ≥0)
+    (hb : CascadeExponents n b) (i : ℕ) (hi : i &lt; n) (z : SpinTensorIndex I degree → ℝ) :
+    tensorAncestorMarkKernel eig U c I degree amplitude n b v i z =
+      (tensorGaussianLaw I degree (v i) : Measure (SpinTensorIndex I degree → ℝ)).tilted
+        (fun a =&gt; b i * tensorCascadeBackward eig U c I degree amplitude n b v (i + 1) (z + a)) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/InvariantIsing.lean.html#L24">OAI.InvariantIsing.Rotation</a>, <a href="NSpinTensorCascade.lean.html#L19">OAI.InvariantIsing.SpinTensorIndex</a>, <a href="NSpinTensorRetained.lean.html#L98">OAI.InvariantIsing.tensorAncestorMarkKernel</a>, <a href="NSpinTensorCascade.lean.html#L173">OAI.InvariantIsing.tensorGaussianLaw</a>, <a href="NSpinTensorRetained.lean.html#L15">OAI.InvariantIsing.tensorCascadeBackward</a></p></li><li id=L108><b>def</b> <code>OAI.InvariantIsing.tensorCascadeCoordinateMean</code> <small>line 108</small></li><li id=L119><b>lemma</b> <code>OAI.InvariantIsing.measurable_tensorCascadeCoordinateMean</code> <small>line 119</small></li><li id=L132><b>lemma</b> <code>OAI.InvariantIsing.tensorCascadeCoordinateMean_abs_le</code> <small>line 132</small></li><li id=L150><b>lemma</b> <code>OAI.InvariantIsing.tensorCoordinateVariation_add</code> <small>line 150</small></li><li id=L160><b>theorem</b> <code>OAI.InvariantIsing.hasDerivAt_tensorCascadeValue_coordinate</code> <small>line 160</small><div class="doc"><p>Every coordinate derivative of the actual backward value is the
+corresponding mean propagated through the ancestor kernels.</p></div><pre>theorem hasDerivAt_tensorCascadeValue_coordinate {N m k : ℕ} (hN : 0 &lt; N)
+    (eig : Fin N → ℝ) (U : Rotation N) (c : Fin N → ℝ)
+    (I : Fin m → Finset (Fin N)) (degree : Fin k → Fin m → ℕ) (amplitude : Fin k → ℝ)
+    (n : ℕ) (b : ℕ → ℝ) (v : ℕ → SpinTensorIndex I degree → ℝ≥0)
+    (hb : CascadeExponents n b) (z : SpinTensorIndex I degree → ℝ)
+    (j : SpinTensorIndex I degree) (t : ℝ) :
+    HasDerivAt (fun s =&gt; tensorCascadeValue eig U c I degree amplitude n b v
+      (tensorCoordinateVariation I degree z j s))
+      (tensorCascadeCoordinateMean eig U c I degree amplitude n b v
+        (tensorCoordinateVariation I degree z j t) j) t := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/InvariantIsing.lean.html#L24">OAI.InvariantIsing.Rotation</a>, <a href="NSpinTensorCascade.lean.html#L19">OAI.InvariantIsing.SpinTensorIndex</a>, <a href="NSpinTensorCascade.lean.html#L208">OAI.InvariantIsing.tensorCascadeValue</a>, <a href="NSpinTensorTerminalDerivative.lean.html#L45">OAI.InvariantIsing.tensorCoordinateVariation</a>, <a href="NSpinTensorBackwardDerivative.lean.html#L108">OAI.InvariantIsing.tensorCascadeCoordinateMean</a></p></li><li id=L215><b>def</b> <code>OAI.InvariantIsing.tensorBackwardCoordinateMean</code> <small>line 215</small></li><li id=L225><b>theorem</b> <code>OAI.InvariantIsing.hasDerivAt_tensorCascadeBackward_coordinate</code> <small>line 225</small><div class="doc"><p>The same derivative identity at every backward level, with the
+manuscript's ancestor indexing.</p></div><pre>theorem hasDerivAt_tensorCascadeBackward_coordinate {N m k : ℕ} (hN : 0 &lt; N)
+    (eig : Fin N → ℝ) (U : Rotation N) (c : Fin N → ℝ)
+    (I : Fin m → Finset (Fin N)) (degree : Fin k → Fin m → ℕ) (amplitude : Fin k → ℝ)
+    (n : ℕ) (b : ℕ → ℝ) (v : ℕ → SpinTensorIndex I degree → ℝ≥0)
+    (hb : CascadeExponents n b) (i : ℕ) (z : SpinTensorIndex I degree → ℝ)
+    (j : SpinTensorIndex I degree) (t : ℝ) :
+    HasDerivAt (fun s =&gt; tensorCascadeBackward eig U c I degree amplitude n b v i
+      (tensorCoordinateVariation I degree z j s))
+      (tensorBackwardCoordinateMean eig U c I degree amplitude n b v i
+        (tensorCoordinateVariation I degree z j t) j) t := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/InvariantIsing.lean.html#L24">OAI.InvariantIsing.Rotation</a>, <a href="NSpinTensorCascade.lean.html#L19">OAI.InvariantIsing.SpinTensorIndex</a>, <a href="NSpinTensorRetained.lean.html#L15">OAI.InvariantIsing.tensorCascadeBackward</a>, <a href="NSpinTensorTerminalDerivative.lean.html#L45">OAI.InvariantIsing.tensorCoordinateVariation</a>, <a href="NSpinTensorBackwardDerivative.lean.html#L215">OAI.InvariantIsing.tensorBackwardCoordinateMean</a></p></li><li id=L244><b>lemma</b> <code>OAI.InvariantIsing.measurable_tensorBackwardCoordinateMean</code> <small>line 244</small></li><li id=L256><b>lemma</b> <code>OAI.InvariantIsing.tensorBackwardCoordinateMean_abs_le</code> <small>line 256</small></li><li id=L272><b>theorem</b> <code>OAI.InvariantIsing.tensorBackwardCoordinateMean_step</code> <small>line 272</small><div class="doc"><p>The backward gradient is a martingale under the actual normalized
+ancestor mark transitions.</p></div><pre>theorem tensorBackwardCoordinateMean_step {N m k : ℕ} (hN : 0 &lt; N)
+    (eig : Fin N → ℝ) (U : Rotation N) (c : Fin N → ℝ)
+    (I : Fin m → Finset (Fin N)) (degree : Fin k → Fin m → ℕ) (amplitude : Fin k → ℝ)
+    (n : ℕ) (b : ℕ → ℝ) (v : ℕ → SpinTensorIndex I degree → ℝ≥0)
+    (hb : CascadeExponents n b) (i : ℕ) (hi : i &lt; n)
+    (z : SpinTensorIndex I degree → ℝ) (j : SpinTensorIndex I degree) :
+    tensorBackwardCoordinateMean eig U c I degree amplitude n b v i z j =
+      ∫ a, tensorBackwardCoordinateMean eig U c I degree amplitude n b v (i + 1) (z + a) j
+        ∂tensorAncestorMarkKernel eig U c I degree amplitude n b v i z := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/InvariantIsing.lean.html#L24">OAI.InvariantIsing.Rotation</a>, <a href="NSpinTensorCascade.lean.html#L19">OAI.InvariantIsing.SpinTensorIndex</a>, <a href="NSpinTensorBackwardDerivative.lean.html#L215">OAI.InvariantIsing.tensorBackwardCoordinateMean</a>, <a href="NSpinTensorRetained.lean.html#L98">OAI.InvariantIsing.tensorAncestorMarkKernel</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

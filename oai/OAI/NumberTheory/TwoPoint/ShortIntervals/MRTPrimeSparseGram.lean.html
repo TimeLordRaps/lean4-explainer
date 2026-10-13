@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/ShortIntervals/MRTPrimeSparseGram.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/ShortIntervals/MRTPrimeSparseGram.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">ShortIntervals</a> / <span>MRTPrimeSparseGram.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">ShortIntervals</a>/<span>MRTPrimeSparseGram.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/ShortIntervals/MRTPrimeSparseGram.lean#L1">source</a></p><div class="doc"><p>The prime-supported sparse mean square keeps the reciprocal logarithmic
+weight of the coefficient norm. The Mangoldt kernel estimate is an explicit
+local hypothesis; its analytic proof is separate from this finite duality.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.TwoPointCorrelations.mrt_sparse_divided_weight_energy</code> <small>line 17</small><div class="doc"><p>The full reciprocal weight in finite weighted Gram duality.</p></div><pre>theorem mrt_sparse_divided_weight_energy {ι : Type*}
+    (K P : Finset ι) (hPK : P ⊆ K) (w freq : ι → ℝ) (a : ι → ℂ)
+    (hw : ∀ n ∈ K, 0 ≤ w n) (hwP : ∀ n ∈ P, 0 &lt; w n)
+    (S : Finset ℝ)
+    (hsep : ∀ t ∈ S, ∀ s ∈ S, t≠s → 1 ≤ |t-s|)
+    {A D : ℝ} (hA : 0 ≤ A) (hD : 0 ≤ D)
+    (hkernel : ∀ t ∈ S, ∀ s ∈ S,
+      ‖mrtExponentialPolynomial K (fun n =&gt; (w n:ℂ)) freq (t-s)‖ ≤
+        A/(1+(t-s)^2)+D) :
+    (∑ t ∈ S, ‖mrtExponentialPolynomial P a freq t‖^2) ≤
+      (8*A+(S.card:ℝ)*D) * ∑ n ∈ P, ‖a n‖^2/w n := by
+…</pre><p class="refs">Mentions: <a href="MRTMeanSquare.lean.html#L14">OAI.TwoPointCorrelations.mrtExponentialPolynomial</a></p></li><li id=L63><b>theorem</b> <code>OAI.TwoPointCorrelations.mrt_sparse_prime_gram</code> <small>line 63</small><div class="doc"><p>A nonnegative smooth Mangoldt majorant supplies the exact logarithmic
+coefficient gain in the prime-supported sparse mean square.</p></div><pre>theorem mrt_sparse_prime_gram (K P : Finset ℕ) (hPK : P ⊆ K)
+    (hP : ∀ p ∈ P, p.Prime) (ψ : ℕ → ℝ)
+    (hψ : ∀ n ∈ K, 0 ≤ ψ n) (hψP : ∀ p ∈ P, 1 ≤ ψ p)
+    (a : ℕ → ℂ) (S : Finset ℝ)
+    (hsep : ∀ t ∈ S, ∀ s ∈ S, t≠s → 1 ≤ |t-s|)
+    {A D : ℝ} (hA : 0 ≤ A) (hD : 0 ≤ D)
+    (hkernel : ∀ t ∈ S, ∀ s ∈ S,
+      ‖mrtExponentialPolynomial K
+        (fun n =&gt; (ψ n * ArithmeticFunction.vonMangoldt n:ℝ))
+        (fun n =&gt; -Real.log (n:ℝ)) (t-s)‖ ≤ A/(1+(t-s)^2)+D) :
+    (∑ t ∈ S, ‖mrtExponentialPolynomial P a
+      (fun n =&gt; -Real.log (n:ℝ)) t‖^2) ≤
+…</pre><p class="refs">Mentions: <a href="MRTMeanSquare.lean.html#L14">OAI.TwoPointCorrelations.mrtExponentialPolynomial</a></p></li><li id=L97><b>theorem</b> <code>OAI.TwoPointCorrelations.mrt_short_prime_logarithmic_mass</code> <small>line 97</small><div class="doc"><p>The coefficient mass in a short logarithmic prime interval has both
+logarithmic savings needed by the prime-supported sparse estimate.</p></div><pre>theorem mrt_short_prime_logarithmic_mass : ∃ C B : ℝ, 0 &lt; C ∧ 2 ≤ B ∧
+    ∀ (H u : ℝ) (P : Finset ℕ) (F : ℕ → ℂ), B ≤ H → 1 ≤ u →
+      H^2 ≤ Real.exp u →
+      (∀ p ∈ P, p.Prime ∧ u ≤ Real.log (p:ℝ) ∧ Real.log (p:ℝ) ≤ u+1/H) →
+      OneBounded F →
+      (∑ p ∈ P, ‖F p/(p:ℂ)‖^2/Real.log (p:ℝ)) ≤
+        C/(H*Real.exp u*u^2) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/OrdinaryTwoPointCorrelations.lean.html#L22">OAI.TwoPointCorrelations.OneBounded</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

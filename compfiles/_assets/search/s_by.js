@@ -1,0 +1,1 @@
+window.l4shard("by", [["Imo2001P5.Setup.AQ_by_AB",79,174],["Imo2001P5.Setup.BP_by_AB",79,166],["Imo2001P5.Setup.QB_by_AB",79,182],["Usa1990P4.DiffByOne",203,35],["Usa1990P4.IV.diffByOne",203,124],["Usa1990P4.IV.of_diffByOne",203,163],["Usa2024P2.smooth_high_signatures_by_ranks",318,1701]]);

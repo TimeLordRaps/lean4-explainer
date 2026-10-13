@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/Superstring/Iteration.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/Superstring/Iteration.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Computability</a> / <a href="index.html">Superstring</a> / <span>Iteration.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Computability</a>/<a href="index.html">Superstring</a>/<span>Iteration.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/Superstring/Iteration.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.Superstring.BitCode.RunsInPolyTime.pair</code> <small>line 12</small><div class="doc"><p>Compute two values from the same explicitly coded input, then concatenate
+their self-delimiting encodings. Duplication and concatenation are charged bitwise.</p></div><pre>theorem pair (hf : RunsInPolyTime ea eb f) (hg : RunsInPolyTime ea ec g) :
+    RunsInPolyTime ea (fun p : β × γ =&gt; eb p.1 ++ ec p.2) (fun a =&gt; (f a, g a)) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialTime.lean.html#L11">OAI.Superstring.BitCode.RunsInPolyTime</a></p></li><li id=L78><b>def</b> <code>OAI.Superstring.BitCode.natCode</code> <small>line 78</small><div class="doc"><p>Unary natural numbers have an explicit end marker, so prefix parsing never
+relies on an uncharged register-length operation.</p></div><pre>def natCode : ℕ → List Bool
+  | 0 =&gt; [true]
+  | n + 1 =&gt; false :: natCode n</pre></li><li id=L82><b>theorem</b> <code>OAI.Superstring.BitCode.length_natCode</code> <small>line 82</small></li><li id=L92><b>theorem</b> <code>OAI.Superstring.BitCode.natCode_reverse</code> <small>line 92</small></li><li id=L112><b>theorem</b> <code>OAI.Superstring.BitCode.RunsInPolyTime.inPlace</code> <small>line 112</small><div class="doc"><p>Normalize any clean routine to the same input and output register. The
+linear bit-order-preserving relocation is included in its polynomial clock.</p></div><pre>theorem inPlace (hf : RunsInPolyTime ea eb f) :
+    ∃ (K : Type) (_ : DecidableEq K) (i : K) (b : Block K) (P : Polynomial ℕ),
+      ∀ a, ∃ n ≤ P.eval (ea a).length, b.Exec (single i (ea a)) (single i (eb (f a))) n := by
+…</pre><p class="refs">Mentions: <a href="PolynomialTime.lean.html#L11">OAI.Superstring.BitCode.RunsInPolyTime</a>, <a href="Instructions.lean.html#L77">OAI.Superstring.BitCode.Block</a>, <a href="Instructions.lean.html#L290">OAI.Superstring.BitCode.single</a></p></li><li id=L140><b>theorem</b> <code>OAI.Superstring.BitCode.Block.iterate_exec</code> <small>line 140</small><div class="doc"><p>Iterate a clean in-place routine once per explicitly stored counter bit.
+The hypothesis is a STATE SIZE invariant, not an assumed time or computation
+oracle. The only computation premise is an actual bit-program execution.</p></div><pre>theorem iterate_exec (b : Block K) (i : K) (P : Polynomial ℕ)
+    (hb : ∀ a, ∃ n ≤ P.eval (e a).length, b.Exec (single i (e a)) (single i (e (f a))) n)
+    (n M : ℕ) (a : α) (hsize : ∀ j &lt; n, (e (f^[j] a)).length ≤ M) :
+    ∃ t ≤ n * (P.eval M + 2) + 1,
+      (Block.loop (Sum.inr () : K ⊕ Unit) (.seq (.pop (.inr ())) (b.rename Sum.inl))).Exec
+        (Sum.elim (single i (e a)) (fun _ : Unit =&gt; List.replicate n false))
+        (Sum.elim (single i (e (f^[n] a))) (fun _ : Unit =&gt; [])) t := by
+…</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L77">OAI.Superstring.BitCode.Block</a>, <a href="Instructions.lean.html#L290">OAI.Superstring.BitCode.single</a>, <a href="Instructions.lean.html#L191">OAI.Superstring.BitCode.Block.Exec</a></p></li><li id=L183><b>def</b> <code>OAI.Superstring.BitCode.parserEmbedding</code> <small>line 183</small><div class="doc"><p>Place the parser's input in an existing work bank, its private storage in a
+fresh bank, and its output in a fresh counter register.</p></div><pre>def parserEmbedding {K L : Type} (i : K) : Ports L → (K ⊕ L) ⊕ Unit
+  | .inl false =&gt; .inl (.inl i)
+  | .inl true =&gt; .inr ()
+  | .inr k =&gt; .inl (.inr k)
+
+ theorem parserEmbedding_injective {K L : Type} (i : K) :
+    Function.Injective (parserEmbedding (L := L) i) := by
+…</pre><p class="refs">Mentions: <a href="Parsing.lean.html#L8">OAI.Superstring.BitCode.Ports</a></p></li><li id=L231><b>theorem</b> <code>OAI.Superstring.BitCode.RunsInPolyTime.iterate</code> <small>line 231</small><div class="doc"><p>Bounded iteration of an actual polynomial bit routine is polynomial. The
+bound is on encoded intermediate DATA, and the counter is explicitly unary.
+This closure rule does not assume a polynomial-time evaluator or a time oracle.</p></div><pre>theorem iterate {α : Type} {e : α → List Bool} {f : α → α}
+    (hf : RunsInPolyTime e e f) (R : Polynomial ℕ)
+    (hsize : ∀ n a j, j &lt; n → (e (f^[j] a)).length ≤
+      R.eval (natCode n ++ e a).length) :
+    RunsInPolyTime (fun p : ℕ × α =&gt; natCode p.1 ++ e p.2) e
+      (fun p =&gt; f^[p.1] p.2) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialTime.lean.html#L11">OAI.Superstring.BitCode.RunsInPolyTime</a>, <a href="Iteration.lean.html#L78">OAI.Superstring.BitCode.natCode</a></p></li><li id=L290><b>abbrev</b> <code>OAI.Superstring.BitCode.Workspace</code> <small>line 290</small></li><li id=L291><b>abbrev</b> <code>OAI.Superstring.BitCode.workPort</code> <small>line 291</small></li><li id=L292><b>def</b> <code>OAI.Superstring.BitCode.workStore</code> <small>line 292</small></li><li id=L295><b>theorem</b> <code>OAI.Superstring.BitCode.workStore_single</code> <small>line 295</small></li><li id=L335><b>theorem</b> <code>OAI.Superstring.BitCode.Block.Exec.workspace</code> <small>line 335</small><div class="doc"><p>Two in-place workspaces may share their data register, with all their
+private registers disjoint. Everything outside the active workspace is framed.</p></div><pre>theorem Exec.workspace {K L : Type} [DecidableEq K] [DecidableEq L]
+    {b : Block (Workspace K)} {w v : List Bool} {n : ℕ}
+    (h : b.Exec (workStore w (fun _ : K =&gt; [])) (workStore v (fun _ : K =&gt; [])) n)
+    (f : K → L) (hf : Function.Injective f) (z : Store L) (hz : ∀ k, z (f k) = []) :
+    (b.rename (Sum.map _root_.id f)).Exec (workStore w z) (workStore v z) n := by
+…</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L77">OAI.Superstring.BitCode.Block</a>, <a href="Iteration.lean.html#L290">OAI.Superstring.BitCode.Workspace</a>, <a href="Iteration.lean.html#L292">OAI.Superstring.BitCode.workStore</a>, <a href="Instructions.lean.html#L7">OAI.Superstring.BitCode.Store</a>, <a href="Instructions.lean.html#L191">OAI.Superstring.BitCode.Block.Exec</a></p></li><li id=L371><b>theorem</b> <code>OAI.Superstring.BitCode.RunsInPolyTime.boolCase</code> <small>line 371</small><div class="doc"><p>Branch on an explicitly encoded Boolean, charging the branch and removal
+of its bit. No unbounded predicate acts as a primitive instruction.</p></div><pre>theorem boolCase {α β : Type} {ea : α → List Bool} {eb : β → List Bool}
+    {f g : α → β} (hf : RunsInPolyTime ea eb f) (hg : RunsInPolyTime ea eb g) :
+    RunsInPolyTime (fun p : Bool × α =&gt; p.1 :: ea p.2) eb
+      (fun p =&gt; if p.1 then f p.2 else g p.2) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialTime.lean.html#L11">OAI.Superstring.BitCode.RunsInPolyTime</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

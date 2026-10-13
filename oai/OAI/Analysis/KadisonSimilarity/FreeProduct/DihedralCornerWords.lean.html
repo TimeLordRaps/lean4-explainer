@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralCornerWords.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralCornerWords.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>DihedralCornerWords.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>DihedralCornerWords.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralCornerWords.lean#L1">source</a></p><div class="doc"><p>The algebraic even-word step in the dihedral corner argument.
+Corner letters absorb the reflection on the right, leaving an explicitly
+alternating centered word in the original free factors.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.pairLetters</code> <small>line 16</small><div class="doc"><p>The alternating word containing <code>n</code> copies of the pair <code>d,s</code>.</p></div><pre>def pairLetters (d s : R) : ℕ → List R
+  | 0 =&gt; []
+  | n + 1 =&gt; d :: s :: pairLetters d s n
+
+/-- A positive-power corner block, after absorbing its first reflection. -/</pre></li><li id=L21><b>def</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.blockLetters</code> <small>line 21</small><div class="doc"><p>A positive-power corner block, after absorbing its first reflection.</p></div><pre>def blockLetters (d s a : R) (l : ℕ) : List R :=
+…</pre></li><li id=L25><b>def</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.productLetters</code> <small>line 25</small><div class="doc"><p>Concatenate the explicitly alternating expansions of all corner blocks.</p></div><pre>def productLetters (d s : R) (blocks : List (R × ℕ)) : List R :=
+…</pre></li><li id=L31><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.pairLetters_prod</code> <small>line 31</small></li><li id=L39><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.blockLetters_prod</code> <small>line 39</small><div class="doc"><p>The corner relation <code>a*d=a</code> is exactly what removes the first <code>d</code>.</p></div><pre>theorem blockLetters_prod (d s a : R) {l : ℕ} (hl : 0 &lt; l) (had : a * d = a) :
+    (blockLetters d s a l).prod = a * (d * s) ^ l := by
+…</pre><p class="refs">Mentions: <a href="DihedralCornerWords.lean.html#L21">OAI.KadisonSimilarity.DihedralCornerWords.blockLetters</a></p></li><li id=L47><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.productLetters_prod</code> <small>line 47</small><div class="doc"><p>The concatenated centered word has precisely the original ordered
+product of corner letters and positive rotation powers.</p></div><pre>theorem productLetters_prod (d s : R) (blocks : List (R × ℕ))
+    (hpositive : ∀ b ∈ blocks, 0 &lt; b.2) (habsorb : ∀ b ∈ blocks, b.1 * d = b.1) :
+    (productLetters d s blocks).prod = (blocks.map fun b =&gt; b.1 * (d * s) ^ b.2).prod := by
+…</pre><p class="refs">Mentions: <a href="DihedralCornerWords.lean.html#L25">OAI.KadisonSimilarity.DihedralCornerWords.productLetters</a></p></li><li id=L64><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.product_insert_right_support</code> <small>line 64</small><div class="doc"><p>Intermediate right support factors disappear because each subsequent
+letter is left supported on the same idempotent. No idempotence is needed
+for this purely multiplicative identity.</p></div><pre>theorem product_insert_right_support (p : R) (xs : List R) (hne : xs ≠ [])
+    (hleft : ∀ x ∈ xs, p * x = x) :
+    (xs.map fun x =&gt; x * p).prod = xs.prod * p := by
+…</pre></li><li id=L93><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.pairLetters_prepend</code> <small>line 93</small><div class="doc"><p>Prepending any number of <code>d,s</code> pairs preserves the alternating starting
+side because each such pair has even length.</p></div><pre>theorem pairLetters_prepend (n : ℕ) (tail : List R)
+    (htail : AlternatingCenteredWord τ D A true tail) :
+    AlternatingCenteredWord τ D A true (pairLetters d s n ++ tail) := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L20">OAI.KadisonSimilarity.AlternatingCenteredWord</a>, <a href="DihedralCornerWords.lean.html#L16">OAI.KadisonSimilarity.DihedralCornerWords.pairLetters</a></p></li><li id=L105><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.blockLetters_prepend</code> <small>line 105</small><div class="doc"><p>A centered corner letter followed by <code>s</code> and rotation pairs is an
+alternating centered word, ready to concatenate with another block.</p></div><pre>theorem blockLetters_prepend (a : R) (ha : a ∈ D) (ha0 : τ a = 0)
+    (l : ℕ) (tail : List R) (htail : AlternatingCenteredWord τ D A true tail) :
+    AlternatingCenteredWord τ D A true (blockLetters d s a l ++ tail) := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L20">OAI.KadisonSimilarity.AlternatingCenteredWord</a>, <a href="DihedralCornerWords.lean.html#L21">OAI.KadisonSimilarity.DihedralCornerWords.blockLetters</a></p></li><li id=L115><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.productLetters_alternating</code> <small>line 115</small><div class="doc"><p>The entire expanded corner product is alternating and centered in the
+original two free algebras.</p></div><pre>theorem productLetters_alternating (blocks : List (R × ℕ))
+    (hmem : ∀ b ∈ blocks, b.1 ∈ D) (hzero : ∀ b ∈ blocks, τ b.1 = 0) :
+    AlternatingCenteredWord τ D A true (productLetters d s blocks) := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L20">OAI.KadisonSimilarity.AlternatingCenteredWord</a>, <a href="DihedralCornerWords.lean.html#L25">OAI.KadisonSimilarity.DihedralCornerWords.productLetters</a></p></li><li id=L130><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.productLetters_ne_nil</code> <small>line 130</small><div class="doc"><p>A nonempty list of corner blocks produces a nonempty centered word.</p></div><pre>theorem productLetters_ne_nil {blocks : List (R × ℕ)} (hblocks : blocks ≠ []) :
+    productLetters d s blocks ≠ [] := by
+…</pre><p class="refs">Mentions: <a href="DihedralCornerWords.lean.html#L25">OAI.KadisonSimilarity.DihedralCornerWords.productLetters</a></p></li><li id=L139><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.trace_product_eq_zero</code> <small>line 139</small><div class="doc"><p>The original algebraic corner-freeness step: every cyclic product of
+centered corner letters and positive rotation powers has trace zero.</p></div><pre>theorem trace_product_eq_zero (hf : ScalarFree τ D A)
+    (blocks : List (R × ℕ)) (hblocks : blocks ≠ [])
+    (hmem : ∀ b ∈ blocks, b.1 ∈ D) (hzero : ∀ b ∈ blocks, τ b.1 = 0)
+    (hpositive : ∀ b ∈ blocks, 0 &lt; b.2) (habsorb : ∀ b ∈ blocks, b.1 * d = b.1) :
+    τ ((blocks.map fun b =&gt; b.1 * (d * s) ^ b.2).prod) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a></p></li><li id=L154><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.trace_product_insert_right_support</code> <small>line 154</small><div class="doc"><p>For a tracial functional, inserting the common corner support after
+each letter does not change the trace of a nonempty product.</p></div><pre>theorem trace_product_insert_right_support
+    (htr : ∀ x y, τ (x * y) = τ (y * x)) (p : R)
+    (xs : List R) (hne : xs ≠ []) (hleft : ∀ x ∈ xs, p * x = x) :
+    τ ((xs.map fun x =&gt; x * p).prod) = τ xs.prod := by
+…</pre></li><li id=L167><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.trace_corner_product_eq_zero</code> <small>line 167</small><div class="doc"><p>The even cyclic trace vanishing remains true with all the actual corner
+supports inserted.</p></div><pre>theorem trace_corner_product_eq_zero (hf : ScalarFree τ D A)
+    (htr : ∀ x y, τ (x * y) = τ (y * x)) (p : R)
+    (blocks : List (R × ℕ)) (hblocks : blocks ≠ [])
+    (hmem : ∀ b ∈ blocks, b.1 ∈ D) (hzero : ∀ b ∈ blocks, τ b.1 = 0)
+    (hpositive : ∀ b ∈ blocks, 0 &lt; b.2) (habsorb : ∀ b ∈ blocks, b.1 * d = b.1)
+    (hleft : ∀ b ∈ blocks, p * b.1 = b.1) :
+    τ ((blocks.map fun b =&gt; b.1 * (d * s) ^ b.2 * p).prod) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

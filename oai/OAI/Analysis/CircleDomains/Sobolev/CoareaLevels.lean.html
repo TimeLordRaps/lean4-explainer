@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Sobolev/CoareaLevels.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Sobolev/CoareaLevels.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Sobolev</a> / <span>CoareaLevels.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Sobolev</a>/<span>CoareaLevels.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Sobolev/CoareaLevels.lean#L1">source</a></p><div class="doc"><h3>From planar coarea charts to compact quotient-level topology</h3><p>A finite collection of Lipschitz parameterizations covers the physical
+part of each level. Scalar coarea in each parameter domain gives finite
+Hausdorff length almost everywhere. The quotient-level
+argument then gives the finite-continuum bound, countably many
+nondegenerate components, and local connectedness of every subcontinuum.</p><p>The chart-cover inclusion and the compactness of the level are
+geometric hypotheses; <code>PlanarScalarCoarea</code> supplies the analytic identity.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.CircleDomainRigidity.finiteLevelUnion</code> <small>line 28</small><div class="doc"><p>A finite list may repeat labels: its entries still have independent
+level parameters.</p></div><pre>def finiteLevelUnion {X J Λ : Type*} (H : Λ → ℝ → Set X) (labels : J → Λ)
+    (θ : J → ℝ) : Set X :=
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.CircleDomainRigidity.ae_finite_hausdorffMeasure_level_union</code> <small>line 34</small><div class="doc"><p>Almost-everywhere finite length for each label passes to an actual
+finite union under the independent product of the level measures.</p></div><pre>theorem ae_finite_hausdorffMeasure_level_union
+    {Y J Λ : Type*} [MetricSpace Y] [MeasurableSpace Y] [BorelSpace Y] [Fintype J]
+    (μ : Measure ℝ) [SigmaFinite μ] (A : Λ → ℝ → Set Y) (labels : J → Λ)
+    (hfinite : ∀ l, ∀ᵐ t ∂μ, (μH[1] : Measure Y) (A l t) &lt; ∞) :
+    ∀ᵐ θ ∂Measure.pi (fun _ : J =&gt; μ),
+      (μH[1] : Measure Y) (finiteLevelUnion A labels θ) &lt; ∞ := by
+…</pre><p class="refs">Mentions: <a href="CoareaLevels.lean.html#L28">OAI.CircleDomainRigidity.finiteLevelUnion</a></p></li><li id=L50><b>theorem</b> <code>OAI.CircleDomainRigidity.ae_finite_physical_levels_of_planar_coarea</code> <small>line 50</small><div class="doc"><p>Finite Lipschitz chart covers preserve the almost-everywhere finite
+length conclusion of planar coarea.</p></div><pre>theorem ae_finite_physical_levels_of_planar_coarea
+    {Y ι : Type*} [MetricSpace Y] [MeasurableSpace Y] [BorelSpace Y] [Fintype ι]
+    (hcoarea : PlanarScalarCoarea)
+    (D : ι → Set ℂ) (f : ι → ℂ → ℝ) (χ : ι → ℂ → Y) (K : ι → ℝ≥0)
+    (hD : ∀ i, IsOpen (D i)) (hf : ∀ i, ContDiffOn ℝ 1 (f i) (D i))
+    (hχ : ∀ i, LipschitzWith (K i) (χ i))
+    (harea : ∀ i, volume (D i) &lt; ∞)
+    (henergy : ∀ i, (∫⁻ z in D i, ENNReal.ofReal (‖fderiv ℝ (f i) z‖ ^ 2)) &lt; ∞)
+    (A : ℝ → Set Y)
+    (hcover : ∀ t, A t ⊆ ⋃ i, χ i &#x27;&#x27;
+      (D i ∩ {z | (f i z : UnitAddCircle) = (t : UnitAddCircle)})) :
+    ∀ᵐ (t : ℝ) ∂volume.restrict (Ico (0 : ℝ) 1), (μH[1] : Measure Y) (A t) &lt; ∞ := by
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L48">OAI.CircleDomainRigidity.PlanarScalarCoarea</a></p></li><li id=L75><b>theorem</b> <code>OAI.CircleDomainRigidity.ae_level_topology_of_planar_coarea</code> <small>line 75</small><div class="doc"><p>The actual compact quotient-level conclusions obtained from
+Federer's scalar coarea input and a finite planar chart cover.</p></div><pre>theorem ae_level_topology_of_planar_coarea
+    {X Y ι : Type*} [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
+    [MetricSpace Y] [MeasurableSpace Y] [BorelSpace Y] [CompactSpace Y] [Fintype ι]
+    (hcoarea : PlanarScalarCoarea)
+    (π : Y → X) (hπ : Continuous π) (hsurj : Surjective π)
+    (hfiber : ∀ x, IsConnected (π ⁻¹&#x27; {x}))
+    {G : Set Y} (hG : IsOpen G) {B : Set X}
+    (hB : IsCompact B) (hTD : IsTotallyDisconnected B) (hdust : π &#x27;&#x27; Gᶜ ⊆ B)
+    (D : ι → Set ℂ) (f : ι → ℂ → ℝ) (χ : ι → ℂ → Y) (K : ι → ℝ≥0)
+    (hD : ∀ i, IsOpen (D i)) (hf : ∀ i, ContDiffOn ℝ 1 (f i) (D i))
+    (hχ : ∀ i, LipschitzWith (K i) (χ i))
+    (harea : ∀ i, volume (D i) &lt; ∞)
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L48">OAI.CircleDomainRigidity.PlanarScalarCoarea</a></p></li><li id=L107><b>theorem</b> <code>OAI.CircleDomainRigidity.ae_finite_level_union_topology_of_planar_coarea</code> <small>line 107</small><div class="doc"><p>Generic finite level unions, including repeated labels, satisfy the
+physical-length and continuum-topology conclusions. The probability
+law is the independent product of Lebesgue measure on <code>[0,1)</code>.</p><p>This is the coarea-to-topology part of the manuscript's Generic level
+continua lemma, items (i)--(iii). Arcwise connectedness is not asserted
+by this theorem. All chart geometry remains explicit.</p></div><pre>theorem ae_finite_level_union_topology_of_planar_coarea
+    {X Y J Λ ι : Type*} [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
+    [MetricSpace Y] [MeasurableSpace Y] [BorelSpace Y] [CompactSpace Y]
+    [Fintype J] [Fintype ι]
+    (hcoarea : PlanarScalarCoarea)
+    (π : Y → X) (hπ : Continuous π) (hsurj : Surjective π)
+    (hfiber : ∀ x, IsConnected (π ⁻¹&#x27; {x}))
+    {G : Set Y} (hG : IsOpen G) {B : Set X}
+    (hB : IsCompact B) (hTD : IsTotallyDisconnected B) (hdust : π &#x27;&#x27; Gᶜ ⊆ B)
+    (D : Λ → ι → Set ℂ) (f : Λ → ι → ℂ → ℝ)
+    (χ : Λ → ι → ℂ → Y) (K : Λ → ι → ℝ≥0)
+    (hD : ∀ l i, IsOpen (D l i))
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L48">OAI.CircleDomainRigidity.PlanarScalarCoarea</a></p></li><li id=L156><b>theorem</b> <code>OAI.CircleDomainRigidity.weighted_level_bound_of_planar_coarea</code> <small>line 156</small><div class="doc"><p>The weighted-level numerical estimate: coarea supplies the physical
+term, and Tonelli plus the band-incidence bound supplies the countable
+dust term. Their sum is finite under the two spatial <code>L²</code> assumptions
+and the two square-summable dust sequences.</p><p>The events <code>E</code> and their measure bound are geometric hypotheses, and
+weighted scalar coarea supplies the analytic identity.</p></div><pre>theorem weighted_level_bound_of_planar_coarea
+    {S : Type*} [Countable S]
+    (hcoarea : WeightedPlanarScalarCoarea) {D : Set ℂ} (hD : IsOpen D)
+    {f q : ℂ → ℝ} (hf : ContDiffOn ℝ 1 f D)
+    (hq : Measurable q) (hq0 : ∀ z, 0 ≤ q z)
+    (hq2 : (∫⁻ z in D, ENNReal.ofReal (q z ^ 2)) &lt; ∞)
+    (hf2 : (∫⁻ z in D, ENNReal.ofReal (‖fderiv ℝ f z‖ ^ 2)) &lt; ∞)
+    (E : S → Set ℝ) (m a : S → ℝ)
+    (hE : ∀ s, MeasurableSet (E s)) (hm : ∀ s, 0 ≤ m s) (ha : ∀ s, 0 ≤ a s)
+    (hband : ∀ s, (volume.restrict (Ico (0 : ℝ) 1)) (E s) ≤ ENNReal.ofReal (a s))
+    (hm2 : Summable (fun s =&gt; m s ^ 2)) (ha2 : Summable (fun s =&gt; a s ^ 2)) :
+    (∫⁻ t in Ico (0 : ℝ) 1,
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L72">OAI.CircleDomainRigidity.WeightedPlanarScalarCoarea</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

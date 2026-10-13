@@ -1,0 +1,1 @@
+window.l4shard("pn", [["Imo1988P3.pnatBinaryReverse",52,55],["Imo1988P3.pnatBinaryReverse_fixed_iff_palindrome",52,238],["Imo1988P3.pnatBinaryReverse_satisfiesRecurrence",52,141],["Imo2009P5.final_solution_pnat",98,122],["Imo2023P3.pnat_prod_coe",137,66]]);

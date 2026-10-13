@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/CubicMoment/Estimates/HeckeSmoothApproximation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/CubicMoment/Estimates/HeckeSmoothApproximation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">CubicMoment</a> / <a href="index.html">Estimates</a> / <span>HeckeSmoothApproximation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">CubicMoment</a>/<a href="index.html">Estimates</a>/<span>HeckeSmoothApproximation.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/CubicMoment/Estimates/HeckeSmoothApproximation.lean#L1">source</a></p><div class="doc"><p>Actual smooth Hecke sums are approximated by their retained dual
+integrals, with an error smaller than any prescribed power.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.CubicFirstMoment.retainedHeckeIntegral</code> <small>line 14</small></li><li id=L23><b>theorem</b> <code>OAI.CubicFirstMoment.hecke_smooth_approximation</code> <small>line 23</small><div class="doc"><p>Uniform arbitrary-power approximation beyond the natural dual
+length. The original sum and retained integral are explicitly defined.</p></div><pre>theorem hecke_smooth_approximation
+    (W : ℝ → ℂ) (hW : HasCompactSupport W) (hpos : tsupport W ⊆ Ioi 0)
+    (hsm : ContDiff ℝ ∞ W) {δ : ℝ} (hδ : 0 &lt; δ) (B R : ℝ) :
+    ∃ (m : ℕ) (C : ℝ), 2 ≤ m ∧ 0 ≤ C ∧
+      ∀ (χ χdual : EisensteinIdealExponent → ℂ),
+      (∀ ν, ‖χ ν‖ ≤ 1) → (∀ ν, ‖χdual ν‖ ≤ 1) →
+      ∀ (ε : ℂ), ‖ε‖ ≤ 1 → ∀ (Y A Z J t : ℝ),
+      1 ≤ Y → 0 &lt; A → 1 ≤ Z → 0 &lt; J → Z ≤ Y^B → J ≤ Y^B →
+      (A^2*(1+|t|)^2)/(Z*J) ≤ Y^(-δ) →
+      ∀ (L Ldual : ℂ → ℂ), PrimitiveHeckeAnalyticData χ χdual A ε L Ldual →
+      GammaQuotientStripBound (1/2-(m:ℝ)) →
+      ‖(∑&#x27; ν, χ ν*mellinPhase t (idealExponentNorm ν)*W (idealExponentNorm ν/Z)) -
+…</pre><p class="refs">Mentions: <a href="ShortMoebius.lean.html#L23">OAI.CubicFirstMoment.EisensteinIdealExponent</a>, <a href="HeckeSmoothDual.lean.html#L20">OAI.CubicFirstMoment.PrimitiveHeckeAnalyticData</a>, <a href="HeckeDualContour.lean.html#L22">OAI.CubicFirstMoment.GammaQuotientStripBound</a>, <a href="MellinWeights.lean.html#L18">OAI.CubicFirstMoment.mellinPhase</a>, <a href="ShortMoebius.lean.html#L37">OAI.CubicFirstMoment.idealExponentNorm</a></p></li><li id=L55><b>theorem</b> <code>OAI.CubicFirstMoment.hecke_smooth_approximation_of_completed</code> <small>line 55</small><div class="doc"><p>Smooth dual approximation from the completed functional equation
+and reciprocal-Gamma bounds.</p></div><pre>theorem hecke_smooth_approximation_of_completed
+    (W : ℝ → ℂ) (hW : HasCompactSupport W) (hpos : tsupport W ⊆ Ioi 0)
+    (hsm : ContDiff ℝ ∞ W) {δ : ℝ} (hδ : 0 &lt; δ) (B R : ℝ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (χ χdual : EisensteinIdealExponent → ℂ),
+      (∀ ν, ‖χ ν‖ ≤ 1) → (∀ ν, ‖χdual ν‖ ≤ 1) →
+      ∀ (ε : ℂ), ‖ε‖ ≤ 1 → ∀ (Y A Z J t : ℝ),
+      1 ≤ Y → 0 &lt; A → 1 ≤ Z → 0 &lt; J → Z ≤ Y^B → J ≤ Y^B →
+      (A^2*(1+|t|)^2)/(Z*J) ≤ Y^(-δ) →
+      ∀ (L Ldual : ℂ → ℂ), Differentiable ℂ L →
+      (∀ s : ℂ, 1 &lt; s.re → L s = normDirichletSeries χ idealExponentNorm s) →
+      (∀ s : ℂ, 1 &lt; s.re → Ldual s = normDirichletSeries χdual idealExponentNorm s) →
+      HeckeFunctionalEquation A 0 ε L Ldual → CompletedHeckeFiniteOrder A L →
+…</pre><p class="refs">Mentions: <a href="ShortMoebius.lean.html#L23">OAI.CubicFirstMoment.EisensteinIdealExponent</a>, <a href="MellinSeries.lean.html#L14">OAI.CubicFirstMoment.normDirichletSeries</a>, <a href="ShortMoebius.lean.html#L37">OAI.CubicFirstMoment.idealExponentNorm</a>, <a href="HeckeFunctionalEquation.lean.html#L21">OAI.CubicFirstMoment.HeckeFunctionalEquation</a>, <a href="HeckeCompletedOrder.lean.html#L21">OAI.CubicFirstMoment.CompletedHeckeFiniteOrder</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("ef", [["C_control_approximation_effect",23,127],["C_control_approximation_effect'",24,151],["C_control_approximation_effect'_le",24,170],["C_control_approximation_effect'_pos",24,156],["C_control_approximation_effect'_property",24,162],["control_approximation_effect",23,157],["control_approximation_effect'",24,177]]);

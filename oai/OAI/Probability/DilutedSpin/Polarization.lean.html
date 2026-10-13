@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/Polarization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/Polarization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>Polarization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>Polarization.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/Polarization.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>def</b> <code>OAI.DilutedSpinGlass.Polarization.sign</code> <small>line 11</small></li><li id=L12><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.sign_not</code> <small>line 12</small></li><li id=L13><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.sign_sq</code> <small>line 13</small></li><li id=L17><b>def</b> <code>OAI.DilutedSpinGlass.Polarization.flip</code> <small>line 17</small></li><li id=L18><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.flip_involutive</code> <small>line 18</small></li><li id=L25><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.prod_sign_flip</code> <small>line 25</small></li><li id=L37><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.signed_cube_sum</code> <small>line 37</small><div class="doc"><p>The signed cube average annihilates every non-surjective assignment of
+k slots to k colors. Thus only permutations survive polarization.</p></div><pre>lemma signed_cube_sum (f : ι → ι) :
+    (∑ ε : ι → Bool, (∏ i, sign (ε i)) * ∏ i, sign (ε (f i))) =
+      if Function.Bijective f then (2 : ℝ) ^ Fintype.card ι else 0 := by
+…</pre><p class="refs">Mentions: <a href="Polarization.lean.html#L11">OAI.DilutedSpinGlass.Polarization.sign</a></p></li><li id=L69><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.signed_polarization</code> <small>line 69</small><div class="doc"><p>Unnormalized real polarization, with exactly the ordered-permutation
+multiplicity. This does not assume a vanishing diagonal.</p></div><pre>lemma signed_polarization (M : MultilinearMap ℝ (fun _ : ι =&gt; E) ℝ)
+    (hsym : ∀ (v : ι → E) (π : Equiv.Perm ι), M (v ∘ π) = M v) (v : ι → E) :
+    (∑ ε : ι → Bool, (∏ j, sign (ε j)) *
+        M (fun _ =&gt; ∑ j, sign (ε j) • v j)) =
+      (2 : ℝ) ^ Fintype.card ι * (Fintype.card ι).factorial * M v := by
+…</pre><p class="refs">Mentions: <a href="Polarization.lean.html#L11">OAI.DilutedSpinGlass.Polarization.sign</a></p></li><li id=L103><b>def</b> <code>OAI.DilutedSpinGlass.Polarization.averageDirection</code> <small>line 103</small></li><li id=L106><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.normalized_polarization</code> <small>line 106</small></li><li id=L137><b>lemma</b> <code>OAI.DilutedSpinGlass.Polarization.averageDirection_bound</code> <small>line 137</small></li><li id=L164><b>lemma</b> <code>OAI.DilutedSpinGlass.abs_integral_le_one</code> <small>line 164</small></li><li id=L174><b>lemma</b> <code>OAI.DilutedSpinGlass.centered_scalar_div_bound</code> <small>line 174</small></li><li id=L191><b>theorem</b> <code>OAI.DilutedSpinGlass.root_matrix_error_bound</code> <small>line 191</small><div class="doc"><p>Root averaging MUST precede the absolute value of the covariance. This
+lemma retains that quantifier order, while integrating genuine single-copy
+projection errors. There is no root-wise concentration hypothesis.</p></div><pre>theorem root_matrix_error_bound {Z : Type*} [MeasurableSpace Z] (μ : Measure Z)
+    [IsProbabilityMeasure μ] (E H H1 F A Et Eo : Z → ℝ) (J δ c B M : ℝ)
+    (hJ : J ≠ 0) (hδ : 0 ≤ δ)
+    (hF : ∀ z, |F z| ≤ 1) (hA : ∀ z, |A z| ≤ 1)
+    (h1 : ∀ z, H1 z/J = -δ*A z)
+    (hE : Integrable E μ) (hH : Integrable H μ) (_hAint : Integrable A μ)
+    (hEt : Integrable Et μ) (hEo : Integrable Eo μ)
+    (hpoint : ∀ z, c*E z ≤ δ+H z/J+Et z*B/|J|+M*Eo z) :
+    c*(∫ z, E z ∂μ) ≤ 2*δ+
+      |(∫ z, H z ∂μ)-(∫ z, F z ∂μ)*(∫ z, H1 z ∂μ)|/|J|+
+      (∫ z, Et z ∂μ)*B/|J|+M*(∫ z, Eo z ∂μ) := by
+…</pre></li><li id=L232><b>theorem</b> <code>OAI.DilutedSpinGlass.select_parameters</code> <small>line 232</small></li><li id=L270><b>theorem</b> <code>OAI.DilutedSpinGlass.countable_parameter_selection</code> <small>line 270</small><div class="doc"><p>All score errors are made small on one deterministic low-increment
+sequence. The parameter may range over an arbitrary probability space; this
+is the noncompact-parameter step in pert:selection.</p></div><pre>theorem countable_parameter_selection
+    {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (Δ : ℕ → Ω → ℝ) (e : ℕ → ℕ → Ω → ℝ)
+    (hΔ : ∀ N, Integrable (Δ N) μ) (he : ∀ ν N, Integrable (e ν N) μ)
+    (hne : ∀ ν N x, 0 ≤ e ν N x)
+    {C v u : ℝ} (hC : 0 ≤ C) (hvu : v &lt; u)
+    (hlower : ∀ N x, -C ≤ Δ N x)
+    (hlow : ∀ n, ∃ N, n ≤ N ∧ ∫ x, Δ N x ∂μ ≤ v)
+    (hlim : ∀ ν, Tendsto (fun N =&gt; ∫ x, e ν N x ∂μ) atTop (𝓝 0)) :
+    ∃ (Ns : ℕ → ℕ) (xs : ℕ → Ω), StrictMono Ns ∧
+      (∀ j, Δ (Ns j) (xs j) ≤ u) ∧
+      (∀ ν, Tendsto (fun j =&gt; e ν (Ns j) (xs j)) atTop (𝓝 0)) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

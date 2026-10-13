@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Topology/CoarseAssembly/TraceSeparation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Topology/CoarseAssembly/TraceSeparation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Topology</a> / <a href="index.html">CoarseAssembly</a> / <span>TraceSeparation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Topology</a>/<a href="index.html">CoarseAssembly</a>/<span>TraceSeparation.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Topology/CoarseAssembly/TraceSeparation.lean#L1">source</a></p><div class="doc"><h3>Trace separation for the congruence-fiber construction</h3><p>These are elementary ingredients of Lemma 3.1 of <em>A counterexample to the
+coarse Novikov conjecture</em> (September 23, 2026). No analytic index theorem or
+property (T) is assumed here. The actual reduction maps are the existing
+<code>PadicInt.toZModPow</code> maps.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.CoarseAssembly.diagonalTrace</code> <small>line 24</small><div class="doc"><p>The trace of <code>diag(t^n,t^(-n),1)</code>, expressed using a unit so that the
+inverse is available in an arbitrary commutative ring.</p></div><pre>def diagonalTrace (t : Rˣ) (n : ℕ) : R :=
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.CoarseAssembly.diagonalTrace_ne_int</code> <small>line 29</small><div class="doc"><p>An integral trace would make the positive power of the unit a root of
+<code>X² + (1-c)X + 1</code>. Thus a transcendental unit has no such trace.</p></div><pre>theorem diagonalTrace_ne_int (t : Rˣ) (ht : Transcendental ℤ (t : R))
+    {n : ℕ} (hn : 0 &lt; n) (c : ℤ) : diagonalTrace t n ≠ (c : R) := by
+…</pre><p class="refs">Mentions: <a href="TraceSeparation.lean.html#L24">OAI.CoarseAssembly.diagonalTrace</a></p></li><li id=L56><b>theorem</b> <code>OAI.CoarseAssembly.reduction_ne_of_le</code> <small>line 56</small><div class="doc"><p>Once two p-adic integers differ modulo <code>p^m</code>, they differ at every
+deeper level. This is the compatibility needed by the short-loop argument.</p></div><pre>theorem reduction_ne_of_le {x y : ℤ_[p]} {m n : ℕ} (hmn : m ≤ n)
+    (hxy : PadicInt.toZModPow m x ≠ PadicInt.toZModPow m y) :
+    PadicInt.toZModPow n x ≠ PadicInt.toZModPow n y := by
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.CoarseAssembly.exists_reduction_ne</code> <small>line 64</small><div class="doc"><p>Distinct p-adic integers are separated by some finite quotient.</p></div><pre>theorem exists_reduction_ne {x y : ℤ_[p]} (hxy : x ≠ y) :
+    ∃ n : ℕ, PadicInt.toZModPow n x ≠ PadicInt.toZModPow n y := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.CoarseAssembly.finite_uniform_reduction_separation</code> <small>line 72</small><div class="doc"><p>A finite collection of unequal p-adic pairs has one common positive
+level above which every pair remains separated.</p></div><pre>theorem finite_uniform_reduction_separation {ι : Type*} (s : Finset ι)
+    (x y : ι → ℤ_[p]) (hxy : ∀ i ∈ s, x i ≠ y i) :
+    ∃ N : ℕ, 1 ≤ N ∧ ∀ n, N ≤ n → ∀ i ∈ s,
+      PadicInt.toZModPow n (x i) ≠ PadicInt.toZModPow n (y i) := by
+…</pre></li><li id=L94><b>theorem</b> <code>OAI.CoarseAssembly.finite_trace_separation</code> <small>line 94</small><div class="doc"><p>The specialization used in the paper: for finitely many integral word
+traces and a bounded positive exponent, every sufficiently deep congruence
+quotient separates the diagonal holonomy trace from all the word traces.</p><p>For a nonzero signed charge, use its positive absolute value; the diagonal
+trace is unchanged by reversing the sign.</p></div><pre>theorem finite_trace_separation (t : ℤ_[p]ˣ)
+    (ht : Transcendental ℤ (t : ℤ_[p])) (A : ℕ) (traces : Finset ℤ) :
+    ∃ N : ℕ, 1 ≤ N ∧ ∀ n, N ≤ n → ∀ m ∈ Finset.Icc 1 A, ∀ c ∈ traces,
+      PadicInt.toZModPow n (diagonalTrace t m) ≠ (c : ZMod (p ^ n)) := by
+…</pre><p class="refs">Mentions: <a href="TraceSeparation.lean.html#L24">OAI.CoarseAssembly.diagonalTrace</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

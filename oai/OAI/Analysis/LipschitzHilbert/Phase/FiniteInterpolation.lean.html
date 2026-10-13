@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/FiniteInterpolation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/FiniteInterpolation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>FiniteInterpolation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>FiniteInterpolation.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/FiniteInterpolation.lean#L1">source</a></p><div class="doc"><h3>Finite bilinear interpolation with constant one</h3><p>This is the finite simple-function step of §7. The analytic family is
+constructed explicitly, and Hadamard's theorem proves the interpolated
+pairing estimate from its two endpoint estimates.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.finitePairing</code> <small>line 21</small></li><li id=L24><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.norm_finitePairing_le</code> <small>line 24</small></li><li id=L41><b>def</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.pairingFamily</code> <small>line 41</small></li><li id=L45><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.differentiable_pairingFamily</code> <small>line 45</small></li><li id=L56><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.pairingFamily_bddAbove</code> <small>line 56</small></li><li id=L81><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.finite_pairing_interpolation</code> <small>line 81</small><div class="doc"><p>The exact normalized finite pairing estimate supplied by the
+coefficient and simple-test-function interpolation families.</p></div><pre>theorem finite_pairing_interpolation (K : ι → κ → ℂ) (w : κ → ℝ)
+    (hK : ∀ i j, ‖K i j‖ ≤ w j)
+    {r s r₄ t : ℝ} (hr : 0 &lt; r) (hs : 0 &lt; s) (hr₄ : 0 &lt; r₄)
+    (ht0 : 0 ≤ t) (ht1 : t ≤ 1)
+    (hrdef : (1 - t) * (r / 1) + t * (r / r₄) = 1)
+    (hsdef : (1 - t) * (s / 1) + t * (s / (4 / 3)) = 1)
+    (hfour : ∀ (a : ι → ℂ) (b : κ → ℂ),
+      (∑ i, ‖a i‖ ^ r₄) = 1 → (∑ j, w j * ‖b j‖ ^ (4 / 3 : ℝ)) = 1 →
+      ‖finitePairing K a b‖ ≤ 1)
+    (a : ι → ℂ) (b : κ → ℂ)
+    (ha : (∑ i, ‖a i‖ ^ r) = 1) (hb : (∑ j, w j * ‖b j‖ ^ s) = 1) :
+    ‖finitePairing K a b‖ ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="FiniteInterpolation.lean.html#L21">OAI.LipschitzHilbert.PhaseCombinatorics.finitePairing</a></p></li><li id=L120><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.finitePairing_div_right</code> <small>line 120</small></li><li id=L127><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.finite_pairing_interpolation_test</code> <small>line 127</small><div class="doc"><p>Scaling removes the unit-norm restriction on the simple test.
+The coefficient sequence remains normalized.</p></div><pre>theorem finite_pairing_interpolation_test (K : ι → κ → ℂ) (w : κ → ℝ)
+    (hw : ∀ j, 0 ≤ w j) (hK : ∀ i j, ‖K i j‖ ≤ w j)
+    {r s r₄ t : ℝ} (hr : 0 &lt; r) (hs : 0 &lt; s) (hr₄ : 0 &lt; r₄)
+    (ht0 : 0 ≤ t) (ht1 : t ≤ 1)
+    (hrdef : (1 - t) * (r / 1) + t * (r / r₄) = 1)
+    (hsdef : (1 - t) * (s / 1) + t * (s / (4 / 3)) = 1)
+    (hfour : ∀ (a : ι → ℂ) (b : κ → ℂ),
+      (∑ i, ‖a i‖ ^ r₄) = 1 → (∑ j, w j * ‖b j‖ ^ (4 / 3 : ℝ)) = 1 →
+      ‖finitePairing K a b‖ ≤ 1)
+    (a : ι → ℂ) (b : κ → ℂ) (ha : (∑ i, ‖a i‖ ^ r) = 1) :
+    ‖finitePairing K a b‖ ≤ (∑ j, w j * ‖b j‖ ^ s) ^ (1 / s) := by
+…</pre><p class="refs">Mentions: <a href="FiniteInterpolation.lean.html#L21">OAI.LipschitzHilbert.PhaseCombinatorics.finitePairing</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

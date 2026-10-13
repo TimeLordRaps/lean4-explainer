@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/ImmFockMatrix.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/ImmFockMatrix.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>ImmFockMatrix.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>ImmFockMatrix.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/ImmFockMatrix.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem335.immPathAmplitude</code> <small>line 14</small><div class="doc"><p>The normalized coefficient contributed by one endpoint path of IMM.</p></div><pre>def immPathAmplitude (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (d : (Fin n × Fin n × Fin n) →₀ ℕ) (p : Fin (immPaths n hn).length) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a></p></li><li id=L20><b>def</b> <code>OAI.Problem335.immPathOccupation</code> <small>line 20</small><div class="doc"><p>The final occupation vector of one path operator.</p></div><pre>def immPathOccupation (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (d : (Fin n × Fin n × Fin n) →₀ ℕ) (p : Fin (immPaths n hn).length) :
+    (Fin n × Fin n × Fin n) →₀ ℕ :=
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a></p></li><li id=L26><b>theorem</b> <code>OAI.Problem335.immPathAmplitude_nonneg</code> <small>line 26</small></li><li id=L36><b>theorem</b> <code>OAI.Problem335.mixedOperator_imm_complexFockMonomial</code> <small>line 36</small><div class="doc"><p>The actual IMM operator on a normalized monomial is the sum of its sparse path actions.</p></div><pre>theorem mixedOperator_imm_complexFockMonomial (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (d : (Fin n × Fin n × Fin n) →₀ ℕ) :
+    mixedOperator isV (imm ℂ n) (complexFockMonomial d) =
+      ∑ p : Fin (immPaths n hn).length,
+        (immPathAmplitude n hn isV d p : ℂ) •
+          complexFockMonomial (immPathOccupation n hn isV d p) := by
+…</pre><p class="refs">Mentions: <a href="MixedOperator.lean.html#L68">OAI.Problem335.mixedOperator</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L96">OAI.Problem335.imm</a>, <a href="FockMonomials.lean.html#L103">OAI.Problem335.complexFockMonomial</a>, <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a>, <a href="ImmFockMatrix.lean.html#L20">OAI.Problem335.immPathOccupation</a></p></li><li id=L52><b>theorem</b> <code>OAI.Problem335.complexFockBasis_repr_mixedOperator_imm</code> <small>line 52</small><div class="doc"><p>Normalized matrix entries of the actual IMM operator are weighted path-shift counts.</p></div><pre>theorem complexFockBasis_repr_mixedOperator_imm (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (d e : (Fin n × Fin n × Fin n) →₀ ℕ) :
+    complexFockBasis.repr (mixedOperator isV (imm ℂ n) (complexFockMonomial d)) e =
+      ∑ p : Fin (immPaths n hn).length,
+        if immPathOccupation n hn isV d p = e then (immPathAmplitude n hn isV d p : ℂ)
+        else 0 := by
+…</pre><p class="refs">Mentions: <a href="MixedOperator.lean.html#L68">OAI.Problem335.mixedOperator</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L96">OAI.Problem335.imm</a>, <a href="FockMonomials.lean.html#L103">OAI.Problem335.complexFockMonomial</a>, <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L20">OAI.Problem335.immPathOccupation</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a></p></li><li id=L68><b>theorem</b> <code>OAI.Problem335.variable_list_product_isWeightedHomogeneous</code> <small>line 68</small><div class="doc"><p>A product of variables has the sum of their assigned weighted degrees.</p></div><pre>theorem variable_list_product_isWeightedHomogeneous {K σ M : Type*}
+    [CommSemiring K] [AddCommMonoid M] (w : σ → M) (l : List σ) :
+    ((l.map (MvPolynomial.X : σ → MvPolynomial σ K)).prod).IsWeightedHomogeneous
+      w (l.map w).sum := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.Problem335.immPath_product_mem_bidegreeSubmodule</code> <small>line 79</small><div class="doc"><p>The path monomials all have the same layerwise bidegree as IMM.</p></div><pre>theorem immPath_product_mem_bidegreeSubmodule (K : Type*) [CommSemiring K]
+    (n : ℕ) (hn : 0 &lt; n) (side : Fin n → Bool)
+    (p : Fin (immPaths n hn).length) :
+    ((((immPaths n hn).get p).map (MvPolynomial.X (R := K))).prod) ∈
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a></p></li><li id=L108><b>theorem</b> <code>OAI.Problem335.weight_eq_of_complexFockMonomial_smul_mem</code> <small>line 108</small><div class="doc"><p>A nonzero scalar multiple of a normalized monomial determines its weighted degree.</p></div><pre>theorem weight_eq_of_complexFockMonomial_smul_mem {σ M : Type*}
+    [Fintype σ] [DecidableEq σ] [AddCommMonoid M]
+    (w : σ → M) (d : σ →₀ ℕ) (a : M) (c : ℂ) (hc : c ≠ 0)
+    (h : (c • complexFockMonomial d).IsWeightedHomogeneous w a) :
+    Finsupp.weight w d = a := by
+…</pre><p class="refs">Mentions: <a href="FockMonomials.lean.html#L103">OAI.Problem335.complexFockMonomial</a></p></li><li id=L120><b>theorem</b> <code>OAI.Problem335.immPathOccupation_bidegree_of_amplitude_ne_zero</code> <small>line 120</small><div class="doc"><p>A nonzero path amplitude guarantees that its occupation lies in the genuine target bidegree.</p></div><pre>theorem immPathOccupation_bidegree_of_amplitude_ne_zero (n : ℕ) (hn : 0 &lt; n)
+    (side : Fin n → Bool) (a b : ℕ)
+    (d : (Fin n × Fin n × Fin n) →₀ ℕ)
+    (hd : Finsupp.weight (bidegreeWeight (fun x =&gt; side x.1)) d = (a, b))
+    (p : Fin (immPaths n hn).length)
+    (hp : immPathAmplitude n hn (fun x =&gt; side x.1) d p ≠ 0) :
+    Finsupp.weight (bidegreeWeight (fun x =&gt; side x.1))
+        (immPathOccupation n hn (fun x =&gt; side x.1) d p) =
+      (a - (Finset.univ.filter (fun t =&gt; side t = true)).card,
+       b + (Finset.univ.filter (fun t =&gt; side t = false)).card) := by
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L19">OAI.Problem335.bidegreeWeight</a>, <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a>, <a href="ImmFockMatrix.lean.html#L20">OAI.Problem335.immPathOccupation</a></p></li><li id=L149><b>theorem</b> <code>OAI.Problem335.immPathAmplitude_sq</code> <small>line 149</small><div class="doc"><p>Squared path amplitudes are the occupation monomials occurring in the moment calculation.</p></div><pre>theorem immPathAmplitude_sq (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (d : (Fin n × Fin n × Fin n) →₀ ℕ) (p : Fin (immPaths n hn).length) :
+    (immPathAmplitude n hn isV d p) ^ 2 =
+      (((immPaths n hn).get p).map
+        (fun i =&gt; if isV i then (d i : ℝ) else (d i : ℝ) + 1)).prod :=
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

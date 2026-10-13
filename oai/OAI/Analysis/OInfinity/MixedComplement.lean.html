@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/MixedComplement.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/MixedComplement.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>MixedComplement.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>MixedComplement.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/MixedComplement.lean#L1">source</a></p><div class="doc"><h3>The complementary action in mixed cancellation</h3><p>An exact corner comparison determines a unitary on the complementary full
+isometric copy. The full error is the sum of the mixed-corner error and
+this concrete complementary conjugation error. A fixed-complement extension
+of a partial isometry is also given; connectedness is not inferred from its
+unitary identities.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>lemma</b> <code>OAI.WeakPureInfiniteness.unitary_commutes_of_conjugation_eq</code> <small>line 23</small><div class="doc"><p>Exact projection transport by a unitary implies commutation with the
+projection when its initial and final projections agree.</p></div><pre>lemma unitary_commutes_of_conjugation_eq (u : unitary E) (q : E)
+    (hq : (u : E) * q * star (u : E) = q) : Commute (u : E) q := by
+…</pre></li><li id=L33><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_complementary_compression_unitary</code> <small>line 33</small><div class="doc"><p>Compressing a projection-preserving unitary to its complementary full
+isometry gives an actual unitary, with the exact intertwining relation.</p></div><pre>lemma exists_complementary_compression_unitary (r : E) (hr : star r * r = 1)
+    (u : unitary E) (hp : Commute (u : E) (r * star r)) :
+    ∃ h : unitary E, (h : E) = star r * (u : E) * r ∧ (u : E) * r = r * (h : E) := by
+…</pre></li><li id=L65><b>lemma</b> <code>OAI.WeakPureInfiniteness.complementary_conjugation_decomposition</code> <small>line 65</small></li><li id=L79><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_mixed_complement_unitary</code> <small>line 79</small><div class="doc"><p>The remaining term is an actual conjugation by the compressed unitary.
+It is not estimated by zero merely because the mixed corner is controlled.</p></div><pre>lemma exists_mixed_complement_unitary [Nontrivial E] (s t : ℕ → E)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (u : unitary E)
+    (huq : (u : E) * canonicalTailProjection t 1 * star (u : E) = canonicalTailProjection t 1) :
+    ∃ h : unitary E, (h : E) = star (t 0) * (u : E) * t 0 ∧
+      (u : E) * t 0 = t 0 * (h : E) ∧
+      ∀ i, ‖(u : E) * mixedSwappedRow s t i * star (u : E) - mixedStabilizedRow t t i‖ ≤
+        ‖(h : E) * t i * star (h : E) - t i‖ +
+          ‖(u : E) * mixedNegativeRow s t i * star (u : E) - canonicalNegativeRow t i‖ := by
+…</pre><p class="refs">Mentions: <a href="NegativeCorner.lean.html#L20">OAI.WeakPureInfiniteness.canonicalTailProjection</a>, <a href="MixedSwap.lean.html#L24">OAI.WeakPureInfiniteness.mixedSwappedRow</a>, <a href="MixedSwap.lean.html#L21">OAI.WeakPureInfiniteness.mixedStabilizedRow</a>, <a href="MixedNegative.lean.html#L23">OAI.WeakPureInfiniteness.mixedNegativeRow</a>, <a href="NegativeCorner.lean.html#L109">OAI.WeakPureInfiniteness.canonicalNegativeRow</a></p></li><li id=L117><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_fixed_complement_unitary_extension</code> <small>line 117</small><div class="doc"><p>The prescribed complementary isometries provide the literal extension
+<code>W + z w*</code>. This theorem asserts unitarity and both exact actions only.</p></div><pre>lemma exists_fixed_complement_unitary_extension (q p W w z : E)
+    (hq : star q = q) (hp : star p = p)
+    (hW : star W * W = q) (hWW : W * star W = p) (hWq : W * q = W)
+    (hw : star w * w = 1) (hww : w * star w = 1 - q)
+    (hz : star z * z = 1) (hzz : z * star z = 1 - p) :
+    ∃ u : unitary E, (u : E) = W + z * star w ∧ (u : E) * q = W ∧ (u : E) * w = z := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/IteratedDifferencing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/IteratedDifferencing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>IteratedDifferencing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>IteratedDifferencing.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/IteratedDifferencing.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.Problem337.correlationShift</code> <small>line 10</small><div class="doc"><p>A single multiplicative difference of a complex sequence.</p></div><pre>def correlationShift (a : ℤ → ℂ) (h : ℤ) : ℤ → ℂ :=
+…</pre></li><li id=L14><b>def</b> <code>OAI.Problem337.iteratedCorrelation</code> <small>line 14</small><div class="doc"><p>Successive multiplicative differences, in their order of application.</p></div><pre>def iteratedCorrelation (a : ℤ → ℂ) : List ℤ → ℤ → ℂ
+  | [] =&gt; a
+  | h :: hs =&gt; iteratedCorrelation (correlationShift a h) hs</pre><p class="refs">Mentions: <a href="IteratedDifferencing.lean.html#L10">OAI.Problem337.correlationShift</a></p></li><li id=L18><b>theorem</b> <code>OAI.Problem337.correlationShift_supported</code> <small>line 18</small></li><li id=L24><b>theorem</b> <code>OAI.Problem337.correlationShift_norm_le_one</code> <small>line 24</small></li><li id=L33><b>def</b> <code>OAI.Problem337.differencingBudget</code> <small>line 33</small><div class="doc"><p>The elementary square-root budget obtained from repeated differencing.</p></div><pre>def differencingBudget (H : ℕ) : ℕ → ℝ → ℝ
+  | 0, B =&gt; B
+  | r + 1, B =&gt; Real.sqrt (2 / (H : ℝ) + 2 * differencingBudget H r B)</pre></li><li id=L37><b>theorem</b> <code>OAI.Problem337.differencingBudget_nonneg</code> <small>line 37</small></li><li id=L45><b>theorem</b> <code>OAI.Problem337.iterated_differencing_bound</code> <small>line 45</small><div class="doc"><p>If every terminal <code>r</code>-fold correlation is small, the original sum is
+bounded by the iterated van der Corput square-root budget.</p></div><pre>theorem iterated_differencing_bound (r : ℕ) (N H : ℕ)
+    (hH : 1 ≤ H) (hHN : H ≤ N) (B : ℝ) (hB : 0 ≤ B)
+    (a : ℤ → ℂ)
+    (hsupport : ∀ n : ℤ, n ∉ Finset.Icc (1 : ℤ) N → a n = 0)
+    (hnorm : ∀ n : ℤ, ‖a n‖ ≤ 1)
+    (hterminal : ∀ hs : List ℤ, hs.length = r →
+      (∀ h ∈ hs, 0 &lt; h ∧ h &lt; H) →
+      ‖∑ n ∈ Finset.Icc (1 : ℤ) N, iteratedCorrelation a hs n‖ / (N : ℝ) ≤ B) :
+    ‖∑ n ∈ Finset.Icc (1 : ℤ) N, a n‖ / (N : ℝ) ≤ differencingBudget H r B := by
+…</pre><p class="refs">Mentions: <a href="IteratedDifferencing.lean.html#L14">OAI.Problem337.iteratedCorrelation</a>, <a href="IteratedDifferencing.lean.html#L33">OAI.Problem337.differencingBudget</a></p></li><li id=L82><b>theorem</b> <code>OAI.Problem337.differencingBudget_le_rpow</code> <small>line 82</small><div class="doc"><p>A uniform bound for the square-root budget. Its constant does not grow
+with the number of differencing steps.</p></div><pre>theorem differencingBudget_le_rpow (H r : ℕ) {ε B : ℝ}
+    (hε : 0 &lt; ε) (hε1 : ε ≤ 1) (hHB : 2 / (H : ℝ) ≤ ε)
+    (hB : B ≤ ε) :
+    differencingBudget H r B ≤ 3 * ε ^ (1 / (2 : ℝ)^r) := by
+…</pre><p class="refs">Mentions: <a href="IteratedDifferencing.lean.html#L33">OAI.Problem337.differencingBudget</a></p></li><li id=L112><b>theorem</b> <code>OAI.Problem337.iterated_differencing_power_bound</code> <small>line 112</small><div class="doc"><p>Power-saving form of iterated van der Corput differencing.</p></div><pre>theorem iterated_differencing_power_bound (r : ℕ) (N H : ℕ)
+    (hH : 1 ≤ H) (hHN : H ≤ N) (ε : ℝ) (hε : 0 &lt; ε) (hε1 : ε ≤ 1)
+    (hHε : 2 / (H : ℝ) ≤ ε) (a : ℤ → ℂ)
+    (hsupport : ∀ n : ℤ, n ∉ Finset.Icc (1 : ℤ) N → a n = 0)
+    (hnorm : ∀ n : ℤ, ‖a n‖ ≤ 1)
+    (hterminal : ∀ hs : List ℤ, hs.length = r →
+      (∀ h ∈ hs, 0 &lt; h ∧ h &lt; H) →
+      ‖∑ n ∈ Finset.Icc (1 : ℤ) N, iteratedCorrelation a hs n‖ / (N : ℝ) ≤ ε) :
+    ‖∑ n ∈ Finset.Icc (1 : ℤ) N, a n‖ / (N : ℝ) ≤
+      3 * ε ^ (1 / (2 : ℝ)^r) :=
+…</pre><p class="refs">Mentions: <a href="IteratedDifferencing.lean.html#L14">OAI.Problem337.iteratedCorrelation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

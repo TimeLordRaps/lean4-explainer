@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Geometry/FarSlabGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Geometry/FarSlabGeometry.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Geometry</a> / <span>FarSlabGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Geometry</a>/<span>FarSlabGeometry.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Geometry/FarSlabGeometry.lean#L1">source</a></p><div class="doc"><p>Local strips in the reference coordinates, and the coordinate bounds
+needed to compare their overlap with a transverse line through a small
+selected rectangle.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>def</b> <code>OAI.LipschitzHilbert.Rectangle.stripSlab</code> <small>line 13</small></li><li id=L17><b>theorem</b> <code>OAI.LipschitzHilbert.Rectangle.mem_stripSlab</code> <small>line 17</small></li><li id=L24><b>theorem</b> <code>OAI.LipschitzHilbert.Rectangle.isCompact_stripSlab</code> <small>line 24</small></li><li id=L41><b>theorem</b> <code>OAI.LipschitzHilbert.Rectangle.volume_stripSlab</code> <small>line 41</small></li><li id=L47><b>theorem</b> <code>OAI.LipschitzHilbert.Rectangle.transverse_coordinate_change_bound</code> <small>line 47</small></li><li id=L68><b>theorem</b> <code>OAI.LipschitzHilbert.Rectangle.short_to_long_slab_coordinates</code> <small>line 68</small><div class="doc"><p>Coordinate bounds at every point of a short rectangle meeting the
+fourfold reference interval. The long rectangle meets the original interval.</p></div><pre>theorem short_to_long_slab_coordinates (S R T : Rectangle) (c l θ : ℝ)
+    (hl : 0 &lt; l) (hθ : 0 &lt; θ) (hθsmall : θ ≤ 1/20)
+    (hRlong : 8*l ≤ R.long) (hTlong : T.long ≤ l)
+    (hSshort : S.short ≤ θ*l) (hTshort : T.short ≤ θ*l)
+    (hRangle : dist (S.axes 0) (R.axes 0) ≤ 2*θ)
+    (hTangle : dist (S.axes 0) (T.axes 0) ≤ 2*θ)
+    (hR : (R.carrier ∩ S.stripSlab c l).Nonempty)
+    (hT : (T.carrier ∩ S.stripSlab c (4*l)).Nonempty)
+    {x : Plane} (hx : x ∈ T.carrier) :
+    |R.axes.repr (x-R.center) 0| ≤ 32*R.long ∧
+      |R.axes.repr (x-R.center) 1| ≤ R.short/2+8*(2*θ*l) := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/PublishedInputs.lean.html#L41">OAI.LipschitzHilbert.Rectangle</a>, <a href="../../../../ComparatorChallenges/LipschitzHilbert.lean.html#L15">OAI.LipschitzHilbert.Plane</a></p></li><li id=L123><b>theorem</b> <code>OAI.LipschitzHilbert.Rectangle.comparable_slab_coordinates</code> <small>line 123</small><div class="doc"><p>Comparable lengths permit the same transverse line argument with a
+larger line radius.</p></div><pre>theorem comparable_slab_coordinates (S R T : Rectangle) (c l θ : ℝ)
+    (hl : 0 &lt; l) (hθ : 0 &lt; θ) (hθsmall : θ ≤ 1/20)
+    (hRlong : l ≤ R.long) (hTlong : T.long ≤ 16*l)
+    (hSshort : S.short ≤ θ*l) (hTshort : T.short ≤ θ*l)
+    (hRangle : dist (S.axes 0) (R.axes 0) ≤ 2*θ)
+    (hTangle : dist (S.axes 0) (T.axes 0) ≤ 2*θ)
+    (hR : (R.carrier ∩ S.stripSlab c l).Nonempty)
+    (hT : (T.carrier ∩ S.stripSlab c (4*l)).Nonempty)
+    {x : Plane} (hx : x ∈ T.carrier) :
+    |R.axes.repr (x-R.center) 0| ≤ 64*R.long ∧
+      |R.axes.repr (x-R.center) 1| ≤ R.short/2+8*(16*θ*l) := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/PublishedInputs.lean.html#L41">OAI.LipschitzHilbert.Rectangle</a>, <a href="../../../../ComparatorChallenges/LipschitzHilbert.lean.html#L15">OAI.LipschitzHilbert.Plane</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,132 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/Elasticity/Supported.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/Elasticity/Supported.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MathematicalPhysics</a> / <a href="index.html">Elasticity</a> / <span>Supported.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MathematicalPhysics</a>/<a href="index.html">Elasticity</a>/<span>Supported.lean</span></code></h1><p class="muted">38 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/Elasticity/Supported.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.ElasticityGraph.exists_coercive_left_inverse</code> <small>line 15</small><div class="doc"><p>Orthogonal projection supplies a genuine bounded left inverse of a
+coercive Hilbert operator on all of the target space.</p></div><pre>theorem exists_coercive_left_inverse (A : E →L[ℂ] F) (C : ℝ) (hC : 0≤C)
+    (hA : ∀ x, ‖x‖≤C*‖A x‖) :
+    ∃ R : F →L[ℂ] E, R.comp A=ContinuousLinearMap.id ℂ E := by
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.ElasticityGraph.local_smooth_left_inverse</code> <small>line 44</small><div class="doc"><p>A smooth local left inverse, with no surjectivity hypothesis.</p></div><pre>theorem local_smooth_left_inverse (A : P → E →L[ℂ] F)
+    (hA : ContDiff ℝ (⊤ : ℕ∞) A) (p₀ : P) (C : ℝ) (hC : 0≤C)
+    (hbound : ∀ x, ‖x‖≤C*‖A p₀ x‖) :
+    ∃ (U : Set P) (R : P → F →L[ℂ] E), IsOpen U ∧ p₀∈U ∧
+      ContDiffOn ℝ (⊤ : ℕ∞) R U ∧ ∀ p∈U, (R p).comp (A p)=ContinuousLinearMap.id ℂ E := by
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.ElasticityGraph.local_smooth_solution_of_dense</code> <small>line 81</small><div class="doc"><p>Smooth dependence and existence at all parameters follow from existence
+on a dense set, using the actual local Hilbert left inverse.</p></div><pre>theorem local_smooth_solution_of_dense (A : P → E →L[ℂ] F)
+    (hA : ContDiff ℝ (⊤ : ℕ∞) A) (f : P → F) (hf : ContDiff ℝ (⊤ : ℕ∞) f)
+    {D : Set P} (hD : Dense D) (hex : ∀ p∈D, ∃ u, A p u=f p)
+    (p₀ : P) (C : ℝ) (hC : 0≤C) (hbound : ∀ x, ‖x‖≤C*‖A p₀ x‖) :
+    ∃ (U : Set P) (u : P → E), IsOpen U ∧ p₀∈U ∧
+      ContDiffOn ℝ (⊤ : ℕ∞) u U ∧ ∀ p∈U, A p (u p)=f p := by
+…</pre></li><li id=L109><b>abbrev</b> <code>OAI.ElasticityPlanar.GraphSpace</code> <small>line 109</small></li><li id=L110><b>def</b> <code>OAI.ElasticityPlanar.testGraph</code> <small>line 110</small></li><li id=L115><b>def</b> <code>OAI.ElasticityPlanar.closedGraph</code> <small>line 115</small></li><li id=L118><b>instance</b> <code>OAI.ElasticityPlanar.graphComplete</code> <small>line 118</small></li><li id=L122><b>def</b> <code>OAI.ElasticityPlanar.graphFirst</code> <small>line 122</small></li><li id=L125><b>def</b> <code>OAI.ElasticityPlanar.graphSecond</code> <small>line 125</small></li><li id=L130><b>theorem</b> <code>OAI.ElasticityPlanar.closed_graph_estimate</code> <small>line 130</small><div class="doc"><p>The positive-commutator coercivity survives the actual graph closure.</p></div><pre>theorem closed_graph_estimate {S : Set ℂ} (hS : IsCompact S)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j)) :
+    ∃ C : ℝ, 0&lt;C ∧ ∀ u : closedGraph S a ha,
+      ‖u‖≤C*‖graphSecond S a ha u‖ := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L204">OAI.ElasticityPlanar.C</a>, <a href="Supported.lean.html#L115">OAI.ElasticityPlanar.closedGraph</a>, <a href="Supported.lean.html#L125">OAI.ElasticityPlanar.graphSecond</a></p></li><li id=L157><b>lemma</b> <code>OAI.ElasticityPlanar.L2_distribution</code> <small>line 157</small></li><li id=L159><b>lemma</b> <code>OAI.ElasticityPlanar.planarOperator_test</code> <small>line 159</small></li><li id=L174><b>theorem</b> <code>OAI.ElasticityPlanar.graph_equation</code> <small>line 174</small><div class="doc"><p>Closing compact test graphs preserves the actual distributional operator.</p></div><pre>theorem graph_equation (S : Set ℂ) (a : n → n → ℂ → ℂ)
+    (ha : ∀ i j, (a i j).HasTemperateGrowth)
+    (u : closedGraph S a (fun i j =&gt; (ha i j).1)) (i : n) :
+    planarOperator a i (graphFirst S a (fun i j =&gt; (ha i j).1) u)=
+      entryInjection i (graphSecond S a (fun i j =&gt; (ha i j).1) u) := by
+…</pre><p class="refs">Mentions: <a href="Supported.lean.html#L115">OAI.ElasticityPlanar.closedGraph</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a>, <a href="Supported.lean.html#L122">OAI.ElasticityPlanar.graphFirst</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a>, <a href="Supported.lean.html#L125">OAI.ElasticityPlanar.graphSecond</a></p></li><li id=L187><b>lemma</b> <code>OAI.ElasticityPlanar.test_support_distribution</code> <small>line 187</small></li><li id=L203><b>theorem</b> <code>OAI.ElasticityPlanar.graph_support</code> <small>line 203</small><div class="doc"><p>Graph closure retains support, in the literal distributional sense.</p></div><pre>theorem graph_support (S : Set ℂ) (a : n → n → ℂ → ℂ)
+    (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (u : closedGraph S a ha) (i : n) :
+    LocalEqual Sᶜ (entryInjection i (graphFirst S a ha u)) 0 := by
+…</pre><p class="refs">Mentions: <a href="Supported.lean.html#L115">OAI.ElasticityPlanar.closedGraph</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a>, <a href="Supported.lean.html#L122">OAI.ElasticityPlanar.graphFirst</a></p></li><li id=L222><b>lemma</b> <code>OAI.ElasticityPlanar.shifted_graph_equation</code> <small>line 222</small></li><li id=L238><b>lemma</b> <code>OAI.ElasticityPlanar.graph_test_solution</code> <small>line 238</small></li><li id=L256><b>lemma</b> <code>OAI.ElasticityPlanar.local_graph_solution</code> <small>line 256</small></li><li id=L270><b>theorem</b> <code>OAI.ElasticityPlanar.local_supported_of_dense_tests</code> <small>line 270</small><div class="doc"><p>A local smooth supported solution family, derived from compact-test graph
+solvability on a dense set. No range-surjectivity assumption is required.</p></div><pre>theorem local_supported_of_dense_tests {S K : Set ℂ} (hS : IsCompact S) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j p z, z∉K → a i j (p,z)=0)
+    (f : P → Hilbert n) (hf : ContDiff ℝ (⊤ : ℕ∞) f) {D : Set P} (hD : Dense D)
+    (hex : ∀ p∈D, ∃ v : n → Test, (∀ i, tsupport (v i : ℂ → ℂ)⊆S) ∧
+      ∀ i, planarOperator (fun i j z =&gt; a i j (p,z)) i (embed v)=entryInjection i (f p))
+    (p₀ : P) :
+    ∃ (U : Set P) (u : P → Hilbert n), IsOpen U ∧ p₀∈U ∧
+      ContDiffOn ℝ (⊤ : ℕ∞) u U ∧ ∀ p∈U, ∀ i,
+        planarOperator (fun i j z =&gt; a i j (p,z)) i (u p)=entryInjection i (f p) ∧
+        LocalEqual Sᶜ (entryInjection i (u p)) 0 := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Planar.lean.html#L66">OAI.ElasticityPlanar.Test</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a>, <a href="Planar.lean.html#L762">OAI.ElasticityPlanar.embed</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a></p></li><li id=L314><b>lemma</b> <code>OAI.ElasticityPlanar.supported_smooth_test</code> <small>line 314</small></li><li id=L371><b>lemma</b> <code>OAI.ElasticityPlanar.operator_all_orders</code> <small>line 371</small></li><li id=L393><b>theorem</b> <code>OAI.ElasticityPlanar.supported_weak_is_test</code> <small>line 393</small><div class="doc"><p>Smooth forcing upgrades every supported weak L2 solution to an actual compact
+smooth test vector, by the established elliptic regularity and support identity.</p></div><pre>theorem supported_weak_is_test {S : Set ℂ} (hS : IsCompact S)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, (a i j).HasTemperateGrowth)
+    (w : Hilbert n) (f : n → 𝓢(ℂ,ℂ))
+    (he : ∀ i, planarOperator a i w=(f i : 𝓢&#x27;(ℂ,ℂ)))
+    (hs : ∀ i, LocalEqual Sᶜ (entryInjection i w) 0) :
+    ∃ v : n → Test, embed v=w ∧ ∀ i, tsupport (v i : ℂ → ℂ)⊆S := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a>, <a href="Planar.lean.html#L66">OAI.ElasticityPlanar.Test</a>, <a href="Planar.lean.html#L762">OAI.ElasticityPlanar.embed</a></p></li><li id=L406><b>theorem</b> <code>OAI.ElasticityPlanar.supported_weak_kernel</code> <small>line 406</small><div class="doc"><p>Compact support gives uniqueness for the genuine weak transport operator.</p></div><pre>theorem supported_weak_kernel {S : Set ℂ} (hS : IsCompact S)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, (a i j).HasTemperateGrowth)
+    (w : Hilbert n) (he : ∀ i, planarOperator a i w=0)
+    (hs : ∀ i, LocalEqual Sᶜ (entryInjection i w) 0) : w=0 := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a></p></li><li id=L429><b>lemma</b> <code>OAI.ElasticityPlanar.compact_smooth_source</code> <small>line 429</small></li><li id=L453><b>theorem</b> <code>OAI.ElasticityPlanar.global_supported_of_dense</code> <small>line 453</small><div class="doc"><p>Dense-parameter supported weak solvability extends to all parameters in the
+actual L2/distribution spaces, and the solution varies strongly smoothly.</p></div><pre>theorem global_supported_of_dense {S K : Set ℂ} (hS : IsCompact S) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j p z, z∉K → a i j (p,z)=0)
+    (F : P → n → 𝓢(ℂ,ℂ)) (f : P → Hilbert n)
+    (hf : ContDiff ℝ (⊤ : ℕ∞) f) (hFe : ∀ p i, entryInjection i (f p)=(F p i : 𝓢&#x27;(ℂ,ℂ)))
+    {D : Set P} (hD : Dense D)
+    (hex : ∀ p∈D, ∃ w : Hilbert n, ∀ i,
+      planarOperator (fun i j z =&gt; a i j (p,z)) i w=entryInjection i (f p) ∧
+      LocalEqual Sᶜ (entryInjection i w) 0) :
+    ∃ u : P → Hilbert n, ContDiff ℝ (⊤ : ℕ∞) u ∧ ∀ p i,
+      planarOperator (fun i j z =&gt; a i j (p,z)) i (u p)=entryInjection i (f p) ∧
+      LocalEqual Sᶜ (entryInjection i (u p)) 0 := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a></p></li><li id=L505><b>lemma</b> <code>OAI.ElasticityPlanar.smooth_operator_all_orders</code> <small>line 505</small></li><li id=L543><b>lemma</b> <code>OAI.ElasticityPlanar.supported_smooth_test_family</code> <small>line 543</small></li><li id=L609><b>theorem</b> <code>OAI.ElasticityPlanar.supported_parameter_inversion</code> <small>line 609</small><div class="doc"><p>The dense-parameter assertion uses genuine weak solutions, not an assumed
+smooth selection. Compact support and the elliptic estimate construct the
+unique jointly smooth selection.</p></div><pre>theorem supported_parameter_inversion {S K : Set ℂ} (hS : IsCompact S) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j p z, z∉K → a i j (p,z)=0)
+    (f : n → P × ℂ → ℂ) (hf : ∀ i, ContDiff ℝ (⊤ : ℕ∞) (f i))
+    (hfs : ∀ i p z, z∉K → f i (p,z)=0)
+    {D : Set P} (hD : Dense D)
+    (hex : ∀ p∈D, ∃ w : Hilbert n, ∀ i,
+      planarOperator (fun i j z =&gt; a i j (p,z)) i w=
+        (toSchwartz ⟨fun z =&gt; f i (p,z),⟨(hf i).comp (contDiff_const.prodMk contDiff_id),
+          compact_slice hK (f i) (hfs i) p⟩⟩ : 𝓢&#x27;(ℂ,ℂ)) ∧
+      LocalEqual Sᶜ (entryInjection i w) 0) :
+    ∃ v : P → n → Test,
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a>, <a href="Planar.lean.html#L713">OAI.ElasticityPlanar.toSchwartz</a>, <a href="Parameters.lean.html#L141">OAI.ElasticityPlanar.entryInjection</a>, <a href="Planar.lean.html#L66">OAI.ElasticityPlanar.Test</a></p></li><li id=L666><b>lemma</b> <code>OAI.ElasticityPlanar.supported_weak_unique</code> <small>line 666</small></li><li id=L688><b>lemma</b> <code>OAI.ElasticityGeneralSlicing.tests_determine_supported</code> <small>line 688</small></li><li id=L725><b>lemma</b> <code>OAI.ElasticityGeneralSlicing.supported_local_zero</code> <small>line 725</small></li><li id=L739><b>lemma</b> <code>OAI.ElasticityGeneralSlicing.supported_slice</code> <small>line 739</small><div class="doc"><p>Compact support passes through Fubini and through the chosen L2 representative.</p></div><pre>lemma supported_slice (S : Set ℂ) (u : P × ℂ → ℂ)
+    (hu : MemLp u 2 volume) (hs : ∀ᵐ q : P × ℂ, q.2∉S → u q=0) :
+    ∀ᵐ t : P, ∀ᵐ z : ℂ, z∉S → sliceLp u t z=0 := by
+…</pre><p class="refs">Mentions: <a href="WeakLimits.lean.html#L852">OAI.ElasticityGeneralSlicing.sliceLp</a></p></li><li id=L751><b>theorem</b> <code>OAI.ElasticityGeneralSlicing.cylinder_supported_slices</code> <small>line 751</small><div class="doc"><p>The slicing result is an actual global planar distribution equation,
+not merely equality on a selected family of test functions.</p></div><pre>theorem cylinder_supported_slices (S : Set ℂ) (hS : IsCompact S)
+    (u w : Lp ℂ 2 (volume : Measure (P × ℂ)))
+    (hu : Integrable (u : P × ℂ → ℂ)) (hw : Integrable (w : P × ℂ → ℂ))
+    (hsu : ∀ᵐ q : P × ℂ, q.2∉S → u q=0) (hsw : ∀ᵐ q : P × ℂ, q.2∉S → w q=0)
+    (he : ∂_{((0:P),(1:ℂ))} (u : 𝓢&#x27;(P × ℂ,ℂ))+
+      Complex.I • ∂_{((0:P),Complex.I)} (u : 𝓢&#x27;(P × ℂ,ℂ))+(w : 𝓢&#x27;(P × ℂ,ℂ))=0) :
+    ∀ᵐ t : P,
+      dbar (sliceLp u t : Dist)+(sliceLp w t : Dist)=0 ∧
+      LocalEqual Sᶜ (sliceLp u t : Dist) 0 := by
+…</pre><p class="refs">Mentions: <a href="WeakLimits.lean.html#L852">OAI.ElasticityGeneralSlicing.sliceLp</a></p></li><li id=L787><b>lemma</b> <code>OAI.ElasticityGeneralSlicing.sliced_coefficients</code> <small>line 787</small></li><li id=L820><b>theorem</b> <code>OAI.ElasticityGeneralSlicing.coupled_slice_equations</code> <small>line 820</small><div class="doc"><p>Genuine cylinder weak solutions give supported weak planar solutions on a
+single full-measure, hence dense, set of transverse parameters.</p></div><pre>theorem coupled_slice_equations (S K : Set ℂ) (hS : IsCompact S) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j t z,z∉K → a i j (t,z)=0)
+    (f : n → P × ℂ → ℂ) (hf : ∀ i,ContDiff ℝ (⊤ : ℕ∞) (f i))
+    (hfs : ∀ i t z,z∉K → f i (t,z)=0)
+    (u w : n → Lp ℂ 2 (volume : Measure (P × ℂ)))
+    (hu : ∀ i,Integrable (u i : P × ℂ → ℂ)) (hw : ∀ i,Integrable (w i : P × ℂ → ℂ))
+    (hsu : ∀ i,∀ᵐ q : P × ℂ,q.2∉S → u i q=0)
+    (hsw : ∀ i,∀ᵐ q : P × ℂ,q.2∉S → w i q=0)
+    (hc : ∀ i,∀ᵐ q : P × ℂ,w i q=∑ j,a i j q*u j q-f i q)
+    (he : ∀ i, ∂_{((0:P),(1:ℂ))} (u i : 𝓢&#x27;(P × ℂ,ℂ))+
+      Complex.I • ∂_{((0:P),Complex.I)} (u i : 𝓢&#x27;(P × ℂ,ℂ))+(w i : 𝓢&#x27;(P × ℂ,ℂ))=0) :
+…</pre></li><li id=L878><b>theorem</b> <code>OAI.ElasticityGeneralSlicing.smooth_supported_of_cylinder</code> <small>line 878</small><div class="doc"><p>Completion of the almost-every-plane to every-plane step. No smooth weak
+representative or nowhere-exceptional slicing has been assumed.</p></div><pre>theorem smooth_supported_of_cylinder (S K : Set ℂ) (hS : IsCompact S) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j t z,z∉K → a i j (t,z)=0)
+    (f : n → P × ℂ → ℂ) (hf : ∀ i,ContDiff ℝ (⊤ : ℕ∞) (f i))
+    (hfs : ∀ i t z,z∉K → f i (t,z)=0)
+    (u w : n → Lp ℂ 2 (volume : Measure (P × ℂ)))
+    (hu : ∀ i,Integrable (u i : P × ℂ → ℂ)) (hw : ∀ i,Integrable (w i : P × ℂ → ℂ))
+    (hsu : ∀ i,∀ᵐ q : P × ℂ,q.2∉S → u i q=0)
+    (hsw : ∀ i,∀ᵐ q : P × ℂ,q.2∉S → w i q=0)
+    (hc : ∀ i,∀ᵐ q : P × ℂ,w i q=∑ j,a i j q*u j q-f i q)
+    (he : ∀ i, ∂_{((0:P),(1:ℂ))} (u i : 𝓢&#x27;(P × ℂ,ℂ))+
+      Complex.I • ∂_{((0:P),Complex.I)} (u i : 𝓢&#x27;(P × ℂ,ℂ))+(w i : 𝓢&#x27;(P × ℂ,ℂ))=0) :
+…</pre></li><li id=L905><b>lemma</b> <code>OAI.ElasticityGeneralSlicing.classical_planar_distribution</code> <small>line 905</small></li><li id=L928><b>theorem</b> <code>OAI.ElasticityGeneralSlicing.smooth_cylinder_representative</code> <small>line 928</small><div class="doc"><p>The jointly smooth solution is the actual weak cylinder solution, not an
+unrelated branch. Supported uniqueness identifies it on almost every slice.</p></div><pre>theorem smooth_cylinder_representative (S K : Set ℂ) (hS : IsCompact S) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j t z,z∉K → a i j (t,z)=0)
+    (f : n → P × ℂ → ℂ) (hf : ∀ i,ContDiff ℝ (⊤ : ℕ∞) (f i))
+    (hfs : ∀ i t z,z∉K → f i (t,z)=0)
+    (u w : n → Lp ℂ 2 (volume : Measure (P × ℂ)))
+    (hu : ∀ i,Integrable (u i : P × ℂ → ℂ)) (hw : ∀ i,Integrable (w i : P × ℂ → ℂ))
+    (hsu : ∀ i,∀ᵐ q : P × ℂ,q.2∉S → u i q=0)
+    (hsw : ∀ i,∀ᵐ q : P × ℂ,q.2∉S → w i q=0)
+    (hc : ∀ i,∀ᵐ q : P × ℂ,w i q=∑ j,a i j q*u j q-f i q)
+    (he : ∀ i, ∂_{((0:P),(1:ℂ))} (u i : 𝓢&#x27;(P × ℂ,ℂ))+
+      Complex.I • ∂_{((0:P),Complex.I)} (u i : 𝓢&#x27;(P × ℂ,ℂ))+(w i : 𝓢&#x27;(P × ℂ,ℂ))=0) :
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

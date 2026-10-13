@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/Kervaire/TraceCalculus.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/Kervaire/TraceCalculus.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">GroupTheory</a> / <a href="index.html">Kervaire</a> / <span>TraceCalculus.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">GroupTheory</a>/<a href="index.html">Kervaire</a>/<span>TraceCalculus.lean</span></code></h1><p class="muted">19 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/Kervaire/TraceCalculus.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.KervaireTraceCalculus.hasDerivAt_trace_pow</code> <small>line 24</small><div class="doc"><p>The derivative of a trace of a noncommutative power has its usual scalar form.</p></div><pre>theorem hasDerivAt_trace_pow (τ : E →L[𝕜] F)
+    (hτ : ∀ a b : E, τ (a * b) = τ (b * a))
+    {f : 𝕜 → E} {f&#x27; : E} {x : 𝕜} (hf : HasDerivAt f f&#x27; x) (n : ℕ) :
+    HasDerivAt (fun y =&gt; τ (f y ^ n)) (n • τ (f x ^ (n - 1) * f&#x27;)) x := by
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.KervaireTraceCalculus.hasDerivAt_trace_exp_path_pow</code> <small>line 46</small><div class="doc"><p>Differentiation along the exponential unitary path, before imposing positivity.</p></div><pre>theorem hasDerivAt_trace_exp_path_pow (τ : B →L[ℂ] ℂ)
+    (hτ : ∀ a b : B, τ (a * b) = τ (b * a)) (U C : B) (z : ℂ) (n : ℕ) :
+    HasDerivAt (fun y : ℂ =&gt; τ ((U * NormedSpace.exp (y • C)) ^ n))
+      ((n : ℂ) * τ ((U * NormedSpace.exp (z • C)) ^ n * C)) z := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.KervaireTraceCalculus.trace_mul_nonneg</code> <small>line 74</small><div class="doc"><p>Tracial positivity applies to a product of positive elements even when they
+do not commute.</p></div><pre>theorem trace_mul_nonneg (τ : A →L[ℂ] ℂ)
+    (ht : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    (hp : ∀ X : A, 0 ≤ (τ (star X * X)).re)
+    {B D : A} (hB : 0 ≤ B) (hD : 0 ≤ D) : 0 ≤ (τ (D * B)).re := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.KervaireTraceCalculus.trace_mul_le</code> <small>line 95</small><div class="doc"><p>The polynomial phase derivative is bounded using positivity, not commutativity
+between the path generator and the functional calculus.</p></div><pre>theorem trace_mul_le (τ : A →L[ℂ] ℂ)
+    (ht : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    (hp : ∀ X : A, 0 ≤ (τ (star X * X)).re)
+    {B C : A} (hB : 0 ≤ B) {r : ℝ} (hC : C ≤ r • (1 : A)) :
+    (τ (C * B)).re ≤ r * (τ B).re := by
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.KervaireTraceCalculus.hasDerivAt_trace_real_exp_path_pow</code> <small>line 111</small><div class="doc"><p>The same tracial differentiation formula for a real time parameter.</p></div><pre>theorem hasDerivAt_trace_real_exp_path_pow (τ : A →L[ℂ] ℂ)
+    (hτ : ∀ a b : A, τ (a * b) = τ (b * a)) (U C : A) (t : ℝ) (n : ℕ) :
+    HasDerivAt (fun y : ℝ =&gt; τ ((U * NormedSpace.exp (y • C)) ^ n))
+      ((n : ℂ) * τ ((U * NormedSpace.exp (t • C)) ^ n * C)) t := by
+…</pre></li><li id=L131><b>def</b> <code>OAI.KervaireTraceCalculus.traceLog</code> <small>line 131</small><div class="doc"><p>A regularized logarithm evaluated by a trace.</p></div><pre>def traceLog (τ : A →L[ℂ] ℂ) (a : ℂ) (U : A) : ℂ :=
+…</pre></li><li id=L134><b>theorem</b> <code>OAI.KervaireTraceCalculus.norm_log_coeff_le</code> <small>line 134</small></li><li id=L143><b>theorem</b> <code>OAI.KervaireTraceCalculus.summable_traceLog</code> <small>line 143</small></li><li id=L161><b>theorem</b> <code>OAI.KervaireTraceCalculus.norm_trace_pow_mul_le</code> <small>line 161</small></li><li id=L174><b>theorem</b> <code>OAI.KervaireTraceCalculus.hasDerivAt_traceLog_path</code> <small>line 174</small><div class="doc"><p>Uniform geometric bounds justify differentiating the regularized trace.
+Only real time is needed, so the unitary path is uniformly bounded.</p></div><pre>theorem hasDerivAt_traceLog_path [NormOneClass A] (τ : A →L[ℂ] ℂ)
+    (hτ : ∀ a b : A, τ (a * b) = τ (b * a)) (U C : A)
+    (hb : ∀ t : ℝ, ‖U * NormedSpace.exp (t • C)‖ ≤ 1)
+    {a : ℂ} (ha : ‖a‖ &lt; 1) (t : ℝ) :
+    HasDerivAt (fun t : ℝ =&gt; traceLog τ a (U * NormedSpace.exp (t • C)))
+      (∑&#x27; n : ℕ, a ^ (n + 1) * τ ((U * NormedSpace.exp (t • C)) ^ (n + 1) * C)) t := by
+…</pre><p class="refs">Mentions: <a href="TraceCalculus.lean.html#L131">OAI.KervaireTraceCalculus.traceLog</a></p></li><li id=L209><b>theorem</b> <code>OAI.KervaireTraceCalculus.geometricPart_realpart_nonneg</code> <small>line 209</small><div class="doc"><p>The Hermitian part of the Cayley transform is nonnegative.  This algebraic
+Neumann-series argument is valid in every C-star algebra, not just matrices.</p></div><pre>theorem geometricPart_realpart_nonneg (Z : A) (hZ : ‖Z‖ &lt; 1) :
+    0 ≤ 1 + (∑&#x27; n : ℕ, Z ^ (n+1)) + star (∑&#x27; n : ℕ, Z ^ (n+1)) := by
+…</pre></li><li id=L234><b>theorem</b> <code>OAI.KervaireTraceCalculus.geometricPart_trace_bound</code> <small>line 234</small><div class="doc"><p>The Cayley positivity gives the exact one-sided phase derivative bound.</p></div><pre>theorem geometricPart_trace_bound (τ : A →L[ℂ] ℂ)
+    (ht : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    (hp : ∀ X : A, 0 ≤ (τ (star X * X)).re)
+    (hs : ∀ X : A, τ (star X) = star (τ X))
+    {B : A} (hB : 0 ≤ B) (Z : A) (hZ : ‖Z‖ &lt; 1) :
+    -2 * (τ ((∑&#x27; n : ℕ, Z ^ (n+1)) * B)).re ≤ (τ B).re := by
+…</pre></li><li id=L260><b>theorem</b> <code>OAI.KervaireTraceCalculus.trace_deriv_series</code> <small>line 260</small><div class="doc"><p>Summing the derivative of the logarithm produces the Cayley series inside
+the algebra.</p></div><pre>theorem trace_deriv_series (τ : A →L[ℂ] ℂ) {a : ℂ} {W : A} (C : A)
+    (haW : ‖a • W‖ &lt; 1) :
+    (∑&#x27; n : ℕ, a ^ (n+1) * τ (W ^ (n+1) * C)) =
+      τ ((∑&#x27; n : ℕ, (a • W) ^ (n+1)) * C) := by
+…</pre></li><li id=L272><b>def</b> <code>OAI.KervaireTraceCalculus.phaseVelocity</code> <small>line 272</small><div class="doc"><p>The derivative generator has the normalization used for fractional phase.</p></div><pre>def phaseVelocity (B : A) : A := ((2 * Real.pi : ℂ) * Complex.I) • B
+…</pre></li><li id=L276><b>theorem</b> <code>OAI.KervaireTraceCalculus.exp_phaseVelocity_mem_unitary</code> <small>line 276</small><div class="doc"><p>Positive generators give a unitary path at all real times.</p></div><pre>theorem exp_phaseVelocity_mem_unitary {B : A} (hB : 0 ≤ B) (t : ℝ) :
+    NormedSpace.exp (t • phaseVelocity B) ∈ unitary A := by
+…</pre><p class="refs">Mentions: <a href="TraceCalculus.lean.html#L272">OAI.KervaireTraceCalculus.phaseVelocity</a></p></li><li id=L284><b>def</b> <code>OAI.KervaireTraceCalculus.smoothTrace</code> <small>line 284</small><div class="doc"><p>A smooth trace approximation to the fractional spectral phase.</p></div><pre>def smoothTrace (τ : A →L[ℂ] ℂ) (a : ℂ) (U : A) : ℝ :=
+…</pre></li><li id=L288><b>theorem</b> <code>OAI.KervaireTraceCalculus.hasDerivAt_smoothTrace_path</code> <small>line 288</small><div class="doc"><p>The exact derivative of the regularized phase along a positive path.</p></div><pre>theorem hasDerivAt_smoothTrace_path (τ : A →L[ℂ] ℂ)
+    (ht : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    {U B : A} (hU : U ∈ unitary A) (hB : 0 ≤ B)
+    {a : ℂ} (ha : ‖a‖ &lt; 1) (t : ℝ) :
+    HasDerivAt (fun t : ℝ =&gt; smoothTrace τ a
+      (U * NormedSpace.exp (t • phaseVelocity B)))
+      (-2 * (τ ((∑&#x27; n : ℕ, (a • (U * NormedSpace.exp
+        (t • phaseVelocity B))) ^ (n+1)) * B)).re) t := by
+…</pre><p class="refs">Mentions: <a href="TraceCalculus.lean.html#L284">OAI.KervaireTraceCalculus.smoothTrace</a>, <a href="TraceCalculus.lean.html#L272">OAI.KervaireTraceCalculus.phaseVelocity</a></p></li><li id=L317><b>theorem</b> <code>OAI.KervaireTraceCalculus.deriv_smoothTrace_path_le</code> <small>line 317</small><div class="doc"><p>The one-sided derivative estimate for the smooth regularization.</p></div><pre>theorem deriv_smoothTrace_path_le (τ : A →L[ℂ] ℂ)
+    (ht : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    (hp : ∀ X : A, 0 ≤ (τ (star X * X)).re)
+    (hs : ∀ X : A, τ (star X) = star (τ X))
+    {U B : A} (hU : U ∈ unitary A) (hB : 0 ≤ B)
+    {a : ℂ} (ha : ‖a‖ &lt; 1) (t : ℝ) :
+    deriv (fun t : ℝ =&gt; smoothTrace τ a
+      (U * NormedSpace.exp (t • phaseVelocity B))) t ≤ (τ B).re := by
+…</pre><p class="refs">Mentions: <a href="TraceCalculus.lean.html#L284">OAI.KervaireTraceCalculus.smoothTrace</a>, <a href="TraceCalculus.lean.html#L272">OAI.KervaireTraceCalculus.phaseVelocity</a></p></li><li id=L332><b>theorem</b> <code>OAI.KervaireTraceCalculus.smoothTrace_mul_exp_le</code> <small>line 332</small><div class="doc"><p>Integrating the regularized derivative bound over the unit path.</p></div><pre>theorem smoothTrace_mul_exp_le (τ : A →L[ℂ] ℂ)
+    (ht : ∀ X Y : A, τ (X * Y) = τ (Y * X))
+    (hp : ∀ X : A, 0 ≤ (τ (star X * X)).re)
+    (hs : ∀ X : A, τ (star X) = star (τ X))
+    {U B : A} (hU : U ∈ unitary A) (hB : 0 ≤ B)
+    {a : ℂ} (ha : ‖a‖ &lt; 1) :
+    smoothTrace τ a (U * NormedSpace.exp (phaseVelocity B)) ≤
+      smoothTrace τ a U + (τ B).re := by
+…</pre><p class="refs">Mentions: <a href="TraceCalculus.lean.html#L284">OAI.KervaireTraceCalculus.smoothTrace</a>, <a href="TraceCalculus.lean.html#L272">OAI.KervaireTraceCalculus.phaseVelocity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

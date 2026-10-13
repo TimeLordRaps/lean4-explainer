@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CoulombTransport/StrictMinimum.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CoulombTransport/StrictMinimum.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">CoulombTransport</a> / <span>StrictMinimum.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">CoulombTransport</a>/<span>StrictMinimum.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CoulombTransport/StrictMinimum.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.Problem356.convex_isMinOn_of_hasFDerivAt_zero</code> <small>line 18</small><div class="doc"><p>A stationary point of a convex differentiable function is a global minimizer
+on its convexity domain.</p></div><pre>theorem convex_isMinOn_of_hasFDerivAt_zero {s : Set E} {f : E → ℝ} {x : E}
+    (hf : ConvexOn ℝ s f) (hx : x ∈ s)
+    (hd : HasFDerivAt f (0 : E →L[ℝ] ℝ) x) : IsMinOn f s x := by
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.Problem356.strictConvex_eq_iff_of_hasFDerivAt_zero</code> <small>line 34</small><div class="doc"><p>Strict convexity upgrades a stationary point to the unique minimum.</p></div><pre>theorem strictConvex_eq_iff_of_hasFDerivAt_zero {s : Set E} {f : E → ℝ} {x : E}
+    (hf : StrictConvexOn ℝ s f) (hx : x ∈ s)
+    (hd : HasFDerivAt f (0 : E →L[ℝ] ℝ) x) {y : E} (hy : y ∈ s) :
+    f y = f x ↔ y = x := by
+…</pre></li><li id=L52><b>theorem</b> <code>OAI.Problem356.strictConvexOn_of_line_deriv2_pos</code> <small>line 52</small><div class="doc"><p>Strict positivity of second derivatives on nonconstant line segments implies
+strict convexity in an arbitrary real normed space.</p></div><pre>theorem strictConvexOn_of_line_deriv2_pos {s : Set E} {f : E → ℝ}
+    (hs : Convex ℝ s) (hf : ContinuousOn f s)
+    (hpos : ∀ x ∈ s, ∀ y ∈ s, x ≠ y → ∀ t ∈ Ioo (0 : ℝ) 1,
+      0 &lt; deriv (deriv (f ∘ AffineMap.lineMap x y)) t) :
+    StrictConvexOn ℝ s f := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.Problem356.strictConvexOn_of_positive_hessian</code> <small>line 79</small><div class="doc"><p>A positive-definite second Fréchet derivative gives strict convexity on an
+open convex domain. The two derivative fields are explicit, so this applies
+directly to computed Hessians without rewriting <code>fderiv</code>.</p></div><pre>theorem strictConvexOn_of_positive_hessian {s : Set E} {f : E → ℝ}
+    {f&#x27; : E → E →L[ℝ] ℝ} {f&#x27;&#x27; : E → E →L[ℝ] E →L[ℝ] ℝ}
+    (hs : Convex ℝ s) (hsopen : IsOpen s)
+    (hf : ∀ z ∈ s, HasFDerivAt f (f&#x27; z) z)
+    (hf&#x27; : ∀ z ∈ s, HasFDerivAt f&#x27; (f&#x27;&#x27; z) z)
+    (hpos : ∀ z ∈ s, ∀ v : E, v ≠ 0 → 0 &lt; f&#x27;&#x27; z v v) :
+    StrictConvexOn ℝ s f := by
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.Problem356.stationary_family_certificate</code> <small>line 109</small><div class="doc"><p>A smooth stationary branch in strictly convex state slices defines a smooth
+supporting value, and its graph is exactly the contact set.</p></div><pre>theorem stationary_family_certificate
+    {P : Type uP} [NormedAddCommGroup P] [NormedSpace ℝ P]
+    {U : Set P} {V : Set E} {n : WithTop ENat}
+    {F : P × E → ℝ} {ψ : P → E}
+    (hF : ContDiffOn ℝ n F (U ×ˢ V)) (hψ : ContDiffOn ℝ n ψ U)
+    (hψV : MapsTo ψ U V)
+    (hconv : ∀ p ∈ U, StrictConvexOn ℝ V (fun z =&gt; F (p, z)))
+    (hstat : ∀ p ∈ U, HasFDerivAt (fun z =&gt; F (p, z))
+      (0 : E →L[ℝ] ℝ) (ψ p)) :
+    ContDiffOn ℝ n (fun p =&gt; F (p, ψ p)) U ∧
+      ∀ p ∈ U, ∀ z ∈ V,
+        F (p, ψ p) ≤ F (p, z) ∧ (F (p, z) = F (p, ψ p) ↔ z = ψ p) := by
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.Problem356.stationary_family_certificate_of_positive_hessian</code> <small>line 130</small><div class="doc"><p>Version of <code>stationary_family_certificate</code> using explicit positive Hessians.
+This is the analytic supporting-certificate step of the local construction.</p></div><pre>theorem stationary_family_certificate_of_positive_hessian
+    {P : Type uP} [NormedAddCommGroup P] [NormedSpace ℝ P]
+    {U : Set P} {V : Set E} {n : WithTop ENat}
+    {F : P × E → ℝ} {ψ : P → E}
+    {D : P → E → E →L[ℝ] ℝ} {H : P → E → E →L[ℝ] E →L[ℝ] ℝ}
+    (hF : ContDiffOn ℝ n F (U ×ˢ V)) (hψ : ContDiffOn ℝ n ψ U)
+    (hψV : MapsTo ψ U V) (hV : Convex ℝ V) (hVopen : IsOpen V)
+    (hD : ∀ p ∈ U, ∀ z ∈ V, HasFDerivAt (fun z =&gt; F (p, z)) (D p z) z)
+    (hH : ∀ p ∈ U, ∀ z ∈ V, HasFDerivAt (D p) (H p z) z)
+    (hpos : ∀ p ∈ U, ∀ z ∈ V, ∀ v : E, v ≠ 0 → 0 &lt; H p z v v)
+    (hstat : ∀ p ∈ U, D p (ψ p) = 0) :
+    ContDiffOn ℝ n (fun p =&gt; F (p, ψ p)) U ∧
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

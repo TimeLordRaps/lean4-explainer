@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Geometry/FirstHeightBounded.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Geometry/FirstHeightBounded.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Geometry</a> / <span>FirstHeightBounded.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Geometry</a>/<span>FirstHeightBounded.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Geometry/FirstHeightBounded.lean#L1">source</a></p><div class="doc"><p>A bounded narrow first-height event, its probability uniformly over spatial
+scales, and measurability of the corresponding stopped-past certificate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.SLEExactGauge.FirstHeightSupport.narrowRiseBy</code> <small>line 17</small></li><li id=L21><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.isOpen_narrowRiseBy</code> <small>line 21</small></li><li id=L34><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.measurableSet_narrowRiseBy</code> <small>line 34</small></li><li id=L37><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.narrowRiseEvent_eq_iUnion</code> <small>line 37</small></li><li id=L48><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.scalePath_narrowRiseBy_iff</code> <small>line 48</small></li><li id=L92><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.narrowRiseBy_probability_scaling</code> <small>line 92</small></li><li id=L128><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.uniform_bounded_narrowRise_probability</code> <small>line 128</small><div class="doc"><p>The uniform probability can be realized before a deterministic multiple
+of the square of the spatial scale.</p></div><pre>theorem uniform_bounded_narrowRise_probability
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (B₀ : ℝ≥0 → Ω → ℝ) (hB₀ : IsBrownianReal B₀ P)
+    (hm : ∀ t, Measurable (B₀ t)) (hc : ∀ ω, Continuous (fun t =&gt; B₀ t ω))
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ ω, IsCapacityTwoWitness (fun t =&gt; Real.sqrt κ * B₀ t ω) (γ ω) (G ω) (F ω))
+    (hpublished : PublishedGeometricTubeSupport P γ) :
+    ∃ T₀ : ℝ≥0, 0 &lt; T₀ ∧ ∃ q : ℝ≥0∞, 0 &lt; q ∧ ∀ c : ℝ≥0, 0 &lt; c →
+      q ≤ P {ω | sourceTracePath γ (fun ω =&gt; (hw ω).1) ω ∈
+        narrowRiseBy (c : ℝ) (T₀ * c ^ 2)} := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="GeometricTubeSupport.lean.html#L45">OAI.SLEExactGauge.PublishedGeometricTubeSupport</a>, <a href="../StoppedMeasures.lean.html#L27">OAI.SLEExactGauge.sourceTracePath</a>, <a href="FirstHeightBounded.lean.html#L17">OAI.SLEExactGauge.FirstHeightSupport.narrowRiseBy</a></p></li><li id=L158><b>def</b> <code>OAI.SLEExactGauge.FirstHeightSupport.stoppedTracePath</code> <small>line 158</small><div class="doc"><p>Stop a continuous trace at a finite stopping time, retaining a continuous
+path on the common nonnegative-time domain.</p></div><pre>def stoppedTracePath {Ω : Type*} (γ : Ω → ℝ≥0 → ℂ) (hc : ∀ ω, Continuous (γ ω))
+    (σ : Ω → ℝ≥0) (ω : Ω) : C(ℝ≥0, ℂ) :=
+…</pre></li><li id=L163><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.stoppedTracePath_measurable</code> <small>line 163</small><div class="doc"><p>Every coordinate of this path is already measurable in the stopped past.</p></div><pre>theorem stoppedTracePath_measurable
+    {Ω : Type*} [m : MeasurableSpace Ω] (ℱ : Filtration ℝ≥0 m)
+    (γ : Ω → ℝ≥0 → ℂ) (ha : Adapted ℱ (fun t ω =&gt; γ ω t))
+    (hc : ∀ ω, Continuous (γ ω)) (σ : Ω → ℝ≥0)
+    (hσ : IsStoppingTime ℱ (fun ω =&gt; (σ ω : WithTop ℝ≥0))) :
+    Measurable[hσ.measurableSpace] (stoppedTracePath γ hc σ) := by
+…</pre><p class="refs">Mentions: <a href="FirstHeightBounded.lean.html#L158">OAI.SLEExactGauge.FirstHeightSupport.stoppedTracePath</a></p></li><li id=L183><b>def</b> <code>OAI.SLEExactGauge.FirstHeightSupport.stoppedNarrowCertificate</code> <small>line 183</small><div class="doc"><p>This concrete certificate depends only on the stopped trace. Its height
+and horizontal-strip conditions can therefore be tested in the stopped past.</p></div><pre>def stoppedNarrowCertificate {Ω : Type*} (γ : Ω → ℝ≥0 → ℂ) (σ : Ω → ℝ≥0)
+    (B : ℝ) (T : ℝ≥0) : Set Ω :=
+…</pre></li><li id=L188><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.stoppedNarrowCertificate_measurable</code> <small>line 188</small></li><li id=L209><b>def</b> <code>OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime</code> <small>line 209</small><div class="doc"><p>Finite first-height clock, stopped at the prescribed deterministic bound.</p></div><pre>def boundedFirstHeightTime (γ : ℝ≥0 → ℂ) (B : ℝ) (T : ℝ≥0) : ℝ≥0 :=
+…</pre></li><li id=L212><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime_coe</code> <small>line 212</small></li><li id=L221><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime_le</code> <small>line 221</small></li><li id=L227><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime_isStoppingTime</code> <small>line 227</small></li><li id=L237><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.narrowRiseBy_gives_bounded_certificate</code> <small>line 237</small><div class="doc"><p>A bounded supported rise supplies a narrow certificate at the actual
+first-height clock.</p></div><pre>theorem narrowRiseBy_gives_bounded_certificate
+    {B : ℝ} (hB : 0 &lt; B) (p : C(ℝ≥0, ℂ)) (hp0 : p 0 = 0)
+    {T : ℝ≥0} (hp : p ∈ narrowRiseBy B T) :
+    let σ := boundedFirstHeightTime p B T
+…</pre><p class="refs">Mentions: <a href="FirstHeightBounded.lean.html#L17">OAI.SLEExactGauge.FirstHeightSupport.narrowRiseBy</a>, <a href="FirstHeightBounded.lean.html#L209">OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime</a></p></li><li id=L257><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.bounded_certificate_geometry</code> <small>line 257</small><div class="doc"><p>Every measurable bounded certificate gives the full first-height
+geometry, including strict freshness and rectangle containment.</p></div><pre>theorem bounded_certificate_geometry
+    (p : C(ℝ≥0, ℂ)) (hp0 : p 0 = 0) (hpH : ∀ t, 0 ≤ (p t).im)
+    {B : ℝ} (hB : 0 &lt; B) (T : ℝ≥0)
+    (hcert : let σ := boundedFirstHeightTime p B T
+…</pre><p class="refs">Mentions: <a href="FirstHeightBounded.lean.html#L209">OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime</a></p></li><li id=L310><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.bounded_certificate_gives_first_height</code> <small>line 310</small></li><li id=L321><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.uniform_boundedFirstHeight_probability</code> <small>line 321</small><div class="doc"><p>Uniform bounded first-height probability in the form of a concrete
+stopped-past event.</p></div><pre>theorem uniform_boundedFirstHeight_probability
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (B₀ : ℝ≥0 → Ω → ℝ) (hB₀ : IsBrownianReal B₀ P)
+    (hm : ∀ t, Measurable (B₀ t)) (hc : ∀ ω, Continuous (fun t =&gt; B₀ t ω))
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ ω, IsCapacityTwoWitness (fun t =&gt; Real.sqrt κ * B₀ t ω) (γ ω) (G ω) (F ω))
+    (hpublished : PublishedGeometricTubeSupport P γ) :
+    ∃ T₀ : ℝ≥0, 0 &lt; T₀ ∧ ∃ q : ℝ≥0∞, 0 &lt; q ∧ ∀ c : ℝ≥0, 0 &lt; c →
+      q ≤ P (stoppedNarrowCertificate γ
+        (fun ω =&gt; boundedFirstHeightTime (γ ω) c (T₀ * c ^ 2)) c (T₀ * c ^ 2)) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="GeometricTubeSupport.lean.html#L45">OAI.SLEExactGauge.PublishedGeometricTubeSupport</a>, <a href="FirstHeightBounded.lean.html#L183">OAI.SLEExactGauge.FirstHeightSupport.stoppedNarrowCertificate</a>, <a href="FirstHeightBounded.lean.html#L209">OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime</a></p></li><li id=L342><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeight_certificate_measurable</code> <small>line 342</small><div class="doc"><p>The event in the uniform probability theorem is measurable at its
+bounded first-height stopping time.</p></div><pre>theorem boundedFirstHeight_certificate_measurable
+    {Ω : Type*} [m : MeasurableSpace Ω] (ℱ : Filtration ℝ≥0 m)
+    (γ : Ω → ℝ≥0 → ℂ) (ha : Adapted ℱ (fun t ω =&gt; γ ω t))
+    (hc : ∀ ω, Continuous (γ ω)) (B : ℝ) (T : ℝ≥0) :
+    MeasurableSet[(boundedFirstHeightTime_isStoppingTime ℱ γ ha hc B T).measurableSpace]
+      (stoppedNarrowCertificate γ (fun ω =&gt; boundedFirstHeightTime (γ ω) B T) B T) :=
+…</pre><p class="refs">Mentions: <a href="FirstHeightBounded.lean.html#L227">OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime_isStoppingTime</a>, <a href="FirstHeightBounded.lean.html#L183">OAI.SLEExactGauge.FirstHeightSupport.stoppedNarrowCertificate</a>, <a href="FirstHeightBounded.lean.html#L209">OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime</a></p></li><li id=L354><b>theorem</b> <code>OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeight_certificate_measurable_at_first</code> <small>line 354</small><div class="doc"><p>The same event is measurable in the full first-height past, as used in
+the manuscript's conditional continuation argument.</p></div><pre>theorem boundedFirstHeight_certificate_measurable_at_first
+    {Ω : Type*} [m : MeasurableSpace Ω] (ℱ : Filtration ℝ≥0 m)
+    (γ : Ω → ℝ≥0 → ℂ) (ha : Adapted ℱ (fun t ω =&gt; γ ω t))
+    (hc : ∀ ω, Continuous (γ ω)) (B : ℝ) (T : ℝ≥0) :
+    MeasurableSet[(firstHeightTime_isStoppingTime ℱ γ ha hc (B / 4)).measurableSpace]
+      (stoppedNarrowCertificate γ (fun ω =&gt; boundedFirstHeightTime (γ ω) B T) B T) := by
+…</pre><p class="refs">Mentions: <a href="FirstHeightSupport.lean.html#L26">OAI.SLEExactGauge.FirstHeightSupport.firstHeightTime_isStoppingTime</a>, <a href="FirstHeightBounded.lean.html#L183">OAI.SLEExactGauge.FirstHeightSupport.stoppedNarrowCertificate</a>, <a href="FirstHeightBounded.lean.html#L209">OAI.SLEExactGauge.FirstHeightSupport.boundedFirstHeightTime</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("ep", [["Arxiv.«2602.05192».IsEpsilonLight",37,46],["Erdos1003.erdos_1003.variants.eps87",142,59],["Erdos1190.eps",263,44],["Erdos1201.erdos_1201.variants.epsilon_half",270,59],["Erdos314.epsilon",433,43],["Erdos750.erdos_750.variants.epsilon",746,147]]);

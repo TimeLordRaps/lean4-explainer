@@ -1,0 +1,1 @@
+window.l4shard("ed", [["TileStructure.Forest.global_tree_control1_edist_left",80,1377],["TileStructure.Forest.global_tree_control1_edist_part1",80,1230],["TileStructure.Forest.global_tree_control1_edist_part2",80,1331],["TileStructure.Forest.global_tree_control1_edist_right",80,1387],["depth_le_edist_add_depth",0,201],["edgeScales",14,477]]);

@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/GeometricRawDensity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/GeometricRawDensity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>GeometricRawDensity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>GeometricRawDensity.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/GeometricRawDensity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>lemma</b> <code>OAI.Problem337.positive_ceiling_quotient</code> <small>line 15</small><div class="doc"><p>A positive integer shift has a positive natural ceiling quotient.</p></div><pre>lemma positive_ceiling_quotient {N u : ℕ} (hN : 0 &lt; N) (hu : 0 &lt; u) :
+    0 &lt; ⌈(N : ℝ) / u⌉₊ := by
+…</pre></li><li id=L23><b>lemma</b> <code>OAI.Problem337.ceiling_residue_le_of_fract_lt</code> <small>line 23</small><div class="doc"><p>A normalized small negative residue gives the unnormalized ceiling bound
+used by the backward construction. The cutoff need not be integral.</p></div><pre>lemma ceiling_residue_le_of_fract_lt {N u : ℕ} {ρ X : ℝ}
+    (hu : 0 &lt; u) (hρ : 0 ≤ ρ) (huX : (u : ℝ) ≤ X)
+    (hsmall : Int.fract (-(N : ℝ) / u) &lt; ρ) :
+    ((u * ⌈(N : ℝ) / u⌉₊ - N : ℕ) : ℝ) ≤ ρ * X := by
+…</pre></li><li id=L34><b>lemma</b> <code>OAI.Problem337.terminal_step_of_fract_lt</code> <small>line 34</small><div class="doc"><p>The terminal normalized residue condition gives a genuine power-saving
+integer residue step, including the case of residue zero.</p></div><pre>lemma terminal_step_of_fract_lt {t u : ℕ} {η : ℝ}
+    (ht : 0 &lt; t) (hu : 0 &lt; u)
+    (hsmall : Int.fract (-(t : ℝ) / u) &lt; (u : ℝ) ^ (-η)) :
+    ∃ z h : ℕ, 0 &lt; z ∧ (h : ℝ) ≤ (u : ℝ) ^ (1 - η) ∧
+      t + h = u * z := by
+…</pre></li><li id=L55><b>abbrev</b> <code>OAI.Problem337.GeometricDensity.depth</code> <small>line 55</small></li><li id=L58><b>abbrev</b> <code>OAI.Problem337.GeometricDensity.cutoff</code> <small>line 58</small></li><li id=L61><b>abbrev</b> <code>OAI.Problem337.GeometricDensity.factor</code> <small>line 61</small></li><li id=L64><b>abbrev</b> <code>OAI.Problem337.GeometricDensity.contraction</code> <small>line 64</small></li><li id=L70><b>structure</b> <code>OAI.Problem337.GeometricDensity.NormalizedResidueData</code> <small>line 70</small><div class="doc"><p>Arithmetic residue information on the canonical geometric levels.
+The normalized Fourier conclusion, exceptional count, shifted-divisor moment,
+and terminal shrinking residue remain explicit hypotheses. All geometric
+alignment, ceiling equations, and expansion construction are supplied below.</p></div><pre>structure NormalizedResidueData (DM D₀ η c r S loss : ℝ) (C M : ℕ) where
+…</pre></li><li id=L97><b>structure</b> <code>OAI.Problem337.GeometricDensity.ResidueData</code> <small>line 97</small><div class="doc"><p>The weaker, directly consumable arithmetic data: only actual ceiling
+residues are bounded. In particular a non-strict residue bound is sufficient.</p></div><pre>structure ResidueData (DM D₀ η c r S loss : ℝ) (C M : ℕ) where
+…</pre></li><li id=L124><b>def</b> <code>OAI.Problem337.GeometricDensity.NormalizedResidueData.toResidueData</code> <small>line 124</small><div class="doc"><p>A normalized strict discrepancy conclusion implies the weaker ceiling
+residue interface, without demanding a strict inequality from later consumers.</p></div><pre>def NormalizedResidueData.toResidueData {DM D₀ η c r S loss : ℝ} {C M : ℕ}
+    (H : NormalizedResidueData DM D₀ η c r S loss C M) (hS : 0 &lt; S) :
+    ResidueData DM D₀ η c r S loss C M := by
+…</pre><p class="refs">Mentions: <a href="GeometricRawDensity.lean.html#L70">OAI.Problem337.GeometricDensity.NormalizedResidueData</a>, <a href="GeometricRawDensity.lean.html#L97">OAI.Problem337.GeometricDensity.ResidueData</a></p></li><li id=L168><b>def</b> <code>OAI.Problem337.GeometricDensity.ResidueData.toFamily</code> <small>line 168</small><div class="doc"><p>Construct the exact raw family from ceiling residue information at the
+canonical levels. This definition discharges every ceiling, divisibility,
+terminal-expansion, and geometric-transition field.</p></div><pre>def ResidueData.toFamily {DM D₀ η c r S loss : ℝ} {C M : ℕ}
+    (H : ResidueData DM D₀ η c r S loss C M)
+    (hDM : 1 &lt; DM) (hD₀ : 1 ≤ D₀) (hη : 0 &lt; η) (hηhalf : η ≤ 1 / 2)
+    (hS : 1 ≤ S) (hlog : 1 ≤ Real.log S) (hscale : 2 ≤ ResidueLevels.scale S)
+    (hC : 0 &lt; C) (hM : Real.exp S &lt; (M : ℝ))
+    (hbinary : 2 ^ TerminalDepth.binaryExponent D₀ S ∣ M)
+    (hloss : 0 &lt; loss)
+    (hloss_bound : 1 + loss * Real.exp (S ^ (1 / 4 : ℝ) / r) ≤
+      Real.exp (2 * S ^ (1 / 4 : ℝ))) :
+    DensityResidueFamily S (ResidueLevels.scale S) (contraction η S) r c
+      (depth DM η S) := by
+…</pre><p class="refs">Mentions: <a href="GeometricRawDensity.lean.html#L97">OAI.Problem337.GeometricDensity.ResidueData</a>, <a href="ResidueLevels.lean.html#L133">OAI.Problem337.ResidueLevels.scale</a>, <a href="TerminalDepth.lean.html#L35">OAI.Problem337.TerminalDepth.binaryExponent</a>, <a href="DensityAssembly.lean.html#L130">OAI.Problem337.DensityResidueFamily</a>, <a href="GeometricRawDensity.lean.html#L64">OAI.Problem337.GeometricDensity.contraction</a>, <a href="GeometricRawDensity.lean.html#L55">OAI.Problem337.GeometricDensity.depth</a></p></li><li id=L249><b>theorem</b> <code>OAI.Problem337.GeometricDensity.raw_density_supply_of_geometric_residues</code> <small>line 249</small><div class="doc"><p>The concrete geometric construction meets the raw upper-bound interface.
+Only the arithmetic input data, denominator size, and the displayed loss
+estimate are assumed; the depth and rounded terminal length are proved.</p></div><pre>theorem raw_density_supply_of_geometric_residues
+    {DM D₀ η c r S loss : ℝ} {C M : ℕ}
+    (H : ResidueData DM D₀ η c r S loss C M)
+    (hDM : 1 &lt; DM) (hD₀ : 1 ≤ D₀) (hη : 0 &lt; η) (hηhalf : η ≤ 1 / 2)
+    (hS : 1 ≤ S) (hlog : 1 ≤ Real.log S) (hscale : 2 ≤ ResidueLevels.scale S)
+    (hscale_lower : S / (2 * Real.log S) ≤ (ResidueLevels.scale S : ℝ))
+    (hC : 0 &lt; C) (hM : Real.exp S &lt; (M : ℝ))
+    (hMupper : (M : ℝ) ≤ Real.exp (DM * S))
+    (hbinary : 2 ^ TerminalDepth.binaryExponent D₀ S ∣ M)
+    (hloss : 0 &lt; loss)
+    (hloss_bound : 1 + loss * Real.exp (S ^ (1 / 4 : ℝ) / r) ≤
+      Real.exp (2 * S ^ (1 / 4 : ℝ))) :
+…</pre><p class="refs">Mentions: <a href="GeometricRawDensity.lean.html#L97">OAI.Problem337.GeometricDensity.ResidueData</a>, <a href="ResidueLevels.lean.html#L133">OAI.Problem337.ResidueLevels.scale</a>, <a href="TerminalDepth.lean.html#L35">OAI.Problem337.TerminalDepth.binaryExponent</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

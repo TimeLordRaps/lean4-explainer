@@ -1,0 +1,1 @@
+window.l4shard("dv", [["Nat.exists_coprime_and_dvd_pow",113,45],["Polynomial.Monic.exists_monic_map_eq_of_monic_dvd_map",137,23],["Polynomial.exists_monic_dvd_dvd_derivative_of_not_separable",141,22]]);

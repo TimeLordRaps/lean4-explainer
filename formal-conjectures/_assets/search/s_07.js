@@ -1,0 +1,1 @@
+window.l4shard("07", [["Arxiv.«math.0703548».bass_conjecture_integral_domain",49,77],["Arxiv.«math.0703548».matrixHattoriStallingsTraceAt",49,47],["Arxiv.«math.0703548».projective_module_isStablyFree",49,61],["Bugeaud07.problem_10_7",81,41]]);

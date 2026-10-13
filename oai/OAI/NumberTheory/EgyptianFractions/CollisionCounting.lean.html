@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/CollisionCounting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/CollisionCounting.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>CollisionCounting.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>CollisionCounting.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/CollisionCounting.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>def</b> <code>OAI.Problem337.collisionPairs</code> <small>line 9</small><div class="doc"><p>Ordered pairs with equal images, including the diagonal.</p></div><pre>def collisionPairs {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (A : Finset α) (f : α → β) : Finset (α × α) :=
+…</pre></li><li id=L14><b>def</b> <code>OAI.Problem337.strictCollisionPairs</code> <small>line 14</small><div class="doc"><p>Ordered collisions between distinct inputs.</p></div><pre>def strictCollisionPairs {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (A : Finset α) (f : α → β) : Finset (α × α) :=
+…</pre></li><li id=L18><b>lemma</b> <code>OAI.Problem337.collision_card_eq_sum_square</code> <small>line 18</small></li><li id=L35><b>lemma</b> <code>OAI.Problem337.collision_card_eq_strict_add</code> <small>line 35</small></li><li id=L49><b>theorem</b> <code>OAI.Problem337.card_sq_le_image_card_mul_collisions</code> <small>line 49</small><div class="doc"><p>Cauchy--Schwarz lower bound for the number of collisions of a finite map.</p></div><pre>theorem card_sq_le_image_card_mul_collisions {α β : Type*} [DecidableEq α]
+    [DecidableEq β] (A : Finset α) (f : α → β) :
+    A.card ^ 2 ≤ (A.image f).card * ((strictCollisionPairs A f).card + A.card) := by
+…</pre><p class="refs">Mentions: <a href="CollisionCounting.lean.html#L14">OAI.Problem337.strictCollisionPairs</a></p></li><li id=L60><b>theorem</b> <code>OAI.Problem337.strict_collision_lower_bound</code> <small>line 60</small><div class="doc"><p>If the image has at most half as many elements as the domain, the
+strict collisions retain at least half the Cauchy--Schwarz lower bound.</p></div><pre>theorem strict_collision_lower_bound {α β : Type*} [DecidableEq α]
+    [DecidableEq β] (A : Finset α) (f : α → β) {H : ℝ} (hH : 0 &lt; H)
+    (himage : ((A.image f).card : ℝ) ≤ H) (hsize : 2 * H ≤ (A.card : ℝ)) :
+    (A.card : ℝ) ^ 2 / (2 * H) ≤ ((strictCollisionPairs A f).card : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="CollisionCounting.lean.html#L14">OAI.Problem337.strictCollisionPairs</a></p></li><li id=L77><b>theorem</b> <code>OAI.Problem337.exceptional_maps_card_le</code> <small>line 77</small><div class="doc"><p>A generic larger-sieve counting step. A family of maps with small images
+is small when no distinct pair collides in too many maps. The codomain is
+allowed to depend on the map (as it does for reduction modulo varying primes).</p></div><pre>theorem exceptional_maps_card_le {ι α : Type*} {β : ι → Type*}
+    [DecidableEq ι] [DecidableEq α] [∀ i, DecidableEq (β i)]
+    (I : Finset ι) (A : Finset α) (f : ∀ i, α → β i)
+    {H B : ℝ} (hH : 0 &lt; H) (hB : 0 ≤ B)
+    (hsize : 2 * H ≤ (A.card : ℝ))
+    (himage : ∀ i ∈ I, ((A.image (f i)).card : ℝ) ≤ H)
+    (hpairs : ∀ p ∈ A.offDiag,
+      ((I.filter (fun i =&gt; f i p.1 = f i p.2)).card : ℝ) ≤ B) :
+    (I.card : ℝ) ≤ 2 * H * B := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.Problem337.primeFactors_card_le_log_collision</code> <small>line 124</small><div class="doc"><p>The number of distinct prime factors of a positive integer is at most
+its base-two logarithm.</p></div><pre>theorem primeFactors_card_le_log_collision {d : ℕ} (hd : 0 &lt; d) :
+    (d.primeFactors.card : ℝ) ≤ Real.log (d : ℝ) / Real.log 2 := by
+…</pre></li><li id=L140><b>theorem</b> <code>OAI.Problem337.prime_mod_collision_card_le</code> <small>line 140</small><div class="doc"><p>Distinct positive integers below <code>P</code> collide modulo at most <code>log₂ P</code>
+primes, even when the tested prime set has no prescribed size.</p></div><pre>theorem prime_mod_collision_card_le (I : Finset ℕ) {a b P : ℕ}
+    (hprime : ∀ p ∈ I, p.Prime) (ha : 1 ≤ a) (hb : 1 ≤ b)
+    (haP : a ≤ P) (hbP : b ≤ P) (hab : a ≠ b) :
+    ((I.filter (fun p =&gt; a % p = b % p)).card : ℝ) ≤
+      Real.log (P : ℝ) / Real.log 2 := by
+…</pre></li><li id=L169><b>theorem</b> <code>OAI.Problem337.exceptional_primes_card_le</code> <small>line 169</small><div class="doc"><p>Exceptional-prime bound underlying the rational-divisor supply. If all
+reductions of <code>A</code> modulo primes in <code>I</code> have size at most <code>H</code>, and <code>|A| ≥ 2H</code>,
+then <code>|I| ≤ 2H log(P)/log(2)</code> for <code>A ⊆ {1,...,P}</code>.</p></div><pre>theorem exceptional_primes_card_le (I A : Finset ℕ) (P : ℕ) {H : ℝ}
+    (hprime : ∀ p ∈ I, p.Prime) (hA : ∀ a ∈ A, 1 ≤ a ∧ a ≤ P)
+    (hP : 1 ≤ P) (hH : 0 &lt; H) (hsize : 2 * H ≤ (A.card : ℝ))
+    (himage : ∀ p ∈ I, ((A.image (fun a =&gt; a % p)).card : ℝ) ≤ H) :
+    (I.card : ℝ) ≤ 2 * H * (Real.log (P : ℝ) / Real.log 2) := by
+…</pre></li><li id=L184><b>theorem</b> <code>OAI.Problem337.exceptional_primes_three_quarters</code> <small>line 184</small><div class="doc"><p>The <code>u^(3/4)</code> exceptional-prime estimate in the supply construction,
+with all size hypotheses explicit and no analytic prime-distribution input.</p></div><pre>theorem exceptional_primes_three_quarters (I A : Finset ℕ) (u P : ℕ)
+    (hu : 2 ≤ u) (hprime : ∀ p ∈ I, p.Prime ∧ p ≤ u)
+    (hA : ∀ a ∈ A, 1 ≤ a ∧ a ≤ P) (hP : 1 ≤ P)
+    (hsize : u ^ 4 ≤ A.card)
+    (himage : ∀ p ∈ I,
+      ((A.image (fun a =&gt; a % p)).card : ℝ) ≤ (p : ℝ) ^ (3 / 4 : ℝ)) :
+    (I.card : ℝ) ≤ 2 * (u : ℝ) ^ (3 / 4 : ℝ) *
+      (Real.log (P : ℝ) / Real.log 2) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

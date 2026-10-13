@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Fourier/LineWeightAverage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Fourier/LineWeightAverage.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Fourier</a> / <span>LineWeightAverage.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Fourier</a>/<span>LineWeightAverage.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Fourier/LineWeightAverage.lean#L1">source</a></p><div class="doc"><p>Nested line averaging against the manuscript's actual top weight.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.LipschitzHilbert.SlopeBox.continuous_weight</code> <small>line 19</small></li><li id=L32><b>theorem</b> <code>OAI.LipschitzHilbert.SlopeBox.line_weight_comparable</code> <small>line 32</small><div class="doc"><p>The top weight is comparable on a reference-line cell no longer
+than the top. The constant depends only on the fixed decay exponent.</p></div><pre>theorem line_weight_comparable (T : SlopeBox) (origin transverse x : ℝ)
+    {K D H : ℝ} (hK : 1 ≤ K) (hD : 0 ≤ D) (hH : H ≤ T.length)
+    (hx : x ∈ Ico origin (origin + H)) :
+    Real.exp (-D) * T.weight K D (origin, transverse + T.slope * origin) ≤
+      T.weight K D (x, transverse + T.slope * x) ∧
+    T.weight K D (x, transverse + T.slope * x) ≤
+      Real.exp D * T.weight K D (origin, transverse + T.slope * origin) := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/TopWeight.lean.html#L17">OAI.LipschitzHilbert.SlopeBox</a>, <a href="../Estimates/TopWeight.lean.html#L30">OAI.LipschitzHilbert.SlopeBox.transverse</a></p></li><li id=L66><b>theorem</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.top_weight_average</code> <small>line 66</small><div class="doc"><p>The actual mesh product may be averaged against a top's decaying
+weight. No cellwise weight-comparison hypothesis remains in the result.</p></div><pre>theorem top_weight_average (g : FiniteLineGrid) (T : SlopeBox) (y : ℝ)
+    {K D : ℝ} (hK : 1 ≤ K) (hD : 0 ≤ D) (hwidth : g.width ≤ T.length)
+    (Γ : ℕ → ℝ → ℝ)
+    (hΓ : ∀ n &lt; g.depth, ∀ x, 0 ≤ Γ n x)
+    (hconstant : ∀ n &lt; g.depth, ∀ x z,
+      g.index (n + 1) x = g.index (n + 1) z → Γ n x = Γ n z)
+    (haverage : ∀ n &lt; g.depth, ∀ i : Fin (g.branching ^ g.depth),
+      (∫ x in {x | g.index n x = i}, Γ n x ∂volume.restrict g.root) ≤
+        (volume.restrict g.root).real {x | g.index n x = i}) :
+    Integrable (fun x =&gt; T.weight K D (x, y + T.slope * x) *
+      ∏ n ∈ Finset.range g.depth, Γ n x) (volume.restrict g.root) ∧
+    (∫ x in g.root, T.weight K D (x, y + T.slope * x) *
+…</pre><p class="refs">Mentions: <a href="../Trees/FiniteLineGrid.lean.html#L15">OAI.LipschitzHilbert.FiniteLineGrid</a>, <a href="../Estimates/TopWeight.lean.html#L17">OAI.LipschitzHilbert.SlopeBox</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

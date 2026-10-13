@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/AffineFamilyGluing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/AffineFamilyGluing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>AffineFamilyGluing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>AffineFamilyGluing.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/AffineFamilyGluing.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.Problem326.Affine.Label.shiftOffset</code> <small>line 17</small><div class="doc"><p>Shift an affine label without changing its slope.</p></div><pre>def Label.shiftOffset {d : ℕ} (L : Label d) (s : ℝ → ℝ) : Label d :=
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a></p></li><li id=L20><b>theorem</b> <code>OAI.Problem326.Affine.Label.shiftOffset_slope</code> <small>line 20</small></li><li id=L23><b>theorem</b> <code>OAI.Problem326.Affine.Label.shiftOffset_value</code> <small>line 23</small></li><li id=L30><b>def</b> <code>OAI.Problem326.Affine.shiftedFamily</code> <small>line 30</small><div class="doc"><p>The finite union of shifted local families; duplicate labels are harmless.</p></div><pre>def shiftedFamily {d : ℕ} {ι : Type uIota} [Fintype ι]
+    (Λ : ι → Finset (Label d)) (s : ι → ℝ → ℝ) : Finset (Label d) := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a></p></li><li id=L35><b>theorem</b> <code>OAI.Problem326.Affine.mem_shiftedFamily_iff</code> <small>line 35</small></li><li id=L41><b>theorem</b> <code>OAI.Problem326.Affine.shiftOffset_mem_shiftedFamily</code> <small>line 41</small></li><li id=L47><b>theorem</b> <code>OAI.Problem326.Affine.active_shiftedFamily_restrict</code> <small>line 47</small></li><li id=L59><b>def</b> <code>OAI.Problem326.Affine.extendedCut</code> <small>line 59</small><div class="doc"><p>An arbitrary total extension is only used at valid cut indices.</p></div><pre>def extendedCut {n : ℕ} (q : Fin n → ℝ) (k : ℕ) : ℝ :=
+…</pre></li><li id=L62><b>theorem</b> <code>OAI.Problem326.Affine.extendedCut_fin</code> <small>line 62</small></li><li id=L66><b>def</b> <code>OAI.Problem326.Affine.cutShift</code> <small>line 66</small><div class="doc"><p>Cumulative shifts select a local family on the corresponding exponent cell.</p></div><pre>def cutShift {n : ℕ} (q : Fin n → ℝ) (j : Fin (n + 1)) (h : ℝ) : ℝ :=
+…</pre></li><li id=L70><b>def</b> <code>OAI.Problem326.Affine.InCutCell</code> <small>line 70</small><div class="doc"><p>Closed cells include tied transition points.</p></div><pre>def InCutCell {n : ℕ} (q : Fin n → ℝ) (a b : ℝ)
+    (j : Fin (n + 1)) (μ : ℝ) : Prop :=
+…</pre></li><li id=L78><b>theorem</b> <code>OAI.Problem326.Affine.active_shiftedFamily_upper_cut</code> <small>line 78</small><div class="doc"><p>Actual canonical label activity supplies the upper-cut inequality needed
+by the asymptotic neighboring-family comparison.</p></div><pre>theorem active_shiftedFamily_upper_cut {d n : ℕ}
+    (Λ : Fin (n + 1) → Finset (Label d))
+    (q : Fin n → ℝ) (t : Fin (n + 1) → ℝ)
+    (hbase : ∀ j, (⟨fun _ =&gt; t j, fun _ =&gt; 0⟩ : Label d) ∈ Λ j)
+    (i : Fin n) {L : Label d}
+    (h : ℕ → ℝ) (p : ℕ → (Fin d → ℝ)) (p₀ : Fin d → ℝ)
+    (hpos : ∀ k, 0 &lt; h k) (hh : Tendsto h atTop (𝓝 0))
+    (hp : Tendsto p atTop (𝓝 p₀))
+    (hoff : L.offset =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ q i))
+    (hA : ∀ k, Active (shiftedFamily Λ (cutShift q))
+      (L.shiftOffset (cutShift q i.castSucc)) (h k) (powerPoint (h k) (p k))) :
+    ∃ k, p₀ k ≤ q i := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L21">OAI.Problem326.Affine.Active</a>, <a href="AffineFamilyGluing.lean.html#L30">OAI.Problem326.Affine.shiftedFamily</a>, <a href="AffineFamilyGluing.lean.html#L66">OAI.Problem326.Affine.cutShift</a>, <a href="FixedMinimum.lean.html#L31">OAI.Problem326.Affine.powerPoint</a></p></li><li id=L111><b>theorem</b> <code>OAI.Problem326.Affine.active_shiftedFamily_lower_cut</code> <small>line 111</small><div class="doc"><p>The corresponding lower-cut conclusion, using the strict slope gap to
+the preceding baseline.</p></div><pre>theorem active_shiftedFamily_lower_cut {d n : ℕ}
+    (Λ : Fin (n + 1) → Finset (Label d))
+    (q : Fin n → ℝ) (t : Fin (n + 1) → ℝ)
+    (hbase : ∀ j, (⟨fun _ =&gt; t j, fun _ =&gt; 0⟩ : Label d) ∈ Λ j)
+    (i : Fin n) {L : Label d} (hr : ∀ k, t i.castSucc &lt; L.slope k)
+    (h : ℕ → ℝ) (p : ℕ → (Fin d → ℝ)) (p₀ : Fin d → ℝ)
+    (hpos : ∀ k, 0 &lt; h k) (hh : Tendsto h atTop (𝓝 0))
+    (hp : Tendsto p atTop (𝓝 p₀))
+    (hoff : L.offset =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ q i))
+    (hA : ∀ k, Active (shiftedFamily Λ (cutShift q))
+      (L.shiftOffset (cutShift q i.succ)) (h k) (powerPoint (h k) (p k))) :
+    ∀ k, q i ≤ p₀ k := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L21">OAI.Problem326.Affine.Active</a>, <a href="AffineFamilyGluing.lean.html#L30">OAI.Problem326.Affine.shiftedFamily</a>, <a href="AffineFamilyGluing.lean.html#L66">OAI.Problem326.Affine.cutShift</a>, <a href="FixedMinimum.lean.html#L31">OAI.Problem326.Affine.powerPoint</a></p></li><li id=L147><b>theorem</b> <code>OAI.Problem326.Affine.approximatesOnCube_shiftedFamily_of_cells</code> <small>line 147</small><div class="doc"><p>Assemble the global sequential approximation statement from local cell
+statements. All activity is activity of the actual finite union of shifted
+canonical labels; no analytically unsupported preferred minimizer is selected.</p></div><pre>theorem approximatesOnCube_shiftedFamily_of_cells {d n : ℕ} [NeZero d]
+    (Λ : Fin (n + 1) → Finset (Label d))
+    (q : Fin n → ℝ) (t : Fin (n + 1) → ℝ)
+    (a b : ℝ) (E : (Fin d → ℝ) → ℝ)
+    (ht : StrictMono t)
+    (hbase : ∀ j, (⟨fun _ =&gt; t j, fun _ =&gt; 0⟩ : Label d) ∈ Λ j)
+    (hslope : ∀ j, ∀ L ∈ Λ j, ∀ k, t j ≤ L.slope k)
+    (hoffUpper : ∀ i : Fin n, ∀ L ∈ Λ i.castSucc,
+      L.offset =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ q i))
+    (hoffLower : ∀ i : Fin n, ∀ L ∈ Λ i.succ,
+      L.offset =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ q i))
+    (hlocal : ∀ j, ∀ L ∈ Λ j,
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a></p></li><li id=L194><b>theorem</b> <code>OAI.Problem326.Affine.cutShift_isLittleO</code> <small>line 194</small><div class="doc"><p>Every cumulative cut shift is negligible at the original lower exponent.</p></div><pre>theorem cutShift_isLittleO {n : ℕ} (q : Fin n → ℝ) (a : ℝ)
+    (hq : ∀ i, a &lt; q i) (j : Fin (n + 1)) :
+    cutShift q j =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ a) := by
+…</pre><p class="refs">Mentions: <a href="AffineFamilyGluing.lean.html#L66">OAI.Problem326.Affine.cutShift</a></p></li><li id=L211><b>theorem</b> <code>OAI.Problem326.Affine.shiftedFamily_properties</code> <small>line 211</small><div class="doc"><p>The union stays nonempty, preserves slope bounds, and preserves the
+required offset decay after all cumulative shifts.</p></div><pre>theorem shiftedFamily_properties {d n : ℕ}
+    (Λ : Fin (n + 1) → Finset (Label d)) (q : Fin n → ℝ) (a b : ℝ)
+    (hne : (Λ 0).Nonempty)
+    (hslopes : ∀ j, ∀ L ∈ Λ j, Cube a b L.slope)
+    (hoff : ∀ j, ∀ L ∈ Λ j, L.offset =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ a))
+    (hq : ∀ i, a &lt; q i) :
+    (shiftedFamily Λ (cutShift q)).Nonempty ∧
+      ∀ J ∈ shiftedFamily Λ (cutShift q), Cube a b J.slope ∧
+        J.offset =o[𝓝[&gt;] (0 : ℝ)] (fun h =&gt; h ^ a) := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L25">OAI.Problem326.Affine.Cube</a>, <a href="AffineFamilyGluing.lean.html#L30">OAI.Problem326.Affine.shiftedFamily</a>, <a href="AffineFamilyGluing.lean.html#L66">OAI.Problem326.Affine.cutShift</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

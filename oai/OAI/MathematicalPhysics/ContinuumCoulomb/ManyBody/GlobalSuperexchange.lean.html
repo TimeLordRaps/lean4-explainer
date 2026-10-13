@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/ContinuumCoulomb/ManyBody/GlobalSuperexchange.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/ContinuumCoulomb/ManyBody/GlobalSuperexchange.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">ContinuumCoulomb</a> / <a href="index.html">ManyBody</a> / <span>GlobalSuperexchange.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">ContinuumCoulomb</a>/<a href="index.html">ManyBody</a>/<span>GlobalSuperexchange.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/ContinuumCoulomb/ManyBody/GlobalSuperexchange.lean#L1">source</a></p><div class="doc"><p>Exact global Hubbard second-order compression on the spin sector.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.ContinuumCoulomb.HubbardGlobal.graphHopping</code> <small>line 14</small></li><li id=L18><b>theorem</b> <code>OAI.ContinuumCoulomb.HubbardGlobal.hopping_inverse_graphHopping_spinWedge</code> <small>line 18</small><div class="doc"><p>Only the matching graph edge survives an inverse compression.</p></div><pre>theorem hopping_inverse_graphHopping_spinWedge (m : ℕ) (U : ℝ)
+    (V : Fin (m + 1) → Fin (m + 1) → ℝ)
+    (hsymm : ∀ i j, V i j = V j i) (hdiag : ∀ i, V i i = 0)
+    (left right : Edge → Fin (m + 1)) (t : Edge → ℂ)
+    (hloop : ∀ e, left e ≠ right e)
+    (hsimple : ∀ e f, e ≠ f →
+      ¬(left e = left f ∧ right e = right f) ∧ ¬(left e = right f ∧ right e = left f))
+    (s : SourceSpinBasis (m + 1)) (e : Edge) :
+    lowProjection m (siteHopping m (left e) (right e)
+      (chargeInverse m U V (graphHopping m left right t (spinWedge m s)))) =
+        t e • (((U - V (left e) (right e))⁻¹ : ℝ) : ℂ) •
+          ((2 : ℂ) • (spinWedge m s - spinWedge m (sourceSpinSwap (left e) (right e) s))) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/ContinuumCoulombHardness.lean.html#L187">OAI.ContinuumCoulomb.SourceSpinBasis</a>, <a href="HubbardExcitation.lean.html#L96">OAI.ContinuumCoulomb.HubbardGlobal.lowProjection</a>, <a href="HubbardExcitation.lean.html#L238">OAI.ContinuumCoulomb.HubbardGlobal.siteHopping</a>, <a href="HubbardExcitation.lean.html#L99">OAI.ContinuumCoulomb.HubbardGlobal.chargeInverse</a>, <a href="GlobalSuperexchange.lean.html#L14">OAI.ContinuumCoulomb.HubbardGlobal.graphHopping</a>, <a href="HubbardSpin.lean.html#L85">OAI.ContinuumCoulomb.HubbardGlobal.spinWedge</a>, <a href="../Reduction/SourceHamiltonian.lean.html#L33">OAI.ContinuumCoulomb.sourceSpinSwap</a></p></li><li id=L43><b>theorem</b> <code>OAI.ContinuumCoulomb.HubbardGlobal.graphHopping_inverse_graphHopping_spinWedge</code> <small>line 43</small><div class="doc"><p>The actual global inverse compression is the sum of the local
+exchange terms, with the Coulomb-corrected denominator on every edge.</p></div><pre>theorem graphHopping_inverse_graphHopping_spinWedge (m : ℕ) (U : ℝ)
+    (V : Fin (m + 1) → Fin (m + 1) → ℝ)
+    (hsymm : ∀ i j, V i j = V j i) (hdiag : ∀ i, V i i = 0)
+    (left right : Edge → Fin (m + 1)) (t : Edge → ℂ)
+    (hloop : ∀ e, left e ≠ right e)
+    (hsimple : ∀ e f, e ≠ f →
+      ¬(left e = left f ∧ right e = right f) ∧ ¬(left e = right f ∧ right e = left f))
+    (s : SourceSpinBasis (m + 1)) :
+    lowProjection m (graphHopping m left right t
+      (chargeInverse m U V (graphHopping m left right t (spinWedge m s)))) =
+        ∑ e, t e ^ 2 • (((U - V (left e) (right e))⁻¹ : ℝ) : ℂ) •
+          ((2 : ℂ) • (spinWedge m s - spinWedge m (sourceSpinSwap (left e) (right e) s))) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/ContinuumCoulombHardness.lean.html#L187">OAI.ContinuumCoulomb.SourceSpinBasis</a>, <a href="HubbardExcitation.lean.html#L96">OAI.ContinuumCoulomb.HubbardGlobal.lowProjection</a>, <a href="GlobalSuperexchange.lean.html#L14">OAI.ContinuumCoulomb.HubbardGlobal.graphHopping</a>, <a href="HubbardExcitation.lean.html#L99">OAI.ContinuumCoulomb.HubbardGlobal.chargeInverse</a>, <a href="HubbardSpin.lean.html#L85">OAI.ContinuumCoulomb.HubbardGlobal.spinWedge</a>, <a href="../Reduction/SourceHamiltonian.lean.html#L33">OAI.ContinuumCoulomb.sourceSpinSwap</a></p></li><li id=L66><b>theorem</b> <code>OAI.ContinuumCoulomb.HubbardGlobal.graphSuperexchange_calibrated</code> <small>line 66</small><div class="doc"><p>Choosing <code>t_e² = J_e (U-V_e)</code> gives the genuine Heisenberg inverse
+term, including the scalar <code>-J_e I</code> on every edge.</p></div><pre>theorem graphSuperexchange_calibrated (m : ℕ) (U : ℝ)
+    (V : Fin (m + 1) → Fin (m + 1) → ℝ)
+    (hsymm : ∀ i j, V i j = V j i) (hdiag : ∀ i, V i i = 0)
+    (left right : Edge → Fin (m + 1)) (t J : Edge → ℂ)
+    (hloop : ∀ e, left e ≠ right e)
+    (hsimple : ∀ e f, e ≠ f →
+      ¬(left e = left f ∧ right e = right f) ∧ ¬(left e = right f ∧ right e = left f))
+    (hgap : ∀ e, U - V (left e) (right e) ≠ 0)
+    (hcal : ∀ e, t e ^ 2 = J e * ((U - V (left e) (right e) : ℝ) : ℂ))
+    (s : SourceSpinBasis (m + 1)) :
+    -(lowProjection m (graphHopping m left right t
+      (chargeInverse m U V (graphHopping m left right t (spinWedge m s))))) =
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/ContinuumCoulombHardness.lean.html#L187">OAI.ContinuumCoulomb.SourceSpinBasis</a>, <a href="HubbardExcitation.lean.html#L96">OAI.ContinuumCoulomb.HubbardGlobal.lowProjection</a>, <a href="GlobalSuperexchange.lean.html#L14">OAI.ContinuumCoulomb.HubbardGlobal.graphHopping</a>, <a href="HubbardExcitation.lean.html#L99">OAI.ContinuumCoulomb.HubbardGlobal.chargeInverse</a>, <a href="HubbardSpin.lean.html#L85">OAI.ContinuumCoulomb.HubbardGlobal.spinWedge</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

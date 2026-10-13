@@ -1,0 +1,1 @@
+window.l4shard("pt", [["OAI.DefocusingNLS.expandingBielecki_isFixedPt",3274,35],["OAI.ExactDerandomization.Relay.PT",4779,318],["OAI.GeneralMahler.SCal.SE.refPt",6116,44],["OAI.PositiveEinsteinFour.Geometry.derivative_zero_at_level_accPt",14962,4560],["OAI.Thomason.Construction.NormalizedSimplexIdentities.simplexFiberCocone_pt",18551,156]]);

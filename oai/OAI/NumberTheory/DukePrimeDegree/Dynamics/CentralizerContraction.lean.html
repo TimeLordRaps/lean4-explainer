@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Dynamics/CentralizerContraction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Dynamics/CentralizerContraction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Dynamics</a> / <span>CentralizerContraction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Dynamics</a>/<span>CentralizerContraction.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Dynamics/CentralizerContraction.lean#L1">source</a></p><div class="doc"><h3>Bounded diagonal returns in a root centralizer</h3><p>A matrix centralizing one root can have entries outside the opposite-root
+centralizer only in expanding directions of a suitable diagonal flow.
+Bounded conjugates along arbitrarily late times therefore centralize both
+roots. This is the matrix step in EKL (2006), Lemma 4.2.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>lemma</b> <code>OAI.DukePrimeDegree.eq_zero_of_bounded_exp_mul</code> <small>line 21</small></li><li id=L34><b>lemma</b> <code>OAI.DukePrimeDegree.conjugation_expanding_entry_eq_zero</code> <small>line 34</small><div class="doc"><p>Each strictly expanding matrix entry must vanish if the conjugates
+remain bounded along a sequence of times tending to infinity.</p></div><pre>lemma conjugation_expanding_entry_eq_zero {n : ℕ}
+    (ell : Fin n → ℝ) (hell : ∑ r, ell r = 0) (g : G n)
+    {t : ℕ → ℝ} (ht : Tendsto t atTop atTop) (B : ℝ)
+    (hb : ∀ᶠ k in atTop, ∀ r s,
+      |(diagonalOneParameter ell hell (t k) * g *
+        diagonalOneParameter ell hell (-t k)).val r s| ≤ B)
+    {r s : Fin n} (hrs : ell s &lt; ell r) : g.val r s = 0 := by
+…</pre></li><li id=L47><b>theorem</b> <code>OAI.DukePrimeDegree.rootPairCentralizer_of_bounded_conjugates</code> <small>line 47</small><div class="doc"><p>With the two distinguished weights extremal, bounded conjugates in
+one root centralizer belong to the common centralizer of opposite roots.</p></div><pre>theorem rootPairCentralizer_of_bounded_conjugates {n : ℕ}
+    {i j : Fin n} (hij : i ≠ j)
+    (ell : Fin n → ℝ) (hell : ∑ r, ell r = 0)
+    (hijw : ell j &lt; ell i)
+    (hmiddle : ∀ r, r ≠ i → r ≠ j → ell j &lt; ell r ∧ ell r &lt; ell i)
+    (g : G n)
+    (hg : g * Matrix.SpecialLinearGroup.transvection hij 1 =
+      Matrix.SpecialLinearGroup.transvection hij 1 * g)
+    {t : ℕ → ℝ} (ht : Tendsto t atTop atTop) (B : ℝ)
+    (hb : ∀ᶠ k in atTop, ∀ r s,
+      |(diagonalOneParameter ell hell (t k) * g *
+        diagonalOneParameter ell hell (-t k)).val r s| ≤ B) :
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.DukePrimeDegree.ae_rootPairCentralizer_of_recurrent_conjugates</code> <small>line 80</small><div class="doc"><p>Poincaré recurrence supplies the unbounded sequence needed by the
+matrix criterion, even when conjugate bounds hold only on returns to a
+measurable set.</p></div><pre>theorem ae_rootPairCentralizer_of_recurrent_conjugates
+    {Y : Type*} [MeasurableSpace Y]
+    (μ : Measure Y) [IsFiniteMeasure μ]
+    (T : Y → Y) (hT : MeasurePreserving T μ μ)
+    (E : Set Y) (hE : MeasurableSet E)
+    {n : ℕ} {i j : Fin n} (hij : i ≠ j)
+    (ell : Fin n → ℝ) (hell : ∑ r, ell r = 0)
+    (hijw : ell j &lt; ell i)
+    (hmiddle : ∀ r, r ≠ i → r ≠ j → ell j &lt; ell r ∧ ell r &lt; ell i)
+    (g : Y → G n)
+    (hg : ∀ x ∈ E, g x * Matrix.SpecialLinearGroup.transvection hij 1 =
+      Matrix.SpecialLinearGroup.transvection hij 1 * g x)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

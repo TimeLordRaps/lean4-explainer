@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Sobolev/PositiveSourceGradient.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Sobolev/PositiveSourceGradient.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Sobolev</a> / <span>PositiveSourceGradient.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Sobolev</a>/<span>PositiveSourceGradient.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Sobolev/PositiveSourceGradient.lean#L1">source</a></p><div class="doc"><h3>Weighted gradient estimates for positive Poisson sources</h3><p>The Cauchy--Schwarz step uses a reciprocal-weight energy and the moment
+obtained from truncation. This keeps the linear dependence on source mass
+which ordinary unweighted energy Cauchy--Schwarz would lose.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.RegularPointCoordinates.integral_sq_le_reciprocal_weight</code> <small>line 22</small><div class="doc"><p>Weighted Cauchy--Schwarz, including the integrability conclusion.</p></div><pre>theorem integral_sq_le_reciprocal_weight {X : Type*} [MeasurableSpace X]
+    (μ : Measure X) {f w : X → ℝ} (hf : AEMeasurable f μ) (hw : AEMeasurable w μ)
+    (hwpos : ∀ᵐ x ∂μ, 0 &lt; w x)
+    (hiw : Integrable w μ) (hif : Integrable (fun x =&gt; f x ^ 2 / w x) μ) :
+    Integrable f μ ∧ (∫ x, f x ∂μ) ^ 2 ≤ (∫ x, f x ^ 2 / w x ∂μ) * ∫ x, w x ∂μ := by
+…</pre></li><li id=L70><b>theorem</b> <code>OAI.RegularPointCoordinates.shifted_moment_le</code> <small>line 70</small><div class="doc"><p>Shifting a nonnegative function by one preserves controlled moments.</p></div><pre>theorem shifted_moment_le {X : Type*} [MeasurableSpace X]
+    (μ : Measure X) [IsFiniteMeasure μ] {H : X → ℝ}
+    (hH : AEMeasurable H μ) (hH0 : 0 ≤ᵐ[μ] H) {q : ℝ} (hq : 0 ≤ q)
+    (hi : Integrable (fun x =&gt; H x ^ q) μ) :
+    Integrable (fun x =&gt; (1 + H x) ^ q) μ ∧
+      (∫ x, (1 + H x) ^ q ∂μ) ≤ 2 ^ q * (μ.real univ + ∫ x, H x ^ q ∂μ) := by
+…</pre></li><li id=L103><b>def</b> <code>OAI.RegularPointCoordinates.positiveSourceGradientBound</code> <small>line 103</small><div class="doc"><p>An explicit, nonoptimal uniform constant for the normalized source.</p></div><pre>def positiveSourceGradientBound (V C d q : ℝ) : ℝ :=
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_positive_source_gradient</code> <small>line 111</small><div class="doc"><p>The complete normalized positive-source L1 gradient estimate from the
+Dirichlet Sobolev inequality and the source's action on bounded tests.</p></div><pre>theorem normalized_positive_source_gradient (Ω : Set X) (hΩfin : μ Ω ≠ ∞)
+    (H : SobolevSpace.dirichlet μ hQ Ω)
+    (hH : ∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ H.val x)
+    {d q C : ℝ} (hq : 1 &lt; q) (hqd : q &lt; d) (hC : 0 ≤ C)
+    (hsob : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      (∫ x in Ω, |SobolevSpace.toLp μ hQ φ.val x| ^ (2 * d) ∂μ) ^ (1 / d) ≤
+        C * energyForm μ hQ φ.val φ.val)
+    (hsource : ∀ φ : SobolevSpace.dirichlet μ hQ Ω, ∀ s : ℝ, 0 ≤ s →
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x ∧ SobolevSpace.toLp μ hQ φ.val x ≤ s) →
+      energyForm μ hQ H.val φ.val ≤ s) :
+    IntegrableOn (fun x =&gt; SobolevSpace.minimalSlope μ hQ H.val x) Ω μ ∧
+      (∫ x in Ω, SobolevSpace.minimalSlope μ hQ H.val x ∂μ) ≤
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a></p></li><li id=L176><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_source_gradient_of_pos</code> <small>line 176</small><div class="doc"><p>Scaling the normalized estimate gives linear dependence on a positive
+source mass.</p></div><pre>theorem positive_source_gradient_of_pos (Ω : Set X) (hΩfin : μ Ω ≠ ∞)
+    (H : SobolevSpace.dirichlet μ hQ Ω)
+    (hH : ∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ H.val x)
+    {d q C P : ℝ} (hq : 1 &lt; q) (hqd : q &lt; d) (hC : 0 ≤ C) (hP : 0 &lt; P)
+    (hsob : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      (∫ x in Ω, |SobolevSpace.toLp μ hQ φ.val x| ^ (2 * d) ∂μ) ^ (1 / d) ≤
+        C * energyForm μ hQ φ.val φ.val)
+    (hsource : ∀ φ : SobolevSpace.dirichlet μ hQ Ω, ∀ s : ℝ, 0 ≤ s →
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x ∧ SobolevSpace.toLp μ hQ φ.val x ≤ s) →
+      energyForm μ hQ H.val φ.val ≤ P * s) :
+    IntegrableOn (fun x =&gt; SobolevSpace.minimalSlope μ hQ H.val x) Ω μ ∧
+      (∫ x in Ω, SobolevSpace.minimalSlope μ hQ H.val x ∂μ) ≤
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a></p></li><li id=L223><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_source_gradient</code> <small>line 223</small><div class="doc"><p>The linear gradient estimate also holds at zero source mass, by
+approaching that mass through positive upper bounds.</p></div><pre>theorem positive_source_gradient (Ω : Set X) (hΩfin : μ Ω ≠ ∞)
+    (H : SobolevSpace.dirichlet μ hQ Ω)
+    (hH : ∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ H.val x)
+    {d q C P : ℝ} (hq : 1 &lt; q) (hqd : q &lt; d) (hC : 0 ≤ C) (hP : 0 ≤ P)
+    (hsob : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      (∫ x in Ω, |SobolevSpace.toLp μ hQ φ.val x| ^ (2 * d) ∂μ) ^ (1 / d) ≤
+        C * energyForm μ hQ φ.val φ.val)
+    (hsource : ∀ φ : SobolevSpace.dirichlet μ hQ Ω, ∀ s : ℝ, 0 ≤ s →
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x ∧ SobolevSpace.toLp μ hQ φ.val x ≤ s) →
+      energyForm μ hQ H.val φ.val ≤ P * s) :
+    IntegrableOn (fun x =&gt; SobolevSpace.minimalSlope μ hQ H.val x) Ω μ ∧
+      (∫ x in Ω, SobolevSpace.minimalSlope μ hQ H.val x ∂μ) ≤
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a></p></li><li id=L254><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_source_energy</code> <small>line 254</small><div class="doc"><p>The companion square-gradient bound is the direct test by the bounded
+solution itself.</p></div><pre>theorem positive_source_energy (Ω : Set X) (H : SobolevSpace.dirichlet μ hQ Ω)
+    {P B : ℝ} (hB : 0 ≤ B)
+    (hH : ∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ H.val x ∧ SobolevSpace.toLp μ hQ H.val x ≤ B)
+    (hsource : ∀ φ : SobolevSpace.dirichlet μ hQ Ω, ∀ s : ℝ, 0 ≤ s →
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x ∧ SobolevSpace.toLp μ hQ φ.val x ≤ s) →
+      energyForm μ hQ H.val φ.val ≤ P * s) :
+    (∫ x, (SobolevSpace.minimalSlope μ hQ H.val x) ^ 2 ∂μ) ≤ P * B := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a></p></li><li id=L270><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_source_bounds</code> <small>line 270</small><div class="doc"><p>Both positive-source estimates, with a fixed exponent selected from
+<code>d &gt; 1</code>. The L1 bound is linear in mass; the L2 energy bound is mass times
+the upper bound of the solution.</p></div><pre>theorem positive_source_bounds (Ω : Set X) (hΩfin : μ Ω ≠ ∞)
+    (H : SobolevSpace.dirichlet μ hQ Ω)
+    {d C P B : ℝ} (hd : 1 &lt; d) (hC : 0 ≤ C) (hP : 0 ≤ P) (hB : 0 ≤ B)
+    (hH : ∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ H.val x ∧ SobolevSpace.toLp μ hQ H.val x ≤ B)
+    (hsob : ∀ φ : SobolevSpace.dirichlet μ hQ Ω,
+      (∫ x in Ω, |SobolevSpace.toLp μ hQ φ.val x| ^ (2 * d) ∂μ) ^ (1 / d) ≤
+        C * energyForm μ hQ φ.val φ.val)
+    (hsource : ∀ φ : SobolevSpace.dirichlet μ hQ Ω, ∀ s : ℝ, 0 ≤ s →
+      (∀ᵐ x ∂μ, 0 ≤ SobolevSpace.toLp μ hQ φ.val x ∧ SobolevSpace.toLp μ hQ φ.val x ≤ s) →
+      energyForm μ hQ H.val φ.val ≤ P * s) :
+    IntegrableOn (fun x =&gt; SobolevSpace.minimalSlope μ hQ H.val x) Ω μ ∧
+      (∫ x in Ω, SobolevSpace.minimalSlope μ hQ H.val x ∂μ) ≤
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

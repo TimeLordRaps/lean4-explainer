@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/SecondMomentNormalization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/SecondMomentNormalization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>SecondMomentNormalization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>SecondMomentNormalization.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/SecondMomentNormalization.lean#L1">source</a></p><div class="doc"><p>Concrete normalization and reindexing of the geometric upper bound for
+four-path occupation moments.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.Problem335.MomentPairing.isDiagonal</code> <small>line 17</small><div class="doc"><p>The diagonal flag used by the local geometric moment table.</p></div><pre>def isDiagonal : Kind → Bool
+  | .normal =&gt; false
+  | .diagonal =&gt; true
+
+/-- Coordinate coincidence in the normal pairing. -/</pre></li><li id=L22><b>def</b> <code>OAI.Problem335.MomentPairing.coincides</code> <small>line 22</small><div class="doc"><p>Coordinate coincidence in the normal pairing.</p></div><pre>def coincides {γ : Type*} (x : Labels γ) : Bool := by
+…</pre></li><li id=L26><b>lemma</b> <code>OAI.Problem335.MomentPairing.localWeight_eq_layerWeight</code> <small>line 26</small></li><li id=L35><b>def</b> <code>OAI.Problem335.MomentPairing.pathMean</code> <small>line 35</small><div class="doc"><p>The first-moment normalization for a fixed V/U layer partition.</p></div><pre>def pathMean {L : ℕ} (isV : Fin (L + 1) → Bool) (A B : ℝ) : ℝ :=
+…</pre></li><li id=L39><b>lemma</b> <code>OAI.Problem335.MomentPairing.pathMean_pos</code> <small>line 39</small></li><li id=L45><b>def</b> <code>OAI.Problem335.MomentPairing.pathGeometricMoment</code> <small>line 45</small><div class="doc"><p>The product of independent geometric local moments for a fixed pairing.</p></div><pre>def pathGeometricMoment {γ : Type*} {L : ℕ} (isV : Fin (L + 1) → Bool)
+    (A B : ℝ) (endpoint : γ) (τ : Fin (L + 1) → Kind)
+    (x : Fin L → Labels γ) : ℝ :=
+…</pre></li><li id=L52><b>theorem</b> <code>OAI.Problem335.MomentPairing.pathGeometricMoment_eq</code> <small>line 52</small><div class="doc"><p>Local normalizations multiply to precisely the square of the first moment.</p></div><pre>theorem pathGeometricMoment_eq {γ : Type*} {L : ℕ}
+    (isV : Fin (L + 1) → Bool) {A B : ℝ} (hA : 0 &lt; A) (hB : 0 ≤ B)
+    (endpoint : γ) (τ : Fin (L + 1) → Kind) (x : Fin L → Labels γ) :
+    pathGeometricMoment isV A B endpoint τ x =
+      pathMean isV A B ^ 2 *
+        pathWeight isV (A / (A + 1)) (B / (B + 1)) endpoint τ x := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentNormalization.lean.html#L45">OAI.Problem335.MomentPairing.pathGeometricMoment</a>, <a href="SecondMomentNormalization.lean.html#L35">OAI.Problem335.MomentPairing.pathMean</a>, <a href="SecondMomentPairing.lean.html#L126">OAI.Problem335.MomentPairing.pathWeight</a></p></li><li id=L67><b>theorem</b> <code>OAI.Problem335.MomentPairing.sum_compatible_geometricMoment_le</code> <small>line 67</small><div class="doc"><p>Summing the geometric local moments over the exact compatible quadruples
+is bounded by the relaxed pairing sum with its common <code>mu^2</code> normalization.</p></div><pre>theorem sum_compatible_geometricMoment_le {γ : Type*} [Fintype γ] [DecidableEq γ]
+    {L : ℕ} (isV : Fin (L + 1) → Bool) {A B : ℝ}
+    (hA : 0 &lt; A) (hB : 0 ≤ B) (endpoint : γ) :
+    (∑ x : {x : Fin L → Labels γ // Compatible endpoint x},
+      pathGeometricMoment isV A B endpoint (classifyWord endpoint x.1) x.1) ≤
+    pathMean isV A B ^ 2 *
+      ∑ τ : Fin (L + 1) → Kind, ∑ x : RelaxedPaths γ endpoint τ,
+        pathWeight isV (A / (A + 1)) (B / (B + 1)) endpoint τ x.1 := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentPairing.lean.html#L22">OAI.Problem335.MomentPairing.Compatible</a>, <a href="SecondMomentNormalization.lean.html#L45">OAI.Problem335.MomentPairing.pathGeometricMoment</a>, <a href="SecondMomentPairing.lean.html#L57">OAI.Problem335.MomentPairing.classifyWord</a>, <a href="SecondMomentNormalization.lean.html#L35">OAI.Problem335.MomentPairing.pathMean</a>, <a href="SecondMomentPairing.lean.html#L126">OAI.Problem335.MomentPairing.pathWeight</a></p></li><li id=L82><b>theorem</b> <code>OAI.Problem335.MomentPairing.sum_sources_compatible_le</code> <small>line 82</small><div class="doc"><p>After the actual occupation comparison has bounded each compatible
+quadruple, all source and path sums combine with only one source-size factor.</p></div><pre>theorem sum_sources_compatible_le {ι γ : Type*} [Fintype ι]
+    [Fintype γ] [DecidableEq γ] {L : ℕ}
+    (isV : Fin (L + 1) → Bool) {A B D : ℝ}
+    (hA : 0 &lt; A) (hB : 0 ≤ B) (hD : 0 ≤ D) (endpoint : γ)
+    (C : ι → (Fin L → Labels γ) → ℝ)
+    (hexpect : ∀ x, Compatible endpoint x →
+      (∑ i, C i x) ≤ D *
+        pathGeometricMoment isV A B endpoint (classifyWord endpoint x) x) :
+    (∑ i, ∑ x : {x : Fin L → Labels γ // Compatible endpoint x}, C i x.1) ≤
+      D * pathMean isV A B ^ 2 *
+        ∑ τ : Fin (L + 1) → Kind, ∑ x : RelaxedPaths γ endpoint τ,
+          pathWeight isV (A / (A + 1)) (B / (B + 1)) endpoint τ x.1 := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentPairing.lean.html#L22">OAI.Problem335.MomentPairing.Compatible</a>, <a href="SecondMomentNormalization.lean.html#L45">OAI.Problem335.MomentPairing.pathGeometricMoment</a>, <a href="SecondMomentPairing.lean.html#L57">OAI.Problem335.MomentPairing.classifyWord</a>, <a href="SecondMomentNormalization.lean.html#L35">OAI.Problem335.MomentPairing.pathMean</a>, <a href="SecondMomentPairing.lean.html#L126">OAI.Problem335.MomentPairing.pathWeight</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

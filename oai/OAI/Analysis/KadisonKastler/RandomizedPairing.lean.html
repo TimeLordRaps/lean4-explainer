@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/RandomizedPairing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/RandomizedPairing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>RandomizedPairing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>RandomizedPairing.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/RandomizedPairing.lean#L1">source</a></p><div class="doc"><h3>Extracting the scalar commutator from randomized rows</h3><p>Finite Cauchy–Schwarz bounds the two row errors without a factor for the
+number of random choices. Together with the scalar commutator estimate
+this gives the constant 141 in the amplification argument.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.KadisonKastler.norm_limit_le_of_eventually_le_add</code> <small>line 24</small><div class="doc"><p>A norm bound with arbitrarily small eventual error passes to any
+limit. No choice of a convergent subsequence is needed.</p></div><pre>theorem norm_limit_le_of_eventually_le_add {J V : Type*} [NormedAddCommGroup V]
+    {l : Filter J} [l.NeBot] {f : J → V} {z : V} {C : ℝ}
+    (hf : Filter.Tendsto f l (𝓝 z))
+    (hC : ∀ ε &gt; 0, ∀ᶠ j in l, ‖f j‖ ≤ C + ε) : ‖z‖ ≤ C := by
+…</pre></li><li id=L35><b>def</b> <code>OAI.KadisonKastler.finiteRMS</code> <small>line 35</small></li><li id=L38><b>theorem</b> <code>OAI.KadisonKastler.finiteRMS_nonneg</code> <small>line 38</small></li><li id=L41><b>theorem</b> <code>OAI.KadisonKastler.expect_norm_mul_le_finiteRMS</code> <small>line 41</small></li><li id=L50><b>def</b> <code>OAI.KadisonKastler.meanPairing</code> <small>line 50</small></li><li id=L55><b>theorem</b> <code>OAI.KadisonKastler.norm_meanPairing_le</code> <small>line 55</small><div class="doc"><p>The contraction between the two vectors does not increase the
+Cauchy–Schwarz bound for the average pairing.</p></div><pre>theorem norm_meanPairing_le (x : Ω → H →L[ℂ] H) (hx : ∀ i, ‖x i‖ ≤ 1)
+    (v w : Ω → H) : ‖meanPairing x v w‖ ≤ finiteRMS v * finiteRMS w := by
+…</pre><p class="refs">Mentions: <a href="RandomizedPairing.lean.html#L50">OAI.KadisonKastler.meanPairing</a>, <a href="RandomizedPairing.lean.html#L35">OAI.KadisonKastler.finiteRMS</a></p></li><li id=L68><b>theorem</b> <code>OAI.KadisonKastler.norm_mean_operator_pairing_le</code> <small>line 68</small><div class="doc"><p>An average of arbitrary operator-vector pairings satisfies the same
+bound when each operator acts with a uniform bound on the chosen vector.</p></div><pre>theorem norm_mean_operator_pairing_le (x : Ω → H →L[ℂ] H)
+    (v w : Ω → H) {δ : ℝ} (hδ : 0 ≤ δ)
+    (hx : ∀ i, ‖x i (v i)‖ ≤ δ * ‖v i‖) :
+    ‖meanPairing x v w‖ ≤ δ * (finiteRMS v * finiteRMS w) := by
+…</pre><p class="refs">Mentions: <a href="RandomizedPairing.lean.html#L50">OAI.KadisonKastler.meanPairing</a>, <a href="RandomizedPairing.lean.html#L35">OAI.KadisonKastler.finiteRMS</a></p></li><li id=L86><b>theorem</b> <code>OAI.KadisonKastler.randomized_pairing_bound</code> <small>line 86</small><div class="doc"><p>The two row errors and the original scalar commutator estimate give
+an explicit bound on the scalar pairing recovered by the rows.</p></div><pre>theorem randomized_pairing_bound (h : H →L[ℂ] H) (hh : h.IsSymmetric)
+    (x : Ω → H →L[ℂ] H) (hx : ∀ i, ‖x i‖ ≤ 1)
+    (v w v₀ w₀ : Ω → H) {δ a b : ℝ} (hδ : 0 ≤ δ)
+    (hcomm : ∀ i, ‖(h * x i - x i * h) (v i)‖ ≤ δ * ‖v i‖)
+    (hv : finiteRMS v ≤ 1) (hw : finiteRMS w ≤ 1)
+    (hforward : finiteRMS (fun i =&gt; h (v i) - v₀ i) ≤ a)
+    (hbackward : finiteRMS (fun i =&gt; h (w i) - w₀ i) ≤ b) :
+    ‖meanPairing x v w₀ - meanPairing x v₀ w‖ ≤ δ + a + b := by
+…</pre><p class="refs">Mentions: <a href="RandomizedPairing.lean.html#L35">OAI.KadisonKastler.finiteRMS</a>, <a href="RandomizedPairing.lean.html#L50">OAI.KadisonKastler.meanPairing</a></p></li><li id=L128><b>theorem</b> <code>OAI.KadisonKastler.randomized_pairing_le_one_forty_one</code> <small>line 128</small><div class="doc"><p>The constants used by the manuscript: two errors of size <code>70δ</code>
+and one scalar commutator of size <code>δ</code>.</p></div><pre>theorem randomized_pairing_le_one_forty_one (h : H →L[ℂ] H) (hh : h.IsSymmetric)
+    (x : Ω → H →L[ℂ] H) (hx : ∀ i, ‖x i‖ ≤ 1)
+    (v w v₀ w₀ : Ω → H) {δ : ℝ} (hδ : 0 ≤ δ)
+    (hcomm : ∀ i, ‖(h * x i - x i * h) (v i)‖ ≤ δ * ‖v i‖)
+    (hv : finiteRMS v ≤ 1) (hw : finiteRMS w ≤ 1)
+    (hforward : finiteRMS (fun i =&gt; h (v i) - v₀ i) ≤ 70 * δ)
+    (hbackward : finiteRMS (fun i =&gt; h (w i) - w₀ i) ≤ 70 * δ) :
+    ‖meanPairing x v w₀ - meanPairing x v₀ w‖ ≤ 141 * δ := by
+…</pre><p class="refs">Mentions: <a href="RandomizedPairing.lean.html#L35">OAI.KadisonKastler.finiteRMS</a>, <a href="RandomizedPairing.lean.html#L50">OAI.KadisonKastler.meanPairing</a></p></li><li id=L141><b>theorem</b> <code>OAI.KadisonKastler.randomized_pairing_limit_le</code> <small>line 141</small><div class="doc"><p>The randomized pairing estimate needs only eventual row-error
+bounds, as supplied by the clipped-coefficient limits.</p></div><pre>theorem randomized_pairing_limit_le {J : Type*} {l : Filter J} [l.NeBot]
+    (h : H →L[ℂ] H) (hh : h.IsSymmetric)
+    (x : J → Ω → H →L[ℂ] H) (hx : ∀ j i, ‖x j i‖ ≤ 1)
+    (v w v₀ w₀ : J → Ω → H) {δ : ℝ} (hδ : 0 ≤ δ)
+    (hcomm : ∀ j i, ‖(h * x j i - x j i * h) (v j i)‖ ≤ δ * ‖v j i‖)
+    (hv : ∀ j, finiteRMS (v j) ≤ 1) (hw : ∀ j, finiteRMS (w j) ≤ 1)
+    (hforward : ∀ ε &gt; 0, ∀ᶠ j in l,
+      finiteRMS (fun i =&gt; h (v j i) - v₀ j i) ≤ 70 * δ + ε)
+    (hbackward : ∀ ε &gt; 0, ∀ᶠ j in l,
+      finiteRMS (fun i =&gt; h (w j i) - w₀ j i) ≤ 70 * δ + ε)
+    {z : ℂ} (hz : Filter.Tendsto
+      (fun j =&gt; meanPairing (x j) (v j) (w₀ j) - meanPairing (x j) (v₀ j) (w j)) l (𝓝 z)) :
+…</pre><p class="refs">Mentions: <a href="RandomizedPairing.lean.html#L35">OAI.KadisonKastler.finiteRMS</a>, <a href="RandomizedPairing.lean.html#L50">OAI.KadisonKastler.meanPairing</a></p></li><li id=L163><b>theorem</b> <code>OAI.KadisonKastler.scalar_recovery_quadratic_bound</code> <small>line 163</small><div class="doc"><p>The scalar lower bound in the recovery construction turns the
+complex pairing bound into the required real quadratic-form bound.</p></div><pre>theorem scalar_recovery_quadratic_bound {c d δ : ℝ}
+    (hc : 1 / 2 ≤ c) (hbound : ‖((c * d : ℝ) : ℂ)‖ ≤ 141 * δ) :
+    |d| ≤ 282 * δ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

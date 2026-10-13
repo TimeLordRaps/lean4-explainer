@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/IntermediateFactorization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/IntermediateFactorization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>IntermediateFactorization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>IntermediateFactorization.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/IntermediateFactorization.lean#L1">source</a></p><div class="doc"><p>Factorization of mixed operators through intermediate bidegree spaces.
+The codomain is initially the full polynomial space.  Restricting it to a
+bidegree submodule leaves the range dimension unchanged, as proved below.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.Problem335.sourceMixedOperator</code> <small>line 21</small><div class="doc"><p>The full operator restricted to a finite-bidegree source, as a linear
+family in the polynomial defining the operator.</p></div><pre>def sourceMixedOperator (isV : σ → Bool) (a b : ℕ) :
+    MvPolynomial σ K →ₗ[K]
+      (bidegreeSubmodule (K := K) isV a b →ₗ[K] MvPolynomial σ K) where
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L32><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_apply</code> <small>line 32</small></li><li id=L37><b>def</b> <code>OAI.Problem335.intermediateStart</code> <small>line 37</small><div class="doc"><p>The operator for <code>p</code> maps the source into the proposed intermediate space.</p></div><pre>def intermediateStart (isV : σ → Bool) (a b c d : ℕ)
+    (p : MvPolynomial σ K)
+    (h : ∀ f : bidegreeSubmodule (K := K) isV a b,
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L46><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_mul_factorization</code> <small>line 46</small><div class="doc"><p>Factorization is an equality of actual linear maps, not merely a rank
+inequality.  The rightmost polynomial factor operates first.</p></div><pre>theorem sourceMixedOperator_mul_factorization (isV : σ → Bool) (a b c d : ℕ)
+    (p q : MvPolynomial σ K)
+    (h : ∀ f : bidegreeSubmodule (K := K) isV a b,
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L59><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_mul_rank_le</code> <small>line 59</small><div class="doc"><p>Any factorization through an intermediate bidegree space bounds rank by
+that space's dimension.</p></div><pre>theorem sourceMixedOperator_mul_rank_le [Finite σ]
+    (isV : σ → Bool) (a b c d : ℕ) (p q : MvPolynomial σ K)
+    (h : ∀ f : bidegreeSubmodule (K := K) isV a b,
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L70><b>theorem</b> <code>OAI.Problem335.selected_bidegree_product_mem</code> <small>line 70</small><div class="doc"><p>The bidegree of a selected subproduct is the sum of the selected
+bidegrees, with no condition on the unselected factors.</p></div><pre>theorem selected_bidegree_product_mem {ι : Type*} (s : Finset ι)
+    (selected : ι → Prop) [DecidablePred selected]
+    (Q : ι → MvPolynomial σ K) (i j : ι → ℕ) (isV : σ → Bool)
+    (hQ : ∀ l ∈ s, Q l ∈ bidegreeSubmodule isV (i l) (j l)) :
+    (∏ l ∈ s.filter selected, Q l) ∈
+      bidegreeSubmodule isV (∑ l ∈ s.filter selected, i l)
+        (∑ l ∈ s.filter selected, j l) := by
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L86><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_prod_rank_le</code> <small>line 86</small><div class="doc"><p>In a commutative polynomial product, any chosen group of factors can be
+applied first.  In the product-rank proof this group consists of the factors
+with positive proportional bidegree discrepancy.</p></div><pre>theorem sourceMixedOperator_prod_rank_le [Finite σ] {ι : Type*}
+    (s : Finset ι) (selected : ι → Prop) [DecidablePred selected]
+    (Q : ι → MvPolynomial σ K) (isV : σ → Bool) (a b c d : ℕ)
+    (h : ∀ f : bidegreeSubmodule (K := K) isV a b,
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L100><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_homogeneous_prod_rank_le</code> <small>line 100</small><div class="doc"><p>A selected homogeneous subproduct gives the actual intermediate dimension
+bound.  Only its total derivative degree needs to fit inside the source.</p></div><pre>theorem sourceMixedOperator_homogeneous_prod_rank_le [Finite σ] {ι : Type*}
+    (s : Finset ι) (selected : ι → Prop) [DecidablePred selected]
+    (Q : ι → MvPolynomial σ K) (i j : ι → ℕ) (isV : σ → Bool) (a b : ℕ)
+    (hQ : ∀ l ∈ s, Q l ∈ bidegreeSubmodule isV (i l) (j l))
+    (hi : (∑ l ∈ s.filter selected, i l) ≤ a) :
+    RankMeasure.mapRank (sourceMixedOperator isV a b (∏ l ∈ s, Q l)) ≤
+      Module.finrank K (bidegreeSubmodule (K := K) isV
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a>, <a href="RankMeasure.lean.html#L30">OAI.Problem335.RankMeasure.mapRank</a>, <a href="IntermediateFactorization.lean.html#L21">OAI.Problem335.sourceMixedOperator</a></p></li><li id=L117><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_component_prod_rank_le</code> <small>line 117</small><div class="doc"><p>Specialization to the component product belonging to one bidegree
+assignment.  This is the geometric rank estimate used before summing over
+assignments in the product-rank lemma.</p></div><pre>theorem sourceMixedOperator_component_prod_rank_le [Finite σ] {ι : Type*}
+    (s : Finset ι) (selected : ι → Prop) [DecidablePred selected]
+    (Q : ι → MvPolynomial σ K) (e i : ι → ℕ) (isV : σ → Bool) (a b : ℕ)
+    (hi : (∑ l ∈ s.filter selected, i l) ≤ a) :
+    RankMeasure.mapRank (sourceMixedOperator isV a b
+      (∏ l ∈ s, bidegreeComponent isV (i l) (e l - i l) (Q l))) ≤
+      Module.finrank K (bidegreeSubmodule (K := K) isV
+…</pre><p class="refs">Mentions: <a href="RankMeasure.lean.html#L30">OAI.Problem335.RankMeasure.mapRank</a>, <a href="IntermediateFactorization.lean.html#L21">OAI.Problem335.sourceMixedOperator</a>, <a href="OperatorRank.lean.html#L47">OAI.Problem335.bidegreeComponent</a>, <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L133><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_component_prod_rank_le_of_sum_le</code> <small>line 133</small><div class="doc"><p>A total derivative-degree bound suffices for every selection of factors.
+This version is convenient for constrained assignments whose degrees sum to <code>k</code>.</p></div><pre>theorem sourceMixedOperator_component_prod_rank_le_of_sum_le [Finite σ]
+    {ι : Type*} (s : Finset ι) (selected : ι → Prop) [DecidablePred selected]
+    (Q : ι → MvPolynomial σ K) (e i : ι → ℕ) (isV : σ → Bool) (a b : ℕ)
+    (hi : (∑ l ∈ s, i l) ≤ a) :
+    RankMeasure.mapRank (sourceMixedOperator isV a b
+      (∏ l ∈ s, bidegreeComponent isV (i l) (e l - i l) (Q l))) ≤
+      Module.finrank K (bidegreeSubmodule (K := K) isV
+…</pre><p class="refs">Mentions: <a href="RankMeasure.lean.html#L30">OAI.Problem335.RankMeasure.mapRank</a>, <a href="IntermediateFactorization.lean.html#L21">OAI.Problem335.sourceMixedOperator</a>, <a href="OperatorRank.lean.html#L47">OAI.Problem335.bidegreeComponent</a>, <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li><li id=L148><b>theorem</b> <code>OAI.Problem335.mapRank_subtype_comp</code> <small>line 148</small><div class="doc"><p>Passing from a fixed-bidegree codomain to the full polynomial codomain
+does not alter the dimension of the range.</p></div><pre>theorem mapRank_subtype_comp {V : Type*} [AddCommGroup V] [Module K V]
+    (Z : Submodule K (MvPolynomial σ K)) (f : V →ₗ[K] Z) :
+    RankMeasure.mapRank (Z.subtype.comp f) = RankMeasure.mapRank f := by
+…</pre><p class="refs">Mentions: <a href="RankMeasure.lean.html#L30">OAI.Problem335.RankMeasure.mapRank</a></p></li><li id=L157><b>theorem</b> <code>OAI.Problem335.sourceMixedOperator_codRestrict_rank</code> <small>line 157</small><div class="doc"><p>Consequently a codomain-restricted mixed operator and its source-only
+restriction have exactly the same rank.</p></div><pre>theorem sourceMixedOperator_codRestrict_rank (isV : σ → Bool) (a b c d : ℕ)
+    (p : MvPolynomial σ K)
+    (h : ∀ f : bidegreeSubmodule (K := K) isV a b,
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L43">OAI.Problem335.bidegreeSubmodule</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

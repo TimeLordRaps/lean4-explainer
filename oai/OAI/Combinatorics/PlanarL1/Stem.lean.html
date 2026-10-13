@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/PlanarL1/Stem.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/PlanarL1/Stem.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">PlanarL1</a> / <span>Stem.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">PlanarL1</a>/<span>Stem.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/PlanarL1/Stem.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>lemma</b> <code>OAI.PlanarL1.Topology.segment_split</code> <small>line 12</small></li><li id=L43><b>lemma</b> <code>OAI.PlanarL1.Topology.convex_frontier_segment_at</code> <small>line 43</small></li><li id=L62><b>lemma</b> <code>OAI.PlanarL1.Topology.ExteriorPorts.spoke_intersection</code> <small>line 62</small></li><li id=L72><b>lemma</b> <code>OAI.PlanarL1.Topology.ExteriorPorts.spoke_disjoint</code> <small>line 72</small></li><li id=L80><b>def</b> <code>OAI.PlanarL1.Topology.ExteriorPorts.restrict</code> <small>line 80</small></li><li id=L88><b>lemma</b> <code>OAI.PlanarL1.Topology.ExteriorPorts.obstacles_closed</code> <small>line 88</small></li><li id=L97><b>lemma</b> <code>OAI.PlanarL1.Topology.SegmentChain.piece_subset_trace</code> <small>line 97</small></li><li id=L102><b>lemma</b> <code>OAI.PlanarL1.Topology.SegmentChain.first_segment_subset</code> <small>line 102</small></li><li id=L105><b>lemma</b> <code>OAI.PlanarL1.Topology.SegmentChain.cut_not_start</code> <small>line 105</small></li><li id=L113><b>lemma</b> <code>OAI.PlanarL1.Topology.SegmentChain.cut_not_next</code> <small>line 113</small></li><li id=L123><b>lemma</b> <code>OAI.PlanarL1.Topology.SegmentChain.cut_avoids_start</code> <small>line 123</small></li><li id=L142><b>lemma</b> <code>OAI.PlanarL1.Topology.SegmentChain.exit_frontier</code> <small>line 142</small><div class="doc"><p>A literal cut of the first polygonal piece at the boundary of a convex
+neighborhood. All of the residual path is outside, except for that port.</p></div><pre>lemma exit_frontier (hP : P.IsSimple) {T : Set ℂ} (hT : Convex ℝ T) (hop : IsOpen T)
+    (hx : x∈T) (htail : Disjoint (closure T) P.tail.trace) :
+    ∃ q : ℂ, ∃ hq : q∈segment ℝ x (P.vertex 1),
+      q∈frontier T ∧ q≠P.vertex 1 ∧ q≠x ∧
+      (∀ z∈(P.cutFirst q hq).trace, z∈closure T → z=q) := by
+…</pre><p class="refs">Mentions: <a href="Polygonal.lean.html#L253">OAI.PlanarL1.Topology.SegmentChain.trace</a></p></li><li id=L184><b>structure</b> <code>OAI.PlanarL1.Topology.DiskCore</code> <small>line 184</small><div class="doc"><p>A literal finite polyline core in a bounded convex disk, with specified
+leaf ports on its boundary. These data are constructed by the surgeries.</p></div><pre>structure DiskCore (G : SimpleGraph V) (B : Set V) where
+…</pre></li><li id=L199><b>def</b> <code>OAI.PlanarL1.Topology.DiskCore.restrict</code> <small>line 199</small></li><li id=L202><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.spoke_subset</code> <small>line 202</small></li><li id=L207><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.align</code> <small>line 207</small><div class="doc"><p>Align the first residual piece with a new disk center, without consuming
+any bend. A thin capsule avoids every other stem and the fixed obstacle.</p></div><pre>lemma align [Finite V] {target : V → ℂ}
+    (E : ExteriorPorts C.drawing.point target B C.disk)
+    (hleaf : ∀ w∈B, ∀ u u&#x27;, G.Adj w u → G.Adj w u&#x27; → u=u&#x27;)
+    {v : V} (hv : v∈B) {K : Set ℂ} (hK : IsClosed K)
+    (hCK : Disjoint (closure C.disk) K)
+    {n : ℕ} (P : SegmentChain (E.region v) (C.drawing.point v) (target v) (n+1))
+    (hP : P.IsSimple) :
+    ∃ C&#x27; : DiskCore G B,
+    ∃ E&#x27; : ExteriorPorts C&#x27;.drawing.point target B C&#x27;.disk,
+    ∃ P&#x27; : SegmentChain (E&#x27;.region v) (C&#x27;.drawing.point v) (target v) (n+1),
+      P&#x27;.IsSimple ∧ C&#x27;.drawing.point v∈segment ℝ C&#x27;.center (P&#x27;.vertex 1) ∧
+      Disjoint (closure C&#x27;.disk) K ∧
+…</pre><p class="refs">Mentions: <a href="Retubing.lean.html#L435">OAI.PlanarL1.Topology.ExteriorPorts</a>, <a href="Polygonal.lean.html#L13">OAI.PlanarL1.Topology.SegmentChain</a>, <a href="Stem.lean.html#L184">OAI.PlanarL1.Topology.DiskCore</a></p></li><li id=L298><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.finish_stem</code> <small>line 298</small></li><li id=L357><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.bend_stem</code> <small>line 357</small><div class="doc"><p>Consuming one radial piece and cutting the next strictly decreases the
+number of residual polygonal pieces. All other external stems remain disjoint.</p></div><pre>lemma bend_stem (E : ExteriorPorts C.drawing.point target B C.disk)
+    (hleaf : ∀ w∈B, ∀ u u&#x27;, G.Adj w u → G.Adj w u&#x27; → u=u&#x27;)
+    {v : V} (hv : v∈B) {K : Set ℂ} (hK : IsClosed K)
+    (hCK : Disjoint (closure C.disk) K)
+    (hEK : ∀ z∈E.region v, z∈K → z=target v)
+    {n : ℕ} (P : SegmentChain (E.region v) (C.drawing.point v) (target v) (n+1+1))
+    (hP : P.IsSimple) (hrad : C.drawing.point v∈segment ℝ C.center (P.vertex 1)) :
+    ∃ C&#x27; : DiskCore G B,
+    ∃ E&#x27; : ExteriorPorts C&#x27;.drawing.point target B C&#x27;.disk,
+    ∃ P&#x27; : SegmentChain (E&#x27;.region v) (C&#x27;.drawing.point v) (target v) (n+1),
+      P&#x27;.IsSimple ∧ C&#x27;.drawing.point v∈segment ℝ C&#x27;.center (P&#x27;.vertex 1) ∧
+      Disjoint (closure C&#x27;.disk) K ∧
+…</pre><p class="refs">Mentions: <a href="Retubing.lean.html#L435">OAI.PlanarL1.Topology.ExteriorPorts</a>, <a href="Polygonal.lean.html#L13">OAI.PlanarL1.Topology.SegmentChain</a>, <a href="Stem.lean.html#L184">OAI.PlanarL1.Topology.DiskCore</a></p></li><li id=L479><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.absorb_radial</code> <small>line 479</small><div class="doc"><p>A radial initial piece plus the finitely many bends of a simple polygonal
+stem can be swallowed while the other stems remain genuine exterior routes.</p></div><pre>lemma absorb_radial (E : ExteriorPorts C.drawing.point target B C.disk)
+    (hleaf : ∀ w∈B, ∀ u u&#x27;, G.Adj w u → G.Adj w u&#x27; → u=u&#x27;)
+    {v : V} (hv : v∈B) {K : Set ℂ} (hK : IsClosed K)
+    (hCK : Disjoint (closure C.disk) K) (hEK : Disjoint (E.region v) K)
+    {n : ℕ} (P : SegmentChain (E.region v) (C.drawing.point v) (target v) (n+1))
+    (hP : P.IsSimple) (hrad : C.drawing.point v∈segment ℝ C.center (P.vertex 1)) :
+    ∃ C&#x27; : DiskCore G (B \ {v}),
+    ∃ E&#x27; : ExteriorPorts C&#x27;.drawing.point target (B \ {v}) C&#x27;.disk,
+      C&#x27;.drawing.point v=target v ∧ C&#x27;.drawing.point v∈C&#x27;.disk ∧
+      Disjoint (closure C&#x27;.disk) K ∧
+      (∀ w∈B \ {v}, ∀ z∈E&#x27;.region w, z∈K → z∈E.region w) := by
+…</pre><p class="refs">Mentions: <a href="Retubing.lean.html#L435">OAI.PlanarL1.Topology.ExteriorPorts</a>, <a href="Polygonal.lean.html#L13">OAI.PlanarL1.Topology.SegmentChain</a>, <a href="Stem.lean.html#L184">OAI.PlanarL1.Topology.DiskCore</a></p></li><li id=L509><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.absorb_stem</code> <small>line 509</small><div class="doc"><p>Absorb an arbitrary finite polygonal exterior stem into the disk. The
+selected leaf reaches its actual exterior target, which becomes interior;
+other ports and their external connections survive, without introducing
+new intersections with any fixed closed obstacle disjoint from the route.</p></div><pre>lemma absorb_stem (E : ExteriorPorts C.drawing.point target B C.disk)
+    (hleaf : ∀ w∈B, ∀ u u&#x27;, G.Adj w u → G.Adj w u&#x27; → u=u&#x27;)
+    {v : V} (hv : v∈B) {K : Set ℂ} (hK : IsClosed K)
+    (hCK : Disjoint (closure C.disk) K) (hEK : Disjoint (E.region v) K) :
+    ∃ C&#x27; : DiskCore G (B \ {v}),
+    ∃ E&#x27; : ExteriorPorts C&#x27;.drawing.point target (B \ {v}) C&#x27;.disk,
+      C&#x27;.drawing.point v=target v ∧ C&#x27;.drawing.point v∈C&#x27;.disk ∧
+      Disjoint (closure C&#x27;.disk) K ∧
+      (∀ w∈B \ {v}, ∀ z∈E&#x27;.region w, z∈K → z∈E.region w) := by
+…</pre><p class="refs">Mentions: <a href="Retubing.lean.html#L435">OAI.PlanarL1.Topology.ExteriorPorts</a>, <a href="Stem.lean.html#L184">OAI.PlanarL1.Topology.DiskCore</a></p></li><li id=L547><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.prepare_radial</code> <small>line 547</small><div class="doc"><p>Before the last radial piece is swallowed, all of a closed external
+barrier, including the target vertex itself, can remain outside the disk.</p></div><pre>lemma prepare_radial (E : ExteriorPorts C.drawing.point target B C.disk)
+    (hleaf : ∀ w∈B, ∀ u u&#x27;, G.Adj w u → G.Adj w u&#x27; → u=u&#x27;)
+    {v : V} (hv : v∈B) {K : Set ℂ} (hK : IsClosed K)
+    (hCK : Disjoint (closure C.disk) K)
+    (hEK : ∀ z∈E.region v, z∈K → z=target v)
+    {n : ℕ} (P : SegmentChain (E.region v) (C.drawing.point v) (target v) (n+1))
+    (hP : P.IsSimple) (hrad : C.drawing.point v∈segment ℝ C.center (P.vertex 1)) :
+    ∃ C&#x27; : DiskCore G B,
+    ∃ E&#x27; : ExteriorPorts C&#x27;.drawing.point target B C&#x27;.disk,
+      segment ℝ (C&#x27;.drawing.point v) (target v) ⊆ E&#x27;.region v ∧
+      C&#x27;.drawing.point v∈segment ℝ C&#x27;.center (target v) ∧
+      Disjoint (closure C&#x27;.disk) K ∧
+…</pre><p class="refs">Mentions: <a href="Retubing.lean.html#L435">OAI.PlanarL1.Topology.ExteriorPorts</a>, <a href="Polygonal.lean.html#L13">OAI.PlanarL1.Topology.SegmentChain</a>, <a href="Stem.lean.html#L184">OAI.PlanarL1.Topology.DiskCore</a></p></li><li id=L574><b>lemma</b> <code>OAI.PlanarL1.Topology.DiskCore.prepare_stem</code> <small>line 574</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

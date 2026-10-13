@@ -1,0 +1,93 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Simplicial/SubdivisionWeakLifting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Simplicial/SubdivisionWeakLifting.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Simplicial</a> / <span>SubdivisionWeakLifting.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Simplicial</a>/<span>SubdivisionWeakLifting.lean</span></code></h1><p class="muted">51 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Simplicial/SubdivisionWeakLifting.lean#L1">source</a></p><div class="doc"><h3>Extension preserves the deletion/closed-star cover</h3><p>A map from the nerve of a poset with a greatest vertex into a simplex
+subcomplex either avoids its greatest allowed vertex, or lies in that
+vertex's closed star.  Appending the greatest source vertex supplies the
+face witnessing the second alternative.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L35><b>def</b> <code>OAI.Thomason.Construction.appendGreatestSimplex</code> <small>line 35</small></li><li id=L51><b>theorem</b> <code>OAI.Thomason.Construction.appendGreatestSimplex_castSucc</code> <small>line 51</small></li><li id=L58><b>theorem</b> <code>OAI.Thomason.Construction.appendGreatestSimplex_last</code> <small>line 58</small></li><li id=L64><b>theorem</b> <code>OAI.Thomason.Construction.simplex_in_containing_face</code> <small>line 64</small></li><li id=L77><b>theorem</b> <code>OAI.Thomason.Construction.nerve_map_factors_deletion_or_star</code> <small>line 77</small></li><li id=L141><b>theorem</b> <code>OAI.Thomason.Construction.extension_deletion_star_cover</code> <small>line 141</small></li><li id=L191><b>def</b> <code>OAI.Thomason.Construction.containedSubcomplexIso</code> <small>line 191</small></li><li id=L202><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_anodyne_of_cover_inside</code> <small>line 202</small></li><li id=L216><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_simplexSubcomplex_aux</code> <small>line 216</small></li><li id=L255><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_simplexSubcomplex_anodyne</code> <small>line 255</small><div class="doc"><p>Every subcomplex of a standard simplex has an anodyne canonical
+extension, including its entire original boundary.</p></div><pre>theorem canonicalExtension_simplexSubcomplex_anodyne {n : ℕ}
+    (A : (Δ[n] : SSet.{0}).Subcomplex) :
+    SSet.anodyneExtensions (canonicalExtension.app A.toSSet) :=
+…</pre></li><li id=L261><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_boundary_anodyne</code> <small>line 261</small></li><li id=L265><b>theorem</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_boundary_anodyne</code> <small>line 265</small></li><li id=L294><b>def</b> <code>OAI.Thomason.Construction.subdivisionUnitHomotopy</code> <small>line 294</small><div class="doc"><p>The mate of the double-last-vertex homotopy compares the canonical
+extension on Sd K with the adjunction unit on K.</p></div><pre>def subdivisionUnitHomotopy (K : SSet.{0}) :
+    SSet.Homotopy (lastVertex.app K ≫ SSet.sdExAdjunction.unit.app K)
+      (canonicalExtension.app (SSet.sd.obj K)) := by
+…</pre></li><li id=L310><b>theorem</b> <code>OAI.Thomason.Construction.exists_subdivision_descent</code> <small>line 310</small><div class="doc"><p>If the canonical extension of the subdivided parameter is anodyne,
+every map from that subdivision into a Kan complex descends up to an
+actual simplicial homotopy.</p></div><pre>theorem exists_subdivision_descent (K X : SSet.{0}) [SSet.KanComplex X]
+    (hK : SSet.anodyneExtensions (canonicalExtension.app (SSet.sd.obj K)))
+    (f : SSet.sd.obj K ⟶ X) :
+    ∃ g : K ⟶ X, Nonempty (SSet.Homotopy
+      (lastVertex.app K ≫ g) f) := by
+…</pre></li><li id=L327><b>theorem</b> <code>OAI.Thomason.Construction.exists_standard_subdivision_descent</code> <small>line 327</small><div class="doc"><p>This descent is already unconditional for every standard simplex.</p></div><pre>theorem exists_standard_subdivision_descent (n : ℕ) (X : SSet.{0}) [SSet.KanComplex X]
+    (f : SSet.sd.obj (SSet.stdSimplex.obj (.mk n)) ⟶ X) :
+    ∃ g : SSet.stdSimplex.obj (.mk n) ⟶ X, Nonempty (SSet.Homotopy
+      (lastVertex.app (SSet.stdSimplex.obj (.mk n)) ≫ g) f) :=
+…</pre></li><li id=L356><b>theorem</b> <code>OAI.Thomason.Construction.finitePoset_nerve_simplex_embedding</code> <small>line 356</small></li><li id=L377><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_subdivision_of_simplex_mono</code> <small>line 377</small></li><li id=L384><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_subdivision_finitePoset_anodyne</code> <small>line 384</small></li><li id=L396><b>theorem</b> <code>OAI.Thomason.Construction.exists_finitePoset_subdivision_descent</code> <small>line 396</small></li><li id=L402><b>theorem</b> <code>OAI.Thomason.Construction.exists_subcomplex_subdivision_descent</code> <small>line 402</small></li><li id=L430><b>def</b> <code>OAI.Thomason.Construction.SubdivisionBarycentric.subdivisionHomeomorphOfMono</code> <small>line 430</small></li><li id=L440><b>def</b> <code>OAI.Thomason.Construction.SubdivisionBarycentric.finitePosetSubdivisionHomeomorph</code> <small>line 440</small><div class="doc"><p>For every finite poset, including the empty one, subdivision retains
+the actual realization space homeomorphically.</p></div><pre>def finitePosetSubdivisionHomeomorph (P : Type) [PartialOrder P] [Finite P] :
+    SSet.toTop.obj (SSet.sd.obj (nerve P)) ≃ₜ SSet.toTop.obj (nerve P) := by
+…</pre></li><li id=L477><b>theorem</b> <code>OAI.Thomason.Construction.subdivision_descent_weak_iff</code> <small>line 477</small></li><li id=L491><b>theorem</b> <code>OAI.Thomason.Construction.exists_finitePoset_weak_descent</code> <small>line 491</small><div class="doc"><p>Finite-poset descent preserves and reflects the actual topological
+weak-equivalence predicate, with a simplicial comparison homotopy.</p></div><pre>theorem exists_finitePoset_weak_descent (P : Type) [PartialOrder P] [Finite P]
+    (X : SSet.{0}) [SSet.KanComplex X] (f : SSet.sd.obj (nerve P) ⟶ X) :
+    ∃ g : nerve P ⟶ X, Nonempty (SSet.Homotopy (lastVertex.app (nerve P) ≫ g) f) ∧
+      (realizationWeakEquivalences g ↔ realizationWeakEquivalences f) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L520><b>theorem</b> <code>OAI.Thomason.Construction.subdivision_unit_extension_lastVertex</code> <small>line 520</small></li><li id=L527><b>theorem</b> <code>OAI.Thomason.Construction.exists_subdivision_descent_over_kan</code> <small>line 527</small><div class="doc"><p>A map on a subdivided parameter descends over the same base map.
+The two anodyne premises hold for the finite poset parameters used below.</p></div><pre>theorem exists_subdivision_descent_over_kan {K E B : SSet.{0}}
+    [SSet.KanComplex B] (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (hK : SSet.anodyneExtensions (canonicalExtension.app K))
+    (hSd : SSet.anodyneExtensions (canonicalExtension.app (SSet.sd.obj K)))
+    (a : SSet.sd.obj K ⟶ E) (b : K ⟶ B)
+    (hab : a ≫ p = lastVertex.app K ≫ b) :
+    ∃ g : K ⟶ E, g ≫ p = b ∧
+      Nonempty (SSet.Homotopy (lastVertex.app K ≫ g) a) := by
+…</pre></li><li id=L563><b>theorem</b> <code>OAI.Thomason.Construction.exists_finitePoset_subdivision_descent_over_kan</code> <small>line 563</small><div class="doc"><p>Concrete relative descent for every finite poset, with no additional
+published input.</p></div><pre>theorem exists_finitePoset_subdivision_descent_over_kan
+    (P : Type) [PartialOrder P] [Finite P] {E B : SSet.{0}}
+    [SSet.KanComplex B] (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (a : SSet.sd.obj (nerve P) ⟶ E) (b : nerve P ⟶ B)
+    (hab : a ≫ p = lastVertex.app (nerve P) ≫ b) :
+    ∃ g : nerve P ⟶ E, g ≫ p = b ∧
+      Nonempty (SSet.Homotopy (lastVertex.app (nerve P) ≫ g) a) :=
+…</pre></li><li id=L595><b>def</b> <code>OAI.Thomason.Construction.NerveSubdivisionMap.faceEmbedding</code> <small>line 595</small></li><li id=L605><b>theorem</b> <code>OAI.Thomason.Construction.NerveSubdivisionMap.faceEmbedding_range</code> <small>line 605</small></li><li id=L617><b>theorem</b> <code>OAI.Thomason.Construction.NerveSubdivisionMap.map_surjective</code> <small>line 617</small><div class="doc"><p>Every simplex of the chain nerve lifts through one actual standard
+subdivision simplex.</p></div><pre>theorem map_surjective (P : Type) [PartialOrder P] (d : SimplexCategoryᵒᵖ) :
+    Function.Surjective ((map P).app d) := by
+…</pre><p class="refs">Mentions: <a href="NonsingularFaceCarriers.lean.html#L860">OAI.Thomason.Construction.NerveSubdivisionMap.map</a></p></li><li id=L654><b>theorem</b> <code>OAI.Thomason.Construction.NerveSubdivisionMap.map_epi</code> <small>line 654</small></li><li id=L660><b>theorem</b> <code>OAI.Thomason.Construction.NerveSubdivisionMap.map_mono</code> <small>line 660</small><div class="doc"><p>A finite linear extension reduces monicity to the standard simplex.</p></div><pre>theorem map_mono (P : Type) [PartialOrder P] [Finite P] : Mono (map P) := by
+…</pre><p class="refs">Mentions: <a href="NonsingularFaceCarriers.lean.html#L860">OAI.Thomason.Construction.NerveSubdivisionMap.map</a></p></li><li id=L714><b>def</b> <code>OAI.Thomason.Construction.NerveSubdivisionMap.iso</code> <small>line 714</small></li><li id=L745><b>def</b> <code>OAI.Thomason.Construction.iteratedChainPoset</code> <small>line 745</small></li><li id=L749><b>instance</b> <code>OAI.Thomason.Construction.iteratedChainPoset_finite</code> <small>line 749</small></li><li id=L757><b>def</b> <code>OAI.Thomason.Construction.iteratedSubdivisionNerveIso</code> <small>line 757</small></li><li id=L766><b>theorem</b> <code>OAI.Thomason.Construction.iteratedSubdivision_canonical_anodyne</code> <small>line 766</small><div class="doc"><p>Every iterated finite parameter has the exact canonical-extension
+lifting property, rather than just a realization weak equivalence.</p></div><pre>theorem iteratedSubdivision_canonical_anodyne (P : PartOrd.{0}) [Finite P] (r : ℕ) :
+    SSet.anodyneExtensions (canonicalExtension.app ((iteratedSubdivision r).obj (nerve P))) :=
+…</pre><p class="refs">Mentions: <a href="BarycentricSortedCoordinates.lean.html#L138">OAI.Thomason.Construction.iteratedSubdivision</a></p></li><li id=L771><b>def</b> <code>OAI.Thomason.Construction.iteratedLastVertex</code> <small>line 771</small></li><li id=L775><b>theorem</b> <code>OAI.Thomason.Construction.iteratedLastVertex_weak</code> <small>line 775</small></li><li id=L784><b>theorem</b> <code>OAI.Thomason.Construction.exists_iteratedSubdivision_step_descent</code> <small>line 784</small><div class="doc"><p>A map out of the next actual subdivision descends into the same Kan
+target with an actual simplicial comparison and unchanged weak test.</p></div><pre>theorem exists_iteratedSubdivision_step_descent (P : PartOrd.{0}) [Finite P]
+    (r : ℕ) (X : SSet.{0}) [SSet.KanComplex X]
+    (f : (iteratedSubdivision (r+1)).obj (nerve P) ⟶ X) :
+    ∃ g : (iteratedSubdivision r).obj (nerve P) ⟶ X,
+      Nonempty (SSet.Homotopy (lastVertex.app ((iteratedSubdivision r).obj (nerve P)) ≫ g) f) ∧
+        (realizationWeakEquivalences g ↔ realizationWeakEquivalences f) := by
+…</pre><p class="refs">Mentions: <a href="BarycentricSortedCoordinates.lean.html#L138">OAI.Thomason.Construction.iteratedSubdivision</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L815><b>def</b> <code>OAI.Thomason.Construction.ChainCardBound</code> <small>line 815</small></li><li id=L818><b>theorem</b> <code>OAI.Thomason.Construction.chainCardBound_chains</code> <small>line 818</small></li><li id=L843><b>theorem</b> <code>OAI.Thomason.Construction.iteratedChainPoset_cardBound</code> <small>line 843</small></li><li id=L849><b>theorem</b> <code>OAI.Thomason.Construction.simplex_dimension_le_chainCardBound</code> <small>line 849</small></li><li id=L868><b>theorem</b> <code>OAI.Thomason.Construction.iteratedChainPoset_dimension_le</code> <small>line 868</small><div class="doc"><p>Every finite starting poset gives one bound valid at every stage.</p></div><pre>theorem iteratedChainPoset_dimension_le (P : PartOrd.{0}) [Fintype P]
+    (r m : ℕ) (s : Fin (m+1) ⥤ iteratedChainPoset P r) (hs : StrictMono s.obj) :
+    m ≤ Fintype.card P := by
+…</pre><p class="refs">Mentions: <a href="SubdivisionWeakLifting.lean.html#L745">OAI.Thomason.Construction.iteratedChainPoset</a></p></li><li id=L895><b>theorem</b> <code>OAI.Thomason.Construction.subdivision_weak_mono</code> <small>line 895</small><div class="doc"><p>Weak monomorphisms remain weak monomorphisms under actual subdivision.</p></div><pre>theorem subdivision_weak_mono {K L : SSet.{0}} (f : K ⟶ L) [Mono f]
+    (hf : realizationWeakEquivalences f) :
+    Mono (SSet.sd.map f) ∧ realizationWeakEquivalences (SSet.sd.map f) :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L902><b>theorem</b> <code>OAI.Thomason.Construction.subdivision_weak_mono_deformation</code> <small>line 902</small><div class="doc"><p>Subdividing a weak mono retains an exact stationary deformation on its
+entire realized image.</p></div><pre>theorem subdivision_weak_mono_deformation {K L : SSet.{0}} (f : K ⟶ L) [Mono f]
+    (hf : realizationWeakEquivalences f) :
+    ∃ r : SSet.toTop.obj (SSet.sd.obj L) ⟶ SSet.toTop.obj (SSet.sd.obj K),
+      SSet.toTop.map (SSet.sd.map f) ≫ r = 𝟙 _ ∧
+      Nonempty ((r ≫ SSet.toTop.map (SSet.sd.map f)).hom.HomotopyRel
+        (ContinuousMap.id _) (Set.range (SSet.toTop.map (SSet.sd.map f)).hom)) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L913><b>theorem</b> <code>OAI.Thomason.Construction.extension_boundary_weak</code> <small>line 913</small><div class="doc"><p>Extension preserves boundary lifting and consequently its actual weak
+equivalence, without requiring the open general acyclic-Kan implication.</p></div><pre>theorem extension_boundary_weak {K L : SSet.{0}} (p : K ⟶ L) (hp : I.rlp p) :
+    I.rlp (SSet.ex.map p) ∧ realizationWeakEquivalences (SSet.ex.map p) :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L919><b>theorem</b> <code>OAI.Thomason.Construction.extension_twice_boundary_weak</code> <small>line 919</small><div class="doc"><p>The same precise consequence for the double extension in the Thomason
+fibration functor.</p></div><pre>theorem extension_twice_boundary_weak {K L : SSet.{0}} (p : K ⟶ L) (hp : I.rlp p) :
+    I.rlp ((SSet.ex ⋙ SSet.ex).map p) ∧
+      realizationWeakEquivalences ((SSet.ex ⋙ SSet.ex).map p) :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L926><b>theorem</b> <code>OAI.Thomason.Construction.extension_twice_singular_acyclic</code> <small>line 926</small><div class="doc"><p>The proved singular acyclic case remains a boundary-lifting weak map
+after the actual double extension.</p></div><pre>theorem extension_twice_singular_acyclic {X Y : TopCat.{0}} (p : X ⟶ Y)
+    [HomotopicalAlgebra.Fibration (TopCat.toSSet.map p)]
+    (hp : IsWeakHomotopyEquivalence p.hom) :
+    I.rlp ((SSet.ex ⋙ SSet.ex).map (TopCat.toSSet.map p)) ∧
+      realizationWeakEquivalences ((SSet.ex ⋙ SSet.ex).map (TopCat.toSSet.map p)) :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L197">OAI.Thomason.Construction.IsWeakHomotopyEquivalence</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L935><b>theorem</b> <code>OAI.Thomason.Construction.street_subdivision_twice_weak_iff</code> <small>line 935</small><div class="doc"><p>Double subdivision detects exactly the implemented omega-Street weak
+equivalences. No Gray or Kan–Quillen assumption appears.</p></div><pre>theorem street_subdivision_twice_weak_iff (h : NormalizedSimplexIdentities)
+    {C D : StrictOmegaCategory} (f : C ⟶ D) :
+    realizationWeakEquivalences ((SSet.sd ⋙ SSet.sd).map (h.streetNerve.map f)) ↔
+      h.streetWeakEquivalences f :=
+…</pre><p class="refs">Mentions: <a href="../Strict/StrictIsomorphisms.lean.html#L32">OAI.Thomason.Construction.NormalizedSimplexIdentities</a>, <a href="../Strict/StrictCompositeListReplacement.lean.html#L134">OAI.Thomason.Construction.StrictOmegaCategory</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,89 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/LowSpaceSubsetSum/Representation/RepresentationFamilies.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/LowSpaceSubsetSum/Representation/RepresentationFamilies.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">LowSpaceSubsetSum</a> / <a href="index.html">Representation</a> / <span>RepresentationFamilies.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">LowSpaceSubsetSum</a>/<a href="index.html">Representation</a>/<span>RepresentationFamilies.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/LowSpaceSubsetSum/Representation/RepresentationFamilies.lean#L1">source</a></p><div class="doc"><h3>Representative families in actual mixer subblock partitions</h3><p>The three categories are the chosen representative, its complement in the
+selected half, and the outside half. Their canonical disjoint-union counting
+model is transported to partitions of the actual mixer indices.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.LowSpaceSubsetSum.balancedBlockCounts</code> <small>line 24</small><div class="doc"><p>The implementation assigns the remainder in the fixed block order.</p></div><pre>def balancedBlockCounts (l k : ℕ) (j : Fin l) : ℕ :=
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.LowSpaceSubsetSum.balancedBlockCounts_sum</code> <small>line 27</small></li><li id=L44><b>theorem</b> <code>OAI.LowSpaceSubsetSum.balancedBlockCounts_balanced</code> <small>line 44</small></li><li id=L49><b>theorem</b> <code>OAI.LowSpaceSubsetSum.balancedBlockCounts_le</code> <small>line 49</small></li><li id=L54><b>def</b> <code>OAI.LowSpaceSubsetSum.representativeBlockProfile</code> <small>line 54</small><div class="doc"><p>Smaller masks, complementary masks, and outside indices fill each block.</p></div><pre>def representativeBlockProfile (l t k : ℕ) : Fin 3 → Fin l → ℕ :=
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.LowSpaceSubsetSum.representativeBlockProfile_properties</code> <small>line 57</small></li><li id=L92><b>def</b> <code>OAI.LowSpaceSubsetSum.representativeCategories</code> <small>line 92</small></li><li id=L96><b>theorem</b> <code>OAI.LowSpaceSubsetSum.representativeCategories_subset</code> <small>line 96</small></li><li id=L105><b>theorem</b> <code>OAI.LowSpaceSubsetSum.representativeCategories_disjoint</code> <small>line 105</small></li><li id=L115><b>theorem</b> <code>OAI.LowSpaceSubsetSum.representativeCategories_card</code> <small>line 115</small></li><li id=L122><b>def</b> <code>OAI.LowSpaceSubsetSum.representativeCategoryEquiv</code> <small>line 122</small><div class="doc"><p>The canonical three-category domain is exactly the actual mixer.</p></div><pre>noncomputable def representativeCategoryEquiv {D A M : Finset ι}
+    (hDA : D ⊆ A) (hAM : A ⊆ M) :
+    CategoryDomain (fun i =&gt; ↥(representativeCategories D A M i)) ≃ ↥M := by
+…</pre><p class="refs">Mentions: <a href="../Counting/BalancedPartitions.lean.html#L116">OAI.LowSpaceSubsetSum.CategoryDomain</a>, <a href="RepresentationFamilies.lean.html#L92">OAI.LowSpaceSubsetSum.representativeCategories</a></p></li><li id=L145><b>def</b> <code>OAI.LowSpaceSubsetSum.coloringsPrecomposeEquiv</code> <small>line 145</small></li><li id=L157><b>theorem</b> <code>OAI.LowSpaceSubsetSum.actual_representative_partition_probability</code> <small>line 157</small><div class="doc"><p>The actual labeled mixer partitions have the same category probability
+as the canonical multinomial model.</p></div><pre>theorem actual_representative_partition_probability {D A M : Finset ι}
+    (hDA : D ⊆ A) (hAM : A ⊆ M) (l b : ℕ) (hl : l = 2 ∨ l = 4)
+    (q : Fin 3 → Fin l → ℕ)
+    (hrows : ∀ i, ∑ j, q i j = (representativeCategories D A M i).card)
+    (hcols : ∀ j, ∑ i, q i j = b) (hbal : ∀ i, BalancedProfile (q i)) :
+    1 / (M.card + 1 : ℝ) ^ (3 * l) ≤
+      finiteUniformProbability
+        (fun f : MatchingSmoothing.Colorings ↥M (Fin l) (fun _ =&gt; b) =&gt;
+          ∀ i, MatchingSmoothing.histogram
+            (fun x : ↥(representativeCategories D A M i) =&gt;
+              f.val ⟨x.val, representativeCategories_subset hDA hAM i x.property⟩) = q i) := by
+…</pre><p class="refs">Mentions: <a href="RepresentationFamilies.lean.html#L92">OAI.LowSpaceSubsetSum.representativeCategories</a>, <a href="../Counting/BalancedPartitions.lean.html#L21">OAI.LowSpaceSubsetSum.BalancedProfile</a>, <a href="../Separators/SeparatorFamilies.lean.html#L22">OAI.LowSpaceSubsetSum.finiteUniformProbability</a>, <a href="../../MatchingPSD/ColoringCounts.lean.html#L20">OAI.MatchingSmoothing.Colorings</a>, <a href="../../MatchingPSD/ColoringCounts.lean.html#L11">OAI.MatchingSmoothing.histogram</a>, <a href="RepresentationFamilies.lean.html#L96">OAI.LowSpaceSubsetSum.representativeCategories_subset</a></p></li><li id=L181><b>def</b> <code>OAI.LowSpaceSubsetSum.representativeMask</code> <small>line 181</small><div class="doc"><p>One concrete mask for every distinct integer weight at the selected size.</p></div><pre>noncomputable def representativeMask (a : ι → ℤ) (A : Finset ι) (k : ℕ)
+    (x : ↥(sumsAtSize a A k)) : Finset ι :=
+…</pre><p class="refs">Mentions: <a href="../Counting/Representatives.lean.html#L23">OAI.LowSpaceSubsetSum.sumsAtSize</a></p></li><li id=L185><b>theorem</b> <code>OAI.LowSpaceSubsetSum.representativeMask_spec</code> <small>line 185</small></li><li id=L191><b>theorem</b> <code>OAI.LowSpaceSubsetSum.representativeMask_weights_injective</code> <small>line 191</small></li><li id=L199><b>def</b> <code>OAI.LowSpaceSubsetSum.survivingWeights</code> <small>line 199</small><div class="doc"><p>The image contains distinct weights rather than repeated subset occurrences.</p></div><pre>noncomputable def survivingWeights {R : Type*} [Fintype R]
+    (a : ι → ℤ) (mask : R → Finset ι) (P : R → Prop) : Finset ℤ := by
+…</pre></li><li id=L204><b>theorem</b> <code>OAI.LowSpaceSubsetSum.survivingWeights_probability</code> <small>line 204</small></li><li id=L220><b>theorem</b> <code>OAI.LowSpaceSubsetSum.retained_family_denominator</code> <small>line 220</small></li><li id=L236><b>theorem</b> <code>OAI.LowSpaceSubsetSum.retained_family_count</code> <small>line 236</small><div class="doc"><p>The paper's exponent fourteen absorbs the size pigeonhole factor and
+half of the expected retained fraction, for both arities.</p></div><pre>theorem retained_family_count {R : Type*} [Fintype R] [Nonempty R]
+    (a : ι → ℤ) (mask : R → Finset ι)
+    (hinj : Function.Injective (fun r =&gt; weight a (mask r)))
+    (P : R → Prop) (s l : ℕ) (L u : ℝ) (hu : 2 ≤ u)
+    (hs : (s : ℝ) + 1 ≤ u) (hl : l = 2 ∨ l = 4)
+    (hsize : (2 : ℝ) ^ L / ((s : ℝ) + 1) ≤ Fintype.card R)
+    (hretained : (1 / u ^ (3 * l)) / 2 ≤ finiteUniformProbability P) :
+    (2 : ℝ) ^ L / u ^ 14 ≤ (survivingWeights a mask P).card := by
+…</pre><p class="refs">Mentions: <a href="../Counting/Model.lean.html#L29">OAI.LowSpaceSubsetSum.weight</a>, <a href="../Separators/SeparatorFamilies.lean.html#L22">OAI.LowSpaceSubsetSum.finiteUniformProbability</a>, <a href="RepresentationFamilies.lean.html#L199">OAI.LowSpaceSubsetSum.survivingWeights</a></p></li><li id=L263><b>theorem</b> <code>OAI.LowSpaceSubsetSum.retained_distinct_weight_probability</code> <small>line 263</small></li><li id=L286><b>def</b> <code>OAI.LowSpaceSubsetSum.representativePrescriptions</code> <small>line 286</small></li><li id=L295><b>theorem</b> <code>OAI.LowSpaceSubsetSum.actual_representative_family_survival</code> <small>line 295</small><div class="doc"><p>The finite family consists of actual masks inside the selected half,
+and the sample space consists of actual equal-size mixer partitions.</p></div><pre>theorem actual_representative_family_survival {R : Type*} [Fintype R] [Nonempty R]
+    (a : ι → ℤ) (A M : Finset ι) (mask : R → Finset ι)
+    (hinj : Function.Injective (fun r =&gt; weight a (mask r)))
+    (hDA : ∀ r, mask r ⊆ A) (hAM : A ⊆ M) (l b : ℕ)
+    (hl : l = 2 ∨ l = 4) (hparts : l * b = M.card)
+    (q : Fin 3 → Fin l → ℕ)
+    (hrows : ∀ r i, ∑ j, q i j = (representativeCategories (mask r) A M i).card)
+    (hcols : ∀ j, ∑ i, q i j = b) (hbal : ∀ i, BalancedProfile (q i))
+    (s : ℕ) (L u : ℝ) (hu : 2 ≤ u) (hs : (s : ℝ) + 1 ≤ u)
+    (hm : (M.card : ℝ) + 1 ≤ u)
+    (hsize : (2 : ℝ) ^ L / ((s : ℝ) + 1) ≤ Fintype.card R) :
+    1 / (2 * u ^ (3 * l)) ≤ finiteUniformProbability
+…</pre><p class="refs">Mentions: <a href="../Counting/Model.lean.html#L29">OAI.LowSpaceSubsetSum.weight</a>, <a href="RepresentationFamilies.lean.html#L92">OAI.LowSpaceSubsetSum.representativeCategories</a>, <a href="../Counting/BalancedPartitions.lean.html#L21">OAI.LowSpaceSubsetSum.BalancedProfile</a>, <a href="../Separators/SeparatorFamilies.lean.html#L22">OAI.LowSpaceSubsetSum.finiteUniformProbability</a></p></li><li id=L321><b>theorem</b> <code>OAI.LowSpaceSubsetSum.fixed_profile_family_survival</code> <small>line 321</small><div class="doc"><p>The algorithm's fixed-order remainder counts satisfy every category
+condition, including the complementary masks and the outside half.</p></div><pre>theorem fixed_profile_family_survival {R : Type*} [Fintype R] [Nonempty R]
+    (a : ι → ℤ) (A M : Finset ι) (mask : R → Finset ι)
+    (hinj : Function.Injective (fun r =&gt; weight a (mask r)))
+    (hDA : ∀ r, mask r ⊆ A) (hAM : A ⊆ M) (l t k : ℕ)
+    (hl : l = 2 ∨ l = 4) (hk : k ≤ l * t)
+    (hD : ∀ r, (mask r).card = k) (hA : A.card = l * t)
+    (hM : M.card = 2 * (l * t)) (L u : ℝ) (hu : 2 ≤ u)
+    (hs : ((l * t : ℕ) : ℝ) + 1 ≤ u) (hm : (M.card : ℝ) + 1 ≤ u)
+    (hsize : (2 : ℝ) ^ L / ((l * t : ℕ) + 1) ≤ Fintype.card R) :
+    1 / (2 * u ^ (3 * l)) ≤ finiteUniformProbability
+      (fun f : MatchingSmoothing.Colorings ↥M (Fin l) (fun _ =&gt; 2 * t) =&gt;
+        (2 : ℝ) ^ L / u ^ 14 ≤ (survivingWeights a mask
+…</pre><p class="refs">Mentions: <a href="../Counting/Model.lean.html#L29">OAI.LowSpaceSubsetSum.weight</a>, <a href="../Separators/SeparatorFamilies.lean.html#L22">OAI.LowSpaceSubsetSum.finiteUniformProbability</a>, <a href="../../MatchingPSD/ColoringCounts.lean.html#L20">OAI.MatchingSmoothing.Colorings</a>, <a href="RepresentationFamilies.lean.html#L199">OAI.LowSpaceSubsetSum.survivingWeights</a></p></li><li id=L345><b>theorem</b> <code>OAI.LowSpaceSubsetSum.distinct_sum_representatives_survival</code> <small>line 345</small><div class="doc"><p>Applying the survival estimate to the concrete representative chosen for
+each distinct sum gives the actual retained-weight event.</p></div><pre>theorem distinct_sum_representatives_survival
+    (a : ι → ℤ) (A M : Finset ι) (hAM : A ⊆ M) (l t k : ℕ)
+    (hl : l = 2 ∨ l = 4) (hk : k ≤ l * t)
+    (hA : A.card = l * t) (hM : M.card = 2 * (l * t))
+    (L u : ℝ) (hu : 2 ≤ u) (hs : ((l * t : ℕ) : ℝ) + 1 ≤ u)
+    (hm : (M.card : ℝ) + 1 ≤ u)
+    (hsize : (2 : ℝ) ^ L / ((l * t : ℕ) + 1) ≤ (sumsAtSize a A k).card) :
+    1 / (2 * u ^ (3 * l)) ≤ finiteUniformProbability
+      (fun f : MatchingSmoothing.Colorings ↥M (Fin l) (fun _ =&gt; 2 * t) =&gt;
+        (2 : ℝ) ^ L / u ^ 14 ≤ (survivingWeights a (representativeMask a A k)
+          (fun r =&gt; representativePrescriptions (representativeMask_spec a A k r).1 hAM
+            (representativeBlockProfile l t k) f)).card) := by
+…</pre><p class="refs">Mentions: <a href="../Counting/Representatives.lean.html#L23">OAI.LowSpaceSubsetSum.sumsAtSize</a>, <a href="../Separators/SeparatorFamilies.lean.html#L22">OAI.LowSpaceSubsetSum.finiteUniformProbability</a>, <a href="../../MatchingPSD/ColoringCounts.lean.html#L20">OAI.MatchingSmoothing.Colorings</a>, <a href="RepresentationFamilies.lean.html#L199">OAI.LowSpaceSubsetSum.survivingWeights</a>, <a href="RepresentationFamilies.lean.html#L181">OAI.LowSpaceSubsetSum.representativeMask</a>, <a href="RepresentationFamilies.lean.html#L286">OAI.LowSpaceSubsetSum.representativePrescriptions</a>, <a href="RepresentationFamilies.lean.html#L185">OAI.LowSpaceSubsetSum.representativeMask_spec</a>, <a href="RepresentationFamilies.lean.html#L54">OAI.LowSpaceSubsetSum.representativeBlockProfile</a></p></li><li id=L371><b>theorem</b> <code>OAI.LowSpaceSubsetSum.exists_large_representative_family</code> <small>line 371</small><div class="doc"><p>Pigeonhole-selected sizes give concrete, weight-injective representative
+families on each actual selected half.</p></div><pre>theorem exists_large_representative_family (a : ι → ℤ) (A : Finset ι)
+    (L : ℝ) (hL : L ≤ (A.card : ℝ) - deficiency a A) :
+    ∃ k ≤ A.card / 2,
+      (2 : ℝ) ^ L / (A.card + 1) ≤ (sumsAtSize a A k).card ∧
+      (∀ x : ↥(sumsAtSize a A k), representativeMask a A k x ⊆ A ∧
+        (representativeMask a A k x).card = k ∧
+        weight a (representativeMask a A k x) = x.val) ∧
+      Function.Injective (fun x : ↥(sumsAtSize a A k) =&gt; weight a (representativeMask a A k x)) := by
+…</pre><p class="refs">Mentions: <a href="../Counting/Deficiency.lean.html#L205">OAI.LowSpaceSubsetSum.deficiency</a>, <a href="../Counting/Representatives.lean.html#L23">OAI.LowSpaceSubsetSum.sumsAtSize</a>, <a href="RepresentationFamilies.lean.html#L181">OAI.LowSpaceSubsetSum.representativeMask</a>, <a href="../Counting/Model.lean.html#L29">OAI.LowSpaceSubsetSum.weight</a></p></li><li id=L385><b>theorem</b> <code>OAI.LowSpaceSubsetSum.finiteUniformProbability_pi</code> <small>line 385</small></li><li id=L396><b>theorem</b> <code>OAI.LowSpaceSubsetSum.three_representative_families_probability</code> <small>line 396</small><div class="doc"><p>One top partition and two local partitions are independent in the
+actual product sample space; their inverse-polynomial costs multiply.</p></div><pre>theorem three_representative_families_probability
+    (Ω : Fin 3 → Type v) [∀ i, Fintype (Ω i)] (P : ∀ i, Ω i → Prop)
+    (u : ℝ) (hu : 8 ≤ u)
+    (h0 : 1 / (2 * u ^ 12) ≤ finiteUniformProbability (P 0))
+    (h1 : 1 / (2 * u ^ 6) ≤ finiteUniformProbability (P 1))
+    (h2 : 1 / (2 * u ^ 6) ≤ finiteUniformProbability (P 2)) :
+    1 / u ^ 25 ≤ finiteUniformProbability (fun x : ∀ i, Ω i =&gt; ∀ i, P i (x i)) := by
+…</pre><p class="refs">Mentions: <a href="../Separators/SeparatorFamilies.lean.html#L22">OAI.LowSpaceSubsetSum.finiteUniformProbability</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

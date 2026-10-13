@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tracial/FullColumnTheorem.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tracial/FullColumnTheorem.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tracial</a> / <span>FullColumnTheorem.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tracial</a>/<span>FullColumnTheorem.lean</span></code></h1><p class="muted">32 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tracial/FullColumnTheorem.lean#L1">source</a></p><div class="doc"><h3>The full-column implementation argument</h3><p>The corner commutator is constructed here, corrected by the proved cyclic
+implementation theorem, and extended through finite matrix coordinates with
+exactly the same norm. Extension by zero and the tracial commutation theorem
+then identify the resulting intertwiner as a right multiplier.</p><p>The finite-factor realization of the corner and its matrix coordinates remains
+explicit geometric data; the full-column conclusion is not an input.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>def</b> <code>OAI.KadisonSimilarity.cornerCommutator</code> <small>line 30</small><div class="doc"><p>The actual rectangular commutator of a corner operator.</p></div><pre>def cornerCommutator (ρ : C →⋆ₐ[ℂ] (F →L[ℂ] F))
+    (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) (G : K →L[ℂ] F) : C →L[ℂ] (K →L[ℂ] F) where
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.KadisonSimilarity.cornerCommutator_apply</code> <small>line 45</small></li><li id=L51><b>theorem</b> <code>OAI.KadisonSimilarity.cornerCommutator_leibniz</code> <small>line 51</small><div class="doc"><p>The rectangular Leibniz rule follows from composition, with no derivation
+hypothesis on the corner operator.</p></div><pre>theorem cornerCommutator_leibniz (ρ : C →⋆ₐ[ℂ] (F →L[ℂ] F))
+    (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) (G : K →L[ℂ] F) (a b : C) :
+    cornerCommutator ρ σ G (a * b) =
+      (ρ a).comp (cornerCommutator ρ σ G b) +
+        (cornerCommutator ρ σ G a).comp (σ b) := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L30">OAI.KadisonSimilarity.cornerCommutator</a></p></li><li id=L62><b>theorem</b> <code>OAI.KadisonSimilarity.exists_corner_intertwiner_of_published_inputs</code> <small>line 62</small><div class="doc"><p>Correct the corner operator to an exact module intertwiner.</p></div><pre>theorem exists_corner_intertwiner_of_published_inputs
+    (ρ : C →⋆ₐ[ℂ] (F →L[ℂ] F)) (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K))
+    (G : K →L[ℂ] F) {ε : ℝ} (hG : ‖cornerCommutator ρ σ G‖ ≤ ε)
+    (dickson : DicksonTwoBound (A := C) (RectangularSum F K))
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L30">OAI.KadisonSimilarity.cornerCommutator</a>, <a href="../Derivation/RectangularDerivations.lean.html#L343">OAI.KadisonSimilarity.DicksonTwoBound</a>, <a href="../Derivation/RectangularDerivations.lean.html#L68">OAI.KadisonSimilarity.RectangularSum</a></p></li><li id=L98><b>def</b> <code>OAI.KadisonSimilarity.copyInsert</code> <small>line 98</small><div class="doc"><p>Insertion into one coordinate of a finite Hilbert sum.</p></div><pre>def copyInsert {n : ℕ} (i : Fin n) : K →L[ℂ] HilbertCopies K n :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a></p></li><li id=L102><b>theorem</b> <code>OAI.KadisonSimilarity.copyInsert_apply</code> <small>line 102</small></li><li id=L106><b>def</b> <code>OAI.KadisonSimilarity.copyMatrixUnit</code> <small>line 106</small><div class="doc"><p>The scalar matrix unit which sends coordinate <code>j</code> to coordinate <code>i</code>.</p></div><pre>def copyMatrixUnit {n : ℕ} (i j : Fin n) :
+    HilbertCopies K n →L[ℂ] HilbertCopies K n :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a></p></li><li id=L110><b>theorem</b> <code>OAI.KadisonSimilarity.copyMatrixUnit_apply</code> <small>line 110</small></li><li id=L114><b>def</b> <code>OAI.KadisonSimilarity.copyCorner</code> <small>line 114</small><div class="doc"><p>A diagonal corner of a bounded operator on two finite Hilbert sums.</p></div><pre>def copyCorner {n : ℕ} (i : Fin n) (W : HilbertCopies K n →L[ℂ] HilbertCopies F n) :
+    K →L[ℂ] F :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a></p></li><li id=L118><b>theorem</b> <code>OAI.KadisonSimilarity.copyCorner_apply</code> <small>line 118</small></li><li id=L124><b>theorem</b> <code>OAI.KadisonSimilarity.eq_mapCopies_of_matrixUnit_intertwining</code> <small>line 124</small><div class="doc"><p>Commutation with the scalar matrix units forces one repeated diagonal
+corner. Only the row of matrix units with target coordinate <code>i</code> is needed.</p></div><pre>theorem eq_mapCopies_of_matrixUnit_intertwining {n : ℕ} (i : Fin n)
+    (W : HilbertCopies K n →L[ℂ] HilbertCopies F n)
+    (hW : ∀ j : Fin n, W.comp (copyMatrixUnit i j) = (copyMatrixUnit i j).comp W) :
+    W = mapCopies (copyCorner i W) n := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a>, <a href="FullColumnTheorem.lean.html#L106">OAI.KadisonSimilarity.copyMatrixUnit</a>, <a href="../Derivation/RectangularDerivations.lean.html#L41">OAI.KadisonSimilarity.mapCopies</a>, <a href="FullColumnTheorem.lean.html#L114">OAI.KadisonSimilarity.copyCorner</a></p></li><li id=L146><b>structure</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates</code> <small>line 146</small><div class="doc"><p>The finite matrix-unit coordinates of a full column and its corner.
+The two action identities say that full left multiplication has the usual
+corner matrix entries. They assert no existence of an intertwiner.</p></div><pre>structure FullColumnCoordinates
+    (L : P →⋆ₐ[ℂ] (H →L[ℂ] H)) (Lr : P →⋆ₐ[ℂ] (D →L[ℂ] D))
+    (ρ : C →⋆ₐ[ℂ] (F →L[ℂ] F)) (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) (n : ℕ) where
+…</pre></li><li id=L163><b>def</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.extend</code> <small>line 163</small><div class="doc"><p>Diagonal extension of a corner operator through matrix-unit coordinates.</p></div><pre>def extend (c : FullColumnCoordinates L Lr ρ σ n) (T : K →L[ℂ] F) : D →L[ℂ] H :=
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a></p></li><li id=L167><b>theorem</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.extend_apply</code> <small>line 167</small></li><li id=L172><b>theorem</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.extend_sub</code> <small>line 172</small></li><li id=L179><b>theorem</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.norm_extend</code> <small>line 179</small><div class="doc"><p>No factor depending on the number of matrix units enters the norm.</p></div><pre>theorem norm_extend (c : FullColumnCoordinates L Lr ρ σ n) (hn : 0 &lt; n)
+    (T : K →L[ℂ] F) : ‖c.extend T‖ = ‖T‖ := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a></p></li><li id=L184><b>theorem</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.norm_extend_sub</code> <small>line 184</small></li><li id=L189><b>theorem</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.extend_intertwines</code> <small>line 189</small><div class="doc"><p>An intertwiner for the corner extends to one for the whole left action.</p></div><pre>theorem extend_intertwines (c : FullColumnCoordinates L Lr ρ σ n)
+    (T : K →L[ℂ] F) (hT : ∀ a, T.comp (σ a) = (ρ a).comp T) (a : P) :
+    (c.extend T).comp (Lr a) = (L a).comp (c.extend T) := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a></p></li><li id=L200><b>def</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.inCoordinates</code> <small>line 200</small><div class="doc"><p>Write a full-column operator in the finite matrix-unit coordinates.</p></div><pre>def inCoordinates (c : FullColumnCoordinates L Lr ρ σ n) (G : D →L[ℂ] H) :
+    HilbertCopies K n →L[ℂ] HilbertCopies F n :=
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a></p></li><li id=L206><b>def</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.corner</code> <small>line 206</small><div class="doc"><p>The distinguished corner of a full-column operator.</p></div><pre>def corner (c : FullColumnCoordinates L Lr ρ σ n) (i : Fin n) (G : D →L[ℂ] H) :
+    K →L[ℂ] F := copyCorner i (c.inCoordinates G)</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a>, <a href="FullColumnTheorem.lean.html#L114">OAI.KadisonSimilarity.copyCorner</a></p></li><li id=L212><b>theorem</b> <code>OAI.KadisonSimilarity.FullColumnCoordinates.eq_extend_of_matrixUnit_intertwining</code> <small>line 212</small><div class="doc"><p>A full operator commuting with the represented scalar matrix units is
+exactly the extension of its corner, rather than merely close to a diagonal
+operator.</p></div><pre>theorem eq_extend_of_matrixUnit_intertwining
+    (c : FullColumnCoordinates L Lr ρ σ n) (i : Fin n) (G : D →L[ℂ] H)
+    (hG : ∀ j : Fin n, (c.inCoordinates G).comp (copyMatrixUnit i j) =
+      (copyMatrixUnit i j).comp (c.inCoordinates G)) :
+    G = c.extend (c.corner i G) := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a>, <a href="FullColumnTheorem.lean.html#L106">OAI.KadisonSimilarity.copyMatrixUnit</a></p></li><li id=L237><b>structure</b> <code>OAI.KadisonSimilarity.TracialRightAction</code> <small>line 237</small><div class="doc"><p>The right multiplication convention, including faithfulness. Composition
+has the opposite order: <code>R_b ∘ R_a = R_(a*b)</code>.</p></div><pre>structure TracialRightAction where
+…</pre></li><li id=L246><b>def</b> <code>OAI.KadisonSimilarity.TracialCommutationInput</code> <small>line 246</small><div class="doc"><p>The finite-trace specialization of the tracial commutation theorem:
+Hiai, Theorem 2.2 and Example 2.4 (<code>JMJ = M′</code>); equivalently every bounded
+left-module endomorphism of <code>L²(P,τ)</code> is right multiplication by an element
+of <code>P</code>. This remains an explicit published input.</p></div><pre>def TracialCommutationInput (L : P →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (R : TracialRightAction (P := P) (H := H)) : Prop :=
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L237">OAI.KadisonSimilarity.TracialRightAction</a></p></li><li id=L253><b>theorem</b> <code>OAI.KadisonSimilarity.exists_supported_right_multiplier</code> <small>line 253</small><div class="doc"><p>A full-column intertwiner extends by zero to a left-module endomorphism;
+tracial commutation therefore makes it a right multiplier supported on <code>r</code>.</p></div><pre>theorem exists_supported_right_multiplier
+    (L : P →⋆ₐ[ℂ] (H →L[ℂ] H)) (Lr : P →⋆ₐ[ℂ] (D →L[ℂ] D))
+    (R : TracialRightAction (P := P) (H := H)) (r : P)
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L237">OAI.KadisonSimilarity.TracialRightAction</a></p></li><li id=L288><b>def</b> <code>OAI.KadisonSimilarity.CyclicStarRepresentation</code> <small>line 288</small><div class="doc"><p>A representation has a vector whose algebra orbit is dense. Because the
+representation is linear in the algebra variable, no additional span is needed.</p></div><pre>def CyclicStarRepresentation (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) : Prop :=
+…</pre></li><li id=L293><b>theorem</b> <code>OAI.KadisonSimilarity.cyclicStarRepresentation_of_module_coordinates</code> <small>line 293</small><div class="doc"><p>Cyclicity transfers through the unitary module coordinates furnished by
+right multiplication by a partial isometry in the tracial corner argument.</p></div><pre>theorem cyclicStarRepresentation_of_module_coordinates
+    (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) (σ&#x27; : C →⋆ₐ[ℂ] (Q →L[ℂ] Q))
+    (U : K ≃ₗᵢ[ℂ] Q) (ζ : Q) (hζ : DenseRange (fun a : C =&gt; σ&#x27; a ζ))
+    (hU : ∀ a x, U (σ a x) = σ&#x27; a (U x)) : CyclicStarRepresentation σ := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L288">OAI.KadisonSimilarity.CyclicStarRepresentation</a></p></li><li id=L308><b>def</b> <code>OAI.KadisonSimilarity.FiniteFactorProjectionComparison</code> <small>line 308</small><div class="doc"><p>The precise finite-factor comparison consequence needed for the chosen
+corner. This is the trace form of projection comparison: Blackadar,
+III.1.1.11, together with the faithful finite trace.</p></div><pre>def FiniteFactorProjectionComparison (τ : P → ℝ) : Prop :=
+…</pre></li><li id=L317><b>def</b> <code>OAI.KadisonSimilarity.TracialCornerCyclicityInput</code> <small>line 317</small><div class="doc"><p>The local tracial module realization needed after comparison: a partial
+isometry from <code>r</code> into <code>e</code> realizes the corner representation on <code>eL²(P)r</code>
+as a cyclic module. In a concrete tracial model this is proved using the
+unitary <code>ξ ↦ ξ v*</code>, the dense orbit of <code>vv*</code>, and the preceding transfer
+lemma. It is explicit geometric data, not an invariant or similarity claim.</p></div><pre>def TracialCornerCyclicityInput (e r : P) (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) : Prop :=
+…</pre></li><li id=L323><b>def</b> <code>OAI.KadisonSimilarity.HaagerupForCyclicInput</code> <small>line 323</small><div class="doc"><p>The applicability of the published standard-form theorem to a cyclic
+representation (Haagerup 1975, Lemma 2.10(1)).</p></div><pre>def HaagerupForCyclicInput (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) : Prop :=
+…</pre></li><li id=L328><b>theorem</b> <code>OAI.KadisonSimilarity.haagerup_of_projection_comparison</code> <small>line 328</small><div class="doc"><p>Projection comparison and the explicit tracial cyclic realization provide
+the precise standard-form hypothesis consumed by the analytic argument.</p></div><pre>theorem haagerup_of_projection_comparison
+    (τ : P → ℝ) (comparison : FiniteFactorProjectionComparison τ)
+    (e r : P) (he : IsStarProjection e) (hr : IsStarProjection r) (hτ : τ r ≤ τ e)
+    (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K)) (cyclic : TracialCornerCyclicityInput e r σ)
+    (haagerup : HaagerupForCyclicInput σ) : HaagerupCyclicVectorRealization σ := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L308">OAI.KadisonSimilarity.FiniteFactorProjectionComparison</a>, <a href="FullColumnTheorem.lean.html#L317">OAI.KadisonSimilarity.TracialCornerCyclicityInput</a>, <a href="FullColumnTheorem.lean.html#L323">OAI.KadisonSimilarity.HaagerupForCyclicInput</a>, <a href="../Derivation/CyclicApproximation.lean.html#L54">OAI.KadisonSimilarity.HaagerupCyclicVectorRealization</a></p></li><li id=L351><b>theorem</b> <code>OAI.KadisonSimilarity.full_column_of_published_inputs</code> <small>line 351</small><div class="doc"><p>The full-column conclusion from the four specialized published cyclic
+inputs and tracial commutation. The remaining hypotheses describe the actual
+corner, its finite matrix coordinates, and its projection into the tracial
+Hilbert space. In particular, no right-multiplier approximation is assumed.</p></div><pre>theorem full_column_of_published_inputs
+    (L : P →⋆ₐ[ℂ] (H →L[ℂ] H)) (Lr : P →⋆ₐ[ℂ] (D →L[ℂ] D))
+    (ρ : C →⋆ₐ[ℂ] (F →L[ℂ] F)) (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K))
+    {n : ℕ} (hn : 0 &lt; n) (c : FullColumnCoordinates L Lr ρ σ n)
+    (R : TracialRightAction (P := P) (H := H)) (r : P)
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a>, <a href="FullColumnTheorem.lean.html#L237">OAI.KadisonSimilarity.TracialRightAction</a></p></li><li id=L380><b>theorem</b> <code>OAI.KadisonSimilarity.full_column_of_matrixUnit_commutation</code> <small>line 380</small><div class="doc"><p>Version of the full-column theorem in which the actual matrix-unit
+commutation of the given operator supplies its diagonal form.</p></div><pre>theorem full_column_of_matrixUnit_commutation
+    (L : P →⋆ₐ[ℂ] (H →L[ℂ] H)) (Lr : P →⋆ₐ[ℂ] (D →L[ℂ] D))
+    (ρ : C →⋆ₐ[ℂ] (F →L[ℂ] F)) (σ : C →⋆ₐ[ℂ] (K →L[ℂ] K))
+    {n : ℕ} (i : Fin n) (c : FullColumnCoordinates L Lr ρ σ n)
+    (R : TracialRightAction (P := P) (H := H)) (r : P)
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L146">OAI.KadisonSimilarity.FullColumnCoordinates</a>, <a href="FullColumnTheorem.lean.html#L237">OAI.KadisonSimilarity.TracialRightAction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

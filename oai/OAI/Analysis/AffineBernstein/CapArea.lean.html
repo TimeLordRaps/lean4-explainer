@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/CapArea.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/CapArea.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>CapArea.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>CapArea.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/CapArea.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>lemma</b> <code>OAI.AffineBernstein.integrableOn_affineArea_sublevel</code> <small>line 14</small></li><li id=L27><b>theorem</b> <code>OAI.AffineBernstein.affineMaximal_cap_area_comparison</code> <small>line 27</small><div class="doc"><p>Local weak maximization and a smooth convex replacement give the cap
+comparison on its actual open base.</p></div><pre>theorem affineMaximal_cap_area_comparison {n : ℕ} {Ω : Set (Space n)} (hΩ : IsOpen Ω)
+    {u q : Space n → ℝ} (hu : ContDiffOn ℝ ∞ u Ω) (hq : ContDiffOn ℝ ∞ q Ω)
+    (hp : ∀ x ∈ Ω, (hessian u x).PosDef) (hmax : AffineMaximalOn Ω u)
+    {b ε : ℝ} (hε : 0 &lt; ε) (hK : IsCompact {x | x ∈ Ω ∧ u x ≤ b})
+    (hqtop : ∀ x, x ∈ Ω → u x &lt; b → q x ≤ b-2*ε)
+    (hqp : ∀ x, x ∈ Ω → u x &lt; b → (hessian q x).PosDef)
+    {B : Set (Space n)} (hB : IsOpen B)
+    (hBE : ∀ x ∈ B, x ∈ Ω ∧ u x &lt; b ∧ ε ≤ q x-u x) :
+    (∫ x in B, affineAreaDensity q x) ≤
+      ∫ x in {x | x ∈ Ω ∧ u x &lt; b}, affineAreaDensity u x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L32">OAI.AffineBernstein.AffineMaximalOn</a>, <a href="CompactIntegration.lean.html#L149">OAI.AffineBernstein.affineAreaDensity</a></p></li><li id=L76><b>theorem</b> <code>OAI.AffineBernstein.affineMaximal_positive_cap_area</code> <small>line 76</small><div class="doc"><p>The graph-coordinate positive cap estimate, with a quantitative uniform
+constant. The original PDE, not an area lower bound, is the hypothesis.</p></div><pre>theorem affineMaximal_positive_cap_area {n : ℕ} {Ω : Set (Space n)} (hΩ : IsOpen Ω)
+    {u : Space n → ℝ} (hu : ContDiffOn ℝ ∞ u Ω)
+    (hp : ∀ x ∈ Ω, (hessian u x).PosDef) (hmax : AffineMaximalOn Ω u)
+    {b ε α r : ℝ} (hε : 0 &lt; ε) (hα : 0 &lt; α) (_hr : 0 &lt; r)
+    (c : Space n) (hK : IsCompact {x | x ∈ Ω ∧ u x ≤ b})
+    (hball : ∀ x ∈ Metric.ball c r, x ∈ Ω ∧ u x ≤ b-6*ε)
+    (hradius : ∀ x, x ∈ Ω → u x &lt; b → α*‖x-c‖^2 ≤ 2*ε) :
+    volume.real (Metric.ball (0 : Space n) r) * Real.rpow (2*α) ((n : ℝ)/((n : ℝ)+2)) ≤
+      ∫ x in {x | x ∈ Ω ∧ u x &lt; b}, affineAreaDensity u x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L32">OAI.AffineBernstein.AffineMaximalOn</a>, <a href="CompactIntegration.lean.html#L149">OAI.AffineBernstein.affineAreaDensity</a></p></li><li id=L101><b>lemma</b> <code>OAI.AffineBernstein.cap_area_constant_pos</code> <small>line 101</small></li><li id=L111><b>theorem</b> <code>OAI.AffineBernstein.exists_uniform_positive_graph_cap_area</code> <small>line 111</small><div class="doc"><p>Uniform nonvanishing in uniformly bounded graph caps, without assumptions
+on boundary regularity or uniform Hessian bounds.</p></div><pre>theorem exists_uniform_positive_graph_cap_area (n : ℕ) {ε r R : ℝ}
+    (hε : 0 &lt; ε) (hr : 0 &lt; r) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (Ω : Set (Space n)) (u : Space n → ℝ)
+      (b : ℝ) (c : Space n), IsOpen Ω → ContDiffOn ℝ ∞ u Ω →
+      (∀ x ∈ Ω, (hessian u x).PosDef) → AffineMaximalOn Ω u →
+      IsCompact {x | x ∈ Ω ∧ u x ≤ b} →
+      (∀ x ∈ Metric.ball c r, x ∈ Ω ∧ u x ≤ b-6*ε) →
+      (∀ x, x ∈ Ω → u x &lt; b → ‖x-c‖ ≤ R) →
+      C ≤ ∫ x in {x | x ∈ Ω ∧ u x &lt; b}, affineAreaDensity u x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L32">OAI.AffineBernstein.AffineMaximalOn</a>, <a href="CompactIntegration.lean.html#L149">OAI.AffineBernstein.affineAreaDensity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

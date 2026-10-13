@@ -1,0 +1,186 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/Superstring/Hierarchical.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/Superstring/Hierarchical.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Computability</a> / <a href="index.html">Superstring</a> / <span>Hierarchical.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Computability</a>/<a href="index.html">Superstring</a>/<span>Hierarchical.lean</span></code></h1><p class="muted">95 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/Superstring/Hierarchical.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.Superstring.Hierarchical.SubstringClosed</code> <small>line 12</small></li><li id=L17><b>inductive</b> <code>OAI.Superstring.Hierarchical.Path</code> <small>line 17</small><div class="doc"><p>An explicit hierarchical-graph walk. Up edges append one symbol and down
+edges delete the first symbol. Transitivity retains every edge of both walks.</p></div><pre>inductive Path (V : Set (List α)) : List α → List α → Type
+  | nil (s) (hs : s ∈ V) : Path V s s
+  | up (s) (a) (hs : s ∈ V) (ht : s ++ [a] ∈ V) : Path V s (s ++ [a])
+  | down (a) (s) (hs : a :: s ∈ V) (ht : s ∈ V) : Path V (a :: s) s
+  | trans {s t u} : Path V s t → Path V t u → Path V s u
+
+namespace Path
+
+variable {V : Set (List α)} {s t u : List α}</pre></li><li id=L27><b>def</b> <code>OAI.Superstring.Hierarchical.Path.cost</code> <small>line 27</small></li><li id=L34><b>def</b> <code>OAI.Superstring.Hierarchical.Path.Visits</code> <small>line 34</small><div class="doc"><p>Vertices, including both endpoints, with no quotient of the edge data.</p></div><pre>def Visits (w : List α) : {s t : List α} → Path V s t → Prop
+  | _, _, .nil s _ =&gt; w = s
+  | _, _, .up s a _ _ =&gt; w = s ∨ w = s ++ [a]
+  | _, _, .down a s _ _ =&gt; w = a :: s ∨ w = s
+  | _, _, .trans P Q =&gt; P.Visits w ∨ Q.Visits w</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L40><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.cost_trans</code> <small>line 40</small></li><li id=L43><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.visits_start</code> <small>line 43</small></li><li id=L50><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.visits_end</code> <small>line 50</small></li><li id=L57><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.mem_of_visits</code> <small>line 57</small></li><li id=L65><b>def</b> <code>OAI.Superstring.Hierarchical.Path.copy</code> <small>line 65</small><div class="doc"><p>Reindex an explicit walk along equality of its endpoint words.</p></div><pre>def copy (P : Path V s t) {s&#x27; t&#x27; : List α} (hs : s = s&#x27;) (ht : t = t&#x27;) :
+    Path V s&#x27; t&#x27; := hs ▸ ht ▸ P</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L68><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.cost_copy</code> <small>line 68</small></li><li id=L72><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.visits_copy</code> <small>line 72</small></li><li id=L77><b>def</b> <code>OAI.Superstring.Hierarchical.Path.deletePrefix</code> <small>line 77</small><div class="doc"><p>Delete an arbitrary prefix, costing zero.</p></div><pre>def deletePrefix (closed : SubstringClosed V) (a b : List α) (h : a ++ b ∈ V) :
+    Path V (a ++ b) b :=
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L85><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.cost_deletePrefix</code> <small>line 85</small></li><li id=L92><b>def</b> <code>OAI.Superstring.Hierarchical.Path.appendSuffix</code> <small>line 92</small><div class="doc"><p>Append an arbitrary suffix, staying within prefixes of the final word.</p></div><pre>def appendSuffix (closed : SubstringClosed V) (a b : List α) (h : a ++ b ∈ V) :
+    Path V a (a ++ b) :=
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L102><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.cost_appendSuffix</code> <small>line 102</small></li><li id=L110><b>def</b> <code>OAI.Superstring.Hierarchical.Path.readGap</code> <small>line 110</small><div class="doc"><p>A path that reads a word one letter at a time, always returning to empty.
+This supplies the gap case of ordered windows without adding non-substring words.</p></div><pre>def readGap (h0 : ([] : List α) ∈ V) (w : List α)
+    (h : ∀ a ∈ w, [a] ∈ V) : Path V [] [] :=
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L119><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.cost_readGap</code> <small>line 119</small></li><li id=L131><b>def</b> <code>OAI.Superstring.Hierarchical.textWord</code> <small>line 131</small><div class="doc"><p>The finite integer window of a two-sided text.</p></div><pre>def textWord (A : ℤ → α) (a b : ℤ) : List α :=
+…</pre></li><li id=L134><b>theorem</b> <code>OAI.Superstring.Hierarchical.length_textWord</code> <small>line 134</small></li><li id=L138><b>theorem</b> <code>OAI.Superstring.Hierarchical.textWord_self</code> <small>line 138</small></li><li id=L141><b>theorem</b> <code>OAI.Superstring.Hierarchical.textWord_append</code> <small>line 141</small></li><li id=L155><b>theorem</b> <code>OAI.Superstring.Hierarchical.textWord_infix</code> <small>line 155</small></li><li id=L161><b>theorem</b> <code>OAI.Superstring.Hierarchical.mem_textWord</code> <small>line 161</small></li><li id=L168><b>theorem</b> <code>OAI.Superstring.Hierarchical.textWord_translate</code> <small>line 168</small><div class="doc"><p>Translate a window by a period of its text, preserving the graph vertex.</p></div><pre>theorem textWord_translate (A : ℤ → α) (h : ℤ) (per : ∀ x, A (x + h) = A x)
+    (a b : ℤ) : textWord A (a + h) (b + h) = textWord A a b := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a></p></li><li id=L177><b>theorem</b> <code>OAI.Superstring.Hierarchical.ordered_windows</code> <small>line 177</small></li><li id=L226><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.deletePrefix_visits</code> <small>line 226</small></li><li id=L234><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.appendSuffix_visits</code> <small>line 234</small></li><li id=L247><b>theorem</b> <code>OAI.Superstring.Hierarchical.window_delete</code> <small>line 247</small><div class="doc"><p>Delete through a range of starting coordinates, visiting every suffix.</p></div><pre>theorem window_delete {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) {a b c : ℤ} (hac : a ≤ c) (hcb : c ≤ b)
+    (hw : textWord A a b ∈ V) :
+    ∃ P : Path V (textWord A a b) (textWord A c b), P.cost = 0 ∧
+      ∀ x, a ≤ x → x ≤ c → P.Visits (textWord A x b) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L272><b>theorem</b> <code>OAI.Superstring.Hierarchical.window_append</code> <small>line 272</small><div class="doc"><p>Append through a range of ends, visiting every prefix.</p></div><pre>theorem window_append {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) {a b d : ℤ} (hab : a ≤ b) (hbd : b ≤ d)
+    (hw : textWord A a d ∈ V) :
+    ∃ P : Path V (textWord A a b) (textWord A a d),
+      P.cost = (d - b).toNat ∧
+      ∀ y, b ≤ y → y ≤ d → P.Visits (textWord A a y) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L297><b>theorem</b> <code>OAI.Superstring.Hierarchical.ordered_windows_suffixes</code> <small>line 297</small><div class="doc"><p>An ordered-window transition can be chosen to contain every overlap suffix
+up to its next start. This strengthens the contact assertion used for links.</p></div><pre>theorem ordered_windows_suffixes {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) (letters : ∀ x, [A x] ∈ V)
+    {a b c d : ℤ} (hab : a ≤ b) (hcd : c ≤ d) (hac : a ≤ c) (hbd : b ≤ d)
+    (h₁ : textWord A a b ∈ V) (h₂ : textWord A c d ∈ V) :
+    ∃ P : Path V (textWord A a b) (textWord A c d),
+      P.cost = (d - b).toNat ∧
+      (∀ x, a ≤ x → x ≤ c → x ≤ b → P.Visits (textWord A x b)) ∧
+      ∃ w, P.Visits w ∧ (w.length : ℤ) ≤ max 0 (b - c) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L317><b>structure</b> <code>OAI.Superstring.Hierarchical.Layer</code> <small>line 317</small></li><li id=L328><b>def</b> <code>OAI.Superstring.Hierarchical.Layer.first</code> <small>line 328</small></li><li id=L329><b>def</b> <code>OAI.Superstring.Hierarchical.Layer.last</code> <small>line 329</small></li><li id=L331><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.first_le_last</code> <small>line 331</small></li><li id=L334><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.start_le_first</code> <small>line 334</small></li><li id=L336><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.first_actual</code> <small>line 336</small></li><li id=L339><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.last_actual</code> <small>line 339</small></li><li id=L342><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.shift_mul</code> <small>line 342</small></li><li id=L350><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.meets_height</code> <small>line 350</small><div class="doc"><p>An actual height crossing in any finite horizontal range.</p></div><pre>theorem meets_height (D : Layer V A p) (a Y : ℤ) (K : ℕ)
+    (hfirst : D.first a ≤ Y) (hlast : Y ≤ D.last (a + K)) :
+    ∃ x : ℤ, a ≤ x ∧ x ≤ a + K ∧ D.first x ≤ Y ∧ Y ≤ D.last x := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L317">OAI.Superstring.Hierarchical.Layer</a></p></li><li id=L368><b>def</b> <code>OAI.Superstring.Hierarchical.Layer.TouchedBy</code> <small>line 368</small></li><li id=L374><b>theorem</b> <code>OAI.Superstring.Hierarchical.periodic_mul</code> <small>line 374</small><div class="doc"><p>Periods can be multiplied without assuming they are least.</p></div><pre>theorem periodic_mul (A : ℤ → α) (p : ℕ) (per : ∀ x, A (x + p) = A x)
+    (k : ℕ) (x : ℤ) : A (x + (k * p : ℕ)) = A x := by
+…</pre></li><li id=L382><b>theorem</b> <code>OAI.Superstring.Hierarchical.collective_link</code> <small>line 382</small></li><li id=L429><b>theorem</b> <code>OAI.Superstring.Hierarchical.join_band</code> <small>line 429</small></li><li id=L473><b>def</b> <code>OAI.Superstring.Hierarchical.forward</code> <small>line 473</small><div class="doc"><p>Forward rotations carry the usual lexicographic order, not a coordinatewise
+order on streams.</p></div><pre>def forward (A : ℤ → α) (t : ℤ) : Lex (ℕ → α) :=
+…</pre></li><li id=L476><b>theorem</b> <code>OAI.Superstring.Hierarchical.lex_at_le</code> <small>line 476</small></li><li id=L485><b>theorem</b> <code>OAI.Superstring.Hierarchical.stream_eq_of_max</code> <small>line 485</small><div class="doc"><p>If a stream dominates its shift by q, then no smaller q-periodic stream
+can have its first q letters. This is the first-difference argument in the
+maximal-rotation lemma, expressed as strong induction.</p></div><pre>theorem stream_eq_of_max [LinearOrder α] (s d : Lex (ℕ → α)) (q : ℕ)
+    (hq : 0 &lt; q) (hd : ∀ n, d (n + q) = d n)
+    (hshift : toLex (fun n =&gt; s (n + q)) ≤ s) (hle : d ≤ s)
+    (hprefix : ∀ n &lt; q, s n = d n) : s = d := by
+…</pre></li><li id=L510><b>theorem</b> <code>OAI.Superstring.Hierarchical.periodic_emod</code> <small>line 510</small><div class="doc"><p>Integer periodic functions can be evaluated at their Euclidean residue.</p></div><pre>theorem periodic_emod (A : ℤ → α) (p : ℤ) (per : ∀ x, A (x + p) = A x)
+    (x : ℤ) : A (x % p) = A x := by
+…</pre></li><li id=L517><b>theorem</b> <code>OAI.Superstring.Hierarchical.periodic_eq_of_forward_eq</code> <small>line 517</small><div class="doc"><p>Two periodic, two-sided texts are determined by their forward words.</p></div><pre>theorem periodic_eq_of_forward_eq (A D : ℤ → α) (p q : ℕ)
+    (hp : 0 &lt; p) (hq : 0 &lt; q) (hA : ∀ x, A (x + p) = A x)
+    (hD : ∀ x, D (x + q) = D x) (t : ℤ) (heq : forward A t = forward D t) :
+    A = D := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L473">OAI.Superstring.Hierarchical.forward</a></p></li><li id=L543><b>theorem</b> <code>OAI.Superstring.Hierarchical.maximal_rotation</code> <small>line 543</small></li><li id=L565><b>def</b> <code>OAI.Superstring.Hierarchical.AgreeOn</code> <small>line 565</small><div class="doc"><p>Agreement on the half-open integer interval [a,b).</p></div><pre>def AgreeOn (A D : ℤ → α) (a b : ℤ) : Prop :=
+…</pre></li><li id=L568><b>theorem</b> <code>OAI.Superstring.Hierarchical.textWord_eq_of_agree</code> <small>line 568</small></li><li id=L577><b>theorem</b> <code>OAI.Superstring.Hierarchical.periodic_mod_at</code> <small>line 577</small></li><li id=L584><b>theorem</b> <code>OAI.Superstring.Hierarchical.same_period_eq</code> <small>line 584</small><div class="doc"><p>Agreement for one period determines an aligned periodic text.</p></div><pre>theorem same_period_eq (A D : ℤ → α) (p : ℕ) (hp : 0 &lt; p)
+    (hA : ∀ x, A (x + p) = A x) (hD : ∀ x, D (x + p) = D x)
+    (a : ℤ) (h : AgreeOn A D a (a + p)) : A = D := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L565">OAI.Superstring.Hierarchical.AgreeOn</a></p></li><li id=L596><b>theorem</b> <code>OAI.Superstring.Hierarchical.eq_of_long_agreement</code> <small>line 596</small></li><li id=L618><b>theorem</b> <code>OAI.Superstring.Hierarchical.agreement_bound</code> <small>line 618</small></li><li id=L627><b>theorem</b> <code>OAI.Superstring.Hierarchical.same_period_agreement_bound</code> <small>line 627</small></li><li id=L640><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.first_mono</code> <small>line 640</small></li><li id=L643><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.last_mono</code> <small>line 643</small></li><li id=L645><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.first_shift</code> <small>line 645</small></li><li id=L649><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.last_shift</code> <small>line 649</small></li><li id=L653><b>def</b> <code>OAI.Superstring.Hierarchical.Layer.HasShort</code> <small>line 653</small><div class="doc"><p>An actual vertex of a layer whose symbol length is at most the allowance.</p></div><pre>def HasShort (D : Layer V A p) (q : ℕ) : Prop :=
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L317">OAI.Superstring.Hierarchical.Layer</a></p></li><li id=L656><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.first_long_of_not_short</code> <small>line 656</small></li><li id=L667><b>theorem</b> <code>OAI.Superstring.Hierarchical.collective_short_sweep</code> <small>line 667</small></li><li id=L724><b>theorem</b> <code>OAI.Superstring.Hierarchical.cycle_collective_contact</code> <small>line 724</small></li><li id=L761><b>def</b> <code>OAI.Superstring.Hierarchical.Path.written</code> <small>line 761</small><div class="doc"><p>The word written by a hierarchical walk: exactly one symbol per up edge.</p></div><pre>def written : {s t : List α} → Path V s t → List α
+  | _, _, .nil _ _ =&gt; []
+  | _, _, .up _ a _ _ =&gt; [a]
+  | _, _, .down _ _ _ _ =&gt; []
+  | _, _, .trans P Q =&gt; P.written ++ Q.written</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L767><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.length_written</code> <small>line 767</small></li><li id=L770><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.end_suffix_written</code> <small>line 770</small></li><li id=L780><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.visited_infix_written</code> <small>line 780</small><div class="doc"><p>The exact output invariant in the main proof: every visited vertex occurs
+contiguously in the starting word followed by the appended letters.</p></div><pre>theorem visited_infix_written (P : Path V s t) {w : List α} (hw : P.Visits w) :
+    w &lt;:+: s ++ P.written := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L801><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.split</code> <small>line 801</small><div class="doc"><p>Split at an actual visited vertex, preserving costs and every visit.</p></div><pre>theorem split (P : Path V s t) {w : List α} (hw : P.Visits w) :
+    ∃ (U : Path V s w) (D : Path V w t),
+      U.cost + D.cost = P.cost ∧
+      ∀ v, P.Visits v ↔ U.Visits v ∨ D.Visits v := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L837><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.rotate</code> <small>line 837</small><div class="doc"><p>Rotate a closed walk to any of its visited vertices without adding edges.</p></div><pre>theorem rotate (P : Path V s s) {w : List α} (hw : P.Visits w) :
+    ∃ Q : Path V w w, Q.cost = P.cost ∧ ∀ v, Q.Visits v ↔ P.Visits v := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L846><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.splice</code> <small>line 846</small><div class="doc"><p>Euler splicing in its exact needed form: edge-disjointness is unnecessary
+because edge copies remain distinct in the path data.</p></div><pre>theorem splice (P : Path V s s) (Q : Path V t t) (w : List α)
+    (hP : P.Visits w) (hQ : Q.Visits w) :
+    ∃ R : Path V s s, R.cost = P.cost + Q.cost ∧
+      ∀ v, R.Visits v ↔ P.Visits v ∨ Q.Visits v := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L859><b>theorem</b> <code>OAI.Superstring.Hierarchical.Path.root_loop</code> <small>line 859</small><div class="doc"><p>Rooting at a short vertex costs exactly its symbol length.</p></div><pre>theorem root_loop (closed : SubstringClosed V) (w : List α) (hw : w ∈ V) :
+    ∃ P : Path V [] [], P.cost = w.length ∧ P.Visits w := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L870><b>theorem</b> <code>OAI.Superstring.Hierarchical.ordered_chain</code> <small>line 870</small><div class="doc"><p>Concatenate any finite ordered list of actual windows.</p></div><pre>theorem ordered_chain {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) (letters : ∀ x, [A x] ∈ V)
+    (a b : ℕ → ℤ) (ha : Monotone a) (hb : Monotone b) (n : ℕ)
+    (hab : ∀ i ≤ n, a i ≤ b i) (hV : ∀ i ≤ n, textWord A (a i) (b i) ∈ V) :
+    ∃ P : Path V (textWord A (a 0) (b 0)) (textWord A (a n) (b n)),
+      P.cost = (b n - b 0).toNat ∧
+      ∀ i ≤ n, P.Visits (textWord A (a i) (b i)) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L903><b>theorem</b> <code>OAI.Superstring.Hierarchical.individual_link</code> <small>line 903</small></li><li id=L939><b>theorem</b> <code>OAI.Superstring.Hierarchical.one_free_period</code> <small>line 939</small></li><li id=L955><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.passage</code> <small>line 955</small><div class="doc"><p>Realize one entire vertical passage and its following down step.</p></div><pre>theorem passage (L : Layer V A p) (closed : SubstringClosed V) (x : ℤ) :
+    ∃ P : Path V (textWord A x (L.first x))
+        (textWord A (x + 1) (L.first (x + 1))),
+      P.cost = (L.first (x + 1) - L.first x).toNat ∧
+      ∀ e, L.first x ≤ e → e ≤ L.last x → P.Visits (textWord A x e) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L317">OAI.Superstring.Hierarchical.Layer</a>, <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a></p></li><li id=L973><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.segment</code> <small>line 973</small><div class="doc"><p>A finite segment of a layer, including every window at its traversed starts.</p></div><pre>theorem segment (L : Layer V A p) (closed : SubstringClosed V) (t : ℤ) (n : ℕ) :
+    ∃ P : Path V (textWord A t (L.first t))
+        (textWord A (t + n) (L.first (t + n))),
+      P.cost = (L.first (t + n) - L.first t).toNat ∧
+      ∀ x e, t ≤ x → x &lt; t + n → L.first x ≤ e → e ≤ L.last x →
+        P.Visits (textWord A x e) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L317">OAI.Superstring.Hierarchical.Layer</a>, <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a></p></li><li id=L1003><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.turn</code> <small>line 1003</small><div class="doc"><p>One primitive turn is an explicit closed walk of exactly the period cost.</p></div><pre>theorem turn (L : Layer V A p) (closed : SubstringClosed V)
+    (per : ∀ x, A (x + p) = A x) (t : ℤ) :
+    ∃ P : Path V (textWord A t (L.first t)) (textWord A t (L.first t)),
+      P.cost = p ∧
+      ∀ x e, t ≤ x → x &lt; t + p → L.first x ≤ e → e ≤ L.last x →
+        P.Visits (textWord A x e) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L317">OAI.Superstring.Hierarchical.Layer</a>, <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a></p></li><li id=L1025><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.shift_int</code> <small>line 1025</small></li><li id=L1036><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.first_shift_int</code> <small>line 1036</small></li><li id=L1042><b>theorem</b> <code>OAI.Superstring.Hierarchical.Layer.full_turn</code> <small>line 1042</small><div class="doc"><p>An entire layer is covered by one turn, because every actual window is a
+period translate of a window in that turn.</p></div><pre>theorem full_turn (L : Layer V A p) (closed : SubstringClosed V) (hp : 0 &lt; p)
+    (per : ∀ x, A (x + p) = A x) (t : ℤ) :
+    ∃ P : Path V (textWord A t (L.first t)) (textWord A t (L.first t)),
+      P.cost = p ∧ ∀ x e, L.first x ≤ e → e ≤ L.last x →
+        P.Visits (textWord A x e) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L317">OAI.Superstring.Hierarchical.Layer</a>, <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a></p></li><li id=L1080><b>structure</b> <code>OAI.Superstring.Hierarchical.Loop</code> <small>line 1080</small><div class="doc"><p>A closed walk with its base vertex retained as explicit data.</p></div><pre>structure Loop (V : Set (List α)) where
+…</pre></li><li id=L1088><b>def</b> <code>OAI.Superstring.Hierarchical.Loop.cost</code> <small>line 1088</small></li><li id=L1089><b>def</b> <code>OAI.Superstring.Hierarchical.Loop.Visits</code> <small>line 1089</small></li><li id=L1091><b>def</b> <code>OAI.Superstring.Hierarchical.Loop.Meets</code> <small>line 1091</small></li><li id=L1096><b>theorem</b> <code>OAI.Superstring.Hierarchical.Loop.saturate</code> <small>line 1096</small><div class="doc"><p>Saturate a closed walk by splicing every accessible loop from a finite
+collection. The resulting visited set is closed under that collection, and no
+loop budget is spent twice.</p></div><pre>theorem saturate {ι : Type} (F : ι → Loop V) (I : Finset ι) (P : Loop V) :
+    ∃ Q : Loop V, Q.base = P.base ∧ Q.cost ≤ P.cost + ∑ i ∈ I, (F i).cost ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      (∀ i ∈ I, Q.Meets (F i) → ∀ w, (F i).Visits w → Q.Visits w) ∧
+      (∀ w, Q.Visits w → P.Visits w ∨ ∃ i ∈ I, (F i).Visits w) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L1080">OAI.Superstring.Hierarchical.Loop</a>, <a href="Hierarchical.lean.html#L1088">OAI.Superstring.Hierarchical.Loop.cost</a>, <a href="Hierarchical.lean.html#L1089">OAI.Superstring.Hierarchical.Loop.Visits</a></p></li><li id=L1136><b>def</b> <code>OAI.Superstring.Hierarchical.Loop.Connected</code> <small>line 1136</small><div class="doc"><p>Used-support connectivity in a form that exactly expresses closure under
+closed walks. It ignores incidental isolated vertices and records a root.</p></div><pre>def Connected {ι : Type} (F : ι → Loop V) (I : Finset ι) (root : List α) : Prop :=
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L1080">OAI.Superstring.Hierarchical.Loop</a></p></li><li id=L1142><b>theorem</b> <code>OAI.Superstring.Hierarchical.Loop.of_connected</code> <small>line 1142</small></li><li id=L1159><b>theorem</b> <code>OAI.Superstring.Hierarchical.host_target_bounds</code> <small>line 1159</small><div class="doc"><p>The host proof's modified target remains inside its recorded host window,
+and lies within one child period of the prescribed requester window.</p></div><pre>theorem host_target_bounds (a₀ b₀ a b e T : ℤ) (p₀ p : ℕ)
+    (hmin : p₀ ≤ p) (horderA : a₀ ≤ a) (horderT : a ≤ T)
+    (horderB : b₀ ≤ b)
+    (hreq₁ : a + p &lt; e) (hreq₂ : e ≤ b - p)
+    (hleft : b₀ - a &lt; p₀ + p) (hright : b - T &lt; p + p₀)
+    (hbase : b₀ &lt; T + p₀) :
+    let s := min (a + p) T
+…</pre></li><li id=L1197><b>theorem</b> <code>OAI.Superstring.Hierarchical.request_attachment</code> <small>line 1197</small><div class="doc"><p>The child-period loop used to attach each later requester at its modified
+target; no recipient budget is consumed by this operation.</p></div><pre>theorem request_attachment {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) (letters : ∀ x, [A x] ∈ V) (p : ℕ)
+    (per : ∀ x, A (x + p) = A x)
+    {a e s h : ℤ} (hae : a ≤ e) (hsh : s ≤ h)
+    (has : a ≤ s) (hsa : s ≤ a + p) (heh : e ≤ h) (hhe : h ≤ e + p)
+    (hR : textWord A a e ∈ V) (hQ : textWord A s h ∈ V) :
+    ∃ P : Path V (textWord A s h) (textWord A s h),
+      P.cost = p ∧ P.Visits (textWord A a e) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L1223><b>theorem</b> <code>OAI.Superstring.Hierarchical.host_excursion</code> <small>line 1223</small><div class="doc"><p>The central cost-q excursion in the host text, for a nonempty ordered
+list of later targets. It includes the initial requesters' whole vertical range
+and ends with a contact shorter than the minimum child period.</p></div><pre>theorem host_excursion {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) (letters : ∀ x, [A x] ∈ V) (q p₀ : ℕ)
+    (hp₀ : 0 &lt; p₀) (per : ∀ x, A (x + q) = A x)
+    (a₀ b₀ e₀ : ℤ) (he₀ : a₀ + p₀ &lt; e₀) (heb : e₀ ≤ b₀)
+    (hR : textWord A a₀ b₀ ∈ V)
+    (s h : ℕ → ℤ) (hs : Monotone s) (hh : Monotone h) (n : ℕ)
+    (hbounds : ∀ i ≤ n, a₀ ≤ s i ∧ s i ≤ a₀ + q ∧ s i ≤ h i ∧
+      b₀ ≤ h i ∧ h i &lt; a₀ + q + p₀)
+    (hQ : ∀ i ≤ n, textWord A (s i) (h i) ∈ V) :
+    ∃ P : Path V (textWord A a₀ e₀) (textWord A a₀ e₀),
+      P.cost = q ∧ P.Visits (textWord A a₀ b₀) ∧
+      (∀ e, e₀ ≤ e → e ≤ b₀ → P.Visits (textWord A a₀ e)) ∧
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L1270><b>theorem</b> <code>OAI.Superstring.Hierarchical.host_excursion_single</code> <small>line 1270</small><div class="doc"><p>The no-later-record case of the same host excursion.</p></div><pre>theorem host_excursion_single {V : Set (List α)} (closed : SubstringClosed V)
+    (A : ℤ → α) (letters : ∀ x, [A x] ∈ V) (q p₀ : ℕ)
+    (hp₀ : 0 &lt; p₀) (per : ∀ x, A (x + q) = A x)
+    (a₀ b₀ e₀ : ℤ) (he₀ : a₀ + p₀ &lt; e₀) (heb : e₀ ≤ b₀)
+    (hshort : b₀ &lt; a₀ + q + p₀) (hR : textWord A a₀ b₀ ∈ V) :
+    ∃ P : Path V (textWord A a₀ e₀) (textWord A a₀ e₀),
+      P.cost = q ∧ P.Visits (textWord A a₀ b₀) ∧
+      (∀ e, e₀ ≤ e → e ≤ b₀ → P.Visits (textWord A a₀ e)) ∧
+      ∃ w, P.Visits w ∧ w.length &lt; p₀ := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L131">OAI.Superstring.Hierarchical.textWord</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L1290><b>theorem</b> <code>OAI.Superstring.Hierarchical.Loop.attach</code> <small>line 1290</small><div class="doc"><p>Splice a family of request attachments into its host excursion.</p></div><pre>theorem attach {ι : Type} (F : ι → Loop V) (I : Finset ι) (P : Loop V)
+    (hmeet : ∀ i ∈ I, P.Meets (F i)) :
+    ∃ Q : Loop V, Q.base = P.base ∧ Q.cost ≤ P.cost + ∑ i ∈ I, (F i).cost ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      (∀ i ∈ I, ∀ w, (F i).Visits w → Q.Visits w) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L1080">OAI.Superstring.Hierarchical.Loop</a>, <a href="Hierarchical.lean.html#L1088">OAI.Superstring.Hierarchical.Loop.cost</a>, <a href="Hierarchical.lean.html#L1089">OAI.Superstring.Hierarchical.Loop.Visits</a></p></li><li id=L1302><b>theorem</b> <code>OAI.Superstring.Hierarchical.Loop.root_at</code> <small>line 1302</small><div class="doc"><p>A short contact roots the whole closed excursion for its length.</p></div><pre>theorem root_at (closed : SubstringClosed V) (P : Loop V) (w : List α)
+    (hw : P.Visits w) :
+    ∃ Q : Path V [] [], Q.cost = P.cost + w.length ∧
+      ∀ v, P.Visits v → Q.Visits v := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L1080">OAI.Superstring.Hierarchical.Loop</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L1314><b>theorem</b> <code>OAI.Superstring.Hierarchical.Loop.root_attachments</code> <small>line 1314</small><div class="doc"><p>Host requests consume the host cost, the later attachments' costs, and
+one unused minimum-child budget. The initial requesters remain visited.</p></div><pre>theorem root_attachments {ι : Type} (closed : SubstringClosed V)
+    (P : Loop V) (F : ι → Loop V) (I : Finset ι) (p₀ : ℕ)
+    (hmeet : ∀ i ∈ I, P.Meets (F i))
+    (hshort : ∃ w, P.Visits w ∧ w.length ≤ p₀) :
+    ∃ Q : Path V [] [], Q.cost ≤ P.cost + (∑ i ∈ I, (F i).cost) + p₀ ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      (∀ i ∈ I, ∀ w, (F i).Visits w → Q.Visits w) := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L1080">OAI.Superstring.Hierarchical.Loop</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a>, <a href="Hierarchical.lean.html#L1088">OAI.Superstring.Hierarchical.Loop.cost</a>, <a href="Hierarchical.lean.html#L1089">OAI.Superstring.Hierarchical.Loop.Visits</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

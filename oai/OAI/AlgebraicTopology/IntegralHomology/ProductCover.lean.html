@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicTopology/IntegralHomology/ProductCover.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicTopology/IntegralHomology/ProductCover.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicTopology</a> / <a href="index.html">IntegralHomology</a> / <span>ProductCover.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicTopology</a>/<a href="index.html">IntegralHomology</a>/<span>ProductCover.lean</span></code></h1><p class="muted">26 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicTopology/IntegralHomology/ProductCover.lean#L1">source</a></p><div class="doc"><p>Product-pair fiber normalization, punctured products, and overlap generators.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Kaplansky.signedCoordinateHalfspace</code> <small>line 19</small><div class="doc"><p>A finite signed halfspace cover, using actual continuous linear coordinates.</p></div><pre>def signedCoordinateHalfspace (i : Fin (Module.finrank ℝ E) × Bool) : Set E :=
+…</pre></li><li id=L23><b>theorem</b> <code>OAI.Kaplansky.signedCoordinateHalfspace_open</code> <small>line 23</small></li><li id=L29><b>theorem</b> <code>OAI.Kaplansky.signedCoordinateHalfspace_convex</code> <small>line 29</small></li><li id=L40><b>theorem</b> <code>OAI.Kaplansky.signedCoordinateHalfspaces_cover</code> <small>line 40</small><div class="doc"><p>The signed coordinate halfspaces cover exactly the punctured space.</p></div><pre>theorem signedCoordinateHalfspaces_cover :
+    (⋃ i : Fin (Module.finrank ℝ E) × Bool, signedCoordinateHalfspace i) = ({0}ᶜ : Set E) := by
+…</pre><p class="refs">Mentions: <a href="ProductCover.lean.html#L19">OAI.Kaplansky.signedCoordinateHalfspace</a></p></li><li id=L62><b>theorem</b> <code>OAI.Kaplansky.signedCoordinateIntersection_convex</code> <small>line 62</small><div class="doc"><p>Every finite intersection is genuinely convex, hence contractible
+whenever it is nonempty.</p></div><pre>theorem signedCoordinateIntersection_convex
+    (T : Finset (Fin (Module.finrank ℝ E) × Bool)) :
+    Convex ℝ (⋂ i ∈ T, signedCoordinateHalfspace (E := E) i) :=
+…</pre><p class="refs">Mentions: <a href="ProductCover.lean.html#L19">OAI.Kaplansky.signedCoordinateHalfspace</a></p></li><li id=L78><b>theorem</b> <code>OAI.Kaplansky.convexBaseProductPair_below_isZero</code> <small>line 78</small><div class="doc"><p>A convex base, including the empty case, has no relative bundle
+homology below the fiber dimension.</p></div><pre>theorem convexBaseProductPair_below_isZero (C : Set E) (hC : Convex ℝ C)
+    (hd : 2 ≤ Module.finrank ℝ V) (n : ℕ) (hn : n &lt; Module.finrank ℝ V) :
+    IsZero (relativeSingularHomology (subspaceInclusion
+      (Subtype.val ⁻¹&#x27; {z : E × V | z.2 ≠ 0} : Set {z : E × V | z.1 ∈ C})) n) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a></p></li><li id=L95><b>theorem</b> <code>OAI.Kaplansky.puncturedBaseProductPair_below_isZero</code> <small>line 95</small><div class="doc"><p>Actual relative homology over a punctured vector-space base vanishes
+below the fiber dimension. This does NOT identify its top group or assert
+that the punctured base is contractible.</p></div><pre>theorem puncturedBaseProductPair_below_isZero
+    (hd : 2 ≤ Module.finrank ℝ V) (n : ℕ) (hn : n &lt; Module.finrank ℝ V) :
+    IsZero (relativeSingularHomology (subspaceInclusion
+      {z : ({0}ᶜ : Set E) × V | z.2 ≠ 0}) n) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a></p></li><li id=L132><b>theorem</b> <code>OAI.Kaplansky.canonicalBundleOverlap_below_isZero</code> <small>line 132</small><div class="doc"><p>The actual canonical overlap has zero homology below its real fiber
+rank. In particular this discharges the PRECEDING-overlap vanishing
+hypothesis in the preserved normalization-gluing theorem.</p></div><pre>theorem canonicalBundleOverlap_below_isZero (hp : 0 &lt; ∑ i, K i)
+    (n : ℕ) (hn : n &lt; 2*(∑ i, K i)) :
+    IsZero (relativeSingularHomology (subspaceInclusion
+      (Subtype.val ⁻¹&#x27; nonzeroBundle :
+        Set ↥(canonicalBundleChartDomain K ∩ canonicalPuncturedBundle K))) n) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a>, <a href="Compactification.lean.html#L17">OAI.Kaplansky.nonzeroBundle</a>, <a href="HyperplaneFiber.lean.html#L19">OAI.Kaplansky.canonicalBundleChartDomain</a>, <a href="HyperplaneFiber.lean.html#L388">OAI.Kaplansky.canonicalPuncturedBundle</a></p></li><li id=L151><b>def</b> <code>OAI.Kaplansky.productPairBaseSubsetIso</code> <small>line 151</small><div class="doc"><p>Relative product coordinates over an arbitrary subset of the base.</p></div><pre>def productPairBaseSubsetIso (C : Set B) (W : Set V) (n : ℕ) :=
+…</pre></li><li id=L157><b>def</b> <code>OAI.Kaplansky.productPairChartFiberMap</code> <small>line 157</small><div class="doc"><p>A fiber inside a restricted product chart.</p></div><pre>def productPairChartFiberMap (C : Set B) (b : C) (W : Set V) (n : ℕ) :=
+…</pre></li><li id=L166><b>theorem</b> <code>OAI.Kaplansky.productPairChartFiberMap_coordinates</code> <small>line 166</small></li><li id=L175><b>theorem</b> <code>OAI.Kaplansky.productPairChartFiberMap_isIso</code> <small>line 175</small></li><li id=L187><b>theorem</b> <code>OAI.Kaplansky.productPairChartFiberMap_inclusion</code> <small>line 187</small><div class="doc"><p>Inclusion of a chart fiber is literally the same global fiber inclusion.</p></div><pre>theorem productPairChartFiberMap_inclusion (C : Set B) (b : C) (W : Set V) (n : ℕ) :
+    productPairChartFiberMap C b W n ≫
+      restrictedPairToAmbientHomologyMap {z : B × V | z.1 ∈ C} {z | z.2 ∈ W} n =
+    productPairFiberMap b.1 W n := by
+…</pre><p class="refs">Mentions: <a href="ProductCover.lean.html#L157">OAI.Kaplansky.productPairChartFiberMap</a>, <a href="MayerVietoris.lean.html#L182">OAI.Kaplansky.restrictedPairToAmbientHomologyMap</a>, <a href="Product.lean.html#L102">OAI.Kaplansky.productPairFiberMap</a></p></li><li id=L209><b>theorem</b> <code>OAI.Kaplansky.productPairProjection_fiber_of_finite_cover</code> <small>line 209</small><div class="doc"><p>A finite cover by contractible base charts proves fiber generation in
+the first potentially nonzero relative degree, provided the preceding
+intersection groups vanish. All maps are the actual product projection and
+fiber inclusion; path connectedness fixes the SAME fiber class on all charts.</p></div><pre>theorem productPairProjection_fiber_of_finite_cover (S : Finset ι) (U : ι → Set B)
+    (hopen : ∀ i ∈ S, IsOpen (U i)) (hcover : (⋃ i ∈ S, U i) = Set.univ)
+    (hchart : ∀ i ∈ S, (U i).Nonempty → ContractibleSpace (U i))
+    (W : Set V) (n : ℕ)
+    (hinter : ∀ T : Finset ι, T.Nonempty → T ⊆ S → ∀ q &lt; n+1,
+      IsZero (relativeSingularHomology
+        (subspaceInclusion {z : (⋂ i ∈ T, U i) × V | z.2 ∈ W}) q))
+    (b : B) :
+    productPairProjection (B := B) W (n+1) ≫ productPairFiberMap b W (n+1) = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a>, <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a>, <a href="Product.lean.html#L102">OAI.Kaplansky.productPairFiberMap</a></p></li><li id=L249><b>theorem</b> <code>OAI.Kaplansky.productPairProjection_isIso_of_finite_cover</code> <small>line 249</small><div class="doc"><p>In this degree the actual product projection is an isomorphism.</p></div><pre>theorem productPairProjection_isIso_of_finite_cover (S : Finset ι) (U : ι → Set B)
+    (hopen : ∀ i ∈ S, IsOpen (U i)) (hcover : (⋃ i ∈ S, U i) = Set.univ)
+    (hchart : ∀ i ∈ S, (U i).Nonempty → ContractibleSpace (U i))
+    (W : Set V) (n : ℕ)
+    (hinter : ∀ T : Finset ι, T.Nonempty → T ⊆ S → ∀ q &lt; n+1,
+      IsZero (relativeSingularHomology
+        (subspaceInclusion {z : (⋂ i ∈ T, U i) × V | z.2 ∈ W}) q)) :
+    IsIso (productPairProjection (B := B) W (n+1)) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a>, <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a></p></li><li id=L269><b>theorem</b> <code>OAI.Kaplansky.signedCoordinateHalfspace_subset_punctured</code> <small>line 269</small><div class="doc"><p>Signed halfspaces avoid the origin.</p></div><pre>theorem signedCoordinateHalfspace_subset_punctured
+    (i : Fin (Module.finrank ℝ E) × Bool) :
+    signedCoordinateHalfspace i ⊆ ({0}ᶜ : Set E) := by
+…</pre><p class="refs">Mentions: <a href="ProductCover.lean.html#L19">OAI.Kaplansky.signedCoordinateHalfspace</a></p></li><li id=L280><b>theorem</b> <code>OAI.Kaplansky.puncturedBaseProductPairProjection_isIso</code> <small>line 280</small><div class="doc"><p>In the real fiber dimension, projection from the punctured-base
+product pair is an isomorphism. Both base and fiber have dimension at least
+two. This is proved by finite convex charts, relative vanishing and path
+transport of actual fiber inclusions, not by a Künneth or Thom assumption.</p></div><pre>theorem puncturedBaseProductPairProjection_isIso
+    (he : 2 ≤ Module.finrank ℝ E) (hv : 2 ≤ Module.finrank ℝ V) :
+    IsIso (productPairProjection (B := ({0}ᶜ : Set E)) ({0}ᶜ : Set V)
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a></p></li><li id=L339><b>theorem</b> <code>OAI.Kaplansky.canonicalOverlapChartMap_isIso</code> <small>line 339</small><div class="doc"><p>The ACTUAL overlap-to-chart map is an isomorphism in the fiber degree.
+This assertion is confined to that degree.</p></div><pre>theorem canonicalOverlapChartMap_isIso (hp : 0 &lt; ∑ i, K i) :
+    IsIso (canonicalOverlapChartMap K (2*(∑ i, K i))) := by
+…</pre><p class="refs">Mentions: <a href="HyperplaneFiber.lean.html#L585">OAI.Kaplansky.canonicalOverlapChartMap</a></p></li><li id=L359><b>theorem</b> <code>OAI.Kaplansky.canonicalOverlapNormalization_isIso</code> <small>line 359</small><div class="doc"><p>The overlap normalization is an actual isomorphism to ℤ, using the
+incoming chart generator, not an independently chosen orientation.</p></div><pre>theorem canonicalOverlapNormalization_isIso (hp : 0 &lt; ∑ i, K i) :
+    IsIso (canonicalOverlapNormalization K hp) := by
+…</pre><p class="refs">Mentions: <a href="HyperplaneFiber.lean.html#L597">OAI.Kaplansky.canonicalOverlapNormalization</a></p></li><li id=L365><b>def</b> <code>OAI.Kaplansky.canonicalOverlapTopIso</code> <small>line 365</small></li><li id=L369><b>def</b> <code>OAI.Kaplansky.canonicalNormalizedOverlapGenerator</code> <small>line 369</small><div class="doc"><p>The unique overlap class with preserved normalization one.</p></div><pre>def canonicalNormalizedOverlapGenerator (hp : 0 &lt; ∑ i, K i) :=
+…</pre></li><li id=L372><b>theorem</b> <code>OAI.Kaplansky.canonicalNormalizedOverlapGenerator_coordinate</code> <small>line 372</small></li><li id=L376><b>theorem</b> <code>OAI.Kaplansky.canonicalNormalizedOverlapGenerator_unique</code> <small>line 376</small></li><li id=L385><b>theorem</b> <code>OAI.Kaplansky.canonicalNormalizedOverlapGenerator_ne_zero</code> <small>line 385</small></li><li id=L392><b>theorem</b> <code>OAI.Kaplansky.canonicalNormalizedOverlapGenerator_spans</code> <small>line 392</small></li><li id=L405><b>theorem</b> <code>OAI.Kaplansky.canonicalFiberGenerator_zero_iff_overlapGenerator</code> <small>line 405</small><div class="doc"><p>The incoming global survival problem reduces to the image of this
+ONE proved primitive overlap class. Its image in the punctured bundle is
+still a global obligation, not supplied by the overlap isomorphism.</p></div><pre>theorem canonicalFiberGenerator_zero_iff_overlapGenerator (hp : 0 &lt; ∑ i, K i) :
+    canonicalWholeBundleFiberMap K (2*(∑ i, K i)) (canonicalFiberGenerator K hp) = 0 ↔
+      canonicalOverlapPuncturedMap K (2*(∑ i, K i))
+        (canonicalNormalizedOverlapGenerator K hp) = 0 := by
+…</pre><p class="refs">Mentions: <a href="HyperplaneFiber.lean.html#L355">OAI.Kaplansky.canonicalWholeBundleFiberMap</a>, <a href="HyperplaneFiber.lean.html#L336">OAI.Kaplansky.canonicalFiberGenerator</a>, <a href="HyperplaneFiber.lean.html#L590">OAI.Kaplansky.canonicalOverlapPuncturedMap</a>, <a href="ProductCover.lean.html#L369">OAI.Kaplansky.canonicalNormalizedOverlapGenerator</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

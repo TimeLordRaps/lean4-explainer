@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/Selection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/Selection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>Selection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>Selection.lean</span></code></h1><p class="muted">24 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/Selection.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.SmoothObstruction.CanonicalRelation.measurable_solution</code> <small>line 24</small><div class="doc"><p>A Borel relation with exactly one output at every input has a genuine
+measurable solution map. Its definition does not depend on any auxiliary
+frame certificate used to obtain existence and uniqueness.</p></div><pre>theorem measurable_solution (R : Set (X × Y)) (hR : MeasurableSet R)
+    (hex : ∀ x,∃! y,(x,y)∈R) :
+    ∃ f : X → Y,Measurable f ∧ (∀ x,(x,f x)∈R) ∧
+      ∀ x y,(x,y)∈R → y=f x := by
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.SmoothObstruction.CanonicalRelation.retained_solution</code> <small>line 48</small><div class="doc"><p>The retained set has its original Borel subspace, not a conditioned
+probability space. The measurable total extension is only for convenient
+pushforward notation; it is equal to the canonical solution on the carrier.</p></div><pre>theorem retained_solution [Nonempty Y] (G : Set X) (hG : MeasurableSet G)
+    (R : X → Y → Prop) (hR : MeasurableSet {z : X×Y | z.1∈G ∧ R z.1 z.2})
+    (hex : ∀ x∈G,∃! y,R x y) :
+    ∃ f : X → Y,Measurable f ∧ (∀ x∈G,R x (f x)) ∧
+      ∀ x∈G,∀ y,R x y → y=f x := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.SmoothObstruction.CanonicalRelation.local_derivative</code> <small>line 87</small><div class="doc"><p>Local analytic branches agree with the canonical Borel solution merely
+by satisfying its boundary relation inside the uniqueness tube. The frame
+witnesses and chart codes need not be continuous functions of the inputs.</p></div><pre>theorem local_derivative (G : Set E) (x : E) (hx : x∈G)
+    (R : E → F → Prop) (f g : E → F) (L : E →L[ℝ] F)
+    (hu : ∀ u∈G,∀ v,R u v → v=f u)
+    (hg : HasFDerivAt g L x) (hrel : ∀ᶠ u in 𝓝[G] x,R u (g u)) :
+    HasFDerivWithinAt f L G x := by
+…</pre></li><li id=L106><b>def</b> <code>OAI.SmoothObstruction.SelectedTube.tube</code> <small>line 106</small><div class="doc"><p>The literal fixed-atlas coordinate tube, with chart sources checked.
+Only the base point chooses the chart; the second point need not be good.</p></div><pre>def tube (q : X → C) (U : C → Set X) (φ : C → X → E)
+    (f : ℕ → X → X) (n : ℕ) (δ : ℝ) (x z : X) : Prop :=
+…</pre></li><li id=L112><b>lemma</b> <code>OAI.SmoothObstruction.SelectedTube.measurable_evaluate</code> <small>line 112</small></li><li id=L116><b>lemma</b> <code>OAI.SmoothObstruction.SelectedTube.measurable_tube</code> <small>line 116</small></li><li id=L147><b>def</b> <code>OAI.SmoothObstruction.MeasurableSwitch.relation</code> <small>line 147</small><div class="doc"><p>Fixed-bin future/past observations and the two old coordinate tubes.
+All auxiliary frames have disappeared from this boundary relation.</p></div><pre>def relation (F P : X → X → E) (TF TB : X → X → Prop) (u : X×X) (z : X) : Prop :=
+…</pre></li><li id=L150><b>lemma</b> <code>OAI.SmoothObstruction.MeasurableSwitch.measurable_relation</code> <small>line 150</small></li><li id=L170><b>theorem</b> <code>OAI.SmoothObstruction.MeasurableSwitch.canonical_pair</code> <small>line 170</small><div class="doc"><p>The original retained carrier gives one globally measurable pair map.
+There is no measurable moving-frame selection and no conditioning of a law.
+Existence and uniqueness are supplied by the actual finite-tube solve.</p></div><pre>theorem canonical_pair [StandardBorelSpace X] [Nonempty X]
+    (G : Set (X×X)) (hG : MeasurableSet G)
+    (F P : X → X → E) (hF : Measurable (Function.uncurry F))
+    (hP : Measurable (Function.uncurry P))
+    (TF TB : X → X → Prop) (hTF : MeasurableSet {p : X×X | TF p.1 p.2})
+    (hTB : MeasurableSet {p : X×X | TB p.1 p.2})
+    (hex : ∀ u∈G,∃! z,relation F P TF TB u z)
+    (hex&#x27; : ∀ u∈G,∃! w,relation F P TF TB u.swap w) :
+    ∃ Φ : X×X → X×X,Measurable Φ ∧
+      (∀ u∈G,relation F P TF TB u (Φ u).1 ∧ relation F P TF TB u.swap (Φ u).2) ∧
+      (∀ u∈G,∀ z,relation F P TF TB u z → z=(Φ u).1) ∧
+      (∀ u∈G,∀ w,relation F P TF TB u.swap w → w=(Φ u).2) := by
+…</pre><p class="refs">Mentions: <a href="Selection.lean.html#L147">OAI.SmoothObstruction.MeasurableSwitch.relation</a></p></li><li id=L205><b>def</b> <code>OAI.SmoothObstruction.EndpointObservation.observation</code> <small>line 205</small><div class="doc"><p>The source endpoint observation in the ambient coordinate space. Its
+finite index consists ONLY of the starting coarse bin and endpoint coarse
+bin; an internal frame witness is not part of this index.</p></div><pre>def observation (c : X → C) (b : X → B) (f : X → X)
+    (φ : B → X → E) (P : C → B → E →L[ℝ] E) (x z : X) : E :=
+…</pre></li><li id=L209><b>lemma</b> <code>OAI.SmoothObstruction.EndpointObservation.measurable_observation</code> <small>line 209</small></li><li id=L227><b>lemma</b> <code>OAI.SmoothObstruction.EndpointObservation.observation_fixed</code> <small>line 227</small><div class="doc"><p>Positive bin margins turn the ambient observations into the actual fixed
+smooth endpoint maps on a neighborhood; there is no differentiability claim
+for the discontinuously selected observation itself.</p></div><pre>lemma observation_fixed (c : X → C) (b : X → B) (f : X → X)
+    (φ : B → X → E) (P : C → B → E →L[ℝ] E)
+    (x y z : X) (hc : c x=c y) (hb : b (f x)=b (f y)) :
+    observation c b f φ P x z=observation c b f φ P y z := by
+…</pre><p class="refs">Mentions: <a href="Selection.lean.html#L205">OAI.SmoothObstruction.EndpointObservation.observation</a></p></li><li id=L233><b>lemma</b> <code>OAI.SmoothObstruction.EndpointObservation.observation_eq_iff</code> <small>line 233</small></li><li id=L249><b>def</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.borelChart</code> <small>line 249</small><div class="doc"><p>A chart has no prescribed behaviour outside its source. This Borel
+extension, used only to state global relations, agrees with it on the source.</p></div><pre>noncomputable def borelChart (a : M) : M → EuclideanSpace ℝ (Fin d) := by
+…</pre></li><li id=L253><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.borelChart_eq</code> <small>line 253</small></li><li id=L260><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.measurable_borelChart</code> <small>line 260</small></li><li id=L269><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.measurable_originalTube</code> <small>line 269</small></li><li id=L287><b>def</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.originalObservation</code> <small>line 287</small></li><li id=L292><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.measurable_originalObservation</code> <small>line 292</small></li><li id=L304><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.originalObservation_eq_iff</code> <small>line 304</small></li><li id=L312><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.originalTube_mono</code> <small>line 312</small></li><li id=L330><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.canonical_original_switch</code> <small>line 330</small><div class="doc"><p>A measurable, witness-independent ORIGINAL pair switch. Its Borel relation
+uses zero-extended charts, but all asserted equations and tube estimates are in
+the original atlas. The retained set has not been normalized or repartitioned.</p></div><pre>theorem canonical_original_switch (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r₀ C₀ : ℝ,0&lt;r₀ ∧ 1≤C₀ ∧
+      ∀ (C J : Type*) [Fintype C] [MeasurableSpace C] [MeasurableSingletonClass C]
+        [Fintype J] [MeasurableSpace J] [MeasurableSingletonClass J]
+        (c : M → ι) (P : M → C) (L : M → J) (G R : Set M)
+        (n : ℕ) (B R₀ ε g α r δ : ℝ) (γ : C → ℝ)
+        (A : ∀ x:G,BilateralGauge I S a c n B R₀ x)
+        (T : G → Finset (Fin d)) (ref : G → G)
+        (Wf Wb : C×C → Submodule ℝ (EuclideanSpace ℝ (Fin d))),
+        Measurable c → Measurable P → Measurable L → MeasurableSet R → R⊆G →
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a></p></li><li id=L493><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.canonical_original_switch_unique</code> <small>line 493</small><div class="doc"><p>A measurable, witness-independent ORIGINAL pair switch. Its Borel relation
+uses zero-extended charts, but all asserted equations and tube estimates are in
+the original atlas. The retained set has not been normalized or repartitioned.</p></div><pre>theorem canonical_original_switch_unique (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r₀ C₀ : ℝ,0&lt;r₀ ∧ 1≤C₀ ∧
+      ∀ (C J : Type*) [Fintype C] [MeasurableSpace C] [MeasurableSingletonClass C]
+        [Fintype J] [MeasurableSpace J] [MeasurableSingletonClass J]
+        (c : M → ι) (P : M → C) (L : M → J) (G R : Set M)
+        (n : ℕ) (B R₀ ε g α r δ : ℝ) (γ : C → ℝ)
+        (A : ∀ x:G,BilateralGauge I S a c n B R₀ x)
+        (T : G → Finset (Fin d)) (ref : G → G)
+        (Wf Wb : C×C → Submodule ℝ (EuclideanSpace ℝ (Fin d))),
+        Measurable c → Measurable P → Measurable L → MeasurableSet R → R⊆G →
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a></p></li><li id=L663><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.canonical_original_switch_complete</code> <small>line 663</small><div class="doc"><p>A measurable, witness-independent ORIGINAL pair switch. Its Borel relation
+uses zero-extended charts, but all asserted equations and tube estimates are in
+the original atlas. The retained set has not been normalized or repartitioned.</p></div><pre>theorem canonical_original_switch_complete (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r₀ C₀ : ℝ,0&lt;r₀ ∧ 1≤C₀ ∧
+      ∀ (C J : Type*) [Fintype C] [MeasurableSpace C] [MeasurableSingletonClass C]
+        [Fintype J] [MeasurableSpace J] [MeasurableSingletonClass J]
+        (c : M → ι) (P : M → C) (L : M → J) (G R : Set M)
+        (n : ℕ) (B R₀ ε g α r δ : ℝ) (γ : C → ℝ)
+        (A : ∀ x:G,BilateralGauge I S a c n B R₀ x)
+        (T : G → Finset (Fin d)) (ref : G → G)
+        (Wf Wb : C×C → Submodule ℝ (EuclideanSpace ℝ (Fin d))),
+        Measurable c → Measurable P → Measurable L → MeasurableSet R → R⊆G →
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

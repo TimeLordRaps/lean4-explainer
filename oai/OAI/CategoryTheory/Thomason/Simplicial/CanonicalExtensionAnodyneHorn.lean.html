@@ -1,0 +1,168 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Simplicial/CanonicalExtensionAnodyneHorn.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Simplicial/CanonicalExtensionAnodyneHorn.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Simplicial</a> / <span>CanonicalExtensionAnodyneHorn.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Simplicial</a>/<span>CanonicalExtensionAnodyneHorn.lean</span></code></h1><p class="muted">53 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Simplicial/CanonicalExtensionAnodyneHorn.lean#L1">source</a></p><div class="doc"><h3>Actual homotopy-fibre compatibility of standard-simplex restrictions</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L38><b>def</b> <code>OAI.Thomason.Construction.realizedSimplexHomotopyFiberMap</code> <small>line 38</small><div class="doc"><p>Restriction to a base simplex induces the literal continuous map of
+homotopy fibres, by projecting the point and applying the simplex map to its path.</p></div><pre>def realizedSimplexHomotopyFiberMap {E : SSet.{0}} (n m : ℕ)
+    (p : E ⟶ (Δ[n] : SSet.{0})) (g : (Δ[m] : SSet.{0}) ⟶ Δ[n])
+    (b : SSet.toTop.obj (Δ[m] : SSet.{0})) :
+    continuousHomotopyFiber (SSet.toTop.map (pullback.snd p g)) b ⟶
+      continuousHomotopyFiber (SSet.toTop.map p) ((SSet.toTop.map g).hom b) :=
+…</pre><p class="refs">Mentions: <a href="HomotopyFiberPathEquivalence.lean.html#L211">OAI.Thomason.Construction.continuousHomotopyFiber</a></p></li><li id=L49><b>theorem</b> <code>OAI.Thomason.Construction.realizedSimplexHomotopyFiberMap_weak</code> <small>line 49</small><div class="doc"><p>Every standard-simplex restriction is compatible with the genuine
+continuous homotopy fibre by an actual weak equivalence. No general
+realization/pullback theorem or acyclic Kan lifting input is used.</p></div><pre>theorem realizedSimplexHomotopyFiberMap_weak {E : SSet.{0}} (n m : ℕ)
+    (p : E ⟶ (Δ[n] : SSet.{0})) [HomotopicalAlgebra.Fibration p]
+    (g : (Δ[m] : SSet.{0}) ⟶ Δ[n]) (b : SSet.toTop.obj (Δ[m] : SSet.{0})) :
+    topologicalWeakEquivalences (realizedSimplexHomotopyFiberMap n m p g b) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L230">OAI.Thomason.Construction.topologicalWeakEquivalences</a>, <a href="CanonicalExtensionAnodyneHorn.lean.html#L38">OAI.Thomason.Construction.realizedSimplexHomotopyFiberMap</a></p></li><li id=L79><b>theorem</b> <code>OAI.Thomason.Construction.kan_simplex_continuousFiberBaseChange_weak</code> <small>line 79</small><div class="doc"><p>Restriction along any map of standard simplices induces a weak
+equivalence of the literal continuous fibres at every real point. This
+includes all faces, degeneracies, and their composites.</p></div><pre>theorem kan_simplex_continuousFiberBaseChange_weak {E : SSet.{0}} (n m : ℕ)
+    (p : E ⟶ (Δ[n] : SSet.{0})) [HomotopicalAlgebra.Fibration p]
+    (g : (Δ[m] : SSet.{0}) ⟶ Δ[n]) (b : SSet.toTop.obj (Δ[m] : SSet.{0})) :
+    topologicalWeakEquivalences (continuousFiberBaseChangeMap
+      (SSet.toTop.map (pullback.snd p g)) (SSet.toTop.map p)
+      (SSet.toTop.map (pullback.fst p g)) (SSet.toTop.map g)
+      (by rw [← SSet.toTop.map_comp, pullback.condition, SSet.toTop.map_comp]) b) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L230">OAI.Thomason.Construction.topologicalWeakEquivalences</a>, <a href="TruncationQuotientComposition.lean.html#L769">OAI.Thomason.Construction.continuousFiberBaseChangeMap</a></p></li><li id=L110><b>abbrev</b> <code>OAI.Thomason.Construction.simplexDensityCocone</code> <small>line 110</small><div class="doc"><p>The standard-simplex density presentation, with the harmless universe
+lift already included in <code>SSet.stdSimplex</code>.</p></div><pre>abbrev simplexDensityCocone (E : SSet.{0}) :
+    Cocone (CostructuredArrow.proj SSet.stdSimplex E ⋙ SSet.stdSimplex) :=
+…</pre></li><li id=L114><b>def</b> <code>OAI.Thomason.Construction.simplexDensityIsColimit</code> <small>line 114</small></li><li id=L118><b>def</b> <code>OAI.Thomason.Construction.simplexPullbackSection</code> <small>line 118</small><div class="doc"><p>A simplex in the total space lifts its own base simplex canonically.</p></div><pre>def simplexPullbackSection {E B : SSet.{0}} (p : E ⟶ B) {n : SimplexCategory}
+    (e : SSet.stdSimplex.obj n ⟶ E) :
+    SSet.stdSimplex.obj n ⟶ pullback p (e ≫ p) :=
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackSection_fst</code> <small>line 124</small></li><li id=L130><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackSection_snd</code> <small>line 130</small></li><li id=L137><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackSection_naturality</code> <small>line 137</small><div class="doc"><p>Restricting a total-space simplex commutes with its canonical lift to
+its base-simplex pullback.</p></div><pre>theorem simplexPullbackSection_naturality {E B : SSet.{0}} (p : E ⟶ B)
+    {s t : CostructuredArrow SSet.stdSimplex E} (f : s ⟶ t) :
+    SSet.stdSimplex.map f.left ≫ simplexPullbackSection p t.hom =
+      simplexPullbackSection p s.hom ≫ (simplexPullbackDiagram p).map
+        ((CostructuredArrow.map p).map f) := by
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L118">OAI.Thomason.Construction.simplexPullbackSection</a>, <a href="KanContractedFamilyLifting.lean.html#L416">OAI.Thomason.Construction.simplexPullbackDiagram</a></p></li><li id=L155><b>def</b> <code>OAI.Thomason.Construction.simplexPullbackDescCocone</code> <small>line 155</small><div class="doc"><p>Every cocone on base-simplex pullbacks induces a compatible cocone on
+the standard simplices of the original total space.</p></div><pre>def simplexPullbackDescCocone {E B : SSet.{0}} (p : E ⟶ B)
+    (s : Cocone (simplexPullbackDiagram p)) :
+    Cocone (CostructuredArrow.proj SSet.stdSimplex E ⋙ SSet.stdSimplex) where
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L416">OAI.Thomason.Construction.simplexPullbackDiagram</a></p></li><li id=L171><b>def</b> <code>OAI.Thomason.Construction.simplexPullbackDesc</code> <small>line 171</small><div class="doc"><p>The induced map is defined through the actual density colimit.</p></div><pre>def simplexPullbackDesc {E B : SSet.{0}} (p : E ⟶ B)
+    (s : Cocone (simplexPullbackDiagram p)) : E ⟶ s.pt :=
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L416">OAI.Thomason.Construction.simplexPullbackDiagram</a></p></li><li id=L176><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackDesc_simplex</code> <small>line 176</small></li><li id=L184><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackDesc_fac</code> <small>line 184</small><div class="doc"><p>The induced map agrees with the given cocone on every full simplex
+pullback, not just on individual chosen lifts.</p></div><pre>theorem simplexPullbackDesc_fac {E B : SSet.{0}} (p : E ⟶ B)
+    (s : Cocone (simplexPullbackDiagram p))
+    (b : CostructuredArrow SSet.stdSimplex B) :
+    pullback.fst p b.hom ≫ simplexPullbackDesc p s = s.ι.app b := by
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L416">OAI.Thomason.Construction.simplexPullbackDiagram</a>, <a href="CanonicalExtensionAnodyneHorn.lean.html#L171">OAI.Thomason.Construction.simplexPullbackDesc</a></p></li><li id=L224><b>def</b> <code>OAI.Thomason.Construction.simplexPullbackIsColimit</code> <small>line 224</small><div class="doc"><p>The canonical pullback cocone really reconstructs the original total
+simplicial set. No Kan or weak-equivalence assumption is needed here.</p></div><pre>def simplexPullbackIsColimit {E B : SSet.{0}} (p : E ⟶ B) :
+    IsColimit (simplexPullbackCocone p) where
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L435">OAI.Thomason.Construction.simplexPullbackCocone</a></p></li><li id=L257><b>theorem</b> <code>OAI.Thomason.Construction.RealizationPrism.cylinder_vertex_cases</code> <small>line 257</small><div class="doc"><p>The only vertices of a simplicial cylinder over a fixed vertex are
+its two endpoints.</p></div><pre>theorem cylinder_vertex_cases {K : SSet.{0}}
+    (z : (K ⊗ Δ[1]).obj (.op (.mk 0))) :
+    z = SSet.ι₀.app _ z.1 ∨ z = SSet.ι₁.app _ z.1 := by
+…</pre></li><li id=L277><b>theorem</b> <code>OAI.Thomason.Construction.RealizationPrism.homotopy_mem_vertexStar</code> <small>line 277</small><div class="doc"><p>If the endpoints send a vertex to the same target vertex, the whole
+realized homotopy sends its open star into the target open star.</p></div><pre>theorem homotopy_mem_vertexStar {K L : SSet.{0}} {f g : K ⟶ L}
+    (H : SSet.Homotopy f g) (v : K.obj (.op (.mk 0)))
+    (w : L.obj (.op (.mk 0)))
+    (hf : f.app (.op (.mk 0)) v = w) (hg : g.app (.op (.mk 0)) v = w)
+    (t : unitInterval) (x : SSet.toTop.obj K) (hx : x ∈ vertexStar K v) :
+    RealizedCylinder.homotopy H (t, x) ∈ vertexStar L w := by
+…</pre><p class="refs">Mentions: <a href="SkeletalWeakEquivalences.lean.html#L166">OAI.Thomason.Construction.RealizationPrism.vertexStar</a>, <a href="HornWeakEquivalences.lean.html#L639">OAI.Thomason.Construction.RealizedCylinder.homotopy</a></p></li><li id=L297><b>def</b> <code>OAI.Thomason.Construction.RealizationPrism.vertexStarMap</code> <small>line 297</small><div class="doc"><p>Restriction of an actual realized simplicial map to an open vertex star.</p></div><pre>def vertexStarMap {K L : SSet.{0}} (f : K ⟶ L)
+    (v : K.obj (.op (.mk 0))) (w : L.obj (.op (.mk 0)))
+    (h : f.app (.op (.mk 0)) v = w) : C(vertexStar K v, vertexStar L w) where
+…</pre><p class="refs">Mentions: <a href="SkeletalWeakEquivalences.lean.html#L166">OAI.Thomason.Construction.RealizationPrism.vertexStar</a></p></li><li id=L307><b>def</b> <code>OAI.Thomason.Construction.RealizationPrism.vertexStarHomotopy</code> <small>line 307</small><div class="doc"><p>Restrict a simplicial homotopy fixing a vertex to its actual open star.
+This does not assert that the star is contractible for a general simplicial set.</p></div><pre>def vertexStarHomotopy {K : SSet.{0}} {f g : K ⟶ K}
+    (H : SSet.Homotopy f g) (v : K.obj (.op (.mk 0)))
+    (hf : f.app (.op (.mk 0)) v = v) (hg : g.app (.op (.mk 0)) v = v) :
+    (vertexStarMap f v v hf).Homotopy (vertexStarMap g v v hg) where
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L297">OAI.Thomason.Construction.RealizationPrism.vertexStarMap</a></p></li><li id=L343><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.simplex_vertex_le</code> <small>line 343</small></li><li id=L351><b>def</b> <code>OAI.Thomason.Construction.PosetGeometry.orderedVertexHomotopy</code> <small>line 351</small><div class="doc"><p>A pointwise inequality on vertices gives a simplicial homotopy into
+a poset nerve, even when the source is not itself an ordinary nerve.</p></div><pre>def orderedVertexHomotopy : SSet.Homotopy f g where
+…</pre></li><li id=L394><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.orderedVertex_weak_iff</code> <small>line 394</small><div class="doc"><p>This ordered-vertex criterion preserves the actual realization weak test.</p></div><pre>theorem orderedVertex_weak_iff : realizationWeakEquivalences f ↔ realizationWeakEquivalences g :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L421><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.orderedVertexHomotopy_stationary</code> <small>line 421</small><div class="doc"><p>The constructed homotopy is stationary along any map on which its
+endpoints agree, with equality of actual cylinder maps.</p></div><pre>theorem orderedVertexHomotopy_stationary (i : A ⟶ K) (hi : i ≫ f = i ≫ g) :
+    i ▷ Δ[1] ≫ (orderedVertexHomotopy f g hfg).h =
+      fst A Δ[1] ≫ i ≫ f := by
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L351">OAI.Thomason.Construction.PosetGeometry.orderedVertexHomotopy</a></p></li><li id=L457><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.nerve_const</code> <small>line 457</small></li><li id=L464><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.vertexStar_contractible_of_clamp</code> <small>line 464</small><div class="doc"><p>A monotone clamp gives a contraction on the open star: both order
+homotopies stay inside the star because they fix its chosen vertex.</p></div><pre>theorem vertexStar_contractible_of_clamp (v : P) (a : P →o P)
+    (ha : ∀ x, x ≤ a x) (hv : ∀ x, v ≤ a x) (hav : a v = v) :
+    ContractibleSpace (vertexStar (nerve P) (vertex v)) := by
+…</pre><p class="refs">Mentions: <a href="FinitePosetCoordinates.lean.html#L803">OAI.Thomason.Construction.PosetGeometry.vertex</a></p></li><li id=L500><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.vertexStar_contractible</code> <small>line 500</small><div class="doc"><p>Open vertex stars of arbitrary small poset nerves are contractible.
+The statement concerns the actual realization subspace topology.</p></div><pre>theorem vertexStar_contractible (v : P) :
+    ContractibleSpace (vertexStar (nerve P) (vertex v)) := by
+…</pre><p class="refs">Mentions: <a href="FinitePosetCoordinates.lean.html#L803">OAI.Thomason.Construction.PosetGeometry.vertex</a></p></li><li id=L529><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.vertexStar_singular_counit_weak</code> <small>line 529</small><div class="doc"><p>Evaluation on an actual open vertex star of a poset realization is a
+weak equivalence on components and every positive homotopy group.</p></div><pre>theorem vertexStar_singular_counit_weak (v : P) :
+    topologicalWeakEquivalences
+      (sSetTopAdj.counit.app (TopCat.of (vertexStar (nerve P) (vertex v)))) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L230">OAI.Thomason.Construction.topologicalWeakEquivalences</a>, <a href="FinitePosetCoordinates.lean.html#L803">OAI.Thomason.Construction.PosetGeometry.vertex</a></p></li><li id=L538><b>theorem</b> <code>OAI.Thomason.Construction.PosetGeometry.cube_grid_singular_comparison</code> <small>line 538</small><div class="doc"><p>Cubes in poset realizations have a uniform finite grid subordinate to
+actual contractible stars, on which the singular comparison is proved.
+This is local control, not an assumed global approximation theorem.</p></div><pre>theorem cube_grid_singular_comparison (n : ℕ)
+    (f : C((Fin n → unitInterval), SSet.toTop.obj (nerve P))) :
+    ∃ m : ℕ, ∀ k : Fin n → Fin (m+1), ∃ v : P,
+      (∀ x ∈ CubeGrid.cell n m k, f x ∈ vertexStar (nerve P) (vertex v)) ∧
+      ContractibleSpace (vertexStar (nerve P) (vertex v)) ∧
+      topologicalWeakEquivalences
+        (sSetTopAdj.counit.app (TopCat.of (vertexStar (nerve P) (vertex v)))) := by
+…</pre><p class="refs">Mentions: <a href="../Gray/TripleGlobeCylinderSource.lean.html#L22">OAI.Thomason.Construction.CubeGrid.cell</a>, <a href="FinitePosetCoordinates.lean.html#L803">OAI.Thomason.Construction.PosetGeometry.vertex</a>, <a href="LoopDimensionShift.lean.html#L230">OAI.Thomason.Construction.topologicalWeakEquivalences</a></p></li><li id=L569><b>theorem</b> <code>OAI.Thomason.Construction.RealizationPrism.iso_mem_vertexStar_iff</code> <small>line 569</small></li><li id=L585><b>def</b> <code>OAI.Thomason.Construction.RealizationPrism.isoVertexStarHomeomorph</code> <small>line 585</small><div class="doc"><p>The star correspondence uses the actual geometric-realization homeomorphism.</p></div><pre>def isoVertexStarHomeomorph {K L : SSet.{0}} (e : K ≅ L)
+    (v : K.obj (.op (.mk 0))) :
+    vertexStar K v ≃ₜ vertexStar L (e.hom.app _ v) :=
+…</pre><p class="refs">Mentions: <a href="SkeletalWeakEquivalences.lean.html#L166">OAI.Thomason.Construction.RealizationPrism.vertexStar</a></p></li><li id=L620><b>theorem</b> <code>OAI.Thomason.Construction.extension_map_const</code> <small>line 620</small><div class="doc"><p>Naturality on constant maps also holds with an extended source, since
+extension preserves the terminal simplex.</p></div><pre>theorem extension_map_const (X Y : SSet.{u}) (y : Y _⦋0⦌) :
+    SSet.ex.map (SSet.const (X := X) y) =
+…</pre></li><li id=L640><b>def</b> <code>OAI.Thomason.Construction.extensionCylinder</code> <small>line 640</small><div class="doc"><p>The natural comparison from the cylinder on <code>Ex X</code> into <code>Ex</code> of the
+cylinder on <code>X</code>.</p></div><pre>def extensionCylinder (X : SSet.{u}) :
+    SSet.ex.obj X ⊗ Δ[1] ⟶ SSet.ex.obj (X ⊗ Δ[1]) :=
+…</pre></li><li id=L645><b>theorem</b> <code>OAI.Thomason.Construction.extensionCylinder_zero</code> <small>line 645</small></li><li id=L652><b>theorem</b> <code>OAI.Thomason.Construction.extensionCylinder_one</code> <small>line 652</small></li><li id=L661><b>def</b> <code>OAI.Thomason.Construction.extensionHomotopy</code> <small>line 661</small><div class="doc"><p>Applying actual extension to both endpoints of a simplicial homotopy
+produces a simplicial homotopy.</p></div><pre>def extensionHomotopy {X Y : SSet.{u}} {f g : X ⟶ Y} (H : SSet.Homotopy f g) :
+    SSet.Homotopy (SSet.ex.map f) (SSet.ex.map g) where
+…</pre></li><li id=L679><b>theorem</b> <code>OAI.Thomason.Construction.extension_homotopy_inverse_weak</code> <small>line 679</small><div class="doc"><p>Extension preserves simplicial homotopy equivalences with explicit
+chosen inverses; this needs no Kan--Quillen model structure.</p></div><pre>theorem extension_homotopy_inverse_weak {X Y : SSet.{0}} (f : X ⟶ Y) (g : Y ⟶ X)
+    (hX : SSet.Homotopy (𝟙 X) (f ≫ g)) (hY : SSet.Homotopy (𝟙 Y) (g ≫ f)) :
+    realizationWeakEquivalences (SSet.ex.map f) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L687><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_isIso_of_terminal</code> <small>line 687</small><div class="doc"><p>The canonical extension of a terminal simplicial set is an isomorphism.</p></div><pre>theorem canonicalExtension_isIso_of_terminal {X : SSet.{u}} (hX : IsTerminal X) :
+    IsIso (canonicalExtension.app X) := by
+…</pre></li><li id=L694><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_weak_of_contractible</code> <small>line 694</small><div class="doc"><p>The canonical extension map is weak on every simplicial set with a
+specified simplicial homotopy equivalence to the point.</p></div><pre>theorem canonicalExtension_weak_of_contractible (X : SSet.{0})
+    (f : X ⟶ Δ[0]) (g : Δ[0] ⟶ X)
+    (hX : SSet.Homotopy (𝟙 X) (f ≫ g))
+    (hT : SSet.Homotopy (𝟙 (Δ[0] : SSet.{0})) (g ≫ f)) :
+    realizationWeakEquivalences (canonicalExtension.app X) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L733><b>theorem</b> <code>OAI.Thomason.Construction.extensionCylinder_canonical</code> <small>line 733</small><div class="doc"><p>The extension cylinder restricts to the original cylinder along the
+canonical map, with equality of maps rather than a further homotopy.</p></div><pre>theorem extensionCylinder_canonical (X : SSet.{0}) :
+    (canonicalExtension.app X) ▷ (Δ[1] : SSet.{0}) ≫ extensionCylinder X =
+      canonicalExtension.app (X ⊗ (Δ[1] : SSet.{0})) := by
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L640">OAI.Thomason.Construction.extensionCylinder</a></p></li><li id=L742><b>theorem</b> <code>OAI.Thomason.Construction.extensionHomotopy_canonical</code> <small>line 742</small><div class="doc"><p>A homotopy and its extension form an exact homotopy of arrows.</p></div><pre>theorem extensionHomotopy_canonical {X Y : SSet.{0}} {f g : X ⟶ Y}
+    (H : SSet.Homotopy f g) :
+    (canonicalExtension.app X) ▷ (Δ[1] : SSet.{0}) ≫ (extensionHomotopy H).h =
+      H.h ≫ canonicalExtension.app Y := by
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L661">OAI.Thomason.Construction.extensionHomotopy</a></p></li><li id=L754><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_anodyne_of_contraction</code> <small>line 754</small><div class="doc"><p>A specified simplicial contraction makes the actual canonical
+extension inclusion anodyne. This supplies exact relative Kan lifts over
+that parameter, with no weak-equivalence recognition theorem.</p></div><pre>theorem canonicalExtension_anodyne_of_contraction (X : SSet.{0})
+    (f : X ⟶ (Δ[0] : SSet.{0})) (g : (Δ[0] : SSet.{0}) ⟶ X)
+    (H : SSet.Homotopy (𝟙 X) (f ≫ g)) :
+    SSet.anodyneExtensions (canonicalExtension.app X) := by
+…</pre></li><li id=L777><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_standard_anodyne</code> <small>line 777</small><div class="doc"><p>In particular every standard simplex has the exact Kan lifting
+property against its canonical inclusion into its extension.</p></div><pre>theorem canonicalExtension_standard_anodyne (n : ℕ) :
+    SSet.anodyneExtensions (canonicalExtension.app (Δ[n] : SSet.{0})) := by
+…</pre></li><li id=L809><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_weak_nerve_greatest</code> <small>line 809</small><div class="doc"><p>A greatest element contracts the actual nerve, and this contraction
+persists through the actual extension functor.</p></div><pre>theorem canonicalExtension_weak_nerve_greatest {P : Type} [PartialOrder P]
+    (v : P) (hv : ∀ x, x ≤ v) :
+    realizationWeakEquivalences (canonicalExtension.app (nerve P)) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L835><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_weak_standard_simplex</code> <small>line 835</small><div class="doc"><p>Every standard simplex satisfies the actual canonical-extension weak
+equivalence theorem.</p></div><pre>theorem canonicalExtension_weak_standard_simplex (n : ℕ) :
+    realizationWeakEquivalences (canonicalExtension.app (Δ[n] : SSet.{0})) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L870><b>def</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension</code> <small>line 870</small></li><li id=L876><b>theorem</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_inl</code> <small>line 876</small></li><li id=L881><b>theorem</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_inr</code> <small>line 881</small></li><li id=L885><b>instance</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_mono</code> <small>line 885</small></li><li id=L899><b>theorem</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_anodyne</code> <small>line 899</small><div class="doc"><p>Absolute anodyne canonical extensions on a pair imply the relative
+anodyne extension, using the actual union map.</p></div><pre>theorem relativeCanonicalExtension_anodyne {A B : SSet.{0}} (i : A ⟶ B) [Mono i]
+    (hA : SSet.anodyneExtensions (canonicalExtension.app A))
+    (hB : SSet.anodyneExtensions (canonicalExtension.app B)) :
+    SSet.anodyneExtensions (relativeCanonicalExtension i) := by
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L870">OAI.Thomason.Construction.relativeCanonicalExtension</a></p></li><li id=L912><b>theorem</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_standard_anodyne</code> <small>line 912</small><div class="doc"><p>In particular any monomorphic map of standard simplices has exact
+relative lifting after canonical extension. Both the original target and
+the entire extended face are prescribed.</p></div><pre>theorem relativeCanonicalExtension_standard_anodyne {m n : ℕ}
+    (i : (Δ[m] : SSet.{0}) ⟶ (Δ[n] : SSet.{0})) [Mono i] :
+    SSet.anodyneExtensions (relativeCanonicalExtension i) :=
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L870">OAI.Thomason.Construction.relativeCanonicalExtension</a></p></li><li id=L941><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_anodyne_of_homotopy_cospan</code> <small>line 941</small><div class="doc"><p>Two compatible homotopies from a common map to the identity and a
+constant also suffice for an anodyne canonical extension.</p></div><pre>theorem canonicalExtension_anodyne_of_homotopy_cospan (X : SSet.{0})
+    (f : X ⟶ (Δ[0] : SSet.{0})) (g : (Δ[0] : SSet.{0}) ⟶ X) (u : X ⟶ X)
+    (H : SSet.Homotopy u (f ≫ g)) (G : SSet.Homotopy u (𝟙 X)) :
+    SSet.anodyneExtensions (canonicalExtension.app X) := by
+…</pre></li><li id=L970><b>theorem</b> <code>OAI.Thomason.Construction.canonicalExtension_horn_anodyne</code> <small>line 970</small><div class="doc"><p>Every positive-dimensional horn has an anodyne canonical extension,
+by its explicit simplicial contraction through <code>lowerMap</code>.</p></div><pre>theorem canonicalExtension_horn_anodyne (n : ℕ) (k : Fin (n+2)) :
+    SSet.anodyneExtensions (canonicalExtension.app (Λ[n+1, k] : SSet.{0})) := by
+…</pre></li><li id=L982><b>theorem</b> <code>OAI.Thomason.Construction.relativeCanonicalExtension_horn_anodyne</code> <small>line 982</small><div class="doc"><p>The whole extended horn and the original simplex can both be fixed
+when lifting through a Kan fibration into the extended simplex.</p></div><pre>theorem relativeCanonicalExtension_horn_anodyne (n : ℕ) (k : Fin (n+2)) :
+    SSet.anodyneExtensions (relativeCanonicalExtension (Λ[n+1, k].ι :
+      (Λ[n+1, k] : SSet.{0}) ⟶ (Δ[n+1] : SSet.{0}))) :=
+…</pre><p class="refs">Mentions: <a href="CanonicalExtensionAnodyneHorn.lean.html#L870">OAI.Thomason.Construction.relativeCanonicalExtension</a></p></li><li id=L990><b>theorem</b> <code>OAI.Thomason.Construction.extension_horn_anodyne</code> <small>line 990</small><div class="doc"><p>Applying <code>Ex</code> to a generating horn inclusion is anodyne, by the
+original horn attachment followed by the exact relative comparison.</p></div><pre>theorem extension_horn_anodyne (n : ℕ) (k : Fin (n+2)) :
+    SSet.anodyneExtensions (SSet.ex.map (Λ[n+1, k].ι :
+      (Λ[n+1, k] : SSet.{0}) ⟶ (Δ[n+1] : SSet.{0}))) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

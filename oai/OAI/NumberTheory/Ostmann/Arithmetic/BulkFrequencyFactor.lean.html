@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/BulkFrequencyFactor.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/BulkFrequencyFactor.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>BulkFrequencyFactor.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>BulkFrequencyFactor.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/BulkFrequencyFactor.lean#L1">source</a></p><div class="doc"><h3>Separate the nonperiodic prime coincidences from frequency support</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>def</b> <code>OAI.Ostmann.movingFrequencyCore</code> <small>line 11</small></li><li id=L22><b>theorem</b> <code>OAI.Ostmann.movingFrequencyPairFactor_core</code> <small>line 22</small><div class="doc"><p>The only nonperiodic part of this factor consists of the explicit
+regular-prime coincidence tests. The remaining node bounds are independent
+of the numerical bulk values.</p></div><pre>theorem movingFrequencyPairFactor_core {σ : Type*} (value : σ → ℕ)
+    (outside : List ℕ)
+    (F : Bool → {n : ℕ} → MovingSlotData σ n → ℤ → ℂ)
+    (E : Bool → {n : ℕ} → MovingSlotData σ n → ℤ → ℤ → ℤ → ℝ)
+    {n : ℕ} (T : Bool → MovingSlotData σ n) (nodes : Bool → List MovingFormulaNode)
+    (R x y : ℤ) :
+    movingFrequencyPairFactor value outside F E T nodes R x y =
+      (if ∀ b, movingRegularOutsidePairwise value outside (T b) ∧
+        (∀ f ∈ nodes b, f.guard.frequencyBounds) then (1 : ℂ) else 0) *
+      movingFrequencyCore value F E T R x y := by
+…</pre><p class="refs">Mentions: <a href="MovingSlotOccurrences.lean.html#L12">OAI.Ostmann.MovingSlotData</a>, <a href="MovingFormulaNodes.lean.html#L10">OAI.Ostmann.MovingFormulaNode</a>, <a href="MovingSeparatedProduct.lean.html#L17">OAI.Ostmann.movingFrequencyPairFactor</a>, <a href="MovingFullSupport.lean.html#L53">OAI.Ostmann.movingRegularOutsidePairwise</a>, <a href="BulkFrequencyFactor.lean.html#L11">OAI.Ostmann.movingFrequencyCore</a></p></li><li id=L49><b>theorem</b> <code>OAI.Ostmann.movingFrequencyCore_values_modEq</code> <small>line 49</small><div class="doc"><p>Unlike the removed coincidence tests, the actual frequency core is
+constant on the joint bulk residue cells.</p></div><pre>theorem movingFrequencyCore_values_modEq {σ : Type*} (v w : σ → ℕ)
+    (F : Bool → {n : ℕ} → MovingSlotData σ n → ℤ → ℂ)
+    (E : Bool → {n : ℕ} → MovingSlotData σ n → ℤ → ℤ → ℤ → ℝ)
+    {n : ℕ} (T : Bool → MovingSlotData σ n) (R : ℤ)
+    (hf : ∀ b, (T b).Frequencies (· ≠ 0))
+    (hcomp : ∀ b, (T b).CompensationAgreement v w)
+    (hR : ∀ b, (T b).frequencyProduct ∣ R)
+    (hv : ∀ i, (v i : ℤ) ≡ (w i : ℤ) [ZMOD R ^ (n + 1)])
+    (XL XR YL YR : ℤ) (hL : XL ≡ YL [ZMOD R ^ (n + 1)])
+    (hRight : XR ≡ YR [ZMOD R ^ (n + 1)]) :
+    movingFrequencyCore v F E T R XL XR = movingFrequencyCore w F E T R YL YR := by
+…</pre><p class="refs">Mentions: <a href="MovingSlotOccurrences.lean.html#L12">OAI.Ostmann.MovingSlotData</a>, <a href="BulkFrequencyFactor.lean.html#L11">OAI.Ostmann.movingFrequencyCore</a></p></li><li id=L66><b>def</b> <code>OAI.Ostmann.MovingSlotData.FrequencyBounds</code> <small>line 66</small></li><li id=L74><b>theorem</b> <code>OAI.Ostmann.MovingSlotData.formulaNodes_frequencyBounds</code> <small>line 74</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Stochastic/BrownianOptionalIntervals.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Stochastic/BrownianOptionalIntervals.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Stochastic</a> / <span>BrownianOptionalIntervals.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Stochastic</a>/<span>BrownianOptionalIntervals.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Stochastic/BrownianOptionalIntervals.lean#L1">source</a></p><div class="doc"><p>Conditional optional stopping between two bounded stopping times.
+The compensated identity follows from the discrete grid identity. The drift is required to have its sign only between the two
+stops, as needed between multipoint activation and completion switches.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>lemma</b> <code>OAI.SLEExactGauge.SmoothTimeBrownianField.eval_joint_measurable</code> <small>line 15</small></li><li id=L26><b>lemma</b> <code>OAI.SLEExactGauge.SmoothTimeBrownianField.compensated_joint_measurable</code> <small>line 26</small></li><li id=L36><b>lemma</b> <code>OAI.SLEExactGauge.SmoothTimeBrownianField.compensated_bound</code> <small>line 36</small></li><li id=L51><b>lemma</b> <code>OAI.SLEExactGauge.SmoothTimeBrownianField.compensated_path_continuous</code> <small>line 51</small></li><li id=L69><b>lemma</b> <code>OAI.SLEExactGauge.SmoothTimeBrownianField.eval_stopped_integrable</code> <small>line 69</small></li><li id=L84><b>lemma</b> <code>OAI.SLEExactGauge.SmoothTimeBrownianField.compensated_stopped_integrable</code> <small>line 84</small></li><li id=L101><b>theorem</b> <code>OAI.SLEExactGauge.brownian_compensated_optional_integral</code> <small>line 101</small><div class="doc"><p>The full compensated optional identity. No sign restriction on the
+drift is needed for this identity.</p></div><pre>theorem brownian_compensated_optional_integral
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω}
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t))
+    (hBm : Measurable (fun q : ℝ≥0 × Ω =&gt; B q.1 q.2))
+    (hBc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    {K : ℝ≥0} {F a : ℝ≥0 → Ω → ℝ → ℝ}
+    (hF : SmoothTimeBrownianField B hm K F a)
+    (τ : Ω → ℝ≥0)
+    (hτ : IsStoppingTime (Filtration.natural B
+      (fun t =&gt; (hm t).stronglyMeasurable)) (fun ω =&gt; (τ ω : WithTop ℝ≥0)))
+    (T : ℝ≥0) (hb : ∀ ω, τ ω ≤ T) :
+…</pre><p class="refs">Mentions: <a href="../BrownianGenerators.lean.html#L15">OAI.SLEExactGauge.SmoothTimeBrownianField</a></p></li><li id=L148><b>lemma</b> <code>OAI.SLEExactGauge.stopping_time_piecewise_after</code> <small>line 148</small></li><li id=L169><b>theorem</b> <code>OAI.SLEExactGauge.brownian_compensated_optional_interval</code> <small>line 169</small><div class="doc"><p>Conditional compensated equality between two bounded stopping times.</p></div><pre>theorem brownian_compensated_optional_interval
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω}
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t))
+    (hBm : Measurable (fun q : ℝ≥0 × Ω =&gt; B q.1 q.2))
+    (hBc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    {K : ℝ≥0} {F a : ℝ≥0 → Ω → ℝ → ℝ}
+    (hF : SmoothTimeBrownianField B hm K F a)
+    (σ τ : Ω → ℝ≥0)
+    (hσ : IsStoppingTime (Filtration.natural B
+      (fun t =&gt; (hm t).stronglyMeasurable)) (fun ω =&gt; (σ ω : WithTop ℝ≥0)))
+    (hτ : IsStoppingTime (Filtration.natural B
+…</pre><p class="refs">Mentions: <a href="../BrownianGenerators.lean.html#L15">OAI.SLEExactGauge.SmoothTimeBrownianField</a></p></li><li id=L220><b>theorem</b> <code>OAI.SLEExactGauge.brownian_time_field_optional_interval_le</code> <small>line 220</small><div class="doc"><p>Only the drift between the stops needs to be nonpositive, and the
+inequality remains valid after restricting to any event known at the
+first stop.</p></div><pre>theorem brownian_time_field_optional_interval_le
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω}
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t))
+    (hBm : Measurable (fun q : ℝ≥0 × Ω =&gt; B q.1 q.2))
+    (hBc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    {K : ℝ≥0} {F a : ℝ≥0 → Ω → ℝ → ℝ}
+    (hF : SmoothTimeBrownianField B hm K F a)
+    (σ τ : Ω → ℝ≥0)
+    (hσ : IsStoppingTime (Filtration.natural B
+      (fun t =&gt; (hm t).stronglyMeasurable)) (fun ω =&gt; (σ ω : WithTop ℝ≥0)))
+    (hτ : IsStoppingTime (Filtration.natural B
+…</pre><p class="refs">Mentions: <a href="../BrownianGenerators.lean.html#L15">OAI.SLEExactGauge.SmoothTimeBrownianField</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

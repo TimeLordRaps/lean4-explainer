@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/DiskMaximal/BandBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/DiskMaximal/BandBounds.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">DiskMaximal</a> / <span>BandBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">DiskMaximal</a>/<span>BandBounds.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/DiskMaximal/BandBounds.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L57><b>def</b> <code>OAI.ActualLabels.spatialPriceConstant</code> <small>line 57</small></li><li id=L58><b>lemma</b> <code>OAI.ActualLabels.spatialPriceConstant_pos</code> <small>line 58</small></li><li id=L65><b>def</b> <code>OAI.ActualLabels.directPriceConstant</code> <small>line 65</small></li><li id=L66><b>lemma</b> <code>OAI.ActualLabels.directPriceConstant_pos</code> <small>line 66</small></li><li id=L71><b>lemma</b> <code>OAI.ActualLabels.pointCost_total_budget</code> <small>line 71</small></li><li id=L84><b>lemma</b> <code>OAI.ActualLabels.marginal_total_budget</code> <small>line 84</small></li><li id=L100><b>lemma</b> <code>OAI.CommonPrices.cellPrice_level_budget</code> <small>line 100</small></li><li id=L110><b>lemma</b> <code>OAI.CommonPrices.total_level_budget</code> <small>line 110</small></li><li id=L121><b>lemma</b> <code>OAI.ActualLabels.gradient_measurable</code> <small>line 121</small></li><li id=L124><b>lemma</b> <code>OAI.ActualLabels.marginal_continuous</code> <small>line 124</small></li><li id=L134><b>lemma</b> <code>OAI.ActualLabels.rate_continuous</code> <small>line 134</small></li><li id=L140><b>lemma</b> <code>OAI.ActualLabels.switchCost_continuous</code> <small>line 140</small></li><li id=L148><b>lemma</b> <code>OAI.ActualLabels.derivativeCost_measurable</code> <small>line 148</small></li><li id=L162><b>lemma</b> <code>OAI.ActualLabels.filt_measurable</code> <small>line 162</small></li><li id=L168><b>lemma</b> <code>OAI.ActualLabels.pointCost_measurable</code> <small>line 168</small></li><li id=L181><b>lemma</b> <code>OAI.PhysicalCells.sum_tsum_ofReal_le</code> <small>line 181</small></li><li id=L192><b>lemma</b> <code>OAI.PhysicalCells.integrated_weighted_patches</code> <small>line 192</small></li><li id=L209><b>lemma</b> <code>OAI.GeometricFilter.radius_convolution</code> <small>line 209</small></li><li id=L227><b>lemma</b> <code>OAI.SignedRuns.total_divergence_integrable</code> <small>line 227</small></li><li id=L239><b>lemma</b> <code>OAI.SignedRuns.total_flux_integrable</code> <small>line 239</small></li><li id=L249><b>lemma</b> <code>OAI.SignedRuns.band_gradient_integrable</code> <small>line 249</small></li><li id=L261><b>theorem</b> <code>OAI.SignedRuns.integrated_signed_master</code> <small>line 261</small><div class="doc"><p>Integration of the signed master, with its actual history law. The only
+remaining inputs here are actual analytic majorants and their integrals; no
+unsigned sum of run gradients is introduced.</p></div><pre>theorem integrated_signed_master {g : ℂ → ℝ} (h : ℂ → ℂ) {r : ℕ → ℝ}
+    (hg : ContDiff ℝ 1 g) (hc : HasCompactSupport g)
+    (hr : ∀ k, 0 &lt; r k) (hstep : ∀ k, 2*r (k+1) = r k)
+    (H : ℕ → Label → ℂ → ℝ) (J : ℕ → ℂ → ℝ)
+    (hH : ∀ k n x, 0 ≤ H k n x) (hJ : ∀ k x, 0 ≤ J k x)
+    (old : Label) (m : ℕ)
+    (hinterior : ∀ᵐ x, ∀ k n t, PhysicalNeighborhoodRadius g (r k) x t →
+      unfavorable n (gradient (fun y =&gt; signedAverage g y t) x) ≤ H k n x)
+    (hend : ∀ᵐ x, ∀ k t, PhysicalEndpointRadius g (r k) x t →
+      ‖gradient (fun y =&gt; signedAverage g y t) x‖ ≤ J k x)
+    (hvalue : ∀ᵐ x, ∀ k t t&#x27;, 0 &lt; t → t ≤ 4*r k → 0 &lt; t&#x27; → t&#x27; ≤ 4*r k →
+      |signedAverage g x t-signedAverage g x t&#x27;| ≤ r k*J k x)
+…</pre><p class="refs">Mentions: <a href="RunCancellation.lean.html#L424">OAI.SignedRuns.unfavorable</a></p></li><li id=L343><b>theorem</b> <code>OAI.CommonPrices.physical_unfavorable_price</code> <small>line 343</small><div class="doc"><p>Combine the two actual signed directional prices; the labels are unchanged.</p></div><pre>theorem physical_unfavorable_price : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {N : ℕ} {r R : ℝ} (hr : 0 &lt; r) (hR : 0 ≤ R) (hN : R/r+1 ≤ (N:ℝ))
+    {g : ℂ → ℝ}, ContDiff ℝ 1 g → Integrable (gradient g) →
+    (∀ y, gradient g y ≠ 0 → ‖y‖ ≤ R) →
+    (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) → ∀ (k : ℕ) (p : ℤ × ℤ) (n : Label),
+    ∃ F : ℂ → ℝ≥0∞, Measurable F ∧
+      (∫⁻ y in cell (point (scale r k) p) (scale r k), F y) ≤ ENNReal.ofReal
+        (C*(badPrice (gradient g) r k (cellRoots N p) n+cellPrice N r (gradient g) k (cellRoots N p))) ∧
+      ∀ y ∈ cell (point (scale r k) p) (scale r k), ∀ t,
+        PhysicalNeighborhoodRadius g (scale r k) y t →
+        ENNReal.ofReal (unfavorable n (gradient (fun z =&gt; signedAverage g z t) y)) ≤ F y := by
+…</pre><p class="refs">Mentions: <a href="Packing.lean.html#L205">OAI.CommonPrices.badPrice</a>, <a href="Packing.lean.html#L311">OAI.CommonPrices.cellRoots</a>, <a href="Packing.lean.html#L61">OAI.CommonPrices.cellPrice</a></p></li><li id=L372><b>theorem</b> <code>OAI.CommonPrices.physical_joint_price</code> <small>line 372</small><div class="doc"><p>A single actual endpoint price pays both the gradient and the normalized
+oscillation. It is introduced before any spatial supremum is taken.</p></div><pre>theorem physical_joint_price : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {N : ℕ} {r R : ℝ} (hr : 0 &lt; r) (hR : 0 ≤ R) (hN : R/r+1 ≤ (N:ℝ))
+    {g : ℂ → ℝ}, ContDiff ℝ 1 g → Integrable (gradient g) →
+    (∀ y, gradient g y ≠ 0 → ‖y‖ ≤ R) →
+    (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) → ∀ (k : ℕ) (p : ℤ × ℤ) (n : Label),
+    ∃ F : ℂ → ℝ≥0∞, Measurable F ∧
+      (∫⁻ y in cell (point (scale r k) p) (scale r k), F y) ≤ ENNReal.ofReal
+        (C*(rootMass (gradient g) r k (cellRoots N p)+cellPrice N r (gradient g) k (cellRoots N p))) ∧
+      (∀ y ∈ cell (point (scale r k) p) (scale r k), ∀ t,
+        PhysicalEndpointRadius g (scale r k) y t →
+        ENNReal.ofReal ‖gradient (fun z =&gt; signedAverage g z t) y‖ ≤ F y) ∧
+      (∀ y ∈ cell (point (scale r k) p) (scale r k), ∀ t t&#x27;,
+…</pre><p class="refs">Mentions: <a href="Envelopes.lean.html#L514">OAI.CommonPrices.rootMass</a>, <a href="Packing.lean.html#L311">OAI.CommonPrices.cellRoots</a>, <a href="Packing.lean.html#L61">OAI.CommonPrices.cellPrice</a></p></li><li id=L417><b>lemma</b> <code>OAI.PhysicalCells.real_weighted_patches</code> <small>line 417</small></li><li id=L444><b>lemma</b> <code>OAI.CommonPrices.bad_total_level_budget</code> <small>line 444</small></li><li id=L455><b>theorem</b> <code>OAI.CommonPrices.patched_unfavorable</code> <small>line 455</small><div class="doc"><p>Actual full-lattice unfavorable prices, with the genuine marginal law.</p></div><pre>theorem patched_unfavorable : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {N : ℕ} {base R : ℝ} (hb : 0 &lt; base) (hR : 0 ≤ R) (hN : R/base+1 ≤ (N:ℝ))
+    {g : ℂ → ℝ}, ContDiff ℝ 1 g → Integrable (gradient g) →
+    (∀ y, gradient g y ≠ 0 → ‖y‖ ≤ R) →
+    (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) →
+    ∃ H : ℕ → Label → ℂ → ℝ,
+      (∀ j n x, 0 ≤ H j n x) ∧ (∀ j n, Integrable (H j n)) ∧
+      (∀ᵐ x, ∀ j n t, PhysicalNeighborhoodRadius g (scale base j) x t →
+        unfavorable n (gradient (fun y =&gt; signedAverage g y t) x) ≤ H j n x) ∧
+      (∀ m n, (∑ j ∈ range (m+1), ∫ x, marginal (gradient g) (geometricRadii base m) (m-j) x n*H j n x) ≤
+        C*(∫ y, ‖gradient g y‖)) := by
+…</pre></li><li id=L519><b>theorem</b> <code>OAI.CommonPrices.patched_joint</code> <small>line 519</small><div class="doc"><p>Actual endpoint/value weights charged simultaneously at every level.</p></div><pre>theorem patched_joint : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {N : ℕ} {base R : ℝ} (hb : 0 &lt; base) (hR : 0 ≤ R) (hN : R/base+1 ≤ (N:ℝ))
+    {g : ℂ → ℝ}, ContDiff ℝ 1 g → Integrable (gradient g) →
+    (∀ y, gradient g y ≠ 0 → ‖y‖ ≤ R) →
+    (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) →
+    ∃ J : ℕ → ℂ → ℝ,
+      (∀ j x, 0 ≤ J j x) ∧ (∀ j, Integrable (J j)) ∧
+      (∀ᵐ x, ∀ j t, PhysicalEndpointRadius g (scale base j) x t →
+        ‖gradient (fun y =&gt; signedAverage g y t) x‖ ≤ J j x) ∧
+      (∀ᵐ x, ∀ j t t&#x27;, 0 &lt; t → t ≤ 4*scale base j → 0 &lt; t&#x27; → t&#x27; ≤ 4*scale base j →
+        |signedAverage g x t-signedAverage g x t&#x27;| ≤ scale base j*J j x) ∧
+      (∀ m, (∑ j ∈ range (m+1), ∫ x, pointCost (gradient g) (geometricRadii base m) x m (m-j)*J j x) ≤
+…</pre></li><li id=L586><b>lemma</b> <code>OAI.SignedRuns.master_from_patches</code> <small>line 586</small><div class="doc"><p>Reverse the spatial scale index and fill unused indices with genuine global
+Lipschitz bounds. Only the physical prices at indices at most m are integrated.</p></div><pre>lemma master_from_patches {g : ℂ → ℝ} (hg : ContDiff ℝ 1 g) (hc : HasCompactSupport g)
+    {base : ℝ} (hb : 0 &lt; base) (m : ℕ)
+    (H : ℕ → Label → ℂ → ℝ) (J : ℕ → ℂ → ℝ)
+    (hH : ∀ j n x, 0 ≤ H j n x) (hJ : ∀ j x, 0 ≤ J j x)
+    (hHi : ∀ j n, Integrable (H j n)) (hJi : ∀ j, Integrable (J j))
+    (hinterior : ∀ᵐ x, ∀ j n t, PhysicalNeighborhoodRadius g (scale base j) x t →
+      unfavorable n (gradient (fun y =&gt; signedAverage g y t) x) ≤ H j n x)
+    (hend : ∀ᵐ x, ∀ j t, PhysicalEndpointRadius g (scale base j) x t →
+      ‖gradient (fun y =&gt; signedAverage g y t) x‖ ≤ J j x)
+    (hvalue : ∀ᵐ x, ∀ j t t&#x27;, 0 &lt; t → t ≤ 4*scale base j → 0 &lt; t&#x27; → t&#x27; ≤ 4*scale base j →
+      |signedAverage g x t-signedAverage g x t&#x27;| ≤ scale base j*J j x) :
+    (∫ x, ‖gradient (runEnvelope g (geometricRadii base m) 0 m) x‖) ≤
+…</pre><p class="refs">Mentions: <a href="RunCancellation.lean.html#L424">OAI.SignedRuns.unfavorable</a>, <a href="Runs.lean.html#L58">OAI.SignedRuns.runEnvelope</a></p></li><li id=L673><b>theorem</b> <code>OAI.SignedRuns.smooth_compact_dyadic_band</code> <small>line 673</small><div class="doc"><p>The genuine smooth signed dyadic finite-band estimate. No probability,
+common-price, local analytic estimate, or total variation bound is assumed.</p></div><pre>theorem smooth_compact_dyadic_band : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {g : ℂ → ℝ}, ContDiff ℝ 1 g → HasCompactSupport g →
+    ∀ {base : ℝ}, 0 &lt; base → ∀ m : ℕ,
+    (∫ x, ‖gradient (runEnvelope g (geometricRadii base m) 0 m) x‖) ≤ C*(∫ x, ‖gradient g x‖) := by
+…</pre><p class="refs">Mentions: <a href="Runs.lean.html#L58">OAI.SignedRuns.runEnvelope</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

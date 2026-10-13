@@ -1,0 +1,1 @@
+window.l4shard("bd", [["OAI.GammaFPP.GammaEnvironment.normalized_meanPassage_bddBelow",6023,21],["OAI.HadwigerMatching.connectedMatchingNumber_bddAbove",6358,40],["OAI.KadisonSimilarity.kirchbergPath_strip_bddAbove",9165,66],["OAI.Thorp.Current.reciprocalFirst_bddAbove",18728,249],["OAI.TriangularBilliards.Admissible.time_not_bddAbove",19366,151]]);

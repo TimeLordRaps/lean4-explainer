@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/RowCompletionBuffer.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/RowCompletionBuffer.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>RowCompletionBuffer.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>RowCompletionBuffer.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/RowCompletionBuffer.lean#L1">source</a></p><div class="doc"><h3>Completions in the first buffer commutant</h3><p>The relative path data records the fixed complement at every time. The
+second buffer is constructed by the explicit central-row theorem inside
+the norm ultrapower; its target family consists of elements of the first
+buffer commutant. No commuting-row existence is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>structure</b> <code>OAI.WeakPureInfiniteness.RelativeBinaryCompletion</code> <small>line 25</small></li><li id=L40><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_relative_connected_binary_completion</code> <small>line 40</small><div class="doc"><p>A relative completion whose whole connecting path fixes the external
+complement, obtained by doing the three connected moves in the corner.</p></div><pre>lemma exists_relative_connected_binary_completion {n : ℕ}
+    (q : E) (hq : star q = q) (hqq : q * q = q) (hq0 : q ≠ 0)
+    (x : Fin (n + 2) → E)
+    (hxs : ∀ i, q * x i = x i ∧ x i * q = x i)
+    (hx : ∀ i j, star (x i) * x j = if i = j then q else 0)
+    (b : Fin 2 → E)
+    (hb : ∀ i j, star (b i) * b j = if i = j then q else 0)
+    (hbs : (∑ i, b i * star (b i)) = q)
+    (r : Fin 3 → E)
+    (hrs : ∀ i, q * r i = r i ∧ r i * q = r i)
+    (hr : ∀ i j, star (r i) * r j = if i = j then q else 0)
+    (her : Commute (star (r 0)) (x (Fin.last (n + 1))))
+…</pre></li><li id=L119><b>def</b> <code>OAI.WeakPureInfiniteness.rowCentralizerDiagonalHom</code> <small>line 119</small><div class="doc"><p>Diagonalizing an element of the first row commutant preserves that
+membership in the next norm ultrapower.</p></div><pre>def rowCentralizerDiagonalHom (U : Ultrafilter ℕ) (R : ℕ → E) :
+    StarSubalgebra.centralizer ℂ (Set.range R) →⋆ₐ[ℂ]
+      StarSubalgebra.centralizer ℂ
+        (Set.range (fun i =&gt; NormUltra.QuotientAlgebra.diagonalHom U (R i))) := by
+…</pre></li><li id=L141><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_normUltrapower_row_in_commutant</code> <small>line 141</small><div class="doc"><p>The second proper row is actually built. Its entries remain in the
+first row's commutant and commute with every member of the chosen target
+family and its adjoint.</p></div><pre>lemma exists_normUltrapower_row_in_commutant [Nontrivial E]
+    (U : Ultrafilter ℕ) [Fact ((U : Filter ℕ) ≤ atTop)] (R : ℕ → E)
+    (hR : ∀ i j, star (R i) * R j = if i = j then 1 else 0)
+    (t : ℕ → StarSubalgebra.centralizer ℂ (Set.range R)) :
+    ∃ z : ℕ → StarSubalgebra.centralizer ℂ
+        (Set.range (fun i =&gt; NormUltra.QuotientAlgebra.diagonalHom U (R i))),
+      (∀ i j, star (z i) * z j = if i = j then 1 else 0) ∧
+      ∀ i j, Commute (z i) (rowCentralizerDiagonalHom U R (t j)) ∧
+        Commute (z i) (star (rowCentralizerDiagonalHom U R (t j))) := by
+…</pre><p class="refs">Mentions: <a href="RowCompletionBuffer.lean.html#L119">OAI.WeakPureInfiniteness.rowCentralizerDiagonalHom</a></p></li><li id=L179><b>lemma</b> <code>OAI.WeakPureInfiniteness.rowCentralizerDiagonal_norm</code> <small>line 179</small></li><li id=L190><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_buffer_preserving_pair_completions</code> <small>line 190</small><div class="doc"><p>The same reference completion is available for both proper finite
+rows after the second, explicitly constructed buffer. All resulting data
+belong to the first buffer commutant.</p></div><pre>lemma exists_buffer_preserving_pair_completions [Nontrivial E]
+    (U : Ultrafilter ℕ) [Fact ((U : Filter ℕ) ≤ atTop)]
+    (R : ℕ → E) (hR : ∀ i j, star (R i) * R j = if i = j then 1 else 0)
+    (q : StarSubalgebra.centralizer ℂ (Set.range R))
+    (hq : star q = q) (hqq : q * q = q) (hq0 : q ≠ 0)
+    (n : ℕ) (x y : Fin (n + 2) → StarSubalgebra.centralizer ℂ (Set.range R))
+    (hxs : ∀ i, q * x i = x i ∧ x i * q = x i)
+    (hys : ∀ i, q * y i = y i ∧ y i * q = y i)
+    (hx : ∀ i j, star (x i) * x j = if i = j then q else 0)
+    (hy : ∀ i j, star (y i) * y j = if i = j then q else 0)
+    (b : Fin 2 → StarSubalgebra.centralizer ℂ (Set.range R))
+    (hb : ∀ i j, star (b i) * b j = if i = j then q else 0)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

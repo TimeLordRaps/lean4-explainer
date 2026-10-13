@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/CircuitRankAssembly.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/CircuitRankAssembly.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>CircuitRankAssembly.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>CircuitRankAssembly.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/CircuitRankAssembly.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Problem335.measure_finset_sum_le</code> <small>line 11</small><div class="doc"><p>Finite subadditivity, with no assumptions on the individual summands.</p></div><pre>theorem measure_finset_sum_le {A ι : Type*} [AddCommMonoid A]
+    (R : A → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (s : Finset ι) (f : ι → A) :
+    R (∑ j ∈ s, f j) ≤ ∑ j ∈ s, R (f j) := by
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Problem335.measure_weighted_sum_le</code> <small>line 24</small><div class="doc"><p>Scalar weighting cannot increase a subadditive rank-like measure.</p></div><pre>theorem measure_weighted_sum_le {K σ ι : Type*} [CommSemiring K]
+    (R : MvPolynomial σ K → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (s : Finset ι) (a : ι → K) (p : ι → MvPolynomial σ K) :
+    R (∑ j ∈ s, MvPolynomial.C (a j) * p j) ≤ ∑ j ∈ s, R (p j) := by
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.Problem335.measure_one_factor_expansion_le</code> <small>line 36</small><div class="doc"><p>Expand one selected factor and leave all other occurrences unchanged.
+This is the algebraic step behind the high-degree-factor case: in particular,
+other occurrences of the very same middle gate are not expanded.</p></div><pre>theorem measure_one_factor_expansion_le {K σ ι : Type*} [CommSemiring K]
+    (R : MvPolynomial σ K → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (s : Finset ι) (a : ι → K) (p : ι → MvPolynomial σ K)
+    (before after : MvPolynomial σ K) :
+    R (before * (∑ j ∈ s, MvPolynomial.C (a j) * p j) * after) ≤
+      ∑ j ∈ s, R (before * p j * after) := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.Problem335.measure_weighted_sum_le_card_mul</code> <small>line 57</small><div class="doc"><p>Only predecessors with nonzero aggregate coefficient need a bound.
+This matters for homogeneous circuits, since inactive gates can have arbitrary
+formal degree.</p></div><pre>theorem measure_weighted_sum_le_card_mul {K σ ι : Type*} [CommSemiring K]
+    (R : MvPolynomial σ K → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (s : Finset ι) (a : ι → K) (p : ι → MvPolynomial σ K)
+    (B : ℝ) (hB : 0 ≤ B)
+    (hbound : ∀ j ∈ s, a j ≠ 0 → R (p j) ≤ B) :
+    R (∑ j ∈ s, MvPolynomial.C (a j) * p j) ≤ (s.card : ℝ) * B := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.Problem335.circuit_measure_le_upperCount_mul</code> <small>line 79</small><div class="doc"><p>A uniform bound on active output predecessors costs the number of upper
+product gates, never the number of output wires.</p></div><pre>theorem circuit_measure_le_upperCount_mul {K : Type*} [CommSemiring K] {n : ℕ}
+    (c : Depth5Circuit K n)
+    (R : MvPolynomial (Fin n × Fin n × Fin n) K → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (B : ℝ) (hB : 0 ≤ B)
+    (hbound : ∀ j, gateCoefficient c.outputInputs j ≠ 0 → R (upperValue c j) ≤ B) :
+    R (circuitValue c) ≤ (c.upperCount : ℝ) * B := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DepthFive.lean.html#L20">OAI.Problem335.Depth5Circuit</a>, <a href="GateSums.lean.html#L13">OAI.Problem335.gateCoefficient</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L76">OAI.Problem335.upperValue</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L82">OAI.Problem335.circuitValue</a></p></li><li id=L95><b>theorem</b> <code>OAI.Problem335.upper_measure_le_lowerCount_mul_of_split</code> <small>line 95</small><div class="doc"><p>Expanding one middle-gate occurrence costs at most the number of lower
+product gates. All other occurrences, including shared copies of the selected
+gate, are retained as factors in <code>before</code> and <code>after</code>.</p></div><pre>theorem upper_measure_le_lowerCount_mul_of_split
+    {K : Type*} [CommSemiring K] {n : ℕ} (c : Depth5Circuit K n)
+    (R : MvPolynomial (Fin n × Fin n × Fin n) K → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (u : Fin c.upperCount) (j : Fin c.middleCount)
+    (before after : List (Fin c.middleCount))
+    (hsplit : c.upperInputs u = before ++ j :: after)
+    (B : ℝ) (hB : 0 ≤ B)
+    (hbound : ∀ l, gateCoefficient (c.middleInputs j) l ≠ 0 →
+      R ((before.map (middleValue c)).prod * lowerValue c l *
+        (after.map (middleValue c)).prod) ≤ B) :
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DepthFive.lean.html#L20">OAI.Problem335.Depth5Circuit</a>, <a href="GateSums.lean.html#L13">OAI.Problem335.gateCoefficient</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L69">OAI.Problem335.middleValue</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L63">OAI.Problem335.lowerValue</a></p></li><li id=L130><b>theorem</b> <code>OAI.Problem335.circuit_measure_le_size_sq_mul_of_low_or_split</code> <small>line 130</small><div class="doc"><p>The gate-count assembly step in the depth-five rank upper bound.
+Each active upper product is either bounded directly, or one occurrence can
+be expanded into active lower products with the same bound.</p></div><pre>theorem circuit_measure_le_size_sq_mul_of_low_or_split
+    {K : Type*} [CommSemiring K] {n : ℕ} (c : Depth5Circuit K n)
+    (R : MvPolynomial (Fin n × Fin n × Fin n) K → ℝ) (hzero : R 0 = 0)
+    (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (B : ℝ) (hB : 0 ≤ B)
+    (hupper : ∀ u, gateCoefficient c.outputInputs u ≠ 0 →
+      R (upperValue c u) ≤ B ∨
+        ∃ (j : Fin c.middleCount) (before after : List (Fin c.middleCount)),
+          c.upperInputs u = before ++ j :: after ∧
+          ∀ l, gateCoefficient (c.middleInputs j) l ≠ 0 →
+            R ((before.map (middleValue c)).prod * lowerValue c l *
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DepthFive.lean.html#L20">OAI.Problem335.Depth5Circuit</a>, <a href="GateSums.lean.html#L13">OAI.Problem335.gateCoefficient</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L76">OAI.Problem335.upperValue</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L69">OAI.Problem335.middleValue</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L63">OAI.Problem335.lowerValue</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

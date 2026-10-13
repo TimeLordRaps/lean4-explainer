@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/MatroidSecretary/Sampling/UniformPermutationImage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/MatroidSecretary/Sampling/UniformPermutationImage.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">MatroidSecretary</a> / <a href="index.html">Sampling</a> / <span>UniformPermutationImage.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">MatroidSecretary</a>/<a href="index.html">Sampling</a>/<span>UniformPermutationImage.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/MatroidSecretary/Sampling/UniformPermutationImage.lean#L1">source</a></p><div class="doc"><p>Counting core for the secretary random-prefix law: a uniformly random
+permutation sends each fixed finite set uniformly onto sets of the same size.
+No conditioning on the complete secretary seed is asserted here.</p><p>Source: <code>sections/secretary.tex</code>, equation <code>eq:secretary-prefix-mask</code>,
+lines 54--66 of the pinned manuscript; SHA256
+<code>3554fe0f7296782edf63cc7f1305c377e7a7b9d8f8948b9510ea4ad02a702d63</code>.
+These are supporting counting lemmas, not the complete secretary endpoint.
+The empty ambient type and empty/full fixed subsets are included.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.MatroidProphet.Secretary.permutation_image_count_eq</code> <small>line 27</small><div class="doc"><p>Equal-cardinality target sets have equally many permutation preimages.</p></div><pre>theorem permutation_image_count_eq (s t u : Finset α) (htu : t.card = u.card) :
+    (∑ σ : Equiv.Perm α, if s.map σ.toEmbedding = t then (1 : ℝ) else 0) =
+      ∑ σ : Equiv.Perm α, if s.map σ.toEmbedding = u then (1 : ℝ) else 0 := by
+…</pre></li><li id=L51><b>theorem</b> <code>OAI.MatroidProphet.Secretary.permutation_image_count</code> <small>line 51</small><div class="doc"><p>Exact probability numerator for a prescribed image of a fixed set.</p></div><pre>theorem permutation_image_count (s t : Finset α) (hst : s.card = t.card) :
+    (∑ σ : Equiv.Perm α, if s.map σ.toEmbedding = t then (1 : ℝ) else 0) =
+      (Fintype.card (Equiv.Perm α) : ℝ) / (Fintype.card α).choose s.card := by
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.MatroidProphet.Secretary.uniform_permutation_image_atom</code> <small>line 84</small><div class="doc"><p>A prescribed image has probability the reciprocal of the number of
+sets of that size, and probability zero if its cardinality is different.</p></div><pre>theorem uniform_permutation_image_atom (s t : Finset α) :
+    (∑ σ : Equiv.Perm α, if s.map σ.toEmbedding = t then (1 : ℝ) else 0) /
+        Fintype.card (Equiv.Perm α) =
+      if s.card = t.card then ((Fintype.card α).choose s.card : ℝ)⁻¹ else 0 := by
+…</pre></li><li id=L103><b>theorem</b> <code>OAI.MatroidProphet.Secretary.uniform_permutation_image_average</code> <small>line 103</small><div class="doc"><p>Averaging over all permutations equals averaging over all possible
+images of the fixed set. This form can be mixed over a random prefix length.</p></div><pre>theorem uniform_permutation_image_average (s : Finset α) (f : Finset α → ℝ) :
+    (∑ σ : Equiv.Perm α, f (s.map σ.toEmbedding)) /
+        Fintype.card (Equiv.Perm α) =
+      (∑ t ∈ (Finset.univ : Finset α).powersetCard s.card, f t) /
+        (Fintype.card α).choose s.card := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

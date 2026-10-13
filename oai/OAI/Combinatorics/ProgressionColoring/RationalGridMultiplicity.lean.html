@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ProgressionColoring/RationalGridMultiplicity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ProgressionColoring/RationalGridMultiplicity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">ProgressionColoring</a> / <span>RationalGridMultiplicity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">ProgressionColoring</a>/<span>RationalGridMultiplicity.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ProgressionColoring/RationalGridMultiplicity.lean#L1">source</a></p><div class="doc"><h3>Multiplicities in a rational circle grid</h3><p>An integer-periodic predicate samples a rational step <code>a / h</code> on precisely
+<code>h / gcd h a</code> different points, each with multiplicity <code>gcd h a</code>.
+The proof reindexes actual finite types using division with remainder and the
+permutation given by multiplication by a coprime numerator.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.QuantitativeVanDerWaerden.mulModGridEquiv</code> <small>line 24</small><div class="doc"><p>Multiplication by a coprime natural number permutes the finite residues.</p></div><pre>noncomputable def mulModGridEquiv (s b : ℕ) (hs : 0 &lt; s)
+    (hcop : Nat.gcd s b = 1) : Equiv.Perm (Fin s) := by
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.mulModGridEquiv_val</code> <small>line 35</small></li><li id=L41><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.periodic_predicate_div_mod</code> <small>line 41</small><div class="doc"><p>An integer-periodic predicate is unchanged when a rational numerator is
+reduced modulo its positive denominator.</p></div><pre>theorem periodic_predicate_div_mod (P : ℝ → Prop)
+    (hperiod : ∀ x (n : ℤ), P (x + n) ↔ P x)
+    (y : ℝ) (n s : ℕ) (hs : 0 &lt; s) :
+    P (y + (n : ℝ) / s) ↔ P (y + ((n % s : ℕ) : ℝ) / s) := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_coprime_rational_grid_periodic</code> <small>line 59</small><div class="doc"><p>A full block with a coprime step visits every point of its uniform grid
+once, for every integer-periodic predicate.</p></div><pre>theorem card_coprime_rational_grid_periodic (s b : ℕ) (hs : 0 &lt; s)
+    (hcop : Nat.gcd s b = 1) (P : ℝ → Prop) [DecidablePred P]
+    (hperiod : ∀ x (n : ℤ), P (x + n) ↔ P x) (y : ℝ) :
+    Fintype.card {j : Fin s // P (y + (j.val : ℝ) * b / s)} =
+      Fintype.card {j : Fin s // P (y + (j.val : ℝ) / s)} := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_repeated_rational_grid_periodic</code> <small>line 72</small><div class="doc"><p>Repeating the rational step for <code>d</code> full denominator blocks multiplies
+every periodic-predicate count by <code>d</code>.</p></div><pre>theorem card_repeated_rational_grid_periodic (d s b : ℕ) (hs : 0 &lt; s)
+    (P : ℝ → Prop) [DecidablePred P]
+    (hperiod : ∀ x (n : ℤ), P (x + n) ↔ P x) (y : ℝ) :
+    Fintype.card {z : Fin (d * s) // P (y + (z.val : ℝ) * b / s)} =
+      d * Fintype.card {j : Fin s // P (y + (j.val : ℝ) * b / s)} := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_rational_grid_periodic</code> <small>line 105</small><div class="doc"><p>Exact multiplicity of the reduced rational grid. This applies to any
+predicate invariant under integer translation, including circle arcs.</p></div><pre>theorem card_rational_grid_periodic (h a : ℕ) (hh : 0 &lt; h)
+    (P : ℝ → Prop) [DecidablePred P]
+    (hperiod : ∀ x (n : ℤ), P (x + n) ↔ P x) (y : ℝ) :
+    Fintype.card {z : Fin h // P (y + (z.val : ℝ) * a / h)} =
+      Nat.gcd h a * Fintype.card {j : Fin (h / Nat.gcd h a) //
+        P (y + (j.val : ℝ) / (h / Nat.gcd h a : ℕ))} := by
+…</pre></li><li id=L137><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_filter_rational_grid_periodic</code> <small>line 137</small><div class="doc"><p>Finset-filter form of the exact rational-grid multiplicity formula.</p></div><pre>theorem card_filter_rational_grid_periodic (h a : ℕ) (hh : 0 &lt; h)
+    (P : ℝ → Prop) [DecidablePred P]
+    (hperiod : ∀ x (n : ℤ), P (x + n) ↔ P x) (y : ℝ) :
+    (Finset.univ.filter (fun z : Fin h =&gt; P (y + (z.val : ℝ) * a / h))).card =
+      Nat.gcd h a * (Finset.univ.filter (fun j : Fin (h / Nat.gcd h a) =&gt;
+        P (y + (j.val : ℝ) / (h / Nat.gcd h a : ℕ)))).card := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

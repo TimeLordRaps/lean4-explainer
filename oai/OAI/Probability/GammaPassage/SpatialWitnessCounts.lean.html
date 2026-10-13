@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/SpatialWitnessCounts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/SpatialWitnessCounts.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>SpatialWitnessCounts.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>SpatialWitnessCounts.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/SpatialWitnessCounts.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.spatial_full_chunk_witnesses</code> <small>line 11</small><div class="doc"><p>A constructive form of wi:full-defect. If the greedy family is empty,
+a cheap full chunk supplies a single witness. No maximum is assumed.</p></div><pre>theorem spatial_full_chunk_witnesses (w : Edge → ℝ) (hw : ∀ e, 0 ≤ w e)
+    (b m₀ am ap K η : ℝ) (hb : |b| ≤ 1) (ha : am ≤ ap) (hη : 0 &lt; η)
+    (hgap : 4*η ≤ (ap-am)/2) (k m : ℕ) (hs : 2 ≤ (2 : ℝ)^k)
+    (hstep : max |m₀-((am+ap)/2)*b| |(am+ap)/2| ≤ η*(2 : ℝ)^k)
+    (hscale₁ : η*(2 : ℝ)^k &lt; 2*m₀*(2 : ℝ)^m-|((am+ap)/2)| *((2 : ℝ)^k+1))
+    (hscale₂ : 3*η*(2 : ℝ)^k+2*|((am+ap)/2)| *((2 : ℝ)^k+1) &lt; K*(2 : ℝ)^k)
+    (p : Vertex) (ds : List Step) (hfull : FullSpatialChunk b k m ds)
+    (hsimple : ((trace p ds).map traversalEdge).Nodup) :
+    ∃ ws : List GammaFPP.BK.StrictPathWitness,
+      ws.Pairwise (fun q r =&gt; Disjoint q.edges r.edges) ∧
+      (∀ q ∈ ws, q ∈ spatialWitnessFamily b m₀ am ap K η k m (spatialChunkIndex b k m p) ∧
+        q.Good w ∧ q.edges ⊆ pathEdges p ds) ∧
+…</pre><p class="refs">Mentions: <a href="SpatialFirstExit.lean.html#L11">OAI.GammaFPP.CrossingBridge.FullSpatialChunk</a>, <a href="BKPrimitives.lean.html#L27">OAI.GammaFPP.BK.StrictPathWitness</a>, <a href="SpatialWitnesses.lean.html#L63">OAI.GammaFPP.CrossingBridge.spatialWitnessFamily</a>, <a href="SpatialChunkGeometry.lean.html#L8">OAI.GammaFPP.CrossingBridge.spatialChunkIndex</a>, <a href="CrossingLocalized.lean.html#L43">OAI.GammaFPP.CrossingBridge.pathEdges</a></p></li><li id=L47><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.spatial_total_witnesses</code> <small>line 47</small><div class="doc"><p>Source wi:total-defect, including all physical-edge disjointness and the
+actual ordered chunk indices. Witness families are constructed, not supplied.</p></div><pre>theorem spatial_total_witnesses (w : Edge → ℝ) (hw : ∀ e, 0 ≤ w e)
+    (b m₀ am ap K η : ℝ) (hb : |b| ≤ 1) (ha : am ≤ ap) (hη : 0 &lt; η)
+    (hgap : 4*η ≤ (ap-am)/2) (k m : ℕ) (hs : 2 ≤ (2 : ℝ)^k)
+    (hstep : max |m₀-((am+ap)/2)*b| |(am+ap)/2| ≤ η*(2 : ℝ)^k)
+    (hscale₁ : η*(2 : ℝ)^k &lt; 2*m₀*(2 : ℝ)^m-|((am+ap)/2)| *((2 : ℝ)^k+1))
+    (hscale₂ : 3*η*(2 : ℝ)^k+2*|((am+ap)/2)| *((2 : ℝ)^k+1) &lt; K*(2 : ℝ)^k)
+    (p : Vertex) (blocks : List (List Step)) (rest : List Step)
+    (hfull : ∀ q ∈ blocks, FullSpatialChunk b k m q)
+    (hrest : ∀ i ≤ rest.length, chunkInterior b k m (displacement (rest.take i)))
+    (hsimple : ((trace p (blocks.flatten++rest)).map traversalEdge).Nodup) :
+    ∃ packs : List (List GammaFPP.BK.StrictPathWitness),
+      packs.length=blocks.length+1 ∧
+…</pre><p class="refs">Mentions: <a href="SpatialFirstExit.lean.html#L11">OAI.GammaFPP.CrossingBridge.FullSpatialChunk</a>, <a href="SpatialFirstExit.lean.html#L8">OAI.GammaFPP.CrossingBridge.chunkInterior</a>, <a href="BKPrimitives.lean.html#L27">OAI.GammaFPP.BK.StrictPathWitness</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

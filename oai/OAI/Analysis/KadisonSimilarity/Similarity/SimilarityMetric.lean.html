@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Similarity/SimilarityMetric.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Similarity/SimilarityMetric.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Similarity</a> / <span>SimilarityMetric.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Similarity</a>/<span>SimilarityMetric.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Similarity/SimilarityMetric.lean#L1">source</a></p><div class="doc"><h3>The quantitative positive metric from an invertible star intertwiner</h3><p>This is the final geometric step of Paulsen's theorem. The intertwiner may
+map to a different Hilbert space. Its positive metric on the original space
+and its positive square root yield the actual similarity unit, with exactly
+the product of the forward and inverse operator norms.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.KadisonSimilarity.intertwiner_metric_identity</code> <small>line 25</small><div class="doc"><p>The square of any bounded star intertwiner is a metric for the original
+homomorphism, without an invertibility assumption.</p></div><pre>theorem intertwiner_metric_identity (π : BoundedUnitalHom A H)
+    (σ : A →⋆ₐ[ℂ] (K →L[ℂ] K)) (W : H →L[ℂ] K)
+    (hW : ∀ a, W.comp (π.1 a) = (σ a).comp W) (a : A) :
+    (W.adjoint.comp W).comp (π.1 (star a)) =
+      (π.1 a).adjoint.comp (W.adjoint.comp W) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L16">OAI.KadisonSimilarity.BoundedUnitalHom</a></p></li><li id=L42><b>def</b> <code>OAI.KadisonSimilarity.intertwinerMetricUnit</code> <small>line 42</small><div class="doc"><p>The metric of a bounded linear isomorphism has an explicit inverse.</p></div><pre>def intertwinerMetricUnit (W : H →L[ℂ] K) (L : K →L[ℂ] H)
+    (hLW : L.comp W = 1) (hWL : W.comp L = 1) : (H →L[ℂ] H)ˣ where
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.KadisonSimilarity.intertwinerMetric_nonneg</code> <small>line 56</small><div class="doc"><p>The metric is positive because it is an adjoint square.</p></div><pre>theorem intertwinerMetric_nonneg (W : H →L[ℂ] K) : 0 ≤ W.adjoint.comp W := by
+…</pre></li><li id=L62><b>theorem</b> <code>OAI.KadisonSimilarity.exists_positive_sqrt_metric_unit</code> <small>line 62</small><div class="doc"><p>A square root of the positive metric preserves both operator norms
+needed for the sharp similarity estimate.</p></div><pre>theorem exists_positive_sqrt_metric_unit (W : H →L[ℂ] K) (L : K →L[ℂ] H)
+    (hLW : L.comp W = 1) (hWL : W.comp L = 1) :
+    ∃ S : (H →L[ℂ] H)ˣ,
+      0 ≤ (S : H →L[ℂ] H) ∧
+      star (S : H →L[ℂ] H) * (S : H →L[ℂ] H) = W.adjoint.comp W ∧
+      ‖(S : H →L[ℂ] H)‖ = ‖W‖ ∧ ‖(↑S⁻¹ : H →L[ℂ] H)‖ = ‖L‖ := by
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.KadisonSimilarity.exists_sqrt_metric_unit</code> <small>line 107</small><div class="doc"><p>The positive metric construction gives an invertible star intertwiner.</p></div><pre>theorem exists_sqrt_metric_unit (W : H →L[ℂ] K) (L : K →L[ℂ] H)
+    (hLW : L.comp W = 1) (hWL : W.comp L = 1) :
+    ∃ S : (H →L[ℂ] H)ˣ,
+      star (S : H →L[ℂ] H) * (S : H →L[ℂ] H) = W.adjoint.comp W ∧
+      ‖(S : H →L[ℂ] H)‖ = ‖W‖ ∧ ‖(↑S⁻¹ : H →L[ℂ] H)‖ = ‖L‖ := by
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.KadisonSimilarity.quantitative_similarity_of_intertwiner</code> <small>line 117</small><div class="doc"><p>An invertible bounded intertwiner into a star representation supplies
+similarity on the original space with its exact condition-number bound.</p></div><pre>theorem quantitative_similarity_of_intertwiner (π : BoundedUnitalHom A H)
+    (σ : A →⋆ₐ[ℂ] (K →L[ℂ] K)) (W : H →L[ℂ] K) (L : K →L[ℂ] H)
+    (hLW : L.comp W = 1) (hWL : W.comp L = 1)
+    (hW : ∀ a, W.comp (π.1 a) = (σ a).comp W) :
+    ∃ S : (H →L[ℂ] H)ˣ,
+      ‖(S : H →L[ℂ] H)‖ * ‖(↑S⁻¹ : H →L[ℂ] H)‖ ≤ ‖W‖ * ‖L‖ ∧
+      ∀ a, (S : H →L[ℂ] H) * π.1 (star a) * (↑S⁻¹ : H →L[ℂ] H) =
+        star ((S : H →L[ℂ] H) * π.1 a * (↑S⁻¹ : H →L[ℂ] H)) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L16">OAI.KadisonSimilarity.BoundedUnitalHom</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

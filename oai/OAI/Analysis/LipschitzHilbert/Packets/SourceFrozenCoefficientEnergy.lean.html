@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Packets/SourceFrozenCoefficientEnergy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Packets/SourceFrozenCoefficientEnergy.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Packets</a> / <span>SourceFrozenCoefficientEnergy.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Packets</a>/<span>SourceFrozenCoefficientEnergy.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Packets/SourceFrozenCoefficientEnergy.lean#L1">source</a></p><div class="doc"><p>Bessel duality for the original physical packets with fixed selector
+values. Both the synthesis and analyzing energies use the actual packet
+area. The constant is independent of vector dimension and scale count.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.LipschitzHilbert.analyzingCoefficient_l2_energy_le</code> <small>line 19</small><div class="doc"><p>Finite weighted Bessel duality, applied to the exact analyzing
+integrals rather than an assumed coefficient estimate.</p></div><pre>theorem analyzingCoefficient_l2_energy_le
+    {X I K : Type*} [MeasurableSpace X] [Fintype I] [Fintype K]
+    (μ : Measure X) (area : I → ℝ) (wave : I → K → X → ℂ)
+    (g : X → EuclideanSpace ℂ K) (A : ℝ) (hA : 0 ≤ A) (ha : ∀ i, 0 &lt; area i)
+    (hg : MemLp g 2 μ)
+    (hint : ∀ i k, Integrable (fun x =&gt; g x k * conj (wave i k x)) μ)
+    (hsyn : ∀ c, MemLp (diagonalSynthesis wave c) 2 μ)
+    (hbound : ∀ c, (∫ x, ‖diagonalSynthesis wave c x‖^2 ∂μ) ≤
+      A * ∑ i, area i * ‖c i‖^2) :
+    (∑ i, area i * ‖analyzingCoefficient μ area wave g i‖^2) ≤
+      A * ∫ x, ‖g x‖^2 ∂μ := by
+…</pre><p class="refs">Mentions: <a href="AnalyzingCoefficients.lean.html#L21">OAI.LipschitzHilbert.diagonalSynthesis</a>, <a href="AnalyzingCoefficients.lean.html#L16">OAI.LipschitzHilbert.analyzingCoefficient</a></p></li><li id=L69><b>def</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physicalFrozenCoefficient</code> <small>line 69</small></li><li id=L75><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physicalFrozenCoefficient_apply_eq_zero</code> <small>line 75</small></li><li id=L81><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physicalFrozenCoefficient_eq_multiplier</code> <small>line 81</small></li><li id=L90><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.exists_physical_frozen_coefficient_energy</code> <small>line 90</small><div class="doc"><p>Frozen selector values have a dimension-free Bessel bound on every
+finite selected packet family. Empty and zero-coefficient fibers need no
+selector separation.</p></div><pre>theorem exists_physical_frozen_coefficient_energy
+    (cStar cEta CEta cb Cb : ℝ) (hcEta : 0 &lt; cEta)
+    (hcb : 0 ≤ cb) (hCb : 0 ≤ Cb) (hgap : cStar &lt; cEta*cb) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (N : ℕ) (κ : Type) (Label : Fin N → Type)
+      (Item : ∀ j, Label j → Type) [Fintype κ] [∀ j l, Fintype (Item j l)]
+      (P : SourceLabeledLattice N κ Label Item) (B : ℕ),
+      (∀ j, (P.labels j).card ≤ B) → ∀ (t w : ℝ), 0 &lt; w →
+    ∀ (beta : P.PacketIndex → κ → ℂ) (packets : Finset P.PacketIndex)
+      (g : ℝ×ℝ → EuclideanSpace ℂ κ),
+      (∀ q ∈ packets, ∀ k, ‖beta q k‖ ≤ 1) → MemLp g 2 (volume.prod volume) →
+      (∀ j l u k ξ η, planarAngularFourier (P.physicalPacket t j l u k) (ξ,η) ≠ 0 →
+        |ξ+(t+P.rowSlope j l)*η| ≤ cStar/P.length j ∧
+…</pre><p class="refs">Mentions: <a href="../Trees/SourceSlottedLattice.lean.html#L21">OAI.LipschitzHilbert.SourceLabeledLattice</a>, <a href="../Phase/PlanarSliceFourierAngular.lean.html#L15">OAI.LipschitzHilbert.planarAngularFourier</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/SetTheory/PartitionConsistency/Forcing/EquivariantMixing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/SetTheory/PartitionConsistency/Forcing/EquivariantMixing.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">SetTheory</a> / <a href="../index.html">PartitionConsistency</a> / <a href="index.html">Forcing</a> / <span>EquivariantMixing.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">SetTheory</a>/<a href="../index.html">PartitionConsistency</a>/<a href="index.html">Forcing</a>/<span>EquivariantMixing.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/SetTheory/PartitionConsistency/Forcing/EquivariantMixing.lean#L1">source</a></p><div class="doc"><h4>Mixing</h4></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>abbrev</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.MixEntries</code> <small>line 17</small><div class="doc"><p>Index the literal children of a small family, with no uniform bound on
+the ranks of the family's members.</p></div><pre>abbrev MixEntries (f : ι → S.Name) := Σ i, Edges (f i).raw</pre><p class="refs">Mentions: <a href="ForcingNames.lean.html#L25">OAI.PartitionConsistency.SetForcingNames.Edges</a></p></li><li id=L19><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mixTest</code> <small>line 19</small></li><li id=L25><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mixTest_permute</code> <small>line 25</small><div class="doc"><p>Fixing the names and their activation conditions permutes every entry
+of their union mixture, including all strengthenings of all activations.</p></div><pre>theorem mixTest_permute (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ)
+    (hf : ∀ g ∈ H, ∀ i, g • f i = f i)
+    (ha : ∀ g ∈ H, ∀ i, S.move g (a i) = a i) :
+    ∀ g ∈ H, ∀ (i : S.MixEntries f) p, S.mixTest f a i p →
+      ∃ j : S.MixEntries f, (f j.1).child j.2.property = g • (f i.1).child i.2.property ∧
+        S.mixTest f a j (S.move g p) := by
+…</pre></li><li id=L45><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mix</code> <small>line 45</small><div class="doc"><p>A coherent or antichain mixture. Coherence is a property proved separately;
+the present construction itself is just the unrestricted union of active names.</p></div><pre>def mix (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hf : ∀ g ∈ H, ∀ i, g • f i = f i)
+    (ha : ∀ g ∈ H, ∀ i, S.move g (a i) = a i) : S.Name :=
+…</pre></li><li id=L51><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mix_fixed</code> <small>line 51</small></li><li id=L57><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.edge_mix</code> <small>line 57</small></li><li id=L73><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mem_mix</code> <small>line 73</small><div class="doc"><p>The exact regular forcing value of membership in the union mixture.</p></div><pre>theorem mem_mix (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hf : ∀ g ∈ H, ∀ i, g • f i = f i)
+    (ha : ∀ g ∈ H, ∀ i, S.move g (a i) = a i) (ν : S.Name) (p : P) :
+    S.atomic.MemF p ν (S.mix f a H hH hf ha) ↔
+      ∀ q, q ≤ p → ∃ r, r ≤ q ∧ ∃ i : ι, r ≤ a i ∧ S.atomic.MemF r ν (f i) := by
+…</pre></li><li id=L100><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.eq_mix_at</code> <small>line 100</small><div class="doc"><p>Any coherent family is equal to its mixture below its activation
+condition. This applies in particular to antichains, when coherence is vacuous.</p></div><pre>theorem eq_mix_at (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hf : ∀ g ∈ H, ∀ i, g • f i = f i)
+    (ha : ∀ g ∈ H, ∀ i, S.move g (a i) = a i)
+    (hcoh : ∀ i j p, p ≤ a i → p ≤ a j → S.atomic.EqF p (f i) (f j)) (i : ι) :
+    S.atomic.EqF (a i) (S.mix f a H hH hf ha) (f i) := by
+…</pre></li><li id=L135><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.equivariantMixTest_permute</code> <small>line 135</small><div class="doc"><p>An equivariant family need not have each member fixed pointwise.
+Permuting the names together with their activation conditions suffices.</p></div><pre>theorem equivariantMixTest_permute (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ)
+    (hperm : ∀ g ∈ H, ∀ i, ∃ j, f j = g • f i ∧ a j = S.move g (a i)) :
+    ∀ g ∈ H, ∀ (i : S.MixEntries f) p, S.mixTest f a i p →
+      ∃ j : S.MixEntries f, (f j.1).child j.2.property = g • (f i.1).child i.2.property ∧
+        S.mixTest f a j (S.move g p) := by
+…</pre></li><li id=L155><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.equivariantMix</code> <small>line 155</small><div class="doc"><p>Union of an equivariant family of active arbitrary-rank names.
+No choice of a common strengthening occurs in the definition.</p></div><pre>def equivariantMix (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hperm : ∀ g ∈ H, ∀ i, ∃ j, f j = g • f i ∧ a j = S.move g (a i)) : S.Name :=
+…</pre></li><li id=L160><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.equivariantMix_fixed</code> <small>line 160</small></li><li id=L165><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.edge_equivariantMix</code> <small>line 165</small></li><li id=L180><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mem_equivariantMix</code> <small>line 180</small><div class="doc"><p>The exact regular forcing value of membership in the union mixture.</p></div><pre>theorem mem_equivariantMix (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hperm : ∀ g ∈ H, ∀ i, ∃ j, f j = g • f i ∧ a j = S.move g (a i)) (ν : S.Name) (p : P) :
+    S.atomic.MemF p ν (S.equivariantMix f a H hH hperm) ↔
+      ∀ q, q ≤ p → ∃ r, r ≤ q ∧ ∃ i : ι, r ≤ a i ∧ S.atomic.MemF r ν (f i) := by
+…</pre></li><li id=L206><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.eq_equivariantMix_at</code> <small>line 206</small><div class="doc"><p>Any coherent family is equal to its mixture below its activation
+condition. This applies in particular to antichains, when coherence is vacuous.</p></div><pre>theorem eq_equivariantMix_at (f : ι → S.Name) (a : ι → P) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hperm : ∀ g ∈ H, ∀ i, ∃ j, f j = g • f i ∧ a j = S.move g (a i))
+    (hcoh : ∀ i j p, p ≤ a i → p ≤ a j → S.atomic.EqF p (f i) (f j)) (i : ι) :
+    S.atomic.EqF (a i) (S.equivariantMix f a H hH hperm) (f i) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

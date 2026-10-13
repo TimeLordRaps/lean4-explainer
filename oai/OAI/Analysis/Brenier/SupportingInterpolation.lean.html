@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/SupportingInterpolation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/SupportingInterpolation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>SupportingInterpolation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>SupportingInterpolation.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/SupportingInterpolation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Problem358.SupportingMapInterpolation.Supports</code> <small>line 15</small><div class="doc"><p>A globally supporting selection; finite affine maximizers satisfy this directly.</p></div><pre>def Supports (u : F → ℝ) (T : F → F) : Prop :=
+…</pre></li><li id=L18><b>def</b> <code>OAI.Problem358.SupportingMapInterpolation.quotient</code> <small>line 18</small></li><li id=L21><b>def</b> <code>OAI.Problem358.SupportingMapInterpolation.slope</code> <small>line 21</small></li><li id=L25><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.slope_le_quotient_le_shift</code> <small>line 25</small><div class="doc"><p>Supporting inequalities at the two ends sandwich the forward quotient.
+This avoids all differentiability and null-set choices in finite-map interpolation.</p></div><pre>lemma slope_le_quotient_le_shift {u : F → ℝ} {T : F → F}
+    (hs : Supports u T) {h : ℝ} (hh : 0 &lt; h) (e x : F) :
+    slope T e x ≤ quotient u h e x ∧
+      quotient u h e x ≤ slope T e (x + h • e) := by
+…</pre><p class="refs">Mentions: <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a>, <a href="SupportingInterpolation.lean.html#L21">OAI.Problem358.SupportingMapInterpolation.slope</a>, <a href="SupportingInterpolation.lean.html#L18">OAI.Problem358.SupportingMapInterpolation.quotient</a></p></li><li id=L44><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.slope_monotone_shift</code> <small>line 44</small></li><li id=L50><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.abs_slope_le</code> <small>line 50</small></li><li id=L59><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.quotient_error_sq_le</code> <small>line 59</small><div class="doc"><p>Squared quotient error is controlled by the monotone slope increment.</p></div><pre>lemma quotient_error_sq_le {u : F → ℝ} {T : F → F}
+    (hs : Supports u T) {h L : ℝ} (hh : 0 &lt; h)
+    (hL : ∀ x, ‖T x‖ ≤ L) {e : F} (he : ‖e‖ ≤ 1) (x : F) :
+    (quotient u h e x - slope T e x) ^ 2 ≤
+      2 * L * (slope T e (x + h • e) - slope T e x) := by
+…</pre><p class="refs">Mentions: <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a>, <a href="SupportingInterpolation.lean.html#L18">OAI.Problem358.SupportingMapInterpolation.quotient</a>, <a href="SupportingInterpolation.lean.html#L21">OAI.Problem358.SupportingMapInterpolation.slope</a></p></li><li id=L73><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.quotient_sub</code> <small>line 73</small></li><li id=L79><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.slope_difference_sq_le</code> <small>line 79</small><div class="doc"><p>The pointwise estimate whose integral gives cubic-root map stability.</p></div><pre>lemma slope_difference_sq_le {u v : F → ℝ} {T S : F → F}
+    (hu : Supports u T) (hv : Supports v S) {h L : ℝ} (hh : 0 &lt; h)
+    (hT : ∀ x, ‖T x‖ ≤ L) (hS : ∀ x, ‖S x‖ ≤ L)
+    {e : F} (he : ‖e‖ ≤ 1) (x : F) :
+    (slope T e x - slope S e x) ^ 2 ≤
+      3 * (quotient (fun z =&gt; u z - v z) h e x) ^ 2 +
+      6 * L * ((slope T e (x + h • e) - slope T e x) +
+        (slope S e (x + h • e) - slope S e x)) := by
+…</pre><p class="refs">Mentions: <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a>, <a href="SupportingInterpolation.lean.html#L21">OAI.Problem358.SupportingMapInterpolation.slope</a>, <a href="SupportingInterpolation.lean.html#L18">OAI.Problem358.SupportingMapInterpolation.quotient</a></p></li><li id=L97><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.slope_difference_sq_le_four</code> <small>line 97</small></li><li id=L115><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.measurable_slope</code> <small>line 115</small></li><li id=L121><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.integrableOn_slope</code> <small>line 121</small></li><li id=L129><b>lemma</b> <code>OAI.Problem358.SupportingMapInterpolation.integrableOn_slope_difference_sq</code> <small>line 129</small></li><li id=L144><b>theorem</b> <code>OAI.Problem358.SupportingMapInterpolation.integral_slope_difference_sq_le</code> <small>line 144</small><div class="doc"><p>A derivative-free directional interpolation estimate.  All geometry of the
+source is isolated in the lost mass of its translation core.</p></div><pre>theorem integral_slope_difference_sq_le
+    {u v : F → ℝ} {T S : F → F}
+    (hu : Supports u T) (hv : Supports v S)
+    (hT : Measurable T) (hS : Measurable S)
+    {K : Set F} (hK : MeasurableSet K) (hKfin : μ K ≠ ⊤)
+    {L h : ℝ} (hTL : ∀ x, ‖T x‖ ≤ L) (hSL : ∀ x, ‖S x‖ ≤ L)
+    (hh : 0 &lt; h) {e : F} (he : ‖e‖ ≤ 1)
+    (hfm : Measurable (fun x =&gt; u x - v x))
+    (hf : IntegrableOn (fun x =&gt; (u x - v x) ^ 2) K μ) :
+    (∫ x in K, (slope T e x - slope S e x) ^ 2 ∂μ) ≤
+      (12 / h ^ 2) * (∫ x in K, (u x - v x) ^ 2 ∂μ) +
+      28 * L ^ 2 * μ.real (K \ (K ∩ (fun x =&gt; x + h • e) ⁻¹&#x27; K)) := by
+…</pre><p class="refs">Mentions: <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a>, <a href="SupportingInterpolation.lean.html#L21">OAI.Problem358.SupportingMapInterpolation.slope</a></p></li><li id=L241><b>theorem</b> <code>OAI.Problem358.SupportingMapInterpolation.integral_norm_sub_sq_le_of_boundary_strip</code> <small>line 241</small><div class="doc"><p>Summing the directional estimate gives full-dimensional interpolation for
+bounded supporting maps. Only a linear boundary-strip estimate is needed.</p></div><pre>theorem integral_norm_sub_sq_le_of_boundary_strip
+    {u v : EuclideanSpace ℝ ι → ℝ}
+    {T S : EuclideanSpace ℝ ι → EuclideanSpace ℝ ι}
+    (hu : Supports u T) (hv : Supports v S)
+    (hT : Measurable T) (hS : Measurable S)
+    {K : Set (EuclideanSpace ℝ ι)} (hK : MeasurableSet K) (hKfin : μ K ≠ ⊤)
+    {L C h : ℝ} (hTL : ∀ x, ‖T x‖ ≤ L) (hSL : ∀ x, ‖S x‖ ≤ L)
+    (hh : 0 &lt; h)
+    (hfm : Measurable (fun x =&gt; u x - v x))
+    (hf : IntegrableOn (fun x =&gt; (u x - v x) ^ 2) K μ)
+    (hstrip : ∀ e : EuclideanSpace ℝ ι, ‖e‖ ≤ 1 →
+      μ.real {x | x ∈ K ∧ x + h • e ∉ K} ≤ C * h) :
+…</pre><p class="refs">Mentions: <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

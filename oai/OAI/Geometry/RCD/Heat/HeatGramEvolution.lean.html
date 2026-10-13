@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Heat/HeatGramEvolution.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Heat/HeatGramEvolution.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Heat</a> / <span>HeatGramEvolution.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Heat</a>/<span>HeatGramEvolution.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Heat/HeatGramEvolution.lean#L1">source</a></p><div class="doc"><h3>Evolution of actual cutoff heat Grams</h3><p>A weak measure Laplacian of the cutoff energy density gives its pointwise
+heat derivative and the integrated Gram increment. A nonnegative shifted
+source then implies monotonicity.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>def</b> <code>OAI.RegularPointCoordinates.cutoffHeatGramAt</code> <small>line 29</small><div class="doc"><p>An all-time extension used only to state ordinary derivatives at
+positive times; it agrees with the actual Gram wherever it is used.</p></div><pre>def cutoffHeatGramAt (t : ℝ) (x : X) (lambda : ℝ) : E →L[ℝ] E :=
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGramAt_of_pos</code> <small>line 32</small></li><li id=L39><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_kernel_energy</code> <small>line 39</small><div class="doc"><p>Identification with the continuous kernel representative, rather than
+an almost-everywhere choice of the heat flow.</p></div><pre>theorem cutoffHeatGram_kernel_energy (v : E) (f : SobolevSpace μ hQ)
+    (hf : SobolevSpace.toLp μ hQ f =ᵐ[μ]
+      fun z =&gt; χ z * (SobolevSpace.minimalSlope μ hQ (U v) z) ^ 2)
+    {t : ℝ} (ht : 0 &lt; t) (x : X) (lambda : ℝ) :
+    ⟪v, cutoffHeatGram μ hQ hp hχ hsχ U ht x lambda v⟫_ℝ =
+      kernelHeat μ hQ hp t (SobolevSpace.toLp μ hQ f) x + lambda * t * ‖v‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a>, <a href="ActualHeatGrams.lean.html#L77">OAI.RegularPointCoordinates.cutoffHeatGram</a>, <a href="HeatKernelRows.lean.html#L125">OAI.RegularPointCoordinates.kernelHeat</a></p></li><li id=L53><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_hasDerivAt</code> <small>line 53</small><div class="doc"><p>Full measure-source differentiation of the actual heat Gram.</p></div><pre>theorem cutoffHeatGram_hasDerivAt (v : E) (f : SobolevSpace μ hQ)
+    (hf : SobolevSpace.toLp μ hQ f =ᵐ[μ]
+      fun z =&gt; χ z * (SobolevSpace.minimalSlope μ hQ (U v) z) ^ 2)
+    (ν : SignedMeasure X) (hν : IsMeasureLaplacian μ hQ f ν)
+    (c : X) {R : ℝ} (hR : 0 &lt; R)
+    (hfs : ∀ᵐ z ∂μ, R &lt; dist c z → SobolevSpace.toLp μ hQ f z = 0)
+    (hνs : ν.variation (Metric.closedBall c R)ᶜ = 0)
+    {t : ℝ} (ht : 0 &lt; t) (x : X) (lambda : ℝ) :
+    HasDerivAt (fun s =&gt; ⟪v, cutoffHeatGramAt μ hQ hp hχ hsχ U s x lambda v⟫_ℝ)
+      ((∫ᵛ z, p t x z ∂&lt;•ν) + lambda * ‖v‖ ^ 2) t := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a>, <a href="../Sobolev/CompactMeasureLaplacian.lean.html#L29">OAI.RegularPointCoordinates.IsMeasureLaplacian</a>, <a href="HeatGramEvolution.lean.html#L29">OAI.RegularPointCoordinates.cutoffHeatGramAt</a></p></li><li id=L74><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_sub_eq_integral</code> <small>line 74</small><div class="doc"><p>Integrating the source gives the actual Gram increment between any
+positive times. No density for the signed source is assumed.</p></div><pre>theorem cutoffHeatGram_sub_eq_integral (v : E) (f : SobolevSpace μ hQ)
+    (hf : SobolevSpace.toLp μ hQ f =ᵐ[μ]
+      fun z =&gt; χ z * (SobolevSpace.minimalSlope μ hQ (U v) z) ^ 2)
+    (ν : SignedMeasure X) (hν : IsMeasureLaplacian μ hQ f ν)
+    (c : X) {R : ℝ} (hR : 0 &lt; R)
+    (hfs : ∀ᵐ z ∂μ, R &lt; dist c z → SobolevSpace.toLp μ hQ f z = 0)
+    (hνs : ν.variation (Metric.closedBall c R)ᶜ = 0)
+    {s t : ℝ} (hs : 0 &lt; s) (hst : s ≤ t) (x : X) (lambda : ℝ) :
+    ⟪v, cutoffHeatGram μ hQ hp hχ hsχ U (hs.trans_le hst) x lambda v⟫_ℝ -
+      ⟪v, cutoffHeatGram μ hQ hp hχ hsχ U hs x lambda v⟫_ℝ =
+      (∫ r in s..t, (∫ᵛ z, p r x z ∂&lt;•ν)) + lambda * (t - s) * ‖v‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a>, <a href="../Sobolev/CompactMeasureLaplacian.lean.html#L29">OAI.RegularPointCoordinates.IsMeasureLaplacian</a>, <a href="ActualHeatGrams.lean.html#L77">OAI.RegularPointCoordinates.cutoffHeatGram</a></p></li><li id=L92><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_monotone</code> <small>line 92</small><div class="doc"><p>Positivity of the shifted source gives monotonicity of the actual
+quadratic heat Gram on positive times.</p></div><pre>theorem cutoffHeatGram_monotone (v : E) (f : SobolevSpace μ hQ)
+    (hf : SobolevSpace.toLp μ hQ f =ᵐ[μ]
+      fun z =&gt; χ z * (SobolevSpace.minimalSlope μ hQ (U v) z) ^ 2)
+    (ν : SignedMeasure X) (hν : IsMeasureLaplacian μ hQ f ν)
+    (c : X) {R : ℝ} (hR : 0 &lt; R)
+    (hfs : ∀ᵐ z ∂μ, R &lt; dist c z → SobolevSpace.toLp μ hQ f z = 0)
+    (hνs : ν.variation (Metric.closedBall c R)ᶜ = 0)
+    (x : X) (lambda : ℝ)
+    (hpos : ∀ t, 0 &lt; t → 0 ≤ (∫ᵛ z, p t x z ∂&lt;•ν) + lambda * ‖v‖ ^ 2)
+    {s t : ℝ} (hs : 0 &lt; s) (hst : s ≤ t) :
+    ⟪v, cutoffHeatGram μ hQ hp hχ hsχ U hs x lambda v⟫_ℝ ≤
+      ⟪v, cutoffHeatGram μ hQ hp hχ hsχ U (hs.trans_le hst) x lambda v⟫_ℝ := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/RelaxedSlope.lean.html#L141">OAI.RegularPointCoordinates.SobolevSpace.minimalSlope</a>, <a href="../Sobolev/CompactMeasureLaplacian.lean.html#L29">OAI.RegularPointCoordinates.IsMeasureLaplacian</a>, <a href="ActualHeatGrams.lean.html#L77">OAI.RegularPointCoordinates.cutoffHeatGram</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

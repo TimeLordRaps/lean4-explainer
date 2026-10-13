@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/VaughanBilinear.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/VaughanBilinear.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>VaughanBilinear.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>VaughanBilinear.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/VaughanBilinear.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.energy_identity</code> <small>line 11</small><div class="doc"><p>The exact correlation expansion of a weighted finite bilinear energy.
+No distinctness or unit-modulus assumption on the phase is needed.</p></div><pre>theorem energy_identity {α β : Type*} (s : Finset α) (t : Finset β)
+    (b : β → ℂ) (z : α → β → ℂ) :
+    ((∑ m ∈ s, ‖∑ n ∈ t, b n * z m n‖ ^ 2 : ℝ) : ℂ) =
+      ∑ n ∈ t, ∑ k ∈ t, b n * (starRingEnd ℂ) (b k) *
+        ∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k) := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.energy_le_correlations</code> <small>line 42</small><div class="doc"><p>Bounding a bilinear energy by absolute correlations retains the
+arithmetic cancellation in the first variable.</p></div><pre>theorem energy_le_correlations {α β : Type*} (s : Finset α) (t : Finset β)
+    (b : β → ℂ) (z : α → β → ℂ) :
+    (∑ m ∈ s, ‖∑ n ∈ t, b n * z m n‖ ^ 2) ≤
+      ∑ n ∈ t, ∑ k ∈ t, ‖b n‖ * ‖b k‖ *
+        ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖ := by
+…</pre></li><li id=L61><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.norm_bilinear_sq_le</code> <small>line 61</small><div class="doc"><p>Finite Type-II Cauchy--Schwarz, with the full correlation sum explicit.
+This is an unconditional algebraic bound, not a minor-arc hypothesis.</p></div><pre>theorem norm_bilinear_sq_le {α β : Type*} (s : Finset α) (t : Finset β)
+    (a : α → ℂ) (b : β → ℂ) (z : α → β → ℂ) :
+    ‖∑ m ∈ s, a m * ∑ n ∈ t, b n * z m n‖ ^ 2 ≤
+      (∑ m ∈ s, ‖a m‖ ^ 2) *
+        (∑ n ∈ t, ∑ k ∈ t, ‖b n‖ * ‖b k‖ *
+          ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖) := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.diagonal_correlation</code> <small>line 79</small><div class="doc"><p>For unit phases the diagonal correlation is exactly the number of rows.</p></div><pre>theorem diagonal_correlation {α β : Type*} (s : Finset α)
+    (z : α → β → ℂ) (n : β) (hz : ∀ m ∈ s, ‖z m n‖ = 1) :
+    ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m n)‖ = (s.card : ℝ) := by
+…</pre></li><li id=L94><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.correlation_sum_split</code> <small>line 94</small><div class="doc"><p>Exact diagonal/off-diagonal separation; erased indices do not count a
+diagonal pair twice, including when either indexing set is empty.</p></div><pre>theorem correlation_sum_split {α β : Type*} [DecidableEq β]
+    (s : Finset α) (t : Finset β) (z : α → β → ℂ)
+    (hz : ∀ m ∈ s, ∀ n ∈ t, ‖z m n‖ = 1) :
+    (∑ n ∈ t, ∑ k ∈ t, ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖) =
+      (s.card : ℝ) * t.card +
+        ∑ n ∈ t, ∑ k ∈ t.erase n,
+          ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖ := by
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.norm_bilinear_sq_le_offDiagonal</code> <small>line 117</small><div class="doc"><p>Bounded coefficient version of Type-II Cauchy--Schwarz. The diagonal
+is evaluated exactly; only genuine off-diagonal correlations remain.</p></div><pre>theorem norm_bilinear_sq_le_offDiagonal {α β : Type*} [DecidableEq β]
+    (s : Finset α) (t : Finset β) (a : α → ℂ) (b : β → ℂ)
+    (z : α → β → ℂ) (B : ℝ) (hB : 0 ≤ B)
+    (hb : ∀ n ∈ t, ‖b n‖ ≤ B)
+    (hz : ∀ m ∈ s, ∀ n ∈ t, ‖z m n‖ = 1) :
+    ‖∑ m ∈ s, a m * ∑ n ∈ t, b n * z m n‖ ^ 2 ≤
+      (∑ m ∈ s, ‖a m‖ ^ 2) * B ^ 2 *
+        ((s.card : ℝ) * t.card + ∑ n ∈ t, ∑ k ∈ t.erase n,
+          ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖) := by
+…</pre></li><li id=L147><b>def</b> <code>OAI.Problem337.VaughanBilinear.phase</code> <small>line 147</small><div class="doc"><p>The standard real additive phase, with the <code>2π</code> convention.</p></div><pre>def phase (x : ℝ) : ℂ := Real.fourierChar x</pre></li><li id=L149><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.norm_phase</code> <small>line 149</small></li><li id=L151><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_mul_conj</code> <small>line 151</small></li><li id=L157><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_nat_mul</code> <small>line 157</small></li><li id=L162><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_sum_mul_bound</code> <small>line 162</small><div class="doc"><p>An exact geometric cancellation bound in a form valid even at resonance.</p></div><pre>theorem phase_sum_mul_bound (x : ℝ) (M : ℕ) :
+    ‖∑ m ∈ Finset.range M, phase (x * m)‖ * ‖1 - phase x‖ ≤ 2 := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a></p></li><li id=L171><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_sum_le_min</code> <small>line 171</small><div class="doc"><p>The usual geometric sum bound away from resonance.</p></div><pre>theorem phase_sum_le_min (x : ℝ) (M : ℕ) (hx : phase x ≠ 1) :
+    ‖∑ m ∈ Finset.range M, phase (x * m)‖ ≤
+      min (M : ℝ) (2 / ‖1 - phase x‖) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a></p></li><li id=L183><b>def</b> <code>OAI.Problem337.VaughanBilinear.geometricBound</code> <small>line 183</small><div class="doc"><p>A total geometric majorant. Resonant frequencies use the trivial bound;
+the definition never interprets division by zero as cancellation.</p></div><pre>def geometricBound (M : ℕ) (x : ℝ) : ℝ :=
+…</pre></li><li id=L186><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_sum_le_geometricBound</code> <small>line 186</small></li><li id=L197><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.real_phase_bilinear_sq_le</code> <small>line 197</small><div class="doc"><p>The finite Type-II estimate specialized to a real bilinear phase. All
+remaining terms are explicit one-dimensional geometric sums, bounded without
+any Diophantine approximation assumption.</p></div><pre>theorem real_phase_bilinear_sq_le (M : ℕ) (t : Finset ℕ)
+    (a b : ℕ → ℂ) (θ B : ℝ) (hB : 0 ≤ B)
+    (hb : ∀ n ∈ t, ‖b n‖ ≤ B) :
+    ‖∑ m ∈ Finset.range M, a m * ∑ n ∈ t, b n * phase (θ * m * n)‖ ^ 2 ≤
+      (∑ m ∈ Finset.range M, ‖a m‖ ^ 2) * B ^ 2 *
+        ((M : ℝ) * t.card + ∑ n ∈ t, ∑ k ∈ t.erase n,
+          geometricBound M (θ * ((n : ℝ) - k))) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a>, <a href="VaughanBilinear.lean.html#L183">OAI.Problem337.VaughanBilinear.geometricBound</a></p></li><li id=L229><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.symmetric_weighted_sum_le</code> <small>line 229</small><div class="doc"><p>A finite real Schur bound, proved by symmetrizing <code>2xy ≤ x²+y²</code>.
+The coefficients need not be nonnegative.</p></div><pre>theorem symmetric_weighted_sum_le {β : Type*} (t : Finset β)
+    (f : β → ℝ) (K : β → β → ℝ)
+    (hK : ∀ n ∈ t, ∀ k ∈ t, 0 ≤ K n k)
+    (hsym : ∀ n ∈ t, ∀ k ∈ t, K n k = K k n) :
+    (∑ n ∈ t, ∑ k ∈ t, f n * f k * K n k) ≤
+      ∑ n ∈ t, f n ^ 2 * ∑ k ∈ t, K n k := by
+…</pre></li><li id=L261><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.correlation_norm_symm</code> <small>line 261</small><div class="doc"><p>Reversing a correlation conjugates it, hence preserves its norm.</p></div><pre>theorem correlation_norm_symm {α β : Type*} (s : Finset α)
+    (z : α → β → ℂ) (n k : β) :
+    ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖ =
+      ‖∑ m ∈ s, z m k * (starRingEnd ℂ) (z m n)‖ := by
+…</pre></li><li id=L276><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.norm_bilinear_sq_le_energy</code> <small>line 276</small><div class="doc"><p>Type-II energy bound using an absolute correlation row bound. Unlike the
+bounded-coefficient version, this retains both coefficient squared sums and
+therefore applies directly to divisor-coefficient second-moment estimates.</p></div><pre>theorem norm_bilinear_sq_le_energy {α β : Type*} (s : Finset α) (t : Finset β)
+    (a : α → ℂ) (b : β → ℂ) (z : α → β → ℂ) (C : ℝ)
+    (hrow : ∀ n ∈ t,
+      (∑ k ∈ t, ‖∑ m ∈ s, z m n * (starRingEnd ℂ) (z m k)‖) ≤ C) :
+    ‖∑ m ∈ s, a m * ∑ n ∈ t, b n * z m n‖ ^ 2 ≤
+      (∑ m ∈ s, ‖a m‖ ^ 2) * C * (∑ n ∈ t, ‖b n‖ ^ 2) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

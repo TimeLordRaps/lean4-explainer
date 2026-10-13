@@ -1,0 +1,187 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction/Simulation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction/Simulation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">TraceReconstruction</a> / <span>Simulation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">TraceReconstruction</a>/<span>Simulation.lean</span></code></h1><p class="muted">81 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction/Simulation.lean#L1">source</a></p><div class="doc"><h3>Simulation</h3><p>Canonical and filled simulations, central fit, root words, chronology, slots, finite codes, and complete-trace decoding.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.TraceReconstruction.dependentProduct_approximates</code> <small>line 25</small><div class="doc"><p>Heterogeneous emissions retain their actual outcome type while moving to
+the one fixed public chronological order.</p></div><pre>theorem dependentProduct_approximates {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {A : ι → Type*} [∀i,Fintype (A i)] {k : ℕ} {q : ℝ} (hq : q∈Set.Icc 0 1)
+    (e : Fin k ≃ ι) (P : ∀i,FiniteLaw (A i)) (f : ∀i,A i → List Bool)
+    (w : ι → List Bool) (E : ι → ℝ)
+    (h : ∀i,ApproximatesTrace q (P i) (f i) (w i) (E i)) :
+    ApproximatesTrace q (FiniteLaw.dependentProduct P)
+      (fun x =&gt; coordinateWord (fun j =&gt; f (e j) (x (e j))))
+      (coordinateWord (fun j =&gt; w (e j))) (∑i,E i) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L183">OAI.TraceReconstruction.ApproximatesTrace</a>, <a href="Metadata.lean.html#L313">OAI.TraceReconstruction.FiniteLaw.dependentProduct</a>, <a href="Oracles.lean.html#L1169">OAI.TraceReconstruction.coordinateWord</a></p></li><li id=L47><b>abbrev</b> <code>OAI.TraceReconstruction.EmissionSlot</code> <small>line 47</small><div class="doc"><p>Each paired mechanism owns two distinct side slots; fillers and old leaf
+oracles have their own IDs. This type is independent of every orientation.</p></div><pre>abbrev EmissionSlot (m k n : ℕ) := (Fin m × Bool) ⊕ (Fin k ⊕ Fin n)</pre></li><li id=L49><b>def</b> <code>OAI.TraceReconstruction.EmissionOutcome</code> <small>line 49</small></li><li id=L54><b>instance</b> <code>OAI.TraceReconstruction.emissionOutcomeFintype</code> <small>line 54</small></li><li id=L63><b>def</b> <code>OAI.TraceReconstruction.emissionAssignmentEquiv</code> <small>line 63</small><div class="doc"><p>Actual arrays and slot observations are bijective, not a lossy interface.</p></div><pre>def emissionAssignmentEquiv (Side Leaf : Type) (m k n : ℕ) :
+    ((Fin m → Side × Side) × (Fin k → Side) × (Fin n → Leaf)) ≃
+      (∀i : EmissionSlot m k n,EmissionOutcome Side Leaf i) where
+…</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L47">OAI.TraceReconstruction.EmissionSlot</a>, <a href="Simulation.lean.html#L49">OAI.TraceReconstruction.EmissionOutcome</a></p></li><li id=L87><b>def</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotLaw</code> <small>line 87</small></li><li id=L95><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotLaw_mass</code> <small>line 95</small></li><li id=L112><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotLaw_expect</code> <small>line 112</small></li><li id=L125><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.reportsGiven_slot_expect</code> <small>line 125</small><div class="doc"><p>Forgetting only the visible flags recovers the genuine independent side,
+filler and leaf laws at every orientation, before any fit restriction.</p></div><pre>theorem reportsGiven_slot_expect (R : Fin k → FiniteLaw Side) (P Q : FiniteLaw Leaf)
+    (bits : Fin m → Bool) (θ : Fin n → Bool)
+    (F : (∀i : EmissionSlot m k n,EmissionOutcome Side Leaf i) → ℝ) :
+    ((M.reportsGiven bits).prod ((FiniteLaw.coordinateProduct R).prod (selectedLeafLaw P Q θ))).expect
+      (fun x =&gt; F (emissionAssignmentEquiv Side Leaf m k n (fun j =&gt; (x.1 j).2,x.2)))=
+      (FiniteLaw.dependentProduct (M.slotLaw R P Q bits θ)).expect F := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Simulation.lean.html#L47">OAI.TraceReconstruction.EmissionSlot</a>, <a href="Simulation.lean.html#L49">OAI.TraceReconstruction.EmissionOutcome</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="Oracles.lean.html#L1616">OAI.TraceReconstruction.PairedMechanisms.selectedLeafLaw</a>, <a href="Simulation.lean.html#L63">OAI.TraceReconstruction.emissionAssignmentEquiv</a>, <a href="Metadata.lean.html#L313">OAI.TraceReconstruction.FiniteLaw.dependentProduct</a></p></li><li id=L144><b>def</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotDecode</code> <small>line 144</small><div class="doc"><p>The common, bit-blind projection simply forgets flags and concatenates in
+the publicly fixed ID order.</p></div><pre>def slotDecode (f : Side → List Bool) (g : Leaf → List Bool) :
+    (i : EmissionSlot m k n) → EmissionOutcome Side Leaf i → List Bool
+  | .inl _,x =&gt; f x
+  | .inr (.inl _),x =&gt; f x
+  | .inr (.inr _),x =&gt; g x</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L47">OAI.TraceReconstruction.EmissionSlot</a>, <a href="Simulation.lean.html#L49">OAI.TraceReconstruction.EmissionOutcome</a></p></li><li id=L150><b>def</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotWord</code> <small>line 150</small></li><li id=L158><b>def</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotCost</code> <small>line 158</small></li><li id=L163><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotCost_sum</code> <small>line 163</small></li><li id=L167><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.slotLaw_simulation</code> <small>line 167</small></li><li id=L192><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.reportsGiven_simulation</code> <small>line 192</small><div class="doc"><p>Exact conditional-on-orientation simulation boundary. The orientation is
+not part of the common projection, and no fit conditioning enters its law.</p></div><pre>theorem reportsGiven_simulation {q E : ℝ} (hq : q∈Set.Icc 0 1)
+    {L : ℕ} (e : Fin L ≃ EmissionSlot m k n)
+    (R : Fin k → FiniteLaw Side) (P Q : FiniteLaw Leaf)
+    (f : Side → List Bool) (g : Leaf → List Bool) (U V : Fin m → List Bool)
+    (W : Fin k → List Bool) (atom : Bool → List Bool)
+    (hU : ∀j,SimulatesTrace q (M.first j) f (U j))
+    (hV : ∀j,SimulatesTrace q (M.second j) f (V j))
+    (hW : ∀j,SimulatesTrace q (R j) f (W j))
+    (hP : ApproximatesTrace q P g (atom false) E) (hQ : ApproximatesTrace q Q g (atom true) E)
+    (bits : Fin m → Bool) (θ : Fin n → Bool) :
+    ApproximatesTrace q
+      ((M.reportsGiven bits).prod ((FiniteLaw.coordinateProduct R).prod (selectedLeafLaw P Q θ)))
+…</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L47">OAI.TraceReconstruction.EmissionSlot</a>, <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L179">OAI.TraceReconstruction.SimulatesTrace</a>, <a href="Oracles.lean.html#L183">OAI.TraceReconstruction.ApproximatesTrace</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="Oracles.lean.html#L1616">OAI.TraceReconstruction.PairedMechanisms.selectedLeafLaw</a></p></li><li id=L229><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.canonical_filled_expect</code> <small>line 229</small><div class="doc"><p>The actual metadata-first oracle with independent genuine fillers has
+exactly the orientation-first product experiment, in the displayed order.</p></div><pre>theorem canonical_filled_expect (R : Fin k → FiniteLaw Side) (P Q : FiniteLaw Leaf)
+    (θ : (Fin m → Bool) → Fin n → Bool)
+    (F : Reports Side m × (Fin k → Side) × (Fin n → Leaf) → ℝ) :
+    ((M.canonicalOracle P Q θ).prod (FiniteLaw.coordinateProduct R)).expect
+      (fun x =&gt; F (x.1.1,x.2,x.1.2))=
+    (fairOrientations m).expect (fun bits =&gt;
+      ((M.reportsGiven bits).prod ((FiniteLaw.coordinateProduct R).prod
+        (selectedLeafLaw P Q (θ bits)))).expect F) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L1594">OAI.TraceReconstruction.Reports</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="Oracles.lean.html#L1608">OAI.TraceReconstruction.PairedMechanisms.fairOrientations</a>, <a href="Oracles.lean.html#L1616">OAI.TraceReconstruction.PairedMechanisms.selectedLeafLaw</a></p></li><li id=L248><b>theorem</b> <code>OAI.TraceReconstruction.PairedMechanisms.canonical_filled_simulation</code> <small>line 248</small><div class="doc"><p>Unconditional common simulation of the actual full canonical oracle.
+The only layout charge is the unconditional fair-orientation failure mass.
+No orientation or side metadata is conditioned on successful fitting.</p></div><pre>theorem canonical_filled_simulation {q E : ℝ} (hq : q∈Set.Icc 0 1) (hE : 0≤E)
+    {L : ℕ} (e : Fin L ≃ EmissionSlot m k n)
+    (R : Fin k → FiniteLaw Side) (P Q : FiniteLaw Leaf)
+    (f : Side → List Bool) (g : Leaf → List Bool) (U V : Fin m → List Bool)
+    (W : Fin k → List Bool) (atom : Bool → List Bool)
+    (hU : ∀j,SimulatesTrace q (M.first j) f (U j))
+    (hV : ∀j,SimulatesTrace q (M.second j) f (V j))
+    (hW : ∀j,SimulatesTrace q (R j) f (W j))
+    (hP : ApproximatesTrace q P g (atom false) E) (hQ : ApproximatesTrace q Q g (atom true) E)
+    (θ : (Fin m → Bool) → Fin n → Bool) (w : List Bool)
+    (good : (Fin m → Bool) → Prop) [DecidablePred good]
+    (hword : ∀bits,good bits → coordinateWord
+…</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L47">OAI.TraceReconstruction.EmissionSlot</a>, <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L179">OAI.TraceReconstruction.SimulatesTrace</a>, <a href="Oracles.lean.html#L183">OAI.TraceReconstruction.ApproximatesTrace</a>, <a href="Oracles.lean.html#L1169">OAI.TraceReconstruction.coordinateWord</a></p></li><li id=L309><b>theorem</b> <code>OAI.TraceReconstruction.source_motif_central</code> <small>line 309</small><div class="doc"><p>The one-based source offset still puts the complete motif in the central
+third under the true fit threshold. The stronger numerical margin is an
+eventual consequence of L=o(T), not an additional stochastic event.</p></div><pre>theorem source_motif_central (T t s : ℕ) (bits : Fin t → Bool) (v : ℤ)
+    (hT : 24 ≤ T) (he : Even T) (hL : 24*2^s ≤ T)
+    (hfit : |8*((∑i,(bitIndex (bits i):ℤ))-(t/2:ℕ)+v)| ≤ (T:ℤ))
+    (u : Fin T)
+    (hu : motifIndicator s ((u.val:ℤ)-((T/2:ℕ)-1+(t/2:ℕ))+
+      (∑i,(bitIndex (bits i):ℤ))+v)≠0) : u∈centralThird T := by
+…</pre><p class="refs">Mentions: <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a>, <a href="Shapes.lean.html#L24">OAI.TraceReconstruction.centralThird</a></p></li><li id=L330><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeFit_central</code> <small>line 330</small><div class="doc"><p>Fit controls every internal source motif, retaining all orientations in
+the law. The incoming displacement of the root is supplied separately.</p></div><pre>theorem sourceTreeFit_central (T n : ℕ → ℕ) (s b : ℕ)
+    (center : ℕ → ℤ) (hc : ∀j≤b,center j=sourceLocalCenter T n j)
+    (hT : ∀j≤b,24≤T j) (he : ∀j≤b,Even (T j)) (hL : ∀j≤b,24*2^s≤T j)
+    (bits : WindowAssignments T n (sourceScheduledTrials T n) Bool (b+1)) (incoming : ℤ)
+    (hroot : |8*((∑i,(bitIndex (bits.1 i):ℤ))-(n b/2:ℕ)+incoming)|≤(T b:ℤ))
+    (hfit : SourceTreeFit T n (b+1) bits) :
+    SourceCentral T n (sourceScheduledTrials T n) s center (sourceScheduledShift T n)
+      (fun j =&gt; centralThird (T j)) (b+1) bits incoming := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L846">OAI.TraceReconstruction.sourceLocalCenter</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Energy.lean.html#L538">OAI.TraceReconstruction.SourceCentral</a>, <a href="Layout.lean.html#L841">OAI.TraceReconstruction.sourceScheduledShift</a>, <a href="Shapes.lean.html#L24">OAI.TraceReconstruction.centralThird</a></p></li><li id=L359><b>theorem</b> <code>OAI.TraceReconstruction.source_root_fit</code> <small>line 359</small><div class="doc"><p>The actual root side count has no parity restriction. Its entire range
+lies inside the fit displacement interval when J=o(T).</p></div><pre>theorem source_root_fit (T J : ℕ) (bits : Fin J → Bool) (h : 4*(J+1)≤T) :
+    |8*((∑i,(bitIndex (bits i):ℤ))-(J/2:ℕ))|≤(T:ℤ) := by
+…</pre><p class="refs">Mentions: <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a></p></li><li id=L372><b>theorem</b> <code>OAI.TraceReconstruction.sourceNoncentralMass_le_fit</code> <small>line 372</small></li><li id=L399><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeWord_eq_center_interior</code> <small>line 399</small><div class="doc"><p>Only interior trials are paired in even bundles. The top J may be odd.</p></div><pre>theorem sourceTreeWord_eq_center_interior (s : ℕ) (P T n h : ℕ → ℕ) (center : ℕ → ℤ)
+    (atom : Bool → List Bool) (b : ℕ) (H : SourceLayoutMargins s P T n h (b-1))
+    (htop : ∀j&lt;b,0&lt;T j)
+    (hc : ∀j, j+1&lt;b → center j=sourceLocalCenter T n j)
+    (bits : WindowAssignments T n (sourceScheduledTrials T n) Bool b)
+    (incoming : ℤ) (τ : Bool) (hfit : SourceTreeFit T n b bits) :
+    sourceTreeWord s P T n h center atom b bits incoming τ=
+      sourceCenterWord s P T n center atom b bits incoming τ := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L920">OAI.TraceReconstruction.SourceLayoutMargins</a>, <a href="Layout.lean.html#L846">OAI.TraceReconstruction.sourceLocalCenter</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Layout.lean.html#L892">OAI.TraceReconstruction.sourceTreeWord</a>, <a href="Layout.lean.html#L884">OAI.TraceReconstruction.sourceCenterWord</a></p></li><li id=L481><b>def</b> <code>OAI.TraceReconstruction.sourceFullWord</code> <small>line 481</small><div class="doc"><p>Full literal unconditioned root partition, including both members of
+every outer paired side. Its top trial count is the source's J, even or odd.</p></div><pre>def sourceFullWord (s : ℕ) (P T n h : ℕ → ℕ) (atom : Bool → List Bool) (b : ℕ)
+    (bits : WindowAssignments T n (sourceScheduledTrials T n) Bool (b+1)) (τ : Bool) : List Bool :=
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a></p></li><li id=L487><b>theorem</b> <code>OAI.TraceReconstruction.bitIndex_sum_le</code> <small>line 487</small></li><li id=L497><b>theorem</b> <code>OAI.TraceReconstruction.sourceFullWord_eq_block</code> <small>line 497</small><div class="doc"><p>The source root's floor anchor and paired side counts have their literal
+unmarked word interpretation, without requiring J to be even.</p></div><pre>theorem sourceFullWord_eq_block (s : ℕ) (P T n h : ℕ → ℕ) (atom : Bool → List Bool)
+    (b : ℕ) (H : SourceLayoutMargins s P T n h b) (hpos : 0&lt;T b)
+    (hroot : P b=n b*(2*h b+1)+T b) (he : Even (T b))
+    (hJ : 4*(n b+1)≤T b) (hL : 8*2^s≤T b)
+    (bits : WindowAssignments T n (sourceScheduledTrials T n) Bool (b+1))
+    (τ : Bool) (hfit : SourceTreeFit T n (b+1) bits) :
+    sourceFullWord s P T n h atom b bits τ=sourceBlockWord s P atom (b+1) τ := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L920">OAI.TraceReconstruction.SourceLayoutMargins</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Simulation.lean.html#L481">OAI.TraceReconstruction.sourceFullWord</a>, <a href="Layout.lean.html#L782">OAI.TraceReconstruction.sourceBlockWord</a></p></li><li id=L559><b>def</b> <code>OAI.TraceReconstruction.WindowFiller</code> <small>line 559</small><div class="doc"><p>Pure filler IDs. At bottom leaf windows the two fillers have zero length;
+they are deterministic empty outputs, not extra information.</p></div><pre>def WindowFiller (T : ℕ → ℕ) : ℕ → Type
+  | 0 =&gt; PEmpty
+  | b+1 =&gt; (Fin (T b) × Bool) ⊕ (Fin (T b) × WindowFiller T b)</pre></li><li id=L563><b>instance</b> <code>OAI.TraceReconstruction.windowFillerFintype</code> <small>line 563</small></li><li id=L569><b>abbrev</b> <code>OAI.TraceReconstruction.TreeEmission</code> <small>line 569</small></li><li id=L572><b>def</b> <code>OAI.TraceReconstruction.TreeEmission.up</code> <small>line 572</small></li><li id=L578><b>def</b> <code>OAI.TraceReconstruction.treeLocalSlots</code> <small>line 578</small></li><li id=L581><b>def</b> <code>OAI.TraceReconstruction.treeGlobalSlots</code> <small>line 581</small></li><li id=L589><b>def</b> <code>OAI.TraceReconstruction.treeChronology</code> <small>line 589</small><div class="doc"><p>Public chronological IDs. Each child carries its own local paired sides;
+the group's global sides and deterministic fillers surround that child.
+The order is fixed independently of all bits and both hypotheses.</p></div><pre>def treeChronology (T n g : ℕ → ℕ)
+    (pre post : (b : ℕ) → Fin (g b) → Fin (T b)) :
+    (b : ℕ) → List (TreeEmission T n g b)
+  | 0 =&gt; [.inr (.inr (show WindowLeaf T 0 from (0 : Fin 1)))]
+  | b+1 =&gt; treeLocalSlots T n g b false ++
+      (List.ofFn (fun u : Fin (T b) =&gt;
+        treeGlobalSlots T n g b false (pre b) u ++
+        [.inr (.inl (.inl (u,false)))] ++
+        (treeChronology T n g pre post b).map (TreeEmission.up T n g b u) ++
+        treeGlobalSlots T n g b true (post b) u ++
+        [.inr (.inl (.inl (u,true)))])).flatten ++
+      treeLocalSlots T n g b true</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L569">OAI.TraceReconstruction.TreeEmission</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="Simulation.lean.html#L578">OAI.TraceReconstruction.treeLocalSlots</a>, <a href="Simulation.lean.html#L581">OAI.TraceReconstruction.treeGlobalSlots</a>, <a href="Simulation.lean.html#L572">OAI.TraceReconstruction.TreeEmission.up</a></p></li><li id=L602><b>theorem</b> <code>OAI.TraceReconstruction.sum_fiber_list_length</code> <small>line 602</small></li><li id=L614><b>theorem</b> <code>OAI.TraceReconstruction.treeChronology_length</code> <small>line 614</small></li><li id=L634><b>theorem</b> <code>OAI.TraceReconstruction.treeChronology_mem</code> <small>line 634</small></li><li id=L682><b>theorem</b> <code>OAI.TraceReconstruction.treeChronology_nodup</code> <small>line 682</small></li><li id=L696><b>def</b> <code>OAI.TraceReconstruction.treeChronologyEquiv</code> <small>line 696</small><div class="doc"><p>A genuine complete chronological bijection, not an assumed layout.</p></div><pre>def treeChronologyEquiv (T n g : ℕ → ℕ)
+    (pre post : (b : ℕ) → Fin (g b) → Fin (T b)) (b : ℕ) :
+    Fin (treeChronology T n g pre post b).length ≃ TreeEmission T n g b :=
+…</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L589">OAI.TraceReconstruction.treeChronology</a>, <a href="Simulation.lean.html#L569">OAI.TraceReconstruction.TreeEmission</a></p></li><li id=L710><b>def</b> <code>OAI.TraceReconstruction.pairedSideCount</code> <small>line 710</small></li><li id=L712><b>theorem</b> <code>OAI.TraceReconstruction.pairedSideCount_false</code> <small>line 712</small></li><li id=L715><b>theorem</b> <code>OAI.TraceReconstruction.pairedSideCount_true</code> <small>line 715</small></li><li id=L718><b>theorem</b> <code>OAI.TraceReconstruction.pairedSideCount_sum_pre</code> <small>line 718</small></li><li id=L723><b>theorem</b> <code>OAI.TraceReconstruction.pairedSideCount_sum_total</code> <small>line 723</small></li><li id=L733><b>theorem</b> <code>OAI.TraceReconstruction.pairedSideCount_sum_post</code> <small>line 733</small></li><li id=L740><b>def</b> <code>OAI.TraceReconstruction.sourceGlobalPre</code> <small>line 740</small><div class="doc"><p>Global trial positions are ID functions, not positions inferred from a
+realized output or orientation.</p></div><pre>def sourceGlobalPre (N t : ℕ) (k : Fin ((N/4)*t)) : Fin N :=
+…</pre></li><li id=L744><b>def</b> <code>OAI.TraceReconstruction.sourceGlobalPost</code> <small>line 744</small></li><li id=L748><b>theorem</b> <code>OAI.TraceReconstruction.sum_globalSides</code> <small>line 748</small></li><li id=L762><b>theorem</b> <code>OAI.TraceReconstruction.sourcePreCount_slots</code> <small>line 762</small></li><li id=L792><b>theorem</b> <code>OAI.TraceReconstruction.sourcePostCount_slots</code> <small>line 792</small></li><li id=L826><b>theorem</b> <code>OAI.TraceReconstruction.filter_chunks_flatten</code> <small>line 826</small><div class="doc"><p>Flattening selected equal-atom chunks sums exactly their genuine lengths.</p></div><pre>theorem filter_chunks_flatten {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (l : List ι) (p : ι → Bool) (c : ι → ℕ) (w : List Bool) :
+    ((l.filter p).map (fun i =&gt; pureAtomRun w (c i))).flatten=
+      pureAtomRun w ((l.map (fun i =&gt; if p i then c i else 0)).sum) := by
+…</pre><p class="refs">Mentions: <a href="Patterns.lean.html#L186">OAI.TraceReconstruction.pureAtomRun</a></p></li><li id=L847><b>def</b> <code>OAI.TraceReconstruction.sourceScheduledPre</code> <small>line 847</small></li><li id=L852><b>def</b> <code>OAI.TraceReconstruction.sourceScheduledPost</code> <small>line 852</small></li><li id=L858><b>def</b> <code>OAI.TraceReconstruction.sourceTrialWord</code> <small>line 858</small><div class="doc"><p>Two actual deterministic pure binary side words for each paired trial ID.</p></div><pre>def sourceTrialWord (s : ℕ) (P T n h : ℕ → ℕ) (atom : Bool → List Bool) :
+    (b : ℕ) → WindowTrial T n (sourceScheduledTrials T n) b → Bool → List Bool
+  | 0,i,_ =&gt; PEmpty.elim i
+  | b+1,.inl _,c =&gt; pureAtomRun (sourceBlockWord s P atom b false) (h b+bitIndex c)
+  | 1,.inr (.inl k),_ =&gt; Fin.elim0 k
+  | b+2,.inr (.inl _),c =&gt; pureAtomRun (sourceBlockWord s P atom b false) (h b+bitIndex c)
+  | b+1,.inr (.inr (_,i)),c =&gt; sourceTrialWord s P T n h atom b i c
+
+/-- Fixed pure fillers, including the deterministic empty bottom fillers. -/</pre><p class="refs">Mentions: <a href="Metadata.lean.html#L397">OAI.TraceReconstruction.WindowTrial</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Patterns.lean.html#L186">OAI.TraceReconstruction.pureAtomRun</a>, <a href="Layout.lean.html#L782">OAI.TraceReconstruction.sourceBlockWord</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a></p></li><li id=L867><b>def</b> <code>OAI.TraceReconstruction.sourceFillerWord</code> <small>line 867</small><div class="doc"><p>Fixed pure fillers, including the deterministic empty bottom fillers.</p></div><pre>def sourceFillerWord (s : ℕ) (P T n h : ℕ → ℕ) (atom : Bool → List Bool) :
+    (b : ℕ) → WindowFiller T b → List Bool
+  | 0,i =&gt; PEmpty.elim i
+  | b+1,.inl (u,p) =&gt; match b,u with
+    | 0,_ =&gt; []
+    | b+1,u =&gt; pureAtomRun (sourceBlockWord s P atom b false)
+        (if p then sourcePostFiller (T (b+1)) (sourceNominalPost P T b) (n b) (h b) u
+          else sourcePreFiller (T (b+1)) (sourceNominalPre P T b) (n b) (h b) u)
+  | b+1,.inr (_,i) =&gt; sourceFillerWord s P T n h atom b i</pre><p class="refs">Mentions: <a href="Simulation.lean.html#L559">OAI.TraceReconstruction.WindowFiller</a>, <a href="Patterns.lean.html#L186">OAI.TraceReconstruction.pureAtomRun</a>, <a href="Layout.lean.html#L782">OAI.TraceReconstruction.sourceBlockWord</a>, <a href="Layout.lean.html#L482">OAI.TraceReconstruction.sourcePostFiller</a>, <a href="Layout.lean.html#L876">OAI.TraceReconstruction.sourceNominalPost</a>, <a href="Layout.lean.html#L479">OAI.TraceReconstruction.sourcePreFiller</a>, <a href="Layout.lean.html#L875">OAI.TraceReconstruction.sourceNominalPre</a></p></li><li id=L877><b>def</b> <code>OAI.TraceReconstruction.sourceSlotWord</code> <small>line 877</small></li><li id=L885><b>def</b> <code>OAI.TraceReconstruction.sourceChronologicalWord</code> <small>line 885</small></li><li id=L891><b>theorem</b> <code>OAI.TraceReconstruction.sourceSlotWord_up</code> <small>line 891</small></li><li id=L899><b>theorem</b> <code>OAI.TraceReconstruction.treeChronology_eval</code> <small>line 899</small></li><li id=L921><b>theorem</b> <code>OAI.TraceReconstruction.sourceLocalSlots_word</code> <small>line 921</small></li><li id=L933><b>theorem</b> <code>OAI.TraceReconstruction.sourceGlobalSlots_word</code> <small>line 933</small></li><li id=L956><b>def</b> <code>OAI.TraceReconstruction.sourceFramedWord</code> <small>line 956</small></li><li id=L964><b>theorem</b> <code>OAI.TraceReconstruction.sourceChronologicalWord_eq_framed</code> <small>line 964</small></li><li id=L1028><b>theorem</b> <code>OAI.TraceReconstruction.sourceChronologicalWord_eq_block</code> <small>line 1028</small><div class="doc"><p>Chronological side/filler/leaf slots produce the SAME full source word
+on the joint fit event. No orientation is removed or conditioned away.</p></div><pre>theorem sourceChronologicalWord_eq_block (s : ℕ) (P T n h : ℕ → ℕ) (atom : Bool → List Bool)
+    (b : ℕ) (H : SourceLayoutMargins s P T n h b)
+    (hP : P b=n b*(2*h b+1)+T b) (hT : Even (T b))
+    (hlarge : 4*(n b+1)≤T b) (hmotif : 8*2^s≤T b)
+    (bits : WindowAssignments T n (sourceScheduledTrials T n) Bool (b+1)) (τ : Bool)
+    (hfit : SourceTreeFit T n (b+1) bits) :
+    sourceChronologicalWord s P T n h (sourceLocalCenter T n) atom (b+1) bits 0 τ=
+      sourceBlockWord s P atom (b+1) τ := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L920">OAI.TraceReconstruction.SourceLayoutMargins</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Simulation.lean.html#L885">OAI.TraceReconstruction.sourceChronologicalWord</a>, <a href="Layout.lean.html#L846">OAI.TraceReconstruction.sourceLocalCenter</a>, <a href="Layout.lean.html#L782">OAI.TraceReconstruction.sourceBlockWord</a></p></li><li id=L1050><b>def</b> <code>OAI.TraceReconstruction.finEnumeration</code> <small>line 1050</small></li><li id=L1052><b>abbrev</b> <code>OAI.TraceReconstruction.SourceTrialCount</code> <small>line 1052</small></li><li id=L1053><b>abbrev</b> <code>OAI.TraceReconstruction.SourceFillerCount</code> <small>line 1053</small></li><li id=L1054><b>abbrev</b> <code>OAI.TraceReconstruction.SourceLeafCount</code> <small>line 1054</small></li><li id=L1056><b>def</b> <code>OAI.TraceReconstruction.sourceEmissionEnum</code> <small>line 1056</small></li><li id=L1062><b>def</b> <code>OAI.TraceReconstruction.sourceAssignmentCode</code> <small>line 1062</small></li><li id=L1072><b>theorem</b> <code>OAI.TraceReconstruction.sourceAssignmentCode_eval</code> <small>line 1072</small></li><li id=L1079><b>def</b> <code>OAI.TraceReconstruction.sourceChronologyCode</code> <small>line 1079</small></li><li id=L1085><b>def</b> <code>OAI.TraceReconstruction.sourceFlatLeafType</code> <small>line 1085</small></li><li id=L1089><b>def</b> <code>OAI.TraceReconstruction.sourceFlatTrialWord</code> <small>line 1089</small></li><li id=L1093><b>def</b> <code>OAI.TraceReconstruction.sourceFlatFillerWord</code> <small>line 1093</small></li><li id=L1097><b>theorem</b> <code>OAI.TraceReconstruction.sourceSlotWord_code</code> <small>line 1097</small></li><li id=L1114><b>theorem</b> <code>OAI.TraceReconstruction.treeChronologyEquiv_word</code> <small>line 1114</small></li><li id=L1126><b>theorem</b> <code>OAI.TraceReconstruction.source_slotCode_word</code> <small>line 1126</small></li><li id=L1146><b>theorem</b> <code>OAI.TraceReconstruction.source_fair_code_expect</code> <small>line 1146</small><div class="doc"><p>Reindex the genuine independent orientations, retaining the whole source tree.</p></div><pre>theorem source_fair_code_expect (T n : ℕ → ℕ) (b : ℕ)
+    (F : WindowAssignments T n (sourceScheduledTrials T n) Bool b → ℝ) :
+    (PairedMechanisms.fairOrientations (SourceTrialCount T n b)).expect
+      (fun bits =&gt; F ((sourceAssignmentCode T n Bool b).symm bits)) =
+    (windowPosteriorLaw T n (sourceScheduledTrials T n) b
+      (noReveals T n (sourceScheduledTrials T n) b)).expect F := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Oracles.lean.html#L1608">OAI.TraceReconstruction.PairedMechanisms.fairOrientations</a>, <a href="Simulation.lean.html#L1052">OAI.TraceReconstruction.SourceTrialCount</a>, <a href="Simulation.lean.html#L1062">OAI.TraceReconstruction.sourceAssignmentCode</a>, <a href="LeafOracle.lean.html#L803">OAI.TraceReconstruction.windowPosteriorLaw</a>, <a href="Metadata.lean.html#L480">OAI.TraceReconstruction.noReveals</a></p></li><li id=L1161><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeFit_tail_interior</code> <small>line 1161</small><div class="doc"><p>The fit event uses only interior even bundles. In particular no parity
+assumption is made on the top root count J.</p></div><pre>theorem sourceTreeFit_tail_interior (T n : ℕ → ℕ) (b : ℕ)
+    (hn : ∀j,j+1&lt;b → 0&lt;n j) (he : ∀j,j+1&lt;b → Even (n j)) :
+    (windowPosteriorLaw T n (sourceScheduledTrials T n) b
+      (noReveals T n (sourceScheduledTrials T n) b)).expect
+        (fun bits =&gt; if SourceTreeFit T n b bits then 0 else 1) ≤ sourceFitTail T n b := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L803">OAI.TraceReconstruction.windowPosteriorLaw</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Metadata.lean.html#L480">OAI.TraceReconstruction.noReveals</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Metadata.lean.html#L678">OAI.TraceReconstruction.sourceFitTail</a></p></li><li id=L1241><b>theorem</b> <code>OAI.TraceReconstruction.source_flat_fit_tail</code> <small>line 1241</small><div class="doc"><p>Honest source joint-fit failure after the actual finite coding.</p></div><pre>theorem source_flat_fit_tail (T n : ℕ → ℕ) (b : ℕ)
+    (hn : ∀j,j+1&lt;b → 0&lt;n j) (he : ∀j,j+1&lt;b → Even (n j)) :
+    (PairedMechanisms.fairOrientations (SourceTrialCount T n b)).expect
+      (fun bits =&gt; if SourceTreeFit T n b ((sourceAssignmentCode T n Bool b).symm bits) then 0 else 1)
+      ≤ sourceFitTail T n b := by
+…</pre><p class="refs">Mentions: <a href="Oracles.lean.html#L1608">OAI.TraceReconstruction.PairedMechanisms.fairOrientations</a>, <a href="Simulation.lean.html#L1052">OAI.TraceReconstruction.SourceTrialCount</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Simulation.lean.html#L1062">OAI.TraceReconstruction.sourceAssignmentCode</a>, <a href="Metadata.lean.html#L678">OAI.TraceReconstruction.sourceFitTail</a></p></li><li id=L1251><b>def</b> <code>OAI.TraceReconstruction.sourceOracleDecode</code> <small>line 1251</small><div class="doc"><p>A fixed public decoder. It does not know the hidden orientations or the
+input hypothesis, and it drops rather than reveals all pairing flags.</p></div><pre>def sourceOracleDecode {Side Leaf : Type} (T n : ℕ → ℕ) (b : ℕ)
+    (f : Side → List Bool) (g : Leaf → List Bool) :
+    ((Reports Side (SourceTrialCount T n b) × (Fin (SourceLeafCount T b) → Leaf)) ×
+      (Fin (SourceFillerCount T b) → Side)) → List Bool := fun x =&gt;
+…</pre><p class="refs">Mentions: <a href="Oracles.lean.html#L1594">OAI.TraceReconstruction.Reports</a>, <a href="Simulation.lean.html#L1052">OAI.TraceReconstruction.SourceTrialCount</a>, <a href="Simulation.lean.html#L1054">OAI.TraceReconstruction.SourceLeafCount</a>, <a href="Simulation.lean.html#L1053">OAI.TraceReconstruction.SourceFillerCount</a></p></li><li id=L1262><b>theorem</b> <code>OAI.TraceReconstruction.source_canonical_simulation</code> <small>line 1262</small><div class="doc"><p>The complete canonical oracle now simulates the LITERAL source block.
+All IDs, words, leaf types and chronology instantiate the actual construction.
+The only failed-layout cost is its original unconditional fair-bit mass.</p></div><pre>theorem source_canonical_simulation {Side Leaf : Type} [Fintype Side] [Fintype Leaf]
+    {q E : ℝ} (hq : q∈Set.Icc 0 1) (hE : 0≤E)
+    (s : ℕ) (P T n h : ℕ → ℕ) (atom : Bool → List Bool) (b : ℕ)
+    (H : SourceLayoutMargins s P T n h b)
+    (hP : P b=n b*(2*h b+1)+T b) (hT : Even (T b))
+    (hlarge : 4*(n b+1)≤T b) (hmotif : 8*2^s≤T b)
+    (hn : ∀j&lt;b,0&lt;n j)
+    (M : PairedMechanisms Side (SourceTrialCount T n (b+1)))
+    (R : Fin (SourceFillerCount T (b+1)) → FiniteLaw Side) (A B : FiniteLaw Leaf)
+    (f : Side → List Bool) (g : Leaf → List Bool)
+    (hU : ∀j,SimulatesTrace q (M.first j) f (sourceFlatTrialWord s P T n h atom (b+1) false j))
+    (hV : ∀j,SimulatesTrace q (M.second j) f (sourceFlatTrialWord s P T n h atom (b+1) true j))
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L920">OAI.TraceReconstruction.SourceLayoutMargins</a>, <a href="Oracles.lean.html#L1585">OAI.TraceReconstruction.PairedMechanisms</a>, <a href="Simulation.lean.html#L1052">OAI.TraceReconstruction.SourceTrialCount</a>, <a href="Simulation.lean.html#L1053">OAI.TraceReconstruction.SourceFillerCount</a>, <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L179">OAI.TraceReconstruction.SimulatesTrace</a>, <a href="Simulation.lean.html#L1089">OAI.TraceReconstruction.sourceFlatTrialWord</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

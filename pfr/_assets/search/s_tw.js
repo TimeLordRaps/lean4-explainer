@@ -1,0 +1,1 @@
+window.l4shard("tw", [["I_two_le",4,1402],["ProbabilityTheory.iIndepFun.apply_two_last",31,256],["ProbabilityTheory.independent_copies_two",15,244],["entropy_of_Z_two_le",41,339],["mutual_of_W_Z_two_le",41,390]]);

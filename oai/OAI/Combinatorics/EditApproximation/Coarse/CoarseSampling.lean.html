@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/EditApproximation/Coarse/CoarseSampling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/EditApproximation/Coarse/CoarseSampling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">EditApproximation</a> / <a href="index.html">Coarse</a> / <span>CoarseSampling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">EditApproximation</a>/<a href="index.html">Coarse</a>/<span>CoarseSampling.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/EditApproximation/Coarse/CoarseSampling.lean#L1">source</a></p><div class="doc"><h3>Independent heterogeneous coarse threshold samples</h3><p>Every child has its own fixed true cost and an independent uniform label
+in <code>1,...,B</code>. The child estimates are absent from this probability space:
+they enter only the pathwise reconstruction proved separately.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.EditApproximation.coarse_sum_labels</code> <small>line 19</small></li><li id=L34><b>def</b> <code>OAI.EditApproximation.coarseThresholdSample</code> <small>line 34</small></li><li id=L37><b>theorem</b> <code>OAI.EditApproximation.coarseThresholdSample_large</code> <small>line 37</small></li><li id=L51><b>theorem</b> <code>OAI.EditApproximation.coarseThresholdSample_moments</code> <small>line 51</small><div class="doc"><p>The mean, centered range and variance proxy are established for each
+fixed cost, including the deterministic range above the threshold scale.</p></div><pre>theorem coarseThresholdSample_moments {B : ℕ} [NeZero B]
+    [MeasurableSpace (Fin B)] [MeasurableSingletonClass (Fin B)]
+    (scale value : ℝ) (hscale : 0 &lt; scale) (hvalue : 0 ≤ value) :
+    (0 ≤ value - uniformMean (coarseThresholdSample (B := B) scale value) ∧
+…</pre><p class="refs">Mentions: <a href="../Probability/FiniteSampling.lean.html#L17">OAI.EditApproximation.uniformMean</a>, <a href="CoarseSampling.lean.html#L34">OAI.EditApproximation.coarseThresholdSample</a></p></li><li id=L98><b>theorem</b> <code>OAI.EditApproximation.coarse_product_threshold_concentration_positive</code> <small>line 98</small><div class="doc"><p>Actual product-uniform child labels satisfy the manuscript's coarse
+Bernstein tail bound for every fixed heterogeneous true-cost list.</p></div><pre>theorem coarse_product_threshold_concentration_positive {B : ℕ} [NeZero B]
+    [MeasurableSpace (Fin B)] [MeasurableSingletonClass (Fin B)]
+    (value : Fin B → ℝ) (scale allowance Q lam : ℝ)
+    (hvalue : ∀ i, 0 ≤ value i) (hu : 0 &lt; scale) (ha : 0 &lt; allowance)
+    (hQ : Q * scale = allowance) (hscale : scale ≤ allowance / 2)
+    (hlam : 0 ≤ lam) (hlamone : lam ≤ 1)
+    (hV : 0 &lt; ∑ i, value i)
+    (bernstein : FiniteBernsteinInput (Measure.pi fun _ : Fin B =&gt;
+      (PMF.uniformOfFintype (Fin B)).toMeasure)) :
+    (Measure.pi fun _ : Fin B =&gt; (PMF.uniformOfFintype (Fin B)).toMeasure).real
+      {draws | lam * (∑ i, value i) + allowance &lt;
+        |(∑ i, coarseThresholdSample scale (value i) (draws i)) - ∑ i, value i|} ≤
+…</pre><p class="refs">Mentions: <a href="../Geometry/PublishedInputs.lean.html#L28">OAI.EditApproximation.FiniteBernsteinInput</a>, <a href="CoarseSampling.lean.html#L34">OAI.EditApproximation.coarseThresholdSample</a></p></li><li id=L157><b>theorem</b> <code>OAI.EditApproximation.coarse_product_threshold_concentration</code> <small>line 157</small><div class="doc"><p>The same exact product-uniform law, including zero total true cost.</p></div><pre>theorem coarse_product_threshold_concentration {B : ℕ} [NeZero B]
+    [MeasurableSpace (Fin B)] [MeasurableSingletonClass (Fin B)]
+    (value : Fin B → ℝ) (scale allowance Q lam : ℝ)
+    (hvalue : ∀ i, 0 ≤ value i) (hu : 0 &lt; scale) (ha : 0 &lt; allowance)
+    (hQ : Q * scale = allowance) (hscale : scale ≤ allowance / 2)
+    (hlam : 0 ≤ lam) (hlamone : lam ≤ 1)
+    (bernstein : FiniteBernsteinInput (Measure.pi fun _ : Fin B =&gt;
+      (PMF.uniformOfFintype (Fin B)).toMeasure)) :
+    (Measure.pi fun _ : Fin B =&gt; (PMF.uniformOfFintype (Fin B)).toMeasure).real
+      {draws | lam * (∑ i, value i) + allowance &lt;
+        |(∑ i, coarseThresholdSample scale (value i) (draws i)) - ∑ i, value i|} ≤
+      2 * Real.exp (-lam * Q / 12) := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/PublishedInputs.lean.html#L28">OAI.EditApproximation.FiniteBernsteinInput</a>, <a href="CoarseSampling.lean.html#L34">OAI.EditApproximation.coarseThresholdSample</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

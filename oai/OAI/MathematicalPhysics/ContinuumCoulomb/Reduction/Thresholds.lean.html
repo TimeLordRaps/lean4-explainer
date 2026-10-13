@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/ContinuumCoulomb/Reduction/Thresholds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/ContinuumCoulomb/Reduction/Thresholds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">ContinuumCoulomb</a> / <a href="index.html">Reduction</a> / <span>Thresholds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">ContinuumCoulomb</a>/<a href="index.html">Reduction</a>/<span>Thresholds.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/ContinuumCoulomb/Reduction/Thresholds.lean#L1">source</a></p><div class="doc"><h3>Promise transfer for continuum Coulomb energy</h3><p>The numerical energy comparisons give rational threshold maps preserving
+both source promises and an output threshold gap of at least one.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.ContinuumCoulomb.binary_threshold_transfer</code> <small>line 17</small><div class="doc"><p>The rational affine thresholds in 271-01, §6, equations
+<code>rounded-affine-error</code> and <code>output-gap</code>, preserve the source promises.</p></div><pre>theorem binary_threshold_transfer
+    {sourceEnergy physicalEnergy sourceYes sourceNo slope offset : ℝ}
+    (hslope : 0 &lt; slope) (hgap : sourceYes &lt; sourceNo)
+    (herror : |physicalEnergy - (slope * sourceEnergy + offset)| ≤
+      (5 / 64 : ℝ) * slope * (sourceNo - sourceYes)) :
+    (sourceEnergy ≤ sourceYes →
+      physicalEnergy &lt; slope * (sourceYes + (sourceNo - sourceYes) / 4) + offset) ∧
+    (sourceNo ≤ sourceEnergy →
+      slope * (sourceNo - (sourceNo - sourceYes) / 4) + offset &lt; physicalEnergy) := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.ContinuumCoulomb.binary_output_gap</code> <small>line 38</small><div class="doc"><p>The binary-charge output loses exactly half of the scaled source gap.</p></div><pre>theorem binary_output_gap (sourceYes sourceNo slope offset : ℝ) :
+    (slope * (sourceNo - (sourceNo - sourceYes) / 4) + offset) -
+      (slope * (sourceYes + (sourceNo - sourceYes) / 4) + offset) =
+        slope * (sourceNo - sourceYes) / 2 := by
+…</pre></li><li id=L47><b>theorem</b> <code>OAI.ContinuumCoulomb.unit_threshold_transfer</code> <small>line 47</small><div class="doc"><p>The unit-charge manuscript, §7, equation (10): the energy error and
+rounding errors have distinct budgets. The thresholds may be any rational
+approximations satisfying the stated real error bounds.</p></div><pre>theorem unit_threshold_transfer
+    {sourceEnergy physicalEnergy sourceYes sourceNo slope offset gamma
+      outputYes outputNo : ℝ}
+    (hslope : 0 &lt; slope) (hgamma : 0 &lt; gamma)
+    (hgap : gamma ≤ sourceNo - sourceYes)
+    (herror : |physicalEnergy - (slope * sourceEnergy + offset)| ≤
+      slope * gamma / 8)
+    (hroundYes : |outputYes - (slope * (sourceYes + gamma / 4) + offset)| ≤
+      slope * gamma / 32)
+    (hroundNo : |outputNo - (slope * (sourceNo - gamma / 4) + offset)| ≤
+      slope * gamma / 32) :
+    (sourceEnergy ≤ sourceYes → physicalEnergy &lt; outputYes) ∧
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.ContinuumCoulomb.unit_output_gap_at_least_one</code> <small>line 76</small><div class="doc"><p>The unit-charge construction requests scaled gap at least eight.</p></div><pre>theorem unit_output_gap_at_least_one {slope gamma outputYes outputNo : ℝ}
+    (hscale : 8 ≤ slope * gamma)
+    (hgap : (7 / 16 : ℝ) * slope * gamma ≤ outputNo - outputYes) :
+    1 ≤ outputNo - outputYes := by
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.ContinuumCoulomb.inverse_length_precision</code> <small>line 84</small><div class="doc"><p>An output threshold gap at least one meets precision exponent <code>c = 1</code>
+for every positive total input length; there is no circular size estimate.</p></div><pre>theorem inverse_length_precision {outputYes outputNo : ℝ} {length : ℕ}
+    (hlength : 1 ≤ length) (hgap : 1 ≤ outputNo - outputYes) :
+    (length : ℝ)⁻¹ ≤ outputNo - outputYes := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,167 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/PoissonVariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/PoissonVariance.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>PoissonVariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>PoissonVariance.lean</span></code></h1><p class="muted">46 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/PoissonVariance.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.DilutedSpinGlass.physical_marked_palm</code> <small>line 17</small><div class="doc"><p>Palm identity for the actual finite selected-type marked reservoir statistic.
+No permutation or add-one property of the score is assumed. The base tower and
+base weight are unchanged on the right: all the other types remain present.</p></div><pre>theorem physical_marked_palm {L : ℕ} (S : PrescribedTree L) (a : S.Leaf)
+    (r : ℝ≥0) (P : FiniteLaw I) (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (base : FinitePath Ω L → ℝ)
+    (factor numerator : I → FinitePath Ω L → FinitePath A L → ℝ)
+    (f : (S.Leaf → FinitePath Ω L) → ℝ) {B : ℝ}
+    (hf : ∀ x, |f x| ≤ B) (hn : ∀ i y z, |numerator i y z| ≤ 1)
+    (hA : ∀ i y z, 1/2 ≤ factor i y z) :
+    (∫ n : ℕ, (FiniteLaw.pi (fun _ : Fin n =&gt; P)).expect (fun roots =&gt;
+      ∑ q, markedTreeScore S a T Q m base roots factor numerator f q) ∂poissonMeasure r) =
+    (r : ℝ) * ∫ n : ℕ, P.expect (fun i =&gt;
+      (FiniteLaw.pi (fun _ : Fin n =&gt; P)).expect (fun roots =&gt;
+        markedTreeScore S a T Q m base (Fin.cons i roots) factor numerator f 0))
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="FiniteLaw.lean.html#L601">OAI.DilutedSpinGlass.FiniteLaw.pi</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="ProductTowers.lean.html#L477">OAI.DilutedSpinGlass.markedTreeScore</a></p></li><li id=L42><b>def</b> <code>OAI.DilutedSpinGlass.markPrior</code> <small>line 42</small><div class="doc"><p>An independent mark prior with no physical state.</p></div><pre>noncomputable def markPrior : (L : ℕ) → (Fin L → FiniteLaw A) → KernelTower A L
+  | 0, _ =&gt; ()
+  | L+1, Q =&gt; (Q 0, fun _ =&gt; markPrior L (fun j =&gt; Q j.succ))
+
+/-- Move the distinguished Poisson-rooted mark out of the old mark row. -/</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a></p></li><li id=L47><b>def</b> <code>OAI.DilutedSpinGlass.splitRow</code> <small>line 47</small><div class="doc"><p>Move the distinguished Poisson-rooted mark out of the old mark row.</p></div><pre>def splitRow (k : ℕ) : (Ω × (Fin (k+1) → A)) ≃ ((Ω × (Fin k → A)) × A) where
+…</pre></li><li id=L55><b>theorem</b> <code>OAI.DilutedSpinGlass.markedTower_split</code> <small>line 55</small><div class="doc"><p>Counts n+1 in the Palm model have exactly the original n-mark law times
+one unused independent prior process. No term is removed from the base law.</p></div><pre>theorem markedTower_split (k L : ℕ) (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A) :
+    KernelTower.transport (splitRow k) L (markedTower (k+1) L T Q) =
+      KernelTower.prod L (markedTower k L T Q) (markPrior L Q) := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="ProductTowers.lean.html#L54">OAI.DilutedSpinGlass.KernelTower.transport</a>, <a href="PoissonVariance.lean.html#L47">OAI.DilutedSpinGlass.splitRow</a>, <a href="ProductTowers.lean.html#L398">OAI.DilutedSpinGlass.markedTower</a>, <a href="ProductTowers.lean.html#L234">OAI.DilutedSpinGlass.KernelTower.prod</a>, <a href="PoissonVariance.lean.html#L42">OAI.DilutedSpinGlass.markPrior</a></p></li><li id=L73><b>theorem</b> <code>OAI.DilutedSpinGlass.physicalPath_split</code> <small>line 73</small></li><li id=L84><b>theorem</b> <code>OAI.DilutedSpinGlass.markPath_split_succ</code> <small>line 84</small></li><li id=L96><b>theorem</b> <code>OAI.DilutedSpinGlass.markPath_split_zero</code> <small>line 96</small></li><li id=L109><b>def</b> <code>OAI.DilutedSpinGlass.insertedMarkedLog</code> <small>line 109</small><div class="doc"><p>Logarithmic weight after one truly independent added factor on the base
+which still contains all original selected-type terms.</p></div><pre>noncomputable def insertedMarkedLog (base : FinitePath Ω L → ℝ) (roots : Fin k → I)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ)
+    (newFactor : FinitePath Ω L → FinitePath A L → ℝ)
+    (y : FinitePath ((Ω × (Fin k → A)) × A) L) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a></p></li><li id=L117><b>theorem</b> <code>OAI.DilutedSpinGlass.insertedMarkedLog_split</code> <small>line 117</small></li><li id=L132><b>def</b> <code>OAI.DilutedSpinGlass.markedRoot</code> <small>line 132</small><div class="doc"><p>The actual quenched root free energy of the marked model.</p></div><pre>noncomputable def markedRoot (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (base : FinitePath Ω L → ℝ) (roots : Fin k → I)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a></p></li><li id=L139><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_cons_bound</code> <small>line 139</small><div class="doc"><p>Add/delete a marked Poisson point using a common product prior; the old
+mark row is not reweighted before the comparison.</p></div><pre>theorem markedRoot_cons_bound (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ) (roots : Fin k → I) (i : I)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ) {C : ℝ}
+    (hfactor : ∀ x y, |Real.log (factor i x y)| ≤ C) :
+    |markedRoot T Q m base (Fin.cons i roots) factor -
+      markedRoot T Q m base roots factor| ≤ C := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a></p></li><li id=L161><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_base_stability</code> <small>line 161</small><div class="doc"><p>Replacing a physical root block acts only on the base log weight.</p></div><pre>theorem markedRoot_base_stability (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base base&#x27; : FinitePath Ω L → ℝ) (roots : Fin k → I)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ) {C : ℝ}
+    (hb : ∀ x, |base x - base&#x27; x| ≤ C) :
+    |markedRoot T Q m base roots factor - markedRoot T Q m base&#x27; roots factor| ≤ C := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a></p></li><li id=L172><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_update_bound</code> <small>line 172</small><div class="doc"><p>One changed type/site label changes exactly one bounded log factor.</p></div><pre>theorem markedRoot_update_bound (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ) (roots : Fin k → I) (q : Fin k) (i : I)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ) {C : ℝ}
+    (hf : ∀ x y, |Real.log (factor i x y) - Real.log (factor (roots q) x y)| ≤ C) :
+    |markedRoot T Q m base (Function.update roots q i) factor -
+      markedRoot T Q m base roots factor| ≤ C := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a></p></li><li id=L204><b>def</b> <code>OAI.DilutedSpinGlass.rootArray</code> <small>line 204</small><div class="doc"><p>The recursive independent-root product and the finite indexed root array
+are the same labeled data. No exchangeability is needed here.</p></div><pre>def rootArray {I : Type*} : (n : ℕ) → RootPath I n → Fin n → I
+  | 0, _ =&gt; Fin.elim0
+  | n+1, x =&gt; Fin.cons x.1 (rootArray n x.2)</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a></p></li><li id=L208><b>theorem</b> <code>OAI.DilutedSpinGlass.rootArray_replace</code> <small>line 208</small></li><li id=L225><b>instance</b> <code>OAI.DilutedSpinGlass.rootPathCountable</code> <small>line 225</small></li><li id=L231><b>instance</b> <code>OAI.DilutedSpinGlass.rootPathSingleton</code> <small>line 231</small></li><li id=L241><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_count_bound</code> <small>line 241</small><div class="doc"><p>A linear bound in the actual random point count, from the prior coupling.</p></div><pre>theorem markedRoot_count_bound (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ) {C : ℝ}
+    (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C) (n : ℕ) (x : RootPath I n) :
+    |markedRoot T Q m base (rootArray n x) factor| ≤
+      |markedRoot T Q m base (fun j : Fin 0 =&gt; j.elim0) factor| + (n : ℝ)*C := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a></p></li><li id=L266><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_poisson_variance</code> <small>line 266</small><div class="doc"><p>Literal random-count marked-root concentration. The auxiliary rows change
+with the count, and their comparison is justified by markedRoot_cons_bound,
+not by an assumed concentration of an already averaged auxiliary score.</p></div><pre>theorem markedRoot_poisson_variance [MeasurableSpace I] [Countable I]
+    [MeasurableSingletonClass I] (μ : Measure I) [IsProbabilityMeasure μ] (r : ℝ≥0)
+    (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ) {C : ℝ}
+    (hC : 0 ≤ C) (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C) :
+    let F := fun n (x : RootPath I n) =&gt; markedRoot T Q m base (rootArray n x) factor
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a></p></li><li id=L305><b>theorem</b> <code>OAI.DilutedSpinGlass.FiniteLaw.measurable_expect</code> <small>line 305</small></li><li id=L310><b>theorem</b> <code>OAI.DilutedSpinGlass.FiniteLaw.measurable_logMean</code> <small>line 310</small></li><li id=L320><b>theorem</b> <code>OAI.DilutedSpinGlass.KernelTower.measurable_backwardLog</code> <small>line 320</small></li><li id=L334><b>theorem</b> <code>OAI.DilutedSpinGlass.measurable_rootArray</code> <small>line 334</small><div class="doc"><p>Coordinate evaluation is measurable for the genuine independent root
+product, including arbitrary (not necessarily discrete) interaction marks.</p></div><pre>theorem measurable_rootArray {I : Type*} [MeasurableSpace I] (n : ℕ) (j : Fin n) :
+    Measurable (fun x : RootPath I n =&gt; rootArray n x j) := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a></p></li><li id=L345><b>theorem</b> <code>OAI.DilutedSpinGlass.measurable_markedRoot</code> <small>line 345</small></li><li id=L360><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_poisson_variance_measurable</code> <small>line 360</small><div class="doc"><p>Physical-root concentration for general measurable interaction labels.
+In particular no finite-support or countability condition is imposed on the
+bounded physical disorder by this application of the random-count bound.</p></div><pre>theorem markedRoot_poisson_variance_measurable
+    (μ : Measure I) [IsProbabilityMeasure μ] (r : ℝ≥0)
+    (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ)
+    (hfmeas : ∀ x y, Measurable (fun i =&gt; factor i x y)) {C : ℝ}
+    (hC : 0 ≤ C) (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C) :
+    let F := fun n (x : RootPath I n) =&gt; markedRoot T Q m base (rootArray n x) factor
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a></p></li><li id=L400><b>def</b> <code>OAI.DilutedSpinGlass.poissonRootAverage</code> <small>line 400</small><div class="doc"><p>Root averaging followed by the genuine Poisson count average.</p></div><pre>noncomputable def poissonRootAverage (r : ℝ≥0)
+    (F : (n : ℕ) → RootPath Ω n → ℝ) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a></p></li><li id=L406><b>theorem</b> <code>OAI.DilutedSpinGlass.measurable_poissonRootAverage</code> <small>line 406</small><div class="doc"><p>A parameter in a Poisson root average stays measurable, despite the
+count-dependent dimension of the actual root state.</p></div><pre>theorem measurable_poissonRootAverage (r : ℝ≥0)
+    {F : X → (n : ℕ) → RootPath Ω n → ℝ}
+    (hF : ∀ n, Measurable (fun z : X × RootPath Ω n =&gt; F z.1 n z.2)) :
+    Measurable (fun x =&gt; poissonRootAverage μ r (F x)) := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L400">OAI.DilutedSpinGlass.poissonRootAverage</a></p></li><li id=L420><b>theorem</b> <code>OAI.DilutedSpinGlass.poisson_root_second_moment</code> <small>line 420</small><div class="doc"><p>The actual random-count squared displacement around any center. Both
+conditional root fluctuations and random-count fluctuations are retained.</p></div><pre>theorem poisson_root_second_moment (r : ℝ≥0)
+    {F : (n : ℕ) → RootPath Ω n → ℝ} {B : ℕ → ℝ} {C D : ℝ}
+    (hF : ∀ n, Measurable (F n)) (hB : ∀ n x, |F n x| ≤ B n)
+    (hD : 0 ≤ D)
+    (hrep : ∀ n (i : Fin n) x y, |F n x-F n (replaceRoot n x i y)| ≤ C)
+    (hadd : ∀ n x y, |F (n+1) (x,y)-F n y| ≤ D) (c : ℝ) :
+    (∫ n : ℕ, ∫ x, (F n x-c)^2 ∂rootLaw n (fun _ =&gt; μ) ∂poissonMeasure r) ≤
+      (C^2/2+D^2)*(r : ℝ) + (poissonRootAverage μ r F-c)^2 := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonMoments.lean.html#L150">OAI.DilutedSpinGlass.replaceRoot</a>, <a href="PoissonMoments.lean.html#L134">OAI.DilutedSpinGlass.rootLaw</a>, <a href="PoissonVariance.lean.html#L400">OAI.DilutedSpinGlass.poissonRootAverage</a></p></li><li id=L454><b>theorem</b> <code>OAI.DilutedSpinGlass.independent_block_poisson_variance</code> <small>line 454</small><div class="doc"><p>Full physical-root variance, with an extra independent root block. It is
+not conditioned on the Poisson count or on the other root disorder.</p></div><pre>theorem independent_block_poisson_variance (r : ℝ≥0) (ν : Measure X)
+    [IsProbabilityMeasure ν] {F : X → (n : ℕ) → RootPath Ω n → ℝ}
+    {B : ℕ → ℝ} {C D : ℝ}
+    (hF : ∀ x n, Measurable (F x n)) (hB : ∀ x n y, |F x n y| ≤ B n)
+    (hD : 0 ≤ D)
+    (hrep : ∀ x n (i : Fin n) y z, |F x n y-F x n (replaceRoot n y i z)| ≤ C)
+    (hadd : ∀ x n y z, |F x (n+1) (y,z)-F x n z| ≤ D)
+    (hmean : MemLp (fun x =&gt; poissonRootAverage μ r (F x)) 2 ν) :
+    (∫ x, ∫ n : ℕ, ∫ y, (F x n y-(∫ z, poissonRootAverage μ r (F z) ∂ν))^2
+      ∂rootLaw n (fun _ =&gt; μ) ∂poissonMeasure r ∂ν) ≤
+      (C^2/2+D^2)*(r : ℝ) + variance (fun x =&gt; poissonRootAverage μ r (F x)) ν := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonMoments.lean.html#L150">OAI.DilutedSpinGlass.replaceRoot</a>, <a href="PoissonVariance.lean.html#L400">OAI.DilutedSpinGlass.poissonRootAverage</a>, <a href="PoissonMoments.lean.html#L134">OAI.DilutedSpinGlass.rootLaw</a></p></li><li id=L480><b>theorem</b> <code>OAI.DilutedSpinGlass.poissonRootAverage_bound</code> <small>line 480</small><div class="doc"><p>A linear root bound is sufficient for all count averages in the physical
+model; no bounded support for the Poisson count is introduced.</p></div><pre>theorem poissonRootAverage_bound (r : ℝ≥0)
+    {F : (n : ℕ) → RootPath Ω n → ℝ} {A D : ℝ}
+    (hB : ∀ n x, |F n x| ≤ A+D*n) :
+    |poissonRootAverage μ r F| ≤ A+D*(r : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L400">OAI.DilutedSpinGlass.poissonRootAverage</a></p></li><li id=L496><b>theorem</b> <code>OAI.DilutedSpinGlass.poissonRootAverage_stability</code> <small>line 496</small><div class="doc"><p>Uniform stability passes through the entire marked-Poisson root law.</p></div><pre>theorem poissonRootAverage_stability (r : ℝ≥0)
+    {F G : (n : ℕ) → RootPath Ω n → ℝ} {A B D : ℝ}
+    (hF : ∀ n, Measurable (F n)) (hG : ∀ n, Measurable (G n))
+    (hBF : ∀ n x, |F n x| ≤ A+B*n) (hBG : ∀ n x, |G n x| ≤ A+B*n)
+    (hdiff : ∀ n x, |F n x-G n x| ≤ D) :
+    |poissonRootAverage μ r F-poissonRootAverage μ r G| ≤ D := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L400">OAI.DilutedSpinGlass.poissonRootAverage</a></p></li><li id=L526><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_uniform_bound</code> <small>line 526</small><div class="doc"><p>A bound for the root log partition uniform also in the physical base.</p></div><pre>theorem markedRoot_uniform_bound (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ) (factor : I → FinitePath Ω L → FinitePath A L → ℝ)
+    {B C : ℝ} (hb : ∀ y, |base y| ≤ B)
+    (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C) (n : ℕ) (x : RootPath I n) :
+    |markedRoot T Q m base (rootArray n x) factor| ≤ B+C*n := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a></p></li><li id=L549><b>theorem</b> <code>OAI.DilutedSpinGlass.measurable_markedRoot_base</code> <small>line 549</small><div class="doc"><p>Joint measurability in physical fields and in the actual independent
+Poisson labels; no discrete-law assumption occurs.</p></div><pre>theorem measurable_markedRoot_base (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (base : X → FinitePath Ω L → ℝ)
+    (hb : ∀ y, Measurable (fun x =&gt; base x y))
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ)
+    (hf : ∀ x y, Measurable (fun i =&gt; factor i x y)) (n : ℕ) :
+    Measurable (fun z : X × RootPath I n =&gt; markedRoot T Q m (base z.1) (rootArray n z.2) factor) := by
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a></p></li><li id=L564><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_full_variance</code> <small>line 564</small><div class="doc"><p>Unconditional root concentration for the actual marked model with an
+independent block of physical fields. The old and fresh mark priors change
+with the Poisson count and are not averaged before the log partition.</p></div><pre>theorem markedRoot_full_variance
+    (μ : Measure I) [IsProbabilityMeasure μ] (ν : Fin M → Measure X)
+    [∀ i, IsProbabilityMeasure (ν i)] (r : ℝ≥0)
+    (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : RootPath X M → FinitePath Ω L → ℝ)
+    (hbmeas : ∀ y, Measurable (fun x =&gt; base x y))
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ)
+    (hfmeas : ∀ x y, Measurable (fun i =&gt; factor i x y))
+    {B C : ℝ} (hC : 0 ≤ C) (hb : ∀ x y, |base x y| ≤ B)
+    (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C)
+    (E : Fin M → ℝ)
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a></p></li><li id=L627><b>def</b> <code>OAI.DilutedSpinGlass.FiniteLaw.point</code> <small>line 627</small></li><li id=L633><b>theorem</b> <code>OAI.DilutedSpinGlass.FiniteLaw.expect_point</code> <small>line 633</small></li><li id=L637><b>theorem</b> <code>OAI.DilutedSpinGlass.FiniteLaw.logMean_point</code> <small>line 637</small></li><li id=L641><b>def</b> <code>OAI.DilutedSpinGlass.FiniteLaw.uniform</code> <small>line 641</small></li><li id=L646><b>theorem</b> <code>OAI.DilutedSpinGlass.FiniteLaw.logMean_uniform</code> <small>line 646</small></li><li id=L661><b>def</b> <code>OAI.DilutedSpinGlass.KernelTower.terminalTower</code> <small>line 661</small><div class="doc"><p>Auxiliary levels contain no physical spin randomness. The last level is
+exactly the Gibbs sum under its uniform spin prior.</p></div><pre>noncomputable def terminalTower (a : Ω) (P : FiniteLaw Ω) : (r : ℕ) → KernelTower Ω (r+1)
+  | 0 =&gt; (P, fun _ =&gt; ())
+  | r+1 =&gt; (FiniteLaw.point a, fun _ =&gt; terminalTower a P r)</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="PoissonVariance.lean.html#L627">OAI.DilutedSpinGlass.FiniteLaw.point</a></p></li><li id=L665><b>def</b> <code>OAI.DilutedSpinGlass.KernelTower.terminalState</code> <small>line 665</small></li><li id=L669><b>theorem</b> <code>OAI.DilutedSpinGlass.KernelTower.backwardLog_terminalTower</code> <small>line 669</small></li><li id=L685><b>theorem</b> <code>OAI.DilutedSpinGlass.backwardLog_marked_base</code> <small>line 685</small></li><li id=L709><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_distance_base</code> <small>line 709</small></li><li id=L730><b>theorem</b> <code>OAI.DilutedSpinGlass.backwardLog_physical</code> <small>line 730</small></li><li id=L743><b>theorem</b> <code>OAI.DilutedSpinGlass.markedRoot_physical_distance</code> <small>line 743</small><div class="doc"><p>Perturbing the actual finite Ising system changes its hierarchical root
+logarithm by the sum of the bounded perturbation log-factors.</p></div><pre>theorem markedRoot_physical_distance {p N k n : ℕ} {A I : Type} [Fintype A]
+    (theta : Fin k → InteractionSample p) (h : Fin N → ℝ)
+    (indices : Fin k → Fin p → Fin N) (r : ℕ)
+    (Q : Fin (r+1) → FiniteLaw A) (m : Fin (r+1) → ℝ)
+    (hm : ∀ j, 0 &lt; m j) (hend : m (Fin.last r) = 1) (roots : Fin n → I)
+    (factor : I → FinitePath (Fin N → Spin) (r+1) → FinitePath A (r+1) → ℝ) {C : ℝ}
+    (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C) :
+    |markedRoot (KernelTower.terminalTower (fun _ : Fin N =&gt; false) FiniteLaw.uniform r)
+      Q m (fun y =&gt; logWeight theta h indices (KernelTower.terminalState r y)) roots factor
+        +N*Real.log 2-logPartition theta h indices| ≤ C*n := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L19">OAI.DilutedSpinGlass.InteractionSample</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L12">OAI.DilutedSpinGlass.Spin</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L661">OAI.DilutedSpinGlass.KernelTower.terminalTower</a>, <a href="PoissonVariance.lean.html#L641">OAI.DilutedSpinGlass.FiniteLaw.uniform</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L54">OAI.DilutedSpinGlass.logWeight</a>, <a href="PoissonVariance.lean.html#L665">OAI.DilutedSpinGlass.KernelTower.terminalState</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L58">OAI.DilutedSpinGlass.logPartition</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

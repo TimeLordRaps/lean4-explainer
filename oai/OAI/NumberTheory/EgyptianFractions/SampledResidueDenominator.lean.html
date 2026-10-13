@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/SampledResidueDenominator.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/SampledResidueDenominator.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>SampledResidueDenominator.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>SampledResidueDenominator.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/SampledResidueDenominator.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.Problem337.RandomProducts.residueWordEquiv</code> <small>line 12</small><div class="doc"><p>Reindex Boolean product words by the two-element finite type used in the
+auxiliary-denominator construction. No product values are identified.</p></div><pre>def residueWordEquiv (m : ℕ) : (Fin m → Fin 2) ≃ (Fin m → Bool) :=
+…</pre></li><li id=L16><b>def</b> <code>OAI.Problem337.RandomProducts.residueSamplePairs</code> <small>line 16</small><div class="doc"><p>The same labelled samples, in the paired-block interface.</p></div><pre>def residueSamplePairs {m : ℕ} {P : Finset ℕ}
+    (f : (Fin m × Bool) → P) : Fin m → Fin 2 → ℕ :=
+…</pre></li><li id=L20><b>theorem</b> <code>OAI.Problem337.RandomProducts.pairedEntry_residueSamplePairs</code> <small>line 20</small></li><li id=L26><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampledProduct_residueWordEquiv_symm</code> <small>line 26</small></li><li id=L34><b>theorem</b> <code>OAI.Problem337.RandomProducts.expect_pairedEntry_eq_sampledProduct</code> <small>line 34</small><div class="doc"><p>Reindexing preserves every normalized product statistic, including the
+complex Fourier averages used by the common-realization theorem.</p></div><pre>theorem expect_pairedEntry_eq_sampledProduct {m : ℕ} {P : Finset ℕ}
+    (f : (Fin m × Bool) → P) {A : Type*} [AddCommMonoid A] [Module ℚ≥0 A]
+    (g : ℕ → A) :
+    (𝔼 I : Fin m → Fin 2, g (ResidueConstruction.pairedEntry (residueSamplePairs f) I)) =
+      𝔼 I : Fin m → Bool, g (sampledProduct f I) := by
+…</pre><p class="refs">Mentions: <a href="ResidueDenominator.lean.html#L40">OAI.Problem337.ResidueConstruction.pairedEntry</a>, <a href="SampledResidueDenominator.lean.html#L16">OAI.Problem337.RandomProducts.residueSamplePairs</a>, <a href="RandomSecondMoment.lean.html#L14">OAI.Problem337.RandomProducts.sampledProduct</a></p></li><li id=L45><b>theorem</b> <code>OAI.Problem337.RandomProducts.card_pairedEntry_eq_sampledProduct</code> <small>line 45</small><div class="doc"><p>Exact preservation of filtered list cardinalities retains multiplicities
+when separate words happen to have equal product values.</p></div><pre>theorem card_pairedEntry_eq_sampledProduct {m : ℕ} {P : Finset ℕ}
+    (f : (Fin m × Bool) → P) (R : ℕ → Prop) [DecidablePred R] :
+    (Finset.univ.filter (fun I : Fin m → Fin 2 =&gt;
+      R (ResidueConstruction.pairedEntry (residueSamplePairs f) I))).card =
+    (Finset.univ.filter (fun I : Fin m → Bool =&gt; R (sampledProduct f I))).card := by
+…</pre><p class="refs">Mentions: <a href="ResidueDenominator.lean.html#L40">OAI.Problem337.ResidueConstruction.pairedEntry</a>, <a href="SampledResidueDenominator.lean.html#L16">OAI.Problem337.RandomProducts.residueSamplePairs</a>, <a href="RandomSecondMoment.lean.html#L14">OAI.Problem337.RandomProducts.sampledProduct</a></p></li><li id=L65><b>theorem</b> <code>OAI.Problem337.RandomProducts.construct_sampled_residue_denominator</code> <small>line 65</small><div class="doc"><p>A single denominator simultaneously contains the deterministic subset
+products and the original Boolean-indexed sampled products. The conclusion is
+valid for every realization of the prime samples; no probabilistic independence
+or Fourier hypothesis is needed for this arithmetic construction.</p></div><pre>theorem construct_sampled_residue_denominator {m : ℕ} {P : Finset ℕ}
+    (p : Fin m → ℕ) (f : Fin 1000 → ((Fin m × Bool) → P)) {S : ℝ}
+    (hS : 1 ≤ S) (hlog : 1 ≤ Real.log S) (hlarge : 100 * Real.log S ≤ S)
+    (hmLower : S - Real.log S ≤ (m : ℝ) * Real.log S)
+    (hmUpper : (m : ℝ) * Real.log S ≤ S)
+    (hp : ∀ j, S ^ 100 ≤ (p j : ℝ) ∧ (p j : ℝ) ≤ S ^ 101)
+    (hP : ∀ q ∈ P, S ^ 100 ≤ (q : ℝ) ∧ (q : ℝ) ≤ S ^ 101) :
+    ∃ M : ℕ, Real.exp S &lt; (M : ℝ) ∧ (M : ℝ) ≤ Real.exp (204204 * S) ∧
+      2 ^ ⌈100000 * Real.log S / Real.log 2⌉₊ ∣ M ∧
+      (∀ I : Fin m → Fin 2, ResidueConstruction.subsetEntry p I ∣ M ∧
+        1 ≤ ResidueConstruction.subsetEntry p I ∧
+        (ResidueConstruction.subsetEntry p I : ℝ) ≤ Real.exp (101 * S)) ∧
+…</pre><p class="refs">Mentions: <a href="ResidueDenominator.lean.html#L36">OAI.Problem337.ResidueConstruction.subsetEntry</a></p></li><li id=L113><b>def</b> <code>OAI.Problem337.RandomProducts.residueSubsetProduct</code> <small>line 113</small><div class="doc"><p>The deterministic subset list on the same Boolean-word index type as the
+sampled lists. This changes indices only, never the list entries or multiplicities.</p></div><pre>def residueSubsetProduct {m : ℕ} (p : Fin m → ℕ) (I : Fin m → Bool) : ℕ :=
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.Problem337.RandomProducts.residueSubsetProduct_eq_prod</code> <small>line 117</small><div class="doc"><p>The reindexed deterministic list has the usual subset-product formula.</p></div><pre>theorem residueSubsetProduct_eq_prod {m : ℕ} (p : Fin m → ℕ) (I : Fin m → Bool) :
+    residueSubsetProduct p I = ∏ j, if I j then p j else 1 := by
+…</pre><p class="refs">Mentions: <a href="SampledResidueDenominator.lean.html#L113">OAI.Problem337.RandomProducts.residueSubsetProduct</a></p></li><li id=L126><b>theorem</b> <code>OAI.Problem337.RandomProducts.residueSubsetProduct_injective</code> <small>line 126</small><div class="doc"><p>The deterministic Boolean-indexed list remains injective for distinct primes.</p></div><pre>theorem residueSubsetProduct_injective {m : ℕ} (p : Fin m → ℕ)
+    (hp : ∀ j, (p j).Prime) (hinj : Function.Injective p) :
+    Function.Injective (residueSubsetProduct p) := by
+…</pre><p class="refs">Mentions: <a href="SampledResidueDenominator.lean.html#L113">OAI.Problem337.RandomProducts.residueSubsetProduct</a></p></li><li id=L133><b>theorem</b> <code>OAI.Problem337.RandomProducts.expect_residueSubsetProduct</code> <small>line 133</small><div class="doc"><p>Any normalized statistic of the deterministic list is unchanged by reindexing.</p></div><pre>theorem expect_residueSubsetProduct {m : ℕ} (p : Fin m → ℕ)
+    {A : Type*} [AddCommMonoid A] [Module ℚ≥0 A] (g : ℕ → A) :
+    (𝔼 I : Fin m → Bool, g (residueSubsetProduct p I)) =
+      𝔼 I : Fin m → Fin 2, g (ResidueConstruction.subsetEntry p I) := by
+…</pre><p class="refs">Mentions: <a href="SampledResidueDenominator.lean.html#L113">OAI.Problem337.RandomProducts.residueSubsetProduct</a>, <a href="ResidueDenominator.lean.html#L36">OAI.Problem337.ResidueConstruction.subsetEntry</a></p></li><li id=L143><b>theorem</b> <code>OAI.Problem337.RandomProducts.construct_sampled_residue_denominator_common_index</code> <small>line 143</small><div class="doc"><p>The denominator construction with the single common Boolean-word index
+used by both high-level deterministic and lower-level sampled residue estimates.</p></div><pre>theorem construct_sampled_residue_denominator_common_index {m : ℕ} {P : Finset ℕ}
+    (p : Fin m → ℕ) (f : Fin 1000 → ((Fin m × Bool) → P)) {S : ℝ}
+    (hS : 1 ≤ S) (hlog : 1 ≤ Real.log S) (hlarge : 100 * Real.log S ≤ S)
+    (hmLower : S - Real.log S ≤ (m : ℝ) * Real.log S)
+    (hmUpper : (m : ℝ) * Real.log S ≤ S)
+    (hp : ∀ j, S ^ 100 ≤ (p j : ℝ) ∧ (p j : ℝ) ≤ S ^ 101)
+    (hP : ∀ q ∈ P, S ^ 100 ≤ (q : ℝ) ∧ (q : ℝ) ≤ S ^ 101) :
+    ∃ M : ℕ, Real.exp S &lt; (M : ℝ) ∧ (M : ℝ) ≤ Real.exp (204204 * S) ∧
+      2 ^ ⌈100000 * Real.log S / Real.log 2⌉₊ ∣ M ∧
+      (∀ I : Fin m → Bool, residueSubsetProduct p I ∣ M ∧
+        1 ≤ residueSubsetProduct p I ∧
+        (residueSubsetProduct p I : ℝ) ≤ Real.exp (101 * S)) ∧
+…</pre><p class="refs">Mentions: <a href="SampledResidueDenominator.lean.html#L113">OAI.Problem337.RandomProducts.residueSubsetProduct</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

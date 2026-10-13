@@ -1,0 +1,1 @@
+window.l4shard("na", [["Ex.Ex.Ex.OfNat",0,645],["TPiL.messageSeverityName",5,1203],["Weekday.Weekday.Hidden.Nat",6,875],["{lit}`Nat`.Ex2.id1",3,1105],["{lit}`Nat`.Ex2.id2",3,1113],["{lit}`Nat`.Ex2.id5",3,1124]]);

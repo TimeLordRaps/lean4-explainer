@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/ConvexLocalLimits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/ConvexLocalLimits.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>ConvexLocalLimits.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>ConvexLocalLimits.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/ConvexLocalLimits.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.AffineBernstein.LocalDistanceConverges</code> <small>line 17</small><div class="doc plain">The local distance-function topology used in geometry.tex:70–101. Sets
+are separately required to be nonempty and closed when those properties enter.</div><pre>def LocalDistanceConverges (Cj : ℕ → Set E) (C : Set E) : Prop :=
+…</pre></li><li id=L21><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.pointwise</code> <small>line 21</small></li><li id=L30><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.exists_approximating</code> <small>line 30</small></li><li id=L42><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_disjoint_compact</code> <small>line 42</small></li><li id=L64><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.mem_of_tendsto</code> <small>line 64</small></li><li id=L78><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_bounded_caps</code> <small>line 78</small><div class="doc plain">Uniform cap compactness, geometry.tex:104–125. The proof traps a chord
+on a fixed compact sphere, rather than choosing escaping directions.</div><pre>theorem LocalDistanceConverges.eventually_bounded_caps
+    {Cj : ℕ → Set E} {C : Set E} (h : LocalDistanceConverges Cj C)
+    (hcl : IsClosed C) (hclj : ∀ j, IsClosed (Cj j))
+    (hcvj : ∀ j, Convex ℝ (Cj j)) (hnej : ∀ j, (Cj j).Nonempty)
+    (ell : E →L[ℝ] ℝ) (b : ℝ)
+    (hbounded : Bornology.IsBounded (C ∩ {x | ell x ≤ b}))
+    {q : E} (hq : q ∈ C) (hqb : ell q &lt; b) :
+    ∃ R &gt; 0, ∀ᶠ j in atTop, Cj j ∩ {x | ell x ≤ b} ⊆ Metric.ball 0 R := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a></p></li><li id=L126><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_infDist_cap_lt_at</code> <small>line 126</small><div class="doc plain">A point on the top of a limit cap is approximated from strictly below
+its top by contracting toward a fixed strict point.</div><pre>theorem LocalDistanceConverges.eventually_infDist_cap_lt_at
+    {Cj : ℕ → Set E} {C : Set E} (h : LocalDistanceConverges Cj C)
+    (hclj : ∀ j, IsClosed (Cj j)) (hnej : ∀ j, (Cj j).Nonempty)
+    (hcv : Convex ℝ C) (ell : E →L[ℝ] ℝ) {b : ℝ}
+    {q : E} (hq : q ∈ C) (hqb : ell q &lt; b)
+    {x : E} (hx : x ∈ C) (hxb : ell x ≤ b) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∀ᶠ j in atTop, infDist x (Cj j ∩ {y | ell y ≤ b}) &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a></p></li><li id=L161><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_infDist_cap_lt_uniform</code> <small>line 161</small><div class="doc plain">Reverse Hausdorff inclusion for a compact cap.</div><pre>theorem LocalDistanceConverges.eventually_infDist_cap_lt_uniform
+    {Cj : ℕ → Set E} {C : Set E} (h : LocalDistanceConverges Cj C)
+    (hclj : ∀ j, IsClosed (Cj j)) (hnej : ∀ j, (Cj j).Nonempty)
+    (hcv : Convex ℝ C) (ell : E →L[ℝ] ℝ) {b : ℝ}
+    (hcap : IsCompact (C ∩ {x | ell x ≤ b}))
+    {q : E} (hq : q ∈ C) (hqb : ell q &lt; b) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∀ᶠ j in atTop, ∀ x ∈ C ∩ {y | ell y ≤ b},
+      infDist x (Cj j ∩ {y | ell y ≤ b}) &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a></p></li><li id=L182><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.tendsto_hausdorffDist_caps</code> <small>line 182</small><div class="doc plain">Full Hausdorff cap convergence, geometry.tex:104–125, with no asserted
+smoothness of the limiting boundary.</div><pre>theorem LocalDistanceConverges.tendsto_hausdorffDist_caps
+    {Cj : ℕ → Set E} {C : Set E} (h : LocalDistanceConverges Cj C)
+    (hcl : IsClosed C) (hcv : Convex ℝ C)
+    (hclj : ∀ j, IsClosed (Cj j)) (hcvj : ∀ j, Convex ℝ (Cj j))
+    (hnej : ∀ j, (Cj j).Nonempty) (ell : E →L[ℝ] ℝ) {b : ℝ}
+    (hcap : IsCompact (C ∩ {x | ell x ≤ b}))
+    {q : E} (hq : q ∈ C) (hqb : ell q &lt; b) :
+    Tendsto (fun j =&gt; hausdorffDist (Cj j ∩ {x | ell x ≤ b})
+      (C ∩ {x | ell x ≤ b})) atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a></p></li><li id=L224><b>theorem</b> <code>OAI.AffineBernstein.isCompact_nonneg_unitLipschitz</code> <small>line 224</small></li><li id=L258><b>theorem</b> <code>OAI.AffineBernstein.exists_distance_function_subsequence</code> <small>line 258</small></li><li id=L272><b>theorem</b> <code>OAI.AffineBernstein.distance_function_limit_representation</code> <small>line 272</small></li><li id=L311><b>theorem</b> <code>OAI.AffineBernstein.exists_convex_local_limit</code> <small>line 311</small><div class="doc plain">Local compactness of nonempty closed convex sets meeting a fixed bounded
+set, the extraction used in geometry.tex:70–101. The topology and the limit
+are literal sets and Euclidean distance functions.</div><pre>theorem exists_convex_local_limit {Cj : ℕ → Set E}
+    (hcl : ∀ j, IsClosed (Cj j)) (hcv : ∀ j, Convex ℝ (Cj j))
+    (hne : ∀ j, (Cj j).Nonempty) {R : ℝ}
+    (hbound : ∀ j, infDist (0 : E) (Cj j) ≤ R) :
+    ∃ (C : Set E) (φ : ℕ → ℕ), StrictMono φ ∧ IsClosed C ∧ C.Nonempty ∧
+      Convex ℝ C ∧ LocalDistanceConverges (fun j =&gt; Cj (φ j)) C := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/SmoothRankin.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/SmoothRankin.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>SmoothRankin.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>SmoothRankin.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/SmoothRankin.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.Problem337.smooth_sum_le_euler_product</code> <small>line 12</small><div class="doc"><p>A finite nonnegative sum over smooth numbers is bounded by the finite
+Euler product. Only the local prime-power series need to be summable.</p></div><pre>theorem smooth_sum_le_euler_product
+    (f : ℕ → ℝ) (hf : ∀ n, 0 ≤ f n) (hf1 : f 1 = 1)
+    (hmul : ∀ {m n}, Nat.Coprime m n → f (m * n) = f m * f n)
+    (hsum : ∀ {p : ℕ}, p.Prime → Summable (fun j : ℕ =&gt; ‖f (p ^ j)‖))
+    (N : ℕ) (s : Finset ℕ) (hs : ∀ n ∈ s, n ∈ N.smoothNumbers) :
+    (∑ n ∈ s, f n) ≤ ∏ p ∈ N.primesBelow, ∑&#x27; j : ℕ, f (p ^ j) := by
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.Problem337.rankin_weight_bound</code> <small>line 29</small><div class="doc"><p>The elementary exponential weight used in Rankin's tail estimate.</p></div><pre>theorem rankin_weight_bound {V β : ℝ} {n : ℕ}
+    (hβ : 0 ≤ β) (hn : Real.exp V ≤ (n : ℝ)) :
+    1 ≤ Real.exp (-β * V) * (n : ℝ) ^ β := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.Problem337.smooth_rankin_bound</code> <small>line 43</small><div class="doc"><p>Rankin's trick followed by a finite Euler product. This form applies to
+<code>f n = τ(n)^r / n</code>; the local weight then has exponent <code>-1 + β</code>.</p></div><pre>theorem smooth_rankin_bound
+    (f : ℕ → ℝ) (hf : ∀ n, 0 ≤ f n) (hf1 : f 1 = 1)
+    (hmul : ∀ {m n}, Nat.Coprime m n → f (m * n) = f m * f n)
+    {V β : ℝ} (hβ : 0 ≤ β)
+    (hsum : ∀ {p : ℕ}, p.Prime →
+      Summable (fun j : ℕ =&gt; ‖f (p ^ j) * ((p ^ j : ℕ) : ℝ) ^ β‖))
+    (N : ℕ) (s : Finset ℕ) (hs : ∀ n ∈ s, n ∈ N.smoothNumbers)
+    (hlarge : ∀ n ∈ s, Real.exp V ≤ (n : ℝ)) :
+    (∑ n ∈ s, f n) ≤ Real.exp (-β * V) *
+      (∏ p ∈ N.primesBelow, ∑&#x27; j : ℕ, f (p ^ j) * ((p ^ j : ℕ) : ℝ) ^ β) := by
+…</pre></li><li id=L77><b>def</b> <code>OAI.Problem337.divisorHarmonicWeight</code> <small>line 77</small><div class="doc"><p>The multiplicative weight occurring in divisor harmonic moments.</p></div><pre>def divisorHarmonicWeight (r n : ℕ) : ℝ :=
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.Problem337.divisorHarmonicWeight_nonneg</code> <small>line 80</small></li><li id=L84><b>theorem</b> <code>OAI.Problem337.divisorHarmonicWeight_one</code> <small>line 84</small></li><li id=L87><b>theorem</b> <code>OAI.Problem337.divisorHarmonicWeight_mul</code> <small>line 87</small></li><li id=L92><b>theorem</b> <code>OAI.Problem337.divisorHarmonicWeight_prime_power</code> <small>line 92</small></li><li id=L103><b>theorem</b> <code>OAI.Problem337.summable_successor_pow_geometric</code> <small>line 103</small></li><li id=L116><b>theorem</b> <code>OAI.Problem337.divisorHarmonicWeight_local_summable</code> <small>line 116</small></li><li id=L125><b>theorem</b> <code>OAI.Problem337.divisor_smooth_rankin_bound</code> <small>line 125</small><div class="doc"><p>Concrete smooth-prefix Rankin estimate for any natural moment order.</p></div><pre>theorem divisor_smooth_rankin_bound (r : ℕ) {V β : ℝ} (hβ : 0 ≤ β) (hβone : β &lt; 1)
+    (N : ℕ) (s : Finset ℕ) (hs : ∀ n ∈ s, n ∈ N.smoothNumbers)
+    (hlarge : ∀ n ∈ s, Real.exp V ≤ (n : ℝ)) :
+    (∑ n ∈ s, (n.divisors.card : ℝ) ^ r / (n : ℝ)) ≤ Real.exp (-β * V) *
+      (∏ p ∈ N.primesBelow, ∑&#x27; j : ℕ,
+        ((j + 1 : ℕ) : ℝ) ^ r * ((p : ℝ) ^ (β - 1)) ^ j) := by
+…</pre></li><li id=L144><b>theorem</b> <code>OAI.Problem337.divisor_harmonic_sum_le_euler_product</code> <small>line 144</small><div class="doc"><p>The unweighted finite Euler-product bound for harmonic divisor moments.</p></div><pre>theorem divisor_harmonic_sum_le_euler_product (r N : ℕ) (s : Finset ℕ)
+    (hs : ∀ n ∈ s, n ∈ N.smoothNumbers) :
+    (∑ n ∈ s, (n.divisors.card : ℝ) ^ r / (n : ℝ)) ≤
+      ∏ p ∈ N.primesBelow, ∑&#x27; j : ℕ, ((j + 1 : ℕ) : ℝ) ^ r * ((p : ℝ)⁻¹) ^ j := by
+…</pre></li><li id=L156><b>def</b> <code>OAI.Problem337.divisorEulerFactor</code> <small>line 156</small><div class="doc"><p>A local Euler factor, in the indexing convenient for Rankin's trick.</p></div><pre>def divisorEulerFactor (r p : ℕ) (β : ℝ) : ℝ :=
+…</pre></li><li id=L159><b>theorem</b> <code>OAI.Problem337.divisorEulerFactor_one_le</code> <small>line 159</small></li><li id=L172><b>theorem</b> <code>OAI.Problem337.divisor_smooth_rankin_log_bound</code> <small>line 172</small><div class="doc"><p>Logarithmic local-factor estimates turn the Rankin Euler product into a
+single exponential. This is the precise smooth-prefix bound used in the
+divisor-moment decomposition.</p></div><pre>theorem divisor_smooth_rankin_log_bound (r : ℕ) {V β C : ℝ}
+    (hβ : 0 ≤ β) (hβone : β &lt; 1) (N : ℕ) (s : Finset ℕ)
+    (hs : ∀ n ∈ s, n ∈ N.smoothNumbers)
+    (hlarge : ∀ n ∈ s, Real.exp V ≤ (n : ℝ))
+    (hlocal : ∀ p ∈ N.primesBelow,
+      Real.log (divisorEulerFactor r p β) ≤ C * (p : ℝ) ^ (β - 1)) :
+    (∑ n ∈ s, (n.divisors.card : ℝ) ^ r / (n : ℝ)) ≤
+      Real.exp (-β * V + C * ∑ p ∈ N.primesBelow, (p : ℝ) ^ (β - 1)) := by
+…</pre><p class="refs">Mentions: <a href="SmoothRankin.lean.html#L156">OAI.Problem337.divisorEulerFactor</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

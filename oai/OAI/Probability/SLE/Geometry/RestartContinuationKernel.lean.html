@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Geometry/RestartContinuationKernel.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Geometry/RestartContinuationKernel.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Geometry</a> / <span>RestartContinuationKernel.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Geometry</a>/<span>RestartContinuationKernel.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Geometry/RestartContinuationKernel.lean#L1">source</a></p><div class="doc"><p>Conditional path tests after a finite restart. Splitting again at τ+t
+identifies the conditional mean in the full original stopped filtration;
+no factorization of its events through the restarted path is required.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.SLEExactGauge.driverContinuationMean</code> <small>line 19</small></li><li id=L23><b>lemma</b> <code>OAI.SLEExactGauge.driverContinuation_test_measurable</code> <small>line 23</small></li><li id=L32><b>lemma</b> <code>OAI.SLEExactGauge.driverContinuationMean_measurable</code> <small>line 32</small></li><li id=L38><b>lemma</b> <code>OAI.SLEExactGauge.sourceRestartDriverPath_measurable</code> <small>line 38</small></li><li id=L48><b>theorem</b> <code>OAI.SLEExactGauge.source_driver_continuation_condLExp</code> <small>line 48</small></li><li id=L82><b>theorem</b> <code>OAI.SLEExactGauge.driverContinuationMean_eq_of_past_integrals</code> <small>line 82</small><div class="doc"><p>Deterministic-time conditional identities identify the continuation
+section on the canonical driver law.</p></div><pre>theorem driverContinuationMean_eq_of_past_integrals
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t)) (hc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    (t : ℝ≥0) (f K : C(ℝ≥0,ℝ) → ℝ≥0∞) (hf : Measurable f)
+    (hK : Measurable[driverPathFiltration t] K)
+    (hmean : ∀ A : Set Ω,
+      MeasurableSet[(Filtration.natural B (fun s =&gt; (hm s).stronglyMeasurable)) t] A →
+      (∫⁻ ω in A, f (sourceDriverPath B hc ω) ∂P)=
+        ∫⁻ ω in A, K (sourceDriverPath B hc ω) ∂P) :
+    driverContinuationMean (P.map (sourceDriverPath B hc)) t f =ᵐ[P.map (sourceDriverPath B hc)] K := by
+…</pre><p class="refs">Mentions: <a href="../Stochastic/DriverPastFactorization.lean.html#L23">OAI.SLEExactGauge.driverPathFiltration</a>, <a href="../StoppedMeasures.lean.html#L23">OAI.SLEExactGauge.sourceDriverPath</a>, <a href="RestartContinuationKernel.lean.html#L19">OAI.SLEExactGauge.driverContinuationMean</a></p></li><li id=L108><b>theorem</b> <code>OAI.SLEExactGauge.source_restart_continuation_condLExp</code> <small>line 108</small><div class="doc"><p>The conditioning sigma algebra is the full original past at τ+t.</p></div><pre>theorem source_restart_continuation_condLExp
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t)) (hc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    (τ : Ω → ℝ≥0)
+    (hτ : IsStoppingTime (Filtration.natural B (fun s =&gt; (hm s).stronglyMeasurable))
+      (fun ω =&gt; (τ ω : WithTop ℝ≥0)))
+    (t : ℝ≥0) (f : C(ℝ≥0,ℝ) → ℝ≥0∞) (hf : Measurable f) :
+    (fun ω =&gt; driverContinuationMean (P.map (sourceDriverPath B hc)) t f
+      (sourceRestartDriverPath B hc τ ω)) =ᵐ[P]
+    P⁻[(fun ω =&gt; f (sourceRestartDriverPath B hc τ ω)) | shiftedStoppingFiltration hτ t] := by
+…</pre><p class="refs">Mentions: <a href="RestartContinuationKernel.lean.html#L19">OAI.SLEExactGauge.driverContinuationMean</a>, <a href="../StoppedMeasures.lean.html#L23">OAI.SLEExactGauge.sourceDriverPath</a>, <a href="../StoppedMeasures.lean.html#L30">OAI.SLEExactGauge.sourceRestartDriverPath</a>, <a href="../Stochastic/ShiftedStoppingFiltration.lean.html#L37">OAI.SLEExactGauge.shiftedStoppingFiltration</a></p></li><li id=L145><b>theorem</b> <code>OAI.SLEExactGauge.source_restart_condLExp_of_section_ae</code> <small>line 145</small><div class="doc"><p>A canonical section identity therefore holds in the larger shifted
+filtration, not merely in the natural filtration of the fresh driver.</p></div><pre>theorem source_restart_condLExp_of_section_ae
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t)) (hc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    (τ : Ω → ℝ≥0)
+    (hτ : IsStoppingTime (Filtration.natural B (fun s =&gt; (hm s).stronglyMeasurable))
+      (fun ω =&gt; (τ ω : WithTop ℝ≥0)))
+    (t : ℝ≥0) (f K : C(ℝ≥0,ℝ) → ℝ≥0∞) (hf : Measurable f) (hK : Measurable K)
+    (hsection : driverContinuationMean (P.map (sourceDriverPath B hc)) t f
+      =ᵐ[P.map (sourceDriverPath B hc)] K) :
+    (fun ω =&gt; K (sourceRestartDriverPath B hc τ ω)) =ᵐ[P]
+    P⁻[(fun ω =&gt; f (sourceRestartDriverPath B hc τ ω)) | shiftedStoppingFiltration hτ t] := by
+…</pre><p class="refs">Mentions: <a href="RestartContinuationKernel.lean.html#L19">OAI.SLEExactGauge.driverContinuationMean</a>, <a href="../StoppedMeasures.lean.html#L23">OAI.SLEExactGauge.sourceDriverPath</a>, <a href="../StoppedMeasures.lean.html#L30">OAI.SLEExactGauge.sourceRestartDriverPath</a>, <a href="../Stochastic/ShiftedStoppingFiltration.lean.html#L37">OAI.SLEExactGauge.shiftedStoppingFiltration</a></p></li><li id=L169><b>theorem</b> <code>OAI.SLEExactGauge.source_restart_integral_of_section_ae</code> <small>line 169</small></li><li id=L190><b>theorem</b> <code>OAI.SLEExactGauge.source_restart_integral_of_original_kernel</code> <small>line 190</small></li><li id=L213><b>theorem</b> <code>OAI.SLEExactGauge.source_restart_bind_of_original_kernel</code> <small>line 213</small><div class="doc"><p>Measure-kernel form of the continuation identity. This applies to the
+sum of the finite-time raw mass and its current Green measure.</p></div><pre>theorem source_restart_bind_of_original_kernel
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hm : ∀ t, Measurable (B t)) (hc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    (t : ℝ≥0) (N K : C(ℝ≥0,ℝ) → Measure upperHalfPlane) (hN : Measurable N)
+    (hK : Measurable[driverPathFiltration t] K)
+    (hmean : ∀ A : Set Ω,
+      MeasurableSet[(Filtration.natural B (fun s =&gt; (hm s).stronglyMeasurable)) t] A →
+      (P.restrict A).bind (fun ω =&gt; N (sourceDriverPath B hc ω))=
+        (P.restrict A).bind (fun ω =&gt; K (sourceDriverPath B hc ω)))
+    (τ : Ω → ℝ≥0)
+    (hτ : IsStoppingTime (Filtration.natural B (fun s =&gt; (hm s).stronglyMeasurable))
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../Stochastic/DriverPastFactorization.lean.html#L23">OAI.SLEExactGauge.driverPathFiltration</a>, <a href="../StoppedMeasures.lean.html#L23">OAI.SLEExactGauge.sourceDriverPath</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/PairSublinear.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/PairSublinear.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>PairSublinear.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>PairSublinear.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/PairSublinear.lean#L1">source</a></p><div class="doc"><h3>Sublinear height errors from the coupled transfers</h3><p>The finite invariant measure on the inverse section need not be ergodic.
+The transfers already constructed there suffice for the same word estimate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>theorem</b> <code>OAI.PolycyclicRecognition.isCocycle_pairHeight_sub_hom</code> <small>line 31</small><div class="doc"><p>Subtracting any continuous height homomorphism preserves the cocycle
+identity, independently of any ergodicity or averaging assertion.</p></div><pre>theorem isCocycle_pairHeight_sub_hom
+    (π l : G →* Multiplicative W) (hπ : Continuous fun g =&gt; (π g).toAdd) :
+    IsCocycle (fun g =&gt; pairHeightL2 μ π hπ g - Lp.const 2 μ (l g).toAdd) := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/CocycleGrowth.lean.html#L24">OAI.PolycyclicRecognition.IsCocycle</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L62">OAI.PolycyclicRecognition.pairHeightL2</a></p></li><li id=L47><b>theorem</b> <code>OAI.PolycyclicRecognition.pairHeight_coboundary_of_squared_errors</code> <small>line 47</small><div class="doc"><p>A compact-uniform squared-error estimate gives an actual small
+coboundary in the Hilbert space, for a finite invariant measure.</p></div><pre>theorem pairHeight_coboundary_of_squared_errors
+    (π l : G →* Multiplicative W) (hπ : Continuous fun g =&gt; (π g).toAdd)
+    (φ : ℕ → NormalizedPair G Λ → W) (hφ : ∀ n, MemLp (φ n) 2 μ)
+    (Q : Set G)
+    (happrox : Filter.Tendsto (fun n =&gt; ⨆ t ∈ Q,
+      ∫⁻ p, ‖pairTransferDefect π l (φ n) t p‖ₑ ^ 2 ∂μ) Filter.atTop (nhds 0)) :
+    ∀ ε : ℝ, 0 &lt; ε → ∃ v : Lp W 2 μ, ∀ q ∈ Q,
+      ‖(pairHeightL2 μ π hπ q - Lp.const 2 μ (l q).toAdd) + q • v - v‖ ≤ ε := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/CouplingTransfer.lean.html#L32">OAI.PolycyclicRecognition.pairTransferDefect</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L62">OAI.PolycyclicRecognition.pairHeightL2</a></p></li><li id=L85><b>theorem</b> <code>OAI.PolycyclicRecognition.pairHeight_sublinear_of_squared_errors</code> <small>line 85</small><div class="doc"><p>Compact-uniform transfer errors imply the global sublinear word bound.
+This applies directly to the finite measure constructed by inverse coupling.</p></div><pre>theorem pairHeight_sublinear_of_squared_errors
+    (π l : G →* Multiplicative W) (hπ : Continuous fun g =&gt; (π g).toAdd)
+    (φ : ℕ → NormalizedPair G Λ → W) (hφ : ∀ n, MemLp (φ n) 2 μ)
+    (Q : Set G) (length : G → ℝ) (hlen : ∀ g, 0 ≤ length g)
+    {a : ℝ} (ha : 0 ≤ a)
+    (hword : ∀ g, ∃ w : List G, (∀ q ∈ w, q ∈ Q) ∧ w.prod = g ∧
+      (w.length : ℝ) ≤ a * length g + a)
+    (happrox : Filter.Tendsto (fun n =&gt; ⨆ t ∈ Q,
+      ∫⁻ p, ‖pairTransferDefect π l (φ n) t p‖ₑ ^ 2 ∂μ) Filter.atTop (nhds 0)) :
+    ∀ ε : ℝ, 0 &lt; ε → ∃ B : ℝ, 0 ≤ B ∧ ∀ g,
+      ‖pairHeightL2 μ π hπ g - Lp.const 2 μ (l g).toAdd‖ ≤ ε * length g + B := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/CouplingTransfer.lean.html#L32">OAI.PolycyclicRecognition.pairTransferDefect</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L62">OAI.PolycyclicRecognition.pairHeightL2</a></p></li><li id=L101><b>theorem</b> <code>OAI.PolycyclicRecognition.pairHeight_sublinear_of_minimizing_paths</code> <small>line 101</small><div class="doc"><p>For a proper group with minimizing paths, compact-uniform transfer
+approximation alone supplies metric sublinearity.</p></div><pre>theorem pairHeight_sublinear_of_minimizing_paths
+    (π l : G →* Multiplicative W) (hπ : Continuous fun g =&gt; (π g).toAdd)
+    (φ : ℕ → NormalizedPair G Λ → W) (hφ : ∀ n, MemLp (φ n) 2 μ)
+    (happrox : ∀ Q : Set G, IsCompact Q →
+      Filter.Tendsto (fun n =&gt; ⨆ t ∈ Q,
+        ∫⁻ p, ‖pairTransferDefect π l (φ n) t p‖ₑ ^ 2 ∂μ) Filter.atTop (nhds 0))
+    (hpath : ∀ g : G, ∃ γ : ℝ → G, γ 0 = 1 ∧ γ 1 = g ∧
+      ∀ t ∈ Set.Icc (0 : ℝ) 1, ∀ u ∈ Set.Icc (0 : ℝ) 1,
+        dist (γ t) (γ u) ≤ dist 1 g * |t - u|) :
+    ∀ ε : ℝ, 0 &lt; ε → ∃ B : ℝ, 0 ≤ B ∧ ∀ g,
+      ‖pairHeightL2 μ π hπ g - Lp.const 2 μ (l g).toAdd‖ ≤ ε * dist 1 g + B := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/CouplingTransfer.lean.html#L32">OAI.PolycyclicRecognition.pairTransferDefect</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L62">OAI.PolycyclicRecognition.pairHeightL2</a></p></li><li id=L120><b>theorem</b> <code>OAI.PolycyclicRecognition.inverseCoupling_sublinear</code> <small>line 120</small><div class="doc"><p>The actual inverse coupling supplies a sublinear inverse height error
+with exactly the inverse coefficient. No ergodicity of its finite measure
+and no second reduced-cohomology hypothesis are required.</p></div><pre>theorem inverseCoupling_sublinear
+    {G W : Type*} [Group G] [MetricSpace G] [ProperSpace G]
+    [SecondCountableTopology G] [IsTopologicalGroup G] [IsIsometricSMul G G]
+    {Λ : ℝ≥0} [MeasurableSpace G] [BorelSpace G]
+    [MeasurableSpace (NormalizedPair G Λ)] [BorelSpace (NormalizedPair G Λ)]
+    [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
+    (m : Measure G) [m.IsHaarMeasure] [m.IsMulRightInvariant]
+    (μ : Measure (NormalizedPair G Λ)) [IsProbabilityMeasure μ]
+    [SMulInvariantMeasure G (NormalizedPair G Λ) μ]
+    (A : W ≃L[ℝ] W) (π l : G →* Multiplicative W)
+    (hπ : Continuous fun g =&gt; (π g).toAdd) (hl : Continuous fun g =&gt; (l g).toAdd)
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

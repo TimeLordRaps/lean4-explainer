@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/ThreeTorus/PassageMass.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/ThreeTorus/PassageMass.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">ThreeTorus</a> / <span>PassageMass.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">ThreeTorus</a>/<span>PassageMass.lean</span></code></h1><p class="muted">50 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/ThreeTorus/PassageMass.lean#L1">source</a></p><div class="doc"><p>Actual Fourier passage coefficients, branch Jacobians, rounding removal, and integrated stationary mass.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>lemma</b> <code>OAI.ThreeTorus.continuous_fourierCoeff_param</code> <small>line 17</small></li><li id=L28><b>def</b> <code>OAI.ThreeTorus.passageFourierInput</code> <small>line 28</small><div class="doc"><p>The precise old-amplitude Fourier coefficients in the passage chart.</p></div><pre>def passageFourierInput (m : ℤ) (H : UnitAddCircle → UnitAddCircle)
+    (A : UnitAddCircle × UnitAddCircle → ℂ) (a θ : UnitAddCircle) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L32><b>def</b> <code>OAI.ThreeTorus.exactPassageCoeff</code> <small>line 32</small></li><li id=L36><b>def</b> <code>OAI.ThreeTorus.retainedPassage</code> <small>line 36</small></li><li id=L42><b>lemma</b> <code>OAI.ThreeTorus.continuous_passageFourierInput</code> <small>line 42</small></li><li id=L47><b>lemma</b> <code>OAI.ThreeTorus.continuous_exactPassageCoeff</code> <small>line 47</small></li><li id=L52><b>lemma</b> <code>OAI.ThreeTorus.packet_in_passage_chart</code> <small>line 52</small></li><li id=L61><b>lemma</b> <code>OAI.ThreeTorus.retainedPassage_error_norm</code> <small>line 61</small></li><li id=L83><b>lemma</b> <code>OAI.ThreeTorus.integrated_retainedPassage_error</code> <small>line 83</small></li><li id=L133><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_real_integral</code> <small>line 133</small><div class="doc"><p>The exact torus coefficient as a compactly supported real oscillatory integral.
+The support hypothesis is the lifted good-arc support, not a Fourier approximation.</p></div><pre>lemma exactPassageCoeff_real_integral {m j : ℤ} {H : UnitAddCircle → UnitAddCircle}
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {a : UnitAddCircle} {o : ℝ}
+    {H₀ : ℝ → ℝ} {A₀ : ℝ → ℂ}
+    (hH : ∀ x : ℝ, H (x : UnitAddCircle) = (H₀ x : UnitAddCircle))
+    (hA : ∀ x ∈ Ioc o (o+1), A ((x : UnitAddCircle),a) = A₀ x)
+    (hAs : Function.support A₀ ⊆ Ioc o (o+1)) :
+    exactPassageCoeff m H A j a =
+      ∫ x : ℝ, A₀ x*Complex.exp (Complex.I*((2*Real.pi*((m:ℝ)*H₀ x-j*x)):ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a>, <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L61">OAI.ThreeTorus.H₀</a>, <a href="PassageMass.lean.html#L32">OAI.ThreeTorus.exactPassageCoeff</a></p></li><li id=L168><b>lemma</b> <code>OAI.ThreeTorus.rounded_phase_normalization</code> <small>line 168</small><div class="doc"><p>No approximation occurs when the rounded primitive is inserted in the phase.
+This is the normalization needed by the compact-support stationary-phase proof.</p></div><pre>lemma rounded_phase_normalization (m j : ℤ) {n : ℕ} (hn : n ≠ 0)
+    (P : ℝ → ℝ) (δ : ℕ → ℝ) (x : ℝ) :
+    2*Real.pi*((m:ℝ)*((n:ℝ)*(P x+δ n*x))-(j:ℝ)*x) =
+      (n:ℝ)*((2*Real.pi*(m:ℝ)*P x)-
+        ((2*Real.pi)*(j:ℝ)/(n:ℝ)-(2*Real.pi*(m:ℝ)*δ n))*x) := by
+…</pre></li><li id=L181><b>lemma</b> <code>OAI.ThreeTorus.continuous_compact_phase_integral</code> <small>line 181</small></li><li id=L198><b>lemma</b> <code>OAI.ThreeTorus.continuous_passageCoefficient</code> <small>line 198</small></li><li id=L205><b>lemma</b> <code>OAI.ThreeTorus.continuous_passageLeading</code> <small>line 205</small></li><li id=L215><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_summed_mass</code> <small>line 215</small><div class="doc"><p>Strong summed stationary mass for the actual torus passage coefficients.
+All integrability in the slow parameter is derived from compact smooth data.</p></div><pre>lemma exactPassageCoeff_summed_mass
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {A₀ : UnitAddCircle → ℝ → ℂ}
+    {P : ℝ → ℝ} {m : ℤ} {δ : ℕ → ℝ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {o l u R d D C₀ C₁ M M₁ C : ℝ}
+    (hH : ∀ n (x : ℝ), H n (x : UnitAddCircle) = ((n:ℝ)*(P x+δ n*x) : UnitAddCircle))
+    (hA : ∀ a x, x ∈ Ioc o (o+1) → A ((x : UnitAddCircle),a) = A₀ a x)
+    (hA₀ : ∀ a, ContDiff ℝ 2 (A₀ a)) (hAc : Continuous A₀.uncurry)
+    (hsupp : ∀ a, Function.support (A₀ a) ⊆ Ioc l u)
+    (hlo : o ≤ l) (huo : u ≤ o+1) (hlu : l ≤ u)
+    (hΦ : ContDiff ℝ 3 (fun x =&gt; 2*Real.pi*(m:ℝ)*P x))
+    (hR : 0 &lt; R) (hd : 0 &lt; d) (hdD : d ≤ D)
+    (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hM₀ : 0 ≤ M) (hM₁ : 0 ≤ M₁) (hC : 0 ≤ C)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L270><b>def</b> <code>OAI.ThreeTorus.branchDensity</code> <small>line 270</small><div class="doc"><p>Zero-extended Jacobian density on a single injective good arc.</p></div><pre>def branchDensity (I : Set ℝ) (J g D q : ℝ → ℝ) (y : ℝ) : ℝ :=
+…</pre></li><li id=L273><b>lemma</b> <code>OAI.ThreeTorus.branchDensity_on</code> <small>line 273</small></li><li id=L279><b>def</b> <code>OAI.ThreeTorus.stationaryWeight</code> <small>line 279</small><div class="doc"><p>The normalized physical-frequency mass used in (W-definition).</p></div><pre>def stationaryWeight (I : Set ℝ) (J : ℝ → ℝ) (A : ℝ → ℂ) : ℝ → ℝ :=
+…</pre></li><li id=L282><b>lemma</b> <code>OAI.ThreeTorus.stationaryLeading_norm_sq_weight</code> <small>line 282</small></li><li id=L319><b>lemma</b> <code>OAI.ThreeTorus.phase_speed_derivatives</code> <small>line 319</small><div class="doc"><p>Normalization of the phase derivative agrees exactly with the old speed.
+This computes the manuscript's W under the ordinary derivative identity P'=V.</p></div><pre>lemma phase_speed_derivatives {P V : ℝ → ℝ} {m : ℝ}
+    (hP : Differentiable ℝ P) (hV : Differentiable ℝ V) (hPV : deriv P = V) :
+    (∀ x, deriv (fun x =&gt; 2*Real.pi*m*P x) x = 2*Real.pi*(m*V x)) ∧
+    (∀ x, iteratedDeriv 2 (fun x =&gt; 2*Real.pi*m*P x) x =
+      2*Real.pi*deriv (fun x =&gt; m*V x) x) := by
+…</pre></li><li id=L335><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_summed_weight</code> <small>line 335</small><div class="doc"><p>Summed stationary mass in the manuscript's actual normalization W, without
+an auxiliary complex leading array remaining in the conclusion.</p></div><pre>lemma exactPassageCoeff_summed_weight
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {A₀ : UnitAddCircle → ℝ → ℂ}
+    {P V : ℝ → ℝ} {m : ℤ} {δ : ℕ → ℝ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {o l u R d D C₀ C₁ M M₁ C : ℝ}
+    (hH : ∀ n (x : ℝ), H n (x : UnitAddCircle) = ((n:ℝ)*(P x+δ n*x) : UnitAddCircle))
+    (hA : ∀ a x, x ∈ Ioc o (o+1) → A ((x : UnitAddCircle),a) = A₀ a x)
+    (hA₀ : ∀ a, ContDiff ℝ 2 (A₀ a)) (hAc : Continuous A₀.uncurry)
+    (hsupp : ∀ a, Function.support (A₀ a) ⊆ Ioc l u)
+    (hlo : o ≤ l) (huo : u ≤ o+1) (hlu : l ≤ u)
+    (hΦ : ContDiff ℝ 3 (fun x =&gt; 2*Real.pi*(m:ℝ)*P x))
+    (hR : 0 &lt; R) (hd : 0 &lt; d) (hdD : d ≤ D)
+    (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hM₀ : 0 ≤ M) (hM₁ : 0 ≤ M₁) (hC : 0 ≤ C)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L386><b>lemma</b> <code>OAI.ThreeTorus.continuous_fourier_summable</code> <small>line 386</small></li><li id=L394><b>lemma</b> <code>OAI.ThreeTorus.continuous_family_fourier_summable</code> <small>line 394</small><div class="doc"><p>The integrated Fourier masses really are summable, so no use of a default
+zero value of a divergent tsum is possible in the passage estimates.</p></div><pre>lemma continuous_family_fourier_summable {f : UnitAddCircle → UnitAddCircle → ℂ}
+    (hf : Continuous f.uncurry) :
+    Summable (fun j : ℤ =&gt; ∫ a : UnitAddCircle, ‖fourierCoeff (f a) j‖^2
+      ∂AddCircle.haarAddCircle) := by
+…</pre></li><li id=L420><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_summable</code> <small>line 420</small></li><li id=L426><b>lemma</b> <code>OAI.ThreeTorus.contDiffAt_invFunOn_of_deriv_ne_zero</code> <small>line 426</small></li><li id=L452><b>lemma</b> <code>OAI.ThreeTorus.isOpen_image_of_deriv_ne_zero</code> <small>line 452</small></li><li id=L473><b>def</b> <code>OAI.ThreeTorus.branchFamily</code> <small>line 473</small><div class="doc"><p>The branch Jacobian with an arbitrary compact slow parameter space.</p></div><pre>def branchFamily {Ω : Type*} (I : Set ℝ) (J : ℝ → ℝ) (F : ℝ × Ω → ℝ)
+    (p : ℝ × Ω) : ℝ := by
+…</pre></li><li id=L478><b>lemma</b> <code>OAI.ThreeTorus.support_branchFamily_subset</code> <small>line 478</small></li><li id=L491><b>lemma</b> <code>OAI.ThreeTorus.branchFamily_compact</code> <small>line 491</small></li><li id=L499><b>lemma</b> <code>OAI.ThreeTorus.branchFamily_continuous</code> <small>line 499</small></li><li id=L540><b>lemma</b> <code>OAI.ThreeTorus.branchFamily_congr_branch</code> <small>line 540</small></li><li id=L560><b>lemma</b> <code>OAI.ThreeTorus.branchFamily_bound_first</code> <small>line 560</small></li><li id=L573><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_family_eq</code> <small>line 573</small></li><li id=L584><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_compact_continuous</code> <small>line 584</small><div class="doc"><p>Joint compact continuity of the exact density used in stationary phase.
+The enlarged stationary branch creates no boundary discontinuity because the
+original packet is supported in the strictly smaller closed interval.</p></div><pre>lemma stationaryWeight_compact_continuous {J : ℝ → ℝ}
+    {A : UnitAddCircle → ℝ → ℂ} {l u R : ℝ}
+    (hJ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) J)
+    (hA : Continuous A.uncurry) (hs : ∀ a, support (A a) ⊆ Icc l u)
+    (hR : 0 &lt; R) (hd : ∀ x ∈ Icc (l-R) (u+R), 0 &lt; deriv J x) :
+    Continuous (fun p : ℝ × UnitAddCircle =&gt; stationaryWeight (Icc (l-R) (u+R)) J (A p.2) p.1) ∧
+    HasCompactSupport (fun p : ℝ × UnitAddCircle =&gt; stationaryWeight (Icc (l-R) (u+R)) J (A p.2) p.1) := by
+…</pre><p class="refs">Mentions: <a href="PassageMass.lean.html#L279">OAI.ThreeTorus.stationaryWeight</a></p></li><li id=L622><b>def</b> <code>OAI.ThreeTorus.roundingMass</code> <small>line 622</small></li><li id=L626><b>lemma</b> <code>OAI.ThreeTorus.roundingMass_bound</code> <small>line 626</small></li><li id=L693><b>lemma</b> <code>OAI.ThreeTorus.tendsto_roundingMass</code> <small>line 693</small><div class="doc"><p>The rounding correction is removed at the coefficient mass level, without
+translating the actual lattice j/N or its fine phase.</p></div><pre>lemma tendsto_roundingMass {W : ℝ → UnitAddCircle → ℝ} {A C : ℝ} {L : ℝ≥0} {e : ℕ → ℝ}
+    (hW : Continuous W.uncurry) (hLip : ∀ a, LipschitzWith L (fun s =&gt; W s a))
+    (hs : ∀ s a, A &lt; |s| → W s a = 0)
+    (he : ∀ n, |e n| ≤ C) (ht : Tendsto e atTop (𝓝 0)) :
+    Tendsto (fun n : ℕ =&gt; roundingMass W n (e n)) atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="PassageMass.lean.html#L622">OAI.ThreeTorus.roundingMass</a></p></li><li id=L707><b>lemma</b> <code>OAI.ThreeTorus.roundingMass_uniform_bound</code> <small>line 707</small></li><li id=L773><b>lemma</b> <code>OAI.ThreeTorus.tendsto_roundingMass_of_compact</code> <small>line 773</small><div class="doc"><p>Compact continuity is sufficient for removal of rounding; no quantitative
+Lipschitz hypothesis has to be added to the old spectral density.</p></div><pre>lemma tendsto_roundingMass_of_compact {W : ℝ → UnitAddCircle → ℝ} {e : ℕ → ℝ}
+    (hW : Continuous W.uncurry) (hc : HasCompactSupport W.uncurry)
+    (ht : Tendsto e atTop (𝓝 0)) :
+    Tendsto (fun n : ℕ =&gt; roundingMass W n (e n)) atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="PassageMass.lean.html#L622">OAI.ThreeTorus.roundingMass</a></p></li><li id=L809><b>lemma</b> <code>OAI.ThreeTorus.compact_lattice_support</code> <small>line 809</small></li><li id=L829><b>lemma</b> <code>OAI.ThreeTorus.compact_lattice_summable_integral</code> <small>line 829</small></li><li id=L838><b>lemma</b> <code>OAI.ThreeTorus.integrated_array_mass_error_summable</code> <small>line 838</small></li><li id=L870><b>lemma</b> <code>OAI.ThreeTorus.remove_array_rounding</code> <small>line 870</small><div class="doc"><p>Removal of rounding for actual coefficient masses, with all summability
+proved from compact support and true squared Fourier mass.</p></div><pre>lemma remove_array_rounding {c : ℕ → ℤ → UnitAddCircle → ℂ}
+    {W : ℝ → UnitAddCircle → ℝ} {e : ℕ → ℝ}
+    (hW : Continuous W.uncurry) (hc : HasCompactSupport W.uncurry)
+    (hcc : ∀ n j, Continuous (c n j))
+    (hcs : ∀ n, Summable (fun j : ℤ =&gt; ∫ a : UnitAddCircle, ‖c n j a‖^2 ∂AddCircle.haarAddCircle))
+    (he : Tendsto e atTop (𝓝 0))
+    (ht : Tendsto (fun n =&gt; ∑&#x27; j : ℤ, ∫ a : UnitAddCircle,
+      |‖c n j a‖^2-(n:ℝ)⁻¹*W ((j:ℝ)/n-e n) a| ∂AddCircle.haarAddCircle) atTop (𝓝 0)) :
+    Tendsto (fun n =&gt; ∑&#x27; j : ℤ, ∫ a : UnitAddCircle,
+      |‖c n j a‖^2-(n:ℝ)⁻¹*W ((j:ℝ)/n) a| ∂AddCircle.haarAddCircle) atTop (𝓝 0) := by
+…</pre></li><li id=L928><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_summed_unrounded</code> <small>line 928</small></li><li id=L983><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_summed_positive</code> <small>line 983</small><div class="doc"><p>A compact positive second derivative supplies every numerical constant used
+by the uniform stationary-phase estimate.  None of those constants are extra
+hypotheses of the passage.</p></div><pre>lemma exactPassageCoeff_summed_positive
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {A₀ : UnitAddCircle → ℝ → ℂ}
+    {P V : ℝ → ℝ} {m : ℤ} {δ : ℕ → ℝ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {o l u R : ℝ}
+    (hm : 0 &lt; m)
+    (hH : ∀ n (x : ℝ), H n (x : UnitAddCircle) = ((n:ℝ)*(P x+δ n*x) : UnitAddCircle))
+    (hA : ∀ a x, x ∈ Ioc o (o+1) → A ((x : UnitAddCircle),a) = A₀ a x)
+    (hA₀ : ∀ a, ContDiff ℝ 2 (A₀ a)) (hAc : Continuous A₀.uncurry)
+    (hAd : Continuous (fun p : UnitAddCircle × ℝ =&gt; deriv (A₀ p.1) p.2))
+    (hsupp : ∀ a, Function.support (A₀ a) ⊆ Ioc l u)
+    (hlo : o ≤ l) (huo : u ≤ o+1) (hlu : l ≤ u) (hR : 0 &lt; R)
+    (hP : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) P)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L1065><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_neg</code> <small>line 1065</small></li><li id=L1075><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_neg_norm</code> <small>line 1075</small></li><li id=L1081><b>lemma</b> <code>OAI.ThreeTorus.summed_mass_reflect</code> <small>line 1081</small></li><li id=L1095><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_reflect</code> <small>line 1095</small></li><li id=L1120><b>lemma</b> <code>OAI.ThreeTorus.exactPassageCoeff_summed</code> <small>line 1120</small><div class="doc"><p>The source passage mass theorem at every nonzero angular index.</p></div><pre>lemma exactPassageCoeff_summed
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {A₀ : UnitAddCircle → ℝ → ℂ}
+    {P V : ℝ → ℝ} {m : ℤ} {δ : ℕ → ℝ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {o l u R : ℝ}
+    (hm : m ≠ 0)
+    (hH : ∀ n (x : ℝ), H n (x : UnitAddCircle) = ((n:ℝ)*(P x+δ n*x) : UnitAddCircle))
+    (hA : ∀ a x, x ∈ Ioc o (o+1) → A ((x : UnitAddCircle),a) = A₀ a x)
+    (hA₀ : ∀ a, ContDiff ℝ 2 (A₀ a)) (hAc : Continuous A₀.uncurry)
+    (hAd : Continuous (fun p : UnitAddCircle × ℝ =&gt; deriv (A₀ p.1) p.2))
+    (hsupp : ∀ a, Function.support (A₀ a) ⊆ Ioc l u)
+    (hlo : o ≤ l) (huo : u ≤ o+1) (hlu : l ≤ u) (hR : 0 &lt; R)
+    (hP : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) P)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

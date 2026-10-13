@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/PathPropagation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/PathPropagation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>PathPropagation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>PathPropagation.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/PathPropagation.lean#L1">source</a></p><div class="doc"><p>Boolean propagation independent of the host construction.
+No entry between variable positions is assumed to remain unchanged. Only
+the dummy incidences, root bits, and identification of the two leaves
+are hypotheses.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Problem348.PathPropagation.Body</code> <small>line 19</small><div class="doc"><p>The lower-right two-by-two pattern of the fixed matrix <code>fixedH</code>.</p></div><pre>def Body (B : R → C → Bool) (r₁ r₂ : R) (c₁ c₂ : C) : Prop :=
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Problem348.PathPropagation.vertical_plus</code> <small>line 24</small><div class="doc"><p>Avoiding the body propagates a one upwards across a column of dummy ones.</p></div><pre>theorem vertical_plus {B : R → C → Bool} {r₁ r₂ : R} {c₁ c₂ : C}
+    (havoid : ¬ Body B r₁ r₂ c₁ c₂)
+    (h₁ : B r₁ c₁ = true) (h₂ : B r₂ c₁ = true)
+    (h₃ : B r₂ c₂ = true) : B r₁ c₂ = true := by
+…</pre><p class="refs">Mentions: <a href="PathPropagation.lean.html#L19">OAI.Problem348.PathPropagation.Body</a></p></li><li id=L33><b>theorem</b> <code>OAI.Problem348.PathPropagation.vertical_minus</code> <small>line 33</small><div class="doc"><p>Avoiding the body propagates a zero downwards across dummy ones.</p></div><pre>theorem vertical_minus {B : R → C → Bool} {r₁ r₂ : R} {c₁ c₂ : C}
+    (havoid : ¬ Body B r₁ r₂ c₁ c₂)
+    (h₁ : B r₁ c₁ = true) (h₂ : B r₂ c₁ = true)
+    (h₃ : B r₁ c₂ = false) : B r₂ c₂ = false := by
+…</pre><p class="refs">Mentions: <a href="PathPropagation.lean.html#L19">OAI.Problem348.PathPropagation.Body</a></p></li><li id=L42><b>theorem</b> <code>OAI.Problem348.PathPropagation.horizontal_plus</code> <small>line 42</small><div class="doc"><p>Avoiding the body propagates a one rightwards above a dummy row.</p></div><pre>theorem horizontal_plus {B : R → C → Bool} {r₁ r₂ : R} {c₁ c₂ : C}
+    (havoid : ¬ Body B r₁ r₂ c₁ c₂)
+    (h₁ : B r₁ c₁ = true) (h₂ : B r₂ c₁ = true)
+    (h₃ : B r₂ c₂ = true) : B r₁ c₂ = true :=
+…</pre><p class="refs">Mentions: <a href="PathPropagation.lean.html#L19">OAI.Problem348.PathPropagation.Body</a></p></li><li id=L49><b>theorem</b> <code>OAI.Problem348.PathPropagation.horizontal_minus</code> <small>line 49</small><div class="doc"><p>Avoiding the body propagates a zero leftwards above a dummy row.</p></div><pre>theorem horizontal_minus {B : R → C → Bool} {r₁ r₂ : R} {c₁ c₂ : C}
+    (havoid : ¬ Body B r₁ r₂ c₁ c₂)
+    (h₁ : B r₁ c₂ = false) (h₂ : B r₂ c₁ = true)
+    (h₃ : B r₂ c₂ = true) : B r₁ c₁ = false := by
+…</pre><p class="refs">Mentions: <a href="PathPropagation.lean.html#L19">OAI.Problem348.PathPropagation.Body</a></p></li><li id=L59><b>def</b> <code>OAI.Problem348.PathPropagation.ModeBody</code> <small>line 59</small><div class="doc"><p>One of the four mode bodies encountered at the edge from level <code>i</code>
+to level <code>i + 1</code> of the selected path.</p></div><pre>def ModeBody (B : R → C → Bool)
+    (xp xm : ℕ → R) (yp ym : ℕ → C) (xd : R) (yd : C) (i : ℕ) : Prop :=
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.Problem348.PathPropagation.propagate</code> <small>line 68</small><div class="doc"><p>The induction invariant: absence of all four mode bodies preserves the
+opposite plus and minus bits at every level of the selected path.</p></div><pre>theorem propagate {B : R → C → Bool}
+    {xp xm : ℕ → R} {yp ym : ℕ → C} {xd : R} {yd : C} {h : ℕ}
+    (hrootp : B (xp 0) (yp 0) = true)
+    (hrootm : B (xm 0) (ym 0) = false)
+    (hdcol : ∀ i, i ≤ h → B (xp i) yd = true ∧ B (xm i) yd = true)
+    (hdrow : ∀ i, i ≤ h → B xd (yp i) = true ∧ B xd (ym i) = true)
+    (havoid : ∀ i, i &lt; h → ¬ ModeBody B xp xm yp ym xd yd i) :
+    ∀ i, i ≤ h → B (xp i) (yp i) = true ∧ B (xm i) (ym i) = false := by
+…</pre><p class="refs">Mentions: <a href="PathPropagation.lean.html#L59">OAI.Problem348.PathPropagation.ModeBody</a></p></li><li id=L101><b>theorem</b> <code>OAI.Problem348.PathPropagation.exists_modeBody</code> <small>line 101</small><div class="doc"><p>Opposite root entries and shared leaves force some mode body. Arbitrary
+changes to every other variable-variable entry are explicitly allowed.</p></div><pre>theorem exists_modeBody {B : R → C → Bool}
+    {xp xm : ℕ → R} {yp ym : ℕ → C} {xd : R} {yd : C} {h : ℕ}
+    (hrootp : B (xp 0) (yp 0) = true)
+    (hrootm : B (xm 0) (ym 0) = false)
+    (hdcol : ∀ i, i ≤ h → B (xp i) yd = true ∧ B (xm i) yd = true)
+    (hdrow : ∀ i, i ≤ h → B xd (yp i) = true ∧ B xd (ym i) = true)
+    (hleafr : xp h = xm h) (hleafc : yp h = ym h) :
+    ∃ i, i &lt; h ∧ ModeBody B xp xm yp ym xd yd i := by
+…</pre><p class="refs">Mentions: <a href="PathPropagation.lean.html#L59">OAI.Problem348.PathPropagation.ModeBody</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

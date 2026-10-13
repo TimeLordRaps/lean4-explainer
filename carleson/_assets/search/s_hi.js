@@ -1,0 +1,1 @@
+window.l4shard("hi", [["Hilbert_kernel_bound",41,45],["Hilbert_kernel_regularity",41,208],["Hilbert_kernel_regularity_main_part",41,87],["Hilbert_strong_2_2",42,983],["MeasureTheory.trunc_Lp_Lq_higher",25,790],["approxHilbertTransform",42,54],["approxHilbertTransform_eq_dirichletApprox",42,425],["highDensityTiles",39,278]]);

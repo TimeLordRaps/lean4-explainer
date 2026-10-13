@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/GradedCoordinateLimit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/GradedCoordinateLimit.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>GradedCoordinateLimit.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>GradedCoordinateLimit.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/GradedCoordinateLimit.lean#L1">source</a></p><div class="doc"><h3>The limiting Lie law of maximizing word coordinates</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.PolycyclicRecognition.gradedCoordinateBracket</code> <small>line 18</small><div class="doc"><p>Retain exactly the structure constants which preserve total degree.</p></div><pre>def gradedCoordinateBracket (b : Basis (Fin n) ℝ L) (cost : Fin n → ℝ) :
+    (Fin n → ℝ) →L[ℝ] (Fin n → ℝ) →L[ℝ] (Fin n → ℝ) :=
+…</pre></li><li id=L25><b>theorem</b> <code>OAI.PolycyclicRecognition.rescaled_structureCoefficient_tendsto</code> <small>line 25</small><div class="doc"><p>Each normalized structure constant converges; the strict-degree terms
+vanish and the degree-preserving terms stay unchanged.</p></div><pre>theorem rescaled_structureCoefficient_tendsto
+    (b : Basis (Fin n) ℝ L) (cost : Fin n → ℝ)
+    (hweight : ∀ i j k, b.repr ⁅b i, b j⁆ k ≠ 0 → cost i + cost j ≤ cost k)
+    (i j k : Fin n) :
+    Tendsto (fun r : ℝ =&gt; (exponentialRescaleBasis b cost r).repr
+      ⁅exponentialRescaleBasis b cost r i, exponentialRescaleBasis b cost r j⁆ k)
+      atTop (𝓝 (if cost i + cost j = cost k then b.repr ⁅b i, b j⁆ k else 0)) := by
+…</pre><p class="refs">Mentions: <a href="NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a></p></li><li id=L47><b>theorem</b> <code>OAI.PolycyclicRecognition.basisBracket_rescale_tendsto</code> <small>line 47</small><div class="doc"><p>Convergence holds in the finite-dimensional normed space of bilinear
+maps, so polynomial expressions in the group law converge on compacts.</p></div><pre>theorem basisBracket_rescale_tendsto
+    (b : Basis (Fin n) ℝ L) (cost : Fin n → ℝ)
+    (hweight : ∀ i j k, b.repr ⁅b i, b j⁆ k ≠ 0 → cost i + cost j ≤ cost k) :
+    Tendsto (fun r : ℝ =&gt; basisBracket (exponentialRescaleBasis b cost r)) atTop
+      (𝓝 (gradedCoordinateBracket b cost)) := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/CoordinateLieBrackets.lean.html#L45">OAI.PolycyclicRecognition.basisBracket</a>, <a href="NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a>, <a href="GradedCoordinateLimit.lean.html#L18">OAI.PolycyclicRecognition.gradedCoordinateBracket</a></p></li><li id=L67><b>theorem</b> <code>OAI.PolycyclicRecognition.isLieBracket_gradedCoordinateBracket</code> <small>line 67</small><div class="doc"><p>The limiting bilinear operation satisfies the Lie identities.</p></div><pre>theorem isLieBracket_gradedCoordinateBracket
+    (b : Basis (Fin n) ℝ L) (cost : Fin n → ℝ)
+    (hweight : ∀ i j k, b.repr ⁅b i, b j⁆ k ≠ 0 → cost i + cost j ≤ cost k) :
+    IsLieBracket (gradedCoordinateBracket b cost) :=
+…</pre><p class="refs">Mentions: <a href="../Geometry/ParametricLieWords.lean.html#L50">OAI.PolycyclicRecognition.IsLieBracket</a>, <a href="GradedCoordinateLimit.lean.html#L18">OAI.PolycyclicRecognition.gradedCoordinateBracket</a></p></li><li id=L78><b>theorem</b> <code>OAI.PolycyclicRecognition.maximizing_word_basis_bracket_weight</code> <small>line 78</small><div class="doc"><p>Maximality of the word-basis weight gives exactly the filtration
+inequality on every nonzero structure constant.</p></div><pre>theorem maximizing_word_basis_bracket_weight
+    (X : I → L) {k : ℕ} (hk : lowerCentralSeries ℝ L L k = ⊥)
+    (b₀ : Basis (Fin (finrank ℝ L)) ℝ L) (s : I → ℝ)
+    (β : WordBasisSelections X (boundedBracketWords k))
+    (hβ : IsMaximizingColumnBasis (wordListCoordinates X (boundedBracketWords k) b₀)
+      (fun w =&gt; bracketWordExponent s w) β.val)
+    (i j l : Fin (finrank ℝ L))
+    (hnz : (WordBasisSelections.basis X (boundedBracketWords k) β).repr
+      ⁅WordBasisSelections.basis X (boundedBracketWords k) β i,
+        WordBasisSelections.basis X (boundedBracketWords k) β j⁆ l ≠ 0) :
+    bracketWordExponent s (β.val i) + bracketWordExponent s (β.val j) ≤
+      bracketWordExponent s (β.val l) := by
+…</pre><p class="refs">Mentions: <a href="FiniteWordBases.lean.html#L21">OAI.PolycyclicRecognition.WordBasisSelections</a>, <a href="FiniteBracketWords.lean.html#L53">OAI.PolycyclicRecognition.boundedBracketWords</a>, <a href="../Geometry/WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a>, <a href="WordExponents.lean.html#L17">OAI.PolycyclicRecognition.bracketWordExponent</a>, <a href="FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

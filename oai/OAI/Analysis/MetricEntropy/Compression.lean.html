@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MetricEntropy/Compression.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MetricEntropy/Compression.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MetricEntropy</a> / <span>Compression.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MetricEntropy</a>/<span>Compression.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MetricEntropy/Compression.lean#L1">source</a></p><div class="doc"><h3>Uniform compression of the actual logarithmic graph matrix</h3><p>A single common index is chosen for all levels. Greedy pivots are replaced
+by representatives fixed from their labels, and only those labels and rounded
+grouped weights enter the finite code. The resulting list has no factor
+depending on the number of vertices.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L32><b>theorem</b> <code>OAI.MetricEntropyDuality.exists_compressionCode</code> <small>line 32</small><div class="doc"><p>Construct an actual finite code for a nonnegative mixture of graph
+profiles, including profiles at infinite distance.</p></div><pre>theorem exists_compressionCode
+    (L : (i : Fin u) → X → Label i) (E : FixedLabels L q)
+    (v : Y → X) (T : Y → Finset (Fin u)) (μ : Y → ℝ)
+    (hμ : ∀ y, 0 ≤ μ y) (hmass : ∑ y, μ y ≤ 1)
+    (hu : 0 &lt; u) (hh : 0 &lt; h) (hs : 0 &lt; s)
+    (θ : ℝ) (hθ : 0 &lt; θ) (hsθ : 1 ≤ (s : ℝ) * θ)
+    (hprofile : Real.log 3 / Real.log ((h : ℝ) + 1) ≤ θ)
+    (hcomp : ∀ y, ((Finset.univ \ T y).card : ℝ) ≤ θ * (u : ℝ)) :
+    ∃ code : CompressionCode u q h s (weightCodeSize (roundingStep θ s u)),
+      ∀ x, profileMixture L v T h μ x - 3 * θ ≤ compressionDecode L E h s θ code x ∧
+        compressionDecode L E h s θ code x ≤ profileMixture L v T h μ x + θ := by
+…</pre><p class="refs">Mentions: <a href="LabelEncoding.lean.html#L23">OAI.MetricEntropyDuality.FixedLabels</a>, <a href="CompressionCode.lean.html#L20">OAI.MetricEntropyDuality.CompressionCode</a>, <a href="WeightRounding.lean.html#L30">OAI.MetricEntropyDuality.weightCodeSize</a>, <a href="WeightRounding.lean.html#L120">OAI.MetricEntropyDuality.roundingStep</a>, <a href="CompressionDecoder.lean.html#L30">OAI.MetricEntropyDuality.compressionDecode</a></p></li><li id=L105><b>theorem</b> <code>OAI.MetricEntropyDuality.compressionList_bounds</code> <small>line 105</small><div class="doc"><p>The fixed decoded list uniformly approximates every nonnegative mixture
+with one-sided errors.</p></div><pre>theorem compressionList_bounds
+    (L : (i : Fin u) → X → Label i) (E : FixedLabels L q)
+    (𝒯 : Finset (Finset (Fin u)))
+    (hu : 0 &lt; u) (hh : 0 &lt; h) (hs : 0 &lt; s)
+    (θ : ℝ) (hθ : 0 &lt; θ) (hsθ : 1 ≤ (s : ℝ) * θ)
+    (hprofile : Real.log 3 / Real.log ((h : ℝ) + 1) ≤ θ)
+    (hcomp : ∀ T ∈ 𝒯, ((Finset.univ \ T).card : ℝ) ≤ θ * (u : ℝ))
+    (μ : GraphProfile.Columns X 𝒯 → ℝ)
+    (hμ : ∀ y, 0 ≤ μ y) (hmass : ∑ y, μ y ≤ 1) :
+    ∃ a ∈ compressionList L E h s θ, ∀ x,
+      columnCombination (GraphProfile.column L 𝒯 h) μ x - 3 * θ ≤ a x ∧
+        a x ≤ columnCombination (GraphProfile.column L 𝒯 h) μ x + θ := by
+…</pre><p class="refs">Mentions: <a href="LabelEncoding.lean.html#L23">OAI.MetricEntropyDuality.FixedLabels</a>, <a href="GraphProfile.lean.html#L28">OAI.MetricEntropyDuality.GraphProfile.Columns</a>, <a href="CompressionDecoder.lean.html#L40">OAI.MetricEntropyDuality.compressionList</a>, <a href="Basic.lean.html#L33">OAI.MetricEntropyDuality.columnCombination</a>, <a href="GraphProfile.lean.html#L32">OAI.MetricEntropyDuality.GraphProfile.column</a></p></li><li id=L125><b>theorem</b> <code>OAI.MetricEntropyDuality.uniform_compression</code> <small>line 125</small><div class="doc"><p>Complete positive compression from the actual partition graph and
+logarithmic profile, with a fixed list and the literal finite-code bound.</p></div><pre>theorem uniform_compression
+    (L : (i : Fin u) → X → Label i)
+    (hlabels : ∀ i, Nat.card (Set.range (L i)) ≤ q)
+    (𝒯 : Finset (Finset (Fin u)))
+    (hu : 0 &lt; u) (hq : 0 &lt; q) (hh : 0 &lt; h) (hs : 0 &lt; s)
+    (θ : ℝ) (hθ : 0 &lt; θ) (hsθ : 1 ≤ (s : ℝ) * θ)
+    (hprofile : Real.log 3 / Real.log ((h : ℝ) + 1) ≤ θ)
+    (hcomp : ∀ T ∈ 𝒯, ((Finset.univ \ T).card : ℝ) ≤ θ * (u : ℝ)) :
+    ∃ A : Finset (X → ℝ), A.Nonempty ∧
+      (A.card : ℝ) ≤ (u : ℝ) * (q : ℝ) ^ (h * s) *
+        (1 + (s : ℝ) * 2 ^ u / θ) ^ (h * s * 2 ^ u) ∧
+      SignedCompression.PositiveApproximation (GraphProfile.column L 𝒯 h) θ A := by
+…</pre><p class="refs">Mentions: <a href="SignedCompression.lean.html#L110">OAI.MetricEntropyDuality.SignedCompression.PositiveApproximation</a>, <a href="GraphProfile.lean.html#L32">OAI.MetricEntropyDuality.GraphProfile.column</a></p></li><li id=L151><b>theorem</b> <code>OAI.MetricEntropyDuality.uniform_signed_compression</code> <small>line 151</small><div class="doc"><p>Signed compression is supplied by the actual difference list of the
+constructed positive list; its cardinal is at most the square of that list.</p></div><pre>theorem uniform_signed_compression
+    (L : (i : Fin u) → X → Label i)
+    (hlabels : ∀ i, Nat.card (Set.range (L i)) ≤ q)
+    (𝒯 : Finset (Finset (Fin u)))
+    (hu : 0 &lt; u) (hq : 0 &lt; q) (hh : 0 &lt; h) (hs : 0 &lt; s)
+    (θ : ℝ) (hθ : 0 &lt; θ) (hsθ : 1 ≤ (s : ℝ) * θ)
+    (hprofile : Real.log 3 / Real.log ((h : ℝ) + 1) ≤ θ)
+    (hcomp : ∀ T ∈ 𝒯, ((Finset.univ \ T).card : ℝ) ≤ θ * (u : ℝ)) :
+    ∃ A B : Finset (X → ℝ), A.Nonempty ∧
+      (A.card : ℝ) ≤ (u : ℝ) * (q : ℝ) ^ (h * s) *
+        (1 + (s : ℝ) * 2 ^ u / θ) ^ (h * s * 2 ^ u) ∧
+      B.card ≤ A.card ^ 2 ∧
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

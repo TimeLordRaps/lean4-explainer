@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/GridConnection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/GridConnection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>GridConnection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>GridConnection.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/GridConnection.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L8><b>lemma</b> <code>OAI.GammaFPP.CrossingBridge.grid_bin_endpoint</code> <small>line 8</small></li><li id=L18><b>lemma</b> <code>OAI.GammaFPP.CrossingBridge.grid_trial_vertex_interval</code> <small>line 18</small></li><li id=L39><b>lemma</b> <code>OAI.GammaFPP.CrossingBridge.grid_interval_localization</code> <small>line 39</small></li><li id=L53><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.grid_bin_connection</code> <small>line 53</small><div class="doc"><p>A successful trial and two whole-column tests connect every permitted
+endpoint pair, with allowance <code>K + 200*shape/rate</code>.</p></div><pre>theorem grid_bin_connection (weights : Edge → ℝ) (hweights : ∀ e, 0 ≤ weights e)
+    (shape rate b m K : ℝ) (hs : 0 &lt; shape) (hr : 0 &lt; rate) (hK : 100 ≤ K) (X h w l : ℤ) (hl : 0 ≤ l) (j : ℕ)
+    (hj : 1 ≤ j) (hw : 1 ≤ w)
+    (htrial : ∃ t : Fin (j^2), weights ∈ crossingEvent b m K w l (gridTrialTranslate b X h w t))
+    (hleft : (∑ e ∈ transverseIntervalEdges b X (gridIntervalLower h w) (gridIntervalUpper j h w),
+      weights e) ≤ 100*shape/rate*(j : ℝ)^2*w)
+    (hright : (∑ e ∈ transverseIntervalEdges b (X+l) (gridIntervalLower h w) (gridIntervalUpper j h w),
+      weights e) ≤ 100*shape/rate*(j : ℝ)^2*w)
+    (r₀ : ℝ) (hbin : (h : ℝ)*w ≤ r₀ ∧ r₀ ≤ ((h : ℝ)+1)*w)
+    (p q : Vertex) (hp : p.1=X ∧ |transverse b p-r₀| ≤ 1)
+    (hq : q.1=X+l ∧ |transverse b q-r₀| ≤ 1) :
+    ∃ ds, p+displacement ds=q ∧ pathCost weights p ds ≤ m*l+(K+200*shape/rate)*(j : ℝ)^2*w ∧
+…</pre><p class="refs">Mentions: <a href="CrossingEvents.lean.html#L8">OAI.GammaFPP.CrossingBridge.crossingEvent</a>, <a href="CrossingEvents.lean.html#L38">OAI.GammaFPP.CrossingBridge.gridTrialTranslate</a></p></li><li id=L134><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.gridBinGood_connection</code> <small>line 134</small><div class="doc"><p>A good bin supplies an attachment-crossing-attachment walk between any
+prescribed endpoints in the bin, with traversal costs counted with multiplicity.</p></div><pre>theorem gridBinGood_connection (weights : Edge → ℝ) (hweights : ∀ e, 0 ≤ weights e)
+    (shape rate b m K : ℝ) (hs : 0 &lt; shape) (hr : 0 &lt; rate) (hK : 100 ≤ K)
+    (X h w l : ℤ) (hl : 0 ≤ l) (j : ℕ) (hj : 1 ≤ j) (hw : 1 ≤ w)
+    (hgood : weights ∈ gridBinGood shape rate b m K X h w l j)
+    (r₀ : ℝ) (hbin : (h : ℝ)*w ≤ r₀ ∧ r₀ ≤ ((h : ℝ)+1)*w)
+    (p q : Vertex) (hp : p.1=X ∧ |transverse b p-r₀| ≤ 1)
+    (hq : q.1=X+l ∧ |transverse b q-r₀| ≤ 1) :
+    ∃ ds, p+displacement ds=q ∧
+      pathCost weights p ds ≤ m*l+Grid.attachmentAllowance shape rate K*(j : ℝ)^2*w ∧
+      PathIn p ds {z | X-l ≤ z.1 ∧ z.1 ≤ X+2*l ∧
+        |transverse b z-r₀| ≤ Grid.attachmentAllowance shape rate K*(j : ℝ)^2*w} := by
+…</pre><p class="refs">Mentions: <a href="CrossingEvents.lean.html#L115">OAI.GammaFPP.CrossingBridge.gridBinGood</a>, <a href="GridAttachments.lean.html#L12">OAI.GammaFPP.Grid.attachmentAllowance</a>, <a href="CrossingLocalized.lean.html#L9">OAI.GammaFPP.CrossingBridge.PathIn</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

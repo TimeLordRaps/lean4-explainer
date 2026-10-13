@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/InteriorStokes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/InteriorStokes.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>InteriorStokes.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>InteriorStokes.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/InteriorStokes.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.MahlerStokes.integral_extDeriv_univ</code> <small>line 27</small><div class="doc"><p>Stokes for a compactly supported form in the whole ambient space.</p></div><pre>theorem integral_extDeriv_univ {n : ℕ}
+    (ω : (Fin (n+1) → ℝ) → (Fin (n+1) → ℝ) [⋀^Fin n]→L[ℝ] ℝ)
+    (hω : ContDiff ℝ 1 ω) (hc : HasCompactSupport ω) :
+    (∫ x, extDeriv ω x (coordinateBasis (n+1))) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FormStokes.lean.html#L11">OAI.MahlerStokes.coordinateBasis</a></p></li><li id=L45><b>theorem</b> <code>OAI.MahlerStokes.integral_extDeriv_interior_support</code> <small>line 45</small><div class="doc"><p>The actual interior patch contributes zero, since the support of the
+localized form stays strictly inside the domain.</p></div><pre>theorem integral_extDeriv_interior_support {n : ℕ} {s : Set (Fin (n+1) → ℝ)}
+    (ω : (Fin (n+1) → ℝ) → (Fin (n+1) → ℝ) [⋀^Fin n]→L[ℝ] ℝ)
+    (hω : ContDiff ℝ 1 ω) (hc : HasCompactSupport ω) (hs : tsupport ω ⊆ s) :
+    (∫ x in s, extDeriv ω x (coordinateBasis (n+1))) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FormStokes.lean.html#L11">OAI.MahlerStokes.coordinateBasis</a></p></li><li id=L57><b>theorem</b> <code>OAI.MahlerStokes.integral_extDeriv_boundary_patches</code> <small>line 57</small><div class="doc"><p>Remove the interior term from the volume partition. All remaining
+terms are supported in boundary charts, before oriented chart transport.</p></div><pre>theorem integral_extDeriv_boundary_patches {n : ℕ} {ι : Type*} [Fintype ι]
+    {K W s : Set (Fin (n+1) → ℝ)}
+    (ρ : SmoothPartitionOfUnity (Option ι) 𝓘(ℝ, Fin (n+1) → ℝ) (Fin (n+1) → ℝ) K)
+    (ω : (Fin (n+1) → ℝ) → (Fin (n+1) → ℝ) [⋀^Fin n]→L[ℝ] ℝ)
+    (hW : IsOpen W) (hsW : s ⊆ W) (hs : MeasurableSet s)
+    (hsum : ∀ x ∈ W, ∑ i, ρ i x = 1)
+    (hρ : ∀ i, HasCompactSupport (ρ i))
+    (hω : ∀ i, ∀ x ∈ tsupport (ρ i), ContDiffAt ℝ 1 ω x)
+    (hinterior : tsupport (ρ none) ⊆ s) :
+    (∫ x in s, extDeriv ω x (coordinateBasis (n+1))) =
+      ∑ i : ι, ∫ x in s,
+        extDeriv (fun z =&gt; ρ (some i) z • ω z) x (coordinateBasis (n+1)) := by
+…</pre><p class="refs">Mentions: <a href="FormStokes.lean.html#L11">OAI.MahlerStokes.coordinateBasis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

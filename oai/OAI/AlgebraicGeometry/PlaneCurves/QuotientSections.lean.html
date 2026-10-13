@@ -1,0 +1,150 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/QuotientSections.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/QuotientSections.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>QuotientSections.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>QuotientSections.lean</span></code></h1><p class="muted">53 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/QuotientSections.lean#L1">source</a></p><div class="doc"><h3>Sections on the torus quotient and holomorphic chart equivalences; Holomorphic division producing quotient sections; Finite lists of quotient sections and their fibre values</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.Nagata.W08.automorphicSection_analyticAt</code> <small>line 19</small><div class="doc"><p>Every concrete multiplier section is complex analytic at every genuine point.</p></div><pre>theorem automorphicSection_analyticAt {τ γ : ℂ} {n : ℤ}
+    (f : automorphicSections τ n γ) {z : ℂ} (hz : z ≠ 0) :
+    AnalyticAt ℂ f.val z := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L27><b>theorem</b> <code>OAI.Nagata.W08.automorphicSection_analyticOnNhd</code> <small>line 27</small><div class="doc"><p>Analyticity on a neighborhood of each point of the punctured plane.</p></div><pre>theorem automorphicSection_analyticOnNhd {τ γ : ℂ} {n : ℤ}
+    (f : automorphicSections τ n γ) :
+    AnalyticOnNhd ℂ f.val {z : ℂ | z ≠ 0} :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L46><b>def</b> <code>OAI.Nagata.W08.EquivariantFunctions</code> <small>line 46</small><div class="doc"><p>Scalar functions with the literal one-step multiplier law on the genuine cover.</p></div><pre>def EquivariantFunctions (τ γ : Rˣ) (n : ℤ) :=
+…</pre></li><li id=L50><b>def</b> <code>OAI.Nagata.W08.QuotientSections</code> <small>line 50</small><div class="doc"><p>Actual right-inverse sections of the projection of the actual orbit quotient.</p></div><pre>def QuotientSections (τ γ : Rˣ) (n : ℤ) :=
+…</pre></li><li id=L55><b>theorem</b> <code>OAI.Nagata.W08.multiplierIterate_graph</code> <small>line 55</small><div class="doc"><p>Equivariance under one generator propagates to every integer deck transformation.</p></div><pre>theorem multiplierIterate_graph (τ γ : Rˣ) (n : ℤ)
+    (f : EquivariantFunctions τ γ n) (k : ℤ) (z : Rˣ) :
+    multiplierIterate τ γ n k (z, f.val z) = (τ ^ k * z, f.val (τ ^ k * z)) := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L46">OAI.Nagata.W08.EquivariantFunctions</a></p></li><li id=L77><b>def</b> <code>OAI.Nagata.W08.quotientSectionOfEquivariant</code> <small>line 77</small><div class="doc"><p>An equivariant scalar function descends to an actual quotient section.</p></div><pre>def quotientSectionOfEquivariant (τ γ : Rˣ) (n : ℤ)
+    (f : EquivariantFunctions τ γ n) : QuotientSections τ γ n :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L46">OAI.Nagata.W08.EquivariantFunctions</a>, <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L91><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionOfEquivariant_apply</code> <small>line 91</small></li><li id=L97><b>theorem</b> <code>OAI.Nagata.W08.quotient_fibre_representative</code> <small>line 97</small><div class="doc"><p>Every quotient fibre point has a scalar representative over each chosen lift of its base.</p></div><pre>theorem quotient_fibre_representative (τ γ : Rˣ) (n : ℤ)
+    (q : MultiplierQuotient τ γ n) (z : Rˣ)
+    (hq : multiplierQuotientProjection τ γ n q = torusPointMk τ z) :
+    ∃ t : R, (Quotient.mk _ (z, t) : MultiplierQuotient τ γ n) = q := by
+…</pre></li><li id=L113><b>theorem</b> <code>OAI.Nagata.W08.quotient_fibre_coordinate_injective</code> <small>line 113</small><div class="doc"><p>Freeness ensures that the scalar coordinate over a fixed lift is unique.</p></div><pre>theorem quotient_fibre_coordinate_injective (τ γ : Rˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0) (z : Rˣ) :
+    Function.Injective (fun t : R ↦ (Quotient.mk _ (z, t) : MultiplierQuotient τ γ n)) := by
+…</pre></li><li id=L126><b>def</b> <code>OAI.Nagata.W08.quotientSectionScalar</code> <small>line 126</small><div class="doc"><p>Extract the unique scalar over a chosen lift from an actual quotient section.</p></div><pre>def quotientSectionScalar (τ γ : Rˣ) (n : ℤ)
+    (s : QuotientSections τ γ n) (z : Rˣ) : R :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L131><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionScalar_represents</code> <small>line 131</small></li><li id=L139><b>theorem</b> <code>OAI.Nagata.W08.quotient_mk_multiplierStep</code> <small>line 139</small><div class="doc"><p>One generator identifies exactly the source multiplier-related representatives.</p></div><pre>theorem quotient_mk_multiplierStep (τ γ : Rˣ) (n : ℤ) (z : Rˣ) (t : R) :
+    (Quotient.mk _ (τ * z, (↑(γ * z ^ (-n)) : R) * t) : MultiplierQuotient τ γ n) =
+      Quotient.mk _ (z, t) := by
+…</pre></li><li id=L149><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionScalar_equivariant</code> <small>line 149</small><div class="doc"><p>The scalar extracted from an actual quotient section is genuinely equivariant.</p></div><pre>theorem quotientSectionScalar_equivariant (τ γ : Rˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (s : QuotientSections τ γ n) (z : Rˣ) :
+    quotientSectionScalar τ γ n s (τ * z) =
+      (↑(γ * z ^ (-n)) : R) * quotientSectionScalar τ γ n s z := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L126">OAI.Nagata.W08.quotientSectionScalar</a></p></li><li id=L161><b>def</b> <code>OAI.Nagata.W08.equivariantOfQuotientSection</code> <small>line 161</small><div class="doc"><p>Extract an equivariant function from an actual quotient section.</p></div><pre>def equivariantOfQuotientSection (τ γ : Rˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (s : QuotientSections τ γ n) : EquivariantFunctions τ γ n :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L46">OAI.Nagata.W08.EquivariantFunctions</a></p></li><li id=L167><b>theorem</b> <code>OAI.Nagata.W08.equivariantOfQuotientSection_left_inverse</code> <small>line 167</small><div class="doc"><p>Extracting after descending returns every original scalar value.</p></div><pre>theorem equivariantOfQuotientSection_left_inverse (τ γ : Rˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (f : EquivariantFunctions τ γ n) :
+    equivariantOfQuotientSection τ γ n hfree (quotientSectionOfEquivariant τ γ n f) = f := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L46">OAI.Nagata.W08.EquivariantFunctions</a>, <a href="QuotientSections.lean.html#L161">OAI.Nagata.W08.equivariantOfQuotientSection</a>, <a href="QuotientSections.lean.html#L77">OAI.Nagata.W08.quotientSectionOfEquivariant</a></p></li><li id=L177><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionOfEquivariant_right_inverse</code> <small>line 177</small><div class="doc"><p>Descending after extracting returns the actual original quotient section.</p></div><pre>theorem quotientSectionOfEquivariant_right_inverse (τ γ : Rˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (s : QuotientSections τ γ n) :
+    quotientSectionOfEquivariant τ γ n (equivariantOfQuotientSection τ γ n hfree s) = s := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L77">OAI.Nagata.W08.quotientSectionOfEquivariant</a>, <a href="QuotientSections.lean.html#L161">OAI.Nagata.W08.equivariantOfQuotientSection</a></p></li><li id=L189><b>def</b> <code>OAI.Nagata.W08.equivariantQuotientSectionEquiv</code> <small>line 189</small><div class="doc"><p>The actual algebraic section/function equivalence of the actual quotient projection.
+Holomorphic compatibility is not asserted by this set-level equivalence.</p></div><pre>def equivariantQuotientSectionEquiv (τ γ : Rˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0) :
+    EquivariantFunctions τ γ n ≃ QuotientSections τ γ n where
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L46">OAI.Nagata.W08.EquivariantFunctions</a>, <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L211><b>abbrev</b> <code>OAI.Nagata.W06.TorusConfiguration.QuotientFibre</code> <small>line 211</small><div class="doc"><p>An actual fibre of the multiplier-orbit quotient projection.</p></div><pre>abbrev QuotientFibre (τ γ : ℂˣ) (n : ℤ) (p : TorusPoint τ) :=
+…</pre></li><li id=L215><b>def</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreRepresentative</code> <small>line 215</small><div class="doc"><p>The vector with scalar c over the chosen nonzero lift z.</p></div><pre>def fibreRepresentative (τ γ : ℂˣ) (n : ℤ) (z : ℂˣ) (c : ℂ) :
+    QuotientFibre τ γ n (torusPointMk τ z) :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L211">OAI.Nagata.W06.TorusConfiguration.QuotientFibre</a></p></li><li id=L219><b>theorem</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreRepresentative_injective</code> <small>line 219</small></li><li id=L225><b>theorem</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreRepresentative_surjective</code> <small>line 225</small></li><li id=L232><b>def</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreCoordinateEquiv</code> <small>line 232</small><div class="doc"><p>A proved coordinate bijection for the actual quotient fibre over a fixed lift.</p></div><pre>def fibreCoordinateEquiv (τ γ : ℂˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0) (z : ℂˣ) :
+    ℂ ≃ QuotientFibre τ γ n (torusPointMk τ z) :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L211">OAI.Nagata.W06.TorusConfiguration.QuotientFibre</a></p></li><li id=L238><b>theorem</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreCoordinateEquiv_apply</code> <small>line 238</small></li><li id=L244><b>def</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreScaleAtLift</code> <small>line 244</small><div class="doc"><p>Scalar multiplication between the actual two fibres in the specified covering frames.
+This finite-fibre map does not assert that these maps glue into a global bundle morphism.</p></div><pre>def fibreScaleAtLift (τ γA γM : ℂˣ) (nA nM : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0) (z : ℂˣ) (P : ℂ) :
+    QuotientFibre τ γA nA (torusPointMk τ z) → QuotientFibre τ γM nM (torusPointMk τ z) :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L211">OAI.Nagata.W06.TorusConfiguration.QuotientFibre</a></p></li><li id=L250><b>theorem</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreScaleAtLift_representative</code> <small>line 250</small></li><li id=L261><b>theorem</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreScaleAtLift_one</code> <small>line 261</small><div class="doc"><p>The source scalar-one vector is sent to the target scalar-P vector.</p></div><pre>theorem fibreScaleAtLift_one (τ γA γM : ℂˣ) (nA nM : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0) (z : ℂˣ) (P : ℂ) :
+    fibreScaleAtLift τ γA γM nA nM hfree z P (fibreRepresentative τ γA nA z 1) =
+      fibreRepresentative τ γM nM z P := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L244">OAI.Nagata.W06.TorusConfiguration.fibreScaleAtLift</a>, <a href="QuotientSections.lean.html#L215">OAI.Nagata.W06.TorusConfiguration.fibreRepresentative</a></p></li><li id=L267><b>theorem</b> <code>OAI.Nagata.W06.TorusConfiguration.fibreRepresentative_ne_zero</code> <small>line 267</small></li><li id=L291><b>def</b> <code>OAI.Nagata.W08.automorphicToEquivariant</code> <small>line 291</small><div class="doc"><p>Restriction of the actual holomorphic section to its genuine unit-valued cover.</p></div><pre>def automorphicToEquivariant (τ γ : ℂˣ) (n : ℤ)
+    (f : automorphicSections (τ : ℂ) n (γ : ℂ)) : EquivariantFunctions τ γ n :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L46">OAI.Nagata.W08.EquivariantFunctions</a></p></li><li id=L298><b>theorem</b> <code>OAI.Nagata.W08.automorphicToEquivariant_injective</code> <small>line 298</small><div class="doc"><p>Restriction loses no actual holomorphic sections.</p></div><pre>theorem automorphicToEquivariant_injective (τ γ : ℂˣ) (n : ℤ) :
+    Function.Injective (automorphicToEquivariant τ γ n) := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L291">OAI.Nagata.W08.automorphicToEquivariant</a></p></li><li id=L306><b>def</b> <code>OAI.Nagata.W08.quotientSectionOfAutomorphic</code> <small>line 306</small><div class="doc"><p>An actual holomorphic multiplier function yields an actual right-inverse section.</p></div><pre>def quotientSectionOfAutomorphic (τ γ : ℂˣ) (n : ℤ)
+    (f : automorphicSections (τ : ℂ) n (γ : ℂ)) : QuotientSections τ γ n :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L311><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionOfAutomorphic_apply</code> <small>line 311</small><div class="doc"><p>The quotient representative uses exactly the function's covering-frame scalar.</p></div><pre>@[simp] theorem quotientSectionOfAutomorphic_apply (τ γ : ℂˣ) (n : ℤ)
+    (f : automorphicSections (τ : ℂ) n (γ : ℂ)) (z : ℂˣ) :
+    (quotientSectionOfAutomorphic τ γ n f).val (torusPointMk τ z) =
+      (Quotient.mk _ (z, f.val (z : ℂ)) : MultiplierQuotient τ γ n) := rfl</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a></p></li><li id=L317><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionOfAutomorphic_scalar</code> <small>line 317</small><div class="doc"><p>Scalar extraction from the descended actual quotient section recovers the original value.</p></div><pre>theorem quotientSectionOfAutomorphic_scalar (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1) (f : automorphicSections (τ : ℂ) n (γ : ℂ)) (z : ℂˣ) :
+    quotientSectionScalar τ γ n (quotientSectionOfAutomorphic τ γ n f) z = f.val (z : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L126">OAI.Nagata.W08.quotientSectionScalar</a>, <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a></p></li><li id=L324><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionOfAutomorphic_injective</code> <small>line 324</small><div class="doc"><p>Distinct holomorphic covering functions give distinct actual quotient sections.</p></div><pre>theorem quotientSectionOfAutomorphic_injective (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1) : Function.Injective (quotientSectionOfAutomorphic τ γ n) := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a></p></li><li id=L349><b>theorem</b> <code>OAI.Nagata.W08.quotientSection_fibreChart</code> <small>line 349</small><div class="doc"><p>The actual fibre chart recovers the unique scalar of an arbitrary quotient section.</p></div><pre>theorem quotientSection_fibreChart (τ γ : ℂˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (U : Set ℂˣ) (hU : IsOpen U) (hinj : Set.InjOn (torusPointMk τ) U)
+    (s : QuotientSections τ γ n) {z : ℂˣ} (hz : z ∈ U) :
+    (multiplierFibreChart τ γ n hfree U hU hinj).symm (s.val (torusPointMk τ z)) =
+      (z, quotientSectionScalar τ γ n s z) := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L126">OAI.Nagata.W08.quotientSectionScalar</a></p></li><li id=L360><b>def</b> <code>OAI.Nagata.W08.quotientChartScalar</code> <small>line 360</small><div class="doc"><p>The scalar local coordinate of a quotient section, expressed in the genuine complex base
+coordinate. Outside the chart domain its values have no geometric meaning.</p></div><pre>def quotientChartScalar (τ γ : ℂˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (U : Set ℂˣ) (hU : IsOpen U) (hinj : Set.InjOn (torusPointMk τ) U)
+    (s : QuotientSections τ γ n) (w : ℂ) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L369><b>theorem</b> <code>OAI.Nagata.W08.quotientChartScalar_eq</code> <small>line 369</small><div class="doc"><p>Exact local-coordinate formula for every actual section.</p></div><pre>theorem quotientChartScalar_eq (τ γ : ℂˣ) (n : ℤ)
+    (hfree : ∀ k : ℤ, τ ^ k = 1 → k = 0)
+    (U : Set ℂˣ) (hU : IsOpen U) (hinj : Set.InjOn (torusPointMk τ) U)
+    (s : QuotientSections τ γ n) {z : ℂˣ} (hz : z ∈ U) :
+    quotientChartScalar τ γ n hfree U hU hinj s (z : ℂ) =
+      quotientSectionScalar τ γ n s z := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L360">OAI.Nagata.W08.quotientChartScalar</a>, <a href="QuotientSections.lean.html#L126">OAI.Nagata.W08.quotientSectionScalar</a></p></li><li id=L380><b>theorem</b> <code>OAI.Nagata.W08.quotientChartScalar_automorphic_eq</code> <small>line 380</small><div class="doc"><p>The actual quotient fibre-coordinate function equals the original holomorphic scalar.</p></div><pre>theorem quotientChartScalar_automorphic_eq (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1)
+    (U : Set ℂˣ) (hU : IsOpen U) (hinj : Set.InjOn (torusPointMk τ) U)
+    (f : automorphicSections (τ : ℂ) n (γ : ℂ)) {z : ℂˣ} (hz : z ∈ U) :
+    quotientChartScalar τ γ n (unitPeriod_free τ hτ) U hU hinj
+      (quotientSectionOfAutomorphic τ γ n f) (z : ℂ) = f.val (z : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L360">OAI.Nagata.W08.quotientChartScalar</a>, <a href="Automorphic.lean.html#L266">OAI.Nagata.W08.unitPeriod_free</a>, <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a></p></li><li id=L390><b>theorem</b> <code>OAI.Nagata.W08.quotientChartScalar_automorphic_differentiableAt</code> <small>line 390</small><div class="doc"><p>The descended actual section is holomorphic in every actual fibre chart.</p></div><pre>theorem quotientChartScalar_automorphic_differentiableAt (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1)
+    (U : Set ℂˣ) (hU : IsOpen U) (hinj : Set.InjOn (torusPointMk τ) U)
+    (f : automorphicSections (τ : ℂ) n (γ : ℂ)) {z : ℂˣ} (hz : z ∈ U) :
+    DifferentiableAt ℂ (quotientChartScalar τ γ n (unitPeriod_free τ hτ) U hU hinj
+      (quotientSectionOfAutomorphic τ γ n f)) (z : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L360">OAI.Nagata.W08.quotientChartScalar</a>, <a href="Automorphic.lean.html#L266">OAI.Nagata.W08.unitPeriod_free</a>, <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a></p></li><li id=L414><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.exists_holomorphic_quotient</code> <small>line 414</small><div class="doc"><p>Quotient construction directly from genuine holomorphic multiplier sections:
+analyticity is derived, with no additional analyticity hypotheses.</p></div><pre>theorem exists_holomorphic_quotient {τ γ δ : ℂ} {n s : ℤ}
+    (hτ : τ ≠ 0) (hδ : δ ≠ 0)
+    (f : Nagata.W08.automorphicSections τ n γ)
+    (P : Nagata.W08.automorphicSections τ s δ) (k : ℕ)
+    (hzero : ∀ z ≠ 0, P.val z = 0 → deriv P.val z ≠ 0 ∧
+      (k : ℕ∞) ≤ analyticOrderAt f.val z) :
+    ∃ G : Nagata.W08.automorphicSections τ (n - (k : ℤ) * s) (γ / δ ^ k),
+      ∀ z ≠ 0, f.val z = P.val z ^ k * G.val z :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L427><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.exists_low_holomorphic_coefficient</code> <small>line 427</small><div class="doc"><p>The actual low coefficient extension without redundant analytic assumptions.</p></div><pre>theorem exists_low_holomorphic_coefficient {τ L Q : ℂ}
+    (hτ : τ ≠ 0) (hL : L ≠ 0) (hQ : Q ≠ 0)
+    (d m j : ℤ) (hj : j ≤ m)
+    (P : Nagata.W08.automorphicSections τ 9 Q)
+    (f : Nagata.W08.automorphicSections τ (3 * (d - 3 * j)) (L ^ (d - 3 * j)))
+    (hzero : ∀ z ≠ 0, P.val z = 0 → deriv P.val z ≠ 0 ∧
+      ((m - j).toNat : ℕ∞) ≤ analyticOrderAt f.val z) :
+    ∃ g ∈ coefficientSpace τ L Q d m j P.val,
+      ∀ z ≠ 0, f.val z = P.val z ^ (m - j).toNat * g z :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="CoefficientSpaces.lean.html#L55">OAI.Nagata.CoefficientSpaces.coefficientSpace</a></p></li><li id=L459><b>def</b> <code>OAI.Nagata.W08.IsChartHolomorphic</code> <small>line 459</small><div class="doc"><p>Standard local-coordinate holomorphy for an actual section of the quotient projection.</p></div><pre>def IsChartHolomorphic (τ γ : ℂˣ) (n : ℤ) (hτ : ‖(τ : ℂ)‖ &lt; 1)
+    (s : QuotientSections τ γ n) : Prop :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L466><b>def</b> <code>OAI.Nagata.W08.quotientSectionZeroScalar</code> <small>line 466</small><div class="doc"><p>The unique scalar extracted from an actual section, represented by a zero extension.</p></div><pre>def quotientSectionZeroScalar (τ γ : ℂˣ) (n : ℤ) (s : QuotientSections τ γ n) (w : ℂ) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a></p></li><li id=L469><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionZeroScalar_zero</code> <small>line 469</small></li><li id=L473><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionZeroScalar_unit</code> <small>line 473</small></li><li id=L481><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionZeroScalar_differentiableAt</code> <small>line 481</small><div class="doc"><p>Holomorphy in an actual fibre chart implies holomorphy of the extracted covering scalar.</p></div><pre>theorem quotientSectionZeroScalar_differentiableAt (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1) (s : QuotientSections τ γ n)
+    (hs : IsChartHolomorphic τ γ n hτ s) {w : ℂ} (hw : w ≠ 0) :
+    DifferentiableAt ℂ (quotientSectionZeroScalar τ γ n s) w := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L459">OAI.Nagata.W08.IsChartHolomorphic</a>, <a href="QuotientSections.lean.html#L466">OAI.Nagata.W08.quotientSectionZeroScalar</a></p></li><li id=L496><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionZeroScalar_automorphy</code> <small>line 496</small><div class="doc"><p>The extracted scalar satisfies the actual multiplier equation.</p></div><pre>theorem quotientSectionZeroScalar_automorphy (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1) (s : QuotientSections τ γ n) {w : ℂ} (hw : w ≠ 0) :
+    quotientSectionZeroScalar τ γ n s ((τ : ℂ) * w) =
+      (γ : ℂ) * w ^ (-n) * quotientSectionZeroScalar τ γ n s w := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L466">OAI.Nagata.W08.quotientSectionZeroScalar</a></p></li><li id=L507><b>def</b> <code>OAI.Nagata.W08.automorphicOfChartHolomorphic</code> <small>line 507</small><div class="doc"><p>Extract a genuine holomorphic multiplier function from a chart-holomorphic actual section.</p></div><pre>def automorphicOfChartHolomorphic (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1) (s : QuotientSections τ γ n)
+    (hs : IsChartHolomorphic τ γ n hτ s) : automorphicSections (τ : ℂ) n (γ : ℂ) :=
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L459">OAI.Nagata.W08.IsChartHolomorphic</a>, <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L515><b>theorem</b> <code>OAI.Nagata.W08.automorphicOfChartHolomorphic_right_inverse</code> <small>line 515</small><div class="doc"><p>Descent of the extracted holomorphic scalar recovers the actual original section.</p></div><pre>theorem automorphicOfChartHolomorphic_right_inverse (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1) (s : QuotientSections τ γ n)
+    (hs : IsChartHolomorphic τ γ n hτ s) :
+    quotientSectionOfAutomorphic τ γ n (automorphicOfChartHolomorphic τ γ n hτ s hs) = s := by
+…</pre><p class="refs">Mentions: <a href="QuotientSections.lean.html#L50">OAI.Nagata.W08.QuotientSections</a>, <a href="QuotientSections.lean.html#L459">OAI.Nagata.W08.IsChartHolomorphic</a>, <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a>, <a href="QuotientSections.lean.html#L507">OAI.Nagata.W08.automorphicOfChartHolomorphic</a></p></li><li id=L528><b>theorem</b> <code>OAI.Nagata.W08.quotientSectionOfAutomorphic_isChartHolomorphic</code> <small>line 528</small><div class="doc"><p>When the actual chart slices cover the base, descent is holomorphic everywhere.</p></div><pre>theorem quotientSectionOfAutomorphic_isChartHolomorphic (τ γ : ℂˣ) (n : ℤ)
+    (hτ : ‖(τ : ℂ)‖ &lt; 1)
+    (hcover : ∀ z : ℂˣ, ∃ U : Set ℂˣ, ∃ _ : IsOpen U,
+      ∃ _ : Set.InjOn (torusPointMk τ) U, z ∈ U)
+    (f : automorphicSections (τ : ℂ) n (γ : ℂ)) :
+    IsChartHolomorphic τ γ n hτ (quotientSectionOfAutomorphic τ γ n f) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="QuotientSections.lean.html#L459">OAI.Nagata.W08.IsChartHolomorphic</a>, <a href="QuotientSections.lean.html#L306">OAI.Nagata.W08.quotientSectionOfAutomorphic</a></p></li><li id=L538><b>def</b> <code>OAI.Nagata.W08.holomorphicQuotientSectionEquiv</code> <small>line 538</small></li><li id=L572><b>theorem</b> <code>OAI.Nagata.W08.positivePeriod_norm_lt_one</code> <small>line 572</small><div class="doc"><p>The source's actual unit-valued positive period has norm less than one.</p></div><pre>theorem positivePeriod_norm_lt_one {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1) :
+    ‖((positivePeriod τ hτ : ℂˣ) : ℂ)‖ &lt; 1 := by
+…</pre></li><li id=L578><b>theorem</b> <code>OAI.Nagata.W08.sourcePeriod_chartCover</code> <small>line 578</small><div class="doc"><p>Actual injective open slices cover every source covering-space point.</p></div><pre>theorem sourcePeriod_chartCover {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1) :
+    ∀ z : ℂˣ, ∃ U : Set ℂˣ, ∃ _ : IsOpen U,
+      ∃ _ : Set.InjOn (torusPointMk (positivePeriod τ hτ)) U, z ∈ U := by
+…</pre></li><li id=L586><b>def</b> <code>OAI.Nagata.W08.sourceHolomorphicQuotientSectionEquiv</code> <small>line 586</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("ol", [["BeaverMathOlympiad.beaver_math_olympiad_problem_1",61,71],["BeaverMathOlympiad.beaver_math_olympiad_problem_2_antihydra",61,98],["BeaverMathOlympiad.beaver_math_olympiad_problem_2_antihydra.variants.set",61,114],["BeaverMathOlympiad.beaver_math_olympiad_problem_5",61,209],["BeaverMathOlympiad.beaver_math_olympiad_problem_8",61,237]]);

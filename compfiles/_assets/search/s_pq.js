@@ -1,0 +1,1 @@
+window.l4shard("pq", [["Usa1973P5.cube_root_pqr_ne_rat",159,69],["Usa1973P5.factorization_pqr",159,39],["Usa2005P1.goodCircle_of_not_pq",247,825],["Usa2005P1.not_pq_of_factorization_ge_two",247,591],["Usa2005P1.not_pq_of_three_le_card",247,614]]);

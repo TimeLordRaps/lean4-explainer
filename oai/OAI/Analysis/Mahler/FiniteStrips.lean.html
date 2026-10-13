@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/FiniteStrips.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/FiniteStrips.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>FiniteStrips.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>FiniteStrips.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/FiniteStrips.lean#L1">source</a></p><div class="doc"><p>Finite-dimensional algebra for the finite-strip construction.
+The image estimate and algebraic injectivity step do not require
+the analytic mass inequality.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.SymmetricMahler.measurement</code> <small>line 20</small><div class="doc"><p>Apply the real matrix whose rows encode the strip constraints.</p></div><pre>def measurement (A : J → I → ℝ) (v : I → ℝ) (j : J) : ℝ := ∑ i, A j i * v i</pre></li><li id=L23><b>def</b> <code>OAI.SymmetricMahler.push</code> <small>line 23</small><div class="doc"><p>Apply the transpose of the strip matrix to a vector of coefficients.</p></div><pre>def push (A : J → I → ℝ) (p : J → ℝ) (i : I) : ℝ := ∑ j, A j i * p j</pre></li><li id=L25><b>def</b> <code>OAI.SymmetricMahler.stripBody</code> <small>line 25</small></li><li id=L29><b>theorem</b> <code>OAI.SymmetricMahler.transpose_pairing</code> <small>line 29</small><div class="doc"><p>The transpose identity in the image bound.</p></div><pre>theorem transpose_pairing (A : J → I → ℝ) (p : J → ℝ) (v : I → ℝ) :
+    (∑ i, push A p i * v i) = ∑ j, p j * measurement A v j := by
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L23">OAI.SymmetricMahler.push</a>, <a href="FiniteStrips.lean.html#L20">OAI.SymmetricMahler.measurement</a></p></li><li id=L40><b>theorem</b> <code>OAI.SymmetricMahler.image_bound</code> <small>line 40</small><div class="doc"><p>Coefficients with bounded l1 norm define a bounded polar functional.</p></div><pre>theorem image_bound (A : J → I → ℝ) (p : J → ℝ) (v : I → ℝ)
+    (hv : v ∈ stripBody A) :
+    (∑ i, push A p i * v i) ≤ ∑ j, |p j| := by
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L25">OAI.SymmetricMahler.stripBody</a>, <a href="FiniteStrips.lean.html#L23">OAI.SymmetricMahler.push</a></p></li><li id=L53><b>theorem</b> <code>OAI.SymmetricMahler.monotone_product_nonneg</code> <small>line 53</small><div class="doc"><p>The scalar strict-monotonicity argument needs no derivative assumption.</p></div><pre>theorem monotone_product_nonneg {f : ℝ → ℝ} (hf : StrictMono f) (a b : ℝ) :
+    0 ≤ (f a - f b) * (a - b) := by
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.SymmetricMahler.monotone_product_pos</code> <small>line 60</small></li><li id=L67><b>theorem</b> <code>OAI.SymmetricMahler.strict_pairing</code> <small>line 67</small><div class="doc"><p>The positive sum in the injectivity argument.</p></div><pre>theorem strict_pairing (A : J → I → ℝ)
+    (hA : Function.Injective (measurement A))
+    (f : J → ℝ → ℝ) (hf : ∀ j, StrictMono (f j))
+    {y y&#x27; : I → ℝ} (hy : y ≠ y&#x27;) :
+    0 &lt; ∑ j, (f j (measurement A y j) - f j (measurement A y&#x27; j)) *
+      (measurement A y j - measurement A y&#x27; j) := by
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L20">OAI.SymmetricMahler.measurement</a></p></li><li id=L83><b>theorem</b> <code>OAI.SymmetricMahler.vertical_map_injective</code> <small>line 83</small><div class="doc"><p>Injectivity of the vertical map <code>y ↦ Aᵀ (P_j ((Ay)_j))</code>.
+This is the algebraic injectivity step for the finite-strip construction.</p></div><pre>theorem vertical_map_injective (A : J → I → ℝ)
+    (hA : Function.Injective (measurement A))
+    (f : J → ℝ → ℝ) (hf : ∀ j, StrictMono (f j)) :
+    Function.Injective (fun y : I → ℝ =&gt; push A (fun j =&gt; f j (measurement A y j))) := by
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L20">OAI.SymmetricMahler.measurement</a>, <a href="FiniteStrips.lean.html#L23">OAI.SymmetricMahler.push</a></p></li><li id=L119><b>theorem</b> <code>OAI.SymmetricMahler.vertical_map_injOn</code> <small>line 119</small><div class="doc"><p>The relevant vertical fibers need only support strict monotonicity on
+an interval, rather than on all of the real line.</p></div><pre>theorem vertical_map_injOn (A : J → I → ℝ)
+    (hA : Function.Injective (measurement A))
+    (S : J → Set ℝ) (f : J → ℝ → ℝ)
+    (hf : ∀ j, StrictMonoOn (f j) (S j)) :
+    Set.InjOn (fun y : I → ℝ =&gt; push A (fun j =&gt; f j (measurement A y j)))
+      {y | ∀ j, measurement A y j ∈ S j} := by
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L20">OAI.SymmetricMahler.measurement</a>, <a href="FiniteStrips.lean.html#L23">OAI.SymmetricMahler.push</a></p></li><li id=L164><b>theorem</b> <code>OAI.SymmetricMahler.full_map_injOn</code> <small>line 164</small><div class="doc"><p>The full real map is injective when each vertical slice satisfies the
+hypotheses proved above. This also permits the fiber interval to depend on x.</p></div><pre>theorem full_map_injOn (A : J → I → ℝ)
+    (hA : Function.Injective (measurement A))
+    (S : (I → ℝ) → J → Set ℝ) (f : (I → ℝ) → J → ℝ → ℝ)
+    (hf : ∀ x j, StrictMonoOn (f x j) (S x j)) :
+    Set.InjOn
+      (fun z : (I → ℝ) × (I → ℝ) =&gt;
+        (z.1, push A (fun j =&gt; f z.1 j (measurement A z.2 j))))
+      {z | ∀ j, measurement A z.2 j ∈ S z.1 j} := by
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L20">OAI.SymmetricMahler.measurement</a>, <a href="FiniteStrips.lean.html#L23">OAI.SymmetricMahler.push</a></p></li><li id=L185><b>theorem</b> <code>OAI.SymmetricMahler.coefficient_bound</code> <small>line 185</small><div class="doc"><p>The planar uniform error accumulates only by the number of rows.</p></div><pre>theorem coefficient_bound (p t : J → ℝ) (ε : ℝ)
+    (hp : ∀ j, |p j| ≤ t j + ε) (ht : (∑ j, t j) &lt; 1) :
+    (∑ j, |p j|) &lt; 1 + Fintype.card J * ε := by
+…</pre></li><li id=L194><b>theorem</b> <code>OAI.SymmetricMahler.image_bound_with_error</code> <small>line 194</small><div class="doc"><p>The pointwise image estimate, including the planar error.</p></div><pre>theorem image_bound_with_error (A : J → I → ℝ) (p t : J → ℝ) (ε : ℝ)
+    (hp : ∀ j, |p j| ≤ t j + ε) (ht : (∑ j, t j) &lt; 1)
+    (v : I → ℝ) (hv : v ∈ stripBody A) :
+    (∑ i, push A p i * v i) &lt; 1 + Fintype.card J * ε :=
+…</pre><p class="refs">Mentions: <a href="FiniteStrips.lean.html#L25">OAI.SymmetricMahler.stripBody</a>, <a href="FiniteStrips.lean.html#L23">OAI.SymmetricMahler.push</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

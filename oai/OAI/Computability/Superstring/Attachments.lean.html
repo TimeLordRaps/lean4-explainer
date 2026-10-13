@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/Superstring/Attachments.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/Superstring/Attachments.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Computability</a> / <a href="index.html">Superstring</a> / <span>Attachments.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Computability</a>/<a href="index.html">Superstring</a>/<span>Attachments.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/Superstring/Attachments.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.attach_layer</code> <small>line 11</small><div class="doc"><p>Complete one touched base layer and splice it into the rooted walk.
+Only this layer's base turn and its one geometric connection are charged.</p></div><pre>theorem attach_layer (closed : SubstringClosed V) (g : G) (i : Fin (C.size g))
+    (P : Path V [] []) (F : Loop V) (hcF : F.cost ≤ C.period g)
+    (ht : (C.layer g i).TouchedBy F.path) (hmeet : (Loop.mk [] P).Meets F) :
+    ∃ Q : Path V [] [], Q.cost ≤ P.cost + 2 * C.period g ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      ∀ w ∈ (C.layer g i).Content, Q.Visits w := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a>, <a href="Hierarchical.lean.html#L1080">OAI.Superstring.Hierarchical.Loop</a></p></li><li id=L29><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.root_below</code> <small>line 29</small><div class="doc"><p>Root each as-yet-unspent layer below the chosen recipient baseline. The
+baseline itself is already fully retained by the incoming-request operation.</p></div><pre>theorem root_below (closed : SubstringClosed V) (g : G) (base : Fin (C.size g))
+    (P : Path V [] []) (hp : ∀ w ∈ (C.layer g base).Content, P.Visits w)
+    (a b : ℤ) (hbf : (C.layer g base).first a ≤ b)
+    (hbl : b ≤ (C.layer g base).last a) (hlen : b - a &lt; 2 * C.period g)
+    (I : Finset (Fin (C.size g))) (hbelow : ∀ i ∈ I, i ≤ base) :
+    ∃ Q : Path V [] [], Q.cost ≤ P.cost + 2 * (I.card * C.period g) ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      ∀ i ∈ I, ∀ w ∈ (C.layer g i).Content, Q.Visits w := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L61><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.root_upper_budget</code> <small>line 61</small><div class="doc"><p>Easy upper round-trip branch, including all upper base turns.</p></div><pre>theorem root_upper_budget (closed : SubstringClosed V) (g : G)
+    (I : Finset (Fin (C.size g))) (top : Fin (C.size g))
+    (hupper : ∀ i ∈ I, i ≤ top) (t : ℤ)
+    (hcost : (C.layer g top).first t - t ≤ (I.card * C.period g : ℕ)) :
+    ∃ Q : Path V [] [], Q.cost ≤ 2 * (I.card * C.period g) ∧
+      ∀ i ∈ I, ∀ w ∈ (C.layer g i).Content, Q.Visits w := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L88><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.attach_upper_band</code> <small>line 88</small><div class="doc"><p>Easy upper band branch, paid only by upper layers, not by the already
+rooted baseline's budget.</p></div><pre>theorem attach_upper_band (closed : SubstringClosed V) (g : G)
+    (I : Finset (Fin (C.size g))) (base top : Fin (C.size g))
+    (horder : ∀ i ∈ I, base ≤ i ∧ i ≤ top) (hbt : base ≤ top)
+    (P : Path V [] []) (hp : ∀ w ∈ (C.layer g base).Content, P.Visits w) (t : ℤ)
+    (hband : (C.layer g top).first t - (C.layer g base).last t ≤ (I.card * C.period g : ℕ)) :
+    ∃ Q : Path V [] [], Q.cost ≤ P.cost + 2 * (I.card * C.period g) ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      ∀ i ∈ I, ∀ w ∈ (C.layer g i).Content, Q.Visits w := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L131><b>abbrev</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending</code> <small>line 131</small></li><li id=L135><b>def</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.source</code> <small>line 135</small></li><li id=L136><b>def</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.ids</code> <small>line 136</small></li><li id=L137><b>def</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.reserve</code> <small>line 137</small></li><li id=L139><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.later</code> <small>line 139</small></li><li id=L141><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.same</code> <small>line 141</small></li><li id=L145><b>def</b> <code>OAI.Superstring.Hierarchical.LayerCollection.upper</code> <small>line 145</small></li><li id=L148><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.mem_upper</code> <small>line 148</small></li><li id=L151><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.card_upper</code> <small>line 151</small></li><li id=L167><b>def</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Covered</code> <small>line 167</small></li><li id=L174><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.complete_upper</code> <small>line 174</small><div class="doc"><p>Complete exactly the unspent upper interval. The failed count test is
+resolved by the proved record supply, not taken as a plan oracle.</p></div><pre>theorem complete_upper (closed : SubstringClosed V) (supply : C.RecordSupply)
+    (g : G) (cut : ℕ) (hcut : cut ≤ C.size g) (P : Path V [] [])
+    (hp : ∀ i : Fin (C.size g), i.val &lt; cut →
+      ∀ w ∈ (C.layer g i).Content, P.Visits w) :
+    ∃ (Q : Path V [] []) (B : Finset C.PlannedBlock) (R : Finset C.Pending),
+      Q.cost + (∑ b ∈ B, b.reserve) + (∑ r ∈ R, r.reserve) ≤
+        P.cost + 2 * ((C.size g - cut) * C.period g) ∧
+      (∀ w, P.Visits w → Q.Visits w) ∧
+      (∀ i ∈ C.upper g cut, C.Covered Q B R ⟨g, i⟩) ∧
+      (∀ r ∈ R, r.source = g) ∧ R.card ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L307><b>def</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.onTarget</code> <small>line 307</small></li><li id=L309><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.at_source</code> <small>line 309</small></li><li id=L313><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.at_budget</code> <small>line 313</small></li><li id=L317><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.Pending.at_ids</code> <small>line 317</small></li><li id=L324><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.fulfill_fibre</code> <small>line 324</small><div class="doc"><p>Fulfill precisely the pending requests on one fixed recipient.</p></div><pre>theorem fulfill_fibre (closed : SubstringClosed V) (d : C.Id) (R : Finset C.Pending)
+    (hne : R.Nonempty) (ht : ∀ r ∈ R, r.1 = d)
+    (distinct : Set.InjOn Pending.source (R : Set C.Pending)) :
+    ∃ Q : Path V [] [], Q.cost ≤ 2 * C.period d.1 + ∑ r ∈ R, r.reserve ∧
+      (∀ w ∈ (C.layerAt d).Content, Q.Visits w) ∧
+      ∀ r ∈ R, ∀ i ∈ r.ids, ∀ w ∈ (C.layerAt i).Content, Q.Visits w := by
+…</pre><p class="refs">Mentions: <a href="Hierarchical.lean.html#L12">OAI.Superstring.Hierarchical.SubstringClosed</a>, <a href="Attachments.lean.html#L135">OAI.Superstring.Hierarchical.LayerCollection.Pending.source</a>, <a href="Hierarchical.lean.html#L17">OAI.Superstring.Hierarchical.Path</a></p></li><li id=L352><b>theorem</b> <code>OAI.Superstring.Hierarchical.LayerCollection.fulfill_all</code> <small>line 352</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

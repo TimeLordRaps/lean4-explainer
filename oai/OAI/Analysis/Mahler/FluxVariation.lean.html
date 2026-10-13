@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/FluxVariation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/FluxVariation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>FluxVariation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>FluxVariation.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/FluxVariation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>lemma</b> <code>OAI.Mahler.oneForm_add</code> <small>line 13</small></li><li id=L19><b>lemma</b> <code>OAI.Mahler.oneForm_smul</code> <small>line 19</small></li><li id=L24><b>lemma</b> <code>OAI.Mahler.extDeriv_oneForm_affine</code> <small>line 24</small></li><li id=L33><b>theorem</b> <code>OAI.Mahler.hasDerivAt_boundaryForm</code> <small>line 33</small><div class="doc"><p>Actual parameter derivative of the boundary form, at each vector tuple.
+The spatial derivatives are exterior derivatives.</p></div><pre>theorem hasDerivAt_boundaryForm {a b : E → E →L[ℝ] ℂ} {x : E}
+    (ha : DifferentiableAt ℝ a x) (hb : DifferentiableAt ℝ b x)
+    (S : Submodule ℝ E) (t : ℝ) (k : ℕ) (v : Fin 1 ⊕ WedgePowerSlots k → S) :
+    HasDerivAt
+      (fun s =&gt; wedge
+        ((oneForm (a+s • b) x).toAlternatingMap.compLinearMap S.subtype)
+        (wedgePower ((extDeriv (oneForm (a+s • b)) x).toAlternatingMap.compLinearMap S.subtype) k) v)
+      ((wedge ((oneForm b x).toAlternatingMap.compLinearMap S.subtype)
+        (wedgePower ((extDeriv (oneForm (a+t • b)) x).toAlternatingMap.compLinearMap S.subtype) k) +
+        wedge ((oneForm (a+t • b) x).toAlternatingMap.compLinearMap S.subtype)
+          (wedgePowerVariation
+            ((extDeriv (oneForm (a+t • b)) x).toAlternatingMap.compLinearMap S.subtype)
+…</pre><p class="refs">Mentions: <a href="HorizontalForms.lean.html#L87">OAI.Mahler.WedgePowerSlots</a>, <a href="HorizontalForms.lean.html#L54">OAI.Mahler.wedge</a>, <a href="ExteriorFlux.lean.html#L30">OAI.Mahler.oneForm</a>, <a href="HorizontalForms.lean.html#L110">OAI.Mahler.wedgePower</a>, <a href="WedgeCalculus.lean.html#L49">OAI.Mahler.wedgePowerVariation</a></p></li><li id=L66><b>theorem</b> <code>OAI.Mahler.MassHypotheses.sphere_boundaryForm_derivative</code> <small>line 66</small><div class="doc"><p>The first variation term vanishes for the homogeneous path.
+The remaining term is displayed explicitly; this is not flux constancy.</p></div><pre>theorem MassHypotheses.sphere_boundaryForm_derivative {n N m : ℕ}
+    {U : Set (ComplexEuclidean n)} {f : Fin N → ComplexEuclidean n → ℂ}
+    {G : Fin N → MvPolynomial (Fin n) ℂ} (h : MassHypotheses n N m U f G)
+    {z : ComplexEuclidean n} (hz : z ≠ 0) (t : ℝ)
+    (v : Fin 1 ⊕ WedgePowerSlots (n-1) → sphereTangent z) :
+    HasDerivAt
+      (fun s =&gt; wedge
+        (tangentForm z (oneForm (alphaPath (polynomialMap G) (coordinateMap n) m s) z).toAlternatingMap)
+        (wedgePower (tangentForm z
+          (extDeriv (oneForm (alphaPath (polynomialMap G) (coordinateMap n) m s)) z).toAlternatingMap) (n-1)) v)
+      (wedge
+        (tangentForm z (oneForm (alphaPath (polynomialMap G) (coordinateMap n) m t) z).toAlternatingMap)
+…</pre><p class="refs">Mentions: <a href="MassTarget.lean.html#L12">OAI.Mahler.ComplexEuclidean</a>, <a href="MassTarget.lean.html#L16">OAI.Mahler.MassHypotheses</a>, <a href="HorizontalForms.lean.html#L87">OAI.Mahler.WedgePowerSlots</a>, <a href="SphereForms.lean.html#L31">OAI.Mahler.sphereTangent</a>, <a href="HorizontalForms.lean.html#L54">OAI.Mahler.wedge</a>, <a href="SphereForms.lean.html#L71">OAI.Mahler.tangentForm</a>, <a href="ExteriorFlux.lean.html#L30">OAI.Mahler.oneForm</a>, <a href="HomogeneousDeformation.lean.html#L18">OAI.Mahler.alphaPath</a>, <a href="SourceHomogeneous.lean.html#L28">OAI.Mahler.polynomialMap</a>, <a href="SphereForms.lean.html#L11">OAI.Mahler.coordinateMap</a>, <a href="HorizontalForms.lean.html#L110">OAI.Mahler.wedgePower</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

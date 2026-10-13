@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Sobolev/SourceArea.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Sobolev/SourceArea.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Sobolev</a> / <span>SourceArea.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Sobolev</a>/<span>SourceArea.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Sobolev/SourceArea.lean#L1">source</a></p><div class="doc"><h3>The source-area inequality for circle domains</h3><p>The source region and the interiors of its complementary disks are
+disjoint subsets of one outer disk. Countable additivity gives the
+source-area inequality used in Section 6 of the rigidity manuscript.
+No regularity of the remaining point components is needed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.CircleDomainRigidity.measure_source_add_disks_le</code> <small>line 23</small><div class="doc"><p>Countable additivity for a disjoint measurable family, together with
+one further disjoint source set, gives an area bound in a containing set.</p></div><pre>theorem measure_source_add_disks_le {X ι : Type*} [MeasurableSpace X] [Countable ι]
+    (μ : Measure X) {U O : Set X} (D : ι → Set X)
+    (hD : ∀ j, MeasurableSet (D j))
+    (hpair : Pairwise (Disjoint on D))
+    (hdisj : ∀ j, Disjoint U (D j))
+    (hUO : U ⊆ O) (hDO : ∀ j, D j ⊆ O) :
+    μ U + ∑&#x27; j, μ (D j) ≤ μ O := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.CircleDomainRigidity.sourceArea_le</code> <small>line 37</small><div class="doc"><p>The actual geometric source-area bound for pairwise disjoint disks.</p></div><pre>theorem sourceArea_le {ι : Type*} [Countable ι] {U : Set ℂ}
+    (centers : ι → ℂ) (radii : ι → ℝ) (R : ℝ)
+    (hpair : Pairwise (Disjoint on fun j =&gt; ball (centers j) (radii j)))
+    (hdisj : ∀ j, Disjoint U (ball (centers j) (radii j)))
+    (hUO : U ⊆ ball 0 R)
+    (hDO : ∀ j, ball (centers j) (radii j) ⊆ ball 0 R) :
+    volume U + ∑&#x27; j, volume (ball (centers j) (radii j)) ≤ volume (ball (0 : ℂ) R) :=
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.CircleDomainRigidity.real_volume_ball</code> <small>line 48</small><div class="doc"><p>Planar ball area, expressed as an ordinary real number.</p></div><pre>theorem real_volume_ball (center : ℂ) {r : ℝ} (hr : 0 ≤ r) :
+    (volume (ball center r)).toReal = Real.pi * r ^ 2 := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.CircleDomainRigidity.summable_radii_sq</code> <small>line 56</small><div class="doc"><p>Finitely bounded, pairwise disjoint disks have square-summable radii.</p></div><pre>theorem summable_radii_sq {ι : Type*} [Countable ι]
+    (centers : ι → ℂ) (radii : ι → ℝ) (R : ℝ)
+    (hr : ∀ j, 0 ≤ radii j)
+    (hpair : Pairwise (Disjoint on fun j =&gt; ball (centers j) (radii j)))
+    (hDO : ∀ j, ball (centers j) (radii j) ⊆ ball 0 R) :
+    Summable (fun j =&gt; radii j ^ 2) := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.CircleDomainRigidity.sourceArea_real_le</code> <small>line 73</small><div class="doc"><p>The real source-area inequality, with the familiar factor <code>π</code>.</p></div><pre>theorem sourceArea_real_le {ι : Type*} [Countable ι] {U : Set ℂ}
+    (centers : ι → ℂ) (radii : ι → ℝ) (R : ℝ)
+    (hr : ∀ j, 0 ≤ radii j) (hR : 0 ≤ R)
+    (hpair : Pairwise (Disjoint on fun j =&gt; ball (centers j) (radii j)))
+    (hdisj : ∀ j, Disjoint U (ball (centers j) (radii j)))
+    (hUO : U ⊆ ball 0 R)
+    (hDO : ∀ j, ball (centers j) (radii j) ⊆ ball 0 R) :
+    (volume U).toReal + Real.pi * (∑&#x27; j, radii j ^ 2) ≤ Real.pi * R ^ 2 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

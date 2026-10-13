@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/KaplanskySelfAdjoint.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/KaplanskySelfAdjoint.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>KaplanskySelfAdjoint.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>KaplanskySelfAdjoint.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/KaplanskySelfAdjoint.lean#L1">source</a></p><div class="doc"><h3>Self-adjoint strong approximation</h3><p>This is the first step in discharging bounded density. The existing
+bicommutant theorem gives unbounded strong approximation. Taking real
+parts preserves weak convergence; orthogonal complements of the finite
+tuple orbit then recover strong approximation by self-adjoint elements.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.KadisonKastler.inner_realPart</code> <small>line 26</small></li><li id=L38><b>theorem</b> <code>OAI.KadisonKastler.tendsto_inner_realPart_of_strong</code> <small>line 38</small><div class="doc"><p>Strong convergence implies weak convergence of the real parts, even
+when no uniform norm bound on the original net is available.</p></div><pre>theorem tendsto_inner_realPart_of_strong
+    {ι : Type*} {l : Filter ι} {a : ι → H →L[ℂ] H} {T : H →L[ℂ] H}
+    (ha : ∀ x, Tendsto (fun i =&gt; a i x) l (𝓝 (T x))) (x y : H) :
+    Tendsto (fun i =&gt; inner ℂ y ((realPart (a i) : H →L[ℂ] H) x)) l
+      (𝓝 (inner ℂ y ((realPart T : H →L[ℂ] H) x))) := by
+…</pre></li><li id=L47><b>def</b> <code>OAI.KadisonKastler.selfAdjointTupleMap</code> <small>line 47</small></li><li id=L59><b>theorem</b> <code>OAI.KadisonKastler.selfAdjoint_bicommutant_tuple_mem_closure</code> <small>line 59</small><div class="doc"><p>The finite tuple of values of a self-adjoint bicommutant element lies
+in the real-linear closure of the self-adjoint algebra orbit.</p></div><pre>theorem selfAdjoint_bicommutant_tuple_mem_closure
+    {ι : Type*} [Fintype ι] (A : StarSubalgebra ℂ (H →L[ℂ] H))
+    (T : H →L[ℂ] H) (hT : T ∈ Set.centralizer (Set.centralizer (A : Set (H →L[ℂ] H))))
+    (hsa : IsSelfAdjoint T) (x : FiniteHilbert ι H) :
+    diagonalOperator T x ∈ (selfAdjointTupleMap A x).range.topologicalClosure := by
+…</pre><p class="refs">Mentions: <a href="KaplanskySelfAdjoint.lean.html#L47">OAI.KadisonKastler.selfAdjointTupleMap</a></p></li><li id=L98><b>theorem</b> <code>OAI.KadisonKastler.selfAdjoint_bicommutant_finite_strong_approximation</code> <small>line 98</small><div class="doc"><p>Finite strong tests can be met by a self-adjoint element of the original
+algebra. This step has no bounded-density hypothesis.</p></div><pre>theorem selfAdjoint_bicommutant_finite_strong_approximation
+    (A : StarSubalgebra ℂ (H →L[ℂ] H)) (T : H →L[ℂ] H)
+    (hT : T ∈ Set.centralizer (Set.centralizer (A : Set (H →L[ℂ] H))))
+    (hsa : IsSelfAdjoint T) (V : Finset H) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ a : A, IsSelfAdjoint (a : H →L[ℂ] H) ∧
+      ∀ x ∈ V, ‖T x - (a : H →L[ℂ] H) x‖ &lt; ε := by
+…</pre></li><li id=L118><b>theorem</b> <code>OAI.KadisonKastler.selfAdjoint_bicommutant_exists_strong_net</code> <small>line 118</small><div class="doc"><p>A self-adjoint strongly convergent net, indexed independently of any
+norm bound. Bounded transforms will supply the missing norm control.</p></div><pre>theorem selfAdjoint_bicommutant_exists_strong_net
+    (A : StarSubalgebra ℂ (H →L[ℂ] H)) (T : H →L[ℂ] H)
+    (hT : T ∈ Set.centralizer (Set.centralizer (A : Set (H →L[ℂ] H))))
+    (hsa : IsSelfAdjoint T) :
+    ∃ a : Finset H × ℕ → A,
+      (∀ i, IsSelfAdjoint (a i : H →L[ℂ] H)) ∧
+      ∀ x : H, Tendsto (fun i =&gt; (a i : H →L[ℂ] H) x) atTop (𝓝 (T x)) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

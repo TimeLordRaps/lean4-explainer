@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/SpaceSimulation/Register/Flow.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/SpaceSimulation/Register/Flow.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">SpaceSimulation</a> / <a href="index.html">Register</a> / <span>Flow.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">SpaceSimulation</a>/<a href="index.html">Register</a>/<span>Flow.lean</span></code></h1><p class="muted">31 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/SpaceSimulation/Register/Flow.lean#L1">source</a></p><div class="doc"><p>Compile bounded-stack algorithms whose steps may themselves be
+space-bounded computations. A Flow is just <em>semantics</em>, no computability
+in its definition; the compilation criterion requires a uniformly
+computable step on the packed code, in the <em>same</em> unit being bounded.
+The interpreted machine manipulates ONE GLOBAL word, outside
+the activation stack. To charge the stack we measure the sizes of
+suspended (continuation) frame codes.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>inductive</b> <code>OAI.Fifths.FlowMove</code> <small>line 15</small></li><li id=L20><b>structure</b> <code>OAI.Fifths.Flow</code> <small>line 20</small></li><li id=L31><b>def</b> <code>OAI.Fifths.Flow.fee</code> <small>line 31</small><div class="doc"><p>Cost to <em>stack</em> this frame in our fixed prefix encoding.</p></div><pre>def fee (f : m.F) := 2*(m.packF f).size + 1</pre></li><li id=L37><b>inductive</b> <code>OAI.Fifths.Flow.Executes</code> <small>line 37</small><div class="doc"><p>Contract of one activation. B upper bounds the sum of fees of
+frames simultaneously suspended by (or under) this invocation.
+Current frame not included; uniformly small active frame will also
+be required.</p></div><pre>inductive Executes : ℕ → m.G → m.F → m.G → Prop
+  | done {B g f h} (step : m.act g f = (h,.finish)) :
+    Executes B g f h
+  | next {B g f h j w}
+    (step : m.act g f = (h,.cont j))
+    (after : Executes B h j w) :
+    Executes B g f w
+  | call {A B g f h j k u w}
+    (step : m.act g f = (h,.call j k))
+    (child : Executes A h j u)
+    (bound : m.fee k + A ≤ B)
+    (after : Executes B u k w) :
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L106">OAI.Fifths.Flow.next</a></p></li><li id=L52><b>theorem</b> <code>OAI.Fifths.Flow.Executes.up</code> <small>line 52</small></li><li id=L62><b>inductive</b> <code>OAI.Fifths.Flow.Continues</code> <small>line 62</small><div class="doc"><p>Reaches another frame at the same level, with any children
+finished. (For use proving Executes via a schedule of loops.)</p></div><pre>inductive Continues : ℕ → m.G → m.F → m.G → m.F → Prop
+  | stop {B g f} : Continues B g f g f
+  | next {B g f h j w l}
+    (step : m.act g f = (h,.cont j))
+    (after : Continues B h j w l) :
+    Continues B g f w l
+  | call {A B g f h j k u w l}
+    (step : m.act g f = (h,.call j k))
+    (child : m.Executes A h j u)
+    (bound : m.fee k + A ≤ B)
+    (after : Continues B u k w l) :
+    Continues B g f w l
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L106">OAI.Fifths.Flow.next</a></p></li><li id=L77><b>theorem</b> <code>OAI.Fifths.Flow.Continues.trans</code> <small>line 77</small></li><li id=L84><b>theorem</b> <code>OAI.Fifths.Flow.Continues.then_exec</code> <small>line 84</small></li><li id=L92><b>def</b> <code>OAI.Fifths.Flow.packFs</code> <small>line 92</small></li><li id=L95><b>theorem</b> <code>OAI.Fifths.Flow.packFs_cons</code> <small>line 95</small></li><li id=L99><b>theorem</b> <code>OAI.Fifths.Flow.pack_ne</code> <small>line 99</small></li><li id=L105><b>abbrev</b> <code>OAI.Fifths.Flow.Cfg</code> <small>line 105</small></li><li id=L106><b>def</b> <code>OAI.Fifths.Flow.next</code> <small>line 106</small></li><li id=L116><b>def</b> <code>OAI.Fifths.Flow.path</code> <small>line 116</small></li><li id=L120><b>theorem</b> <code>OAI.Fifths.Flow.path_add</code> <small>line 120</small></li><li id=L126><b>structure</b> <code>OAI.Fifths.Flow.Segment</code> <small>line 126</small><div class="doc"><p>Segment of <code>n</code> flow moves. Suspended-frame total at each nonfinal
+point bounded by <code>B</code>. Active frame exists at such points.</p></div><pre>structure Segment (s t : m.Cfg) (n B : ℕ) : Prop where
+…</pre></li><li id=L133><b>theorem</b> <code>OAI.Fifths.Flow.Segment.mono</code> <small>line 133</small></li><li id=L135><b>theorem</b> <code>OAI.Fifths.Flow.Segment.trans</code> <small>line 135</small></li><li id=L146><b>theorem</b> <code>OAI.Fifths.Flow.Segment.one</code> <small>line 146</small></li><li id=L154><b>theorem</b> <code>OAI.Fifths.Flow.trajectory</code> <small>line 154</small></li><li id=L170><b>def</b> <code>OAI.Fifths.Flow.tag</code> <small>line 170</small><div class="doc plain">Code for a move: a leading tag, plus zero-padded first and second frame encodings.</div><pre>def tag : FlowMove m.F → ℕ
+  | .finish =&gt; 0
+  | .cont _ =&gt; 1
+  | .call _ _ =&gt; 2</pre><p class="refs">Mentions: <a href="Flow.lean.html#L15">OAI.Fifths.FlowMove</a></p></li><li id=L174><b>def</b> <code>OAI.Fifths.Flow.arg1</code> <small>line 174</small></li><li id=L177><b>def</b> <code>OAI.Fifths.Flow.arg2</code> <small>line 177</small></li><li id=L180><b>def</b> <code>OAI.Fifths.Flow.packMove</code> <small>line 180</small></li><li id=L185><b>def</b> <code>OAI.Fifths.Flow.input</code> <small>line 185</small><div class="doc"><p>Inspect the current activation in the presence of immutable
+integer parameter <code>cp</code>.</p></div><pre>def input (cp : ℕ) (g : m.G) (f : m.F) :=
+…</pre></li><li id=L188><b>def</b> <code>OAI.Fifths.Flow.code</code> <small>line 188</small></li><li id=L191><b>theorem</b> <code>OAI.Fifths.Flow.next_code</code> <small>line 191</small></li><li id=L207><b>abbrev</b> <code>OAI.Fifths.Flow.Points</code> <small>line 207</small><div class="doc"><p>Local indexed hypothesis. Global pool and program counter may be
+any encoded state of the corresponding semantic type.</p></div><pre>abbrev Points (M : I → Flow) := Σ i, (M i).G × (M i).F</pre><p class="refs">Mentions: <a href="Flow.lean.html#L20">OAI.Fifths.Flow</a></p></li><li id=L209><b>def</b> <code>OAI.Fifths.Flow.uniform</code> <small>line 209</small></li><li id=L215><b>theorem</b> <code>OAI.Fifths.Flow.uniform_move</code> <small>line 215</small><div class="doc plain">Apply the move over a nonempty stack, incorporating local step computation.</div><pre>theorem uniform_move {M : I → Flow} (p : uniform M x S cp)
+    {U : Type} (e : U → I) (g : ∀ i, (M (e i)).G)
+    (f : ∀ i, (M (e i)).F) (l : ∀ i, List (M (e i)).F) (s : U → ℕ)
+    (h : Comp (fun i =&gt; x (e i)) (fun i =&gt; S (e i)) s
+      (fun i =&gt; (M (e i)).code (cp (e i)) (g i,f i :: l i))) :
+    Comp (fun i =&gt; x (e i)) (fun i =&gt; S (e i)) s
+      (fun i =&gt; (M (e i)).code (cp (e i)) ((M (e i)).next (g i,f i :: l i))) := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L20">OAI.Fifths.Flow</a>, <a href="Flow.lean.html#L209">OAI.Fifths.Flow.uniform</a>, <a href="Comp.lean.html#L26">OAI.Fifths.Comp</a>, <a href="Flow.lean.html#L188">OAI.Fifths.Flow.code</a>, <a href="Flow.lean.html#L106">OAI.Fifths.Flow.next</a></p></li><li id=L235><b>theorem</b> <code>OAI.Fifths.Flow.uniform_result</code> <small>line 235</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

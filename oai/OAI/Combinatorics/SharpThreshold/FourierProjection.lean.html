@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/SharpThreshold/FourierProjection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/SharpThreshold/FourierProjection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">SharpThreshold</a> / <span>FourierProjection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">SharpThreshold</a>/<span>FourierProjection.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/SharpThreshold/FourierProjection.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Problem313.BiasedFourier.project</code> <small>line 19</small><div class="doc"><p>The projection onto the specified finite collection of Fourier characters.</p></div><pre>def project (p : ℝ) (L : Finset (Finset ι))
+    (g : (ι → Bool) → ℝ) (x : ι → Bool) : ℝ :=
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Problem313.BiasedFourier.project_inner</code> <small>line 24</small><div class="doc"><p>Pairing a function with its projection gives its selected Fourier energy.</p></div><pre>theorem project_inner (p : ℝ) (L : Finset (Finset ι)) (g : (ι → Bool) → ℝ) :
+    (∑ x, weight p x * g x * project p L g x) =
+      ∑ S ∈ L, (coeff p g S) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="FourierBasis.lean.html#L18">OAI.Problem313.BiasedFourier.weight</a>, <a href="FourierProjection.lean.html#L19">OAI.Problem313.BiasedFourier.project</a>, <a href="FourierBasis.lean.html#L27">OAI.Problem313.BiasedFourier.coeff</a></p></li><li id=L45><b>theorem</b> <code>OAI.Problem313.BiasedFourier.project_second_moment</code> <small>line 45</small><div class="doc"><p>The squared norm of a Fourier projection is its selected Fourier energy.</p></div><pre>theorem project_second_moment {p : ℝ} (hp : 0 &lt; p) (hp1 : p &lt; 1)
+    (L : Finset (Finset ι)) (g : (ι → Bool) → ℝ) :
+    (∑ x, weight p x * (project p L g x) ^ 2) =
+      ∑ S ∈ L, (coeff p g S) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="FourierBasis.lean.html#L18">OAI.Problem313.BiasedFourier.weight</a>, <a href="FourierProjection.lean.html#L19">OAI.Problem313.BiasedFourier.project</a>, <a href="FourierBasis.lean.html#L27">OAI.Problem313.BiasedFourier.coeff</a></p></li><li id=L55><b>theorem</b> <code>OAI.Problem313.BiasedFourier.project_inner_eq_second_moment</code> <small>line 55</small><div class="doc"><p>The defining orthogonality identity needed by the projection/Hölder estimate.</p></div><pre>theorem project_inner_eq_second_moment {p : ℝ} (hp : 0 &lt; p) (hp1 : p &lt; 1)
+    (L : Finset (Finset ι)) (g : (ι → Bool) → ℝ) :
+    (∑ x, weight p x * g x * project p L g x) =
+      ∑ x, weight p x * (project p L g x) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="FourierBasis.lean.html#L18">OAI.Problem313.BiasedFourier.weight</a>, <a href="FourierProjection.lean.html#L19">OAI.Problem313.BiasedFourier.project</a></p></li><li id=L63><b>theorem</b> <code>OAI.Problem313.BiasedFourier.project_fourth_moment_of_noise</code> <small>line 63</small><div class="doc"><p>Specialization of inverse-noise hypercontractivity to the canonical Fourier
+projection.  The hypothesis is precisely the coefficient-form noise estimate.</p></div><pre>theorem project_fourth_moment_of_noise (p rho k : ℝ)
+    (hrho : 0 &lt; rho) (hrho1 : rho ≤ 1)
+    (hnoise : ∀ a : Finset ι → ℝ,
+      (∑ x, weight p x *
+        (∑ S, rho ^ S.card * a S * char p S x) ^ 4) ≤
+          (∑ S, (a S) ^ 2) ^ 2)
+    (L : Finset (Finset ι)) (g : (ι → Bool) → ℝ)
+    (hdegree : ∀ S ∈ L, (S.card : ℝ) ≤ k) :
+    (∑ x, weight p x * (project p L g x) ^ 4) ≤
+      rho ^ (-4 * k) * (∑ S ∈ L, (coeff p g S) ^ 2) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="FourierBasis.lean.html#L18">OAI.Problem313.BiasedFourier.weight</a>, <a href="FourierBasis.lean.html#L24">OAI.Problem313.BiasedFourier.char</a>, <a href="FourierProjection.lean.html#L19">OAI.Problem313.BiasedFourier.project</a>, <a href="FourierBasis.lean.html#L27">OAI.Problem313.BiasedFourier.coeff</a></p></li><li id=L96><b>theorem</b> <code>OAI.Problem313.BiasedFourier.project_energy_le_of_noise</code> <small>line 96</small><div class="doc"><p>The concrete Fourier projection estimate for ternary-valued functions,
+including Boolean coordinate differences.</p></div><pre>theorem project_energy_le_of_noise {p : ℝ} (hp : 0 &lt; p) (hp1 : p &lt; 1)
+    (rho k : ℝ) (hrho : 0 &lt; rho) (hrho1 : rho ≤ 1)
+    (hnoise : ∀ a : Finset ι → ℝ,
+      (∑ x, weight p x *
+        (∑ S, rho ^ S.card * a S * char p S x) ^ 4) ≤
+          (∑ S, (a S) ^ 2) ^ 2)
+    (L : Finset (Finset ι)) (g : (ι → Bool) → ℝ)
+    (hg : ∀ x, g x = -1 ∨ g x = 0 ∨ g x = 1)
+    (hdegree : ∀ S ∈ L, (S.card : ℝ) ≤ k) :
+    (∑ S ∈ L, (coeff p g S) ^ 2) ≤
+      rho ^ (-2 * k) *
+        (∑ x, if g x ≠ 0 then weight p x else 0) ^ (3 / 2 : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="FourierBasis.lean.html#L18">OAI.Problem313.BiasedFourier.weight</a>, <a href="FourierBasis.lean.html#L24">OAI.Problem313.BiasedFourier.char</a>, <a href="FourierBasis.lean.html#L27">OAI.Problem313.BiasedFourier.coeff</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

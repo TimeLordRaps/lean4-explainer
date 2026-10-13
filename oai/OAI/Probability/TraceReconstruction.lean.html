@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction.lean.html"><link rel="stylesheet" href="../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../index.html">All corpora</a> | <a href="../../index.html">Index</a> | <a href="../../glossary.html">Glossary</a> | <a href="../../find.html">Find</a> | <a href="../../implications.html">Implications</a> | <a href="../../annotate.html">Explanation guide</a> | <a href="../../learning-path.html">Learning path</a> | <a href="../../trust.html">Trust</a> | <a href="../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../index.html">Corpus home</a> / <a href="../index.html">OAI</a> / <a href="index.html">Probability</a> / <span>TraceReconstruction.lean</span></nav></header><h1 class="path-title"><code><a href="../index.html">OAI</a>/<a href="index.html">Probability</a>/<span>TraceReconstruction.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction.lean#L1">source</a></p><div class="doc"><h3>Bounds</h3><p>Restored construction and final scales; quantitative sample lower bound and both fixed-channel superpolynomial endpoints.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.TraceReconstruction.source_final_error_eventually</code> <small>line 25</small><div class="doc"><p>The exact source error is negligible compared to the squared score energy.</p></div><pre>theorem source_final_error_eventually (B : ℕ) (ζ : ℝ) (hB : 2≤B) (hζ : ζ∈Set.Ioo 0 1)
+    {n q : ℕ→ℝ} (hn : Tendsto n atTop atTop) (hq : ∀t,q t∈Set.Ioc 0 (1/2:ℝ))
+    (hH : Tendsto (fun t=&gt;(q t)^3*Real.log (n t)) atTop atTop) :
+    ∀ᶠt in atTop,∀ (U : ConcreteLevelPair (q t) ⟨(hq t).1.le,by linarith [(hq t).2]⟩ (n t)
+      ((n t)^(-100*(totalScoreExponent B (sourceDepth B ζ ((q t)^3*Real.log (n t)))+B+1)))
+      (totalScoreExponent B (sourceDepth B ζ ((q t)^3*Real.log (n t))))
+      (initialOverlapLower (q t))
+      ((sourceOverlapConstant (q t))^(2*B*sourceDepth B ζ ((q t)^3*Real.log (n t))+2))
+      (sourceDepth B ζ ((q t)^3*Real.log (n t)))
+      (sourceHalfMoment B (sourceDepth B ζ ((q t)^3*Real.log (n t))) (n t)
+        (sourceDepth B ζ ((q t)^3*Real.log (n t))))),
+      U.error≤(n t)^(-2*totalScoreExponent B (sourceDepth B ζ ((q t)^3*Real.log (n t)))) := by
+…</pre><p class="refs">Mentions: <a href="TraceReconstruction/Oracles.lean.html#L1476">OAI.TraceReconstruction.ConcreteLevelPair</a>, <a href="TraceReconstruction/Scales.lean.html#L137">OAI.TraceReconstruction.totalScoreExponent</a>, <a href="TraceReconstruction/Scales.lean.html#L136">OAI.TraceReconstruction.sourceDepth</a>, <a href="TraceReconstruction/InitialOverlap.lean.html#L426">OAI.TraceReconstruction.initialOverlapLower</a>, <a href="TraceReconstruction/InitialRates.lean.html#L926">OAI.TraceReconstruction.sourceOverlapConstant</a>, <a href="TraceReconstruction/InitialRates.lean.html#L538">OAI.TraceReconstruction.sourceHalfMoment</a></p></li><li id=L66><b>theorem</b> <code>OAI.TraceReconstruction.exists_source_slope</code> <small>line 66</small></li><li id=L94><b>theorem</b> <code>OAI.TraceReconstruction.subdivided_working_scale</code> <small>line 94</small><div class="doc"><p>Constant-size subdivision and larger deletion preserve the joint regime.
+The factor 16 includes the factor eight of the working deletion cube.</p></div><pre>theorem subdivided_working_scale {n q : ℕ→ℝ} (hn : Tendsto n atTop atTop)
+    (hq : ∀t,q t∈Set.Ioo 0 1)
+    (hH : Tendsto (fun t=&gt;(q t)^3*Real.log (n t)) atTop atTop)
+    {G : ℝ} (hG : 0&lt;G) :
+    Tendsto (fun t=&gt;n t/G) atTop atTop ∧
+    Tendsto (fun t=&gt;(workingDeletion (q t))^3*Real.log (n t/G)) atTop atTop ∧
+    ∀ᶠt in atTop,(q t)^3*Real.log (n t)/16 ≤
+      (workingDeletion (q t))^3*Real.log (n t/G) := by
+…</pre><p class="refs">Mentions: <a href="TraceReconstruction/Scales.lean.html#L133">OAI.TraceReconstruction.workingDeletion</a></p></li><li id=L118><b>theorem</b> <code>OAI.TraceReconstruction.workingDeletion_Ioc</code> <small>line 118</small></li><li id=L132><b>theorem</b> <code>OAI.TraceReconstruction.source_restored_exponent_margin</code> <small>line 132</small><div class="doc"><p>Full sharp slope restoration after fixed gadget packing. Both deletion
+probability and length may vary; the working channel is only internal.</p></div><pre>theorem source_restored_exponent_margin (B : ℕ) (ζ c G a : ℝ)
+    (hB : 2≤B) (hζ : ζ∈Set.Ioo 0 1) (hc : 0&lt;c) (hα : c&lt;finalSlope B ζ)
+    (hG : 0&lt;G) (ha : 0&lt;a) {n q : ℕ→ℝ} (hn : Tendsto n atTop atTop)
+    (hq : ∀t,q t∈Set.Ioo 0 1)
+    (hH : Tendsto (fun t=&gt;(q t)^3*Real.log (n t)) atTop atTop) :
+    ∀ᶠt in atTop,(n t)^(c*Real.log ((q t)^3*Real.log (n t))) ≤
+      a*(n t/G)^(totalScoreExponent B
+        (sourceDepth B ζ ((workingDeletion (q t))^3*Real.log (n t/G)))) := by
+…</pre><p class="refs">Mentions: <a href="TraceReconstruction/Scales.lean.html#L139">OAI.TraceReconstruction.finalSlope</a>, <a href="TraceReconstruction/Scales.lean.html#L137">OAI.TraceReconstruction.totalScoreExponent</a>, <a href="TraceReconstruction/Scales.lean.html#L136">OAI.TraceReconstruction.sourceDepth</a>, <a href="TraceReconstruction/Scales.lean.html#L133">OAI.TraceReconstruction.workingDeletion</a></p></li><li id=L182><b>theorem</b> <code>OAI.TraceReconstruction.sample_tv_small</code> <small>line 182</small></li><li id=L213><b>theorem</b> <code>OAI.TraceReconstruction.quantitative_sample_lower_bound</code> <small>line 213</small><div class="doc"><p>Source Theorem 1: all fixed positive success levels, not only binary
+testing above one half, with complete independent traces and known channel.</p></div><p class="refs">Distinct definitions of this name: <a href="../../ComparatorChallenges/TraceReconstruction.lean.html#L62">ComparatorChallenges/TraceReconstruction.lean:62</a> (same statement, different proof or body). Qualify references as OAI.TraceReconstruction.quantitative_sample_lower_bound@path.</p><pre>theorem quantitative_sample_lower_bound
+    (s c : ℝ) (hs : s ∈ Set.Ioc 0 1)
+    (hc : c ∈ Set.Ioo 0 (1 / (4 * Real.log 2)))
+    (n : ℕ → ℕ) (q : ℕ → ℝ)
+    (hn : Tendsto n atTop atTop)
+    (hq : ∀ k, q k ∈ Set.Ioo 0 1)
+    (hscale : Tendsto (fun k =&gt; (q k) ^ 3 * Real.log (n k)) atTop atTop) :
+    ∀ᶠ k in atTop,
+      ENNReal.ofReal ((n k : ℝ) ^ (c * Real.log ((q k) ^ 3 * Real.log (n k))))  ≤ 
+        sampleComplexity (n k) (q k) s := by
+…</pre><p class="refs">Mentions: <a href="../../ComparatorChallenges/TraceReconstruction.lean.html#L52">OAI.TraceReconstruction.sampleComplexity</a></p></li><li id=L286><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.tv_product_one</code> <small>line 286</small></li><li id=L291><b>theorem</b> <code>OAI.TraceReconstruction.totalScoreExponent_two</code> <small>line 291</small></li><li id=L295><b>theorem</b> <code>OAI.TraceReconstruction.minTraceTV_nonneg_of_pair</code> <small>line 295</small></li><li id=L302><b>theorem</b> <code>OAI.TraceReconstruction.minTraceTV_le_pair</code> <small>line 302</small></li><li id=L307><b>theorem</b> <code>OAI.TraceReconstruction.one_trace_power_bound</code> <small>line 307</small></li><li id=L332><b>theorem</b> <code>OAI.TraceReconstruction.superpolynomial_one_trace</code> <small>line 332</small><div class="doc"><p>Source Theorem 2, first conclusion, over all integer lengths and at the
+same fixed channel for every power.</p></div><p class="refs">Distinct definitions of this name: <a href="../../ComparatorChallenges/TraceReconstruction.lean.html#L74">ComparatorChallenges/TraceReconstruction.lean:74</a> (different statement). Qualify references as OAI.TraceReconstruction.superpolynomial_one_trace@path.</p><pre>theorem superpolynomial_one_trace
+    (q : ℝ) (hq : q ∈ Set.Ioo 0 1) (C : ℝ) (hC : 0&lt;C) :
+    Tendsto (fun n : ℕ=&gt;(n:ℝ)^C*minTraceTV n q) atTop (𝓝 0) := by
+…</pre></li><li id=L378><b>theorem</b> <code>OAI.TraceReconstruction.superpolynomial_sample_complexity</code> <small>line 378</small><div class="doc"><p>Source Theorem 2's sample conclusion at the same fixed deletion channel.</p></div><p class="refs">Distinct definitions of this name: <a href="../../ComparatorChallenges/TraceReconstruction.lean.html#L79">ComparatorChallenges/TraceReconstruction.lean:79</a> (same statement, different proof or body). Qualify references as OAI.TraceReconstruction.superpolynomial_sample_complexity@path.</p><pre>theorem superpolynomial_sample_complexity
+    (q : ℝ) (hq : q ∈ Set.Ioo 0 1) (s : ℝ) (hs : s ∈ Set.Ioc 0 1)
+    (C : ℝ) (hC : 0 &lt; C) :
+    Tendsto
+      (fun n : ℕ =&gt; sampleComplexity n q s / ENNReal.ofReal ((n : ℝ) ^ C))
+      atTop (𝓝 ⊤) := by
+…</pre><p class="refs">Mentions: <a href="../../ComparatorChallenges/TraceReconstruction.lean.html#L52">OAI.TraceReconstruction.sampleComplexity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../_assets/site.js"></script><script src="../../_assets/lean2tex.js" defer></script><script src="../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/UniformKServer/AlphaStability.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/UniformKServer/AlphaStability.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">UniformKServer</a> / <span>AlphaStability.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">UniformKServer</a>/<span>AlphaStability.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/UniformKServer/AlphaStability.lean#L1">source</a></p><div class="doc"><p>Companion §04: exact primitive input slopes on the entire simplex.  The
+constants do not depend on the number of children.  These estimates apply to
+the old flags after filtering, without requiring feasibility of that input.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.primitive_sub</code> <small>line 19</small><div class="doc"><p>Linearity in the two raw inputs, with the improper endpoint justified by
+the same integrable density as the original primitive.</p></div><pre>theorem primitive_sub {D : ℝ → ℝ} {base a scale S Q S&#x27; Q&#x27; : ℝ}
+    (hb : base ∈ Icc (0:ℝ) 1) (ha : a ∈ Icc (0:ℝ) 1)
+    (hI : IntervalIntegrable (fun x =&gt; (S-Q/x)/D x) volume 0 1)
+    (hI&#x27; : IntervalIntegrable (fun x =&gt; (S&#x27;-Q&#x27;/x)/D x) volume 0 1) :
+    primitive D base scale S Q a-primitive D base scale S&#x27; Q&#x27; a =
+      primitive D base scale (S-S&#x27;) (Q-Q&#x27;) a := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.regular_integrable</code> <small>line 33</small></li><li id=L38><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.marked_integrable</code> <small>line 38</small></li><li id=L43><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.regular_difference</code> <small>line 43</small></li><li id=L50><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.marked_difference</code> <small>line 50</small></li><li id=L59><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.sum_difference</code> <small>line 59</small></li><li id=L64><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.regular_input</code> <small>line 64</small><div class="doc"><p>Dimension-free whole-simplex input Lipschitz bound in an unmarked epoch.</p></div><pre>theorem regular_input (h η a B B&#x27; : ι → ℝ) (scale E : ℝ)
+    (hh : ∀ i, 1 ≤ h i) (ha : ∀ i, a i ∈ Icc (0:ℝ) 1)
+    (hasum : ∑ i, a i=1) (hη : ∀ i, 0 ≤ η i) (hηE : ∀ i, η i ≤ E) :
+    |(∑ i, primitive (regular (h i)) 0 scale (∑ r, B r) ((1+η i)*B i) (a i))-
+      (∑ i, primitive (regular (h i)) 0 scale (∑ r, B&#x27; r) ((1+η i)*B&#x27; i) (a i))| ≤
+      |scale| *(2+E)*(∑ i, |B i-B&#x27; i|) := by
+…</pre></li><li id=L89><b>def</b> <code>OAI.UniformKServer.AlphaStability.mixedPrimitive</code> <small>line 89</small></li><li id=L96><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.marked_input</code> <small>line 96</small><div class="doc"><p>The marked primitive retains a dimension-free input bound as u tends to
+zero. The estimate does not require input feasibility at the old state.</p></div><pre>theorem marked_input [DecidableEq ι] (o : ι) (h η a B B&#x27; : ι → ℝ) (scale E u : ℝ)
+    (hu : 0 &lt; u) (hu₁ : u ≤ 1) (hh : ∀ i, i ≠ o → 1 ≤ h i)
+    (ha : ∀ i, a i ∈ Icc (0:ℝ) 1) (hasum : ∑ i, a i=1)
+    (hη : ∀ i, 0 ≤ η i) (hηE : ∀ i, η i ≤ E) :
+    |(∑ i, mixedPrimitive o u h η B scale a i)-
+      (∑ i, mixedPrimitive o u h η B&#x27; scale a i)| ≤
+      |scale| * (11+4*E)*(∑ i, |B i-B&#x27; i|) := by
+…</pre><p class="refs">Mentions: <a href="AlphaStability.lean.html#L89">OAI.UniformKServer.AlphaStability.mixedPrimitive</a></p></li><li id=L151><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.regular_parameter</code> <small>line 151</small><div class="doc"><p>Refreshing a regular size costs its prepared input, not the parent's
+total size. There is no summation over unchanged coordinates.</p></div><pre>theorem regular_parameter {h h&#x27; a S B η η&#x27; E : ℝ} (hh : 1 ≤ h) (hh&#x27; : 1 ≤ h&#x27;)
+    (ha : a ∈ Icc (0:ℝ) 1) (hS : 0 ≤ S) (hB : 0 ≤ B)
+    (hη : 0 ≤ η) (hη&#x27; : 0 ≤ η&#x27;) (hE : η ≤ E) (hE&#x27; : η&#x27; ≤ E)
+    (hprep : S*a ≤ (1+E)*B) (scale : ℝ) :
+    |primitive (regular h) 0 scale S ((1+η)*B) a-
+      primitive (regular h&#x27;) 0 scale S ((1+η&#x27;)*B) a| ≤
+      4*|scale| * (1+E)*B := by
+…</pre></li><li id=L173><b>theorem</b> <code>OAI.UniformKServer.AlphaStability.marked_prepared_component</code> <small>line 173</small><div class="doc"><p>Cancellation at the marked base point 1 converts a parameter refresh
+into a side-size charge. This bound stays uniform as u tends to zero.</p></div><pre>theorem marked_prepared_component {u a S B η κ E : ℝ} (hu : 0 &lt; u) (hu₁ : u ≤ 1)
+    (ha : a ∈ Icc (0:ℝ) 1) (hS : 0 ≤ S) (hB : 0 ≤ B) (hBS : B ≤ S)
+    (hη : 0 ≤ η) (hκ : η ≤ κ*u) (hprep : S*(1-a) ≤ (1+E)*(S-B)) (scale : ℝ) :
+    |primitive (marked u) 1 scale S ((1+η)*B) a| ≤
+      3*|scale| * ((2+E)*(S-B)+κ*u*S) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

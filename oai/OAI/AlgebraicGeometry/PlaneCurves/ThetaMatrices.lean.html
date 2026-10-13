@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/ThetaMatrices.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/ThetaMatrices.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>ThetaMatrices.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>ThetaMatrices.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/ThetaMatrices.lean#L1">source</a></p><div class="doc"><h3>Theta jet matrices and their basis data</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Nagata.Workers.W11.thetaJetMatrix</code> <small>line 19</small><div class="doc"><p>The actual mixed-derivative matrix of all three scalar coefficient branches.
+The <code>marks</code> are offsets <code>aᵢ = x₀ - xᵢ</code> in <code>(0,1)</code>, as in §03's product limit;
+they are not the original point exponents <code>xᵢ</code>.</p></div><pre>def thetaJetMatrix (d : ℤ) (q m : ℕ) (a delta : ℝ)
+    (marks : Fin 9 → ℝ) (τ : ℝ) :
+    Matrix (JetIndex q m) (Column d (m : ℤ) a delta) ℂ :=
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.Nagata.Workers.W11.tendsto_thetaJetMatrix_entries</code> <small>line 27</small><div class="doc"><p>Entrywise convergence of the literal theta jet matrix, with no assumed
+derivative convergence: that input is discharged by the scalar analytic theorem.</p></div><pre>theorem tendsto_thetaJetMatrix_entries
+    {α : Type*} {l : Filter α} {τ : α → ℝ}
+    (d : ℤ) (q m : ℕ) (a delta : ℝ) (marks : Fin 9 → ℝ)
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ t in l, 0 &lt; τ t) :
+    ∀ row col, Tendsto (fun t =&gt; thetaJetMatrix d q m a delta marks (τ t) row col)
+      l (𝓝 (B0 d q m a delta row col)) := by
+…</pre><p class="refs">Mentions: <a href="ThetaMatrices.lean.html#L19">OAI.Nagata.Workers.W11.thetaJetMatrix</a></p></li><li id=L39><b>def</b> <code>OAI.Nagata.Workers.W11.thetaScalarCombination</code> <small>line 39</small><div class="doc"><p>The literal finite scalar expression for a coefficient vector.</p></div><pre>def thetaScalarCombination (d : ℤ) (m : ℕ) (a delta : ℝ)
+    (marks : Fin 9 → ℝ) (τ : ℝ) (v : Column d (m : ℤ) a delta → ℂ)
+    (x y : ℂ) : ℂ :=
+…</pre></li><li id=L46><b>def</b> <code>OAI.Nagata.Workers.W11.thetaScalarCombinationLinear</code> <small>line 46</small><div class="doc"><p>The actual finite scalar expansion is linear in its coefficients.</p></div><pre>def thetaScalarCombinationLinear (d : ℤ) (m : ℕ) (a delta : ℝ)
+    (marks : Fin 9 → ℝ) (τ : ℝ) :
+    (Column d (m : ℤ) a delta → ℂ) →ₗ[ℂ] (ℂ → ℂ → ℂ) where
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.Nagata.Workers.W11.thetaScalarCombination_injective_of_jets</code> <small>line 59</small><div class="doc"><p>Jet determination of a coefficient vector implies noncancellation of the
+actual finite scalar expansion as a function, without assuming a basis.</p></div><pre>theorem thetaScalarCombination_injective_of_jets
+    (d : ℤ) (q m : ℕ) (a delta : ℝ) (marks : Fin 9 → ℝ) (τ : ℝ)
+    (hjets : ∀ v : Column d (m : ℤ) a delta → ℂ,
+      (∀ row : JetIndex q m,
+        mixedJetAtZero (thetaScalarCombination d m a delta marks τ v)
+          row.2.val row.1.val = 0) → v = 0) :
+    Function.Injective (thetaScalarCombination d m a delta marks τ) := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a>, <a href="ThetaMatrices.lean.html#L39">OAI.Nagata.Workers.W11.thetaScalarCombination</a></p></li><li id=L78><b>theorem</b> <code>OAI.Nagata.Workers.W11.eventually_thetaJetMatrix_kernel_iff_mixedJets</code> <small>line 78</small><div class="doc"><p>For sufficiently small parameters the actual scalar expression has zero
+prescribed mixed jets iff its coefficient vector is a theta-matrix kernel
+vector. The differentiability needed for finite-sum linearity is discharged.</p></div><pre>theorem eventually_thetaJetMatrix_kernel_iff_mixedJets
+    {α : Type*} {l : Filter α} {τ : α → ℝ}
+    (d : ℤ) (q m : ℕ) (a delta : ℝ) (marks : Fin 9 → ℝ)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ t in l, 0 &lt; τ t) :
+    ∀ᶠ t in l, ∀ v : Column d (m : ℤ) a delta → ℂ,
+      (thetaJetMatrix d q m a delta marks (τ t)).mulVec v = 0 ↔
+      ∀ row : JetIndex q m,
+        mixedJetAtZero (thetaScalarCombination d m a delta marks (τ t) v)
+          row.2.val row.1.val = 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaMatrices.lean.html#L19">OAI.Nagata.Workers.W11.thetaJetMatrix</a>, <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a>, <a href="ThetaMatrices.lean.html#L39">OAI.Nagata.Workers.W11.thetaScalarCombination</a></p></li><li id=L111><b>theorem</b> <code>OAI.Nagata.Workers.W11.eventually_injective_thetaJetMatrix</code> <small>line 111</small></li><li id=L129><b>theorem</b> <code>OAI.Nagata.Workers.W11.thetaJetMatrix_kernel_contradiction</code> <small>line 129</small></li><li id=L149><b>theorem</b> <code>OAI.Nagata.Workers.W11.eventually_thetaScalarCombination_jet_injective</code> <small>line 149</small><div class="doc"><p>For sufficiently small positive parameters, the literal scalar combination
+can have all prescribed mixed jets zero only when every coefficient is zero.
+This result contains no assumed smoothness, derivative convergence or rank.</p></div><pre>theorem eventually_thetaScalarCombination_jet_injective
+    (d : ℤ) (q m : ℕ) (rho a delta lam : ℝ)
+    (ha : 0 &lt; a) (hm : 0 &lt; m) (hrho : 0 ≤ rho) (hdelta : 0 ≤ delta)
+    (hlam : 0 &lt; lam) (hlam1 : lam &lt; 1)
+    (hratio : 3 * ((d : ℝ) - 3 * (m : ℝ)) = (m : ℝ) * rho)
+    (hslack : rho + delta * rho / 9 &lt; lam * a - 9 * (1 - lam))
+    (hcoef : 2 * a + a ^ 2 / 9 = (q : ℝ))
+    (hmargin : 1 ≤ (q : ℝ) * (1 - lam) * m)
+    (marks : Fin 9 → ℝ)
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1) :
+    ∀ᶠ τ in 𝓝[&gt;] (0 : ℝ), ∀ v : Column d (m : ℤ) a delta → ℂ,
+      (∀ row : JetIndex q m,
+…</pre></li><li id=L173><b>theorem</b> <code>OAI.Nagata.Workers.W11.eventually_thetaScalarCombination_injective</code> <small>line 173</small><div class="doc"><p>Noncancellation of the actual scalar column expansion for sufficiently
+small positive parameters: distinct coefficient vectors define distinct
+functions of the two local variables.</p></div><pre>theorem eventually_thetaScalarCombination_injective
+    (d : ℤ) (q m : ℕ) (rho a delta lam : ℝ)
+    (ha : 0 &lt; a) (hm : 0 &lt; m) (hrho : 0 ≤ rho) (hdelta : 0 ≤ delta)
+    (hlam : 0 &lt; lam) (hlam1 : lam &lt; 1)
+    (hratio : 3 * ((d : ℝ) - 3 * (m : ℝ)) = (m : ℝ) * rho)
+    (hslack : rho + delta * rho / 9 &lt; lam * a - 9 * (1 - lam))
+    (hcoef : 2 * a + a ^ 2 / 9 = (q : ℝ))
+    (hmargin : 1 ≤ (q : ℝ) * (1 - lam) * m)
+    (marks : Fin 9 → ℝ)
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1) :
+    ∀ᶠ τ in 𝓝[&gt;] (0 : ℝ),
+      Function.Injective (thetaScalarCombination d m a delta marks τ) :=
+…</pre><p class="refs">Mentions: <a href="ThetaMatrices.lean.html#L39">OAI.Nagata.Workers.W11.thetaScalarCombination</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

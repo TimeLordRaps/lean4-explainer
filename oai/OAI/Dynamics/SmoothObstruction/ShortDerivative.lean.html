@@ -1,0 +1,105 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/ShortDerivative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/ShortDerivative.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>ShortDerivative.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>ShortDerivative.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/ShortDerivative.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.SmoothObstruction.RelativeProduct.segment</code> <small>line 20</small><div class="doc"><p>Later times multiply on the left, as in the manuscript.</p></div><pre>def segment [Monoid R] (A : ℕ → R) (s : ℕ) : ℕ → R
+  | 0 =&gt; 1
+  | n + 1 =&gt; A (s + n) * segment A s n</pre></li><li id=L24><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.segment_zero</code> <small>line 24</small></li><li id=L27><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.segment_succ</code> <small>line 27</small></li><li id=L31><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.difference</code> <small>line 31</small><div class="doc"><p>Exact variation-of-constants expansion; no commutativity is used.</p></div><pre>theorem difference [Ring R] (A B : ℕ → R) (s n : ℕ) :
+    segment B s n - segment A s n =
+      ∑ j ∈ Finset.range n,
+        segment A (s + j + 1) (n - (j + 1)) *
+          (B (s + j) - A (s + j)) * segment B s j := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L20">OAI.SmoothObstruction.RelativeProduct.segment</a></p></li><li id=L58><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.norm_difference_le</code> <small>line 58</small><div class="doc"><p>Uniform subinterval bounds yield a relative error, rather than a
+bound obtained by multiplying one-step bounds.</p></div><pre>theorem norm_difference_le [NormedRing R] (A B : ℕ → R)
+    (s m : ℕ) (L δ : ℝ) (hL : 0 ≤ L) (hδ : 0 ≤ δ)
+    (hA : ∀ t k : ℕ, s ≤ t → t + k ≤ s + m → ‖segment A t k‖ ≤ L)
+    (hBA : ∀ t : ℕ, s ≤ t → t &lt; s + m → ‖B t - A t‖ ≤ δ) :
+    ‖segment B s m - segment A s m‖ ≤ L * ((1 + L * δ) ^ m - 1) := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L20">OAI.SmoothObstruction.RelativeProduct.segment</a></p></li><li id=L104><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.segment_smul</code> <small>line 104</small><div class="doc"><p>Scalar normalization of a whole interval.</p></div><pre>theorem segment_smul [NormedRing R] [NormedAlgebra ℝ R]
+    (A : ℕ → R) (c : ℝ) (s n : ℕ) :
+    segment (fun t =&gt; c • A t) s n = c ^ n • segment A s n := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L20">OAI.SmoothObstruction.RelativeProduct.segment</a></p></li><li id=L112><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.exp_cancel</code> <small>line 112</small></li><li id=L119><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.norm_difference_le_exp_exact</code> <small>line 119</small><div class="doc"><p>The relative perturbation bound with its exact exponential weight.</p></div><pre>theorem norm_difference_le_exp_exact [NormedRing R] [NormedAlgebra ℝ R]
+    (A B : ℕ → R) (s m : ℕ) (σ a δ : ℝ) (hδ : 0 ≤ δ)
+    (hA : ∀ t k : ℕ, s ≤ t → t + k ≤ s + m →
+      ‖segment A t k‖ ≤ Real.exp (σ * k + a))
+    (hBA : ∀ t : ℕ, s ≤ t → t &lt; s + m → ‖B t - A t‖ ≤ δ) :
+    ‖segment B s m - segment A s m‖ ≤
+      Real.exp (σ * m + a) * ((1 + δ * Real.exp (a - σ)) ^ m - 1) := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L20">OAI.SmoothObstruction.RelativeProduct.segment</a></p></li><li id=L162><b>theorem</b> <code>OAI.SmoothObstruction.RelativeProduct.norm_difference_le_exp</code> <small>line 162</small><div class="doc"><p>Quantitative core of the source exterior-product perturbation lemma.
+Applying this to exterior powers with one-step error <code>δ = C * ε</code> gives
+exactly its stated finite-product bound.</p></div><pre>theorem norm_difference_le_exp [NormedRing R] [NormedAlgebra ℝ R]
+    (A B : ℕ → R) (s m : ℕ) (σ a δ : ℝ) (hδ : 0 ≤ δ)
+    (hA : ∀ t k : ℕ, s ≤ t → t + k ≤ s + m →
+      ‖segment A t k‖ ≤ Real.exp (σ * k + a))
+    (hBA : ∀ t : ℕ, s ≤ t → t &lt; s + m → ‖B t - A t‖ ≤ δ) :
+    ‖segment B s m - segment A s m‖ ≤
+      Real.exp (σ * m + a) * ((1 + δ * Real.exp (a + |σ|)) ^ m - 1) := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L20">OAI.SmoothObstruction.RelativeProduct.segment</a></p></li><li id=L179><b>lemma</b> <code>OAI.SmoothObstruction.RelativeProduct.segment_norm_le</code> <small>line 179</small></li><li id=L192><b>lemma</b> <code>OAI.SmoothObstruction.RelativeProduct.short_difference</code> <small>line 192</small><div class="doc"><p>Ordinary C¹ telescoping on a short interval. Unlike the long-window
+relative exterior estimate this bound pays the one-step bound, precisely
+where the manuscript permits an exp(CL) loss.</p></div><pre>lemma short_difference (A B : ℕ → R) (N : ℕ) (hOne : ‖(1:R)‖≤1) {K δ : ℝ}
+    (hK : 1≤K) (hδ : 0≤δ)
+    (hA : ∀ t&lt;N,‖A t‖≤K) (hB : ∀ t&lt;N,‖B t‖≤K)
+    (hBA : ∀ t&lt;N,‖B t-A t‖≤δ) :
+    ‖segment B 0 N-segment A 0 N‖≤N*K^N*δ := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L20">OAI.SmoothObstruction.RelativeProduct.segment</a></p></li><li id=L226><b>def</b> <code>OAI.SmoothObstruction.ShortDerivative.iterate</code> <small>line 226</small><div class="doc"><p>Actual nonautonomous coordinate composition.</p></div><pre>def iterate (f : ℕ → E → E) : ℕ → E → E
+  | 0 =&gt; id
+  | n+1 =&gt; f n ∘ iterate f n
+
+omit [NormedAddCommGroup E] [NormedSpace ℝ E] in</pre></li><li id=L231><b>lemma</b> <code>OAI.SmoothObstruction.ShortDerivative.orbit_eq_iterate</code> <small>line 231</small></li><li id=L240><b>lemma</b> <code>OAI.SmoothObstruction.ShortDerivative.derivative_iterate</code> <small>line 240</small></li><li id=L258><b>theorem</b> <code>OAI.SmoothObstruction.ShortDerivative.short_c1_stability</code> <small>line 258</small><div class="doc"><p>Nearby genuine coordinate orbits have exponentially close short
+products, under uniform first and second derivative bounds on convex
+patches. No derivative of the long iterate is bounded by fiat.</p></div><pre>theorem short_c1_stability (f : ℕ → E → E) (x y : ℕ → E)
+    (s : ℕ → Set E) (N : ℕ) {K D : ℝ} (hK : 1≤K) (hD : 0≤D)
+    (hx : ∀ t&lt;N,f t (x t)=x (t+1)) (hy : ∀ t&lt;N,f t (y t)=y (t+1))
+    (hxs : ∀ t&lt;N,x t∈s t) (hys : ∀ t&lt;N,y t∈s t)
+    (hs : ∀ t&lt;N,Convex ℝ (s t))
+    (hf : ∀ t&lt;N,∀ a∈s t,DifferentiableAt ℝ (f t) a)
+    (hff : ∀ t&lt;N,∀ a∈s t,DifferentiableAt ℝ (fderiv ℝ (f t)) a)
+    (hfirst : ∀ t&lt;N,∀ a∈s t,‖fderiv ℝ (f t) a‖≤K)
+    (hsecond : ∀ t&lt;N,∀ a∈s t,‖fderiv ℝ (fderiv ℝ (f t)) a‖≤D) :
+    (∀ t≤N,‖y t-x t‖≤K^t*‖y 0-x 0‖) ∧
+    ‖fderiv ℝ (iterate f N) (y 0)-fderiv ℝ (iterate f N) (x 0)‖≤
+      N*D*K^(2*N)*‖y 0-x 0‖ := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L226">OAI.SmoothObstruction.ShortDerivative.iterate</a></p></li><li id=L315><b>theorem</b> <code>OAI.SmoothObstruction.ShortDerivative.uniform_short_boundary</code> <small>line 315</small><div class="doc"><p>Bootstrap nearby genuine local-map orbits into the carried domains,
+using only one-sided C2 bounds on a convex closed model (in particular a
+half-space). No extension across the boundary is assumed.
+The only smallness required is C^N times the initial displacement; no
+long-iterate derivative estimate or continued domain membership is assumed.</p></div><pre>theorem uniform_short_boundary (f : ι → E → E) (K U : ι → Set E)
+    (H : Set E) (hK : ∀ i,IsCompact (K i)) (hU : ∀ i,IsOpen (U i))
+    (hH : IsClosed H) (hconvH : Convex ℝ H) (hKU : ∀ i,K i⊆U i)
+    (huniq : ∀ i,UniqueDiffOn ℝ (U i∩H))
+    (hf : ∀ i,ContDiffOn ℝ ∞ (f i) (U i∩H)) :
+    ∃ r C : ℝ,0 &lt; r ∧ 1 ≤ C ∧ ∀ (a : ℕ → ι) (x y : ℕ → E) (N : ℕ),
+      (∀ t&lt;N,x t∈K (a t)) →
+      (∀ t&lt;N,x t∈interior H ∧ y t∈interior H) →
+      (∀ t&lt;N,f (a t) (x t)=x (t+1)) →
+      (∀ t&lt;N,f (a t) (y t)=y (t+1)) →
+      C^N*‖y 0-x 0‖ ≤ r →
+      (∀ t≤N,‖y t-x t‖ ≤ C^t*‖y 0-x 0‖) ∧
+…</pre></li><li id=L383><b>theorem</b> <code>OAI.SmoothObstruction.ShortDerivative.uniform_short_interior</code> <small>line 383</small><div class="doc"><p>Bootstrap nearby genuine local-map orbits into the carried domains,
+using only one-sided C2 bounds on a convex closed model (in particular a
+half-space). No extension across the boundary is assumed.
+The only smallness required is C^N times the initial displacement; no
+long-iterate derivative estimate or continued domain membership is assumed.</p></div><pre>theorem uniform_short_interior (f : ι → E → E) (K U : ι → Set E)
+    (H : Set E) (hK : ∀ i,IsCompact (K i)) (hU : ∀ i,IsOpen (U i))
+    (hH : IsClosed H) (hconvH : Convex ℝ H) (hKU : ∀ i,K i⊆U i)
+    (huniq : ∀ i,UniqueDiffOn ℝ (U i∩H))
+    (hf : ∀ i,ContDiffOn ℝ ∞ (f i) (U i∩H))
+    (hmaps : ∀ i,MapsTo (f i) (U i∩interior H) (interior H)) :
+    ∃ r C : ℝ,0 &lt; r ∧ 1 ≤ C ∧ ∀ (a : ℕ → ι) (x y : ℕ → E) (N : ℕ),
+      (∀ t&lt;N,x t∈K (a t)) →
+      (∀ t&lt;N,x t∈interior H) → y 0∈interior H →
+      (∀ t&lt;N,f (a t) (x t)=x (t+1)) →
+      (∀ t&lt;N,f (a t) (y t)=y (t+1)) →
+      C^N*‖y 0-x 0‖ ≤ r →
+…</pre></li><li id=L459><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.actual_short_comparison</code> <small>line 459</small><div class="doc"><p>The C1 comparison is for genuine manifold orbits in one fixed carried
+chart sequence. Neither continued chart membership nor staying in the
+interior is assumed for the perturbed orbit: both are proved. The constants
+are uniform over every sequence of reference charts, orbit and length.</p></div><pre>theorem actual_short_comparison (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r C : ℝ,0 &lt; r ∧ 1 ≤ C ∧ ∀ (c : ℕ → ι) (x y : M) (N : ℕ),
+      (∀ t≤N,S^[t] x∈K (c t)) → I.IsInteriorPoint x → I.IsInteriorPoint y →
+      y∈(chartAt H (a (c 0))).source →
+      C ^ N*‖(extChartAt I (a (c 0))) y-(extChartAt I (a (c 0))) x‖ ≤ r →
+      (∀ t≤N,S^[t] y∈(chartAt H (a (c t))).source ∧
+        ‖(extChartAt I (a (c t))) (S^[t] y)-(extChartAt I (a (c t))) (S^[t] x)‖ ≤
+          C ^ t*‖(extChartAt I (a (c 0))) y-(extChartAt I (a (c 0))) x‖) ∧
+      ‖fderiv ℝ (ShortDerivative.iterate (fun t =&gt; localMap I S (a (c t)) (a (c (t+1)))) N)
+          ((extChartAt I (a (c 0))) y)-
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L226">OAI.SmoothObstruction.ShortDerivative.iterate</a>, <a href="Charts.lean.html#L937">OAI.SmoothObstruction.ManifoldCoordinates.localMap</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

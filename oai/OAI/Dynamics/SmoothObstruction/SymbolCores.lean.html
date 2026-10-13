@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/SymbolCores.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/SymbolCores.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>SymbolCores.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>SymbolCores.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/SymbolCores.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.SmoothObstruction.SymbolCores.compact_core</code> <small>line 16</small><div class="doc"><p>A finite measurable observation is uniformly stable at nearby points of
+one compact core, losing arbitrarily little of the original probability.</p></div><pre>theorem compact_core (μ : Measure M) [IsFiniteMeasure μ]
+    (f : M → A) (hf : Measurable f) {κ : ℝ} (hκ : 0&lt;κ) :
+    ∃ (C : Set M) (δ : ℝ≥0), IsCompact C ∧ μ Cᶜ≤ENNReal.ofReal κ ∧
+      0&lt;δ ∧ ∀ x∈C,∀ y∈C,edist x y&lt;(δ : ℝ≥0∞) → f x=f y := by
+…</pre></li><li id=L83><b>theorem</b> <code>OAI.SmoothObstruction.SymbolMass.mismatch_mass</code> <small>line 83</small><div class="doc"><p>The per-time mismatch estimate in the original, unnormalized retained
+law. Only its actual dominated marginals are used.</p></div><pre>theorem mismatch_mass (σ : Measure Ω) (μ : Measure M)
+    (f : M → A) (C : Set M) (hC : IsClosed C) {δ : ℝ≥0}
+    (hcore : ∀ x∈C,∀ y∈C,edist x y&lt;(δ : ℝ≥0∞) → f x=f y)
+    (u v : Ω → M) (hu : Measurable u) (hv : Measurable v)
+    (a b : ℝ≥0∞) (hU : σ.map u≤a•μ) (hV : σ.map v≤b•μ)
+    (hdist : ∀ᵐ ω ∂σ,edist (u ω) (v ω)&lt;(δ : ℝ≥0∞)) :
+    σ {ω | f (u ω)≠f (v ω)}≤(a+b)*μ Cᶜ := by
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.SmoothObstruction.SymbolMass.transported_domination</code> <small>line 109</small><div class="doc"><p>Invariance transports output domination to every observation time.</p></div><pre>theorem transported_domination (σ : Measure Ω) (μ : Measure M)
+    (z : Ω → M) (hz : Measurable z) (S : M → M)
+    (hS : MeasurePreserving S μ μ) (a : ℝ≥0∞) (hzle : σ.map z≤a•μ) :
+    σ.map (S ∘ z)≤a•μ := by
+…</pre></li><li id=L125><b>def</b> <code>OAI.SmoothObstruction.SymbolMass.errors</code> <small>line 125</small><div class="doc"><p>Counted mismatches, before any normalization of the retained law.</p></div><pre>noncomputable def errors (N : ℕ) (bad : Fin N → Set Ω) (ω : Ω) : ℝ≥0∞ :=
+…</pre></li><li id=L128><b>lemma</b> <code>OAI.SmoothObstruction.SymbolMass.measurable_errors</code> <small>line 128</small></li><li id=L134><b>theorem</b> <code>OAI.SmoothObstruction.SymbolMass.fraction_bad</code> <small>line 134</small><div class="doc"><p>The finite-time Markov bound. The factor N cancels; no mixing in time
+and no renormalized law is required.</p></div><pre>theorem fraction_bad (σ : Measure Ω) (N : ℕ) (hN : 0&lt;N)
+    (bad : Fin N → Set Ω) (hb : ∀ t,MeasurableSet (bad t))
+    (ε θ : ℝ≥0∞) (hθ : θ≠0) (hθt : θ≠∞)
+    (hm : ∀ t,σ (bad t)≤ε) :
+    σ {ω | (N:ℝ≥0∞)*θ≤errors N bad ω}≤ε/θ := by
+…</pre><p class="refs">Mentions: <a href="SymbolCores.lean.html#L125">OAI.SmoothObstruction.SymbolMass.errors</a></p></li><li id=L157><b>theorem</b> <code>OAI.SmoothObstruction.SymbolMass.two_halves_bad</code> <small>line 157</small><div class="doc"><p>Both half-names lose at most twice the one-half Markov bound.</p></div><pre>theorem two_halves_bad (σ : Measure Ω) (N : ℕ) (hN : 0&lt;N)
+    (bad₁ bad₂ : Fin N → Set Ω)
+    (hb₁ : ∀ t,MeasurableSet (bad₁ t)) (hb₂ : ∀ t,MeasurableSet (bad₂ t))
+    (ε θ : ℝ≥0∞) (hθ : θ≠0) (hθt : θ≠∞)
+    (hm₁ : ∀ t,σ (bad₁ t)≤ε) (hm₂ : ∀ t,σ (bad₂ t)≤ε) :
+    σ ({ω | (N:ℝ≥0∞)*θ≤errors N bad₁ ω} ∪
+      {ω | (N:ℝ≥0∞)*θ≤errors N bad₂ ω})≤2*(ε/θ) := by
+…</pre><p class="refs">Mentions: <a href="SymbolCores.lean.html#L125">OAI.SmoothObstruction.SymbolMass.errors</a></p></li><li id=L180><b>lemma</b> <code>OAI.SmoothObstruction.SymbolMass.errors_eq_mismatches</code> <small>line 180</small></li><li id=L193><b>theorem</b> <code>OAI.SmoothObstruction.SymbolMass.symbol_success</code> <small>line 193</small><div class="doc"><p>Compact symbol cores give simultaneous full-half-name recovery with
+original (not conditionally normalized) mass at least .98.</p></div><pre>theorem symbol_success (μ : Measure M) [IsProbabilityMeasure μ]
+    (S Sinv : M → M) (hS : MeasurePreserving S μ μ) (hSi : MeasurePreserving Sinv μ μ)
+    (f : M → A) (hf : Measurable f) :
+    ∃ δ : ℝ,0&lt;δ ∧ ∀ (D : SwitchData μ) (n : ℕ),0&lt;n →
+      (99/100:ℝ)≤D.law.real D.carrier → D.retained.map D.point≤(2:ℝ≥0∞) • μ →
+      (∀ p∈D.carrier,∀ t v : Fin (n+1),
+        dist (S^[t.val] (D.point p)) (S^[t.val] p.1)+
+        dist (Sinv^[v.val] (D.point p)) (Sinv^[v.val] p.2)&lt;δ) →
+      ∃ H : Set (M×M),MeasurableSet H ∧ H⊆D.carrier ∧ (98/100:ℝ)≤D.law.real H ∧
+        ∀ p∈H,
+          (mismatches (fun t : Fin n =&gt; f (S^[t.val] p.1))
+            (fun t : Fin n =&gt; f (S^[t.val] (D.point p))):ℝ)&lt;(3/400:ℝ)*n ∧
+…</pre><p class="refs">Mentions: <a href="PairLaw.lean.html#L90">OAI.SmoothObstruction.SwitchData</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

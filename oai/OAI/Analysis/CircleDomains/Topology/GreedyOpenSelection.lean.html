@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Topology/GreedyOpenSelection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Topology/GreedyOpenSelection.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Topology</a> / <span>GreedyOpenSelection.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Topology</a>/<span>GreedyOpenSelection.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Topology/GreedyOpenSelection.lean#L1">source</a></p><div class="doc"><h3>Countable selection of compatible open barriers</h3><p>A basis enumeration selects one admissible candidate at each finite stage.
+If removing previous candidates allows a candidate with the same or larger open set,
+every candidate
+admissible for the final family has its open set covered by that family.
+This is the selection step only; countability of unavailable ends is separate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>def</b> <code>OAI.CircleDomainRigidity.greedyStep</code> <small>line 26</small></li><li id=L31><b>theorem</b> <code>OAI.CircleDomainRigidity.greedyStep_contains</code> <small>line 31</small></li><li id=L40><b>theorem</b> <code>OAI.CircleDomainRigidity.greedyStep_finite</code> <small>line 40</small></li><li id=L49><b>theorem</b> <code>OAI.CircleDomainRigidity.greedyStep_new_subsingleton</code> <small>line 49</small></li><li id=L62><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_countable_open_selection</code> <small>line 62</small><div class="doc"><p>Select a countable compatible family whose union covers every finally
+admissible candidate. The stage condition retains the actual order of selection.</p></div><pre>theorem exists_countable_open_selection [TopologicalSpace X] [SecondCountableTopology X]
+    (U : C → Set X) (hU : ∀ c, IsOpen (U c))
+    (Allowed : Set C → C → Prop)
+    (hrestrict : ∀ {A D : Set C}, A ⊆ D → ∀ c, Allowed D c →
+      ∃ d, Allowed A d ∧ U c ⊆ U d) :
+    ∃ A : ℕ → Set C,
+      A 0 = ∅ ∧ (∀ n, (A n).Finite) ∧ Monotone A ∧
+      (∀ n, (A (n + 1) \ A n).Subsingleton) ∧
+      (∀ n c, c ∈ A (n + 1) \ A n → Allowed (A n) c) ∧
+      (⋃ n, A n).Countable ∧
+      ∀ c, Allowed (⋃ n, A n) c → U c ⊆ ⋃ d ∈ ⋃ n, A n, U d := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_countable_graded_open_selection</code> <small>line 105</small><div class="doc"><p>The open-set selection can impose every countably indexed accuracy demand
+at once, retaining compatibility across different accuracies.</p></div><pre>theorem exists_countable_graded_open_selection
+    [TopologicalSpace X] [SecondCountableTopology X]
+    (U : C → Set X) (hU : ∀ c, IsOpen (U c)) (grade : C → ℕ)
+    (Allowed : Set C → C → Prop)
+    (hrestrict : ∀ {A D : Set C}, A ⊆ D → ∀ c, Allowed D c →
+      ∃ d, Allowed A d ∧ grade d = grade c ∧ U c ⊆ U d) :
+    ∃ A : ℕ → Set C,
+      A 0 = ∅ ∧ (∀ n, (A n).Finite) ∧ Monotone A ∧
+      (∀ n, (A (n + 1) \ A n).Subsingleton) ∧
+      (∀ n c, c ∈ A (n + 1) \ A n → Allowed (A n) c) ∧
+      (⋃ n, A n).Countable ∧
+      ∀ c, Allowed (⋃ n, A n) c → ∀ x ∈ U c,
+…</pre></li><li id=L136><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_countable_graded_cover</code> <small>line 136</small><div class="doc"><p>If only countably many endpoints lack an admissible test at each accuracy,
+the graded selection leaves only countably many endpoints uncovered. The
+hypothesis is precisely where the separate path-law argument is needed.</p></div><pre>theorem exists_countable_graded_cover
+    [TopologicalSpace X] [SecondCountableTopology X]
+    (U : C → Set X) (hU : ∀ c, IsOpen (U c)) (grade : C → ℕ)
+    (Allowed : Set C → C → Prop)
+    (hrestrict : ∀ {A D : Set C}, A ⊆ D → ∀ c, Allowed D c →
+      ∃ d, Allowed A d ∧ grade d = grade c ∧ U c ⊆ U d)
+    (hunavailable : ∀ A : Set C, A.Countable → ∀ k : ℕ,
+      {x | ¬∃ c, Allowed A c ∧ grade c = k ∧ x ∈ U c}.Countable) :
+    ∃ A : ℕ → Set C,
+      A 0 = ∅ ∧ (∀ n, (A n).Finite) ∧ Monotone A ∧
+      (∀ n, (A (n + 1) \ A n).Subsingleton) ∧
+      (∀ n c, c ∈ A (n + 1) \ A n → Allowed (A n) c) ∧
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

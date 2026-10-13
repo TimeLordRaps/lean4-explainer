@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/CubicMoment/Estimates/PolynomialMeanValue.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/CubicMoment/Estimates/PolynomialMeanValue.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">CubicMoment</a> / <a href="index.html">Estimates</a> / <span>PolynomialMeanValue.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">CubicMoment</a>/<a href="index.html">Estimates</a>/<span>PolynomialMeanValue.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/CubicMoment/Estimates/PolynomialMeanValue.lean#L1">source</a></p><div class="doc"><h3>Ordinary mean values after collecting Eisenstein norms</h3><p>The input <code>MontgomeryVaughanBound</code> is the ordinary Dirichlet-polynomial
+mean-square theorem of Montgomery--Vaughan, <em>Hilbert's inequality</em>,
+J. London Math. Soc. (2) 8 (1974), Corollary 3, p. 75, equation (1.11),
+in the form explicitly recorded
+in the manuscript as <code>eq:ordinary-mean-value</code>.</p><p>The deductions below collect the actual Eisenstein norms, record their
+multiplicity cost, and preserve an arbitrary fixed angular weight and
+an arbitrary translated height. These are the ordinary mean-value steps
+in <code>eq:dispersion-height-small</code> and <code>eq:angular-completed-height</code>.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.CubicFirstMoment.integerNormPolynomial</code> <small>line 28</small><div class="doc"><p>Ordinary Dirichlet polynomial, with positive integer frequencies.</p></div><pre>def integerNormPolynomial (Z : ℕ) (v : ℕ → ℂ) (t : ℝ) : ℂ :=
+…</pre></li><li id=L33><b>def</b> <code>OAI.CubicFirstMoment.MontgomeryVaughanBound</code> <small>line 33</small><div class="doc"><p>Precise published input: the constant is independent of the interval,
+length, coefficients, and any later translation of the height.</p></div><pre>def MontgomeryVaughanBound (C : ℝ) : Prop :=
+…</pre></li><li id=L39><b>def</b> <code>OAI.CubicFirstMoment.normCollectedCoeff</code> <small>line 39</small><div class="doc"><p>Collection by rational norm, with no change to the coefficients.</p></div><pre>def normCollectedCoeff (s : Finset Eisenstein) (v : Eisenstein → ℂ) (n : ℕ) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a></p></li><li id=L43><b>def</b> <code>OAI.CubicFirstMoment.eisensteinNormPolynomial</code> <small>line 43</small><div class="doc"><p>Finite polynomial before collecting the equal rational norms.</p></div><pre>def eisensteinNormPolynomial (s : Finset Eisenstein) (v : Eisenstein → ℂ) (t : ℝ) : ℂ :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a></p></li><li id=L46><b>lemma</b> <code>OAI.CubicFirstMoment.mellinPhase_add</code> <small>line 46</small></li><li id=L54><b>lemma</b> <code>OAI.CubicFirstMoment.normPolynomial_collected</code> <small>line 54</small></li><li id=L67><b>lemma</b> <code>OAI.CubicFirstMoment.norm_sum_sq_le_card_mul</code> <small>line 67</small></li><li id=L75><b>lemma</b> <code>OAI.CubicFirstMoment.normCollectedCoeff_energy</code> <small>line 75</small></li><li id=L91><b>theorem</b> <code>OAI.CubicFirstMoment.eisensteinNormPolynomial_meanSquare</code> <small>line 91</small><div class="doc"><p>The mean-square bound with the exact multiplicity loss from collecting
+Eisenstein norms.</p></div><pre>theorem eisensteinNormPolynomial_meanSquare {C : ℝ}
+    (hMV : MontgomeryVaughanBound C) (hC : 0 ≤ C)
+    (s : Finset Eisenstein) (v : Eisenstein → ℂ) (Z : ℕ) (M : ℝ)
+    (hs : ∀ b ∈ s, normNat b ∈ Finset.Icc 1 Z)
+    (hM : ∀ n ∈ Finset.Icc 1 Z, ((s.filter (fun b =&gt; normNat b = n)).card : ℝ) ≤ M)
+    {a b : ℝ} (hab : a ≤ b) :
+    (∫ t in a..b, ‖eisensteinNormPolynomial s v t‖ ^ 2) ≤
+      C * (b - a + Z) * M * ∑ c ∈ s, ‖v c‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="PolynomialMeanValue.lean.html#L33">OAI.CubicFirstMoment.MontgomeryVaughanBound</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a>, <a href="PolynomialMeanValue.lean.html#L43">OAI.CubicFirstMoment.eisensteinNormPolynomial</a></p></li><li id=L109><b>theorem</b> <code>OAI.CubicFirstMoment.fixedAngular_translated_meanSquare</code> <small>line 109</small><div class="doc"><p>A fixed angular character and translated height are coefficient phases;
+they do not change the original coefficient energy.</p></div><pre>theorem fixedAngular_translated_meanSquare {C : ℝ}
+    (hMV : MontgomeryVaughanBound C) (hC : 0 ≤ C)
+    (s : Finset Eisenstein) (v : Eisenstein → ℂ) (Z : ℕ) (M : ℝ)
+    (hs : ∀ b ∈ s, normNat b ∈ Finset.Icc 1 Z)
+    (hzero : ∀ b ∈ s, b ≠ 0)
+    (hM : ∀ n ∈ Finset.Icc 1 Z, ((s.filter (fun b =&gt; normNat b = n)).card : ℝ) ≤ M)
+    (ℓ : ℤ) (u : ℝ) {a b : ℝ} (hab : a ≤ b) :
+    (∫ t in a..b, ‖∑ c ∈ s, v c * theta ℓ c * mellinPhase (t + u) (norm c)‖ ^ 2) ≤
+      C * (b - a + Z) * M * ∑ c ∈ s, ‖v c‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="PolynomialMeanValue.lean.html#L33">OAI.CubicFirstMoment.MontgomeryVaughanBound</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L71">OAI.CubicFirstMoment.theta</a>, <a href="MellinWeights.lean.html#L18">OAI.CubicFirstMoment.mellinPhase</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a></p></li><li id=L137><b>theorem</b> <code>OAI.CubicFirstMoment.fixedAngular_translated_dyadicMeanSquare</code> <small>line 137</small><div class="doc"><p>The normalized two-sided height mean used for the small-conductor
+noncube contribution. Both positive and negative height intervals occur.</p></div><pre>theorem fixedAngular_translated_dyadicMeanSquare {C : ℝ}
+    (hMV : MontgomeryVaughanBound C) (hC : 0 ≤ C)
+    (s : Finset Eisenstein) (v : Eisenstein → ℂ) (Z : ℕ) (M : ℝ)
+    (hs : ∀ b ∈ s, normNat b ∈ Finset.Icc 1 Z)
+    (hzero : ∀ b ∈ s, b ≠ 0)
+    (hM : ∀ n ∈ Finset.Icc 1 Z, ((s.filter (fun b =&gt; normNat b = n)).card : ℝ) ≤ M)
+    (ℓ : ℤ) (u : ℝ) {T : ℝ} (hT : 0 &lt; T) :
+    ((∫ t in T..2 * T, ‖∑ c ∈ s, v c * theta ℓ c * mellinPhase (t + u) (norm c)‖ ^ 2) +
+     (∫ t in -2 * T..-T, ‖∑ c ∈ s, v c * theta ℓ c * mellinPhase (t + u) (norm c)‖ ^ 2)) / T ≤
+      2 * C * (1 + (Z : ℝ) / T) * M * ∑ c ∈ s, ‖v c‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="PolynomialMeanValue.lean.html#L33">OAI.CubicFirstMoment.MontgomeryVaughanBound</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L71">OAI.CubicFirstMoment.theta</a>, <a href="MellinWeights.lean.html#L18">OAI.CubicFirstMoment.mellinPhase</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a></p></li><li id=L156><b>lemma</b> <code>OAI.CubicFirstMoment.continuous_angularNormPolynomial</code> <small>line 156</small></li><li id=L167><b>lemma</b> <code>OAI.CubicFirstMoment.interval_integral_sq_le</code> <small>line 167</small></li><li id=L200><b>theorem</b> <code>OAI.CubicFirstMoment.fixedAngular_translated_meanAbsolute_sq</code> <small>line 200</small><div class="doc"><p>Mean absolute size on a height interval, derived from the mean square.
+This form retains the exact coefficient energy instead of hiding it in a
+big-O constant.</p></div><pre>theorem fixedAngular_translated_meanAbsolute_sq {C : ℝ}
+    (hMV : MontgomeryVaughanBound C) (hC : 0 ≤ C)
+    (s : Finset Eisenstein) (v : Eisenstein → ℂ) (Z : ℕ) (M : ℝ)
+    (hs : ∀ b ∈ s, normNat b ∈ Finset.Icc 1 Z)
+    (hzero : ∀ b ∈ s, b ≠ 0)
+    (hM : ∀ n ∈ Finset.Icc 1 Z, ((s.filter (fun b =&gt; normNat b = n)).card : ℝ) ≤ M)
+    (ℓ : ℤ) (u : ℝ) {T : ℝ} (hT : 0 &lt; T) :
+    ((∫ t in T..2 * T, ‖∑ c ∈ s, v c * theta ℓ c * mellinPhase (t + u) (norm c)‖) / T) ^ 2 ≤
+      C * (1 + (Z : ℝ) / T) * M * ∑ c ∈ s, ‖v c‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="PolynomialMeanValue.lean.html#L33">OAI.CubicFirstMoment.MontgomeryVaughanBound</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L71">OAI.CubicFirstMoment.theta</a>, <a href="MellinWeights.lean.html#L18">OAI.CubicFirstMoment.mellinPhase</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a></p></li><li id=L224><b>theorem</b> <code>OAI.CubicFirstMoment.fixedAngular_translated_short_meanAbsolute</code> <small>line 224</small><div class="doc"><p>The short-polynomial branch of the completed angular height estimate:
+length at most <code>sqrt R * T²</code> and coefficient energy at most <code>V</code> give mean
+absolute size at most <code>sqrt (2 C M V sqrt R T)</code>. The square-root form is
+<code>O(sqrt V * R^(1/4) * sqrt T)</code> after the divisor loss is included in <code>M</code>.</p></div><pre>theorem fixedAngular_translated_short_meanAbsolute {C : ℝ}
+    (hMV : MontgomeryVaughanBound C) (hC : 0 ≤ C)
+    (s : Finset Eisenstein) (v : Eisenstein → ℂ) (Z : ℕ) (M : ℝ)
+    (hs : ∀ b ∈ s, normNat b ∈ Finset.Icc 1 Z)
+    (hzero : ∀ b ∈ s, b ≠ 0)
+    (hM : ∀ n ∈ Finset.Icc 1 Z, ((s.filter (fun b =&gt; normNat b = n)).card : ℝ) ≤ M)
+    (hM₀ : 0 ≤ M) (ℓ : ℤ) (u : ℝ) {T R V : ℝ}
+    (hT : 1 ≤ T) (hR : 1 ≤ R) (hV : 0 ≤ V)
+    (henergy : (∑ c ∈ s, ‖v c‖ ^ 2) ≤ V)
+    (hlength : (Z : ℝ) ≤ Real.sqrt R * T ^ 2) :
+    (∫ t in T..2 * T, ‖∑ c ∈ s, v c * theta ℓ c * mellinPhase (t + u) (norm c)‖) / T ≤
+      Real.sqrt (2 * C * M * V * Real.sqrt R * T) := by
+…</pre><p class="refs">Mentions: <a href="PolynomialMeanValue.lean.html#L33">OAI.CubicFirstMoment.MontgomeryVaughanBound</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L71">OAI.CubicFirstMoment.theta</a>, <a href="MellinWeights.lean.html#L18">OAI.CubicFirstMoment.mellinPhase</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

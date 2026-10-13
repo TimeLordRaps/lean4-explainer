@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceCellMarking.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceCellMarking.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceCellMarking.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceCellMarking.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceCellMarking.lean#L1">source</a></p><div class="doc"><p>The manuscript's marking rule uses the infimum of the parent mass
+and the supremum of its absolute drop over the entire line cell. The
+possible unmarked large drop is the last active index, hence is unique.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.LipschitzHilbert.sourceMarkedCell</code> <small>line 14</small><div class="doc"><p>The exact two inequalities in the source's cell marking rule.</p></div><pre>def sourceMarkedCell (I : Set ℝ) (n h : ℝ → ℝ) (M : ℝ) : Prop :=
+…</pre></li><li id=L17><b>theorem</b> <code>OAI.LipschitzHilbert.sourceMarkedCell_active</code> <small>line 17</small></li><li id=L22><b>theorem</b> <code>OAI.LipschitzHilbert.sourceMarkedCell_inactive</code> <small>line 22</small></li><li id=L30><b>theorem</b> <code>OAI.LipschitzHilbert.sourceMarkedCell_drop</code> <small>line 30</small><div class="doc"><p>Relative motion on the entire cell turns the supremum condition
+into a uniform positive absolute drop, also for a half-open cell.</p></div><pre>theorem sourceMarkedCell_drop {I : Set ℝ} {n h : ℝ → ℝ} {M E x : ℝ}
+    (hE : 0 &lt; E) (hm : sourceMarkedCell I n h M) (hx : x ∈ I)
+    (hmove : ∀ y ∈ I, h y ≤ E*h x) : (1/2:ℝ)/E ≤ h x := by
+…</pre><p class="refs">Mentions: <a href="SourceCellMarking.lean.html#L14">OAI.LipschitzHilbert.sourceMarkedCell</a></p></li><li id=L40><b>theorem</b> <code>OAI.LipschitzHilbert.source_unmarked_large_drop</code> <small>line 40</small><div class="doc"><p>If an unmarked cell contains a drop of at least one, its mass
+infimum is at most M. Relative motion bounds every mass by E*M.</p></div><pre>theorem source_unmarked_large_drop {I : Set ℝ} {n h : ℝ → ℝ} {M E x : ℝ}
+    (hE : 0 &lt; E) (hx : x ∈ I) (hm : ¬ sourceMarkedCell I n h M)
+    (hlarge : 1 ≤ h x) (hbounded : BddAbove (h &#x27;&#x27; I))
+    (hmove : ∀ y ∈ I, n x ≤ E*n y) : n x ≤ E*M := by
+…</pre><p class="refs">Mentions: <a href="SourceCellMarking.lean.html#L14">OAI.LipschitzHilbert.sourceMarkedCell</a></p></li><li id=L59><b>theorem</b> <code>OAI.LipschitzHilbert.source_unmarked_crosses_cutoff</code> <small>line 59</small><div class="doc"><p>A unit absolute drop from a mass below M+1 crosses the stopping
+threshold. This is the exceptional index in the source decomposition.</p></div><pre>theorem source_unmarked_crosses_cutoff {I : Set ℝ} {n next : ℝ → ℝ} {M E x : ℝ}
+    (hE : 0 &lt; E) (hx : x ∈ I)
+    (hm : ¬ sourceMarkedCell I n (fun y =&gt; n y-next y) M)
+    (hlarge : 1 ≤ n x-next x)
+    (hbounded : BddAbove ((fun y =&gt; n y-next y) &#x27;&#x27; I))
+    (hmove : ∀ y ∈ I, n x ≤ E*n y) (hsmall : E*M &lt; M+1) : next x &lt; M := by
+…</pre><p class="refs">Mentions: <a href="SourceCellMarking.lean.html#L14">OAI.LipschitzHilbert.sourceMarkedCell</a></p></li><li id=L70><b>theorem</b> <code>OAI.LipschitzHilbert.source_cell_marking_cases</code> <small>line 70</small><div class="doc"><p>The marked/unmarked dichotomy under the quantitative relative motion
+used for the actual source weights.</p></div><pre>theorem source_cell_marking_cases (I : Set ℝ) (n next : ℝ → ℝ) (M q : ℝ)
+    (hn : ∀ y ∈ I, 0 ≤ n y) (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
+    (hsmall : (1+q)*M &lt; M+1)
+    (hmove : ∀ x ∈ I, ∀ y ∈ I,
+      n x ≤ (1+q)*n y ∧ n x-next x ≤ (1+q)*(n y-next y))
+    (x : ℝ) (hx : x ∈ I) :
+    (sourceMarkedCell I n (fun y =&gt; n y-next y) M →
+      M &lt; n x ∧ (1/4:ℝ) ≤ n x-next x) ∧
+    (¬ sourceMarkedCell I n (fun y =&gt; n y-next y) M →
+      1 ≤ n x-next x → n x &lt; M+1 ∧ next x &lt; M) := by
+…</pre><p class="refs">Mentions: <a href="SourceCellMarking.lean.html#L14">OAI.LipschitzHilbert.sourceMarkedCell</a></p></li><li id=L99><b>theorem</b> <code>OAI.LipschitzHilbert.source_exceptional_index_unique</code> <small>line 99</small><div class="doc"><p>Every exceptional unmarked large drop is the last active index.
+There can be only one, independently of the number of angular levels.</p></div><pre>theorem source_exceptional_index_unique (n : ℕ → ℝ) (M : ℝ)
+    (hanti : Antitone n) (exceptional : ℕ → Prop)
+    (hactive : ∀ j, exceptional j → M &lt; n j)
+    (hstop : ∀ j, exceptional j → n (j+1) ≤ M) :
+    Set.Subsingleton {j | exceptional j} := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

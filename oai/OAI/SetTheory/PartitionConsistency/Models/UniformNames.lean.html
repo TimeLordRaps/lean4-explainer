@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/SetTheory/PartitionConsistency/Models/UniformNames.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/SetTheory/PartitionConsistency/Models/UniformNames.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">SetTheory</a> / <a href="../index.html">PartitionConsistency</a> / <a href="index.html">Models</a> / <span>UniformNames.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">SetTheory</a>/<a href="../index.html">PartitionConsistency</a>/<a href="index.html">Models</a>/<span>UniformNames.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/SetTheory/PartitionConsistency/Models/UniformNames.lean#L1">source</a></p><div class="doc"><h4>UniformFamily</h4></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformRange</code> <small>line 17</small><div class="doc"><p>The range of a small ground family all of whose entries have the same
+literal support. This is an actual HS name, not an external evaluated set.</p></div><pre>def uniformRange {ι : Type t} [Small.{u} ι] (f : ι → S.Name)
+    (H : Subgroup Γ) (hH : H ∈ S.filter) (hfix : ∀ g ∈ H, ∀ i, g • f i = f i) : S.Name :=
+…</pre></li><li id=L22><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformRange_fixed</code> <small>line 22</small></li><li id=L30><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mem_uniformRange</code> <small>line 30</small></li><li id=L45><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformRange_mem</code> <small>line 45</small></li><li id=L53><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.indexedGraph_surjection</code> <small>line 53</small><div class="doc"><p>The canonical family graph enumerates exactly the corresponding range.
+The witnesses of the surjection formula are internal ordered-pair sets.</p></div><pre>theorem indexedGraph_surjection (X : ZFSet.{u}) (f : X → S.Name)
+    (H : Subgroup Γ) (hH : H ∈ S.filter) (hfix : ∀ g ∈ H, ∀ i, g • f i = f i) (p : P) :
+    S.Forces ![S.indexedGraph X f H hH hfix,Name.check X,S.uniformRange f H hH hfix] p
+      (SetLanguage.surjection 0 1 2) := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a>, <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L167">OAI.PartitionConsistency.SetLanguage.surjection</a></p></li><li id=L74><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.forces_injection</code> <small>line 74</small><div class="doc"><p>The injection sentence, with its full maps-to conjunct retained.</p></div><pre>theorem forces_injection {n} (v : Fin n → S.Name) (p : P) (f a b : Fin n) :
+    S.Forces v p (SetLanguage.injection f a b) ↔
+      S.Forces ![v f,v a,v b] p (SetLanguage.mapsTo 0 1 2) ∧
+      ∀ x y z : S.Name, ∀ q, q ≤ p → S.atomic.MemF q x (v a) →
+        ∀ r, r ≤ q → S.atomic.MemF r y (v a) → ∀ s, s ≤ r →
+          S.App s (v f) x z ∧ S.App s (v f) y z → S.atomic.EqF s x y := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L173">OAI.PartitionConsistency.SetLanguage.injection</a>, <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L161">OAI.PartitionConsistency.SetLanguage.mapsTo</a></p></li><li id=L92><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.BinaryRelation.graph_injection</code> <small>line 92</small><div class="doc"><p>A bounded functional relation which is also one-to-one gives an actual
+internal injection graph.</p></div><pre>theorem BinaryRelation.graph_injection (R : S.BinaryRelation)
+    (X Y : S.Name) (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hX : ∀ g ∈ H, g • X = X) (hY : ∀ g ∈ H, g • Y = Y)
+    (hR : ∀ g ∈ H, ∀ p x y, R.holds p x y → R.holds (S.move g p) (g • x) (g • y))
+    (p : P)
+    (htotal : ∀ x : S.Name, ∀ q, q ≤ p → S.atomic.MemF q x X →
+      ∀ r, r ≤ q → ∃ s, s ≤ r ∧ ∃ y : S.Name, S.atomic.MemF s y Y ∧ R.holds s x y)
+    (hone : ∀ q, q ≤ p → ∀ x y z : S.Name, R.holds q x y → R.holds q x z →
+      S.atomic.EqF q y z)
+    (hinj : ∀ q, q ≤ p → ∀ x y z : S.Name, R.holds q x z → R.holds q y z →
+      S.atomic.EqF q x y) :
+    S.Forces ![R.graph X Y H hH hX hY hR,X,Y] p (SetLanguage.injection 0 1 2) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L173">OAI.PartitionConsistency.SetLanguage.injection</a></p></li><li id=L117><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.LeastValue</code> <small>line 117</small><div class="doc"><p>The index is the least possible index of this value. Negative equality
+with every earlier entry is forced, not merely unforced at this condition.</p></div><pre>def LeastValue (p : P) (x : S.Name) (i : X) : Prop :=
+…</pre></li><li id=L121><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.least_mono</code> <small>line 121</small></li><li id=L126><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.least_congr</code> <small>line 126</small></li><li id=L136><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.least_unique</code> <small>line 136</small></li><li id=L144><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.Holds</code> <small>line 144</small><div class="doc"><p>Regularization of the indexed least-value relation.</p></div><pre>def Holds (p : P) (x y : S.Name) : Prop :=
+…</pre></li><li id=L148><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.relation</code> <small>line 148</small></li><li id=L165><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.relation_one</code> <small>line 165</small></li><li id=L176><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.relation_inj</code> <small>line 176</small></li><li id=L191><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.relation_total</code> <small>line 191</small><div class="doc"><p>Least indices are dense below every condition forcing membership in
+this range. Minimality is proved using the ground wellorder; no choice
+function in the symmetric extension or completeness of a filter is assumed.</p></div><pre>theorem relation_total (H : Subgroup Γ) (hH : H ∈ S.filter)
+    (hfix : ∀ g ∈ H, ∀ i, g • f i = f i) (x : S.Name) (p : P)
+    (hm : S.atomic.MemF p x (S.uniformRange f H hH hfix)) :
+    ∀ q, q ≤ p → ∃ r, r ≤ q ∧ ∃ y : S.Name,
+      S.atomic.MemF r y (Name.check X) ∧ (relation X f).holds r x y := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a>, <a href="UniformNames.lean.html#L148">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.relation</a></p></li><li id=L212><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.least_move</code> <small>line 212</small><div class="doc"><p>The least-value test is covariant under each automorphism fixing all
+entries of the family. Its negative conjunct is transported at every stronger
+condition by the inverse order isomorphism.</p></div><pre>theorem least_move (H : Subgroup Γ)
+    (hfix : ∀ g ∈ H, ∀ i, g • f i = f i) (g : Γ) (hg : g ∈ H)
+    {p : P} {x : S.Name} {i : X} (hi : LeastValue X f p x i) :
+    LeastValue X f (S.move g p) (g • x) i := by
+…</pre><p class="refs">Mentions: <a href="UniformNames.lean.html#L117">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.LeastValue</a></p></li><li id=L224><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.UniformInverse.relation_move</code> <small>line 224</small></li><li id=L239><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformRangeInverse</code> <small>line 239</small><div class="doc"><p>The sequence range admits an internal injection into its ground index
+set. This implements the least-occurrence argument with an actual HS graph;
+it does not assume that all its values are ground or that equalities of
+values can be decided uniformly by a single condition.</p></div><pre>def uniformRangeInverse (X : ZFSet.{u}) (f : X → S.Name)
+    (H : Subgroup Γ) (hH : H ∈ S.filter) (hfix : ∀ g ∈ H, ∀ i, g • f i = f i) : S.Name :=
+…</pre></li><li id=L245><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformRangeInverse_injection</code> <small>line 245</small></li><li id=L259><b>def</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformSubsetInverse</code> <small>line 259</small><div class="doc"><p>The same least-index graph restricted to an arbitrary supported set.
+The set need not have a literal representative among the indexed entries.</p></div><pre>def uniformSubsetInverse (X : ZFSet.{u}) (f : X → S.Name) (Y : S.Name)
+    (H : Subgroup Γ) (hH : H ∈ S.filter) (hfix : ∀ g ∈ H, ∀ i, g • f i = f i)
+    (hY : ∀ g ∈ H, g • Y = Y) : S.Name :=
+…</pre></li><li id=L265><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.uniformSubsetInverse_injection</code> <small>line 265</small></li><li id=L282><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.outside_uniformRange</code> <small>line 282</small><div class="doc"><p>If a set cannot be injected into the index set, then densely it has an
+element outside this evaluation list. Nonmembership in the list is forced
+below the witness condition, rather than just presently undecided.</p></div><pre>theorem outside_uniformRange (X : ZFSet.{u}) (f : X → S.Name) (Y : S.Name)
+    (H : Subgroup Γ) (hH : H ∈ S.filter) (hfix : ∀ g ∈ H, ∀ i, g • f i = f i)
+    (hY : ∀ g ∈ H, g • Y = Y) (p : P)
+    (hno : ∀ q, q ≤ p → ∀ J : S.Name,
+      ¬ S.Forces ![J,Y,Name.check X] q (SetLanguage.injection 0 1 2)) :
+    ∀ q, q ≤ p → ∃ r, r ≤ q ∧ ∃ y : S.Name, S.atomic.MemF r y Y ∧
+      ∀ s, s ≤ r → ¬ S.atomic.MemF s y (S.uniformRange f H hH hfix) := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a>, <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L173">OAI.PartitionConsistency.SetLanguage.injection</a></p></li><li id=L318><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.mem_checkOrdinal</code> <small>line 318</small><div class="doc"><p>Members of a checked ordinal are locally checked smaller ordinals.</p></div><pre>theorem mem_checkOrdinal (α : Ordinal.{u}) (x : S.Name) (p : P) :
+    S.atomic.MemF p x (Name.check α.toZFSet) ↔
+      ∀ q, q ≤ p → ∃ r, r ≤ q ∧ ∃ β : Ordinal.{u}, β &lt; α ∧
+        S.atomic.EqF r x (Name.check β.toZFSet) := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a></p></li><li id=L334><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.transF_checkOrdinal</code> <small>line 334</small><div class="doc"><p>Transitivity of a ground ordinal survives arbitrary set symmetric
+forcing. Quantified members here are all HS names, not just check names.</p></div><pre>theorem transF_checkOrdinal (α : Ordinal.{u}) (p : P) :
+    S.TransF p (Name.check α.toZFSet) := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a></p></li><li id=L347><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.ordF_checkOrdinal</code> <small>line 347</small><div class="doc"><p>Each member of a check ordinal is forced to be transitive as well.</p></div><pre>theorem ordF_checkOrdinal (α : Ordinal.{u}) (p : P) :
+    S.OrdF p (Name.check α.toZFSet) := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a></p></li><li id=L361><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.forces_membershipWellFounded</code> <small>line 361</small><div class="doc"><p>Internal membership well-foundedness follows from the proved name-rank
+Foundation argument, and holds for every set of the symmetric model.</p></div><pre>theorem forces_membershipWellFounded {n} (v : Fin n → S.Name) (p : P) (a : Fin n) :
+    S.Forces v p (SetLanguage.membershipWellFounded a) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L196">OAI.PartitionConsistency.SetLanguage.membershipWellFounded</a></p></li><li id=L378><b>theorem</b> <code>OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.forces_checkOrdinal</code> <small>line 378</small><div class="doc"><p>An actual checked ordinal satisfies the exact ordinal formula used by
+<code>ACwo</code>. Neither external well-foundedness of a model nor a weakened proxy
+for that formula is used.</p></div><pre>theorem forces_checkOrdinal (α : Ordinal.{u}) (p : P) :
+    S.Forces ![Name.check α.toZFSet] p (SetLanguage.ordinal 0) := by
+…</pre><p class="refs">Mentions: <a href="../Forcing/SymmetricSets.lean.html#L108">OAI.PartitionConsistency.SetForcingNames.SymmetricSystem.Name.check</a>, <a href="../../../../ComparatorChallenges/PartitionConsistency.lean.html#L202">OAI.PartitionConsistency.SetLanguage.ordinal</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

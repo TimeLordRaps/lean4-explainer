@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/MovingTransferSupport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/MovingTransferSupport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>MovingTransferSupport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>MovingTransferSupport.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/MovingTransferSupport.lean#L1">source</a></p><div class="doc"><h3>Support inherited by the reconstructed giant-only transfer</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.Ostmann.moving_reconstructed_node_valid</code> <small>line 14</small><div class="doc"><p>The integer quotient satisfies the full rigidity guard. Its frequency
+unit is derived from prime sizes, rather than assumed as a new transfer input.</p></div><pre>theorem moving_reconstructed_node_valid {σ : Type*}
+    (value : σ → ℕ) (childBound pivotBound : ℕ → ℕ)
+    (x : MovingSlotState σ) (I : Finset ℕ) (s v w : ℤ) (V : ℕ)
+    (hI : ∀ p ∈ I, 0 &lt; p)
+    (h : validTransferredPivot I
+      (v * (x.rightProduct value : ℤ) - w * (x.leftProduct value : ℤ))
+      (s * x.compensation value))
+    (hV : s.natAbs ≤ V)
+    (hlarge : ∀ q, q.Prime → q ∣ x.rightProduct value → V &lt; q)
+    (hpivot : ∀ p ∈ I, p * x.compensation value ≤ pivotBound x.depth)
+    (hv : v.natAbs ≤ childBound x.depth) (hw : w.natAbs ≤ childBound x.depth)
+    (hgap : 2 * pivotBound x.depth * childBound x.depth &lt; x.rightProduct value)
+…</pre><p class="refs">Mentions: <a href="MovingSlotSystem.lean.html#L15">OAI.Ostmann.MovingSlotState</a>, <a href="../Construction/TransferredPivotSubstitution.lean.html#L19">OAI.Ostmann.validTransferredPivot</a></p></li><li id=L57><b>theorem</b> <code>OAI.Ostmann.pairwise_coprime_merge_shared</code> <small>line 57</small><div class="doc"><p>The two branch priors already supply their internal and outside tests.
+The only new pairwise requirement is the cross-product coprimality.</p></div><pre>theorem pairwise_coprime_merge_shared (A B Y : List ℕ)
+    (hA : (A ++ Y).Pairwise Nat.Coprime)
+    (hB : (B ++ Y).Pairwise Nat.Coprime) (hAB : A.prod.Coprime B.prod) :
+    (A ++ B ++ Y).Pairwise Nat.Coprime := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.Ostmann.moving_transferred_current_pairwise</code> <small>line 76</small><div class="doc"><p>The root's pairwise test follows from the two old branch supports and
+the nonzero transfer equation, since every shared prime is too large to
+divide the new frequency.</p></div><pre>theorem moving_transferred_current_pairwise {σ : Type*}
+    (value : σ → ℕ) (outside : List ℕ) {n : ℕ}
+    (s : ℤ) (CL CR u : List σ) (l r : MovingSlotData σ n) (XL XR P : ℕ)
+    (hs : s ≠ 0) (v w : ℤ)
+    (hrel : v * ((XR * MovingSlotReversal.naturalProduct value CR : ℕ) : ℤ) -
+      w * ((XL * MovingSlotReversal.naturalProduct value CL : ℕ) : ℤ) = s * P)
+    (hleft : ((XL :: CL.map value) ++ outside).Pairwise Nat.Coprime)
+    (hright : ((XR :: CR.map value) ++ outside).Pairwise Nat.Coprime)
+    (hsmall : ∀ q, q.Prime → q ∣ XL * MovingSlotReversal.naturalProduct value CL →
+      q ∣ XR * MovingSlotReversal.naturalProduct value CR → s.natAbs &lt; q)
+    (hunit : (XL * MovingSlotReversal.naturalProduct value CL).Coprime P) :
+    ((MovingSlotData.node s CL CR u l r).currentSlots value XL XR ++ outside).Pairwise
+…</pre><p class="refs">Mentions: <a href="MovingSlotOccurrences.lean.html#L12">OAI.Ostmann.MovingSlotData</a>, <a href="MovingSlotRealization.lean.html#L13">OAI.Ostmann.MovingSlotReversal.naturalProduct</a></p></li><li id=L107><b>theorem</b> <code>OAI.Ostmann.moving_local_support_of_large</code> <small>line 107</small><div class="doc"><p>All current giant tests, including descendant frequencies, follow from
+pairwise support and the same large-prime separation used at the root.</p></div><pre>theorem moving_local_support_of_large {σ : Type*}
+    (value : σ → ℕ) (outside : List ℕ) {n : ℕ}
+    (T : MovingSlotData σ n) (XL XR : ℕ)
+    (hp : (T.currentSlots value XL XR ++ outside).Pairwise Nat.Coprime)
+    (hf : T.Frequencies (fun s =&gt; s ≠ 0 ∧
+      ∀ q, q.Prime → q ∣ XL * XR → s.natAbs &lt; q)) :
+    movingLocalSupport value outside ⟨n, T, XL, XR⟩ := by
+…</pre><p class="refs">Mentions: <a href="MovingSlotOccurrences.lean.html#L12">OAI.Ostmann.MovingSlotData</a>, <a href="MovingRecursiveSupport.lean.html#L16">OAI.Ostmann.movingLocalSupport</a></p></li><li id=L147><b>theorem</b> <code>OAI.Ostmann.moving_local_support_prime_giants</code> <small>line 147</small><div class="doc"><p>In the transfer application the surviving top giants are actual primes.
+All the additional descendant-frequency tests are therefore automatic.</p></div><pre>theorem moving_local_support_prime_giants {σ : Type*}
+    (value : σ → ℕ) (outside : List ℕ) {n : ℕ}
+    (T : MovingSlotData σ n) (XL XR V : ℕ)
+    (hXL : XL.Prime) (hXR : XR.Prime) (hVL : V &lt; XL) (hVR : V &lt; XR)
+    (hp : (T.currentSlots value XL XR ++ outside).Pairwise Nat.Coprime)
+    (hf : T.Frequencies (fun s =&gt; s ≠ 0 ∧ s.natAbs ≤ V)) :
+    movingLocalSupport value outside ⟨n, T, XL, XR⟩ := by
+…</pre><p class="refs">Mentions: <a href="MovingSlotOccurrences.lean.html#L12">OAI.Ostmann.MovingSlotData</a>, <a href="MovingRecursiveSupport.lean.html#L16">OAI.Ostmann.movingLocalSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

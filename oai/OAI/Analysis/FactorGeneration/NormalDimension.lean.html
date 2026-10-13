@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/FactorGeneration/NormalDimension.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/FactorGeneration/NormalDimension.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">FactorGeneration</a> / <span>NormalDimension.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">FactorGeneration</a>/<span>NormalDimension.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/FactorGeneration/NormalDimension.lean#L1">source</a></p><div class="doc"><p>Increasing projection suprema and compatible sequential comparison.
+The witnesses live in the original algebra; no trace or dimension is used.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.exists_isLUB_monotone</code> <small>line 20</small><div class="doc"><p>Actual least upper bounds for arbitrary nonempty directed projection nets.</p></div><pre>theorem exists_isLUB_monotone
+    {I : Type*} [Preorder I] [IsDirected I (· ≤ ·)] [Nonempty I]
+    (q : I → AlgebraProjection M) (hq : Monotone q) :
+    ∃ p : AlgebraProjection M, IsLUB (Set.range q) p := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a></p></li><li id=L41><b>theorem</b> <code>OAI.Generator.Tracial.PartialIsometry.exists_extension_of_subequivalent</code> <small>line 41</small><div class="doc"><p>Extend a given embedding to a larger source while keeping its target in r.</p></div><pre>theorem exists_extension_of_subequivalent (v : PartialIsometry M)
+    (p r : AlgebraProjection M) (hp : v.support ≤ p) (hr : v.target ≤ r)
+    (hpr : p.Subequivalent r) :
+    ∃ w : PartialIsometry M, v ≤ w ∧ w.support=p ∧ w.target ≤ r := by
+…</pre><p class="refs">Mentions: <a href="PartialIsometries.lean.html#L18">OAI.Generator.Tracial.PartialIsometry</a>, <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a></p></li><li id=L65><b>theorem</b> <code>OAI.Generator.Tracial.PartialIsometry.exists_monotone_embeddings</code> <small>line 65</small><div class="doc"><p>A sequence of comparable sources admits compatible actual embeddings.</p></div><pre>theorem exists_monotone_embeddings (q : ℕ → AlgebraProjection M) (hq : Monotone q)
+    (r : AlgebraProjection M) (hr : ∀ n, (q n).Subequivalent r) :
+    ∃ a : ℕ → PartialIsometry M, Monotone a ∧
+      (∀ n, (a n).support=q n) ∧ (∀ n, (a n).target ≤ r) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="PartialIsometries.lean.html#L18">OAI.Generator.Tracial.PartialIsometry</a>, <a href="PartialIsometries.lean.html#L33">OAI.Generator.Tracial.PartialIsometry.target</a></p></li><li id=L86><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.isLUB_subequivalent_of_sequence</code> <small>line 86</small><div class="doc"><p>Sequential increasing-union comparison, with a constructed compatible
+partial-isometry limit. No dimension-continuity premise occurs.</p></div><pre>theorem isLUB_subequivalent_of_sequence
+    (hfactor : ∀ c : M.toStarSubalgebra,
+      (∀ a : M.toStarSubalgebra, a*c=c*a) → ∃ z : ℂ, c=z • (1 : M.toStarSubalgebra))
+    (hfinite : ∀ a : M.toStarSubalgebra, star a*a=1 → a*star a=1)
+    (q : ℕ → AlgebraProjection M) (hq : Monotone q)
+    (p : AlgebraProjection M) (hp : IsLUB (Set.range q) p)
+    (r : AlgebraProjection M) (hr : ∀ n, (q n).Subequivalent r) :
+    p.Subequivalent r := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="DyadicComparison.lean.html#L540">OAI.Generator.Tracial.AlgebraProjection.Subequivalent</a></p></li><li id=L116><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_range_bddAbove</code> <small>line 116</small></li><li id=L123><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_isLUB_sequence</code> <small>line 123</small><div class="doc"><p>Continuity on sequences follows from compatible embeddings into each
+concrete dyadic upper approximant of the real supremum.</p></div><pre>theorem traceFreeDimension_isLUB_sequence
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    (q : ℕ → AlgebraProjection M) (hq : Monotone q)
+    (p : AlgebraProjection M) (hp : IsLUB (Set.range q) p) :
+    traceFreeDimension hfactor hdiff p =
+      sSup (Set.range (fun n =&gt; traceFreeDimension hfactor hdiff (q n))) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L150><b>theorem</b> <code>OAI.Generator.Tracial.exists_monotone_dominating_from</code> <small>line 150</small><div class="doc"><p>Every countable family in a directed preorder has an increasing majorant
+above a specified index. This is not countable cofinality of the preorder.</p></div><pre>theorem exists_monotone_dominating_from
+    {I : Type*} [Preorder I] [IsDirected I (· ≤ ·)] (f : ℕ → I) (i : I) :
+    ∃ a : ℕ → I, Monotone a ∧ (∀ n, f n ≤ a n) ∧ (∀ n, i ≤ a n) := by
+…</pre></li><li id=L168><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_exhausting_sequence</code> <small>line 168</small><div class="doc"><p>Construct an increasing countable subfamily whose supremum dimension is
+the real supremum of the entire directed family. No countability is assumed.</p></div><pre>theorem traceFreeDimension_exists_exhausting_sequence
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    {I : Type*} [Preorder I] [IsDirected I (· ≤ ·)] [Nonempty I]
+    (q : I → AlgebraProjection M) (hq : Monotone q) :
+    ∃ (a : ℕ → I) (s : AlgebraProjection M), Monotone a ∧
+      IsLUB (Set.range (fun n =&gt; q (a n))) s ∧
+      traceFreeDimension hfactor hdiff s =
+        sSup (Set.range (fun i =&gt; traceFreeDimension hfactor hdiff (q i))) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L201><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_isLUB</code> <small>line 201</small><div class="doc"><p>The constructed countable supremum bounds the entire net: adjoining any
+one index cannot increase its dimension, so strict increase forces equality.</p></div><pre>theorem traceFreeDimension_exists_isLUB
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    {I : Type*} [Preorder I] [IsDirected I (· ≤ ·)] [Nonempty I]
+    (q : I → AlgebraProjection M) (hq : Monotone q) :
+    ∃ p : AlgebraProjection M, IsLUB (Set.range q) p ∧
+      traceFreeDimension hfactor hdiff p =
+        sSup (Set.range (fun i =&gt; traceFreeDimension hfactor hdiff (q i))) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L233><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_isLUB_monotone</code> <small>line 233</small><div class="doc"><p>Order continuity on arbitrary nonempty directed projection nets.</p></div><pre>theorem traceFreeDimension_isLUB_monotone
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    {I : Type*} [Preorder I] [IsDirected I (· ≤ ·)] [Nonempty I]
+    (q : I → AlgebraProjection M) (hq : Monotone q)
+    (p : AlgebraProjection M) (hp : IsLUB (Set.range q) p) :
+    traceFreeDimension hfactor hdiff p =
+      sSup (Set.range (fun i =&gt; traceFreeDimension hfactor hdiff (q i))) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L257><b>theorem</b> <code>OAI.Generator.Tracial.traceFree_isLUB_subequivalent</code> <small>line 257</small><div class="doc"><p>Arbitrary increasing-union comparison, now a consequence of the constructed
+dimension continuity and exact classification of comparison.</p></div><pre>theorem traceFree_isLUB_subequivalent
+    (hfactor : ∀ c : M.toStarSubalgebra,
+      (∀ a : M.toStarSubalgebra, a*c=c*a) → ∃ z : ℂ, c=z • (1 : M.toStarSubalgebra))
+    (hdiff : ∀ p : M.toStarSubalgebra, IsStarProjection p → p ≠ 0 →
+      ∃ q : M.toStarSubalgebra, IsStarProjection q ∧ q ≠ 0 ∧ q ≠ p ∧ p*q=q ∧ q*p=q)
+    (hfinite : ∀ a : M.toStarSubalgebra, star a*a=1 → a*star a=1)
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    {I : Type*} [Preorder I] [IsDirected I (· ≤ ·)] [Nonempty I]
+    (q : I → AlgebraProjection M) (hq : Monotone q)
+    (p : AlgebraProjection M) (hp : IsLUB (Set.range q) p)
+    (r : AlgebraProjection M) (hr : ∀ i, (q i).Subequivalent r) :
+    p.Subequivalent r := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a></p></li><li id=L279><b>theorem</b> <code>OAI.Generator.isII1Factor_projection_dimension_orderContinuous</code> <small>line 279</small><div class="doc"><p>The same actual dimension satisfies all finite laws and arbitrary-directed
+supremum continuity under exactly the original IsII1Factor hypothesis.</p></div><pre>theorem isII1Factor_projection_dimension_orderContinuous
+    (S : StarSubalgebra ℂ (H →L[ℂ] H)) (hS : IsII1Factor S) :
+    ∃ D : Tracial.AlgebraProjection (vonNeumannOfWOTClosed S hS.weaklyClosed) → ℝ,
+      D ⟨1,IsStarProjection.one _⟩=1 ∧
+      (∀ q, 0 ≤ D q ∧ D q ≤ 1) ∧
+      (∀ q, D q=0 ↔ q.val=0) ∧
+      (∀ q r, D q ≤ D r ↔ q.Subequivalent r) ∧
+      (∀ q r, D q=D r ↔ q.Equivalent r) ∧
+      (∀ q r (ho : q.val*r.val=0), D (Tracial.orthogonalSum q r ho)=D q+D r) ∧
+      (∀ (I : Type v) [Preorder I] [IsDirected I (· ≤ ·)] [Nonempty I]
+        (q : I → Tracial.AlgebraProjection (vonNeumannOfWOTClosed S hS.weaklyClosed)),
+        Monotone q → ∃ p, IsLUB (Set.range q) p ∧
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/FactorGeneration.lean.html#L23">OAI.Generator.IsII1Factor</a>, <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Bicommutant.lean.html#L221">OAI.Generator.vonNeumannOfWOTClosed</a>, <a href="DyadicComparison.lean.html#L20">OAI.Generator.Tracial.orthogonalSum</a></p></li><li id=L335><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_small_subprojection</code> <small>line 335</small></li><li id=L364><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_bounded_chain</code> <small>line 364</small></li><li id=L385><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_maximal_below</code> <small>line 385</small></li><li id=L408><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_subprojection</code> <small>line 408</small><div class="doc"><p>Every dimension between zero and D(p) is realized inside p.</p></div><pre>theorem traceFreeDimension_exists_subprojection
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    (p : AlgebraProjection M) (d : ℝ) (hd : 0 ≤ d)
+    (hdp : d ≤ traceFreeDimension hfactor hdiff p) :
+    ∃ q : AlgebraProjection M, q ≤ p ∧ traceFreeDimension hfactor hdiff q=d := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L455><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_remainder</code> <small>line 455</small></li><li id=L472><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_partition</code> <small>line 472</small><div class="doc"><p>Every prescribed finite list of nonnegative dimensions summing to D(p)
+is realized by pairwise orthogonal actual projections summing to p.</p></div><pre>theorem traceFreeDimension_exists_partition
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    (n : ℕ) (p : AlgebraProjection M) (d : Fin n → ℝ)
+    (hd : ∀ i, 0 ≤ d i) (hsum : ∑ i, d i=traceFreeDimension hfactor hdiff p) :
+    ∃ q : Fin n → AlgebraProjection M, (∀ i, q i ≤ p) ∧
+      (∀ i j, i≠j → (q i).val*(q j).val=0) ∧
+      (∑ i, (q i).val)=p.val ∧ (∀ i, traceFreeDimension hfactor hdiff (q i)=d i) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L528><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_uniform_partition</code> <small>line 528</small><div class="doc"><p>A finite corner partition into n equal dimensions, for every n&gt;0.</p></div><pre>theorem traceFreeDimension_exists_uniform_partition
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    (n : ℕ) (hn : 0&lt;n) (p : AlgebraProjection M) :
+    ∃ q : Fin n → AlgebraProjection M, (∀ i, q i ≤ p) ∧
+      (∀ i j, i≠j → (q i).val*(q j).val=0) ∧
+      (∑ i, (q i).val)=p.val ∧
+      (∀ i, traceFreeDimension hfactor hdiff (q i)=traceFreeDimension hfactor hdiff p/n) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="Dimension.lean.html#L745">OAI.Generator.Tracial.traceFreeDimension</a></p></li><li id=L544><b>theorem</b> <code>OAI.Generator.Tracial.traceFreeDimension_exists_equivalent_partition</code> <small>line 544</small><div class="doc"><p>Actual matrix-unit legs for a partition of every positive finite size.</p></div><pre>theorem traceFreeDimension_exists_equivalent_partition
+    (hunit : (1 : M.toStarSubalgebra) ≠ 0)
+    (n : ℕ) (hn : 0&lt;n) (p : AlgebraProjection M) :
+    Nonempty (EquivalentPartition p (Fin n)) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="DyadicComparison.lean.html#L156">OAI.Generator.Tracial.EquivalentPartition</a></p></li><li id=L578><b>def</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue</code> <small>line 578</small><div class="doc"><p>The original Hilbert-space vector functional on actual projections.</p></div><pre>def vectorValue (ξ : H) (p : AlgebraProjection M) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a></p></li><li id=L581><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue_eq_norm_sq</code> <small>line 581</small></li><li id=L592><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue_nonneg</code> <small>line 592</small></li><li id=L596><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue_remainder</code> <small>line 596</small></li><li id=L602><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue_mono</code> <small>line 602</small></li><li id=L610><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.exists_isLUB_monotone_vector_limit</code> <small>line 610</small><div class="doc"><p>Retains the matrix-coefficient limit of the concrete projection supremum.
+The ultrafilter is the fixed extension of atTop, not a countable subsequence.</p></div><pre>theorem exists_isLUB_monotone_vector_limit
+    {ι : Type*} [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
+    (a : ι → AlgebraProjection M) (ha : Monotone a) :
+    ∃ p : AlgebraProjection M, IsLUB (Set.range a) p ∧
+      ∀ x y : H, Tendsto (fun i =&gt; inner ℂ y ((a i).val.val x))
+        ((Ultrafilter.of atTop : Ultrafilter ι) : Filter ι) (𝓝 (inner ℂ y (p.val.val x))) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a></p></li><li id=L679><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue_isLUB_monotone</code> <small>line 679</small><div class="doc"><p>The vector functional preserves any directed projection supremum.</p></div><pre>theorem vectorValue_isLUB_monotone
+    {ι : Type*} [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
+    (a : ι → AlgebraProjection M) (ha : Monotone a)
+    (p : AlgebraProjection M) (hp : IsLUB (Set.range a) p) (ξ : H) :
+    IsLUB (Set.range (fun i =&gt; vectorValue ξ (a i))) (vectorValue ξ p) := by
+…</pre><p class="refs">Mentions: <a href="ProjectionLimits.lean.html#L95">OAI.Generator.Tracial.AlgebraProjection</a>, <a href="NormalDimension.lean.html#L578">OAI.Generator.Tracial.AlgebraProjection.vectorValue</a></p></li><li id=L694><b>theorem</b> <code>OAI.Generator.Tracial.AlgebraProjection.vectorValue_tendsto_monotone</code> <small>line 694</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

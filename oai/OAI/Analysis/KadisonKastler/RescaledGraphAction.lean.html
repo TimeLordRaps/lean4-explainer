@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/RescaledGraphAction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/RescaledGraphAction.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>RescaledGraphAction.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>RescaledGraphAction.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/RescaledGraphAction.lean#L1">source</a></p><div class="doc"><h3>The common unitary action on rescaled graphs</h3><p>Left and right multiplication by common unitaries acts on graph vectors
+through one unitary of the fixed two-coordinate Hilbert space. Thus each
+closed graph reduces this unitary whenever the right action belongs to
+the relevant commutant and has the prescribed value on the common vector.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.KadisonKastler.graphDiagonalUnitary</code> <small>line 22</small><div class="doc"><p>Two unitary coordinate actions form an actual Hilbert-space unitary.</p></div><pre>def graphDiagonalUnitary (u v : unitary (H →L[ℂ] H)) :
+    unitary (TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) :=
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li><li id=L27><b>theorem</b> <code>OAI.KadisonKastler.graphDiagonalUnitary_apply_zero</code> <small>line 27</small></li><li id=L35><b>theorem</b> <code>OAI.KadisonKastler.graphDiagonalUnitary_apply_one</code> <small>line 35</small></li><li id=L44><b>def</b> <code>OAI.KadisonKastler.rescaledGraphAction</code> <small>line 44</small><div class="doc"><p>The common graph action implementing <code>x ↦ r*x*s</code>.</p></div><pre>def rescaledGraphAction (J : H ≃ₗᵢ⋆[ℂ] H) (hJ : Function.Involutive J)
+    (r s : unitary (H →L[ℂ] H)) :
+    unitary (TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) :=
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li><li id=L50><b>theorem</b> <code>OAI.KadisonKastler.right_operator_on_algebra_vector</code> <small>line 50</small></li><li id=L61><b>theorem</b> <code>OAI.KadisonKastler.rescaledGraphAction_vector</code> <small>line 61</small><div class="doc"><p>Exact action on graph vectors, before any closure argument.</p></div><pre>theorem rescaledGraphAction_vector
+    (P : VonNeumannAlgebra H) (J : H ≃ₗᵢ⋆[ℂ] H) (hJ : Function.Involutive J)
+    (Ω : H) (c : ℝ) (r s : unitary (H →L[ℂ] H))
+    (hsright : conjugationOperator J (star (s : H →L[ℂ] H)) ∈ P.commutant)
+    (hrright : conjugationOperator J (r : H →L[ℂ] H) ∈ P.commutant)
+    (hsΩ : conjugationOperator J (star (s : H →L[ℂ] H)) Ω = (s : H →L[ℂ] H) Ω)
+    (hrΩ : conjugationOperator J (r : H →L[ℂ] H) Ω = star (r : H →L[ℂ] H) Ω)
+    (x : Algebra P) :
+    (rescaledGraphAction J hJ r s :
+      TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H)
+      (rescaledGraphVector J Ω c x.val) =
+        rescaledGraphVector J Ω c ((r : H →L[ℂ] H) * x.val * (s : H →L[ℂ] H)) := by
+…</pre><p class="refs">Mentions: <a href="CommonRightAction.lean.html#L20">OAI.KadisonKastler.conjugationOperator</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="RescaledGraphAction.lean.html#L44">OAI.KadisonKastler.rescaledGraphAction</a>, <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a>, <a href="RescaledTomitaGraph.lean.html#L29">OAI.KadisonKastler.rescaledGraphVector</a></p></li><li id=L104><b>theorem</b> <code>OAI.KadisonKastler.rescaledGraphSubspace_invariant_of_vectors</code> <small>line 104</small><div class="doc"><p>A bounded operator preserving defining graph vectors preserves the
+closed graph subspace.</p></div><pre>theorem rescaledGraphSubspace_invariant_of_vectors
+    (P : VonNeumannAlgebra H) (J : H ≃ₗᵢ⋆[ℂ] H) (Ω : H) (c : ℝ)
+    (T : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H)
+    (hT : ∀ x : Algebra P, ∃ y : Algebra P,
+      T (rescaledGraphVector J Ω c x.val) = rescaledGraphVector J Ω c y.val)
+    {ξ : TomitaGraphHilbert H} (hξ : ξ ∈ rescaledGraphSubspace P J Ω c) :
+    T ξ ∈ rescaledGraphSubspace P J Ω c := by
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="RescaledTomitaGraph.lean.html#L29">OAI.KadisonKastler.rescaledGraphVector</a>, <a href="RescaledTomitaGraph.lean.html#L69">OAI.KadisonKastler.rescaledGraphSubspace</a></p></li><li id=L122><b>theorem</b> <code>OAI.KadisonKastler.rescaledGraphProjection_commutes</code> <small>line 122</small><div class="doc"><p>The common right-action identities make the graph reduce the
+unitary implementing simultaneous left and right multiplication.</p></div><pre>theorem rescaledGraphProjection_commutes
+    (P : VonNeumannAlgebra H) (R : StarSubalgebra ℂ (H →L[ℂ] H))
+    (hRP : R ≤ P.toStarSubalgebra)
+    (J : H ≃ₗᵢ⋆[ℂ] H) (hJ : Function.Involutive J) (Ω : H) (c : ℝ)
+    (hcomm : ∀ a ∈ R, conjugationOperator J (star a) ∈ P.commutant)
+    (hvector : ∀ a ∈ R, conjugationOperator J (star a) Ω = a Ω)
+    (r s : unitary (H →L[ℂ] H))
+    (hr : (r : H →L[ℂ] H) ∈ R) (hs : (s : H →L[ℂ] H) ∈ R) :
+    rescaledGraphProjection P J Ω c *
+        (rescaledGraphAction J hJ r s : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) =
+      (rescaledGraphAction J hJ r s : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) *
+        rescaledGraphProjection P J Ω c := by
+…</pre><p class="refs">Mentions: <a href="CommonRightAction.lean.html#L20">OAI.KadisonKastler.conjugationOperator</a>, <a href="RescaledTomitaGraph.lean.html#L84">OAI.KadisonKastler.rescaledGraphProjection</a>, <a href="RescaledGraphAction.lean.html#L44">OAI.KadisonKastler.rescaledGraphAction</a>, <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/SecondMomentAssembly.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/SecondMomentAssembly.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>SecondMomentAssembly.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>SecondMomentAssembly.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/SecondMomentAssembly.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>def</b> <code>OAI.Problem337.weightedCorrelation</code> <small>line 9</small><div class="doc"><p>Finite weighted pair correlation, with no probability-library dependency.</p></div><pre>def weightedCorrelation {Ω I : Type*} [Fintype Ω]
+    (w : Ω → ℝ) (z : Ω → I → ℂ) (i j : I) : ℂ :=
+…</pre></li><li id=L13><b>theorem</b> <code>OAI.Problem337.norm_sum_sq_eq_sum_pair</code> <small>line 13</small></li><li id=L22><b>theorem</b> <code>OAI.Problem337.weighted_second_moment_identity</code> <small>line 22</small></li><li id=L33><b>theorem</b> <code>OAI.Problem337.second_moment_exceptional_bound</code> <small>line 33</small><div class="doc"><p>Exceptional pairs cost their cardinality; all other pairs cost the common
+correlation bound. The assumptions deliberately expose the exact analytic interface.</p></div><pre>theorem second_moment_exceptional_bound {Ω I : Type*} [Fintype Ω] [Fintype I]
+    (w : Ω → ℝ) (z : Ω → I → ℂ) (E : Finset (I × I)) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hall : ∀ i j, ‖weightedCorrelation w z i j‖ ≤ 1)
+    (hgood : ∀ i j, (i, j) ∉ E → ‖weightedCorrelation w z i j‖ ≤ δ) :
+    (∑ ω, w ω * ‖∑ i, z ω i‖ ^ 2) ≤
+      (E.card : ℝ) + (Fintype.card I : ℝ) ^ 2 * δ := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentAssembly.lean.html#L9">OAI.Problem337.weightedCorrelation</a></p></li><li id=L56><b>theorem</b> <code>OAI.Problem337.weightedCorrelation_norm_le_one</code> <small>line 56</small><div class="doc"><p>Correlations of unit-bounded variables under nonnegative weights of mass one
+are themselves bounded by one.</p></div><pre>theorem weightedCorrelation_norm_le_one {Ω I : Type*} [Fintype Ω]
+    (w : Ω → ℝ) (z : Ω → I → ℂ) (hw : ∀ ω, 0 ≤ w ω)
+    (hmass : ∑ ω, w ω = 1) (hz : ∀ ω i, ‖z ω i‖ ≤ 1) (i j : I) :
+    ‖weightedCorrelation w z i j‖ ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentAssembly.lean.html#L9">OAI.Problem337.weightedCorrelation</a></p></li><li id=L75><b>theorem</b> <code>OAI.Problem337.boolean_second_moment_bound</code> <small>line 75</small><div class="doc"><p>The random-products second-moment reduction: after the separated-pair
+correlation estimate, the only loss is the exponentially small Hamming exception.</p></div><pre>theorem boolean_second_moment_bound {Ω : Type*} [Fintype Ω] (m : ℕ)
+    (w : Ω → ℝ) (z : Ω → (Fin m → Bool) → ℂ)
+    (hw : ∀ ω, 0 ≤ w ω) (hmass : ∑ ω, w ω = 1)
+    (hz : ∀ ω i, ‖z ω i‖ ≤ 1) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hgood : ∀ i j, (m : ℝ) / 4 ≤ (hammingDist i j : ℝ) →
+      ‖weightedCorrelation w z i j‖ ≤ δ) :
+    (∑ ω, w ω * ‖∑ i, z ω i‖ ^ 2) / (4 : ℝ) ^ m ≤
+      Real.exp (-(m : ℝ) / 16) + δ := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentAssembly.lean.html#L9">OAI.Problem337.weightedCorrelation</a></p></li><li id=L103><b>theorem</b> <code>OAI.Problem337.weighted_exposure_bound</code> <small>line 103</small><div class="doc"><p>Averaging over exposed variables costs at most the mass of bad exposures
+plus the bound that holds uniformly on the good exposures.</p></div><pre>theorem weighted_exposure_bound {Ω : Type*} [Fintype Ω]
+    (w : Ω → ℝ) (f : Ω → ℂ) (B : Finset Ω) (a b : ℝ)
+    (hw : ∀ ω, 0 ≤ w ω) (hmass : ∑ ω, w ω = 1)
+    (ha : 0 ≤ a) (hbad : ∑ ω ∈ B, w ω ≤ b)
+    (hall : ∀ ω, ‖f ω‖ ≤ 1) (hgood : ∀ ω, ω ∉ B → ‖f ω‖ ≤ a) :
+    ‖∑ ω, (w ω : ℂ) * f ω‖ ≤ a + b := by
+…</pre></li><li id=L127><b>theorem</b> <code>OAI.Problem337.random_second_moment_absorption</code> <small>line 127</small><div class="doc"><p>The numerical absorption at the end of the random-products argument.</p></div><pre>theorem random_second_moment_absorption (m V : ℝ) (hlarge : 50 ≤ min m V) :
+    Real.exp (-m / 16) + Real.exp (-V / 20) + Real.exp (-V / 5) ≤
+      Real.exp (-min m V / 100) := by
+…</pre></li><li id=L157><b>theorem</b> <code>OAI.Problem337.boolean_random_second_moment_bound</code> <small>line 157</small><div class="doc"><p>Final second-moment estimate once the good/bad pair-exposure estimates
+are supplied. All constants agree with the random-products lemma.</p></div><pre>theorem boolean_random_second_moment_bound {Ω : Type*} [Fintype Ω] (m : ℕ) (V : ℝ)
+    (w : Ω → ℝ) (z : Ω → (Fin m → Bool) → ℂ)
+    (hw : ∀ ω, 0 ≤ w ω) (hmass : ∑ ω, w ω = 1)
+    (hz : ∀ ω i, ‖z ω i‖ ≤ 1) (hlarge : 50 ≤ min (m : ℝ) V)
+    (hgood : ∀ i j, (m : ℝ) / 4 ≤ (hammingDist i j : ℝ) →
+      ‖weightedCorrelation w z i j‖ ≤ Real.exp (-V / 20) + Real.exp (-V / 5)) :
+    (∑ ω, w ω * ‖∑ i, z ω i‖ ^ 2) / (4 : ℝ) ^ m ≤
+      Real.exp (-min (m : ℝ) V / 100) := by
+…</pre><p class="refs">Mentions: <a href="SecondMomentAssembly.lean.html#L9">OAI.Problem337.weightedCorrelation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

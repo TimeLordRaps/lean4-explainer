@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/AnalyticScaling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/AnalyticScaling.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>AnalyticScaling.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>AnalyticScaling.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/AnalyticScaling.lean#L1">source</a></p><div class="doc"><h3>Analytic jet composition, normal scaling, and normal velocity limits; Preservation of local order by variable analytic units</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L40><b>theorem</b> <code>OAI.Nagata.Workers.W28.comp_coeff_eq_zero_below</code> <small>line 40</small><div class="doc"><p>Low Taylor coefficients of the outer series remain zero after substitution.</p></div><pre>theorem comp_coeff_eq_zero_below
+    (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
+    (m : ℕ) (hq : ∀ n &lt; m, q n = 0) :
+    ∀ n &lt; m, (q.comp p) n = 0 := by
+…</pre></li><li id=L55><b>def</b> <code>OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast</code> <small>line 55</small><div class="doc"><p>Genuine convergent analytic Taylor vanishing of order at least m.</p></div><pre>def HasAnalyticOrderAtLeast (f : E → F) (x : E) (m : ℕ) : Prop :=
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast.comp</code> <small>line 60</small><div class="doc"><p>Analytic substitution preserves the lower bound on Taylor order.</p></div><pre>theorem HasAnalyticOrderAtLeast.comp {g : F → G} {f : E → F} {x : E} {m : ℕ}
+    (hg : HasAnalyticOrderAtLeast (𝕜 := 𝕜) g (f x) m)
+…</pre><p class="refs">Mentions: <a href="AnalyticScaling.lean.html#L55">OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast</a></p></li><li id=L69><b>theorem</b> <code>OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast.congr</code> <small>line 69</small><div class="doc"><p>Taylor vanishing depends only on the actual local function germ.</p></div><pre>theorem HasAnalyticOrderAtLeast.congr {f g : E → F} {x : E} {m : ℕ}
+    (hf : HasAnalyticOrderAtLeast (𝕜 := 𝕜) f x m)
+…</pre><p class="refs">Mentions: <a href="AnalyticScaling.lean.html#L55">OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast</a></p></li><li id=L77><b>theorem</b> <code>OAI.Nagata.Workers.W28.analytic_order_comp_local_chart_iff</code> <small>line 77</small><div class="doc"><p>A genuine local analytic coordinate change preserves and reflects Taylor
+order, provided its actual inverse is analytic at the marked image.</p></div><pre>theorem analytic_order_comp_local_chart_iff
+    (e : OpenPartialHomeomorph E F) (x : E) (hx : x ∈ e.source)
+    (he : AnalyticAt 𝕜 e x) (hei : AnalyticAt 𝕜 e.symm (e x))
+    (f : F → G) (m : ℕ) :
+    HasAnalyticOrderAtLeast (𝕜 := 𝕜) (f ∘ e) x m ↔
+…</pre><p class="refs">Mentions: <a href="AnalyticScaling.lean.html#L55">OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast</a></p></li><li id=L108><b>theorem</b> <code>OAI.Nagata.Workers.W28.normal_equation_affine_velocity_limit</code> <small>line 108</small><div class="doc"><p>The actual nonlinear defining equation has divided normal displacement
+converging to its actual derivative applied to the chosen affine velocity.</p></div><pre>theorem normal_equation_affine_velocity_limit
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (G : E → ℂ) (L : E →L[ℂ] ℂ) (p V : E)
+    (hG : HasFDerivAt G L p) (hp : G p = 0) :
+    Filter.Tendsto (fun s : ℂ =&gt; s⁻¹ * G (p + s • V)) (𝓝[≠] 0) (𝓝 (L V)) := by
+…</pre></li><li id=L136><b>theorem</b> <code>OAI.Nagata.VariableUnitOrder.bilinear_series_zero_second</code> <small>line 136</small><div class="doc"><p>Every coefficient of a bilinear expansion at (a,0) vanishes on vectors
+whose second component is zero.</p></div><pre>theorem bilinear_series_zero_second (b : ℂ →L[ℂ] ℂ →L[ℂ] ℂ) (a : ℂ)
+    (n : ℕ) (v : Fin n → ℂ × ℂ) (hv : ∀ i, (v i).2 = 0) :
+    b.fpowerSeriesBilinear (a, 0) n v = 0 := by
+…</pre></li><li id=L147><b>theorem</b> <code>OAI.Nagata.VariableUnitOrder.product_series_coeff_zero</code> <small>line 147</small><div class="doc"><p>Product composition coefficients below m vanish when the second series
+has no coefficients below m; this is a formal multilinear-series calculation.</p></div><pre>theorem product_series_coeff_zero (b : ℂ →L[ℂ] ℂ →L[ℂ] ℂ) (a : ℂ)
+    (p q : FormalMultilinearSeries ℂ E ℂ) (m : ℕ)
+    (hq : ∀ n &lt; m, q n = 0) :
+    ∀ n &lt; m, ((b.fpowerSeriesBilinear (a, 0)).comp (p.prod q)) n = 0 := by
+…</pre></li><li id=L164><b>theorem</b> <code>OAI.Nagata.VariableUnitOrder.analytic_order_mul_left</code> <small>line 164</small><div class="doc"><p>Multiplying by any actual analytic function preserves the lower Taylor-order bound.</p></div><pre>theorem analytic_order_mul_left {u f : E → ℂ} {x : E} {m : ℕ}
+    (hu : AnalyticAt ℂ u x)
+    (hf : HasAnalyticOrderAtLeast (𝕜 := ℂ) f x m) :
+…</pre></li><li id=L187><b>theorem</b> <code>OAI.Nagata.VariableUnitOrder.analytic_order_unit_mul_iff</code> <small>line 187</small><div class="doc"><p>The source's variable holomorphic-unit multiplication preserves and reflects
+ordinary analytic Taylor order. This includes the factor Pi(z)^(-m).</p></div><pre>theorem analytic_order_unit_mul_iff {u f : E → ℂ} {x : E} (m : ℕ)
+    (hu : AnalyticAt ℂ u x) (hu0 : u x ≠ 0) :
+    HasAnalyticOrderAtLeast (𝕜 := ℂ) (fun y =&gt; u y * f y) x m ↔
+…</pre></li><li id=L209><b>def</b> <code>OAI.Nagata.Workers.W28.analyticNormalScale</code> <small>line 209</small><div class="doc"><p>The actual rescaling of the normal coordinate.</p></div><pre>def analyticNormalScale (s : ℂ) (x : ℂ × ℂ) : ℂ × ℂ := (x.1, s * x.2)</pre></li><li id=L211><b>theorem</b> <code>OAI.Nagata.Workers.W28.analyticNormalScale_analyticAt</code> <small>line 211</small></li><li id=L217><b>theorem</b> <code>OAI.Nagata.Workers.W28.analyticNormalScale_inv</code> <small>line 217</small></li><li id=L223><b>theorem</b> <code>OAI.Nagata.Workers.W28.analytic_order_normal_scale_iff</code> <small>line 223</small><div class="doc"><p>For a nonzero specialization parameter, normal rescaling preserves and
+reflects the actual local convergent Taylor order.</p></div><pre>theorem analytic_order_normal_scale_iff
+    (f : ℂ × ℂ → ℂ) (s : ℂ) (hs : s ≠ 0) (x : ℂ × ℂ) (m : ℕ) :
+    HasAnalyticOrderAtLeast (𝕜 := ℂ) (f ∘ analyticNormalScale s) x m ↔
+…</pre><p class="refs">Mentions: <a href="AnalyticScaling.lean.html#L55">OAI.Nagata.Workers.W28.HasAnalyticOrderAtLeast</a>, <a href="AnalyticScaling.lean.html#L209">OAI.Nagata.Workers.W28.analyticNormalScale</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

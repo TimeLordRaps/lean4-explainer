@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/UniformProfileConcentration.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/UniformProfileConcentration.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>UniformProfileConcentration.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>UniformProfileConcentration.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/UniformProfileConcentration.lean#L1">source</a></p><div class="doc"><h3>Uniform concentration and independent suffix sampling</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.PolycyclicRecognition.eventually_uniform_lt_of_all_selections</code> <small>line 17</small><div class="doc"><p>If every deterministic choice has vanishing bad probability, the
+bound is uniform over all permitted choices at each scale.</p></div><pre>theorem eventually_uniform_lt_of_all_selections
+    {A : ℕ → Type*} [∀ n, Nonempty (A n)] (p : ∀ n, A n → ℝ≥0∞)
+    (hp : ∀ a : ∀ n, A n, Tendsto (fun n =&gt; p n (a n)) atTop (𝓝 0))
+    {η : ℝ≥0∞} (hη : 0 &lt; η) :
+    ∀ᶠ n in atTop, ∀ a, p n a &lt; η := by
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.PolycyclicRecognition.product_bad_probability_le</code> <small>line 36</small><div class="doc"><p>Averaging an independent suffix preserves a bound that holds for each
+of its deterministic values. The suffix law may vary arbitrarily.</p></div><pre>theorem product_bad_probability_le
+    {A K : Type*} [MeasurableSpace A] [MeasurableSpace K]
+    (μ : ProbabilityMeasure A) (ν : ProbabilityMeasure K)
+    (B : Set (A × K)) (hB : MeasurableSet B) (δ : ℝ≥0∞)
+    (hδ : ∀ k, (μ : Measure A) ((fun a =&gt; (a, k)) ⁻¹&#x27; B) ≤ δ) :
+    (μ : Measure A).prod (ν : Measure K) B ≤ δ := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.PolycyclicRecognition.independent_bad_probability_tendsto_zero</code> <small>line 50</small><div class="doc"><p>The uniform deterministic concentration conclusion survives arbitrary
+independent suffix distributions at each scale.</p></div><pre>theorem independent_bad_probability_tendsto_zero
+    {A K : ℕ → Type*} [∀ n, MeasurableSpace (A n)] [∀ n, MeasurableSpace (K n)]
+    [∀ n, Nonempty (K n)]
+    (μ : ∀ n, ProbabilityMeasure (A n)) (ν : ∀ n, ProbabilityMeasure (K n))
+    (B : ∀ n, Set (A n × K n)) (hB : ∀ n, MeasurableSet (B n))
+    (hp : ∀ k : ∀ n, K n,
+      Tendsto (fun n =&gt; (μ n : Measure (A n)) ((fun a =&gt; (a, k n)) ⁻¹&#x27; B n))
+        atTop (𝓝 0)) :
+    Tendsto (fun n =&gt; (μ n : Measure (A n)).prod (ν n : Measure (K n)) (B n))
+      atTop (𝓝 0) := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_probe_fiber_in_event</code> <small>line 74</small><div class="doc"><p>A joint failure probability smaller than the selected event's mass
+forces a starting sample inside that event with a good probe fiber.</p></div><pre>theorem exists_probe_fiber_in_event
+    {A K : Type*} [MeasurableSpace A] [MeasurableSpace K]
+    (μ : ProbabilityMeasure A) (ν : ProbabilityMeasure K)
+    (E : Set A) (hE : MeasurableSet E) (B : Set (A × K)) (hB : MeasurableSet B)
+    (η : ℝ≥0∞) (hsmall : (μ : Measure A).prod (ν : Measure K) B &lt; η * (μ : Measure A) E) :
+    ∃ a ∈ E, (ν : Measure K) (Prod.mk a ⁻¹&#x27; B) &lt; η := by
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.PolycyclicRecognition.eq_zero_on_support_of_probability_tendsto_zero</code> <small>line 96</small><div class="doc"><p>Vanishing bad probabilities force every supported limiting profile
+into the zero set of the continuous error observable.</p></div><pre>theorem eq_zero_on_support_of_probability_tendsto_zero
+    {S : Type*} [TopologicalSpace S] [MeasurableSpace S] [BorelSpace S]
+    [HasOuterApproxClosed S]
+    (μn : ℕ → ProbabilityMeasure S) (μ : ProbabilityMeasure S)
+    (hμ : Tendsto μn atTop (𝓝 μ)) (err : S → ℝ) (he : Continuous err)
+    (hne : ∀ f, 0 ≤ err f)
+    (hprob : ∀ η : ℝ, 0 &lt; η →
+      Tendsto (fun n =&gt; (μn n : Measure S) {f | η ≤ err f}) atTop (𝓝 0))
+    {f : S} (hf : f ∈ (μ : Measure S).support) : err f = 0 := by
+…</pre></li><li id=L125><b>theorem</b> <code>OAI.PolycyclicRecognition.affineProfileClass_of_finite_restrictions</code> <small>line 125</small><div class="doc"><p>Affine restrictions on every finite set have one compatible label and
+offset on the entire domain. This also glues a compact exhaustion.</p></div><pre>theorem affineProfileClass_of_finite_restrictions
+    {V W L : Type*} [TopologicalSpace V] [TopologicalSpace W]
+    [AddCommGroup W] [Finite L] (A : L → C(V, W)) (f : C(V, W)) (z₀ : V)
+    (h : ∀ Z : Set V, Z.Finite → ∃ a b, ∀ z ∈ Z, f z = A a z + b) :
+    f ∈ affineProfileClass A := by
+…</pre><p class="refs">Mentions: <a href="AffineProfileConcentration.lean.html#L19">OAI.PolycyclicRecognition.affineProfileClass</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

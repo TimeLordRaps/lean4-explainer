@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/CoreGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/CoreGeometry.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>CoreGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>CoreGeometry.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/CoreGeometry.lean#L1">source</a></p><div class="doc"><h3>Keeping the selected physical core away from all terminal disks</h3><p>A closed planar core extends across infinity to a compact spherical
+core. Its quotient image is disjoint from the quotient dust. Thus the
+terminal and filling neighborhoods can be chosen away from the entire
+retained core. Compact planar tail pieces suffice for the metric step.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.sphericalCore</code> <small>line 22</small></li><li id=L25><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.coe_mem_sphericalCore</code> <small>line 25</small></li><li id=L29><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.infty_mem_sphericalCore</code> <small>line 29</small></li><li id=L33><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.isCompact_sphericalCore</code> <small>line 33</small></li><li id=L39><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.sphericalCore_subset_domain</code> <small>line 39</small></li><li id=L50><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.quotient_core_disjoint_dust</code> <small>line 50</small><div class="doc"><p>The quotient image of any retained physical core misses every
+collapsed complementary component.</p></div><pre>theorem quotient_core_disjoint_dust
+    {G C : Set Sphere} (π : Sphere → Sphere) (hCG : C ⊆ G)
+    (hr : ∀ x y, π x = π y ↔
+      x = y ∨ (x ∈ Gᶜ ∧ y ∈ connectedComponentIn Gᶜ x)) :
+    Disjoint (π &#x27;&#x27; C) (π &#x27;&#x27; Gᶜ) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L63><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.quotient_core_safe_open</code> <small>line 63</small><div class="doc"><p>The complement of the compact quotient image is an open neighborhood
+of all dust points, whose full physical preimage avoids the core.</p></div><pre>theorem quotient_core_safe_open
+    {G C : Set Sphere} (π : Sphere → Sphere) (hπ : Continuous π)
+    (hC : IsCompact C) (hCG : C ⊆ G)
+    (hr : ∀ x y, π x = π y ↔
+      x = y ∨ (x ∈ Gᶜ ∧ y ∈ connectedComponentIn Gᶜ x)) :
+    IsOpen (π &#x27;&#x27; C)ᶜ ∧ π &#x27;&#x27; Gᶜ ⊆ (π &#x27;&#x27; C)ᶜ ∧
+      Disjoint (π ⁻¹&#x27; (π &#x27;&#x27; C)ᶜ) C := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L76><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.PhysicalTerminalDisks.closure_disjoint_core</code> <small>line 76</small><div class="doc"><p>Actual terminal disks in the prescribed quotient neighborhoods avoid
+the retained core, including their boundaries.</p></div><pre>theorem PhysicalTerminalDisks.closure_disjoint_core
+    {I : Type*} {G B C : Set Sphere} {π : Sphere → Sphere}
+    {p : I → Sphere} {O : I → Set Sphere} (D : PhysicalTerminalDisks G π B p O)
+    (hO : ∀ i, O i ⊆ (π &#x27;&#x27; C)ᶜ) (i : I) :
+    Disjoint (((↑) : ℂ → Sphere) &#x27;&#x27; closure (jordanInterior (D.H i))) C := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a>, <a href="../Selection/PhysicalTerminals.lean.html#L25">OAI.CircleDomainRigidity.FiniteTransfer.PhysicalTerminalDisks</a>, <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a></p></li><li id=L85><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.PhysicalTerminalDisks.core_subset_completedRegion</code> <small>line 85</small></li><li id=L96><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.quotient_dust_eq_compl_image</code> <small>line 96</small><div class="doc"><p>The two standard descriptions of quotient dust agree for the
+actual component-collapse map.</p></div><pre>theorem quotient_dust_eq_compl_image
+    {G : Set Sphere} (π : Sphere → Sphere) (hsurj : Surjective π)
+    (hr : ∀ x y, π x = π y ↔
+      x = y ∨ (x ∈ Gᶜ ∧ y ∈ connectedComponentIn Gᶜ x)) :
+    π &#x27;&#x27; Gᶜ = (π &#x27;&#x27; G)ᶜ := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L115><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.exists_physical_terminals_avoiding_core</code> <small>line 115</small><div class="doc"><p>Construct the actual terminal disks in arbitrary prescribed
+neighborhoods and automatically keep their closed caps off the retained
+core. Including infinity in the core also excludes the infinity fiber
+without an additional assumption on the selected indices.</p></div><pre>theorem exists_physical_terminals_avoiding_core
+    (hsard : SmoothPlanarSard) (hschoenflies : PlanarSchoenflies)
+    {I : Type*} [Fintype I] {G C : Set Sphere} (hG : IsOpen G)
+    (π : Sphere → Sphere) (hπ : Continuous π) (hclosed : IsClosedMap π) (hsurj : Surjective π)
+    (hr : ∀ x y, π x = π y ↔
+      x = y ∨ (x ∈ Gᶜ ∧ y ∈ connectedComponentIn Gᶜ x))
+    (hTD : IsTotallyDisconnected (π &#x27;&#x27; Gᶜ)) (hC : IsCompact C) (hCG : C ⊆ G)
+    (hinfty : OnePoint.infty ∈ C) (p : I → Sphere) (hp : Injective p)
+    (hpB : ∀ i, p i ∈ π &#x27;&#x27; Gᶜ) (O : I → Set Sphere) (hO : ∀ i, O i ∈ 𝓝 (p i)) :
+    ∃ D : PhysicalTerminalDisks G π (π &#x27;&#x27; Gᶜ) p O,
+      ∀ i, Disjoint (((↑) : ℂ → Sphere) &#x27;&#x27; closure (jordanInterior (D.H i))) C := by
+…</pre><p class="refs">Mentions: <a href="../Sobolev/SmoothContours.lean.html#L65">OAI.CircleDomainRigidity.SmoothPlanarSard</a>, <a href="../Topology/JordanContours.lean.html#L44">OAI.CircleDomainRigidity.PlanarSchoenflies</a>, <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a>, <a href="../Selection/PhysicalTerminals.lean.html#L25">OAI.CircleDomainRigidity.FiniteTransfer.PhysicalTerminalDisks</a>, <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a></p></li><li id=L143><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.exists_compact_tail_piece</code> <small>line 143</small><div class="doc"><p>For a core containing a neighborhood of infinity the entire tail
+integral can be computed on one compact part of the finite chart.</p></div><pre>theorem exists_compact_tail_piece
+    {Q K : Set (ℝ × ℝ)} (hQ : IsClosed Q) (hK : IsCompact (closure Kᶜ)) :
+    ∃ R : ℝ, 0 &lt; R ∧ IsCompact (Q ∩ closedBall 0 R) ∧
+      Q \ K = (Q ∩ closedBall 0 R) \ K := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/CornerShortPath.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/CornerShortPath.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>CornerShortPath.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>CornerShortPath.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/CornerShortPath.lean#L1">source</a></p><div class="doc"><h3>Closing the small stabilization gap</h3><p>The principal-argument path between unitary elements at distance less than
+<code>2</code> has speed at most <code>π</code>. Thus the middle gap in the finite corner
+construction is closed by a genuine path with a uniform bound. The fixed
+corner hypotheses are retained.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>lemma</b> <code>OAI.WeakPureInfiniteness.selfAdjoint_expUnitary_sub_one_norm_le</code> <small>line 20</small></li><li id=L32><b>lemma</b> <code>OAI.WeakPureInfiniteness.selfAdjoint_expUnitary_sub_norm_le</code> <small>line 32</small></li><li id=L51><b>lemma</b> <code>OAI.WeakPureInfiniteness.unitary_shortPath_sub_norm_le</code> <small>line 51</small></li><li id=L68><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_controlled_unitary_shortPath</code> <small>line 68</small><div class="doc"><p>The principal-argument bridge closes the actual middle gap, with a
+uniform speed bound independent of the two endpoint unitaries.</p></div><pre>lemma exists_controlled_unitary_shortPath (u v : unitary E)
+    (huv : ‖(u : E) - v‖ &lt; 2) :
+    ∃ p : Path u v, ∀ t s, ‖(p t : E) - p s‖ ≤ Real.pi * |(t : ℝ) - s| := by
+…</pre></li><li id=L75><b>lemma</b> <code>OAI.WeakPureInfiniteness.unitaryPath_trans_sub_norm_le</code> <small>line 75</small><div class="doc"><p>Concatenating two uniformly controlled paths costs only the time rescaling.</p></div><pre>lemma unitaryPath_trans_sub_norm_le {a b c : unitary E}
+    (p : Path a b) (q : Path b c) (L : ℝ)
+    (hp : ∀ t s, ‖(p t : E) - p s‖ ≤ L * |(t : ℝ) - s|)
+    (hq : ∀ t s, ‖(q t : E) - q s‖ ≤ L * |(t : ℝ) - s|) :
+    ∀ t s, ‖((p.trans q) t : E) - (p.trans q) s‖ ≤ 2 * L * |(t : ℝ) - s| := by
+…</pre></li><li id=L120><b>def</b> <code>OAI.WeakPureInfiniteness.unitaryQuarterPath</code> <small>line 120</small><div class="doc"><p>Restrict a uniformly controlled angular path to its quarter-turn interval.</p></div><pre>def unitaryQuarterPath (u : ℝ → unitary E) (hu : Continuous u) :
+    Path (u 0) (u (Real.pi / 2)) where
+…</pre></li><li id=L127><b>lemma</b> <code>OAI.WeakPureInfiniteness.unitaryQuarterPath_sub_norm_le</code> <small>line 127</small></li><li id=L140><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_uniform_compressed_unitary_path</code> <small>line 140</small><div class="doc"><p>The small middle gap is closed, yielding a uniformly controlled genuine
+path for the compressed unitary. The fixed corner hypotheses are explicit.</p></div><pre>lemma exists_uniform_compressed_unitary_path (q a b z : E)
+    (hqstar : star q = q) (hqq : q * q = q)
+    (haa : star a * a = q) (hbb : star b * b = q) (hab : star a * b = 0)
+    (hsum : a * star a + b * star b = q)
+    (hqz : q * z = z) (hzq : z * q = z)
+    (hzz : star z * z = q) (hzz&#x27; : z * star z = q)
+    (δ : ℝ) (hδ : 0 ≤ δ) (hsmall : 4 * δ &lt; 2)
+    (haz : ‖z * a - a * z‖ ≤ δ) (hbz : ‖z * b - b * z‖ ≤ δ) :
+    ∃ u : unitary E, (u : E) = cornerCompression a z ∧
+      ∃ p : Path u 1, ∀ t s, ‖(p t : E) - p s‖ ≤ (8 * Real.pi) * |(t : ℝ) - s| := by
+…</pre><p class="refs">Mentions: <a href="CornerContractionPath.lean.html#L22">OAI.WeakPureInfiniteness.cornerCompression</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

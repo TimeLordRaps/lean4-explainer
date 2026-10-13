@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/PlateauCertificate.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/PlateauCertificate.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>PlateauCertificate.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>PlateauCertificate.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/PlateauCertificate.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.Problem326.AffineActive</code> <small>line 12</small><div class="doc"><p>Pairwise comparison formulation of activity in a finite affine family.</p></div><pre>def AffineActive {d : ℕ} {Λ : Type uLambda}
+    (r : Λ → Fin d → ℝ) (c : Λ → ℝ) (x : Fin d → ℝ) (j : Λ) : Prop :=
+…</pre></li><li id=L17><b>theorem</b> <code>OAI.Problem326.exists_affineActive</code> <small>line 17</small><div class="doc"><p>Every finite nonempty affine family has an active label, including at ties.</p></div><pre>theorem exists_affineActive {d : ℕ} {Λ : Type uLambda} [Fintype Λ] [Nonempty Λ]
+    (r : Λ → Fin d → ℝ) (c : Λ → ℝ) (x : Fin d → ℝ) :
+    ∃ j, AffineActive r c x j := by
+…</pre><p class="refs">Mentions: <a href="PlateauCertificate.lean.html#L12">OAI.Problem326.AffineActive</a></p></li><li id=L26><b>theorem</b> <code>OAI.Problem326.affineActive_slope_eq_zero</code> <small>line 26</small><div class="doc"><p>Coordinate sign gaps force any initially active slope to vanish.</p></div><pre>theorem affineActive_slope_eq_zero {d : ℕ} {Λ : Type uLambda}
+    (r : Λ → Fin d → ℝ) (c : Λ → ℝ) (x p : Fin d → ℝ) {H : ℝ}
+    (hp : ∀ i, |p i| &lt; H)
+    (hgap : ∀ j, AffineActive r c x j → ∀ i, r j i ≠ 0 → H ≤ |p i|)
+    {j : Λ} (hj : AffineActive r c x j) : r j = 0 := by
+…</pre><p class="refs">Mentions: <a href="PlateauCertificate.lean.html#L12">OAI.Problem326.AffineActive</a></p></li><li id=L37><b>theorem</b> <code>OAI.Problem326.constant_branch_plateau</code> <small>line 37</small><div class="doc"><p>The plateau cut out by a constant active branch contains the initial point.
+This also records that plateau membership is exactly activity of that branch.</p></div><pre>theorem constant_branch_plateau {d : ℕ} {Λ : Type uLambda}
+    (r : Λ → Fin d → ℝ) (c : Λ → ℝ) (x₀ : Fin d → ℝ)
+    {j : Λ} (hr : r j = 0) (hj : AffineActive r c x₀ j) :
+    x₀ ∈ {x | ∀ k, c j ≤ dot (r k) x + c k} ∧
+      ∀ x, (∀ k, c j ≤ dot (r k) x + c k) ↔ AffineActive r c x j := by
+…</pre><p class="refs">Mentions: <a href="PlateauCertificate.lean.html#L12">OAI.Problem326.AffineActive</a>, <a href="Model.lean.html#L54">OAI.Problem326.dot</a></p></li><li id=L53><b>theorem</b> <code>OAI.Problem326.constant_branch_not_active_on_boundary</code> <small>line 53</small><div class="doc"><p>A zero-slope branch cannot be active at an exponent-box boundary point
+when the active-label approximation has radius strictly below one there.</p></div><pre>theorem constant_branch_not_active_on_boundary {d : ℕ} {Λ : Type uLambda}
+    (r : Λ → Fin d → ℝ) (c : Λ → ℝ) (X : (Fin d → ℝ) → (Fin d → ℝ))
+    (E : (Fin d → ℝ) → ℝ) (hE : E 0 ≤ 1 / 2)
+    {j : Λ} (hr : r j = 0) {p : Fin d → ℝ}
+    (hboundary : ∃ i, |p i| = 1)
+    (happrox : AffineActive r c (X p) j → ∀ i, |p i - r j i| &lt; E (r j)) :
+    ¬ AffineActive r c (X p) j := by
+…</pre><p class="refs">Mentions: <a href="PlateauCertificate.lean.html#L12">OAI.Problem326.AffineActive</a></p></li><li id=L67><b>theorem</b> <code>OAI.Problem326.exists_constant_plateau_certificate</code> <small>line 67</small><div class="doc"><p>Combined algebraic certificate used before the geometric trapping step.</p></div><pre>theorem exists_constant_plateau_certificate {d : ℕ} {Λ : Type uLambda}
+    [Fintype Λ] [Nonempty Λ]
+    (r : Λ → Fin d → ℝ) (c : Λ → ℝ) (x₀ p₀ : Fin d → ℝ) {H : ℝ}
+    (hp₀ : ∀ i, |p₀ i| &lt; H)
+    (hgap : ∀ j, AffineActive r c x₀ j → ∀ i, r j i ≠ 0 → H ≤ |p₀ i|) :
+    ∃ j : Λ, r j = 0 ∧
+      x₀ ∈ {x | ∀ k, c j ≤ dot (r k) x + c k} ∧
+      ∀ x, (∀ k, c j ≤ dot (r k) x + c k) ↔ AffineActive r c x j := by
+…</pre><p class="refs">Mentions: <a href="PlateauCertificate.lean.html#L12">OAI.Problem326.AffineActive</a>, <a href="Model.lean.html#L54">OAI.Problem326.dot</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

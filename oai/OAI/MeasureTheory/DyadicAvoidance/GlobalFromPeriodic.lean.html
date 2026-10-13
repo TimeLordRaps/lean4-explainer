@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/DyadicAvoidance/GlobalFromPeriodic.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/DyadicAvoidance/GlobalFromPeriodic.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MeasureTheory</a> / <a href="index.html">DyadicAvoidance</a> / <span>GlobalFromPeriodic.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MeasureTheory</a>/<a href="index.html">DyadicAvoidance</a>/<span>GlobalFromPeriodic.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/DyadicAvoidance/GlobalFromPeriodic.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Problem310Support.compact_complement_volume</code> <small>line 13</small><div class="doc"><p>A small open deletion from the unit interval leaves a compact set
+whose volume is strictly greater than the requested threshold.</p></div><pre>theorem compact_complement_volume {C : Set ℝ} (hC : IsOpen C)
+    {η : ℝ} (hη : 0 &lt; η) (hη1 : η &lt; 1)
+    (hsmall : volume (C ∩ Icc (0 : ℝ) 1) ≤ ENNReal.ofReal (η / 2)) :
+    IsCompact (Icc (0 : ℝ) 1 \ C) ∧
+      ENNReal.ofReal (1 - η) &lt; volume (Icc (0 : ℝ) 1 \ C) := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.Problem310Support.positive_scale_normalization</code> <small>line 38</small><div class="doc"><p>Every positive scale can be moved into <code>[1,2]</code> by a natural power
+of two followed by passage to a dyadic tail.</p></div><pre>theorem positive_scale_normalization {s : ℝ} (hs : 0 &lt; s) :
+    ∃ j m : ℕ, (s * (2 : ℝ) ^ j * ((2 : ℝ)⁻¹ ^ m)) ∈ Icc (1 : ℝ) 2 := by
+…</pre></li><li id=L54><b>def</b> <code>OAI.Problem310Support.signedDyadicUnion</code> <small>line 54</small><div class="doc"><p>The paired pullbacks used to cover all signed scales.</p></div><pre>def signedDyadicUnion (H : ℕ → Set ℝ) : Set ℝ :=
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.Problem310Support.signedDyadicUnion_open</code> <small>line 58</small></li><li id=L65><b>theorem</b> <code>OAI.Problem310Support.signedDyadicUnion_neg</code> <small>line 65</small></li><li id=L78><b>theorem</b> <code>OAI.Problem310Support.signedDyadicUnion_hits</code> <small>line 78</small><div class="doc"><p>The full signed-scale hitting property is a purely algebraic consequence
+of a normalized hitting set at every dyadic magnification.</p></div><pre>theorem signedDyadicUnion_hits {H : ℕ → Set ℝ}
+    (hH : ∀ j (x t : ℝ), t ∈ Icc (1 : ℝ) 2 →
+      ∃ n : ℕ, 1 ≤ n ∧ x + t * ((2 : ℝ)⁻¹ ^ n) ∈ H j) :
+    ∀ x s : ℝ, s ≠ 0 → ∃ n : ℕ, 1 ≤ n ∧
+      x + s * ((2 : ℝ)⁻¹ ^ n) ∈ signedDyadicUnion H := by
+…</pre><p class="refs">Mentions: <a href="GlobalFromPeriodic.lean.html#L54">OAI.Problem310Support.signedDyadicUnion</a></p></li><li id=L107><b>theorem</b> <code>OAI.Problem310Support.signedDyadicUnion_volume_le</code> <small>line 107</small><div class="doc"><p>The cost of pairing and summing the dyadic pullbacks is at most
+twice the sum of the original period densities.</p></div><pre>theorem signedDyadicUnion_volume_le {H : ℕ → Set ℝ}
+    (hH : ∀ j, ∀ x : ℝ, x + 1 ∈ H j ↔ x ∈ H j) :
+    volume (signedDyadicUnion H ∩ Icc (0 : ℝ) 1) ≤
+      ∑&#x27; j : ℕ, 2 * volume (H j ∩ Icc (0 : ℝ) 1) := by
+…</pre><p class="refs">Mentions: <a href="GlobalFromPeriodic.lean.html#L54">OAI.Problem310Support.signedDyadicUnion</a></p></li><li id=L120><b>theorem</b> <code>OAI.Problem310Support.dyadic_density_budget</code> <small>line 120</small></li><li id=L150><b>theorem</b> <code>OAI.Problem310Support.avoidance_of_periodic_hitting</code> <small>line 150</small><div class="doc"><p>The global compact avoidance theorem follows from the periodic hitting
+lemma. All measure estimates, signed scales, and strict volume loss are
+included in this implication.</p></div><pre>theorem avoidance_of_periodic_hitting
+    (hperiodic : ∀ p : ℝ, 0 &lt; p → p &lt; 1 → ∃ H : Set ℝ,
+      IsOpen H ∧ (∀ x : ℝ, x + 1 ∈ H ↔ x ∈ H) ∧
+      volume (H ∩ Icc (0 : ℝ) 1) ≤ ENNReal.ofReal (6 * p) ∧
+      ∀ x t : ℝ, t ∈ Icc (1 : ℝ) 2 → ∃ n : ℕ, 1 ≤ n ∧
+        x + t * ((2 : ℝ)⁻¹ ^ n) ∈ H) :
+    ∀ η : ℝ, 0 &lt; η → η &lt; 1 → ∃ E : Set ℝ,
+      E ⊆ Icc (0 : ℝ) 1 ∧ IsCompact E ∧
+      volume E &gt; ENNReal.ofReal (1 - η) ∧
+      ∀ x s : ℝ, s ≠ 0 → ∃ n : ℕ, 1 ≤ n ∧
+        x + s * ((2 : ℝ)⁻¹ ^ n) ∉ E := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

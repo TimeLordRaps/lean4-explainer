@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/FoulkesHowe/ShiftHomogeneity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/FoulkesHowe/ShiftHomogeneity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">FoulkesHowe</a> / <span>ShiftHomogeneity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">FoulkesHowe</a>/<span>ShiftHomogeneity.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/FoulkesHowe/ShiftHomogeneity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem346.weightedHomogeneous_pderiv</code> <small>line 15</small><div class="doc"><p>Differentiating a weighted homogeneous polynomial lowers its weighted degree
+by the weight of the differentiated variable. The statement also covers degree
+zero, since a zero derivative is homogeneous in every degree.</p></div><pre>theorem weightedHomogeneous_pderiv
+    {σ R : Type*} [CommSemiring R] {w : σ → ℕ}
+    {f : MvPolynomial σ R} {m : ℕ}
+    (hf : IsWeightedHomogeneous w f m) (i : σ) :
+    IsWeightedHomogeneous w (pderiv i f) (m - w i) := by
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.Problem346.weightedHomogeneous_directional</code> <small>line 29</small><div class="doc"><p>A weighted directional derivative has the expected homogeneous degree
+when all source variables and all destination variables have common weights.</p></div><pre>theorem weightedHomogeneous_directional
+    {σ κ R : Type*} [Fintype κ] [CommSemiring R]
+    {w : σ → ℕ} {f : MvPolynomial σ R} {m a b : ℕ}
+    (hf : IsWeightedHomogeneous w f m) (s t : κ → σ)
+    (hs : ∀ i, w (s i) = a) (ht : ∀ i, w (t i) = b) :
+    IsWeightedHomogeneous w (∑ i, X (t i) * pderiv (s i) f) (b + (m - a)) := by
+…</pre></li><li id=L40><b>theorem</b> <code>OAI.Problem346.derivation_sum_apply</code> <small>line 40</small></li><li id=L50><b>theorem</b> <code>OAI.Problem346.blockShift_eq_sum_pderiv</code> <small>line 50</small><div class="doc"><p>The generator-defined block shift agrees with the usual sum of partial
+derivatives over its coordinate block.</p></div><pre>theorem blockShift_eq_sum_pderiv
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R] (u v : ι) :
+    blockShift (κ := κ) R u v =
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L63><b>theorem</b> <code>OAI.Problem346.blockShift_apply_eq_sum</code> <small>line 63</small></li><li id=L72><b>theorem</b> <code>OAI.Problem346.blockShift_isWeightedHomogeneous</code> <small>line 72</small><div class="doc"><p>A block shift changes the degree in an observed block by adding one for
+the destination and subtracting one for the source.</p></div><pre>theorem blockShift_isWeightedHomogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v k : ι) {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = k then 1 else 0) f m) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = k then 1 else 0)
+      (blockShift R u v f)
+      ((if v = k then 1 else 0) + (m - (if u = k then 1 else 0))) := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L84><b>theorem</b> <code>OAI.Problem346.blockShift_source_homogeneous</code> <small>line 84</small><div class="doc"><p>The source block loses one unit of degree under a directional shift.</p></div><pre>theorem blockShift_source_homogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v : ι) (huv : u ≠ v) {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = u then 1 else 0) f m) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = u then 1 else 0)
+      (blockShift R u v f) (m - 1) := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L93><b>theorem</b> <code>OAI.Problem346.blockShift_destination_homogeneous</code> <small>line 93</small><div class="doc"><p>The destination block gains one unit of degree under a directional shift.</p></div><pre>theorem blockShift_destination_homogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v : ι) (huv : u ≠ v) {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = v then 1 else 0) f m) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = v then 1 else 0)
+      (blockShift R u v f) (m + 1) := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L102><b>theorem</b> <code>OAI.Problem346.blockShift_spectator_homogeneous</code> <small>line 102</small><div class="doc"><p>Spectator block degrees are unchanged by a directional shift.</p></div><pre>theorem blockShift_spectator_homogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v k : ι) (hu : u ≠ k) (hv : v ≠ k)
+    {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = k then 1 else 0) f m) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = k then 1 else 0)
+      (blockShift R u v f) m := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L112><b>theorem</b> <code>OAI.Problem346.blockShift_pow_source_homogeneous</code> <small>line 112</small><div class="doc"><p>Repeated shifts lower the source degree by the number of operations.</p></div><pre>theorem blockShift_pow_source_homogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v : ι) (huv : u ≠ v) {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = u then 1 else 0) f m)
+    (n : ℕ) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = u then 1 else 0)
+      (((blockShift R u v).toLinearMap ^ n) f) (m - n) := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L126><b>theorem</b> <code>OAI.Problem346.blockShift_pow_destination_homogeneous</code> <small>line 126</small><div class="doc"><p>Repeated shifts increase the destination degree by the number of operations.</p></div><pre>theorem blockShift_pow_destination_homogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v : ι) (huv : u ≠ v) {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = v then 1 else 0) f m)
+    (n : ℕ) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = v then 1 else 0)
+      (((blockShift R u v).toLinearMap ^ n) f) (m + n) := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li><li id=L140><b>theorem</b> <code>OAI.Problem346.blockShift_pow_spectator_homogeneous</code> <small>line 140</small><div class="doc"><p>Repeated shifts leave all spectator block degrees unchanged.</p></div><pre>theorem blockShift_pow_spectator_homogeneous
+    {ι κ R : Type*} [DecidableEq ι] [Fintype κ] [CommRing R]
+    (u v k : ι) (hu : u ≠ k) (hv : v ≠ k)
+    {f : MvPolynomial (ι × κ) R} {m : ℕ}
+    (hf : IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = k then 1 else 0) f m)
+    (n : ℕ) :
+    IsWeightedHomogeneous (fun z : ι × κ =&gt; if z.1 = k then 1 else 0)
+      (((blockShift R u v).toLinearMap ^ n) f) m := by
+…</pre><p class="refs">Mentions: <a href="BlockDerivation.lean.html#L19">OAI.Problem346.blockShift</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

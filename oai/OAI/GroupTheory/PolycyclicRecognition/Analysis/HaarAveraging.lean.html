@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/HaarAveraging.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/HaarAveraging.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>HaarAveraging.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>HaarAveraging.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/HaarAveraging.lean#L1">source</a></p><div class="doc"><h3>Averaging translated masses</h3><p>The boundary argument averages a Radon measure over Haar translates.  The
+identities below use genuine measures and measurable multiplication, including
+the Tonelli step.  Invariance is required only of Haar measure, not of the
+measure whose translated masses are being compared.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.PolycyclicRecognition.leftTranslate</code> <small>line 28</small><div class="doc"><p>A left translate, expressed as a measurable preimage.</p></div><pre>def leftTranslate (E : Set G) (z : G) : Set G := {y | z⁻¹ * y ∈ E}
+…</pre></li><li id=L31><b>theorem</b> <code>OAI.PolycyclicRecognition.measurableSet_leftTranslate</code> <small>line 31</small></li><li id=L35><b>theorem</b> <code>OAI.PolycyclicRecognition.average_translate_eq</code> <small>line 35</small><div class="doc"><p>Tonelli's identity for the average mass of translates.</p></div><pre>theorem average_translate_eq (μ ρ : Measure G) [SFinite μ] [SFinite ρ]
+    {E S : Set G} (hE : MeasurableSet E) :
+    (∫⁻ z in S, ρ (leftTranslate E z) ∂μ) =
+      ∫⁻ y, μ (S ∩ {z | z⁻¹ * y ∈ E}) ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a></p></li><li id=L71><b>theorem</b> <code>OAI.PolycyclicRecognition.translate_kernel_mass</code> <small>line 71</small><div class="doc"><p>Unimodularity identifies the total mass of the averaging kernel.</p></div><pre>theorem translate_kernel_mass (μ : Measure G) [IsInvInvariant μ] [IsMulRightInvariant μ]
+    (E : Set G) (y : G) : μ {z | z⁻¹ * y ∈ E} = μ E := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.PolycyclicRecognition.average_translate_sandwich</code> <small>line 79</small><div class="doc"><p>The set-theoretic sandwich underlying the Haar averaging estimate.
+<code>inner</code> consists of points whose entire averaging kernel lies in <code>S</code>, while
+outside <code>outer</code> the kernel misses <code>S</code>.</p></div><pre>theorem average_translate_sandwich
+    (μ ρ : Measure G) [SFinite μ] [SFinite ρ]
+    [IsInvInvariant μ] [IsMulRightInvariant μ]
+    {E S inner outer : Set G} (hE : MeasurableSet E)
+    (hi : MeasurableSet inner) (ho : MeasurableSet outer)
+    (hin : ∀ y ∈ inner, ∀ z, z⁻¹ * y ∈ E → z ∈ S)
+    (hout : ∀ y, ∀ z ∈ S, z⁻¹ * y ∈ E → y ∈ outer) :
+    μ E * ρ inner ≤ (∫⁻ z in S, ρ (leftTranslate E z) ∂μ) ∧
+      (∫⁻ z in S, ρ (leftTranslate E z) ∂μ) ≤ μ E * ρ outer := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a></p></li><li id=L115><b>def</b> <code>OAI.PolycyclicRecognition.lengthBall</code> <small>line 115</small><div class="doc"><p>Balls for a left-invariant length function.</p></div><pre>def lengthBall (ℓ : GroupSeminorm G) (r : ℝ) : Set G := {x | ℓ x &lt; r}</pre></li><li id=L119><b>def</b> <code>OAI.PolycyclicRecognition.distanceLength</code> <small>line 119</small><div class="doc"><p>The group length associated to the left-invariant metric used in the
+Lie-group application.</p></div><pre>def distanceLength [PseudoMetricSpace G] [IsIsometricSMul G G] : GroupSeminorm G where
+…</pre></li><li id=L136><b>theorem</b> <code>OAI.PolycyclicRecognition.ball_average_sandwich</code> <small>line 136</small><div class="doc"><p>The metric version of the Tonelli sandwich. It uses the triangle
+inequality for group length; commutativity is not required.</p></div><pre>theorem ball_average_sandwich
+    (μ ρ : Measure G) [SFinite μ] [SFinite ρ]
+    [IsInvInvariant μ] [IsMulRightInvariant μ]
+    (ℓ : GroupSeminorm G) (hℓ : Measurable ℓ)
+    {E : Set G} (hE : MeasurableSet E) {R T : ℝ} (hR : ∀ e ∈ E, ℓ e ≤ R) :
+    μ E * ρ (lengthBall ℓ (T - R)) ≤
+        (∫⁻ z in lengthBall ℓ T, ρ (leftTranslate E z) ∂μ) ∧
+      (∫⁻ z in lengthBall ℓ T, ρ (leftTranslate E z) ∂μ) ≤
+        μ E * ρ (lengthBall ℓ (T + R)) := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L115">OAI.PolycyclicRecognition.lengthBall</a>, <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a></p></li><li id=L165><b>theorem</b> <code>OAI.PolycyclicRecognition.average_translate_le</code> <small>line 165</small><div class="doc"><p>Integrating a uniform upper bound on all translated masses.</p></div><pre>theorem average_translate_le (μ ρ : Measure G) {E S : Set G}
+    {a K : ℝ≥0∞} (h : ∀ z, ρ (leftTranslate E z) ≤ K * a) :
+    (∫⁻ z in S, ρ (leftTranslate E z) ∂μ) ≤ K * a * μ S := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a></p></li><li id=L174><b>theorem</b> <code>OAI.PolycyclicRecognition.le_mul_average_translate</code> <small>line 174</small><div class="doc"><p>Integrating a uniform lower bound on all translated masses.</p></div><pre>theorem le_mul_average_translate (μ ρ : Measure G) {E S : Set G}
+    {a K : ℝ≥0∞} (hK : K ≠ ∞) (h : ∀ z, a ≤ K * ρ (leftTranslate E z)) :
+    a * μ S ≤ K * (∫⁻ z in S, ρ (leftTranslate E z) ∂μ) := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a></p></li><li id=L184><b>theorem</b> <code>OAI.PolycyclicRecognition.translated_mass_comparison_at_radius</code> <small>line 184</small><div class="doc"><p>Comparing two compact shapes needs only one finite ball of positive
+measure and its volume growth bound. The radius may depend on both shapes.</p></div><pre>theorem translated_mass_comparison_at_radius
+    (μ ρ : Measure G) [SFinite μ] [SFinite ρ]
+    [IsInvInvariant μ] [IsMulRightInvariant μ]
+    (ℓ : GroupSeminorm G) (hℓ : Measurable ℓ)
+    {E F : Set G} (hE : MeasurableSet E) (hF : MeasurableSet F)
+    {T : ℝ} (hET : ∀ e ∈ E, ℓ e ≤ T) (hFT : ∀ f ∈ F, ℓ f ≤ T)
+    {a b K D : ℝ≥0∞} (hK : K ≠ ∞)
+    (ha : ∀ z, a ≤ K * ρ (leftTranslate E z))
+    (hb : ∀ z, ρ (leftTranslate F z) ≤ K * b)
+    (hvol0 : μ (lengthBall ℓ T) ≠ 0) (hvoltop : μ (lengthBall ℓ T) ≠ ∞)
+    (hgrowth : μ (lengthBall ℓ (3 * T)) ≤ D * μ (lengthBall ℓ T)) :
+    a * μ F ≤ (K * K * D) * b * μ E := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a>, <a href="HaarAveraging.lean.html#L115">OAI.PolycyclicRecognition.lengthBall</a></p></li><li id=L220><b>theorem</b> <code>OAI.PolycyclicRecognition.haar_averaging_comparison</code> <small>line 220</small><div class="doc"><p>The Haar-averaging comparison, uniformly over all bounded measurable
+shapes. No absolute continuity of <code>ρ</code> is assumed. The growth hypothesis is the
+large-scale ball-volume bound, independent of the shapes.</p></div><pre>theorem haar_averaging_comparison
+    (μ ρ : Measure G) [SFinite μ] [SFinite ρ]
+    [IsInvInvariant μ] [IsMulRightInvariant μ]
+    (ℓ : GroupSeminorm G) (hℓ : Measurable ℓ)
+    {J : Type*} (E : J → Set G) (a : J → ℝ≥0∞)
+    (hE : ∀ j, MeasurableSet (E j))
+    (hbounded : ∀ j, ∃ R : ℝ, ∀ e ∈ E j, ℓ e ≤ R)
+    {K D : ℝ≥0∞} (hK : K ≠ ∞)
+    (hlower : ∀ j z, a j ≤ K * ρ (leftTranslate (E j) z))
+    (hupper : ∀ j z, ρ (leftTranslate (E j) z) ≤ K * a j)
+    (hballs : ∃ T₀ : ℝ, ∀ T, T₀ ≤ T →
+      μ (lengthBall ℓ T) ≠ 0 ∧ μ (lengthBall ℓ T) ≠ ∞ ∧
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a>, <a href="HaarAveraging.lean.html#L115">OAI.PolycyclicRecognition.lengthBall</a></p></li><li id=L248><b>theorem</b> <code>OAI.PolycyclicRecognition.tripling_of_doubling</code> <small>line 248</small><div class="doc"><p>A doubling estimate gives the tripling bound used above, with the square
+of the doubling constant.</p></div><pre>theorem tripling_of_doubling (μ : Measure G) (ℓ : GroupSeminorm G)
+    {T₀ : ℝ} (hT₀ : 0 ≤ T₀) {D : ℝ≥0∞}
+    (hd : ∀ T, T₀ ≤ T → μ (lengthBall ℓ (2 * T)) ≤ D * μ (lengthBall ℓ T))
+    {T : ℝ} (hT : T₀ ≤ T) :
+    μ (lengthBall ℓ (3 * T)) ≤ (D * D) * μ (lengthBall ℓ T) := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L115">OAI.PolycyclicRecognition.lengthBall</a></p></li><li id=L268><b>theorem</b> <code>OAI.PolycyclicRecognition.haar_averaging_compact</code> <small>line 268</small><div class="doc"><p>The compact-set version used for boundary images. All geometric inputs
+are explicit: a left-invariant metric and eventual Haar-volume doubling.
+The measure <code>ρ</code> can be singular.</p></div><pre>theorem haar_averaging_compact
+    [MetricSpace G] [BorelSpace G] [IsIsometricSMul G G]
+    (μ ρ : Measure G) [SFinite μ] [SFinite ρ]
+    [IsInvInvariant μ] [IsMulRightInvariant μ]
+    {J : Type*} (E : J → Set G) (a : J → ℝ≥0∞)
+    (hE : ∀ j, IsCompact (E j)) {K D : ℝ≥0∞} (hK : K ≠ ∞)
+    (hlower : ∀ j z, a j ≤ K * ρ (leftTranslate (E j) z))
+    (hupper : ∀ j z, ρ (leftTranslate (E j) z) ≤ K * a j)
+    (hballs : ∃ T₀ : ℝ, 0 ≤ T₀ ∧ ∀ T, T₀ ≤ T →
+      μ (Metric.ball 1 T) ≠ 0 ∧ μ (Metric.ball 1 T) ≠ ∞ ∧
+      μ (Metric.ball 1 (2 * T)) ≤ D * μ (Metric.ball 1 T)) :
+    ∀ j k, a j * μ (E k) ≤ (K * K * (D * D)) * a k * μ (E j) := by
+…</pre><p class="refs">Mentions: <a href="HaarAveraging.lean.html#L28">OAI.PolycyclicRecognition.leftTranslate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

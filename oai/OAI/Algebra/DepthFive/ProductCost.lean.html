@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/ProductCost.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/ProductCost.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>ProductCost.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>ProductCost.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/ProductCost.lean#L1">source</a></p><div class="doc"><h3>Numerical assembly of the product-rank estimates</h3><p>These lemmas isolate the finite-product and real-power calculations in the
+all-low and one-high cases of the circuit rank estimate.  All hypotheses on
+individual factor costs and parameters remain explicit.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.Problem335.prod_cost_le_exp_mul_rpow</code> <small>line 19</small><div class="doc"><p>Assemble individual exponential errors and favorable powers of a base at
+most one.  This applies regardless of the source of the factor estimates.</p></div><pre>theorem prod_cost_le_exp_mul_rpow {ι : Type*} (s : Finset ι)
+    (H err d : ι → ℝ) (q E D : ℝ) (hq : 0 &lt; q) (hq1 : q ≤ 1)
+    (hH : ∀ j ∈ s, 0 ≤ H j)
+    (hcost : ∀ j ∈ s, H j ≤ Real.exp (err j) * q ^ d j)
+    (herr : (∑ j ∈ s, err j) ≤ E) (hd : D ≤ ∑ j ∈ s, d j) :
+    (∏ j ∈ s, H j) ≤ Real.exp E * q ^ D := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.Problem335.all_low_power_saving</code> <small>line 37</small><div class="doc"><p>The favorable power in the all-low case saves the exact manuscript
+exponent <code>sqrt(n)/20</code>.</p></div><pre>theorem all_low_power_saving (n q s : ℝ) (hn : 1 ≤ n) (hq : 0 ≤ q)
+    (hqbound : q ≤ n ^ (-(2 : ℝ) / 5)) (hs : Real.sqrt n / 2 ≤ s) :
+    q ^ (s / 4) ≤ n ^ (-Real.sqrt n / 20) := by
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.Problem335.one_high_power_saving</code> <small>line 53</small><div class="doc"><p>The favorable power from expanding one high-degree factor saves the exact
+manuscript exponent <code>3*sqrt(n)/160</code>.</p></div><pre>theorem one_high_power_saving (n q lam t : ℝ) (hn : 1 ≤ n) (hq : 0 ≤ q)
+    (hqbound : q ≤ n ^ (-(2 : ℝ) / 5)) (hlam : (3 : ℝ) / 8 ≤ lam)
+    (ht : Real.sqrt n / 4 ≤ t) :
+    q ^ (lam * t / 2) ≤ n ^ (-(3 * Real.sqrt n) / 160) := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.Problem335.high_factor_exponential_bound</code> <small>line 72</small><div class="doc"><p>The bounded loss per remaining large factor is exponential in <code>sqrt n</code>.</p></div><pre>theorem high_factor_exponential_bound (n s : ℝ) (hs : s ≤ Real.sqrt n) :
+    (5 : ℝ) ^ (4 * s) ≤ Real.exp (4 * Real.log 5 * Real.sqrt n) := by
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.Problem335.large_degree_count_mul_le_sum</code> <small>line 81</small><div class="doc"><p>The number of large positive-degree factor occurrences is charged to their
+total degree, rather than to the number of distinct circuit gates.</p></div><pre>theorem large_degree_count_mul_le_sum {ι : Type*} (s : Finset ι)
+    (e : ι → ℝ) (t : ℝ) (he : ∀ j ∈ s, 0 ≤ e j) :
+    ((s.filter (fun j =&gt; t ≤ e j)).card : ℝ) * t ≤ ∑ j ∈ s, e j := by
+…</pre></li><li id=L97><b>theorem</b> <code>OAI.Problem335.large_degree_count_le</code> <small>line 97</small><div class="doc"><p>Division form of the large-degree occurrence count.</p></div><pre>theorem large_degree_count_le {ι : Type*} (s : Finset ι)
+    (e : ι → ℝ) (t : ℝ) (ht : 0 &lt; t) (he : ∀ j ∈ s, 0 ≤ e j) :
+    ((s.filter (fun j =&gt; t ≤ e j)).card : ℝ) ≤ (∑ j ∈ s, e j) / t := by
+…</pre></li><li id=L104><b>theorem</b> <code>OAI.Problem335.all_low_common_rank_bound</code> <small>line 104</small><div class="doc"><p>The all-low branch fits the common circuit-rank envelope.  No sign
+assumption on the error constant <code>C</code> is required.</p></div><pre>theorem all_low_common_rank_bound (n S D C : ℝ) (hn : 1 ≤ n)
+    (hS : 1 ≤ S) (hD : 0 ≤ D) :
+    2 * D * Real.exp (4 * C * Real.sqrt n) * n ^ (-Real.sqrt n / 20) ≤
+      2 * S * D * Real.exp ((4 * C + 4 * Real.log 5) * Real.sqrt n) *
+        n ^ (-Real.sqrt n / 100) := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.Problem335.one_high_common_rank_bound</code> <small>line 124</small><div class="doc"><p>The one-high branch fits the same envelope, absorbing the bounded cost of
+all remaining high-degree factors.</p></div><pre>theorem one_high_common_rank_bound (n s S D C : ℝ) (hn : 1 ≤ n)
+    (hs : s ≤ Real.sqrt n) (hS : 0 ≤ S) (hD : 0 ≤ D) :
+    2 * S * D * (5 : ℝ) ^ (4 * s) * Real.exp (4 * C * Real.sqrt n) *
+        n ^ (-(3 * Real.sqrt n) / 160) ≤
+      2 * S * D * Real.exp ((4 * C + 4 * Real.log 5) * Real.sqrt n) *
+        n ^ (-Real.sqrt n / 100) := by
+…</pre></li><li id=L148><b>theorem</b> <code>OAI.Problem335.sum_branch_rank_bound</code> <small>line 148</small><div class="doc"><p>Summing at most <code>S</code> upper-product contributions gives the quadratic gate
+factor in the circuit-rank proposition.</p></div><pre>theorem sum_branch_rank_bound {ι : Type*} (s : Finset ι) (R : ι → ℝ)
+    (n S D C : ℝ) (hn : 0 ≤ n) (hS : 0 ≤ S) (hD : 0 ≤ D)
+    (hcard : (s.card : ℝ) ≤ S)
+    (hR : ∀ j ∈ s, R j ≤
+      2 * S * D * Real.exp (C * Real.sqrt n) * n ^ (-Real.sqrt n / 100)) :
+    (∑ j ∈ s, R j) ≤
+      2 * S ^ 2 * D * Real.exp (C * Real.sqrt n) * n ^ (-Real.sqrt n / 100) := by
+…</pre></li><li id=L168><b>theorem</b> <code>OAI.Problem335.prod_high_low_cost_le</code> <small>line 168</small><div class="doc"><p>Splitting large and small degrees multiplies their two distinct types of
+cost, with the large-factor multiplicity retained exactly.</p></div><pre>theorem prod_high_low_cost_le {ι : Type*} (s : Finset ι)
+    (H err e : ι → ℝ) (t B E : ℝ)
+    (hH : ∀ j ∈ s, 0 ≤ H j) (hB : 0 ≤ B)
+    (hhigh : ∀ j ∈ s, t ≤ e j → H j ≤ B)
+    (hlow : ∀ j ∈ s, e j &lt; t → H j ≤ Real.exp (err j))
+    (herr : (∑ j ∈ s with e j &lt; t, err j) ≤ E) :
+    (∏ j ∈ s, H j) ≤
+      B ^ (s.filter (fun j =&gt; t ≤ e j)).card * Real.exp E := by
+…</pre></li><li id=L192><b>theorem</b> <code>OAI.Problem335.prod_high_low_cost_le_rpow</code> <small>line 192</small><div class="doc"><p>A degree budget replaces the number of high factors by <code>N/t</code>.</p></div><pre>theorem prod_high_low_cost_le_rpow {ι : Type*} (s : Finset ι)
+    (H err e : ι → ℝ) (t B E N : ℝ) (ht : 0 &lt; t)
+    (hH : ∀ j ∈ s, 0 ≤ H j) (hB : 1 ≤ B)
+    (he : ∀ j ∈ s, 0 ≤ e j) (hbudget : (∑ j ∈ s, e j) ≤ N)
+    (hhigh : ∀ j ∈ s, t ≤ e j → H j ≤ B)
+    (hlow : ∀ j ∈ s, e j &lt; t → H j ≤ Real.exp (err j))
+    (herr : (∑ j ∈ s with e j &lt; t, err j) ≤ E) :
+    (∏ j ∈ s, H j) ≤ B ^ (N / t) * Real.exp E := by
+…</pre></li><li id=L213><b>theorem</b> <code>OAI.Problem335.linear_factor_cost_power_le</code> <small>line 213</small><div class="doc"><p>Expanding one factor of degree at least <code>t</code> supplies enough linear-factor
+cost to obtain the favorable power <code>q^(lam*t/2)</code>.</p></div><pre>theorem linear_factor_cost_power_le (H q lam t : ℝ) (e : ℕ)
+    (hH : 0 ≤ H) (hq : 0 &lt; q) (hq1 : q ≤ 1) (hlam : 0 ≤ lam)
+    (hcost : H ≤ q ^ (lam / 2)) (he : t ≤ (e : ℝ)) :
+    H ^ e ≤ q ^ (lam * t / 2) := by
+…</pre></li><li id=L228><b>theorem</b> <code>OAI.Problem335.expanded_high_product_cost_le</code> <small>line 228</small><div class="doc"><p>The abstract one-high expansion estimate, before inserting the analytic
+parameter bounds.  The finite family represents the unexpanded occurrences.</p></div><pre>theorem expanded_high_product_cost_le {ι : Type*} (s : Finset ι)
+    (H err e : ι → ℝ) (Hlin q lam t B E N : ℝ) (d : ℕ)
+    (ht : 0 &lt; t) (hH : ∀ j ∈ s, 0 ≤ H j) (hB : 1 ≤ B)
+    (he : ∀ j ∈ s, 0 ≤ e j) (hbudget : (∑ j ∈ s, e j) ≤ N)
+    (hhigh : ∀ j ∈ s, t ≤ e j → H j ≤ B)
+    (hlow : ∀ j ∈ s, e j &lt; t → H j ≤ Real.exp (err j))
+    (herr : (∑ j ∈ s with e j &lt; t, err j) ≤ E)
+    (hHlin : 0 ≤ Hlin) (hq : 0 &lt; q) (hq1 : q ≤ 1) (hlam : 0 ≤ lam)
+    (hlinear : Hlin ≤ q ^ (lam / 2)) (hd : t ≤ (d : ℝ)) :
+    Hlin ^ d * (∏ j ∈ s, H j) ≤
+      B ^ (N / t) * Real.exp E * q ^ (lam * t / 2) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/CirculantHadamard/BinaryProductTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/CirculantHadamard/BinaryProductTransport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">LinearAlgebra</a> / <a href="index.html">CirculantHadamard</a> / <span>BinaryProductTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">LinearAlgebra</a>/<a href="index.html">CirculantHadamard</a>/<span>BinaryProductTransport.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/CirculantHadamard/BinaryProductTransport.lean#L1">source</a></p><div class="doc"><h3>Odd-power products in the concrete binary local ring</h3><p>The local units are supplied with their actual coefficient-ring values.
+Their alternating product maps to the fixed alternating product in the
+fraction field. Injectivity transports each exact power identity back to
+the local units, with the same exponent.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.odd_power_mul_inv</code> <small>line 26</small><div class="doc"><p>Odd-power torsion is closed under taking a quotient in a commutative
+group. The product of the two supplied exponents is an explicit witness.</p></div><pre>theorem odd_power_mul_inv {G : Type uG} [CommGroup G] (x y : G)
+    (hx : ∃ m : ℕ, 0 &lt; m ∧ Odd m ∧ x ^ m = 1)
+    (hy : ∃ n : ℕ, 0 &lt; n ∧ Odd n ∧ y ^ n = 1) :
+    ∃ r : ℕ, 0 &lt; r ∧ Odd r ∧ (x * y⁻¹) ^ r = 1 := by
+…</pre></li><li id=L38><b>def</b> <code>OAI.CirculantHadamard.BinaryProductTransport.localUnitToFraction</code> <small>line 38</small><div class="doc"><p>The actual map from local units to the fraction field of <code>B u</code>.</p></div><pre>def localUnitToFraction (u : ℕ) : (O u)ˣ →* FractionRing (B u) :=
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.localUnitToFraction_apply</code> <small>line 41</small></li><li id=L44><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.localUnitToFraction_injective</code> <small>line 44</small></li><li id=L52><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.local_alternatingProduct_toFraction</code> <small>line 52</small><div class="doc"><p>Transport of the literal signed subset product, using the supplied
+value equality only for subsets that occur in the product.</p></div><pre>theorem local_alternatingProduct_toFraction {I : Type uI} (u : ℕ) (t : Finset I)
+    (x : Finset I → B u) (X : Finset I → (O u)ˣ)
+    (hX : ∀ S ⊆ t, (X S : O u) = toLocal u (x S)) :
+    localUnitToFraction u (alternatingProduct t X) =
+      alternatingProduct t (fun S =&gt; algebraMap (B u) (FractionRing (B u)) (x S)) := by
+…</pre><p class="refs">Mentions: <a href="BinaryProductTransport.lean.html#L38">OAI.CirculantHadamard.BinaryProductTransport.localUnitToFraction</a>, <a href="AlternatingProducts.lean.html#L121">OAI.CirculantHadamard.alternatingProduct</a></p></li><li id=L65><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.local_alternatingProduct_pow_eq_one</code> <small>line 65</small><div class="doc"><p>An exact fraction-field power identity holds for the actual local
+alternating product with precisely the same exponent.</p></div><pre>theorem local_alternatingProduct_pow_eq_one {I : Type uI} (u : ℕ) (t : Finset I)
+    (x : Finset I → B u) (X : Finset I → (O u)ˣ)
+    (hX : ∀ S ⊆ t, (X S : O u) = toLocal u (x S)) (m : ℕ)
+    (hpow : (alternatingProduct t
+      (fun S =&gt; algebraMap (B u) (FractionRing (B u)) (x S))) ^ m = 1) :
+    (alternatingProduct t X) ^ m = 1 := by
+…</pre><p class="refs">Mentions: <a href="AlternatingProducts.lean.html#L121">OAI.CirculantHadamard.alternatingProduct</a></p></li><li id=L75><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.local_alternatingProduct_has_odd_power</code> <small>line 75</small></li><li id=L87><b>theorem</b> <code>OAI.CirculantHadamard.BinaryProductTransport.local_alternatingProduct_ratio_has_odd_power</code> <small>line 87</small><div class="doc"><p>The two concrete unit families produce an odd-power quotient family.
+No torsion of individual factors is assumed or inferred.</p></div><pre>theorem local_alternatingProduct_ratio_has_odd_power {I : Type uI}
+    (u : ℕ) (t : Finset I) (x y : Finset I → B u)
+    (X Y : Finset I → (O u)ˣ)
+    (hX : ∀ S ⊆ t, (X S : O u) = toLocal u (x S))
+    (hY : ∀ S ⊆ t, (Y S : O u) = toLocal u (y S))
+    (hx : ∃ m : ℕ, 0 &lt; m ∧ Odd m ∧
+      (alternatingProduct t
+        (fun S =&gt; algebraMap (B u) (FractionRing (B u)) (x S))) ^ m = 1)
+    (hy : ∃ m : ℕ, 0 &lt; m ∧ Odd m ∧
+      (alternatingProduct t
+        (fun S =&gt; algebraMap (B u) (FractionRing (B u)) (y S))) ^ m = 1) :
+    ∃ m : ℕ, 0 &lt; m ∧ Odd m ∧
+…</pre><p class="refs">Mentions: <a href="AlternatingProducts.lean.html#L121">OAI.CirculantHadamard.alternatingProduct</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

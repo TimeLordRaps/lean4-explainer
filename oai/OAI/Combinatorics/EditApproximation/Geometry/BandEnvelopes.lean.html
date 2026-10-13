@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/EditApproximation/Geometry/BandEnvelopes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/EditApproximation/Geometry/BandEnvelopes.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">EditApproximation</a> / <a href="index.html">Geometry</a> / <span>BandEnvelopes.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">EditApproximation</a>/<a href="index.html">Geometry</a>/<span>BandEnvelopes.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/EditApproximation/Geometry/BandEnvelopes.lean#L1">source</a></p><div class="doc"><h3>Actual dyadic child envelopes</h3><p>The maximum scans the actual finite band. The dyadic ceiling uses the
+computable integer upper logarithm of a positive rational, including values
+below one.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.EditApproximation.rationalMaximum_le</code> <small>line 22</small></li><li id=L30><b>theorem</b> <code>OAI.EditApproximation.le_rationalMaximum_member</code> <small>line 30</small></li><li id=L41><b>theorem</b> <code>OAI.EditApproximation.rationalDyadicCeiling_bounds</code> <small>line 41</small></li><li id=L56><b>theorem</b> <code>OAI.EditApproximation.bandChildEnvelope_lower</code> <small>line 56</small><div class="doc"><p>Zero is a harmless duplicated fallback under the initial table lower
+invariant. The positive b/M floor ensures that the ceiling input is positive.</p></div><pre>theorem bandChildEnvelope_lower {ny M : ℕ} (b : ℕ)
+    (band : List (Fin M → TargetInterval ny))
+    (initial : Fin M → TargetInterval ny → ℚ) (i : Fin M) :
+    (b : ℚ) / M ≤ bandChildEnvelope b band initial i ∧
+      ∀ action ∈ band, initial i (action i) ≤ bandChildEnvelope b band initial i := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L2986">OAI.EditApproximation.TargetInterval</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L4568">OAI.EditApproximation.bandChildEnvelope</a></p></li><li id=L70><b>theorem</b> <code>OAI.EditApproximation.bandChildEnvelope_upper</code> <small>line 70</small><div class="doc"><p>Every finite envelope is bounded using the actual computed-band
+endpoint diameter and the initial table's spatial inequality.</p></div><pre>theorem bandChildEnvelope_upper {nx ny M : ℕ} (parent : TargetInterval nx)
+    (r : TargetInterval ny) (b P : ℕ) (hb : 0 &lt; b) (hM : 0 &lt; M)
+    (tau theta velocity : ℚ) (htau : 0 &lt; tau) (htheta : 0 ≤ theta)
+    (child initial : Fin M → TargetInterval ny → ℚ)
+    (comparison : Fin M → TargetInterval ny)
+    (hcomparison : comparison ∈ computedBandActions parent r b P tau theta velocity child)
+    (L0 : ℚ) (hL0 : 0 ≤ L0)
+    (hinitial : ∀ i, 0 ≤ initial i (comparison i))
+    (hspatial : ∀ i s t, initial i s ≤ initial i t + L0 * targetEndpointDistance s t)
+    (i : Fin M) :
+    bandChildEnvelope b (computedBandActions parent r b P tau theta velocity child) initial i ≤
+      2 * ((b : ℚ) / M) + 2 * initial i (comparison i) + 8 * L0 * theta * b / M := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L2986">OAI.EditApproximation.TargetInterval</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6569">OAI.EditApproximation.computedBandActions</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L3014">OAI.EditApproximation.targetEndpointDistance</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L4568">OAI.EditApproximation.bandChildEnvelope</a></p></li><li id=L113><b>theorem</b> <code>OAI.EditApproximation.bandChildEnvelope_sum_guard</code> <small>line 113</small><div class="doc"><p>The actual sum guard follows from the concrete envelopes, the initial
+cone bounds at the comparison child states, and their actual edit costs.</p></div><pre>theorem bandChildEnvelope_sum_guard {α : Type*} (source target : List α)
+    {M : ℕ} (parent : TargetInterval source.length) (r : TargetInterval target.length)
+    (b P : ℕ) (hb : 0 &lt; b) (hM : 0 &lt; M)
+    (tau theta velocity : ℚ) (htau : 0 &lt; tau) (htheta : 0 ≤ theta)
+    (child initial : Fin M → TargetInterval target.length → ℚ)
+    (comparison : Fin M → TargetInterval target.length)
+    (hcomparison : comparison ∈ computedBandActions parent r b P tau theta velocity child)
+    (L0 F : ℚ) (hL0 : 0 ≤ L0) (hF : 1 ≤ F) (hsmall : L0 * theta ≤ 1)
+    (hinitial : ∀ i, 0 ≤ initial i (comparison i))
+    (hspatial : ∀ i s t, initial i s ≤ initial i t + L0 * targetEndpointDistance s t)
+    (hinitialUpper : ∀ i, initial i (comparison i) ≤ 2 * F * (stateEditCost
+      (substring source (sourceChild parent i).lo (sourceChild parent i).hi) target (comparison i) : ℚ))
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L2986">OAI.EditApproximation.TargetInterval</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6569">OAI.EditApproximation.computedBandActions</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L3014">OAI.EditApproximation.targetEndpointDistance</a>, <a href="StateGeometry.lean.html#L39">OAI.EditApproximation.stateEditCost</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L2983">OAI.EditApproximation.substring</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L3047">OAI.EditApproximation.sourceChild</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

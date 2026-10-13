@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Arithmetic/CyclicInduction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Arithmetic/CyclicInduction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Arithmetic</a> / <span>CyclicInduction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Arithmetic</a>/<span>CyclicInduction.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Arithmetic/CyclicInduction.lean#L1">source</a></p><div class="doc"><h3>Cyclic subgroup coefficients for Stark descent</h3><p>Möbius inversion on the finite poset of cyclic subgroups expresses the
+constant function as an integer combination of their indicators.
+Averaging conjugates gives the denominator-cleared cyclic permutation
+identity used to compare Dedekind zeta orders.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.DukePrimeDegree.finite_poset_upper_weights</code> <small>line 18</small></li><li id=L54><b>abbrev</b> <code>OAI.DukePrimeDegree.CyclicSubgroups</code> <small>line 54</small><div class="doc"><p>The finite set of cyclic subgroups, retaining their actual subgroup
+carrier. No choice of generators enters the coefficients.</p></div><pre>abbrev CyclicSubgroups (G : Type*) [Group G] :=
+…</pre></li><li id=L57><b>instance</b> <code>OAI.DukePrimeDegree.instFintypeCyclicSubgroups</code> <small>line 57</small></li><li id=L61><b>theorem</b> <code>OAI.DukePrimeDegree.exists_cyclic_indicator_coefficients</code> <small>line 61</small><div class="doc"><p>Integer cyclic-subgroup indicator coefficients.</p></div><pre>theorem exists_cyclic_indicator_coefficients
+    (G : Type*) [Group G] [Finite G] :
+    ∃ a : CyclicSubgroups G → ℤ, ∀ g : G,
+      (∑ C, if g ∈ C.val then a C else 0) = 1 := by
+…</pre><p class="refs">Mentions: <a href="CyclicInduction.lean.html#L54">OAI.DukePrimeDegree.CyclicSubgroups</a></p></li><li id=L79><b>theorem</b> <code>OAI.DukePrimeDegree.exists_cyclic_conjugacy_coefficients</code> <small>line 79</small><div class="doc"><p>Conjugacy averaging gives the denominator-cleared cyclic induction
+identity, with coefficients independent of the group element.</p></div><pre>theorem exists_cyclic_conjugacy_coefficients
+    (G : Type*) [Group G] [Fintype G] :
+    ∃ a : CyclicSubgroups G → ℤ, ∀ g : G,
+      (∑ C, a C * ∑ x : G, if x⁻¹ * g * x ∈ C.val then (1 : ℤ) else 0) =
+        Fintype.card G := by
+…</pre><p class="refs">Mentions: <a href="CyclicInduction.lean.html#L54">OAI.DukePrimeDegree.CyclicSubgroups</a></p></li><li id=L97><b>theorem</b> <code>OAI.DukePrimeDegree.permutation_character_eq_fixed_sum</code> <small>line 97</small><div class="doc"><p>The permutation character counts fixed points in the actual coset
+representation used by the Artin Euler factors.</p></div><pre>theorem permutation_character_eq_fixed_sum
+    {G Ω : Type*} [Monoid G] [Fintype Ω] [MulAction G Ω] (g : G) :
+    (Representation.ofMulAction ℂ G Ω).character g =
+      ∑ x : Ω, if g • x = x then (1 : ℂ) else 0 := by
+…</pre></li><li id=L112><b>theorem</b> <code>OAI.DukePrimeDegree.conjugacy_indicator_sum_eq_card_mul_character</code> <small>line 112</small><div class="doc"><p>Conjugacy counting and the coset permutation character differ by
+exactly the subgroup order.</p></div><pre>theorem conjugacy_indicator_sum_eq_card_mul_character
+    {G : Type*} [Group G] [Fintype G] (H : Subgroup G) (g : G) :
+    (∑ x : G, if x⁻¹ * g * x ∈ H then (1 : ℂ) else 0) =
+      Fintype.card H * (Representation.ofMulAction ℂ G (G ⧸ H)).character g := by
+…</pre></li><li id=L144><b>theorem</b> <code>OAI.DukePrimeDegree.exists_cyclic_permutation_character_identity</code> <small>line 144</small><div class="doc"><p>Artin's cyclic permutation identity with integer coefficients after
+clearing the single denominator <code>card G</code>.</p></div><pre>theorem exists_cyclic_permutation_character_identity
+    (G : Type*) [Group G] [Fintype G] :
+    ∃ b : CyclicSubgroups G → ℤ, ∀ g : G,
+      (∑ C, (b C : ℂ) *
+        (Representation.ofMulAction ℂ G (G ⧸ C.val)).character g) =
+          Fintype.card G := by
+…</pre><p class="refs">Mentions: <a href="CyclicInduction.lean.html#L54">OAI.DukePrimeDegree.CyclicSubgroups</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

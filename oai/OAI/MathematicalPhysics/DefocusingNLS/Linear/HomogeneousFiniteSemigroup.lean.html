@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/DefocusingNLS/Linear/HomogeneousFiniteSemigroup.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/DefocusingNLS/Linear/HomogeneousFiniteSemigroup.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">DefocusingNLS</a> / <a href="index.html">Linear</a> / <span>HomogeneousFiniteSemigroup.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">DefocusingNLS</a>/<a href="index.html">Linear</a>/<span>HomogeneousFiniteSemigroup.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/DefocusingNLS/Linear/HomogeneousFiniteSemigroup.lean#L1">source</a></p><div class="doc"><h3>Short-time averaging for the finite-dimensional semigroup</h3><p>On a finite-dimensional invariant subspace, strong continuity is norm
+continuity. An invertible short-time integral then converts the semigroup
+identity into a differential equation. These are supporting lemmas for the
+actual contour subspace, with no spectral classification premise.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L32><b>theorem</b> <code>OAI.DefocusingNLS.continuous_exists_unit_integral</code> <small>line 32</small><div class="doc"><p>A continuous operator family starting at the identity has an invertible
+integral over some short positive interval.</p></div><pre>theorem continuous_exists_unit_integral (f : ℝ → A) (hf : Continuous f)
+    (hzero : f 0 = 1) :
+    ∃ ε : ℝ, 0 &lt; ε ∧ IsUnit (∫ s in (0 : ℝ)..ε, f s) := by
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.DefocusingNLS.continuous_semigroup_integral_shift</code> <small>line 54</small><div class="doc"><p>The integrated semigroup identity.</p></div><pre>theorem continuous_semigroup_integral_shift (f : ℝ → A) (hf : Continuous f)
+    (hmul : ∀ s t : ℝ, 0 ≤ s → 0 ≤ t → f (s + t) = f s * f t)
+    {ε s : ℝ} (hε : 0 ≤ ε) (hs : 0 ≤ s) :
+    f s * (∫ t in (0 : ℝ)..ε, f t) = ∫ t in s..s + ε, f t := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.DefocusingNLS.continuous_semigroup_hasRightDerivative</code> <small>line 74</small><div class="doc"><p>Norm continuity and the semigroup identity produce a bounded generator,
+without a differentiability hypothesis on the semigroup.</p></div><pre>theorem continuous_semigroup_hasRightDerivative (f : ℝ → A) (hf : Continuous f)
+    (hzero : f 0 = 1)
+    (hmul : ∀ s t : ℝ, 0 ≤ s → 0 ≤ t → f (s + t) = f s * f t) :
+    ∃ G : A, ∀ s : ℝ, 0 ≤ s →
+      HasDerivWithinAt f (f s * G) (Ici s) s := by
+…</pre></li><li id=L112><b>theorem</b> <code>OAI.DefocusingNLS.continuous_semigroup_eq_exp</code> <small>line 112</small><div class="doc"><p>The bounded generator obtained by averaging represents the semigroup
+by an exponential for every nonnegative time.</p></div><pre>theorem continuous_semigroup_eq_exp (f : ℝ → A) (hf : Continuous f)
+    (hzero : f 0 = 1)
+    (hmul : ∀ s t : ℝ, 0 ≤ s → 0 ≤ t → f (s + t) = f s * f t) :
+    ∃ G : A, ∀ t : ℝ, 0 ≤ t → f t = NormedSpace.exp (t • G) := by
+…</pre></li><li id=L150><b>theorem</b> <code>OAI.DefocusingNLS.finiteDimensional_semigroup_eq_exp</code> <small>line 150</small><div class="doc"><p>Strongly continuous finite-dimensional semigroups are matrix
+exponentials; differentiability is a conclusion.</p></div><pre>theorem finiteDimensional_semigroup_eq_exp (S : ℝ≥0 → E →L[ℂ] E)
+    (hS : ∀ x : E, Continuous (fun t =&gt; S t x)) (hzero : S 0 = 1)
+    (hadd : ∀ s t : ℝ≥0, S (s + t) = S t * S s) :
+    ∃ G : E →L[ℂ] E, ∀ t : ℝ≥0, S t = NormedSpace.exp ((t : ℝ) • G) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

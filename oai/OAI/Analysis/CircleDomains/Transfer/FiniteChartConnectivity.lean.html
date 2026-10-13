@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/FiniteChartConnectivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/FiniteChartConnectivity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>FiniteChartConnectivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>FiniteChartConnectivity.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/FiniteChartConnectivity.lean#L1">source</a></p><div class="doc"><h3>Passing a connected exterior through the finite sphere chart</h3><p>Deleting an interior point from a connected set preserves connectedness when
+that point has a connected punctured neighborhood. Applied at infinity, this
+turns the connected sphere inverse image of a quotient exterior into the
+connected unbounded planar exterior needed for smooth contour filling.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.CircleDomainRigidity.puncture_subset_of_boundary_color</code> <small>line 19</small></li><li id=L65><b>theorem</b> <code>OAI.CircleDomainRigidity.isPreconnected_puncture_of_connected_neighborhood</code> <small>line 65</small><div class="doc"><p>A point with a connected punctured neighborhood is not a cut point
+of any connected set containing that neighborhood.</p></div><pre>theorem isPreconnected_puncture_of_connected_neighborhood
+    {X : Type*} [TopologicalSpace X] [T1Space X]
+    {S U : Set X} {p : X} (hp : p ∉ S)
+    (hconn : IsPreconnected (insert p S)) (hU : U ∈ 𝓝 p)
+    (hUS : U \ {p} ⊆ S) (hpuncture : IsPreconnected (U \ {p})) :
+    IsPreconnected S := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.CircleDomainRigidity.isConnected_complex_exterior_closedBall</code> <small>line 86</small></li><li id=L110><b>theorem</b> <code>OAI.CircleDomainRigidity.finite_part_connected_unbounded</code> <small>line 110</small><div class="doc"><p>The finite part of a connected sphere set containing a neighborhood
+of infinity is preconnected and unbounded.</p></div><pre>theorem finite_part_connected_unbounded {K : Set Sphere}
+    (hK : IsPreconnected K) (hinfty : ∞ ∈ interior K) :
+    IsPreconnected (((↑) : ℂ → Sphere) ⁻¹&#x27; K) ∧
+      ¬ Bornology.IsBounded (((↑) : ℂ → Sphere) ⁻¹&#x27; K) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L163><b>theorem</b> <code>OAI.CircleDomainRigidity.physical_exterior_connected_unbounded_of_quotient</code> <small>line 163</small><div class="doc"><p>A closed quotient with connected fibers pulls a closed connected
+quotient exterior back to a connected unbounded physical exterior.</p></div><pre>theorem physical_exterior_connected_unbounded_of_quotient
+    {X : Type*} [TopologicalSpace X]
+    (π : Sphere → X) (hπ : Continuous π) (hclosed : IsClosedMap π)
+    (hsurj : Surjective π) (hfibers : ∀ x, IsConnected (π ⁻¹&#x27; {x}))
+    {V : Set X} (hV : IsOpen V) (hVconn : IsConnected Vᶜ)
+    (hinfty : π ∞ ∉ closure V) :
+    IsPreconnected ((fun z : ℂ =&gt; π (z : Sphere)) ⁻¹&#x27; V)ᶜ ∧
+      ¬ Bornology.IsBounded ((fun z : ℂ =&gt; π (z : Sphere)) ⁻¹&#x27; V)ᶜ := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li><li id=L183><b>theorem</b> <code>OAI.CircleDomainRigidity.physical_exterior_connected_unbounded_of_component_collapse</code> <small>line 183</small><div class="doc"><p>Specialization to a component-collapse quotient.</p></div><pre>theorem physical_exterior_connected_unbounded_of_component_collapse
+    {X : Type*} [TopologicalSpace X]
+    (G : Set Sphere) (π : Sphere → X) (hπ : Continuous π)
+    (hclosed : IsClosedMap π) (hsurj : Surjective π)
+    (hr : ∀ x y, π x = π y ↔
+      x = y ∨ (x ∈ Gᶜ ∧ y ∈ connectedComponentIn Gᶜ x))
+    {V : Set X} (hV : IsOpen V) (hVconn : IsConnected Vᶜ)
+    (hinfty : π ∞ ∉ closure V) :
+    IsPreconnected ((fun z : ℂ =&gt; π (z : Sphere)) ⁻¹&#x27; V)ᶜ ∧
+      ¬ Bornology.IsBounded ((fun z : ℂ =&gt; π (z : Sphere)) ⁻¹&#x27; V)ᶜ :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

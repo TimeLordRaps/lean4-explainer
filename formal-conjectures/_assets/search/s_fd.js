@@ -1,0 +1,1 @@
+window.l4shard("fd", [["AutomorphicForm.LieDerivAux.fderiv_rightDeriv_apply",55,107],["AutomorphicForm.LieDerivAux.fderiv_rightDeriv_sub_comm",55,121],["Matrix.GeneralLinearGroup.fderiv_extendGL_eq",55,198],["Matrix.GeneralLinearGroup.lieDerivFun_eq_fderiv",55,258]]);

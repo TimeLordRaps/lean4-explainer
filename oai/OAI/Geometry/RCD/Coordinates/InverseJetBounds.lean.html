@@ -1,0 +1,140 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/InverseJetBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/InverseJetBounds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>InverseJetBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>InverseJetBounds.lean</span></code></h1><p class="muted">20 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/InverseJetBounds.lean#L1">source</a></p><div class="doc"><h3>Higher derivatives of inverse fields</h3><p>The resolvent identity subtracts the value of the original field at the
+base point before the higher product estimate is applied.  Its zeroth
+derivative is then zero, so the inverse recurrence has no occurrence of
+the current unknown derivative on the right.  These are actual iterated
+Fréchet derivatives in a real Banach algebra, including bounded operators.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_field_resolvent</code> <small>line 29</small><div class="doc"><p>The resolvent identity in the order needed for a one-sided inverse.</p></div><pre>theorem inverse_field_resolvent {J K : X → A} {s : Set X} {x : X}
+    (hleft : K x * J x = 1)
+    (hright : ∀ y ∈ s, J y * K y = 1) :
+    Set.EqOn K (fun y =&gt; K x - K x * ((J y - J x) * K y)) s := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.RegularPointCoordinates.iteratedFDerivWithin_sub_basepoint</code> <small>line 41</small><div class="doc"><p>At positive orders, subtracting the value at the base point does not
+change the iterated derivative.</p></div><pre>theorem iteratedFDerivWithin_sub_basepoint {J : X → A} {s : Set X} {x : X}
+    {n : ℕ} (hJ : ContDiffWithinAt ℝ n J s x)
+    (hs : UniqueDiffOn ℝ s) (hx : x ∈ s) (hn : n ≠ 0) :
+    iteratedFDerivWithin ℝ n (fun y =&gt; J y - J x) s x =
+      iteratedFDerivWithin ℝ n J s x := by
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_iteratedFDerivWithin_inverse_field_le</code> <small>line 53</small><div class="doc"><p>A higher inverse derivative is bounded by strictly lower inverse
+derivatives.  The smoothness and inverse identities are explicit.</p></div><pre>theorem norm_iteratedFDerivWithin_inverse_field_le
+    {J K : X → A} {s : Set X} {x : X} {n : ℕ}
+    (hJ : ContDiffOn ℝ n J s) (hK : ContDiffOn ℝ n K s)
+    (hs : UniqueDiffOn ℝ s) (hx : x ∈ s) (hn : 0 &lt; n)
+    (hleft : K x * J x = 1) (hright : ∀ y ∈ s, J y * K y = 1) :
+    ‖iteratedFDerivWithin ℝ n K s x‖ ≤ ‖K x‖ *
+      ∑ i ∈ Finset.Icc 1 n, (n.choose i : ℝ) *
+        ‖iteratedFDerivWithin ℝ i J s x‖ *
+        ‖iteratedFDerivWithin ℝ (n - i) K s x‖ := by
+…</pre></li><li id=L112><b>theorem</b> <code>OAI.RegularPointCoordinates.contDiffOn_ringInverse_field</code> <small>line 112</small><div class="doc"><p>A unit-valued smooth field has a smooth inverse field on the same set.</p></div><pre>theorem contDiffOn_ringInverse_field [CompleteSpace A]
+    {J : X → A} {s : Set X} {n : ℕ∞ω}
+    (hJ : ContDiffOn ℝ n J s) (hunit : ∀ y ∈ s, IsUnit (J y)) :
+    ContDiffOn ℝ n (fun y =&gt; Ring.inverse (J y)) s := by
+…</pre></li><li id=L123><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_iteratedFDerivWithin_ringInverse_le</code> <small>line 123</small><div class="doc"><p>The preceding recurrence for the genuine inverse in a Banach algebra.</p></div><pre>theorem norm_iteratedFDerivWithin_ringInverse_le [CompleteSpace A]
+    {J : X → A} {s : Set X} {x : X} {n : ℕ}
+    (hJ : ContDiffOn ℝ n J s) (hunit : ∀ y ∈ s, IsUnit (J y))
+    (hs : UniqueDiffOn ℝ s) (hx : x ∈ s) (hn : 0 &lt; n) :
+    ‖iteratedFDerivWithin ℝ n (fun y =&gt; Ring.inverse (J y)) s x‖ ≤
+      ‖Ring.inverse (J x)‖ * ∑ i ∈ Finset.Icc 1 n, (n.choose i : ℝ) *
+        ‖iteratedFDerivWithin ℝ i J s x‖ *
+        ‖iteratedFDerivWithin ℝ (n - i) (fun y =&gt; Ring.inverse (J y)) s x‖ := by
+…</pre></li><li id=L138><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_iteratedFDeriv_ringInverse_le</code> <small>line 138</small><div class="doc"><p>The pointwise recurrence requires invertibility only at the base
+point: continuity supplies an invertible neighborhood.</p></div><pre>theorem norm_iteratedFDeriv_ringInverse_le [CompleteSpace A]
+    {J : X → A} {x : X} {n : ℕ}
+    (hJ : ContDiffAt ℝ n J x) (hunit : IsUnit (J x)) (hn : 0 &lt; n) :
+    ‖iteratedFDeriv ℝ n (fun y =&gt; Ring.inverse (J y)) x‖ ≤
+      ‖Ring.inverse (J x)‖ * ∑ i ∈ Finset.Icc 1 n, (n.choose i : ℝ) *
+        ‖iteratedFDeriv ℝ i J x‖ *
+        ‖iteratedFDeriv ℝ (n - i) (fun y =&gt; Ring.inverse (J y)) x‖ := by
+…</pre></li><li id=L157><b>def</b> <code>OAI.RegularPointCoordinates.jetCoefficientScale</code> <small>line 157</small><div class="doc"><p>Exponential and factorial scaling for the coefficient of order <code>m</code>.</p></div><pre>def jetCoefficientScale (B : ℝ) (m : ℕ) : ℝ :=
+…</pre></li><li id=L160><b>theorem</b> <code>OAI.RegularPointCoordinates.jetCoefficientScale_pos</code> <small>line 160</small></li><li id=L165><b>theorem</b> <code>OAI.RegularPointCoordinates.jetCoefficientScale_zero</code> <small>line 165</small></li><li id=L170><b>theorem</b> <code>OAI.RegularPointCoordinates.choose_mul_jetCoefficientScale</code> <small>line 170</small><div class="doc"><p>Binomial coefficients exactly cancel the factorial scaling; there
+is no loss in the exponential base.</p></div><pre>theorem choose_mul_jetCoefficientScale {B : ℝ} {m i : ℕ} (hi : i ≤ m) :
+    (m.choose i : ℝ) * jetCoefficientScale B i * jetCoefficientScale B (m - i) =
+      jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L186><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_inverse_jet_recurrence</code> <small>line 186</small><div class="doc"><p>A binomial inverse recurrence becomes the convolution recurrence
+after division by its exact exponential-factorial scaling.</p></div><pre>theorem normalized_inverse_jet_recurrence {B H : ℝ} {j k : ℕ → ℝ}
+    (hB : 0 &lt; B) (hH : 0 ≤ H) (hk : ∀ m, 0 ≤ k m)
+    (hj : ∀ m, 0 &lt; m → j m ≤ factorialMajorant m * jetCoefficientScale B m)
+    (hrec : ∀ m, 0 &lt; m → k m ≤ H * ∑ i ∈ Finset.Icc 1 m,
+      (m.choose i : ℝ) * j i * k (m - i))
+    {m : ℕ} (hm : 0 &lt; m) :
+    k m / jetCoefficientScale B m ≤ H * ∑ i ∈ Finset.Icc 1 m,
+      factorialMajorant i * (k (m - i) / jetCoefficientScale B (m - i)) := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L216><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_inverse_jet_hasMajorant</code> <small>line 216</small><div class="doc"><p>The normalized inverse recurrence has the form required by the
+factorial majorant, including its zeroth-order endpoint.</p></div><pre>theorem normalized_inverse_jet_hasMajorant {B D : ℝ} {j k : ℕ → ℝ}
+    (hB : 0 &lt; B) (hD : 0 ≤ D) (hk : ∀ m, 0 ≤ k m)
+    (hkzero : k 0 ≤ Real.sqrt D)
+    (hj : ∀ m, 0 &lt; m → j m ≤ factorialMajorant m * jetCoefficientScale B m)
+    (hrec : ∀ m, 0 &lt; m → k m ≤ Real.sqrt D * ∑ i ∈ Finset.Icc 1 m,
+      (m.choose i : ℝ) * j i * k (m - i)) :
+    HasInverseMajorantRecurrence factorialMajorant
+      (fun m =&gt; k m / jetCoefficientScale B m) D := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a>, <a href="InverseMajorant.lean.html#L33">OAI.RegularPointCoordinates.HasInverseMajorantRecurrence</a></p></li><li id=L250><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_jet_uniform_bound</code> <small>line 250</small><div class="doc"><p>Uniform inverse bounds for every order, with exactly the original
+exponential base and one order-independent constant.</p></div><pre>theorem inverse_jet_uniform_bound {D : ℝ} (hD : 1 ≤ D) :
+    ∃ C : ℝ, Real.sqrt D ≤ C ∧ 2 * D ≤ C ∧ ∀ B : ℝ, 0 &lt; B → ∀ j k : ℕ → ℝ,
+      (∀ m, 0 ≤ k m) → k 0 ≤ Real.sqrt D →
+      (∀ m, 0 &lt; m → j m ≤ factorialMajorant m * jetCoefficientScale B m) →
+      (∀ m, 0 &lt; m → k m ≤ Real.sqrt D * ∑ i ∈ Finset.Icc 1 m,
+        (m.choose i : ℝ) * j i * k (m - i)) →
+      ∀ m, k m ≤ C * factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L267><b>theorem</b> <code>OAI.RegularPointCoordinates.clm_apply_factorialMajorant_bound</code> <small>line 267</small><div class="doc"><p>Applying a field of operators preserves the same factorial weights.
+This is the product estimate used for the coordinate increment.</p></div><pre>theorem clm_apply_factorialMajorant_bound
+    {F G : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+    [NormedAddCommGroup G] [NormedSpace ℝ G]
+    {f : X → F →L[ℝ] G} {g : X → F} {s : Set X} {x : X}
+    {B C D : ℝ} {m : ℕ} (hB : 0 &lt; B) (hC : 0 ≤ C) (hD : 0 ≤ D)
+    (hf : ContDiffOn ℝ m f s) (hg : ContDiffOn ℝ m g s)
+    (hs : UniqueDiffOn ℝ s) (hx : x ∈ s)
+    (hfbound : ∀ i, i ≤ m → ‖iteratedFDerivWithin ℝ i f s x‖ ≤
+      C * factorialMajorant i * jetCoefficientScale B i)
+    (hgbound : ∀ i, i ≤ m → ‖iteratedFDerivWithin ℝ i g s x‖ ≤
+      D * factorialMajorant i * jetCoefficientScale B i) :
+    ‖iteratedFDerivWithin ℝ m (fun y =&gt; f y (g y)) s x‖ ≤
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L314><b>theorem</b> <code>OAI.RegularPointCoordinates.ringInverse_iteratedFDerivWithin_uniform_bound</code> <small>line 314</small><div class="doc"><p>Actual higher derivatives of the inverse of a unit-valued Banach
+algebra field satisfy the factorial majorant without changing <code>B</code>.
+The same constant works for every field, set, and base point.</p></div><pre>theorem ringInverse_iteratedFDerivWithin_uniform_bound [CompleteSpace A]
+    {D : ℝ} (hD : 1 ≤ D) :
+    ∃ C : ℝ, Real.sqrt D ≤ C ∧ 2 * D ≤ C ∧
+      ∀ (B : ℝ), 0 &lt; B → ∀ (J : X → A) (s : Set X) (x : X),
+      (∀ m : ℕ, ContDiffOn ℝ m J s) → (∀ y ∈ s, IsUnit (J y)) →
+      UniqueDiffOn ℝ s → x ∈ s → ‖Ring.inverse (J x)‖ ≤ Real.sqrt D →
+      (∀ m, 0 &lt; m → ‖iteratedFDerivWithin ℝ m J s x‖ ≤
+        factorialMajorant m * jetCoefficientScale B m) →
+      ∀ m, ‖iteratedFDerivWithin ℝ m (fun y =&gt; Ring.inverse (J y)) s x‖ ≤
+        C * factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L342><b>theorem</b> <code>OAI.RegularPointCoordinates.ringInverse_iteratedFDeriv_uniform_bound</code> <small>line 342</small><div class="doc"><p>Pointwise form of the manuscript's inverse majorant: only smoothness
+and invertibility at the point are assumed, and the constant is uniform
+in both the order and the exponential base.</p></div><pre>theorem ringInverse_iteratedFDeriv_uniform_bound [CompleteSpace A]
+    {D : ℝ} (hD : 1 ≤ D) :
+    ∃ C : ℝ, Real.sqrt D ≤ C ∧ 2 * D ≤ C ∧
+      ∀ (B : ℝ), 0 &lt; B → ∀ (J : X → A) (x : X),
+      (∀ m : ℕ, ContDiffAt ℝ m J x) → IsUnit (J x) →
+      ‖Ring.inverse (J x)‖ ≤ Real.sqrt D →
+      (∀ m, 0 &lt; m → ‖iteratedFDeriv ℝ m J x‖ ≤
+        factorialMajorant m * jetCoefficientScale B m) →
+      ∀ m, ‖iteratedFDeriv ℝ m (fun y =&gt; Ring.inverse (J y)) x‖ ≤
+        C * factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L372><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_iteratedFDerivWithin_inverseTranspose</code> <small>line 372</small><div class="doc"><p>Taking the transpose preserves every iterated derivative norm.</p></div><pre>theorem norm_iteratedFDerivWithin_inverseTranspose
+    (J : X → E →L[ℝ] E) {s : Set X} {x : X}
+    (hs : UniqueDiffOn ℝ s) (hx : x ∈ s) (m : ℕ) :
+    ‖iteratedFDerivWithin ℝ m (fun y =&gt; operatorInverseTranspose (J y)) s x‖ =
+      ‖iteratedFDerivWithin ℝ m (fun y =&gt; Ring.inverse (J y)) s x‖ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a></p></li><li id=L380><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_iteratedFDeriv_inverseTranspose</code> <small>line 380</small></li><li id=L389><b>theorem</b> <code>OAI.RegularPointCoordinates.inverseTranspose_iteratedFDerivWithin_uniform_bound</code> <small>line 389</small><div class="doc"><p>The all-order inverse-transpose estimate uses the same constant and
+the same exponential base as the inverse estimate.</p></div><pre>theorem inverseTranspose_iteratedFDerivWithin_uniform_bound
+    {D : ℝ} (hD : 1 ≤ D) :
+    ∃ C : ℝ, Real.sqrt D ≤ C ∧ 2 * D ≤ C ∧
+      ∀ (B : ℝ), 0 &lt; B → ∀ (J : X → E →L[ℝ] E) (s : Set X) (x : X),
+      (∀ m : ℕ, ContDiffOn ℝ m J s) → (∀ y ∈ s, IsUnit (J y)) →
+      UniqueDiffOn ℝ s → x ∈ s → ‖Ring.inverse (J x)‖ ≤ Real.sqrt D →
+      (∀ m, 0 &lt; m → ‖iteratedFDerivWithin ℝ m J s x‖ ≤
+        factorialMajorant m * jetCoefficientScale B m) →
+      ∀ m, ‖iteratedFDerivWithin ℝ m (fun y =&gt; operatorInverseTranspose (J y)) s x‖ ≤
+        C * factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a>, <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a></p></li><li id=L408><b>theorem</b> <code>OAI.RegularPointCoordinates.inverseTranspose_iteratedFDeriv_uniform_bound</code> <small>line 408</small><div class="doc"><p>Pointwise inverse-transpose majorant, with the same constant as the
+inverse and no loss of exponential base.</p></div><pre>theorem inverseTranspose_iteratedFDeriv_uniform_bound
+    {D : ℝ} (hD : 1 ≤ D) :
+    ∃ C : ℝ, Real.sqrt D ≤ C ∧ 2 * D ≤ C ∧
+      ∀ (B : ℝ), 0 &lt; B → ∀ (J : X → E →L[ℝ] E) (x : X),
+      (∀ m : ℕ, ContDiffAt ℝ m J x) → IsUnit (J x) →
+      ‖Ring.inverse (J x)‖ ≤ Real.sqrt D →
+      (∀ m, 0 &lt; m → ‖iteratedFDeriv ℝ m J x‖ ≤
+        factorialMajorant m * jetCoefficientScale B m) →
+      ∀ m, ‖iteratedFDeriv ℝ m (fun y =&gt; operatorInverseTranspose (J y)) x‖ ≤
+        C * factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a>, <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

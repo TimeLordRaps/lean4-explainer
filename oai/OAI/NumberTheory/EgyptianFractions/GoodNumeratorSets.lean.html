@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/GoodNumeratorSets.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/GoodNumeratorSets.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>GoodNumeratorSets.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>GoodNumeratorSets.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/GoodNumeratorSets.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.Problem337.goodNumeratorAux</code> <small>line 10</small><div class="doc"><p>Finite backwards construction, indexed first by the number of remaining
+steps so that its recursion is structurally terminating.</p></div><pre>private def goodNumeratorAux
+    (X : ℕ → ℝ) (I : ℕ → Finset ℕ) (res : ℕ → ℕ → ℕ → ℕ) :
+    ℕ → ℕ → Finset ℕ
+  | 0, j =&gt; Finset.Icc 1 ⌊X j⌋₊
+  | n + 1, j =&gt; by
+      classical
+      exact (Finset.Icc 1 ⌊X j⌋₊).filter (fun u =&gt;
+        u ∈ goodNumeratorAux X I res n (j + 1) ∨
+        ∃ i ∈ I j, res j i u = 0 ∨ res j i u ∈ goodNumeratorAux X I res n (j + 1))</pre></li><li id=L20><b>theorem</b> <code>OAI.Problem337.goodNumeratorAux_subset</code> <small>line 20</small></li><li id=L29><b>theorem</b> <code>OAI.Problem337.exists_good_numerator_sets</code> <small>line 29</small><div class="doc"><p>The good numerator sets exist for arbitrary finite indexed residue maps.
+No arithmetic distribution or analytic estimate is required for this recursion.</p></div><pre>theorem exists_good_numerator_sets
+    (d : ℕ) (X : ℕ → ℝ) (I : ℕ → Finset ℕ) (res : ℕ → ℕ → ℕ → ℕ) :
+    ∃ G : ℕ → Finset ℕ,
+      (∀ j ≤ d, G j ⊆ Finset.Icc 1 ⌊X j⌋₊) ∧
+      G d = Finset.Icc 1 ⌊X d⌋₊ ∧
+      (∀ j &lt; d, ∀ u : ℕ, u ∈ G j ↔
+        u ∈ Finset.Icc 1 ⌊X j⌋₊ ∧
+        (u ∈ G (j + 1) ∨ ∃ i ∈ I j, res j i u = 0 ∨ res j i u ∈ G (j + 1))) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

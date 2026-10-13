@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RationalSupplyReduction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RationalSupplyReduction.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RationalSupplyReduction.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RationalSupplyReduction.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RationalSupplyReduction.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Problem337.rational_divisor_sum_of_large_prime_image</code> <small>line 16</small><div class="doc"><p>The five-product theorem and residue lifting give five rational divisors
+for every prime whose divisor-residue image is sufficiently large.</p></div><pre>theorem rational_divisor_sum_of_large_prime_image (P p : ℕ) (hp : p.Prime)
+    (hlarge : (p : ℝ) ^ (3 / 4 : ℝ) &lt;
+      (P.divisors.image (fun d : ℕ =&gt; (d : ZMod p))).card) :
+    HasRationalDivisorSum (P ^ 2) (p : ℚ) 5 := by
+…</pre><p class="refs">Mentions: <a href="RationalDivisorSupplyAlgebra.lean.html#L12">OAI.Problem337.HasRationalDivisorSum</a></p></li><li id=L29><b>lemma</b> <code>OAI.Problem337.mod_image_card_eq_zmod_image_card</code> <small>line 29</small></li><li id=L36><b>def</b> <code>OAI.Problem337.supplyPrimeTriples</code> <small>line 36</small><div class="doc"><p>Ordered prime triples of sum <code>u</code>, with their coordinates bounded by <code>u</code>.</p></div><pre>def supplyPrimeTriples (u : ℕ) : Finset (ℕ × ℕ × ℕ) :=
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Problem337.rational_divisor_sum_of_many_prime_triples</code> <small>line 42</small><div class="doc"><p>Actual collision counting and the five-product theorem reduce rational
+supply for a fixed integer to a lower bound for its number of prime triples.</p></div><pre>theorem rational_divisor_sum_of_many_prime_triples (u P : ℕ)
+    (hu : 2 ≤ u) (hP : 0 &lt; P) (hsize : u ^ 4 ≤ P.divisors.card)
+    (htriples : 6 * (u : ℝ) * (u : ℝ) ^ (3 / 4 : ℝ) *
+      (Real.log (P : ℝ) / Real.log 2) &lt; (supplyPrimeTriples u).card) :
+    HasRationalDivisorSum (P ^ 2) (u : ℚ) 15 := by
+…</pre><p class="refs">Mentions: <a href="RationalSupplyReduction.lean.html#L36">OAI.Problem337.supplyPrimeTriples</a>, <a href="RationalDivisorSupplyAlgebra.lean.html#L12">OAI.Problem337.HasRationalDivisorSum</a></p></li><li id=L97><b>def</b> <code>OAI.Problem337.QuantitativeThreePrimeLowerBound</code> <small>line 97</small><div class="doc"><p>The precise external number-theoretic assertion used by this supply
+reduction. It is a proposition, not an axiom or an asserted theorem.</p></div><pre>def QuantitativeThreePrimeLowerBound : Prop :=
+…</pre></li><li id=L103><b>theorem</b> <code>OAI.Problem337.eventually_rational_divisor_sum_of_three_prime_lower_bound</code> <small>line 103</small><div class="doc"><p>Once quantitative three-prime input is provided, only elementary growth
+properties of the divisor-rich common products are needed for the odd supply.</p></div><pre>theorem eventually_rational_divisor_sum_of_three_prime_lower_bound
+    (P : ℕ → ℕ) (hthree : QuantitativeThreePrimeLowerBound)
+    (hP : ∀ᶠ u : ℕ in atTop, 0 &lt; P u ∧ u ^ 4 ≤ (P u).divisors.card)
+    (hgrowth : ∃ C : ℝ, ∀ᶠ u : ℕ in atTop,
+      Real.log (P u : ℝ) ≤ C * (Real.log (u : ℝ) * Real.log (Real.log (u : ℝ)))) :
+    ∀ᶠ u : ℕ in atTop, Odd u →
+      HasRationalDivisorSum ((P u) ^ 2) (u : ℚ) 15 := by
+…</pre><p class="refs">Mentions: <a href="RationalSupplyReduction.lean.html#L97">OAI.Problem337.QuantitativeThreePrimeLowerBound</a>, <a href="RationalDivisorSupplyAlgebra.lean.html#L12">OAI.Problem337.HasRationalDivisorSum</a></p></li><li id=L142><b>theorem</b> <code>OAI.Problem337.eventually_full_rational_supply_of_odd</code> <small>line 142</small><div class="doc"><p>Transfer the eventual odd-integer supply to every integer in the required
+initial interval, using nesting and eventual divisibility of each fixed range.</p></div><pre>theorem eventually_full_rational_supply_of_odd
+    (P K : ℕ → ℕ)
+    (hodd : ∀ᶠ u : ℕ in atTop, Odd u →
+      HasRationalDivisorSum ((P u) ^ 2) (u : ℚ) 15)
+    (hnest : ∀ᶠ m : ℕ in atTop, ∀ u : ℕ, 1 ≤ u → u ≤ m ^ 4 → (P u) ^ 2 ∣ K m)
+    (hsmall : ∀ N : ℕ, ∀ᶠ m : ℕ in atTop, ∀ s : ℕ, 1 ≤ s → s ≤ N → s ∣ K m) :
+    ∀ᶠ m : ℕ in atTop, ∀ s : ℕ, 1 ≤ s → s ≤ m ^ 4 →
+      HasRationalDivisorSum (K m) (s : ℚ) 16 := by
+…</pre><p class="refs">Mentions: <a href="RationalDivisorSupplyAlgebra.lean.html#L12">OAI.Problem337.HasRationalDivisorSum</a></p></li><li id=L168><b>theorem</b> <code>OAI.Problem337.eventually_full_rational_supply_of_three_prime_lower_bound</code> <small>line 168</small><div class="doc"><p>Complete conditional supply reduction. Every ingredient other than the
+explicit three-prime lower bound is an elementary product-growth interface.</p></div><pre>theorem eventually_full_rational_supply_of_three_prime_lower_bound
+    (P K : ℕ → ℕ) (hthree : QuantitativeThreePrimeLowerBound)
+    (hP : ∀ᶠ u : ℕ in atTop, 0 &lt; P u ∧ u ^ 4 ≤ (P u).divisors.card)
+    (hgrowth : ∃ C : ℝ, ∀ᶠ u : ℕ in atTop,
+      Real.log (P u : ℝ) ≤ C * (Real.log (u : ℝ) * Real.log (Real.log (u : ℝ))))
+    (hnest : ∀ᶠ m : ℕ in atTop, ∀ u : ℕ, 1 ≤ u → u ≤ m ^ 4 → (P u) ^ 2 ∣ K m)
+    (hsmall : ∀ N : ℕ, ∀ᶠ m : ℕ in atTop, ∀ s : ℕ, 1 ≤ s → s ≤ N → s ∣ K m) :
+    ∀ᶠ m : ℕ in atTop, ∀ s : ℕ, 1 ≤ s → s ≤ m ^ 4 →
+      HasRationalDivisorSum (K m) (s : ℚ) 16 := by
+…</pre><p class="refs">Mentions: <a href="RationalSupplyReduction.lean.html#L97">OAI.Problem337.QuantitativeThreePrimeLowerBound</a>, <a href="RationalDivisorSupplyAlgebra.lean.html#L12">OAI.Problem337.HasRationalDivisorSum</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

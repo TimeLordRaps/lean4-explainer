@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/AffineOptimality.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/AffineOptimality.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>AffineOptimality.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>AffineOptimality.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/AffineOptimality.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.Problem358.finiteAffine_map_ae_mem_range</code> <small>line 18</small><div class="doc"><p>An active finite-affine selection takes values in the finite site set almost everywhere.</p></div><pre>theorem finiteAffine_map_ae_mem_range [Nonempty ι] (y : ι → E d) (c : ι → ℝ)
+    (hT : Measurable T)
+    (hactive : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i) :
+    ∀ᵐ z ∂Measure.map T ρ, z ∈ Set.range y := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L30><b>theorem</b> <code>OAI.Problem358.finiteAffine_coupling_dual_bound</code> <small>line 30</small><div class="doc"><p>The pointwise finite-affine dual estimate holds under every competing coupling.</p></div><pre>theorem finiteAffine_coupling_dual_bound (y : ι → E d) (c : ι → ℝ)
+    (hy : Function.Injective y) (hT : Measurable T)
+    (hactive : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i)
+    {π : Measure (E d × E d)} (hπ : IsCoupling ρ (Measure.map T ρ) π) :
+    ∀ᵐ p ∂π, FiniteAffine.sourceDual y c p.1 +
+      FiniteAffine.targetDual y c p.2 ≤ ‖p.1 - p.2‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a>, <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a>, <a href="AffineCertificate.lean.html#L175">OAI.Problem358.FiniteAffine.targetDual</a></p></li><li id=L43><b>theorem</b> <code>OAI.Problem358.isQuadraticOptimalMap_of_finite_affine</code> <small>line 43</small><div class="doc"><p>A measurable active selection of distinct affine sites is quadratically optimal.</p></div><pre>theorem isQuadraticOptimalMap_of_finite_affine
+    [IsProbabilityMeasure ρ] (y : ι → E d) (c : ι → ℝ)
+    (hy : Function.Injective y) (hT : Measurable T)
+    (hsource : Integrable (FiniteAffine.sourceDual y c) ρ)
+    (hactive : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i) :
+    IsQuadraticOptimalMap ρ (Measure.map T ρ) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a>, <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L61><b>theorem</b> <code>OAI.Problem358.finiteAffine_dual_eq_implies_graph_ae</code> <small>line 61</small><div class="doc"><p>Under an absolutely continuous source, saturation of the finite-affine certificate
+forces every competing plan onto the selected graph.</p></div><pre>theorem finiteAffine_dual_eq_implies_graph_ae
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hρ : ρ ≪ (volume : Measure (E d))) (hT : Measurable T)
+    (hactive : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i)
+    {π : Measure (E d × E d)} (hπ : IsCoupling ρ (Measure.map T ρ) π) :
+    ∀ᵐ p ∂π, FiniteAffine.sourceDual y c p.1 +
+      FiniteAffine.targetDual y c p.2 = ‖p.1 - p.2‖ ^ 2 → p.2 = T p.1 := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a>, <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a>, <a href="AffineCertificate.lean.html#L175">OAI.Problem358.FiniteAffine.targetDual</a></p></li><li id=L91><b>theorem</b> <code>OAI.Problem358.integrable_finiteAffine_sourceDual_of_compact</code> <small>line 91</small><div class="doc"><p>Compact support makes the continuous source potential integrable.</p></div><pre>theorem integrable_finiteAffine_sourceDual_of_compact
+    [IsFiniteMeasure ρ] (y : ι → E d) (c : ι → ℝ)
+    {K : Set (E d)} (hK : IsCompact K) (hρK : IsSupported ρ K) :
+    Integrable (FiniteAffine.sourceDual y c) ρ := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a></p></li><li id=L104><b>theorem</b> <code>OAI.Problem358.isUniqueQuadraticOptimalMap_of_finite_affine</code> <small>line 104</small><div class="doc"><p>The finite-affine construction gives uniqueness among all transport plans, not
+merely among maps, whenever the source is absolutely continuous.</p></div><pre>theorem isUniqueQuadraticOptimalMap_of_finite_affine
+    [IsProbabilityMeasure ρ] (y : ι → E d) (c : ι → ℝ)
+    (hy : Function.Injective y) (hρ : ρ ≪ (volume : Measure (E d)))
+    (hT : Measurable T) (hsource : Integrable (FiniteAffine.sourceDual y c) ρ)
+    (hactive : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i) :
+    IsUniqueQuadraticOptimalMap ρ (Measure.map T ρ) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a>, <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L124><b>theorem</b> <code>OAI.Problem358.isUniqueQuadraticOptimalMap_of_finite_affine_of_compact</code> <small>line 124</small><div class="doc"><p>Compactly supported absolutely continuous probabilities admit the finite-affine
+optimality certificate without auxiliary integrability assumptions.</p></div><pre>theorem isUniqueQuadraticOptimalMap_of_finite_affine_of_compact
+    [IsProbabilityMeasure ρ] (y : ι → E d) (c : ι → ℝ)
+    (hy : Function.Injective y) (hρ : ρ ≪ (volume : Measure (E d)))
+    {K : Set (E d)} (hK : IsCompact K) (hρK : IsSupported ρ K)
+    (hT : Measurable T)
+    (hactive : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i) :
+    IsUniqueQuadraticOptimalMap ρ (Measure.map T ρ) T :=
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L135><b>theorem</b> <code>OAI.Problem358.isUniqueQuadraticOptimalMap_uniform_of_finite_affine</code> <small>line 135</small><div class="doc"><p>Uniform compact-source specialization for the finite-affine maps used in sharpness.</p></div><pre>theorem isUniqueQuadraticOptimalMap_uniform_of_finite_affine
+    (K : Set (E d)) [IsProbabilityMeasure (uniformMeasure K)]
+    (hK : IsCompact K) (y : ι → E d) (c : ι → ℝ)
+    (hy : Function.Injective y) (hT : Measurable T)
+    (hactive : ∀ᵐ x ∂uniformMeasure K,
+      ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i) :
+    IsUniqueQuadraticOptimalMap (uniformMeasure K)
+      (Measure.map T (uniformMeasure K)) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L156><b>theorem</b> <code>OAI.Problem358.FiniteAffine.isQuadraticOptimalMap_of_maximizes</code> <small>line 156</small><div class="doc"><p>A measurable active-site map solves the quadratic transport problem to its law.</p></div><pre>theorem isQuadraticOptimalMap_of_maximizes
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (ρ : Measure (E d)) [IsProbabilityMeasure ρ]
+    {T : E d → E d} (hT : Measurable T)
+    (hsource : Integrable (sourceDual y c) ρ)
+    (hmax : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ Maximizes y c x i) :
+    IsQuadraticOptimalMap ρ (Measure.map T ρ) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a>, <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L181><b>theorem</b> <code>OAI.Problem358.FiniteAffine.isQuadraticOptimalMap_of_maximizes_of_compact</code> <small>line 181</small><div class="doc"><p>Compact support supplies the dual-potential integrability automatically.</p></div><pre>theorem isQuadraticOptimalMap_of_maximizes_of_compact
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (ρ : Measure (E d)) [IsProbabilityMeasure ρ]
+    {K : Set (E d)} (hK : IsCompact K) (hρ : IsSupported ρ K)
+    {T : E d → E d} (hT : Measurable T)
+    (hmax : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ Maximizes y c x i) :
+    IsQuadraticOptimalMap ρ (Measure.map T ρ) T :=
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L192><b>theorem</b> <code>OAI.Problem358.FiniteAffine.isUniqueQuadraticOptimalMap_of_maximizes</code> <small>line 192</small><div class="doc"><p>No ties between distinct maximizing sites upgrades finite-affine optimality to plan uniqueness.</p></div><pre>theorem isUniqueQuadraticOptimalMap_of_maximizes
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (ρ : Measure (E d)) [IsProbabilityMeasure ρ]
+    {T : E d → E d} (hT : Measurable T)
+    (hsource : Integrable (sourceDual y c) ρ)
+    (hmax : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ Maximizes y c x i)
+    (hunique : ∀ᵐ x ∂ρ, ∀ i j, Maximizes y c x i →
+      Maximizes y c x j → y i = y j) :
+    IsUniqueQuadraticOptimalMap ρ (Measure.map T ρ) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L130">OAI.Problem358.FiniteAffine.sourceDual</a>, <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L236><b>theorem</b> <code>OAI.Problem358.FiniteAffine.isUniqueQuadraticOptimalMap_of_maximizes_of_compact</code> <small>line 236</small><div class="doc"><p>The compact-source form of the finite-affine unique-optimality criterion.</p></div><pre>theorem isUniqueQuadraticOptimalMap_of_maximizes_of_compact
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (ρ : Measure (E d)) [IsProbabilityMeasure ρ]
+    {K : Set (E d)} (hK : IsCompact K) (hρ : IsSupported ρ K)
+    {T : E d → E d} (hT : Measurable T)
+    (hmax : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ Maximizes y c x i)
+    (hunique : ∀ᵐ x ∂ρ, ∀ i j, Maximizes y c x i →
+      Maximizes y c x j → y i = y j) :
+    IsUniqueQuadraticOptimalMap ρ (Measure.map T ρ) T :=
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L249><b>theorem</b> <code>OAI.Problem358.FiniteAffine.isUniqueQuadraticOptimalMap_of_maximizes_of_ac_volume</code> <small>line 249</small><div class="doc"><p>For an absolutely continuous source, distinct slopes have no positive-mass ties.</p></div><pre>theorem isUniqueQuadraticOptimalMap_of_maximizes_of_ac_volume
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (ρ : Measure (E d)) [IsProbabilityMeasure ρ]
+    {K : Set (E d)} (hK : IsCompact K) (hρ : IsSupported ρ K)
+    (hac : ρ ≪ volume) {T : E d → E d} (hT : Measurable T)
+    (hmax : ∀ᵐ x ∂ρ, ∃ i, T x = y i ∧ Maximizes y c x i) :
+    IsUniqueQuadraticOptimalMap ρ (Measure.map T ρ) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li><li id=L262><b>theorem</b> <code>OAI.Problem358.FiniteAffine.isUniqueQuadraticOptimalMap_uniform_of_maximizes</code> <small>line 262</small><div class="doc"><p>Direct finite-affine uniqueness on a uniform compact source.</p></div><pre>theorem isUniqueQuadraticOptimalMap_uniform_of_maximizes
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    {K : Set (E d)} (hK : IsCompact K)
+    [IsProbabilityMeasure (uniformMeasure K)]
+    {T : E d → E d} (hT : Measurable T)
+    (hmax : ∀ᵐ x ∂uniformMeasure K, ∃ i, T x = y i ∧ Maximizes y c x i) :
+    IsUniqueQuadraticOptimalMap (uniformMeasure K)
+      (Measure.map T (uniformMeasure K)) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

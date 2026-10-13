@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/MovingRoundedCellSums.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/MovingRoundedCellSums.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>MovingRoundedCellSums.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>MovingRoundedCellSums.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/MovingRoundedCellSums.lean#L1">source</a></p><div class="doc"><h3>The endpoint loss of rounded top and compensation cells</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>def</b> <code>OAI.Ostmann.movingSmallCellCenters</code> <small>line 11</small><div class="doc"><p>A compensation type occurs four times in the full initial list.</p></div><pre>noncomputable def movingSmallCellCenters (top compensation : List ℝ) : List ℝ :=
+…</pre></li><li id=L14><b>theorem</b> <code>OAI.Ostmann.movingSmallCellCenters_length</code> <small>line 14</small></li><li id=L23><b>theorem</b> <code>OAI.Ostmann.movingSmallCellCenters_sum</code> <small>line 23</small></li><li id=L33><b>theorem</b> <code>OAI.Ostmann.movingCompensationCenters_error</code> <small>line 33</small></li><li id=L48><b>theorem</b> <code>OAI.Ostmann.movingSmallCellCenters_lower</code> <small>line 48</small><div class="doc"><p>Replacing each center by the bottom of its width-two cell loses exactly
+one per slot, in addition to the top and compensation rounding errors.</p></div><pre>theorem movingSmallCellCenters_lower (J cb E et : ℝ)
+    (top centers targets : List ℝ)
+    (htop : J - et ≤ top.sum + cb)
+    (hcomp : List.Forall₂ (fun c w =&gt; |4 * c - w| ≤ 4 * E) centers targets) :
+    J + targets.sum - (et + 4 * E * centers.length +
+      (top.length + 4 * centers.length : ℕ) + 1) ≤
+      ((movingSmallCellCenters top centers).map (fun c =&gt; c - 1)).sum + (cb - 1) := by
+…</pre><p class="refs">Mentions: <a href="MovingRoundedCellSums.lean.html#L11">OAI.Ostmann.movingSmallCellCenters</a></p></li><li id=L65><b>theorem</b> <code>OAI.Ostmann.movingSmallCellCenters_lower_of_le</code> <small>line 65</small><div class="doc"><p>One-sided rounding has no accumulated center error in the lower bound.</p></div><pre>theorem movingSmallCellCenters_lower_of_le (J cb : ℝ)
+    (top centers targets : List ℝ)
+    (htop : J ≤ top.sum + cb)
+    (hcomp : List.Forall₂ (fun c w =&gt; w ≤ 4 * c) centers targets) :
+    J + targets.sum - ((top.length + 4 * centers.length : ℕ) + 1) ≤
+      ((movingSmallCellCenters top centers).map (fun c =&gt; c - 1)).sum + (cb - 1) := by
+…</pre><p class="refs">Mentions: <a href="MovingRoundedCellSums.lean.html#L11">OAI.Ostmann.movingSmallCellCenters</a></p></li><li id=L85><b>theorem</b> <code>OAI.Ostmann.moving_rounded_cell_diagonal_gap</code> <small>line 85</small><div class="doc"><p>The actual repeated cell endpoints satisfy the diagonal gap after paying
+for excluded integer centers and one unit per cell endpoint.</p></div><pre>theorem moving_rounded_cell_diagonal_gap (k n : ℕ)
+    (BD Bz C L J cb w b cg : ℝ) (top centers targets : List ℝ)
+    (D : Finset ℤ)
+    (hC : 0 ≤ C) (hk : 16 * C + 20 ≤ (k : ℝ) ^ 4)
+    (hL : (top.length + 4 * centers.length : ℕ) + 9 ≤ L)
+    (hD : (D.card : ℝ) ≤ C * L)
+    (hcg : cg ≤ (91 / 100 : ℝ) * L)
+    (htop : J ≤ top.sum + cb)
+    (hcomp : List.Forall₂ (fun c t =&gt; t ≤ 4 * c) centers targets)
+    (hupper : 4 * b ≤ w + 4 * (D.card + 2))
+    (hbalance : (2 ^ n : ℕ) * w = (2 ^ n : ℕ) * (J + targets.sum) -
+      spectatorStepGap BD Bz ((k : ℝ) ^ 4) (2 ^ n : ℕ) (spectatorBulkCount k L)) :
+…</pre><p class="refs">Mentions: <a href="../Construction/DiagonalGapBudget.lean.html#L13">OAI.Ostmann.spectatorStepGap</a>, <a href="../Construction/SpectatorBulkScale.lean.html#L16">OAI.Ostmann.spectatorBulkCount</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

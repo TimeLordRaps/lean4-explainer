@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/Automorphic.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/Automorphic.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>Automorphic.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>Automorphic.lean</span></code></h1><p class="muted">41 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/Automorphic.lean#L1">source</a></p><div class="doc"><h3>Automorphic section spaces, Laurent recurrences, and period freeness</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.Nagata.W08.automorphicSections</code> <small>line 28</small><div class="doc"><p>Holomorphic functions on <code>ℂ*</code> with the multiplier of <code>D(n,γ)</code>.
+The zero extension at the omitted point is part of the representation.</p></div><pre>noncomputable def automorphicSections (τ : ℂ) (n : ℤ) (γ : ℂ) :
+    Submodule ℂ (ℂ → ℂ) where
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.Nagata.W08.mem_automorphicSections_iff</code> <small>line 60</small></li><li id=L66><b>theorem</b> <code>OAI.Nagata.W08.automorphicSections_ext</code> <small>line 66</small><div class="doc"><p>Agreement on the genuine domain <code>ℂ*</code> determines the represented section.</p></div><pre>theorem automorphicSections_ext {τ γ : ℂ} {n : ℤ}
+    (f g : automorphicSections τ n γ)
+    (h : ∀ z, z ≠ 0 → f.val z = g.val z) : f = g := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L77><b>def</b> <code>OAI.Nagata.W08.sectionRestriction</code> <small>line 77</small><div class="doc"><p>Forget the forced zero value and restrict to the actual punctured-plane domain.</p></div><pre>def sectionRestriction (τ : ℂ) (n : ℤ) (γ : ℂ) :
+    automorphicSections τ n γ →ₗ[ℂ] ({z : ℂ // z ≠ 0} → ℂ) where
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L84><b>theorem</b> <code>OAI.Nagata.W08.sectionRestriction_injective</code> <small>line 84</small><div class="doc"><p>The zero-extension representation adds no sections invisible on <code>ℂ*</code>.</p></div><pre>theorem sectionRestriction_injective (τ : ℂ) (n : ℤ) (γ : ℂ) :
+    Function.Injective (sectionRestriction τ n γ) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L77">OAI.Nagata.W08.sectionRestriction</a></p></li><li id=L92><b>def</b> <code>OAI.Nagata.W08.normalizeAtZero</code> <small>line 92</small><div class="doc"><p>Extend the values on <code>ℂ*</code> by zero at the omitted point.</p></div><pre>noncomputable def normalizeAtZero (f : ℂ → ℂ) (z : ℂ) : ℂ :=
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.Nagata.W08.normalizeAtZero_zero</code> <small>line 95</small></li><li id=L98><b>theorem</b> <code>OAI.Nagata.W08.normalizeAtZero_of_ne</code> <small>line 98</small></li><li id=L103><b>theorem</b> <code>OAI.Nagata.W08.normalizeAtZero_eventuallyEq</code> <small>line 103</small><div class="doc"><p>Changing the value at zero changes no germ on the punctured plane.</p></div><pre>theorem normalizeAtZero_eventuallyEq (f : ℂ → ℂ) {z : ℂ} (hz : z ≠ 0) :
+    normalizeAtZero f =ᶠ[𝓝 z] f :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L92">OAI.Nagata.W08.normalizeAtZero</a></p></li><li id=L108><b>theorem</b> <code>OAI.Nagata.W08.normalizeAtZero_differentiableAt_iff</code> <small>line 108</small><div class="doc"><p>The zero-extension representation preserves holomorphy at every genuine point.</p></div><pre>theorem normalizeAtZero_differentiableAt_iff (f : ℂ → ℂ) {z : ℂ} (hz : z ≠ 0) :
+    DifferentiableAt ℂ (normalizeAtZero f) z ↔ DifferentiableAt ℂ f z :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L92">OAI.Nagata.W08.normalizeAtZero</a></p></li><li id=L114><b>theorem</b> <code>OAI.Nagata.W08.normalizeAtZero_mem_automorphicSections</code> <small>line 114</small><div class="doc"><p>Construct a concrete section from an actual holomorphic automorphic function.
+The assumptions state only holomorphy and the defining multiplier equation.</p></div><pre>theorem normalizeAtZero_mem_automorphicSections {τ γ : ℂ} {n : ℤ}
+    (hτ : τ ≠ 0) (f : ℂ → ℂ)
+    (hf : ∀ z, z ≠ 0 → DifferentiableAt ℂ f z)
+    (he : ∀ z, z ≠ 0 → f (τ * z) = γ * z ^ (-n) * f z) :
+    normalizeAtZero f ∈ automorphicSections τ n γ := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L92">OAI.Nagata.W08.normalizeAtZero</a>, <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L127><b>def</b> <code>OAI.Nagata.W08.sectionOfFunction</code> <small>line 127</small><div class="doc"><p>The resulting element of the genuine section space.</p></div><pre>noncomputable def sectionOfFunction {τ γ : ℂ} {n : ℤ}
+    (hτ : τ ≠ 0) (f : ℂ → ℂ)
+    (hf : ∀ z, z ≠ 0 → DifferentiableAt ℂ f z)
+    (he : ∀ z, z ≠ 0 → f (τ * z) = γ * z ^ (-n) * f z) :
+    automorphicSections τ n γ :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L134><b>theorem</b> <code>OAI.Nagata.W08.sectionOfFunction_apply</code> <small>line 134</small></li><li id=L153><b>def</b> <code>OAI.Nagata.W08.triangular</code> <small>line 153</small><div class="doc"><p>The integer-valued quadratic appearing in a bi-infinite Laurent orbit.</p></div><pre>def triangular (p : Int) : Int := p * (p - 1) / 2</pre></li><li id=L155><b>theorem</b> <code>OAI.Nagata.W08.triangular_zero</code> <small>line 155</small></li><li id=L158><b>theorem</b> <code>OAI.Nagata.W08.triangular_add_one</code> <small>line 158</small><div class="doc"><p>This identity is valid also for negative <code>p</code>.</p></div><pre>theorem triangular_add_one (p : Int) : triangular (p + 1) = triangular p + p := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L153">OAI.Nagata.W08.triangular</a></p></li><li id=L166><b>theorem</b> <code>OAI.Nagata.W08.triangular_sub_one</code> <small>line 166</small></li><li id=L173><b>def</b> <code>OAI.Nagata.W08.laurentExponent</code> <small>line 173</small><div class="doc"><p>The exact exponent, before distributing the factor <code>n</code> inside the quotient.</p></div><pre>def laurentExponent (n K p : Int) : Int := p * K + n * triangular p</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L153">OAI.Nagata.W08.triangular</a></p></li><li id=L175><b>theorem</b> <code>OAI.Nagata.W08.laurentExponent_zero</code> <small>line 175</small></li><li id=L178><b>theorem</b> <code>OAI.Nagata.W08.laurentExponent_add_one</code> <small>line 178</small></li><li id=L183><b>theorem</b> <code>OAI.Nagata.W08.laurentExponent_sub_one</code> <small>line 183</small></li><li id=L191><b>theorem</b> <code>OAI.Nagata.W08.biInfinite_unique</code> <small>line 191</small><div class="doc"><p>A recurrence with reversible transitions is determined at every integer by its value at zero.</p></div><pre>theorem biInfinite_unique {α : Type u} (step : Int → α → α)
+    (injective_step : ∀ p x y, step p x = step p y → x = y)
+    (a b : Int → α) (ha : ∀ p, a (p + 1) = step p (a p))
+    (hb : ∀ p, b (p + 1) = step p (b p)) (hzero : a 0 = b 0) : a = b := by
+…</pre></li><li id=L221><b>theorem</b> <code>OAI.Nagata.W08.two_mul_triangular</code> <small>line 221</small><div class="doc"><p>The division in the triangular exponent is exact, for every integer.</p></div><pre>theorem two_mul_triangular (p : Int) : 2 * triangular p = p * (p - 1) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L153">OAI.Nagata.W08.triangular</a></p></li><li id=L234><b>theorem</b> <code>OAI.Nagata.W08.two_dvd_mul_pred</code> <small>line 234</small></li><li id=L238><b>theorem</b> <code>OAI.Nagata.W08.laurentExponent_eq_source</code> <small>line 238</small><div class="doc"><p>Moves <code>n</code> through the exact integer quotient in the manuscript exponent.</p></div><pre>theorem laurentExponent_eq_source (n K p : Int) :
+    laurentExponent n K p = p * K + n * p * (p - 1) / 2 := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L173">OAI.Nagata.W08.laurentExponent</a></p></li><li id=L253><b>theorem</b> <code>OAI.Nagata.W08.period_zpow_eq_one</code> <small>line 253</small><div class="doc"><p>A complex period strictly inside the unit circle has no nontrivial integral period.</p></div><pre>theorem period_zpow_eq_one {τ : ℂ} (hτ : ‖τ‖ &lt; 1) {k : ℤ}
+    (hk : τ ^ k = 1) : k = 0 := by
+…</pre></li><li id=L260><b>theorem</b> <code>OAI.Nagata.W08.period_zpow_mul_eq_self</code> <small>line 260</small><div class="doc"><p>The period acts freely on every nonzero point.</p></div><pre>theorem period_zpow_mul_eq_self {τ z : ℂ} (hτ : ‖τ‖ &lt; 1) (hz : z ≠ 0)
+    {k : ℤ} (hk : τ ^ k * z = z) : k = 0 := by
+…</pre></li><li id=L266><b>theorem</b> <code>OAI.Nagata.W08.unitPeriod_free</code> <small>line 266</small><div class="doc"><p>The unit-valued form used by the genuine torus and multiplier quotients.</p></div><pre>theorem unitPeriod_free (τ : ℂˣ) (hτ : ‖(τ : ℂ)‖ &lt; 1) (k : ℤ)
+    (hk : τ ^ k = 1) : k = 0 := by
+…</pre></li><li id=L289><b>theorem</b> <code>OAI.Nagata.W08.periodic_eq_of_exp_eq</code> <small>line 289</small><div class="doc"><p>Equality of exponential images identifies values of a deck-invariant function.</p></div><pre>theorem periodic_eq_of_exp_eq (F : ℂ → ℂ)
+    (hperiod : ∀ x (k : ℤ), F (x + (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) = F x)
+    {x y : ℂ} (hxy : Complex.exp x = Complex.exp y) : F x = F y := by
+…</pre></li><li id=L296><b>theorem</b> <code>OAI.Nagata.W08.periodic_log_eq_localLog</code> <small>line 296</small><div class="doc"><p>Use any local logarithm about <code>z₀</code>; the value agrees with the principal-log formula.</p></div><pre>theorem periodic_log_eq_localLog (F : ℂ → ℂ)
+    (hperiod : ∀ x (k : ℤ), F (x + (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) = F x)
+    {z z₀ : ℂ} (hz : z ≠ 0) (hz₀ : z₀ ≠ 0) :
+    F (Complex.log z) = F (Complex.log (z / z₀) + Complex.log z₀) := by
+…</pre></li><li id=L306><b>theorem</b> <code>OAI.Nagata.W08.periodic_log_differentiableAt</code> <small>line 306</small><div class="doc"><p>The expression using principal log is holomorphic even at its branch cut,
+because locally it agrees with a holomorphic choice centered at the point.</p></div><pre>theorem periodic_log_differentiableAt (F : ℂ → ℂ) (hF : Differentiable ℂ F)
+    (hperiod : ∀ x (k : ℤ), F (x + (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) = F x)
+    {z₀ : ℂ} (hz₀ : z₀ ≠ 0) :
+    DifferentiableAt ℂ (fun z ↦ F (Complex.log z)) z₀ := by
+…</pre></li><li id=L325><b>theorem</b> <code>OAI.Nagata.W08.periodic_log_automorphy</code> <small>line 325</small><div class="doc"><p>A shift law on the exponential cover gives the actual multiplicative law on <code>ℂ*</code>.</p></div><pre>theorem periodic_log_automorphy (F : ℂ → ℂ)
+    (hperiod : ∀ x (k : ℤ), F (x + (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) = F x)
+    {τ γ : ℂ} {n : ℤ} (hτ : τ ≠ 0)
+    (hshift : ∀ x, F (x + Complex.log τ) =
+      γ * Complex.exp (((-n : ℤ) : ℂ) * x) * F x)
+    {z : ℂ} (hz : z ≠ 0) :
+    F (Complex.log (τ * z)) = γ * z ^ (-n) * F (Complex.log z) := by
+…</pre></li><li id=L340><b>def</b> <code>OAI.Nagata.W08.automorphicSectionOfPeriodicFunction</code> <small>line 340</small><div class="doc"><p>Package the descended actual function as a genuine holomorphic multiplier section.
+Entire holomorphy, deck invariance and the scalar shift law remain explicit inputs.</p></div><pre>def automorphicSectionOfPeriodicFunction (F : ℂ → ℂ) (hF : Differentiable ℂ F)
+    (hperiod : ∀ x (k : ℤ), F (x + (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) = F x)
+    {τ γ : ℂ} {n : ℤ} (hτ : τ ≠ 0)
+    (hshift : ∀ x, F (x + Complex.log τ) =
+      γ * Complex.exp (((-n : ℤ) : ℂ) * x) * F x) :
+    automorphicSections τ n γ :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L351><b>theorem</b> <code>OAI.Nagata.W08.automorphicSectionOfPeriodicFunction_exp</code> <small>line 351</small><div class="doc"><p>Every exponential-cover value is recovered exactly, independently of branch choices.</p></div><pre>theorem automorphicSectionOfPeriodicFunction_exp (F : ℂ → ℂ) (hF : Differentiable ℂ F)
+    (hperiod : ∀ x (k : ℤ), F (x + (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) = F x)
+    {τ γ : ℂ} {n : ℤ} (hτ : τ ≠ 0)
+    (hshift : ∀ x, F (x + Complex.log τ) =
+      γ * Complex.exp (((-n : ℤ) : ℂ) * x) * F x) (x : ℂ) :
+    (automorphicSectionOfPeriodicFunction F hF hperiod hτ hshift).val (Complex.exp x) = F x := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L340">OAI.Nagata.W08.automorphicSectionOfPeriodicFunction</a></p></li><li id=L379><b>def</b> <code>OAI.Nagata.W08.orbitValue</code> <small>line 379</small><div class="doc"><p>Candidate values along one residue class. The starting coefficient can be zero.</p></div><pre>def orbitValue (τ γ : F) (n K : ℤ) (c₀ : F) (p : ℤ) : F :=
+…</pre></li><li id=L382><b>theorem</b> <code>OAI.Nagata.W08.orbitValue_zero</code> <small>line 382</small></li><li id=L386><b>theorem</b> <code>OAI.Nagata.W08.orbitValue_add_one</code> <small>line 386</small></li><li id=L396><b>theorem</b> <code>OAI.Nagata.W08.laurent_recurrence_all_int</code> <small>line 396</small><div class="doc"><p>The Laurent recurrence iterated through all integers, including negative ones.</p></div><pre>theorem laurent_recurrence_all_int (τ γ : F) (hτ : τ ≠ 0) (hγ : γ ≠ 0)
+    (n : ℤ) (c : ℤ → F)
+    (hc : ∀ K, c (K + n) = γ⁻¹ * τ ^ K * c K) (K p : ℤ) :
+    c (K + n * p) = c K * γ ^ (-p) * τ ^ (p * K + n * (p * (p - 1) / 2)) := by
+…</pre></li><li id=L417><b>theorem</b> <code>OAI.Nagata.W08.laurent_recurrence_source_formula</code> <small>line 417</small><div class="doc"><p>The formula exactly as printed in <code>eq:laurent-recurrence</code>.</p></div><pre>theorem laurent_recurrence_source_formula (τ γ : F) (hτ : τ ≠ 0) (hγ : γ ≠ 0)
+    (n : ℤ) (c : ℤ → F)
+    (hc : ∀ K, c (K + n) = γ⁻¹ * τ ^ K * c K) (K p : ℤ) :
+    c (K + n * p) = c K * γ ^ (-p) * τ ^ (p * K + n * p * (p - 1) / 2) := by
+…</pre></li><li id=L427><b>theorem</b> <code>OAI.Nagata.W08.recurrence_of_coefficient_balance</code> <small>line 427</small><div class="doc"><p>Rearrangement of the coefficient equality obtained from the functional equation.</p></div><pre>theorem recurrence_of_coefficient_balance (τ γ : F) (hγ : γ ≠ 0)
+    (n : ℤ) (c : ℤ → F)
+    (hbalance : ∀ K, τ ^ K * c K = γ * c (K + n)) :
+    ∀ K, c (K + n) = γ⁻¹ * τ ^ K * c K := by
+…</pre></li><li id=L438><b>theorem</b> <code>OAI.Nagata.W08.laurent_formula_of_coefficient_balance</code> <small>line 438</small><div class="doc"><p>The entire bi-infinite formula follows from the coefficient balance equation.</p></div><pre>theorem laurent_formula_of_coefficient_balance (τ γ : F) (hτ : τ ≠ 0) (hγ : γ ≠ 0)
+    (n : ℤ) (c : ℤ → F)
+    (hbalance : ∀ K, τ ^ K * c K = γ * c (K + n)) (K p : ℤ) :
+    c (K + n * p) = c K * γ ^ (-p) * τ ^ (p * K + n * p * (p - 1) / 2) :=
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

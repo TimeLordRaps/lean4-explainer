@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/WeightedDeficit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/WeightedDeficit.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>WeightedDeficit.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>WeightedDeficit.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/WeightedDeficit.lean#L1">source</a></p><div class="doc"><p>Finite weighted deficits used after the actual leaf-switching estimates.</p><p>The scalar argument allows zero leaf weights and returns a positive-weight leaf.
+The application constructs its vectors using the strictly positive path weights,
+then supplies the row estimates through <code>block_deficit_of_detection</code>.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.ReflexiveFixedPoints.pathDeficit</code> <small>line 24</small><div class="doc"><p>Sum of the nonnegative deficits on the path incident to a leaf.</p></div><pre>def pathDeficit {V S : Type*} [Fintype V]
+    (R : V → S → Prop) [DecidableRel R]
+    (a : V → S → ℝ) (s : S) : ℝ :=
+…</pre></li><li id=L30><b>def</b> <code>OAI.ReflexiveFixedPoints.IsBadLeaf</code> <small>line 30</small><div class="doc"><p>Equality at the threshold is bad, so a good leaf has a strict inequality.</p></div><pre>def IsBadLeaf {V S : Type*}
+    (R : V → S → Prop) (a : V → S → ℝ) (s : S) : Prop :=
+…</pre></li><li id=L35><b>def</b> <code>OAI.ReflexiveFixedPoints.badLeafMass</code> <small>line 35</small><div class="doc"><p>The total weight of leaves with at least one failing incident detector.</p></div><pre>def badLeafMass {V S : Type*} [Fintype S]
+    (R : V → S → Prop) (w : S → ℝ) (a : V → S → ℝ) : ℝ := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.ReflexiveFixedPoints.finite_weighted_deficit</code> <small>line 45</small><div class="doc"><p>Finite double counting gives a common leaf without a lower bound on weights.</p><p>The first two conclusions retain the quantitative estimates. The
+selected leaf has positive weight and satisfies every incident detector strictly.</p></div><pre>theorem finite_weighted_deficit
+    {V S : Type*} [Fintype V] [Fintype S]
+    (R : V → S → Prop) [DecidableRel R]
+    (w : S → ℝ) (e : V → ℝ) (a : V → S → ℝ)
+    (hw : ∀ s, 0 ≤ w s)
+    (hw_sum : (∑ s, w s) = 1)
+    (ha : ∀ v s, R v s → a v s ≤ 1)
+    (hrow : ∀ v,
+      (∑ s, if R v s then w s * (1 - a v s) else 0) ≤ 5 * e v)
+    (he_sum : (∑ v, e v) ≤ (1 : ℝ) / 128) :
+    (∑ s, w s * pathDeficit R a s) ≤ (5 : ℝ) / 128 ∧
+      badLeafMass R w a ≤ (5 : ℝ) / 64 ∧
+…</pre><p class="refs">Mentions: <a href="WeightedDeficit.lean.html#L24">OAI.ReflexiveFixedPoints.pathDeficit</a>, <a href="WeightedDeficit.lean.html#L35">OAI.ReflexiveFixedPoints.badLeafMass</a></p></li><li id=L135><b>theorem</b> <code>OAI.ReflexiveFixedPoints.block_deficit_of_detection</code> <small>line 135</small><div class="doc"><p>A block's actual telescoping identity turns detection into weighted deficit.</p><p>Only the detector is linear. The block outputs may come from nonlinear maps;
+their actual finite telescoping identity is the input <code>htelescope</code>.</p></div><pre>theorem block_deficit_of_detection
+    {X S : Type*} [AddCommGroup X] [Module ℝ X]
+    (block : Finset S) (w : S → ℝ) (d : S → X)
+    (f : X →ₗ[ℝ] ℝ) (U V : X) (W e : ℝ)
+    (hmass : (∑ s ∈ block, w s) = W)
+    (htelescope : (∑ s ∈ block, w s • d s) = U - V)
+    (hdetect : W - 5 * e ≤ f (U - V)) :
+    (∑ s ∈ block, w s * (1 - f (d s))) ≤ 5 * e := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TotientAsymptotic/PPTNormalWitness.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TotientAsymptotic/PPTNormalWitness.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">TotientAsymptotic</a> / <span>PPTNormalWitness.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">TotientAsymptotic</a>/<span>PPTNormalWitness.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TotientAsymptotic/PPTNormalWitness.lean#L1">source</a></p><div class="doc"><p>The finite singleton-fiber reduction in Ford's exclusion (vi).  If the
+candidate primes and the fixed seed primes are normal, a chosen preimage
+with a nonnormal prime can only come from a singleton candidate-totient
+fiber.  The exceptional candidates therefore give distinct target
+totients, retaining the multiplicities elsewhere in the construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_nonnormal_witness_totient_injective</code> <small>line 20</small><div class="doc"><p>A nonnormal chosen preimage cannot lie in the seed-multiple branch of
+the injective witness construction.</p></div><pre>theorem ppt_nonnormal_witness_totient_injective {S Q : Finset ℕ}
+    {F : ℕ → ℕ} {q : ℕ} {W : ℝ} (hQS : Q ⊆ S)
+    (hS : ∀ n ∈ S, ∀ p : ℕ, p.Prime → p ∣ n → IsNormalPrime W p)
+    (hq : ∀ p : ℕ, p.Prime → p ∣ q → IsNormalPrime W p)
+    (hbranch : ∀ n ∈ S,
+      (∃ m ∈ S, m ≠ n ∧ m.totient = n.totient) →
+        ∃ c ∈ S, F n = c*q)
+    (hbad : ∀ n ∈ Q, ∃ p : ℕ, p.Prime ∧ p ∣ F n ∧ ¬IsNormalPrime W p) :
+    Set.InjOn Nat.totient (Q : Set ℕ) := by
+…</pre><p class="refs">Mentions: <a href="PublishedComparison.lean.html#L30">OAI.TotientAsymptotic.IsNormalPrime</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L42">OAI.TotientAsymptotic.m</a></p></li><li id=L40><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_nonnormal_witness_target_injective</code> <small>line 40</small><div class="doc"><p>The corresponding seed-scaled target totients are distinct as well.</p></div><pre>theorem ppt_nonnormal_witness_target_injective {S Q : Finset ℕ}
+    {F : ℕ → ℕ} {d q : ℕ} {W : ℝ} (hd : 0 &lt; d) (hQS : Q ⊆ S)
+    (hS : ∀ n ∈ S, ∀ p : ℕ, p.Prime → p ∣ n → IsNormalPrime W p)
+    (hq : ∀ p : ℕ, p.Prime → p ∣ q → IsNormalPrime W p)
+    (hbranch : ∀ n ∈ S,
+      (∃ m ∈ S, m ≠ n ∧ m.totient = n.totient) →
+        ∃ c ∈ S, F n = c*q)
+    (hbad : ∀ n ∈ Q, ∃ p : ℕ, p.Prime ∧ p ∣ F n ∧ ¬IsNormalPrime W p) :
+    Set.InjOn (fun n : ℕ =&gt; d*n.totient) (Q : Set ℕ) := by
+…</pre><p class="refs">Mentions: <a href="PublishedComparison.lean.html#L30">OAI.TotientAsymptotic.IsNormalPrime</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L42">OAI.TotientAsymptotic.m</a></p></li><li id=L56><b>theorem</b> <code>OAI.TotientAsymptotic.ppt_nonnormal_witness_count</code> <small>line 56</small><div class="doc"><p>Counting nonnormal chosen preimages reduces to counting their actual
+distinct target totients.  The analytic exceptional-value estimate is a
+separate input to this finite reduction.</p></div><pre>theorem ppt_nonnormal_witness_count {S Q T : Finset ℕ}
+    {F : ℕ → ℕ} {d q : ℕ} {W : ℝ} (hd : 0 &lt; d) (hQS : Q ⊆ S)
+    (hS : ∀ n ∈ S, ∀ p : ℕ, p.Prime → p ∣ n → IsNormalPrime W p)
+    (hq : ∀ p : ℕ, p.Prime → p ∣ q → IsNormalPrime W p)
+    (hbranch : ∀ n ∈ S,
+      (∃ m ∈ S, m ≠ n ∧ m.totient = n.totient) →
+        ∃ c ∈ S, F n = c*q)
+    (hbad : ∀ n ∈ Q, ∃ p : ℕ, p.Prime ∧ p ∣ F n ∧ ¬IsNormalPrime W p)
+    (hT : ∀ n ∈ Q, d*n.totient ∈ T) :
+    Q.card ≤ T.card := by
+…</pre><p class="refs">Mentions: <a href="PublishedComparison.lean.html#L30">OAI.TotientAsymptotic.IsNormalPrime</a>, <a href="../../../ComparatorChallenges/TotientAsymptotic.lean.html#L42">OAI.TotientAsymptotic.m</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

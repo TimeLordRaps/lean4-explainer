@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RandomProductFourier.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RandomProductFourier.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RandomProductFourier.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RandomProductFourier.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RandomProductFourier.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>lemma</b> <code>OAI.Problem337.sum_fiber_card_mul</code> <small>line 11</small><div class="doc"><p>Regroup a finite sum by the fibers of a map, with explicit fiber cardinalities.</p></div><pre>lemma sum_fiber_card_mul {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq κ]
+    (f : ι → κ) (g : κ → ℂ) :
+    (∑ r : κ, ((Finset.univ.filter (fun a : ι =&gt; f a = r)).card : ℂ) * g r) =
+      ∑ a : ι, g (f a) := by
+…</pre></li><li id=L30><b>lemma</b> <code>OAI.Problem337.primeProductModMass_average</code> <small>line 30</small><div class="doc"><p>The mass function of a prime product is the pushforward of uniform counting.</p></div><pre>lemma primeProductModMass_average (P : Finset ℕ) (s q : ℕ) [NeZero q]
+    (g : ZMod q → ℂ) :
+    (∑ r : ZMod q, (primeProductModMass P s q r : ℂ) * g r) =
+      (∑ a : Fin s → ↥P, g ((∏ i, (a i : ℕ)) : ZMod q)) / (P.card : ℂ)^s := by
+…</pre><p class="refs">Mentions: <a href="PrimeProductFibers.lean.html#L82">OAI.Problem337.primeProductModMass</a></p></li><li id=L39><b>lemma</b> <code>OAI.Problem337.primeProductModMass_double_average</code> <small>line 39</small><div class="doc"><p>Two independent prime products correspond to the product of their residue masses.</p></div><pre>lemma primeProductModMass_double_average (P : Finset ℕ) (s q : ℕ) [NeZero q]
+    (g : ZMod q → ZMod q → ℂ) :
+    (∑ x : ZMod q, ∑ y : ZMod q,
+      (primeProductModMass P s q x : ℂ) *
+        (primeProductModMass P s q y : ℂ) * g x y) =
+      (∑ a : Fin s → ↥P, ∑ b : Fin s → ↥P,
+        g ((∏ i, (a i : ℕ)) : ZMod q) ((∏ i, (b i : ℕ)) : ZMod q)) /
+          ((P.card : ℂ)^s)^2 := by
+…</pre><p class="refs">Mentions: <a href="PrimeProductFibers.lean.html#L82">OAI.Problem337.primeProductModMass</a></p></li><li id=L55><b>theorem</b> <code>OAI.Problem337.prime_product_bilinear_average_bound</code> <small>line 55</small><div class="doc"><p>Exponential cancellation for two independent uniform prime products whenever
+all attainable integer products are smaller than the modulus. Repetitions among
+sampled primes are permitted.</p></div><pre>theorem prime_product_bilinear_average_bound
+    (P : Finset ℕ) (hP : ∀ p ∈ P, Nat.Prime p) (hne : P.Nonempty)
+    (s q : ℕ) [NeZero q]
+    (hsmall : ∀ a : Fin s → ↥P, (∏ i, (a i : ℕ)) &lt; q)
+    (c : (ZMod q)ˣ) :
+    ‖(∑ a : Fin s → ↥P, ∑ b : Fin s → ↥P,
+      ZMod.stdAddChar ((c : ZMod q) * ((∏ i, (a i : ℕ)) : ZMod q) *
+        ((∏ i, (b i : ℕ)) : ZMod q))) / ((P.card : ℂ)^s)^2‖ ≤
+      Real.sqrt (q : ℝ) * ((s.factorial : ℝ) / (P.card : ℝ)^s) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

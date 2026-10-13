@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/ThetaLimits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/ThetaLimits.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>ThetaLimits.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>ThetaLimits.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/ThetaLimits.lean#L1">source</a></p><div class="doc"><h3>Marked theta products and scalar-basis degeneration</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.Nagata.W22.scaledThetaPositive</code> <small>line 20</small><div class="doc"><p>One half of the theta product, after substituting a shrinking center.</p></div><pre>def scaledThetaPositive (a : ℝ) (δ : ℂ) (τ : ℝ) (x : ℂ) : ℂ :=
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Nagata.W22.scaledThetaPositive_factor_norm_le</code> <small>line 24</small><div class="doc"><p>The nonconstant product factors have one summable geometric majorant on a disk.</p></div><pre>theorem scaledThetaPositive_factor_norm_le {a τ R : ℝ} {δ x : ℂ}
+    (hτ : 0 ≤ τ) (hτhalf : τ ≤ 1 / 2) (hδ : ‖δ‖ ≤ 1)
+    (hR : 0 ≤ R) (hx : ‖x‖ ≤ R) (t : ℕ) :
+    ‖-((τ : ℂ) ^ t * (((τ ^ a : ℝ) : ℂ) * Complex.exp (δ * x)))‖ ≤
+      (1 / 2 : ℝ) ^ t * (τ ^ a * Real.exp R) := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_scaledThetaPositive</code> <small>line 42</small><div class="doc"><p>Each half-product tends uniformly to one on a fixed disk when <code>a&gt;0</code>.</p></div><pre>theorem tendstoUniformlyOn_scaledThetaPositive
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {a R : ℝ} {δ : ℂ}
+    (ha : 0 &lt; a) (hδ : ‖δ‖ ≤ 1) (hR : 0 ≤ R)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    TendstoUniformlyOn (fun j =&gt; scaledThetaPositive a δ (τ j)) (fun _ =&gt; 1)
+      l {x : ℂ | ‖x‖ ≤ R} := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L20">OAI.Nagata.W22.scaledThetaPositive</a></p></li><li id=L77><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_scaledThetaPositive</code> <small>line 77</small><div class="doc"><p>Local-uniform version of the same actual half-product degeneration.</p></div><pre>theorem tendstoLocallyUniformlyOn_scaledThetaPositive
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {a : ℝ} {δ : ℂ}
+    (ha : 0 &lt; a) (hδ : ‖δ‖ ≤ 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    TendstoLocallyUniformlyOn (fun j =&gt; scaledThetaPositive a δ (τ j))
+      (fun _ =&gt; 1) l Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L20">OAI.Nagata.W22.scaledThetaPositive</a></p></li><li id=L91><b>def</b> <code>OAI.Nagata.W22.shiftedThetaProduct</code> <small>line 91</small><div class="doc"><p>The actual theta product evaluated at the shrinking center.</p></div><pre>def shiftedThetaProduct (a : ℝ) (τ : ℝ) (x : ℂ) : ℂ :=
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.Nagata.W22.shiftedThetaProduct_eq_halves</code> <small>line 95</small><div class="doc"><p>The two source halves after the common-chart substitution.</p></div><pre>theorem shiftedThetaProduct_eq_halves {τ : ℝ} (hτ : 0 &lt; τ) (a : ℝ) (x : ℂ) :
+    shiftedThetaProduct a τ x = scaledThetaPositive a 1 τ x *
+      scaledThetaPositive (1 - a) (-1) τ x := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L91">OAI.Nagata.W22.shiftedThetaProduct</a>, <a href="ThetaLimits.lean.html#L20">OAI.Nagata.W22.scaledThetaPositive</a></p></li><li id=L105><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_shiftedThetaProduct</code> <small>line 105</small><div class="doc"><p>The complete theta factor tends locally uniformly to one if <code>0&lt;a&lt;1</code>.</p></div><pre>theorem tendstoLocallyUniformlyOn_shiftedThetaProduct
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {a : ℝ}
+    (ha : 0 &lt; a) (haone : a &lt; 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    TendstoLocallyUniformlyOn (fun j =&gt; shiftedThetaProduct a (τ j))
+      (fun _ =&gt; 1) l Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L91">OAI.Nagata.W22.shiftedThetaProduct</a></p></li><li id=L136><b>def</b> <code>OAI.Nagata.W22.markedPi</code> <small>line 136</small><div class="doc"><p>The product <code>Π</code> in the local covering frame, with offsets <code>aᵢ=x₀−xᵢ</code>.</p></div><pre>def markedPi (a : Fin 9 → ℝ) (τ : ℝ) (x : ℂ) : ℂ :=
+…</pre></li><li id=L140><b>theorem</b> <code>OAI.Nagata.W22.shiftedThetaProduct_differentiable</code> <small>line 140</small><div class="doc"><p>Every shifted theta factor is entire in the logarithmic coordinate.</p></div><pre>theorem shiftedThetaProduct_differentiable {τ : ℝ}
+    (hτ : 0 &lt; τ) (hτone : τ &lt; 1) (a : ℝ) :
+    Differentiable ℂ (shiftedThetaProduct a τ) := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L91">OAI.Nagata.W22.shiftedThetaProduct</a></p></li><li id=L151><b>theorem</b> <code>OAI.Nagata.W22.markedPi_differentiable</code> <small>line 151</small><div class="doc"><p>The nine-factor product is entire in the logarithmic coordinate.</p></div><pre>theorem markedPi_differentiable {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (a : Fin 9 → ℝ) : Differentiable ℂ (markedPi a τ) := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L136">OAI.Nagata.W22.markedPi</a></p></li><li id=L156><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_markedPi</code> <small>line 156</small><div class="doc"><p>The full product tends locally uniformly to one, with all nine marks present.</p></div><pre>theorem tendstoLocallyUniformlyOn_markedPi
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {a : Fin 9 → ℝ}
+    (ha : ∀ i, 0 &lt; a i) (haone : ∀ i, a i &lt; 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    TendstoLocallyUniformlyOn (fun j =&gt; markedPi a (τ j)) (fun _ =&gt; 1) l Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L136">OAI.Nagata.W22.markedPi</a></p></li><li id=L165><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_markedPi_pow</code> <small>line 165</small><div class="doc"><p>Every fixed nonnegative power of <code>Π</code> tends locally uniformly to one.</p></div><pre>theorem tendstoLocallyUniformlyOn_markedPi_pow
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {a : Fin 9 → ℝ}
+    (ha : ∀ i, 0 &lt; a i) (haone : ∀ i, a i &lt; 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (e : ℕ) :
+    TendstoLocallyUniformlyOn (fun j x =&gt; markedPi a (τ j) x ^ e) (fun _ =&gt; 1) l Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L136">OAI.Nagata.W22.markedPi</a></p></li><li id=L175><b>theorem</b> <code>OAI.Nagata.W22.tendsto_iteratedDeriv_markedPi_pow_zero</code> <small>line 175</small><div class="doc"><p>The degree-zero tip is retained: the coefficient <code>Π^e</code> has jets tending to
+those of the constant function one, including its zeroth jet.</p></div><pre>theorem tendsto_iteratedDeriv_markedPi_pow_zero
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {marks : Fin 9 → ℝ}
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (e c : ℕ) :
+    Tendsto (fun j =&gt; iteratedDeriv c (fun x =&gt; markedPi marks (τ j) x ^ e) 0)
+      l (𝓝 ((0 : ℂ) ^ c)) := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L136">OAI.Nagata.W22.markedPi</a></p></li><li id=L203><b>def</b> <code>OAI.Nagata.W22.rayMarkedSection</code> <small>line 203</small><div class="doc"><p>The actual nine-mark multiplier section for ray lifts <code>τ^ξᵢ</code>.</p></div><pre>def rayMarkedSection {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1) (ξ : Fin 9 → ℝ) :=
+…</pre></li><li id=L213><b>theorem</b> <code>OAI.Nagata.W22.rayMarkedSection_centered</code> <small>line 213</small><div class="doc"><p>Evaluating the genuine section on the moving exponential chart gives exactly
+the scalar nine-factor product used in the jet limit.</p></div><pre>theorem rayMarkedSection_centered {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (ξ : Fin 9 → ℝ) (x₀ : ℝ) (x : ℂ) :
+    (rayMarkedSection hτ hτone ξ).val (((τ ^ x₀ : ℝ) : ℂ) * Complex.exp x) =
+      markedPi (fun i =&gt; x₀ - ξ i) τ x := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L203">OAI.Nagata.W22.rayMarkedSection</a>, <a href="ThetaLimits.lean.html#L136">OAI.Nagata.W22.markedPi</a></p></li><li id=L241><b>def</b> <code>OAI.Nagata.W22.multipliedThetaCoefficient</code> <small>line 241</small><div class="doc"><p>The exact second-branch scalar coefficient.</p></div><pre>def multipliedThetaCoefficient (marks : Fin 9 → ℝ) (n a K : ℝ) (ε : ℂ)
+    (e : ℕ) (τ : ℝ) (x : ℂ) : ℂ :=
+…</pre></li><li id=L246><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_multipliedThetaCoefficient</code> <small>line 246</small><div class="doc"><p>The complete positive-degree coefficient block has the required local limit.</p></div><pre>theorem tendstoLocallyUniformlyOn_multipliedThetaCoefficient
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {marks : Fin 9 → ℝ}
+    {n a K : ℝ} {ε : ℂ}
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1)
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (e : ℕ) :
+    TendstoLocallyUniformlyOn (fun j =&gt; multipliedThetaCoefficient marks n a K ε e (τ j))
+      (fun x =&gt; Complex.exp ((K : ℂ) * x)) l Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L241">OAI.Nagata.W22.multipliedThetaCoefficient</a></p></li><li id=L261><b>theorem</b> <code>OAI.Nagata.W22.tendsto_iteratedDeriv_multipliedThetaCoefficient_zero</code> <small>line 261</small><div class="doc"><p>Derivative limits for the complete positive-degree second block at the jet origin.</p></div><pre>theorem tendsto_iteratedDeriv_multipliedThetaCoefficient_zero
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {marks : Fin 9 → ℝ}
+    {n a K : ℝ} {ε : ℂ}
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1)
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (e c : ℕ) :
+    Tendsto (fun j =&gt; iteratedDeriv c (multipliedThetaCoefficient marks n a K ε e (τ j)) 0)
+      l (𝓝 ((K : ℂ) ^ c)) := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L241">OAI.Nagata.W22.multipliedThetaCoefficient</a></p></li><li id=L297><b>def</b> <code>OAI.Nagata.W22.basisCoefficient</code> <small>line 297</small><div class="doc"><p>Actual scalar expression of every basis column, retaining the degree-zero tip.</p></div><pre>def basisCoefficient (d m : ℤ) (ρ Δ : ℝ) (marks : Fin 9 → ℝ)
+    (τ : ℝ) (col : Column d m ρ Δ) : ℂ → ℂ :=
+…</pre></li><li id=L312><b>theorem</b> <code>OAI.Nagata.W22.eventually_differentiableOn_basisCoefficient_disk</code> <small>line 312</small><div class="doc"><p>All columns are eventually holomorphic on one fixed disk. This assertion
+uses the actual normal convergence and keeps all three source branches.</p></div><pre>theorem eventually_differentiableOn_basisCoefficient_disk
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {d m : ℤ} {ρ Δ : ℝ}
+    (marks : Fin 9 → ℝ) (hτ : Tendsto τ l (𝓝 0))
+    (hτpos : ∀ᶠ t in l, 0 &lt; τ t) :
+    ∀ᶠ t in l, ∀ col : Column d m ρ Δ,
+      DifferentiableOn ℂ (basisCoefficient d m ρ Δ marks (τ t) col)
+        {x : ℂ | ‖x‖ &lt; 1} := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L297">OAI.Nagata.W22.basisCoefficient</a></p></li><li id=L342><b>theorem</b> <code>OAI.Nagata.W22.eventually_contDiffAt_basisCoefficient</code> <small>line 342</small><div class="doc"><p>Eventual smoothness of every literal column, for the finite-jet linearity bridge.</p></div><pre>theorem eventually_contDiffAt_basisCoefficient
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {d m : ℤ} {ρ Δ : ℝ}
+    (marks : Fin 9 → ℝ) (hτ : Tendsto τ l (𝓝 0))
+    (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    ∀ᶠ j in l, ∀ col : Column d m ρ Δ, ∀ c : ℕ,
+      ContDiffAt ℂ c (basisCoefficient d m ρ Δ marks (τ j) col) 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L297">OAI.Nagata.W22.basisCoefficient</a></p></li><li id=L354><b>theorem</b> <code>OAI.Nagata.W22.tendsto_iteratedDeriv_basisCoefficient_zero</code> <small>line 354</small><div class="doc"><p>Every genuine scalar coefficient has the expected limiting x-jets.</p></div><pre>theorem tendsto_iteratedDeriv_basisCoefficient_zero
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {d m : ℤ} {ρ Δ : ℝ}
+    {marks : Fin 9 → ℝ}
+    (hmarks : ∀ i, 0 &lt; marks i) (hmarksone : ∀ i, marks i &lt; 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j)
+    (col : Column d m ρ Δ) (c : ℕ) :
+    Tendsto (fun t =&gt; iteratedDeriv c (basisCoefficient d m ρ Δ marks (τ t) col) 0)
+      l (𝓝 ((col.val.2 : ℂ) ^ c)) := by
+…</pre><p class="refs">Mentions: <a href="ThetaLimits.lean.html#L297">OAI.Nagata.W22.basisCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/EinsteinFour/ScalarPoissonKernelLocalTests.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/EinsteinFour/ScalarPoissonKernelLocalTests.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">EinsteinFour</a> / <span>ScalarPoissonKernelLocalTests.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">EinsteinFour</a>/<span>ScalarPoissonKernelLocalTests.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/EinsteinFour/ScalarPoissonKernelLocalTests.lean#L1">source</a></p><div class="doc"><p>Compact tests determine every inner localization of a distribution.
+A source smooth only on the test domain becomes a Schwartz source after
+localization, and therefore has all Sobolev orders.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalarSchwartz_cutoff_compact</code> <small>line 21</small></li><li id=L27><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalarSchwartz_cutoff_support</code> <small>line 27</small></li><li id=L35><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_localize_eq_of_compact_tests</code> <small>line 35</small><div class="doc"><p>Equality on compact tests in U gives equality after any compact
+Schwartz cutoff supported in U.</p></div><pre>theorem scalar_localize_eq_of_compact_tests (U : Set V) (u v : T)
+    (htest : ∀ φ : S, HasCompactSupport (φ : V → ℂ) →
+      tsupport (φ : V → ℂ) ⊆ U → u φ = v φ)
+    (ψ : S) (hc : HasCompactSupport (ψ : V → ℂ))
+    (hs : tsupport (ψ : V → ℂ) ⊆ U) :
+    M ψ u = M ψ v := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_localize_zero_of_compact_tests</code> <small>line 45</small></li><li id=L55><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalarLocalSource_smooth</code> <small>line 55</small></li><li id=L69><b>def</b> <code>OAI.PositiveEinsteinFour.Geometry.scalarLocalSourceSchwartz</code> <small>line 69</small><div class="doc"><p>A smooth source restricted by a compact Schwartz cutoff is Schwartz,
+even if it has no regularity or growth control outside the cutoff.</p></div><pre>def scalarLocalSourceSchwartz (ψ : S) (f : V → ℂ)
+    (hc : HasCompactSupport (ψ : V → ℂ))
+    (hf : ∀ x ∈ tsupport (ψ : V → ℂ), ContDiffAt ℝ (⊤ : ℕ∞) f x) : S :=
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalarLocalSourceSchwartz_apply</code> <small>line 74</small></li><li id=L81><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_localize_eq_smooth_source</code> <small>line 81</small><div class="doc"><p>The actual compact-test equation identifies the localized source
+with a constructed Schwartz function.</p></div><pre>theorem scalar_localize_eq_smooth_source (U : Set V) (u : T) (f : V → ℂ)
+    (hf : ∀ x ∈ U, ContDiffAt ℝ (⊤ : ℕ∞) f x)
+    (htest : ∀ φ : S, HasCompactSupport (φ : V → ℂ) →
+      tsupport (φ : V → ℂ) ⊆ U → u φ = ∫ x, φ x * f x)
+    (ψ : S) (hc : HasCompactSupport (ψ : V → ℂ))
+    (hs : tsupport (ψ : V → ℂ) ⊆ U) :
+    M ψ u = (scalarLocalSourceSchwartz ψ f hc (fun x hx =&gt; hf x (hs hx)) : T) := by
+…</pre><p class="refs">Mentions: <a href="ScalarPoissonKernelLocalTests.lean.html#L69">OAI.PositiveEinsteinFour.Geometry.scalarLocalSourceSchwartz</a></p></li><li id=L100><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_localize_smooth_source_memSobolev</code> <small>line 100</small><div class="doc"><p>A compact-test equation with a locally smooth source supplies all
+orders of the inner localized forcing used by the elliptic bootstrap.</p></div><pre>theorem scalar_localize_smooth_source_memSobolev (U : Set V) (u : T) (f : V → ℂ)
+    (hf : ∀ x ∈ U, ContDiffAt ℝ (⊤ : ℕ∞) f x)
+    (htest : ∀ φ : S, HasCompactSupport (φ : V → ℂ) →
+      tsupport (φ : V → ℂ) ⊆ U → u φ = ∫ x, φ x * f x)
+    (ψ : S) (hc : HasCompactSupport (ψ : V → ℂ))
+    (hs : tsupport (ψ : V → ℂ) ⊆ U) (s : ℝ) :
+    MemSobolev s 2 (M ψ u) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

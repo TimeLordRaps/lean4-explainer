@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/DefocusingNLS/Linear/ExpandingPotentialContinuity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/DefocusingNLS/Linear/ExpandingPotentialContinuity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">DefocusingNLS</a> / <a href="index.html">Linear</a> / <span>ExpandingPotentialContinuity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">DefocusingNLS</a>/<a href="index.html">Linear</a>/<span>ExpandingPotentialContinuity.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/DefocusingNLS/Linear/ExpandingPotentialContinuity.lean#L1">source</a></p><div class="doc"><h3>The actual nonautonomous linearized potential</h3><p>A continuous profile and a continuous expanding radius give the potential
+<code>-i D(|u|^(2m)u)|q(t)</code>.  Its short-time construction uses the uniform exact
+<code>Y_L</code> derivative bounds already proved, not a separately assumed potential.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.DefocusingNLS.expandingProfileReaction</code> <small>line 17</small><div class="doc"><p>The actual real-linearized odd-power reaction along a moving profile.</p></div><pre>noncomputable def expandingProfileReaction (a k T : ℝ)
+    (ha : 0 &lt; a) (ha1 : a &lt; 1) (hk : 8 &lt; k) (m : ℕ)
+    (l : C(Set.Icc (0 : ℝ) T, {L : ℝ // 1 ≤ L}))
+    (q g : C(Set.Icc (0 : ℝ) T, FourierL2)) :
+    C((Set.Icc (0 : ℝ) T) × FourierL2, FourierL2) where
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a></p></li><li id=L33><b>theorem</b> <code>OAI.DefocusingNLS.exists_expandingProfileReaction_lipschitz</code> <small>line 33</small><div class="doc"><p>One Lipschitz bound applies to every starting scale and every bounded profile.</p></div><pre>theorem exists_expandingProfileReaction_lipschitz (a k : ℝ)
+    (ha : 0 &lt; a) (ha1 : a &lt; 1) (hk : 8 &lt; k) (m : ℕ) (R : ℝ) (hR : 0 ≤ R) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ (T : ℝ)
+      (l : C(Set.Icc (0 : ℝ) T, {L : ℝ // 1 ≤ L}))
+      (q g : C(Set.Icc (0 : ℝ) T, FourierL2)),
+      (∀ t, ‖q t‖ ≤ R) → ∀ t x y,
+      ‖expandingProfileReaction a k T ha ha1 hk m l q g (t, x) -
+        expandingProfileReaction a k T ha ha1 hk m l q g (t, y)‖ ≤ K * ‖x - y‖ := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a>, <a href="ExpandingPotentialContinuity.lean.html#L17">OAI.DefocusingNLS.expandingProfileReaction</a></p></li><li id=L57><b>def</b> <code>OAI.DefocusingNLS.expandingRadiusCurve</code> <small>line 57</small><div class="doc"><p>The radius follows exactly the manuscript's moving family <code>L exp(t/2)</code>.</p></div><pre>noncomputable def expandingRadiusCurve (L T : ℝ) (hL : 1 ≤ L) :
+    C(Set.Icc (0 : ℝ) T, {M : ℝ // 1 ≤ M}) where
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.DefocusingNLS.expandingProfileReaction_pointwise</code> <small>line 65</small><div class="doc"><p>The reaction is exactly the scalar linearized Schrödinger potential at each point.</p></div><pre>theorem expandingProfileReaction_pointwise (a k T : ℝ)
+    (ha : 0 &lt; a) (ha1 : a &lt; 1) (hk : 8 &lt; k) (m : ℕ)
+    (l : C(Set.Icc (0 : ℝ) T, {L : ℝ // 1 ≤ L}))
+    (q g : C(Set.Icc (0 : ℝ) T, FourierL2))
+    (t : Set.Icc (0 : ℝ) T) (v : FourierL2) (x : SchrodingerTorus) :
+    expandingTorusFunction a k (l t).1
+      (expandingProfileReaction a k T ha ha1 hk m l q g (t, v)) x =
+      -Complex.I * oddPowerDerivative m
+        (expandingTorusFunction a k (l t).1 (q t) x)
+        (expandingTorusFunction a k (l t).1 v x) +
+        expandingTorusFunction a k (l t).1 (g t) x := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a>, <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L76">OAI.DefocusingNLS.SchrodingerTorus</a>, <a href="ExpandingTorus.lean.html#L27">OAI.DefocusingNLS.expandingTorusFunction</a>, <a href="ExpandingPotentialContinuity.lean.html#L17">OAI.DefocusingNLS.expandingProfileReaction</a>, <a href="../Nonlinear/OddPowerNonlinearity.lean.html#L34">OAI.DefocusingNLS.oddPowerDerivative</a></p></li><li id=L84><b>theorem</b> <code>OAI.DefocusingNLS.exists_expandingProfile_mild_bound</code> <small>line 84</small><div class="doc"><p>Uniform short-slab existence for the actual varying-scale linearized potential.</p></div><pre>theorem exists_expandingProfile_mild_bound (a b k : ℝ)
+    (ha : 0 &lt; a) (ha1 : a &lt; 1) (hk : 8 &lt; k) (m : ℕ) (R : ℝ) (hR : 0 ≤ R) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ (L T : ℝ) (hL : 1 ≤ L) (hT : 0 ≤ T), T * K &lt; 1 →
+      ∀ (q g : C(Set.Icc (0 : ℝ) T, FourierL2)) (u₀ : FourierL2),
+      (∀ t, ‖q t‖ ≤ R) →
+      ∃! u : C(Set.Icc (0 : ℝ) T, FourierL2), ∀ t : Set.Icc (0 : ℝ) T,
+        u t = expandingFreeStep a b k L t ha hk hL t.2.1 u₀ +
+          expandingDuhamel a b k L ha hk hL t
+            (expandingReactionHistory T hT
+              (expandingProfileReaction a k T ha ha1 hk m (expandingRadiusCurve L T hL) q g) u) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a>, <a href="ExpandingFreeStep.lean.html#L59">OAI.DefocusingNLS.expandingFreeStep</a>, <a href="ExpandingDuhamel.lean.html#L25">OAI.DefocusingNLS.expandingDuhamel</a>, <a href="ExpandingMildContraction.lean.html#L20">OAI.DefocusingNLS.expandingReactionHistory</a>, <a href="ExpandingPotentialContinuity.lean.html#L17">OAI.DefocusingNLS.expandingProfileReaction</a>, <a href="ExpandingPotentialContinuity.lean.html#L57">OAI.DefocusingNLS.expandingRadiusCurve</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

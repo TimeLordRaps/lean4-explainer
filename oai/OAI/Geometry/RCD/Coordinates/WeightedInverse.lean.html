@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/WeightedInverse.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/WeightedInverse.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>WeightedInverse.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>WeightedInverse.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/WeightedInverse.lean#L1">source</a></p><div class="doc"><h3>Inverse increments without commutation assumptions</h3><p>The arguments use positive quadratic forms and exact inverse identities.
+Operators from different scales are never assumed to commute.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_equiv_symm</code> <small>line 21</small><div class="doc"><p>Positivity is preserved by the inverse of a linear equivalence.</p></div><pre>theorem positive_equiv_symm (Q : E ≃L[ℝ] E)
+    (hQ : (Q : E →L[ℝ] E).IsPositive) : (Q.symm : E →L[ℝ] E).IsPositive :=
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_increment_apply</code> <small>line 26</small><div class="doc"><p>Exact resolvent identity evaluated on a vector.</p></div><pre>theorem inverse_increment_apply (P Q : E ≃L[ℝ] E) (xi : E) :
+    ((Q.symm : E →L[ℝ] E) - (P.symm : E →L[ℝ] E)) xi =
+      Q.symm (((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)) (P.symm xi)) := by
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_increment_quadratic_identity</code> <small>line 34</small><div class="doc"><p>The inverse increment equals the leading conjugated decrement plus a
+nonnegative remainder.</p></div><pre>theorem inverse_increment_quadratic_identity (P Q : E ≃L[ℝ] E)
+    (hP : (P : E →L[ℝ] E).IsPositive)
+    (hD : ((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)).IsPositive) (xi : E) :
+    let D := (P : E →L[ℝ] E) - (Q : E →L[ℝ] E)
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_increment_order</code> <small>line 64</small><div class="doc"><p>The sharp two-sided inverse-increment order for a relatively small
+positive decrement.  This replaces the one-matrix spectral calculation.</p></div><pre>theorem inverse_increment_order (P Q : E ≃L[ℝ] E)
+    (hP : (P : E →L[ℝ] E).IsPositive) (hQ : (Q : E →L[ℝ] E).IsPositive)
+    (hD : ((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)).IsPositive)
+    {eta : ℝ} (heta : 0 ≤ eta) (heta1 : eta &lt; 1)
+    (hsmall : ∀ v, ⟪v, ((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)) v⟫_ℝ ≤
+      eta * ⟪v, P v⟫_ℝ) (xi : E) :
+    let D := (P : E →L[ℝ] E) - (Q : E →L[ℝ] E)
+…</pre></li><li id=L115><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_inverse_sandwich_bound</code> <small>line 115</small><div class="doc"><p>A positive form bounded by <code>eta Q</code> satisfies the weighted square bound
+<code>D Q⁻¹ D ≤ eta D</code>.</p></div><pre>theorem positive_inverse_sandwich_bound (Q : E ≃L[ℝ] E)
+    (hQ : (Q : E →L[ℝ] E).IsPositive) {D : E →L[ℝ] E} (hD : D.IsPositive)
+    {eta : ℝ} (heta : 0 ≤ eta)
+    (hsmall : ∀ v, ⟪v, D v⟫_ℝ ≤ eta * ⟪v, Q v⟫_ℝ) (w : E) :
+    ⟪D w, Q.symm (D w)⟫_ℝ ≤ eta * ⟪w, D w⟫_ℝ := by
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_increment_isPositive</code> <small>line 141</small><div class="doc"><p>A monotone positive metric sequence has positive inverse increments.</p></div><pre>theorem inverse_increment_isPositive (P Q : E ≃L[ℝ] E)
+    (hP : (P : E →L[ℝ] E).IsPositive) (hQ : (Q : E →L[ℝ] E).IsPositive)
+    (hD : ((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)).IsPositive) :
+    ((Q.symm : E →L[ℝ] E) - (P.symm : E →L[ℝ] E)).IsPositive := by
+…</pre></li><li id=L158><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_increment_weighted_square_le</code> <small>line 158</small><div class="doc"><p>For a half-small decrement the inverse increment satisfies the weighted
+square bound used in the convolution argument.</p></div><pre>theorem inverse_increment_weighted_square_le (P Q : E ≃L[ℝ] E)
+    (hP : (P : E →L[ℝ] E).IsPositive) (hQ : (Q : E →L[ℝ] E).IsPositive)
+    (hD : ((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)).IsPositive)
+    (hsmall : ∀ v, ⟪v, ((P : E →L[ℝ] E) - (Q : E →L[ℝ] E)) v⟫_ℝ ≤
+      (1 / 2 : ℝ) * ⟪v, P v⟫_ℝ) (xi : E) :
+    let B := (Q.symm : E →L[ℝ] E) - (P.symm : E →L[ℝ] E)
+…</pre></li><li id=L184><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_energy_of_bilinear_bound</code> <small>line 184</small><div class="doc"><p>The inverse-energy form of a bilinear comparison, obtained by testing
+at the actual inverse image rather than assuming a duality formula.</p></div><pre>theorem inverse_energy_of_bilinear_bound (Q : E ≃L[ℝ] E)
+    (hQ : (Q : E →L[ℝ] E).IsPositive) (z : E) {K : ℝ} (hK : 0 ≤ K)
+    (hbound : ∀ v, ⟪v, z⟫_ℝ ^ 2 ≤ K * ⟪v, Q v⟫_ℝ) :
+    ⟪z, Q.symm z⟫_ℝ ≤ K := by
+…</pre></li><li id=L203><b>theorem</b> <code>OAI.RegularPointCoordinates.relative_inverse_bounds</code> <small>line 203</small><div class="doc"><p>Relative comparison of positive metrics gives both inverse order and
+the weighted inverse-square estimate needed for normalization errors.</p></div><pre>theorem relative_inverse_bounds (Q R : E ≃L[ℝ] E)
+    (hQ : (Q : E →L[ℝ] E).IsPositive) (hR : (R : E →L[ℝ] E).IsPositive)
+    {c : ℝ} (hc : 0 &lt; c)
+    (hcompare : ∀ v, c * ⟪v, Q v⟫_ℝ ≤ ⟪v, R v⟫_ℝ) (z : E) :
+    ⟪z, R.symm z⟫_ℝ ≤ ⟪z, Q.symm z⟫_ℝ / c ∧
+      ⟪R.symm z, Q (R.symm z)⟫_ℝ ≤ ⟪z, Q.symm z⟫_ℝ / c ^ 2 := by
+…</pre></li><li id=L249><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_normalization_error_identity</code> <small>line 249</small><div class="doc"><p>Exact change of inverse normalization.</p></div><pre>theorem inverse_normalization_error_identity (Q R : E ≃L[ℝ] E) (xi : E) :
+    R.symm xi - Q.symm xi =
+      -(R.symm (((R : E →L[ℝ] E) - (Q : E →L[ℝ] E)) (Q.symm xi))) := by
+…</pre></li><li id=L258><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_normalization_error_le</code> <small>line 258</small><div class="doc"><p>Bilinear heat comparison and relative metric comparison imply the
+normalization-error bound. Neither inverse order nor the error is assumed.</p></div><pre>theorem inverse_normalization_error_le (Q R : E ≃L[ℝ] E)
+    (hQ : (Q : E →L[ℝ] E).IsPositive) (hR : (R : E →L[ℝ] E).IsPositive)
+    (F : E →L[ℝ] E) (hF : F.IsPositive) {c C : ℝ} (hc : 0 &lt; c) (hC : 0 ≤ C)
+    (hcompare : ∀ v, c * ⟪v, Q v⟫_ℝ ≤ ⟪v, R v⟫_ℝ)
+    (hbilinear : ∀ u v,
+      ⟪v, ((R : E →L[ℝ] E) - (Q : E →L[ℝ] E)) u⟫_ℝ ^ 2 ≤
+        (C * ⟪u, F u⟫_ℝ) * ⟪v, Q v⟫_ℝ) (xi : E) :
+    ⟪R.symm xi - Q.symm xi, Q (R.symm xi - Q.symm xi)⟫_ℝ ≤
+      C / c ^ 2 * ⟪Q.symm xi, F (Q.symm xi)⟫_ℝ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

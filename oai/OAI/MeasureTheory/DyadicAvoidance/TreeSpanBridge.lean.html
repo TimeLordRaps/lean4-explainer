@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/DyadicAvoidance/TreeSpanBridge.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/DyadicAvoidance/TreeSpanBridge.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MeasureTheory</a> / <a href="index.html">DyadicAvoidance</a> / <span>TreeSpanBridge.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MeasureTheory</a>/<a href="index.html">DyadicAvoidance</a>/<span>TreeSpanBridge.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/DyadicAvoidance/TreeSpanBridge.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>def</b> <code>OAI.Problem310.TreeSpanBridge.weights</code> <small>line 13</small><div class="doc"><p>Incoming-window lengths listed in the tree's edge preorder.</p></div><pre>def weights (q d : ℕ) (r : ℕ → ℕ) : List ℕ :=
+…</pre></li><li id=L16><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.weights_zero</code> <small>line 16</small></li><li id=L20><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.weights_succ</code> <small>line 20</small><div class="doc"><p>Each child contributes its incoming length followed by the weights of a
+complete subtree of one smaller height. This is independent of the child label.</p></div><pre>theorem weights_succ (q d : ℕ) (r : ℕ → ℕ) :
+    weights q (d + 1) r =
+      (List.finRange q).flatMap (fun _ =&gt; r (d + 1) :: weights q d r) := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a></p></li><li id=L35><b>def</b> <code>OAI.Problem310.TreeSpanBridge.subtreeBlock</code> <small>line 35</small><div class="doc"><p>An edge and all descendants under it, in their contiguous preorder block.</p></div><pre>def subtreeBlock (q d : ℕ) (p : List (Fin q)) : List (List (Fin q)) :=
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.childBlock_infix</code> <small>line 38</small></li><li id=L45><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.subtreeBlock_infix</code> <small>line 45</small><div class="doc"><p>Every rooted descendant block is contiguous in the global edge preorder.</p></div><pre>theorem subtreeBlock_infix (q d : ℕ) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    subtreeBlock q d p &lt;:+: edgePaths q d := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L35">OAI.Problem310.TreeSpanBridge.subtreeBlock</a></p></li><li id=L68><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.map_weights_subtreeBlock</code> <small>line 68</small><div class="doc"><p>Global-depth weights on one descendant block are exactly the incoming
+length followed by the weights of the complete residual-height subtree.</p></div><pre>theorem map_weights_subtreeBlock (q d : ℕ) (r : ℕ → ℕ) (p : List (Fin q))
+    (hlen : p.length ≤ d) :
+    (subtreeBlock q d p).map (fun v =&gt; r (d + 1 - v.length)) =
+      r (d + 1 - p.length) :: weights q (d - p.length) r := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L35">OAI.Problem310.TreeSpanBridge.subtreeBlock</a>, <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a></p></li><li id=L82><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.weights_subtree_infix</code> <small>line 82</small><div class="doc"><p>The incoming edge and descendant weights form a contiguous block of the
+full weighted preorder, ready for the numerical child-span estimate.</p></div><pre>theorem weights_subtree_infix (q d : ℕ) (r : ℕ → ℕ) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    (r (d + 1 - p.length) :: weights q (d - p.length) r) &lt;:+: weights q d r := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a></p></li><li id=L90><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.take_drop_idxOf_of_infix</code> <small>line 90</small><div class="doc"><p>A nonempty contiguous block in a duplicate-free list starts at the index
+of its first entry.</p></div><pre>theorem take_drop_idxOf_of_infix {α : Type u_α} [BEq α] [LawfulBEq α]
+    (l : List α) (hl : l.Nodup) (a : α) (u : List α) (h : (a :: u) &lt;:+: l) :
+    (l.drop (l.idxOf a)).take (u.length + 1) = a :: u := by
+…</pre></li><li id=L102><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.subtreeBlock_eq_slice</code> <small>line 102</small><div class="doc"><p>Exact contiguous slice of the preorder belonging to one rooted child block.</p></div><pre>theorem subtreeBlock_eq_slice (q d : ℕ) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    ((edgePaths q d).drop ((edgePaths q d).idxOf p)).take
+      (1 + edgeCount q (d - p.length)) = subtreeBlock q d p := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L35">OAI.Problem310.TreeSpanBridge.subtreeBlock</a></p></li><li id=L113><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.weights_slice</code> <small>line 113</small><div class="doc"><p>The weighted preorder slice at an edge is its incoming weight followed by
+exactly one residual-height weighted subtree.</p></div><pre>theorem weights_slice (q d : ℕ) (r : ℕ → ℕ) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    ((weights q d r).drop ((edgePaths q d).idxOf p)).take
+      (1 + edgeCount q (d - p.length)) =
+      r (d + 1 - p.length) :: weights q (d - p.length) r := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a></p></li><li id=L122><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.weights_eq_preorderLengths</code> <small>line 122</small><div class="doc"><p>The path-dependent weight list is exactly the numerical preorder list.</p></div><pre>theorem weights_eq_preorderLengths (q g r₀ d : ℕ) :
+    weights q d (WindowRecursion.length q g r₀) =
+      WindowSpanSum.preorderLengths q g r₀ d := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a>, <a href="WindowRecursion.lean.html#L18">OAI.Problem310.WindowRecursion.length</a>, <a href="WindowSpanSum.lean.html#L12">OAI.Problem310.WindowSpanSum.preorderLengths</a></p></li><li id=L132><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.paddedSum_weights_slice</code> <small>line 132</small><div class="doc"><p>The exact padded sum of the actual subtree slice in global preorder.</p></div><pre>theorem paddedSum_weights_slice (q g r₀ d : ℕ) (hq : 1 ≤ q) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    WindowSpanSum.paddedSum g
+      (((weights q d (WindowRecursion.length q g r₀)).drop
+        ((edgePaths q d).idxOf p)).take (1 + edgeCount q (d - p.length))) =
+      WindowRecursion.childSpan q g r₀ (d - p.length) + g := by
+…</pre><p class="refs">Mentions: <a href="WindowSpanSum.lean.html#L18">OAI.Problem310.WindowSpanSum.paddedSum</a>, <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a>, <a href="WindowRecursion.lean.html#L18">OAI.Problem310.WindowRecursion.length</a>, <a href="WindowRecursion.lean.html#L23">OAI.Problem310.WindowRecursion.childSpan</a></p></li><li id=L145><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.paddedSum_weights_slice_le</code> <small>line 145</small><div class="doc"><p>The arithmetic padding budget now applies to an actual subtree slice,
+not merely to an abstract recursively defined list of lengths.</p></div><pre>theorem paddedSum_weights_slice_le (q g r₀ d : ℕ) (hq : 1 ≤ q) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    WindowSpanSum.paddedSum g
+      (((weights q d (WindowRecursion.length q g r₀)).drop
+        ((edgePaths q d).idxOf p)).take (1 + edgeCount q (d - p.length))) ≤
+      2 * WindowRecursion.length q g r₀ (d + 1 - p.length) + g := by
+…</pre><p class="refs">Mentions: <a href="WindowSpanSum.lean.html#L18">OAI.Problem310.WindowSpanSum.paddedSum</a>, <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a>, <a href="WindowRecursion.lean.html#L18">OAI.Problem310.WindowRecursion.length</a></p></li><li id=L159><b>theorem</b> <code>OAI.Problem310.TreeSpanBridge.weighted_child_decomposition</code> <small>line 159</small><div class="doc"><p>Full-list decomposition at the genuine edge index. This is the direct
+interface for constructing separated windows from the weighted preorder.</p></div><pre>theorem weighted_child_decomposition (q g r₀ d : ℕ) (p : List (Fin q))
+    (hp : p ≠ []) (hlen : p.length ≤ d) :
+    ∃ pre post : List ℕ,
+      weights q d (WindowRecursion.length q g r₀) =
+        pre ++ (WindowRecursion.length q g r₀ (d + 1 - p.length) ::
+          WindowSpanSum.preorderLengths q g r₀ (d - p.length)) ++ post ∧
+      pre.length = (edgePaths q d).idxOf p := by
+…</pre><p class="refs">Mentions: <a href="TreeSpanBridge.lean.html#L13">OAI.Problem310.TreeSpanBridge.weights</a>, <a href="WindowRecursion.lean.html#L18">OAI.Problem310.WindowRecursion.length</a>, <a href="WindowSpanSum.lean.html#L12">OAI.Problem310.WindowSpanSum.preorderLengths</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

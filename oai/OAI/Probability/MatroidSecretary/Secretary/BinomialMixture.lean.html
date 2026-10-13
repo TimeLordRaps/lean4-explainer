@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/MatroidSecretary/Secretary/BinomialMixture.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/MatroidSecretary/Secretary/BinomialMixture.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">MatroidSecretary</a> / <a href="index.html">Secretary</a> / <span>BinomialMixture.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">MatroidSecretary</a>/<a href="index.html">Secretary</a>/<span>BinomialMixture.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/MatroidSecretary/Secretary/BinomialMixture.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>lemma</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.bitsWeight_const</code> <small>line 18</small><div class="doc"><p>A homogeneous Bernoulli mask has the exact cardinality-dependent mass.</p></div><pre>lemma bitsWeight_const (p : ℝ) (V S : Finset α) (hS : S ⊆ V) :
+    bitsWeight (fun _ =&gt; p) V S = p ^ S.card * (1 - p) ^ (V.card - S.card) := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/FiniteBits.lean.html#L17">OAI.MatroidProphet.bitsWeight</a></p></li><li id=L34><b>theorem</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.bitsExpectation_card</code> <small>line 34</small><div class="doc"><p>The cardinality of a predrawn product mask has the full binomial law.
+The identity also holds at <code>p = 0</code>, <code>p = 1</code>, and for an empty ground set.</p></div><pre>theorem bitsExpectation_card (p : ℝ) (V : Finset α) (f : ℕ → ℝ) :
+    bitsExpectation (fun _ =&gt; p) V (fun S =&gt; f S.card) =
+      ∑ k ∈ range (V.card + 1),
+        (V.card.choose k : ℝ) * p ^ k * (1 - p) ^ (V.card - k) * f k := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/FiniteBits.lean.html#L20">OAI.MatroidProphet.bitsExpectation</a></p></li><li id=L56><b>theorem</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.binomial_uniform_subset_mixture</code> <small>line 56</small><div class="doc"><p>Complete averaging over the binomial prefix length cancels the uniform
+fixed-size subset normalizer and recovers the product mask expectation.</p></div><pre>theorem binomial_uniform_subset_mixture (p : ℝ) (V : Finset α)
+    (f : Finset α → ℝ) :
+    (∑ k ∈ range (V.card + 1),
+      ((V.card.choose k : ℝ) * p ^ k * (1 - p) ^ (V.card - k)) *
+        ((V.card.choose k : ℝ)⁻¹ * ∑ S ∈ V.powersetCard k, f S)) =
+      bitsExpectation (fun _ =&gt; p) V f := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/FiniteBits.lean.html#L20">OAI.MatroidProphet.bitsExpectation</a></p></li><li id=L84><b>theorem</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.predrawn_card_uniform_subset</code> <small>line 84</small><div class="doc"><p>Equivalent implementation: predraw a product mask, keep only its cardinality,
+then draw a uniform subset of that cardinality independently.</p></div><pre>theorem predrawn_card_uniform_subset (p : ℝ) (V : Finset α)
+    (f : Finset α → ℝ) :
+    bitsExpectation (fun _ =&gt; p) V
+      (fun B =&gt; (V.card.choose B.card : ℝ)⁻¹ *
+        ∑ S ∈ V.powersetCard B.card, f S) =
+      bitsExpectation (fun _ =&gt; p) V f := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/FiniteBits.lean.html#L20">OAI.MatroidProphet.bitsExpectation</a></p></li><li id=L98><b>theorem</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.integral_binomial</code> <small>line 98</small><div class="doc"><p>The finite binomial law used for the initial prefix-length draw, with its
+actual integral rather than an unnormalized formal sum.</p></div><pre>theorem integral_binomial (p : ℝ≥0) (hp : p ≤ 1) (n : ℕ) (f : ℕ → ℝ) :
+    (∫ k, f k ∂ProbabilityTheory.binomial n
+      ⟨p, p.coe_nonneg, by exact_mod_cast hp⟩) =
+      ∑ k ∈ range (n + 1),
+        (n.choose k : ℝ) * (p : ℝ) ^ k * (1 - (p : ℝ)) ^ (n - k) * f k := by
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.integral_binomial_uniform_subset</code> <small>line 109</small><div class="doc"><p>Sampling the finite binomial length and then a uniform fixed-cardinality
+subset gives the homogeneous Bernoulli product mask exactly.</p></div><pre>theorem integral_binomial_uniform_subset (p : ℝ≥0) (hp : p ≤ 1)
+    (V : Finset α) (f : Finset α → ℝ) :
+    (∫ k, (V.card.choose k : ℝ)⁻¹ * ∑ S ∈ V.powersetCard k, f S
+      ∂ProbabilityTheory.binomial V.card ⟨p, p.coe_nonneg, by exact_mod_cast hp⟩) =
+      bitsExpectation (fun _ =&gt; (p : ℝ)) V f := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/FiniteBits.lean.html#L20">OAI.MatroidProphet.bitsExpectation</a></p></li><li id=L119><b>theorem</b> <code>OAI.MatroidProphet.SecretaryBinomialMixture.integral_uniform_fintype</code> <small>line 119</small><div class="doc"><p>Conversion from the actual finite uniform law to a normalized sum.</p></div><pre>theorem integral_uniform_fintype {β : Type*} [Fintype β] [Nonempty β]
+    [MeasurableSpace β] [MeasurableSingletonClass β] (f : β → ℝ) :
+    (∫ b, f b ∂(PMF.uniformOfFintype β).toMeasure) =
+      (Fintype.card β : ℝ)⁻¹ * ∑ b, f b := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

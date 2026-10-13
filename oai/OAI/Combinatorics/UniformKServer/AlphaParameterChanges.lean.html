@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/UniformKServer/AlphaParameterChanges.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/UniformKServer/AlphaParameterChanges.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">UniformKServer</a> / <span>AlphaParameterChanges.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">UniformKServer</a>/<span>AlphaParameterChanges.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/UniformKServer/AlphaParameterChanges.lean#L1">source</a></p><div class="doc"><p>Prepared logarithmic parameter changes. All bounds concern the actual
+improper primitives, with constants uniform at vanishing side mass.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.UniformKServer.AlphaParameterChanges.piece</code> <small>line 17</small></li><li id=L21><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.sum_piece</code> <small>line 21</small></li><li id=L25><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.piece_outside</code> <small>line 25</small></li><li id=L29><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.piece_inside</code> <small>line 29</small></li><li id=L34><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.regular_piece</code> <small>line 34</small><div class="doc"><p>An ordinary coordinate costs only its prepared input.</p></div><pre>theorem regular_piece {p : Config ι} (hp : valid p) (B a : ι → ℝ)
+    (hB : ∀ i, 0 ≤ B i) (hs : DomainTransport.Supported p.active B)
+    (ha : ∀ i, a i ∈ Set.Icc (0:ℝ) 1)
+    (hf : ∀ i, (∑ j, B j)*a i ≤ 2*B i) (i : p.active)
+    (he : ProportionParameters.component p.param (fun j =&gt; B j) i (a i)=
+      AlphaTracker.regularG p.param.h (fun j =&gt; B j) p.param.ell p.param.ct p.param.C i (a i))
+    (hh : 1 ≤ p.param.h i) : |piece p B a i| ≤ 4*scale p*B i := by
+…</pre><p class="refs">Mentions: <a href="DomainTransport.lean.html#L19">OAI.UniformKServer.DomainTransport.Supported</a>, <a href="ProportionParameters.lean.html#L44">OAI.UniformKServer.ProportionParameters.component</a>, <a href="AlphaTracker.lean.html#L13">OAI.UniformKServer.AlphaTracker.regularG</a>, <a href="AlphaParameterChanges.lean.html#L17">OAI.UniformKServer.AlphaParameterChanges.piece</a></p></li><li id=L57><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.prepared_two</code> <small>line 57</small></li><li id=L69><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.prepared_side</code> <small>line 69</small><div class="doc"><p>Sum of prepared side constraints, without division by total input.</p></div><pre>theorem prepared_side (B a : ι → ℝ) (ha : ∑ i, a i=1)
+    (hf : ∀ i, (∑ j, B j)*a i ≤ 2*B i) (o : ι) :
+    (∑ j, B j)*(1-a o) ≤ 2*((∑ j, B j)-B o) := by
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.regular_jump</code> <small>line 80</small><div class="doc"><p>A regular epoch, including additions/removals, charges only the coordinates
+whose parameter piece changes. The indicator is later identified with held
+size refreshes; no degree factor appears.</p></div><pre>theorem regular_jump {p q : Config ι} (hp : valid p) (hq : valid q)
+    (hep : p.param.kind=.regular) (heq : q.param.kind=.regular)
+    (B a : ι → ℝ) (hB : ∀ i, 0 ≤ B i)
+    (hsp : DomainTransport.Supported p.active B) (hsq : DomainTransport.Supported q.active B)
+    (ha : ∀ i, a i ∈ Set.Icc (0:ℝ) 1)
+    (hf : ∀ i, (∑ j, B j)*a i ≤ 2*B i)
+    (changed : ι → Prop) [DecidablePred changed]
+    (same : ∀ i, ¬changed i → piece p B a i=piece q B a i) :
+    |potential q B a-potential p B a| ≤
+      4*(scale p+scale q)*(∑ i, if changed i then B i else 0) := by
+…</pre><p class="refs">Mentions: <a href="DomainTransport.lean.html#L19">OAI.UniformKServer.DomainTransport.Supported</a>, <a href="AlphaParameterChanges.lean.html#L17">OAI.UniformKServer.AlphaParameterChanges.piece</a></p></li><li id=L110><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.marked_prepared</code> <small>line 110</small><div class="doc"><p>Whole marked potential on a prepared state. In particular only side input
+and u times total input are charged when the distinguished parameter changes.</p></div><pre>theorem marked_prepared {p : Config ι} (hp : valid p) (o : p.active) (u : ℝ)
+    (he : p.param.kind=.marked o u) (B a : ι → ℝ)
+    (hB : ∀ i, 0 ≤ B i) (hs : DomainTransport.Supported p.active B)
+    (ha : ∀ i, a i ∈ Set.Icc (0:ℝ) 1) (hasum : ∑ i, a i=1)
+    (hf : ∀ i, (∑ j, B j)*a i ≤ 2*B i) :
+    |potential p B a| ≤ 13*scale p*((∑ i, B i)-B o)+
+      3*scale p*(p.param.ct/p.param.ell)*u*(∑ i, B i) := by
+…</pre><p class="refs">Mentions: <a href="DomainTransport.lean.html#L19">OAI.UniformKServer.DomainTransport.Supported</a></p></li><li id=L162><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.marked_sparse_jump</code> <small>line 162</small><div class="doc"><p>The distinguished summand does not move when its held ratio is unchanged.
+Only regular side summands remain in a size-refresh charge.</p></div><pre>theorem marked_sparse_jump {p q : Config ι} (hp : valid p) (hq : valid q)
+    (op : p.active) (oq : q.active) (u : ℝ)
+    (hep : p.param.kind=.marked op u) (heq : q.param.kind=.marked oq u)
+    (ho : op.val=oq.val) (B a : ι → ℝ) (hB : ∀ i, 0 ≤ B i)
+    (hsp : DomainTransport.Supported p.active B) (hsq : DomainTransport.Supported q.active B)
+    (ha : ∀ i, a i ∈ Set.Icc (0:ℝ) 1)
+    (hf : ∀ i, (∑ j, B j)*a i ≤ 2*B i)
+    (changed : ι → Prop) [DecidablePred changed]
+    (same : ∀ i, ¬changed i → piece p B a i=piece q B a i)
+    (mark : ¬changed op.val) :
+    |potential q B a-potential p B a| ≤
+      4*(scale p+scale q)*(∑ i, if changed i then B i else 0) := by
+…</pre><p class="refs">Mentions: <a href="DomainTransport.lean.html#L19">OAI.UniformKServer.DomainTransport.Supported</a>, <a href="AlphaParameterChanges.lean.html#L17">OAI.UniformKServer.AlphaParameterChanges.piece</a></p></li><li id=L202><b>theorem</b> <code>OAI.UniformKServer.AlphaParameterChanges.singleton_potential</code> <small>line 202</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,148 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/SurfaceCones/CartierPullback.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/SurfaceCones/CartierPullback.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">SurfaceCones</a> / <span>CartierPullback.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">SurfaceCones</a>/<span>CartierPullback.lean</span></code></h1><p class="muted">58 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/SurfaceCones/CartierPullback.lean#L1">source</a></p><div class="doc"><h3>Cartier pullback and coherent lattice filtrations</h3><p>This development accompanies <em>A Complete Local Domain without a Small
+Cohen–Macaulay Module</em> (OpenAI, 2026).</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>theorem</b> <code>OAI.kernelMono</code> <small>line 10</small><p class="refs">Also declared: <a href="CartierSupport.lean.html#L20">OAI/AlgebraicGeometry/SurfaceCones/CartierSupport.lean:20</a> (identical).</p></li><li id=L15><b>theorem</b> <code>OAI.counitIsIso</code> <small>line 15</small></li><li id=L35><b>def</b> <code>OAI.ActualCartier.restrictionUnit</code> <small>line 35</small></li><li id=L38><b>lemma</b> <code>OAI.ActualCartier.restrictionUnit_zero</code> <small>line 38</small></li><li id=L43><b>def</b> <code>OAI.ActualCartier.restrictionUnitIsColimit</code> <small>line 43</small><div class="doc"><p>This is the cokernel fork in all sheaves of modules after
+forgetting coherence.</p></div><pre>def restrictionUnitIsColimit (M : Coh Y) :
+    IsColimit (CokernelCofork.ofπ ((restrictionUnit f d).app M).hom
+      (show ((action f d).app M).hom ≫ ((restrictionUnit f d).app M).hom = 0 from
+        congrArg (fun z =&gt; z.hom) (NatTrans.congr_app (restrictionUnit_zero f d) M))) := by
+…</pre><p class="refs">Mentions: <a href="CartierPullback.lean.html#L35">OAI.ActualCartier.restrictionUnit</a>, <a href="GeometricChartSandwich.lean.html#L634">OAI.ActualCartier.action</a>, <a href="CartierPullback.lean.html#L38">OAI.ActualCartier.restrictionUnit_zero</a></p></li><li id=L56><b>def</b> <code>OAI.ActualCartier.restrictionPullbackIso</code> <small>line 56</small><div class="doc"><p>The descended ordinary restriction is the geometric pullback.
+This spells out its universal property, rather than using the desired
+identification as an extra hypothesis.</p></div><pre>def restrictionPullbackIso (M : Coh Y) :
+    (Scheme.Modules.pullback f).obj M.obj ≅ ((restriction f d).obj M).obj := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a></p></li><li id=L76><b>lemma</b> <code>OAI.ActualCartier.coherent_pullback</code> <small>line 76</small></li><li id=L94><b>lemma</b> <code>OAI.ActualCartier.firstTor_isZero</code> <small>line 94</small><div class="doc"><p>The first Cartier Tor vanishes for a sectionwise torsion-free
+coherent sheaf: this is proved from the invertible ideal action.</p></div><pre>lemma firstTor_isZero (M : Coh Y)
+    (hM : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (M.obj.val.obj U)) :
+    IsZero ((firstTor f d).obj M) := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L668">OAI.ActualCartier.firstTor</a></p></li><li id=L111><b>lemma</b> <code>OAI.ActualCartier.derivedRestriction_cls_torsionFree</code> <small>line 111</small></li><li id=L118><b>lemma</b> <code>OAI.ActualCartier.action_pushforward_zero</code> <small>line 118</small><div class="doc"><p>A coherent sheaf pushed forward from the divisor has zero Cartier action.</p></div><pre>lemma action_pushforward_zero (N : Coh X) :
+    (action f d).app ((cohPushforward f).obj N) = 0 := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L634">OAI.ActualCartier.action</a></p></li><li id=L125><b>def</b> <code>OAI.ActualCartier.firstTor_supported_pushforwardIso</code> <small>line 125</small><div class="doc"><p>The first Tor of a supported layer is the ambient ideal line tensor
+after closed pushforward. Full faithfulness descends this identification to the divisor.</p></div><pre>def firstTor_supported_pushforwardIso (N : Coh X) :
+    (cohPushforward f).obj ((firstTor f d).obj ((cohPushforward f).obj N)) ≅
+      (coherentTensorLine (idealSheaf f) d).obj ((cohPushforward f).obj N) :=
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L668">OAI.ActualCartier.firstTor</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a></p></li><li id=L135><b>def</b> <code>OAI.ActualCartier.restriction_supported_iso</code> <small>line 135</small><div class="doc"><p>Ordinary restriction of a closed pushforward is the original
+coherent sheaf on the divisor.</p></div><pre>def restriction_supported_iso (N : Coh X) :
+    (restriction f d).obj ((cohPushforward f).obj N) ≅ N :=
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a></p></li><li id=L141><b>lemma</b> <code>OAI.ActualCartier.derivedRestriction_supported</code> <small>line 141</small></li><li id=L158><b>lemma</b> <code>OAI.ActualSheafTensor.tensorSchemeRestrictIso_inv_pure</code> <small>line 158</small><div class="doc"><p>The inverse restriction comparison is the identity on pure sections,
+with the scalar action transported by the open immersion's ring isomorphism.</p></div><pre>lemma tensorSchemeRestrictIso_inv_pure (M N : X.Modules) (V : U.toScheme.Opens)
+    (x : ((restrictFunctor U.ι).obj M).val.obj (op V))
+    (y : ((restrictFunctor U.ι).obj N).val.obj (op V)) :
+    (tensorSchemeRestrictIso X U M N).inv.val.app (op V)
+      (pure U.toScheme.sheaf ((restrictFunctor U.ι).obj M)
+        ((restrictFunctor U.ι).obj N) (op V) x y) =
+    pure X.sheaf M N (op (U.ι &#x27;&#x27;ᵁ V)) x y := by
+…</pre><p class="refs">Mentions: <a href="TensorLineCoherent.lean.html#L791">OAI.ActualSheafTensor.tensorSchemeRestrictIso</a>, <a href="TensorLineCoherent.lean.html#L577">OAI.ActualSheafTensor.pure</a></p></li><li id=L207><b>lemma</b> <code>OAI.ActualSheafTensor.tensorLeft_map_pure</code> <small>line 207</small></li><li id=L216><b>lemma</b> <code>OAI.ActualSheafTensor.pure_naturality</code> <small>line 216</small></li><li id=L234><b>def</b> <code>OAI.ActualSheafTensor.projectionRestrictLeft</code> <small>line 234</small></li><li id=L244><b>def</b> <code>OAI.ActualSheafTensor.projectionRestrictRight</code> <small>line 244</small></li><li id=L261><b>lemma</b> <code>OAI.ActualSheafTensor.projectionRestrictLeft_pure</code> <small>line 261</small></li><li id=L287><b>lemma</b> <code>OAI.ActualSheafTensor.projectionRestrictRight_pure</code> <small>line 287</small></li><li id=L324><b>lemma</b> <code>OAI.ActualSheafTensor.tensorProjection_restrict</code> <small>line 324</small><div class="doc"><p>The tensor projection morphism commutes with open restriction
+through the pullback comparison induced by the adjunction.</p></div><pre>lemma tensorProjection_restrict :
+    projectionRestrictLeft f U L N = projectionRestrictRight f U L N := by
+…</pre><p class="refs">Mentions: <a href="CartierPullback.lean.html#L234">OAI.ActualSheafTensor.projectionRestrictLeft</a>, <a href="CartierPullback.lean.html#L244">OAI.ActualSheafTensor.projectionRestrictRight</a></p></li><li id=L346><b>lemma</b> <code>OAI.ActualSheafTensor.projectionRestrictRight_isIso</code> <small>line 346</small></li><li id=L374><b>lemma</b> <code>OAI.ActualSheafTensor.projectionRestrict_isIso</code> <small>line 374</small></li><li id=L394><b>lemma</b> <code>OAI.ActualSheafTensor.tensorProjection_isIso_of_line</code> <small>line 394</small><div class="doc"><p>Projection formula for the tensor sheaf and any line bundle,
+proved locally from its pure-section projection morphism.</p></div><pre>lemma tensorProjection_isIso_of_line (d : LineTrivialization Y.sheaf L) (N : X.Modules) :
+    IsIso (tensorProjection f L N) := by
+…</pre><p class="refs">Mentions: <a href="CoherentClosedFunctor.lean.html#L794">OAI.ActualSheafTensor.LineTrivialization</a>, <a href="GeometricChartSandwich.lean.html#L249">OAI.ActualSheafTensor.tensorProjection</a></p></li><li id=L401><b>def</b> <code>OAI.ActualSheafTensor.tensorProjectionIso</code> <small>line 401</small><div class="doc"><p>The canonical projection-formula isomorphism for any line bundle.</p></div><pre>def tensorProjectionIso (d : LineTrivialization Y.sheaf L) (N : X.Modules) :
+    tensor Y.sheaf L ((pushforward f).obj N) ≅
+      (pushforward f).obj (tensor X.sheaf ((Scheme.Modules.pullback f).obj L) N) := by
+…</pre><p class="refs">Mentions: <a href="CoherentClosedFunctor.lean.html#L794">OAI.ActualSheafTensor.LineTrivialization</a>, <a href="CoherentTensor.lean.html#L297">OAI.ActualSheafTensor.tensor</a></p></li><li id=L422><b>lemma</b> <code>OAI.ActualCartier.coherent_conormal_tensor</code> <small>line 422</small><div class="doc"><p>Tensor by the conormal line preserves coherence on the divisor
+by the projection formula and coherent Cartier pullback.</p></div><pre>lemma coherent_conormal_tensor (N : Coh X) :
+    (tensor X.sheaf ((Scheme.Modules.pullback f).obj (idealSheaf f)) N.obj).IsFinitePresentation := by
+…</pre><p class="refs">Mentions: <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a></p></li><li id=L435><b>def</b> <code>OAI.ActualCartier.conormalTensor</code> <small>line 435</small><div class="doc"><p>The conormal twist, as a coherent sheaf ON the Cartier divisor.</p></div><pre>def conormalTensor (N : Coh X) : Coh X :=
+…</pre></li><li id=L439><b>def</b> <code>OAI.ActualCartier.conormalProjectionIso</code> <small>line 439</small></li><li id=L445><b>def</b> <code>OAI.ActualCartier.firstTor_supported_iso</code> <small>line 445</small><div class="doc"><p>The first Tor of a supported layer is its tensor by the conormal sheaf on the divisor.</p></div><pre>def firstTor_supported_iso (N : Coh X) :
+    (firstTor f d).obj ((cohPushforward f).obj N) ≅ conormalTensor f d N :=
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L668">OAI.ActualCartier.firstTor</a>, <a href="CartierPullback.lean.html#L435">OAI.ActualCartier.conormalTensor</a></p></li><li id=L451><b>lemma</b> <code>OAI.ActualCartier.derivedRestriction_conormal</code> <small>line 451</small><div class="doc"><p>The precise class formula used for each supported layer in the Cartier restriction formula.</p></div><pre>lemma derivedRestriction_conormal (N : Coh X) :
+    derivedRestriction f d (cls ((cohPushforward f).obj N)) =
+      cls N - cls (conormalTensor f d N) := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L780">OAI.ActualCartier.derivedRestriction</a>, <a href="CartierPullback.lean.html#L435">OAI.ActualCartier.conormalTensor</a></p></li><li id=L469><b>lemma</b> <code>OAI.ActualCartier.lattice_firstTor_identity</code> <small>line 469</small><div class="doc"><p>The coherent Grothendieck identity for an inclusion of torsion-free lattices
+whose quotient has a finite filtration by divisor sheaves.</p></div><pre>lemma lattice_firstTor_identity {S : ShortComplex (Coh Y)} (hS : S.ShortExact)
+    (h₁ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₁.obj.val.obj U))
+    (h₂ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₂.obj.val.obj U))
+    (layers : List (Coh X))
+    (hlayers : FilteredBy S.X₃ (layers.map (cohPushforward f).obj)) :
+    cls ((restriction f d).obj S.X₁) = cls ((restriction f d).obj S.X₂) +
+      (layers.map fun Q =&gt;
+        cls ((firstTor f d).obj ((cohPushforward f).obj Q)) - cls Q).sum := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="GeometricChartSandwich.lean.html#L668">OAI.ActualCartier.firstTor</a></p></li><li id=L508><b>def</b> <code>OAI.ActualCartier.restrictionCokernelIso</code> <small>line 508</small><div class="doc"><p>Ordinary restriction is the cokernel of the ideal action.</p></div><pre>def restrictionCokernelIso (M : Coh Y) :
+    (cohPushforward f).obj ((restriction f d).obj M) ≅ cokernel ((action f d).app M) :=
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="GeometricChartSandwich.lean.html#L634">OAI.ActualCartier.action</a></p></li><li id=L514><b>abbrev</b> <code>OAI.ActualCartier.idealMultiple</code> <small>line 514</small><div class="doc"><p>Repeated images of the Cartier ideal action on a coherent sheaf.</p></div><pre>abbrev idealMultiple (n : ℕ) (M : Coh Y) : Coh Y :=
+…</pre></li><li id=L518><b>abbrev</b> <code>OAI.ActualCartier.idealLayers</code> <small>line 518</small><div class="doc"><p>The coherent layers of the ideal-adic image filtration.</p></div><pre>abbrev idealLayers (n : ℕ) (M : Coh Y) : List (Coh X) :=
+…</pre></li><li id=L523><b>lemma</b> <code>OAI.ActualCartier.filteredBy_idealLayers</code> <small>line 523</small></li><li id=L530><b>lemma</b> <code>OAI.ActualCartier.lattice_conormal_identity</code> <small>line 530</small><div class="doc"><p>Coherent K₀ identity of the Cartier restriction formula, with each supported
+term identified ON the divisor as its conormal tensor.</p></div><pre>lemma lattice_conormal_identity {S : ShortComplex (Coh Y)} (hS : S.ShortExact)
+    (h₁ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₁.obj.val.obj U))
+    (h₂ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₂.obj.val.obj U))
+    (layers : List (Coh X))
+    (hlayers : FilteredBy S.X₃ (layers.map (cohPushforward f).obj)) :
+    cls ((restriction f d).obj S.X₁) = cls ((restriction f d).obj S.X₂) +
+      (layers.map fun Q =&gt; cls (conormalTensor f d Q) - cls Q).sum := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="CartierPullback.lean.html#L435">OAI.ActualCartier.conormalTensor</a></p></li><li id=L542><b>lemma</b> <code>OAI.ActualCartier.lattice_nilpotent_identity</code> <small>line 542</small><div class="doc"><p>A nilpotent ideal quotient gives a finite coherent filtration
+for the Cartier lattice identity.</p></div><pre>lemma lattice_nilpotent_identity {S : ShortComplex (Coh Y)} (hS : S.ShortExact)
+    (h₁ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₁.obj.val.obj U))
+    (h₂ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₂.obj.val.obj U))
+    (n : ℕ) (hn : IsZero (idealMultiple f d n S.X₃)) :
+    cls ((restriction f d).obj S.X₁) = cls ((restriction f d).obj S.X₂) +
+      ((idealLayers f d n S.X₃).map fun Q =&gt; cls (conormalTensor f d Q) - cls Q).sum :=
+…</pre><p class="refs">Mentions: <a href="CartierPullback.lean.html#L514">OAI.ActualCartier.idealMultiple</a>, <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="CartierPullback.lean.html#L518">OAI.ActualCartier.idealLayers</a>, <a href="CartierPullback.lean.html#L435">OAI.ActualCartier.conormalTensor</a></p></li><li id=L564><b>lemma</b> <code>OAI.CartierImageFiltration.map_powerAction_zero_of_le</code> <small>line 564</small><div class="doc"><p>A locally vanishing ideal power remains vanishing at every larger
+exponent, by naturality of the iterated action.</p></div><pre>lemma map_powerAction_zero_of_le (M : C) {n m : ℕ} (hnm : n ≤ m)
+    (hn : F.map ((powerAction T a n).app M) = 0) :
+    F.map ((powerAction T a m).app M) = 0 := by
+…</pre><p class="refs">Mentions: <a href="CartierImageFiltration.lean.html#L89">OAI.CartierImageFiltration.powerAction</a></p></li><li id=L585><b>lemma</b> <code>OAI.ActualCartier.idealMultiple_isZero_of_finite_cover</code> <small>line 585</small><div class="doc"><p>Finitely many locally vanishing Cartier powers give a global nilpotence
+exponent and a finite supported filtration.</p></div><pre>lemma idealMultiple_isZero_of_finite_cover
+    {ι : Type} [Fintype ι] (U : ι → Y.Opens)
+    (hU : (Opens.grothendieckTopology Y).CoversTop U) (M : Coh Y)
+    (h : ∀ i, ∃ n : ℕ,
+      (((cohInclusion Y).map
+        ((powerAction (coherentTensorLine (idealSheaf f) d) (action f d) n).app M)).over
+          (U i)) = 0) :
+    ∃ n : ℕ, IsZero (idealMultiple f d n M) := by
+…</pre><p class="refs">Mentions: <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="GeometricChartSandwich.lean.html#L634">OAI.ActualCartier.action</a>, <a href="CartierPullback.lean.html#L514">OAI.ActualCartier.idealMultiple</a></p></li><li id=L627><b>lemma</b> <code>OAI.CartierAffineCoverNilpotence.exists_powerAction_zero</code> <small>line 627</small><div class="doc"><p>Support on finitely many principal Cartier charts gives a vanishing tensor-ideal power.</p></div><pre>lemma exists_powerAction_zero (M : Y.Modules) [M.IsFinitePresentation]
+    (hM : ∀ j, IsZero (((restrictFunctor (f j)).obj M).over
+      (PrimeSpectrum.basicOpen (AffineCartierNilpotence.equation
+        ((restrictFunctor (f j)).obj L) (e j) (restrictedIdeal (f j) i))))) :
+    ∃ n : ℕ, (powerAction (tensorLeft Y.sheaf L) (idealAction Y.sheaf i) n).app M = 0 := by
+…</pre><p class="refs">Mentions: <a href="CartierImageFiltration.lean.html#L341">OAI.AffineCartierNilpotence.equation</a></p></li><li id=L664><b>instance</b> <code>OAI.ActualCartier.firstTor_additive</code> <small>line 664</small></li><li id=L671><b>instance</b> <code>OAI.ActualCartier.restriction_additive</code> <small>line 671</small></li><li id=L689><b>instance</b> <code>OAI.ActualCartier.restrictionUnit_epi</code> <small>line 689</small></li><li id=L693><b>instance</b> <code>OAI.ActualCartier.restriction_preservesEpis</code> <small>line 693</small></li><li id=L704><b>abbrev</b> <code>OAI.ActualCartier.layer</code> <small>line 704</small><div class="doc"><p>The jth supported quotient of the ideal-image filtration.</p></div><pre>abbrev layer (j : ℕ) (M : Coh Y) : Coh X :=
+…</pre></li><li id=L709><b>def</b> <code>OAI.ActualCartier.layerCover</code> <small>line 709</small><div class="doc"><p>An ambient ideal power of the original lattice surjects onto each
+corresponding layer of its quotient.</p></div><pre>def layerCover {L Q : Coh Y} (q : L ⟶ Q) (j : ℕ) :
+    (CartierImageFiltration.power (coherentTensorLine (idealSheaf f) d) j).obj L ⟶
+      (cohPushforward f).obj (layer f d j Q) :=
+…</pre><p class="refs">Mentions: <a href="CartierImageFiltration.lean.html#L78">OAI.CartierImageFiltration.power</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="CartierPullback.lean.html#L704">OAI.ActualCartier.layer</a></p></li><li id=L716><b>instance</b> <code>OAI.ActualCartier.layerCover_epi</code> <small>line 716</small></li><li id=L722><b>def</b> <code>OAI.ActualCartier.layerQuotient</code> <small>line 722</small><div class="doc"><p>The quotient morphism on the Cartier divisor.</p></div><pre>def layerQuotient {L Q : Coh Y} (q : L ⟶ Q) (j : ℕ) :
+    (restriction f d).obj
+      ((CartierImageFiltration.power (coherentTensorLine (idealSheaf f) d) j).obj L) ⟶
+      layer f d j Q :=
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="CartierImageFiltration.lean.html#L78">OAI.CartierImageFiltration.power</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="CartierPullback.lean.html#L704">OAI.ActualCartier.layer</a></p></li><li id=L729><b>instance</b> <code>OAI.ActualCartier.layerQuotient_epi</code> <small>line 729</small></li><li id=L736><b>lemma</b> <code>OAI.ActualCartier.lattice_sandwich_identity</code> <small>line 736</small><div class="doc"><p>An ideal-power containment in a lattice inclusion gives nilpotence
+and coherent layers in the conormal Grothendieck identity.</p></div><pre>lemma lattice_sandwich_identity {S : ShortComplex (Coh Y)} (hS : S.ShortExact)
+    (h₁ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₁.obj.val.obj U))
+    (h₂ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₂.obj.val.obj U))
+    (n : ℕ)
+    (b : (CartierImageFiltration.power (coherentTensorLine (idealSheaf f) d) n).obj S.X₂ ⟶ S.X₁)
+    (hb : b ≫ S.f =
+      (CartierImageFiltration.powerAction (coherentTensorLine (idealSheaf f) d) (action f d) n).app S.X₂) :
+    cls ((restriction f d).obj S.X₁) = cls ((restriction f d).obj S.X₂) +
+      ((idealLayers f d n S.X₃).map fun Q =&gt; cls (conormalTensor f d Q) - cls Q).sum := by
+…</pre><p class="refs">Mentions: <a href="CartierImageFiltration.lean.html#L78">OAI.CartierImageFiltration.power</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="CartierImageFiltration.lean.html#L89">OAI.CartierImageFiltration.powerAction</a>, <a href="GeometricChartSandwich.lean.html#L634">OAI.ActualCartier.action</a>, <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="CartierPullback.lean.html#L518">OAI.ActualCartier.idealLayers</a>, <a href="CartierPullback.lean.html#L435">OAI.ActualCartier.conormalTensor</a></p></li><li id=L761><b>def</b> <code>OAI.ActualCartier.conormalFunctor</code> <small>line 761</small><div class="doc"><p>Tensor by the conormal line, on coherent sheaves of the divisor.</p></div><pre>def conormalFunctor : Coh X ⥤ Coh X :=
+…</pre></li><li id=L767><b>lemma</b> <code>OAI.ActualCartier.action_central</code> <small>line 767</small></li><li id=L775><b>def</b> <code>OAI.ActualCartier.restriction_tensorLine_iso</code> <small>line 775</small><div class="doc"><p>Cartier restriction sends an ideal twist to the conormal twist
+by preservation of cokernels and centrality of multiplication.</p></div><pre>def restriction_tensorLine_iso (M : Coh Y) :
+    (restriction f d).obj ((coherentTensorLine (idealSheaf f) d).obj M) ≅
+      (conormalFunctor f d).obj ((restriction f d).obj M) := by
+…</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="CartierPullback.lean.html#L761">OAI.ActualCartier.conormalFunctor</a></p></li><li id=L789><b>def</b> <code>OAI.ActualCartier.restriction_powerIso</code> <small>line 789</small><div class="doc"><p>Restricting each ambient ideal power gives the corresponding
+conormal tensor power on the divisor.</p></div><pre>def restriction_powerIso : (j : ℕ) → (M : Coh Y) →
+    (restriction f d).obj ((power (coherentTensorLine (idealSheaf f) d) j).obj M) ≅
+      (power (conormalFunctor f d) j).obj ((restriction f d).obj M)
+  | 0, _ =&gt; Iso.refl _
+  | j + 1, M =&gt; restriction_powerIso j ((coherentTensorLine (idealSheaf f) d).obj M) ≪≫
+      (power (conormalFunctor f d) j).mapIso (restriction_tensorLine_iso f d M)
+
+/-- The surjection from the jth conormal twist of the original
+restricted lattice onto its jth supported quotient (the ideal-image filtration). -/</pre><p class="refs">Mentions: <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="CartierPullback.lean.html#L761">OAI.ActualCartier.conormalFunctor</a>, <a href="CartierPullback.lean.html#L775">OAI.ActualCartier.restriction_tensorLine_iso</a></p></li><li id=L798><b>def</b> <code>OAI.ActualCartier.twistedLayerQuotient</code> <small>line 798</small><div class="doc"><p>The surjection from the jth conormal twist of the original
+restricted lattice onto its jth supported quotient (the ideal-image filtration).</p></div><pre>def twistedLayerQuotient {L Q : Coh Y} (q : L ⟶ Q) (j : ℕ) :
+    (power (conormalFunctor f d) j).obj ((restriction f d).obj L) ⟶ layer f d j Q :=
+…</pre><p class="refs">Mentions: <a href="CartierPullback.lean.html#L761">OAI.ActualCartier.conormalFunctor</a>, <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="CartierPullback.lean.html#L704">OAI.ActualCartier.layer</a></p></li><li id=L802><b>instance</b> <code>OAI.ActualCartier.twistedLayerQuotient_epi</code> <small>line 802</small></li><li id=L828><b>lemma</b> <code>OAI.ActualCartier.exists_idealMultiple_isZero_of_support</code> <small>line 828</small><div class="doc"><p>Support on the finite principal-chart complement yields a finite
+filtration by the Cartier ideal images in the coherent category.</p></div><pre>lemma exists_idealMultiple_isZero_of_support (M : Coh Y)
+    (hM : ∀ j, IsZero (((restrictFunctor (f j)).obj M.obj).over
+      (PrimeSpectrum.basicOpen (AffineCartierNilpotence.equation
+        ((restrictFunctor (f j)).obj (idealSheaf g)) (e j)
+        (restrictedIdeal (f j) (idealι g)))))) :
+    ∃ n : ℕ, IsZero (idealMultiple g d n M) := by
+…</pre><p class="refs">Mentions: <a href="CartierImageFiltration.lean.html#L341">OAI.AffineCartierNilpotence.equation</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="TensorLineCoherent.lean.html#L533">OAI.ActualCartier.idealι</a>, <a href="CartierPullback.lean.html#L514">OAI.ActualCartier.idealMultiple</a></p></li><li id=L848><b>lemma</b> <code>OAI.ActualCartier.lattice_support_identity</code> <small>line 848</small><div class="doc"><p>The divisor-side Grothendieck lattice identity follows from local support.</p></div><pre>lemma lattice_support_identity {S : ShortComplex (Coh Y)} (hS : S.ShortExact)
+    (h₁ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₁.obj.val.obj U))
+    (h₂ : ∀ U, Module.IsTorsionFree (Y.sheaf.obj.obj U) (S.X₂.obj.val.obj U))
+    (hQ : ∀ j, IsZero (((restrictFunctor (f j)).obj S.X₃.obj).over
+      (PrimeSpectrum.basicOpen (AffineCartierNilpotence.equation
+        ((restrictFunctor (f j)).obj (idealSheaf g)) (e j)
+        (restrictedIdeal (f j) (idealι g)))))) :
+    ∃ n : ℕ, cls ((restriction g d).obj S.X₁) = cls ((restriction g d).obj S.X₂) +
+      ((idealLayers g d n S.X₃).map fun Q =&gt; cls (conormalTensor g d Q) - cls Q).sum := by
+…</pre><p class="refs">Mentions: <a href="CartierImageFiltration.lean.html#L341">OAI.AffineCartierNilpotence.equation</a>, <a href="TensorLineCoherent.lean.html#L532">OAI.ActualCartier.idealSheaf</a>, <a href="TensorLineCoherent.lean.html#L533">OAI.ActualCartier.idealι</a>, <a href="GeometricChartSandwich.lean.html#L672">OAI.ActualCartier.restriction</a>, <a href="CartierPullback.lean.html#L518">OAI.ActualCartier.idealLayers</a>, <a href="CartierPullback.lean.html#L435">OAI.ActualCartier.conormalTensor</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

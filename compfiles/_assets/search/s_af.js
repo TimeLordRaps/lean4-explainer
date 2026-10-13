@@ -1,0 +1,1 @@
+window.l4shard("af", [["Imo1993P6.lampsAfter",65,49],["Imo1993P6.pos_after",65,73],["Imo2025P1.AffSubOfPlane",143,92],["Imo2025P1.affine_trans",143,512],["Imo2025P1.eqAffSubOfPlane",143,356],["Usa1987P5.neqAfter",194,44]]);

@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralCornerDensity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralCornerDensity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>DihedralCornerDensity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>DihedralCornerDensity.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralCornerDensity.lean#L1">source</a></p><div class="doc"><p>Separate L²-continuity extends the positive-power corner trace tests.
+Only density of their linear span in the centered corner is needed;
+no uniform bound on approximants is imposed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCornerGeometry.trace_middle_eq_inner</code> <small>line 23</small><div class="doc"><p>The trace with fixed left and right factors is a continuous functional
+of the middle L²-vector, by traciality and the inner-product identity.</p></div><pre>theorem trace_middle_eq_inner (a x b : P) :
+    G.trace (a * x * b) = inner ℂ (G.vector (star (b * a))) (G.vector x) := by
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCornerGeometry.trace_middle_zero_of_mem_closed_span</code> <small>line 32</small><div class="doc"><p>A middle-factor trace test that vanishes on generators vanishes on the
+closed linear span of their L²-vectors.</p></div><pre>theorem trace_middle_zero_of_mem_closed_span (S : Set P) (a x b : P)
+    (hx : G.vector x ∈ (Submodule.span ℂ (G.vector &#x27;&#x27; S)).topologicalClosure)
+    (hzero : ∀ y ∈ S, G.trace (a * y * b) = 0) :
+    G.trace (a * x * b) = 0 := by
+…</pre></li><li id=L56><b>def</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct</code> <small>line 56</small><div class="doc"><p>Ordered alternating products, with the first list supplying fixed
+left letters and the second list supplying the variable right letters.</p></div><pre>def alternatingProduct : List P → List P → P
+  | a :: as, x :: xs =&gt; a * x * alternatingProduct as xs
+  | _, _ =&gt; 1</pre></li><li id=L60><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct_nil</code> <small>line 60</small></li><li id=L61><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct_cons</code> <small>line 61</small></li><li id=L66><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.trace_alternatingProduct_zero_of_dense</code> <small>line 66</small><div class="doc"><p>Extending one variable at a time requires only L²-density. The fixed
+factors may have arbitrary operator norms.</p></div><pre>theorem trace_alternatingProduct_zero_of_dense
+    (G : TracialCornerGeometry P H) (S : Set P) (as : List P) (a : P)
+    (hzero : ∀ xs : List P, xs.length = as.length → (∀ x ∈ xs, x ∈ S) →
+      G.trace (a * alternatingProduct as xs) = 0)
+    (xs : List P) (hlen : xs.length = as.length)
+    (hmem : ∀ x ∈ xs,
+      G.vector x ∈ (Submodule.span ℂ (G.vector &#x27;&#x27; S)).topologicalClosure) :
+    G.trace (a * alternatingProduct as xs) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../Derivation/TracialCornerCyclicity.lean.html#L16">OAI.KadisonSimilarity.TracialCornerGeometry</a>, <a href="DihedralCornerDensity.lean.html#L56">OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct</a></p></li><li id=L105><b>def</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.positiveCornerPowers</code> <small>line 105</small><div class="doc"><p>The positive compressed rotation powers spanning the centered dihedral corner.</p></div><pre>def positiveCornerPowers (p w : P) : Set P :=
+…</pre></li><li id=L114><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.split_even_alternating_word</code> <small>line 114</small><div class="doc"><p>Split an even alternating word into its two ordered lists of letters.
+The product identity is valid after applying any map into the ambient algebra.</p></div><pre>theorem split_even_alternating_word (f : R → P) (w : List R)
+    (hw : AlternatingCenteredWord τR AR BR true w) (heven : w.length % 2 = 0) :
+    ∃ as bs : List R, as.length = bs.length ∧ w.length = 2 * as.length ∧
+      (∀ a ∈ as, a ∈ AR ∧ τR a = 0) ∧ (∀ b ∈ bs, b ∈ BR ∧ τR b = 0) ∧
+      (w.map f).prod = alternatingProduct (as.map f) (bs.map f) := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L20">OAI.KadisonSimilarity.AlternatingCenteredWord</a>, <a href="DihedralCornerDensity.lean.html#L56">OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct</a></p></li><li id=L151><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct_eq_positive_blocks</code> <small>line 151</small><div class="doc"><p>Choosing a positive exponent for each generator converts the alternating
+product to the concrete list of corner blocks.</p></div><pre>theorem alternatingProduct_eq_positive_blocks (p w : P) (as xs : List P)
+    (hlen : xs.length = as.length) (hsupport : ∀ a ∈ as, a * p = a)
+    (hmem : ∀ x ∈ xs, x ∈ positiveCornerPowers p w) :
+    ∃ bs : List (P × ℕ), bs.map Prod.fst = as ∧
+      (∀ b ∈ bs, 0 &lt; b.2) ∧
+      alternatingProduct as xs = (bs.map fun b =&gt; b.1 * w ^ b.2 * p).prod := by
+…</pre><p class="refs">Mentions: <a href="DihedralCornerDensity.lean.html#L105">OAI.KadisonSimilarity.DihedralCornerWords.positiveCornerPowers</a>, <a href="DihedralCornerDensity.lean.html#L56">OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct</a></p></li><li id=L183><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.trace_positive_corner_generators_zero</code> <small>line 183</small><div class="doc"><p>The original scalar freeness supplies every positive-generator test,
+with the support factors and exponent choices constructed explicitly.</p></div><pre>theorem trace_positive_corner_generators_zero
+    (G : TracialCornerGeometry P H) (D A : StarSubalgebra ℂ P)
+    (hf : ScalarFree G.trace D A) {d s : P}
+    (hd : d ∈ D) (hs : s ∈ A) (hd0 : G.trace d = 0) (hs0 : G.trace s = 0)
+    (p : P) (as xs : List P) (hne : as ≠ []) (hlen : xs.length = as.length)
+    (hD : ∀ a ∈ as, a ∈ D) (hzero : ∀ a ∈ as, G.trace a = 0)
+    (habsorb : ∀ a ∈ as, a * d = a)
+    (hleft : ∀ a ∈ as, p * a = a) (hright : ∀ a ∈ as, a * p = a)
+    (hmem : ∀ x ∈ xs, x ∈ positiveCornerPowers p (d * s)) :
+    G.trace (alternatingProduct as xs) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../Derivation/TracialCornerCyclicity.lean.html#L16">OAI.KadisonSimilarity.TracialCornerGeometry</a>, <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a>, <a href="DihedralCornerDensity.lean.html#L105">OAI.KadisonSimilarity.DihedralCornerWords.positiveCornerPowers</a>, <a href="DihedralCornerDensity.lean.html#L56">OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct</a></p></li><li id=L210><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.trace_corner_alternating_zero_of_dense</code> <small>line 210</small><div class="doc"><p>Every even cyclic product of centered corner letters vanishes once the
+positive compressed powers have dense span in the centered second corner.</p></div><pre>theorem trace_corner_alternating_zero_of_dense
+    (G : TracialCornerGeometry P H) (D A : StarSubalgebra ℂ P)
+    (hf : ScalarFree G.trace D A) {d s : P}
+    (hd : d ∈ D) (hs : s ∈ A) (hd0 : G.trace d = 0) (hs0 : G.trace s = 0)
+    (p : P) (as xs : List P) (hne : as ≠ []) (hlen : xs.length = as.length)
+    (hD : ∀ a ∈ as, a ∈ D) (hzero : ∀ a ∈ as, G.trace a = 0)
+    (habsorb : ∀ a ∈ as, a * d = a)
+    (hleft : ∀ a ∈ as, p * a = a) (hright : ∀ a ∈ as, a * p = a)
+    (hmem : ∀ x ∈ xs, G.vector x ∈
+      (Submodule.span ℂ (G.vector &#x27;&#x27; positiveCornerPowers p (d * s))).topologicalClosure) :
+    G.trace (alternatingProduct as xs) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../Derivation/TracialCornerCyclicity.lean.html#L16">OAI.KadisonSimilarity.TracialCornerGeometry</a>, <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a>, <a href="DihedralCornerDensity.lean.html#L105">OAI.KadisonSimilarity.DihedralCornerWords.positiveCornerPowers</a>, <a href="DihedralCornerDensity.lean.html#L56">OAI.KadisonSimilarity.DihedralCornerWords.alternatingProduct</a></p></li><li id=L229><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.coe_corner_list_prod</code> <small>line 229</small><div class="doc"><p>Coercing a corner product inserts the corner identity at its right end.</p></div><pre>theorem coe_corner_list_prod (p : P) (hp : IsStarProjection p)
+    (w : List (CStarCorner p hp)) :
+    (w.prod : P) = (List.map (fun x : CStarCorner p hp =&gt; (x : P)) w).prod * p := by
+…</pre><p class="refs">Mentions: <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a></p></li><li id=L242><b>theorem</b> <code>OAI.KadisonSimilarity.DihedralCornerWords.scalarFree_corner_of_positive_power_density</code> <small>line 242</small><div class="doc"><p>Actual corner freeness follows from the original scalar freeness and
+density of the centered positive compressed rotation powers. The density
+input is a geometric word-span statement, not a freeness assumption.</p></div><pre>theorem scalarFree_corner_of_positive_power_density
+    (G : TracialCornerGeometry P H) (D A C : StarSubalgebra ℂ P)
+    (hf : ScalarFree G.trace D A) {d s : P}
+    (hd : d ∈ D) (hs : s ∈ A) (hd0 : G.trace d = 0) (hs0 : G.trace s = 0)
+    (p : P) (hp : IsStarProjection p) (hpD : p ∈ D) (hpC : p ∈ C)
+    (hpd : p * d = p) (ht : G.trace p ≠ 0)
+    (hdense : ∀ x : CStarCorner p hp, (x : P) ∈ C → G.trace (x : P) = 0 →
+      G.vector (x : P) ∈
+        (Submodule.span ℂ (G.vector &#x27;&#x27; positiveCornerPowers p (d * s))).topologicalClosure) :
+    ScalarFree (CStarCorner.normalizedTrace p hp G.trace)
+      (CStarCorner.subalgebra p hp D hpD) (CStarCorner.subalgebra p hp C hpC) := by
+…</pre><p class="refs">Mentions: <a href="../Derivation/TracialCornerCyclicity.lean.html#L16">OAI.KadisonSimilarity.TracialCornerGeometry</a>, <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a>, <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a>, <a href="DihedralCornerDensity.lean.html#L105">OAI.KadisonSimilarity.DihedralCornerWords.positiveCornerPowers</a>, <a href="../Tracial/TracialCornerExpectations.lean.html#L44">OAI.KadisonSimilarity.CStarCorner.normalizedTrace</a>, <a href="../Tracial/TracialCornerExpectations.lean.html#L19">OAI.KadisonSimilarity.CStarCorner.subalgebra</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/FiveProducts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/FiveProducts.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>FiveProducts.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>FiveProducts.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/FiveProducts.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L8><b>theorem</b> <code>OAI.Problem337.FiveProducts.character_map_sum</code> <small>line 8</small></li><li id=L17><b>theorem</b> <code>OAI.Problem337.FiveProducts.character_sum</code> <small>line 17</small><div class="doc"><p>Orthogonality for the standard character on a finite cyclic group.</p></div><pre>theorem character_sum {p : ℕ} [NeZero p] (t : ZMod p) :
+    (∑ r : ZMod p, ZMod.stdAddChar (t * r)) =
+      if t = 0 then (p : ℂ) else 0 := by
+…</pre></li><li id=L25><b>theorem</b> <code>OAI.Problem337.FiveProducts.moment_eq_zero_of_no_zero_sum</code> <small>line 25</small><div class="doc"><p>The character moment vanishes if no tuple has zero sum.</p></div><pre>theorem moment_eq_zero_of_no_zero_sum {p : ℕ} [NeZero p]
+    {X : Type*} [Fintype X] (f : X → ZMod p) (n : ℕ)
+    (h : ∀ v : Fin n → X, ∑ i, f (v i) ≠ 0) :
+    (∑ r : ZMod p, (∑ x : X, ZMod.stdAddChar (f x * r)) ^ n) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L42">OAI.Problem337.v</a></p></li><li id=L44><b>theorem</b> <code>OAI.Problem337.FiveProducts.exists_zero_sum_of_character_bound</code> <small>line 44</small><div class="doc"><p>A strict spectral bound forces a zero-sum tuple. The estimate uses <code>p</code>
+rather than <code>p-1</code>, which is convenient and sufficient for five products.</p></div><pre>theorem exists_zero_sum_of_character_bound {p : ℕ} [NeZero p]
+    {X : Type*} [Fintype X] (f : X → ZMod p) (n : ℕ) (B : ℝ)
+    (hB : 0 ≤ B)
+    (hchar : ∀ r : ZMod p, r ≠ 0 →
+      ‖∑ x : X, ZMod.stdAddChar (f x * r)‖ ≤ B)
+    (hsize : (p : ℝ) * B ^ n &lt; (Fintype.card X : ℝ) ^ n) :
+    ∃ v : Fin n → X, ∑ i, f (v i) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L42">OAI.Problem337.v</a></p></li><li id=L84><b>theorem</b> <code>OAI.Problem337.FiveProducts.character_parseval</code> <small>line 84</small><div class="doc"><p>Parseval for the standard character restricted to a set.</p></div><pre>theorem character_parseval {p : ℕ} [Fact p.Prime] (H : Finset (ZMod p))
+    (r : ZMod p) (hr : r ≠ 0) :
+    (∑ a : ZMod p, ‖∑ b ∈ H, ZMod.stdAddChar (b * a * r)‖ ^ 2) =
+      (p : ℝ) * H.card := by
+…</pre></li><li id=L120><b>theorem</b> <code>OAI.Problem337.FiveProducts.bilinear_character_bound</code> <small>line 120</small><div class="doc"><p>The finite-field bilinear character bound, in unnormalised form.</p></div><pre>theorem bilinear_character_bound {p : ℕ} [Fact p.Prime]
+    (H : Finset (ZMod p)) (r : ZMod p) (hr : r ≠ 0) :
+    ‖∑ a ∈ H, ∑ b ∈ H, ZMod.stdAddChar (b * a * r)‖ ≤
+      Real.sqrt p * H.card := by
+…</pre></li><li id=L154><b>theorem</b> <code>OAI.Problem337.FiveProducts.five_products_zero_of_power_bound</code> <small>line 154</small><div class="doc"><p>Five products from a sufficiently large set in a prime field have sum zero.
+The integral threshold is slightly stronger than the optimal Fourier threshold
+only in its strictness, and is implied by <code>|H| &gt; p^(3/4)</code>.</p></div><pre>theorem five_products_zero_of_power_bound {p : ℕ} [Fact p.Prime]
+    (H : Finset (ZMod p)) (hsize : p ^ 7 &lt; H.card ^ 10) :
+    ∃ a b : Fin 5 → H, ∑ i, (a i : ZMod p) * (b i : ZMod p) = 0 := by
+…</pre></li><li id=L188><b>theorem</b> <code>OAI.Problem337.FiveProducts.five_products_zero</code> <small>line 188</small><div class="doc"><p>The five-product conclusion at the <code>p^(3/4)</code> threshold used in
+rational-divisor supply.</p></div><pre>theorem five_products_zero {p : ℕ} [Fact p.Prime]
+    (H : Finset (ZMod p)) (hsize : (p : ℝ) ^ (3 / 4 : ℝ) &lt; H.card) :
+    ∃ a b : Fin 5 → H, ∑ i, (a i : ZMod p) * (b i : ZMod p) = 0 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

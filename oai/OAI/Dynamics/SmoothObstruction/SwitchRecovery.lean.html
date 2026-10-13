@@ -1,0 +1,188 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/SwitchRecovery.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/SwitchRecovery.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>SwitchRecovery.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>SwitchRecovery.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/SwitchRecovery.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.SmoothObstruction.PairLaw.law_domination</code> <small>line 26</small><div class="doc"><p>Cellwise pair domination sums with the ORIGINAL weights 1/μ(Q). There
+is no renormalization after restricting to G or to endpoint patterns.</p></div><pre>theorem law_domination (μ : Measure X) (P : X → α)
+    (G : Set (X × X)) (Φ : X × X → X × X) (hΦ : Measurable Φ)
+    (C : ℝ≥0∞)
+    (hc : ∀ a,(((cell μ P a).prod (cell μ P a)).restrict G).map Φ≤
+      C • (cell μ P a).prod (cell μ P a)) :
+    ((law μ P).restrict G).map Φ≤C • law μ P := by
+…</pre><p class="refs">Mentions: <a href="PairLaw.lean.html#L16">OAI.SmoothObstruction.PairLaw.cell</a>, <a href="PairLaw.lean.html#L21">OAI.SmoothObstruction.PairLaw.law</a></p></li><li id=L46><b>theorem</b> <code>OAI.SmoothObstruction.PairLaw.first_output_domination</code> <small>line 46</small><div class="doc"><p>Joint domination yields exactly the first-output switch law 2μ, not
+a law normalized by the retained mass.</p></div><pre>theorem first_output_domination (μ : Measure X) [IsFiniteMeasure μ]
+    (P : X → α) (hP : Measurable P) (G : Set (X × X))
+    (Φ : X × X → X × X) (hΦ : Measurable Φ) (C : ℝ≥0∞)
+    (hdom : ((law μ P).restrict G).map Φ≤C • law μ P) :
+    ((law μ P).restrict G).map (fun z =&gt; (Φ z).1)≤C • μ := by
+…</pre><p class="refs">Mentions: <a href="PairLaw.lean.html#L21">OAI.SmoothObstruction.PairLaw.law</a></p></li><li id=L65><b>lemma</b> <code>OAI.SmoothObstruction.PairLaw.same_cell_ae</code> <small>line 65</small><div class="doc"><p>The original cell-weighted experiment is carried by pairs in the same
+cell, including zero-mass cells without any special convention.</p></div><pre>lemma same_cell_ae (μ : Measure X) [IsFiniteMeasure μ] (P : X → α)
+    (hP : Measurable P) : ∀ᵐ z ∂law μ P,P z.1=P z.2 := by
+…</pre><p class="refs">Mentions: <a href="PairLaw.lean.html#L21">OAI.SmoothObstruction.PairLaw.law</a></p></li><li id=L78><b>theorem</b> <code>OAI.SmoothObstruction.PairLaw.retained_bound</code> <small>line 78</small><div class="doc"><p>Retention is measured in the original pair probability, rather than in
+any conditional law on the good set.</p></div><pre>theorem retained_bound (μ : Measure X) [IsProbabilityMeasure μ]
+    (P : X → α) (hP : Measurable P) (R : Set X) (hR : MeasurableSet R) :
+    let G := (R ×ˢ R) ∩ {z : X×X | P z.1=P z.2}
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.SmoothObstruction.PairLaw.glue_cell_domination</code> <small>line 106</small><div class="doc"><p>A measurable canonical pair map can be checked using any cellwise local
+extension agreeing on the retained set. Different extensions off that set do
+not affect the ORIGINAL unnormalized pushforward.</p></div><pre>theorem glue_cell_domination (μ : Measure X) [IsFiniteMeasure μ]
+    (P : X → α) (hP : Measurable P) (G : Set (X×X)) (hG : MeasurableSet G)
+    (Φ : X×X → X×X) (hΦ : Measurable Φ) (C : ℝ≥0∞)
+    (hc : ∀ a,∃ F : X×X → X×X,Measurable F ∧
+      EqOn F Φ G ∧
+      (((cell μ P a).prod (cell μ P a)).restrict G).map F≤
+        C • (cell μ P a).prod (cell μ P a)) :
+    ((law μ P).restrict G).map Φ≤C • law μ P ∧
+      ((law μ P).restrict G).map (fun z =&gt; (Φ z).1)≤C • μ := by
+…</pre><p class="refs">Mentions: <a href="PairLaw.lean.html#L16">OAI.SmoothObstruction.PairLaw.cell</a>, <a href="PairLaw.lean.html#L21">OAI.SmoothObstruction.PairLaw.law</a></p></li><li id=L132><b>theorem</b> <code>OAI.SmoothObstruction.OrbitSafety.bilateral_bad_bound</code> <small>line 132</small><div class="doc"><p>A finite two-sided safety exclusion is charged to the original invariant
+measure at every time, without conditioning the retained law.</p></div><pre>theorem bilateral_bad_bound (μ : Measure X) (f g : X → X)
+    (hf : MeasurePreserving f μ μ) (hg : MeasurePreserving g μ μ)
+    (W : Set X) (hW : MeasurableSet W) (n : ℕ) :
+    let Z := (⋃ t : Fin (n+1),(f^[t.val]) ⁻¹&#x27; W) ∪
+…</pre></li><li id=L168><b>lemma</b> <code>OAI.SmoothObstruction.RetainedGlobal.real_union_le</code> <small>line 168</small></li><li id=L176><b>theorem</b> <code>OAI.SmoothObstruction.RetainedGlobal.exists_retained</code> <small>line 176</small><div class="doc"><p>The actual one-point retained carrier. The fixed atlas core is checked
+only at 0 and the two endpoints. Coarse margins, product margins, and all
+boundary-tube checks are charged in the original stationary measure.</p></div><pre>theorem exists_retained (μ : Measure X) [IsProbabilityMeasure μ]
+    (f g : X → X) (hf : MeasurePreserving f μ μ) (hg : MeasurePreserving g μ μ)
+    (G V Wc Wp Wb : Set X) (hG : MeasurableSet G) (hV : MeasurableSet V)
+    (hWc : MeasurableSet Wc) (hWp : MeasurableSet Wp) (hWb : MeasurableSet Wb) (n : ℕ) :
+    ∃ R : Set X,MeasurableSet R ∧ R⊆G ∧
+      μ.real Rᶜ≤μ.real Gᶜ+3*(μ.real Vᶜ+μ.real Wc)+μ.real Wp+
+        2*((n:ℝ)+1)*μ.real Wb ∧
+      ∀ x∈R,x∈V ∧ x∉Wc ∧ x∉Wp ∧
+        f^[n] x∈V ∧ f^[n] x∉Wc ∧ g^[n] x∈V ∧ g^[n] x∉Wc ∧
+        ∀ t≤n,f^[t] x∉Wb ∧ g^[t] x∉Wb := by
+…</pre></li><li id=L231><b>theorem</b> <code>OAI.SmoothObstruction.RetainedGlobal.pair_mass</code> <small>line 231</small><div class="doc"><p>Retained original cell-pair probability, with all exclusion losses and
+without replacing cell weights by good-set weights.</p></div><pre>theorem pair_mass {α : Type*} [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
+    (μ : Measure X) [IsProbabilityMeasure μ] (P : X → α) (hP : Measurable P)
+    (R : Set X) (hR : MeasurableSet R) {η : ℝ} (hm : μ.real Rᶜ≤η/2) :
+    let G := (R ×ˢ R)∩{z : X×X | P z.1=P z.2}
+…</pre></li><li id=L256><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.finite_product_partition</code> <small>line 256</small><div class="doc"><p>The actual full finite product partition is constructed from one original
+gauge reference per active starting bin. Wall strips are charged to the ORIGINAL
+measure. No endpoint or orbit chart code is included in the cell alphabet. The
+recovery assertion is precisely the ideal exchange needed by both joins.</p></div><pre>theorem finite_product_partition [IsManifold I ∞ M] (μ : Measure M) [IsProbabilityMeasure μ]
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    (c : M → ι) (hc : ∀ x,x∈K (c x)) :
+    ∃ D : ℝ,1≤D ∧ ∀ (P : M → C),Measurable P → ∀ (chart : C → ι),
+      (∀ x,chart (P x)=c x) → ∀ (G : Set M) (n : ℕ) (B R : ℝ),0≤B →
+      ∀ (A : ∀ x:G,BilateralGauge I S a c n B R x) (T : G → Finset (Fin d))
+        (δ : ℝ),0&lt;δ → ∀ N : ℕ,0&lt;N →
+      let H₀ := Real.sqrt 2*Real.exp (2*B)
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a></p></li><li id=L328><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.uniform_chart_transfer</code> <small>line 328</small><div class="doc"><p>Uniform comparison of actual chart displacements on the retained interior
+balls. This is a consequence of the identity diffeomorphism's genuine smooth
+coordinate maps, not an assumed Riemannian/Lipschitz metric.</p></div><pre>theorem uniform_chart_transfer (hclosed : IsClosed (range I))
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r C : ℝ,0&lt;r ∧ 1≤C ∧ ∀ (i j : ι) (x y : M) (δ : ℝ),
+      x∈K i → x∈K j → 0≤δ → δ≤r →
+      closedBall ((extChartAt I (a i)) x) δ⊆interior (range I) →
+      y∈(chartAt H (a i)).source →
+      ‖(extChartAt I (a i)) y-(extChartAt I (a i)) x‖≤δ →
+      y∈(chartAt H (a j)).source ∧
+      ‖(extChartAt I (a j)) y-(extChartAt I (a j)) x‖≤
+        C*‖(extChartAt I (a i)) y-(extChartAt I (a i)) x‖ := by
+…</pre></li><li id=L373><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.uniform_common_output</code> <small>line 373</small><div class="doc"><p>A common output in two small selected tubes puts their centers in each
+other's original chart, with a uniform linear coordinate bound. The chart
+selector can be discontinuous: only its finite compact carrying patches are
+used. This is the comparison needed to invoke old-tube rigidity when two
+canonical switches have the same output.</p></div><pre>theorem uniform_common_output (hclosed : IsClosed (range I))
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r C : ℝ,0&lt;r ∧ 1≤C ∧ ∀ (i j : ι) (x y z : M) (ρ : ℝ),
+      x∈K i → y∈K j → 0≤ρ → ρ≤r →
+      closedBall ((extChartAt I (a j)) y) ρ⊆interior (range I) →
+      z∈(chartAt H (a i)).source → z∈(chartAt H (a j)).source →
+      ‖(extChartAt I (a i)) z-(extChartAt I (a i)) x‖≤ρ →
+      ‖(extChartAt I (a j)) z-(extChartAt I (a j)) y‖≤ρ →
+      y∈(chartAt H (a i)).source ∧
+      ‖(extChartAt I (a i)) y-(extChartAt I (a i)) x‖≤C*ρ := by
+…</pre></li><li id=L422><b>theorem</b> <code>OAI.SmoothObstruction.SwitchRecovery.global_injective_tubes</code> <small>line 422</small><div class="doc"><p>Exact recovered cell and endpoint labels force the same four endpoint
+maps even when the two inputs were certified by different frame witnesses.</p></div><pre>theorem global_injective_tubes
+    (c : X → α) (b : X → β) (future past : X → X)
+    (U : α → β → X → E) (V : α → β → X → F)
+    (TF TB RF RB : X → X → Prop) (R : Set X) (G : Set (X × X))
+    (Φ : X × X → X × X)
+    (hcommonF : ∀ x∈R,∀ y∈R,∀ z,TF x z → TF y z → RF x y)
+    (hcommonB : ∀ x∈R,∀ y∈R,∀ z,TB x z → TB y z → RB x y)
+    (hgood : ∀ u∈G,u.1∈R ∧ u.2∈R)
+    (hc : ∀ u∈G,c u.1=c u.2 ∧ c (Φ u).1=c u.1)
+    (hb : ∀ u∈G,
+      b (future (Φ u).1)=b (future u.1) ∧
+      b (past (Φ u).2)=b (past u.1) ∧
+…</pre></li><li id=L489><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.original_common_tubes</code> <small>line 489</small><div class="doc"><p>Common sharp outputs recover the original full orbit tube, despite all
+intermediate selected charts being allowed to differ.</p></div><pre>theorem original_common_tubes (hclosed : IsClosed (range I))
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r C : ℝ,0&lt;r ∧ 1≤C ∧ ∀ (S : Diffeomorph I I M M ∞)
+      (c : M → ι) (n : ℕ) (ρ δ : ℝ) (x y z : M),
+      (∀ v,v∈K (c v)) → 0≤ρ → ρ≤r → C*ρ≤δ →
+      (∀ t : Fin (n+1),closedBall ((extChartAt I (a (c (S^[t.val] y)))) (S^[t.val] y)) ρ
+        ⊆interior (range I)) →
+      originalTube I S a c (n:=n) ρ x z → originalTube I S a c (n:=n) ρ y z →
+…</pre><p class="refs">Mentions: <a href="TubeProjection.lean.html#L789">OAI.SmoothObstruction.ManifoldCoordinates.originalTube</a></p></li><li id=L511><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.original_switch_injective</code> <small>line 511</small><div class="doc"><p>Original cell and endpoint recovery makes the measurable canonical
+switch globally one-to-one. The four endpoint equations are the original
+ones, and rigidity is invoked in OLD charts, not independently chosen ones.</p></div><pre>theorem original_switch_injective {C J : Type*}
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (c : M → ι)
+    (P : M → C) (L : M → J) (π : J → C) (chart : C → ι)
+    (hπ : ∀ x,π (L x)=P x) (hchart : ∀ x,chart (P x)=c x)
+    (n : ℕ) (δ ρ : ℝ) (R : Set M) (G : Set (M×M)) (Φ : M×M → M×M)
+    (Wf Wb : C×C → Submodule ℝ (EuclideanSpace ℝ (Fin d)))
+    (hcommonF : ∀ x∈R,∀ y∈R,∀ z,
+      originalTube I S a c (n:=n) ρ x z → originalTube I S a c (n:=n) ρ y z →
+…</pre><p class="refs">Mentions: <a href="TubeProjection.lean.html#L789">OAI.SmoothObstruction.ManifoldCoordinates.originalTube</a></p></li><li id=L572><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.coarse_label_germ</code> <small>line 572</small><div class="doc"><p>No new label is introduced: positive old grid margin plus a stable
+selected chart makes the original coarse label locally constant.</p></div><pre>theorem coarse_label_germ (c : X → ι) (P : X → C) (φ : ι → X → E)
+    (U : ι → Set X) (hU : ∀ i,IsOpen (U i))
+    (hφ : ∀ i,ContinuousOn (φ i) (U i))
+    (x : X) (hxU : x∈U (c x)) (s δ : ℝ) (hs : 0&lt;s) (hδ : 0&lt;δ)
+    (hc : ∀ y,dist y x ≤ s → c y=c x)
+    (hrec : ∀ y,c y=c x → ‖φ (c x) y-φ (c x) x‖≤δ → P y=P x) :
+    ∀ᶠ y in 𝓝 x,P y=P x := by
+…</pre></li><li id=L587><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.finite_label_germ</code> <small>line 587</small><div class="doc"><p>Starting and final old labels can all be fixed on one neighborhood;
+this finite local intersection is not charged to a partition alphabet.</p></div><pre>theorem finite_label_germ {T : Type*} [Finite T]
+    (P : X → C) (f : T → X → X) (x : X)
+    (hf : ∀ t,ContinuousAt (f t) x)
+    (hP : ∀ t,∀ᶠ y in 𝓝 (f t x),P y=P (f t x)) :
+    ∀ᶠ y in 𝓝 x,∀ t,P (f t y)=P (f t x) := by
+…</pre></li><li id=L605><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.uniform_original_shadow</code> <small>line 605</small><div class="doc"><p>Uniform old-chart tubes give metric shadowing, with constants chosen
+before the time length, orbit, chart selector, or frame witness.</p></div><pre>theorem uniform_original_shadow (hclosed : IsClosed (range I))
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    {ε : ℝ} (hε : 0&lt;ε) :
+    ∃ σ : ℝ,0&lt;σ ∧ ∀ (S : Diffeomorph I I M M ∞) (c : M → ι)
+      (n : ℕ) (ρ : ℝ) (x z : M), (∀ u,u∈K (c u)) → ρ≤σ →
+      originalTube I S a c (n:=n) ρ x z →
+…</pre><p class="refs">Mentions: <a href="TubeProjection.lean.html#L789">OAI.SmoothObstruction.ManifoldCoordinates.originalTube</a></p></li><li id=L621><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.original_tube_labels</code> <small>line 621</small><div class="doc"><p>Recovery of the ORIGINAL coarse label, without recording an orbit-chart
+itinerary in the partition. The only exclusions are the fixed chart core and
+old coarse-grid wall strip at the particular time under consideration.</p></div><pre>theorem original_tube_labels
+    (hclosed : IsClosed (range I)) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    {s : ℝ} (hs : 0&lt;s) :
+    ∃ σ : ℝ,0&lt;σ ∧ ∀ {C : Type*} (S : Diffeomorph I I M M ∞) (c : M → ι)
+      (P : M → C) (V W : Set M) (δ ρ : ℝ) (n : ℕ),
+      (∀ u,u∈K (c u)) →
+      (∀ x∈V,∀ z,dist z x ≤ s → c z=c x) →
+      (∀ x z,x∉W → c z=c x →
+        ‖ChartDensity.coordinates I (a (c x)) z-ChartDensity.coordinates I (a (c x)) x‖≤δ/4 →
+        P z=P x) → ρ≤σ → ρ≤δ/4 →
+      ∀ x z,originalTube I S a c (n:=n) ρ x z →
+…</pre><p class="refs">Mentions: <a href="DensityBounds.lean.html#L194">OAI.SmoothObstruction.ChartDensity.coordinates</a>, <a href="TubeProjection.lean.html#L789">OAI.SmoothObstruction.ManifoldCoordinates.originalTube</a></p></li><li id=L645><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.original_shadow_tendsto</code> <small>line 645</small><div class="doc"><p>The qualitative uniform shadowing assertion follows from the actual
+sharp tube radii tending to zero. This does not assume a rate for an arbitrary
+compatible metric on the compact manifold.</p></div><pre>theorem original_shadow_tendsto (hclosed : IsClosed (range I))
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    (S : Diffeomorph I I M M ∞) (c : M → ι) (hc : ∀ u,u∈K (c u))
+    (n : ℕ → ℕ) (ρ : ℕ → ℝ) (hρ : Tendsto ρ atTop (𝓝 0))
+    (G : ℕ → Set (M×M)) (Φ : ℕ → M×M → M×M)
+    (ht : ∀ᶠ k in atTop,∀ u∈G k,
+      originalTube I S a c (n:=n k) (ρ k) u.1 (Φ k u).1 ∧
+…</pre><p class="refs">Mentions: <a href="TubeProjection.lean.html#L789">OAI.SmoothObstruction.ManifoldCoordinates.originalTube</a></p></li><li id=L678><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.recovered_original_pair</code> <small>line 678</small><div class="doc"><p>Actual sharp tubes and old coarse/product grid margins recover both
+full ORIGINAL cells and all four endpoint labels. Common-output old tubes
+then prove global injectivity, even for unequal selected intermediate charts.
+No partition is refined by an endpoint, frame witness, or orbit itinerary.</p></div><pre>theorem recovered_original_pair (hclosed : IsClosed (range I))
+    (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source)
+    {s : ℝ} (hs : 0&lt;s) :
+    ∃ σ r₁ C₁ : ℝ,0&lt;σ ∧ 0&lt;r₁ ∧ 1≤C₁ ∧
+      ∀ {C J : Type*} (S : Diffeomorph I I M M ∞) (c : M → ι)
+        (P : M → C) (L : M → J) (π : J → C) (chart : C → ι)
+        (_ : ∀ x,π (L x)=P x) (_ : ∀ x,chart (P x)=c x)
+        (n : ℕ) (δ ρ δc δp H₀ E : ℝ) (R V Wc Wp : Set M)
+        (U : M → EuclideanSpace ℝ (Fin d) →L[ℝ] EuclideanSpace ℝ (Fin d))
+        (Φ : M×M → M×M) (Wf Wb : C×C → Submodule ℝ (EuclideanSpace ℝ (Fin d))),
+        (∀ x,x∈K (c x)) → 0≤ρ → ρ≤σ → ρ≤δc/4 → ρ≤r₁ → C₁*ρ≤δ →
+…</pre><p class="refs">Mentions: <a href="Coordinates.lean.html#L14">OAI.SmoothObstruction.ManifoldCoordinates.E</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

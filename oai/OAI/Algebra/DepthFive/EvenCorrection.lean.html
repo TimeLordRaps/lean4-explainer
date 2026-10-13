@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/EvenCorrection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/EvenCorrection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>EvenCorrection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>EvenCorrection.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/EvenCorrection.lean#L1">source</a></p><div class="doc"><p>Endpoint control for the even-degree correction in the circuit rank estimate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Problem335.convexOn_affine_sub_log</code> <small>line 13</small><div class="doc"><p>The logarithm of an exponential divided by its positive argument is convex.</p></div><pre>theorem convexOn_affine_sub_log (A B : ℝ) :
+    ConvexOn ℝ (Ioi 0) (fun x : ℝ =&gt; A * x + B - Real.log x) := by
+…</pre></li><li id=L25><b>theorem</b> <code>OAI.Problem335.rpow_affine_div_le_max_endpoints</code> <small>line 25</small><div class="doc"><p>The quotient occurring in the even-degree error is bounded by its two
+endpoint values. No smallness assumption on <code>q</code> is needed for this fact.</p></div><pre>theorem rpow_affine_div_le_max_endpoints {q a b z c : ℝ}
+    (hq : 0 &lt; q) (ha : 0 &lt; a) (haz : a ≤ z) (hzb : z ≤ b) :
+    q ^ (1 - c * z) / z ≤
+      max (q ^ (1 - c * a) / a) (q ^ (1 - c * b) / b) := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.Problem335.sum_rpow_affine_le_endpoint_mul_sum</code> <small>line 45</small><div class="doc"><p>Summing the endpoint estimate charges each term by its degree, rather
+than by the number of factors. This avoids a constant loss per even degree.</p></div><pre>theorem sum_rpow_affine_le_endpoint_mul_sum {ι : Type*} (s : Finset ι)
+    (d : ι → ℝ) {q a b c : ℝ} (hq : 0 &lt; q) (ha : 0 &lt; a)
+    (hd : ∀ i ∈ s, a ≤ d i ∧ d i ≤ b) :
+    (∑ i ∈ s, q ^ (1 - c * d i)) ≤
+      max (q ^ (1 - c * a) / a) (q ^ (1 - c * b) / b) * ∑ i ∈ s, d i := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.Problem335.sum_rpow_affine_le_endpoint_mul</code> <small>line 59</small><div class="doc"><p>A total degree bound turns the preceding weighted estimate into a bound
+independent of the number of terms.</p></div><pre>theorem sum_rpow_affine_le_endpoint_mul {ι : Type*} (s : Finset ι)
+    (d : ι → ℝ) {q a b c N : ℝ} (hq : 0 &lt; q) (ha : 0 &lt; a)
+    (hd : ∀ i ∈ s, a ≤ d i ∧ d i ≤ b) (hs : (∑ i ∈ s, d i) ≤ N) :
+    (∑ i ∈ s, q ^ (1 - c * d i)) ≤
+      max (q ^ (1 - c * a) / a) (q ^ (1 - c * b) / b) * N := by
+…</pre></li><li id=L70><b>theorem</b> <code>OAI.Problem335.sum_rpow_affine_le_mul_sqrt</code> <small>line 70</small><div class="doc"><p>The exact square-root error bound needed after estimating the two endpoint
+quotients by <code>C / sqrt N</code>.</p></div><pre>theorem sum_rpow_affine_le_mul_sqrt {ι : Type*} (s : Finset ι)
+    (d : ι → ℝ) {q a b c N C : ℝ} (hq : 0 &lt; q) (ha : 0 &lt; a)
+    (hN : 0 &lt; N) (hd : ∀ i ∈ s, a ≤ d i ∧ d i ≤ b)
+    (hs : (∑ i ∈ s, d i) ≤ N)
+    (hleft : q ^ (1 - c * a) / a ≤ C / Real.sqrt N)
+    (hright : q ^ (1 - c * b) / b ≤ C / Real.sqrt N) :
+    (∑ i ∈ s, q ^ (1 - c * d i)) ≤ C * Real.sqrt N := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.Problem335.evenCorrection_left_endpoint</code> <small>line 89</small><div class="doc"><p>The left endpoint correction is uniformly bounded.</p></div><pre>theorem evenCorrection_left_endpoint {N s q : ℝ} (hN : 0 &lt; N)
+    (hs : 0 ≤ s) (hsN : s ≤ Real.sqrt N)
+    (hqlo : (Real.sqrt N)⁻¹ ≤ q) (hqhi : q ≤ 2 / Real.sqrt N) :
+    q ^ (1 - (s / N) * 2) / 2 ≤ Real.exp 2 / Real.sqrt N := by
+…</pre></li><li id=L121><b>theorem</b> <code>OAI.Problem335.evenCorrection_right_endpoint</code> <small>line 121</small><div class="doc"><p>The right endpoint correction needs only <code>q ≤ 1</code>.</p></div><pre>theorem evenCorrection_right_endpoint {N s q : ℝ} (hN : 0 &lt; N)
+    (hs : 0 &lt; s) (hsN : s ≤ Real.sqrt N) (hq : 0 ≤ q) (hqone : q ≤ 1) :
+    q ^ (1 - (s / N) * (N / (4 * s))) / (N / (4 * s)) ≤
+      4 / Real.sqrt N := by
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.Problem335.evenCorrection_sum_bound</code> <small>line 141</small><div class="doc"><p>An explicit uniform square-root bound for the sum of all low-even-degree
+corrections. Only the numerical range of degrees is needed, not their parity.</p></div><pre>theorem evenCorrection_sum_bound {ι : Type*} (I : Finset ι) (d : ι → ℝ)
+    {N s q : ℝ} (hN : 0 &lt; N) (hs : 0 &lt; s) (hsN : s ≤ Real.sqrt N)
+    (hqlo : (Real.sqrt N)⁻¹ ≤ q) (hqhi : q ≤ 2 / Real.sqrt N) (hqone : q ≤ 1)
+    (hd : ∀ i ∈ I, 2 ≤ d i ∧ d i ≤ N / (4 * s))
+    (hdsum : (∑ i ∈ I, d i) ≤ N) :
+    (∑ i ∈ I, q ^ (1 - (s / N) * d i)) ≤
+      (Real.exp 2 + 4) * Real.sqrt N := by
+…</pre></li><li id=L160><b>theorem</b> <code>OAI.Problem335.sum_low_even_corrections</code> <small>line 160</small><div class="doc"><p>The correction bound specialized to the low even members of a list of
+positive integer degrees with bounded total degree.</p></div><pre>theorem sum_low_even_corrections {ι : Type*} (I : Finset ι) (e : ι → ℕ)
+    {N s q : ℝ} (hN : 0 &lt; N) (hs : 0 &lt; s) (hsN : s ≤ Real.sqrt N)
+    (hqlo : (Real.sqrt N)⁻¹ ≤ q) (hqhi : q ≤ 2 / Real.sqrt N) (hqone : q ≤ 1)
+    (he : ∀ i ∈ I, 0 &lt; e i) (hsum : (∑ i ∈ I, (e i : ℝ)) ≤ N) :
+    (∑ i ∈ I, if Even (e i) ∧ (e i : ℝ) &lt; N / (4 * s)
+      then 4 * q ^ (1 - (s / N) * e i) else 0) ≤
+      (4 * (Real.exp 2 + 4)) * Real.sqrt N := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

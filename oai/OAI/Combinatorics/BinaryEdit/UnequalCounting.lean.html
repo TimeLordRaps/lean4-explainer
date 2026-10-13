@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/UnequalCounting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/UnequalCounting.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>UnequalCounting.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>UnequalCounting.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/UnequalCounting.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.sum_counts_le_of_large_charge</code> <small>line 9</small><div class="doc"><p>Sum the local large-pair charge, allowing a threshold-sized error for
+every visited block pair.  Small pairs need no separation hypothesis.</p></div><pre>theorem sum_counts_le_of_large_charge {β : Type*} (s : Finset β)
+    (a g : β → ℕ) (a₀ : ℕ)
+    (hlarge : ∀ b ∈ s, a₀ ≤ a b → a b ≤ 100 * g b) :
+    (∑ b ∈ s, a b) ≤ 100 * (∑ b ∈ s, g b) + s.card * a₀ := by
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.block_pair_bad_count_le</code> <small>line 26</small><div class="doc"><p>The unequal-label count estimate once the actual segment separation has
+been applied to each large block pair. All gap terms here are the concrete
+interval-span losses, rather than arbitrary charged weights.</p></div><pre>theorem block_pair_bad_count_le {r M P : ℕ} (hP : 0 &lt; P)
+    (f g : Fin r → Fin (M * P)) (hf : StrictMono f) (hg : StrictMono g)
+    (bad : ℕ × ℕ → Prop) [DecidablePred bad] (a₀ : ℕ)
+    (hlarge : ∀ b ∈ (Finset.univ.image (fun i =&gt; ((f i).val / P, (g i).val / P))).filter bad,
+      a₀ ≤ (Finset.univ.filter (fun i =&gt; ((f i).val / P, (g i).val / P) = b)).card →
+      (Finset.univ.filter (fun i =&gt; ((f i).val / P, (g i).val / P) = b)).card ≤
+        100 * (((matchingSpan f (fun i =&gt; ((f i).val / P, (g i).val / P)) b).card -
+          (Finset.univ.filter (fun i =&gt; ((f i).val / P, (g i).val / P) = b)).card) +
+          ((matchingSpan g (fun i =&gt; ((f i).val / P, (g i).val / P)) b).card -
+          (Finset.univ.filter (fun i =&gt; ((f i).val / P, (g i).val / P) = b)).card))) :
+    (Finset.univ.filter (fun i =&gt; bad ((f i).val / P, (g i).val / P))).card ≤
+      200 * (M * P - r) + 2 * M * a₀ := by
+…</pre><p class="refs">Mentions: <a href="MatchingSpanBudget.lean.html#L11">OAI.TreeEdit.BinaryLower.matchingSpan</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

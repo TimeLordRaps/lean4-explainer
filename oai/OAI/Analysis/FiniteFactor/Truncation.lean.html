@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/FiniteFactor/Truncation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/FiniteFactor/Truncation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">FiniteFactor</a> / <span>Truncation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">FiniteFactor</a>/<span>Truncation.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/FiniteFactor/Truncation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.FiniteFactor.laurent_row_eq</code> <small>line 12</small><div class="doc"><p>Sum a row of the Laurent coefficient double sum using its unique possible
+second exponent.</p></div><pre>theorem laurent_row_eq (K : ℕ) (A B : ℤ → ℂ) (r v : ℤ) :
+    (∑ j : Fin (2*K+1), if v + ((j.val : ℤ)-K) = r then
+      A v * B ((j.val : ℤ)-K) else 0) =
+    if -(K : ℤ) ≤ r-v ∧ r-v ≤ K then A v * B (r-v) else 0 := by
+…</pre></li><li id=L41><b>def</b> <code>OAI.FiniteFactor.convolutionWindow</code> <small>line 41</small><div class="doc"><p>A finite subset of ℤ, exactly the two simultaneous coefficient cutoffs.</p></div><pre>noncomputable def convolutionWindow (K : ℕ) (n : ℤ) : Finset ℤ :=
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.FiniteFactor.mem_convolutionWindow</code> <small>line 44</small></li><li id=L49><b>theorem</b> <code>OAI.FiniteFactor.not_mem_convolutionWindow</code> <small>line 49</small></li><li id=L54><b>theorem</b> <code>OAI.FiniteFactor.laurent_coefficient_eq_finite_convolution</code> <small>line 54</small></li><li id=L78><b>theorem</b> <code>OAI.FiniteFactor.laurent_coefficient_eq_neg_tail</code> <small>line 78</small><div class="doc"><p>A zero absolutely convergent convolution forces the exact finite Laurent
+coefficient to be the negative complementary tail.</p></div><pre>theorem laurent_coefficient_eq_neg_tail (K : ℕ) (A B : ℤ → ℂ) (n : ℤ)
+    (hs : Summable (fun v =&gt; A v * B (-n-v)))
+    (hz : ∑&#x27; v, A v * B (-n-v) = 0) :
+    laurentProductCoefficient K A B (-n) =
+      -(∑&#x27; v : {v : ℤ // v ∉ convolutionWindow K n}, A v * B (-n-v)) := by
+…</pre><p class="refs">Mentions: <a href="Polynomial.lean.html#L115">OAI.FiniteFactor.laurentProductCoefficient</a>, <a href="Truncation.lean.html#L41">OAI.FiniteFactor.convolutionWindow</a></p></li><li id=L87><b>theorem</b> <code>OAI.FiniteFactor.laurent_coefficient_norm_le_tail</code> <small>line 87</small><div class="doc"><p>The corresponding absolute tail bound used in error-pointwise.</p></div><pre>theorem laurent_coefficient_norm_le_tail (K : ℕ) (A B : ℤ → ℂ) (n : ℤ)
+    (hs : Summable (fun v =&gt; ‖A v * B (-n-v)‖))
+    (hz : ∑&#x27; v, A v * B (-n-v) = 0) :
+    ‖laurentProductCoefficient K A B (-n)‖ ≤
+      ∑&#x27; v : {v : ℤ // v ∉ convolutionWindow K n}, ‖A v * B (-n-v)‖ := by
+…</pre><p class="refs">Mentions: <a href="Polynomial.lean.html#L115">OAI.FiniteFactor.laurentProductCoefficient</a>, <a href="Truncation.lean.html#L41">OAI.FiniteFactor.convolutionWindow</a></p></li><li id=L97><b>theorem</b> <code>OAI.FiniteFactor.laurent_error_pointwise</code> <small>line 97</small><div class="doc"><p>The full pointwise error estimate. The two exceptional masks remain
+separate and each is summed over all of ℤ; no union bound is introduced.</p></div><pre>theorem laurent_error_pointwise (K : ℕ) (n : ℤ)
+    (ξ γ : lp (fun _ : ℤ =&gt; ℂ) 2) {F G : ℤ → ℝ}
+    (hF : ∀ k, 0 &lt; F k) (hG : ∀ k, 0 &lt; G k)
+    (hFa : Antitone F) (hGa : Antitone G) (hGF : ∀ k, G k ≤ F k)
+    (hn : 0 ≤ n) {H₁ H₂ : Set ℤ} {ε : ℝ} (hε : 0 ≤ ε)
+    (hz : ∑&#x27; v, leftCoefficient F ξ v * rightCoefficient G γ (-n-v) = 0)
+    (hR : ∀ v, v ∉ convolutionWindow K n →
+      G (n+v) / F v ≤ ε + H₁.indicator (fun _ =&gt; 1) v +
+        H₂.indicator (fun _ =&gt; 1) v) :
+    ‖laurentProductCoefficient K (leftCoefficient F ξ) (rightCoefficient G γ) (-n)‖ ≤
+      ε * (‖ξ‖ * ‖γ‖) +
+      (∑&#x27; v, H₁.indicator (fun v =&gt; ‖ξ v‖ * ‖γ (n+v)‖) v) +
+…</pre><p class="refs">Mentions: <a href="Convolution.lean.html#L74">OAI.FiniteFactor.leftCoefficient</a>, <a href="Convolution.lean.html#L77">OAI.FiniteFactor.rightCoefficient</a>, <a href="Truncation.lean.html#L41">OAI.FiniteFactor.convolutionWindow</a>, <a href="Polynomial.lean.html#L115">OAI.FiniteFactor.laurentProductCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

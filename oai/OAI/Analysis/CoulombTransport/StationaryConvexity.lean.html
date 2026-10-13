@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CoulombTransport/StationaryConvexity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CoulombTransport/StationaryConvexity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">CoulombTransport</a> / <span>StationaryConvexity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">CoulombTransport</a>/<span>StationaryConvexity.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CoulombTransport/StationaryConvexity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.Problem356.StationaryMap.stateDifferential_eq_stateDual</code> <small>line 22</small><div class="doc"><p>The concrete scalar state differential is the product-state dual of its
+stationary vector field.</p></div><pre>theorem stateDifferential_eq_stateDual (a y : E) (s : E × E) :
+    stateDifferential a y s = stateDual E E (stationary a (y, s)) := rfl</pre><p class="refs">Mentions: <a href="StationaryMap.lean.html#L80">OAI.Problem356.StationaryMap.stateDifferential</a>, <a href="StateDual.lean.html#L19">OAI.Problem356.stateDual</a>, <a href="StationaryMap.lean.html#L24">OAI.Problem356.StationaryMap.stationary</a></p></li><li id=L27><b>theorem</b> <code>OAI.Problem356.StationaryMap.hasFDerivAt_stateStationary</code> <small>line 27</small><div class="doc"><p>The state derivative of the concrete stationary map is the coercive
+regularized Coulomb Hessian.</p></div><pre>theorem hasFDerivAt_stateStationary (a y : E) {s : E × E}
+    (hxy : s.1 ≠ y) (hxz : s.1 ≠ s.2) (hzy : s.2 ≠ y) :
+    HasFDerivAt (fun p : E × E =&gt; stationary a (y, p))
+      (regularizedStateHessian (s.1 - y) (s.1 - s.2) (s.2 - y)) s := by
+…</pre><p class="refs">Mentions: <a href="StationaryMap.lean.html#L24">OAI.Problem356.StationaryMap.stationary</a></p></li><li id=L44><b>theorem</b> <code>OAI.Problem356.StationaryMap.statePotential_strictConvexOn_of_separated</code> <small>line 44</small><div class="doc"><p>Concrete strict convexity on every open convex state domain with the
+uniform pair separation used in the local construction.</p></div><pre>theorem statePotential_strictConvexOn_of_separated (a y : E) {V : Set (E × E)}
+    (hV : Convex ℝ V) (hVopen : IsOpen V)
+    (hsep : ∀ s ∈ V, (2 : ℝ) / 3 ≤ ‖s.1 - y‖ ∧
+      (2 : ℝ) / 3 ≤ ‖s.1 - s.2‖ ∧ (2 : ℝ) / 3 ≤ ‖s.2 - y‖) :
+    StrictConvexOn ℝ V (statePotential a y) := by
+…</pre><p class="refs">Mentions: <a href="StationaryMap.lean.html#L18">OAI.Problem356.StationaryMap.statePotential</a></p></li><li id=L67><b>theorem</b> <code>OAI.Problem356.StationaryMap.statePotential_minimum_and_eq_iff_of_separated</code> <small>line 67</small><div class="doc"><p>A zero of the actual Coulomb stationary map is the unique minimizing state
+on a separated open convex domain.</p></div><pre>theorem statePotential_minimum_and_eq_iff_of_separated (a y : E) {V : Set (E × E)}
+    (hV : Convex ℝ V) (hVopen : IsOpen V)
+    (hsep : ∀ s ∈ V, (2 : ℝ) / 3 ≤ ‖s.1 - y‖ ∧
+      (2 : ℝ) / 3 ≤ ‖s.1 - s.2‖ ∧ (2 : ℝ) / 3 ≤ ‖s.2 - y‖)
+    {s : E × E} (hs : s ∈ V) (hzero : stationary a (y, s) = 0)
+    {q : E × E} (hq : q ∈ V) :
+    statePotential a y s ≤ statePotential a y q ∧
+      (statePotential a y q = statePotential a y s ↔ q = s) := by
+…</pre><p class="refs">Mentions: <a href="StationaryMap.lean.html#L24">OAI.Problem356.StationaryMap.stationary</a>, <a href="StationaryMap.lean.html#L18">OAI.Problem356.StationaryMap.statePotential</a></p></li><li id=L87><b>theorem</b> <code>OAI.Problem356.StationaryMap.smooth_stationary_branch_support</code> <small>line 87</small><div class="doc"><p>A smooth branch of zeros of the concrete Coulomb stationary equation
+produces a smooth supporting value with its exact contact graph. All analytic
+convexity hypotheses are discharged by the explicit distance separation.</p></div><pre>theorem smooth_stationary_branch_support (a : E)
+    {U : Set E} {V : Set (E × E)} {ψ : E → E × E} {n : WithTop ENat}
+    (hV : Convex ℝ V) (hVopen : IsOpen V)
+    (hsep : ∀ y ∈ U, ∀ s ∈ V, (2 : ℝ) / 3 ≤ ‖s.1 - y‖ ∧
+      (2 : ℝ) / 3 ≤ ‖s.1 - s.2‖ ∧ (2 : ℝ) / 3 ≤ ‖s.2 - y‖)
+    (hψ : ContDiffOn ℝ n ψ U) (hψV : MapsTo ψ U V)
+    (hzero : ∀ y ∈ U, stationary a (y, ψ y) = 0) :
+    ContDiffOn ℝ n (fun y =&gt; statePotential a y (ψ y)) U ∧
+      ∀ y ∈ U, ∀ s ∈ V,
+        statePotential a y (ψ y) ≤ statePotential a y s ∧
+          (statePotential a y s = statePotential a y (ψ y) ↔ s = ψ y) := by
+…</pre><p class="refs">Mentions: <a href="StationaryMap.lean.html#L24">OAI.Problem356.StationaryMap.stationary</a>, <a href="StationaryMap.lean.html#L18">OAI.Problem356.StationaryMap.statePotential</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

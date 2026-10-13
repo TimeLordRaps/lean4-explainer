@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Representation/NormalRepresentationReduction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Representation/NormalRepresentationReduction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Representation</a> / <span>NormalRepresentationReduction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Representation</a>/<span>NormalRepresentationReduction.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Representation/NormalRepresentationReduction.lean#L1">source</a></p><div class="doc"><h3>Normal representations and countable tracial multiplicity</h3><p>The published input below is local to a fixed finite von Neumann algebra with
+faithful normal finite trace and a fixed normal representation on a separable
+Hilbert space.  Hiai, <em>Concise lectures on selected topics of von Neumann
+algebras</em>, arXiv:2004.02383v1 (2020), Corollary 5.14 and Remark 5.15, printed
+page 50, represent every normal positive functional by a vector in the tracial
+standard form.  Applied on each cyclic reducing summand, the usual countable
+cyclic decomposition gives the displayed isometric intertwiner.  This is the
+normal-representation consequence used in the manuscript's global section;
+it is not asserted here for arbitrary C-star representations or arbitrary
+positive functionals.  The countable cyclic decomposition is the standard
+representation theory cited there to Takesaki, <em>Theory of Operator Algebras I</em>
+(1979).</p><p>All commutator and matrix estimates below are derived from that geometric
+input and the already proved finite-to-countable transfer.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L38><b>def</b> <code>OAI.KadisonSimilarity.HiaiNormalStandardEmbeddingInput</code> <small>line 38</small><div class="doc"><p>The precise local standard-form embedding consequence of Hiai
+Corollary 5.14 / Remark 5.15 and countable cyclic decomposition.  At the
+published application <code>τ</code> is the faithful normal trace of a finite von
+Neumann algebra and <code>σ</code> is a normal representation on separable <code>H</code>.
+The range is reducing because both representations preserve adjoints.</p></div><pre>def HiaiNormalStandardEmbeddingInput (τ : A →ₚ[ℂ] ℂ)
+    (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H)) : Prop :=
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.KadisonSimilarity.normal_representation_bound_of_countable</code> <small>line 46</small><div class="doc"><p>A countable standard-form estimate transfers to the given normal
+representation with exactly the same constant.</p></div><pre>theorem normal_representation_bound_of_countable
+    (τ : A →ₚ[ℂ] ℂ) (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (embedding : HiaiNormalStandardEmbeddingInput τ σ) {C : ℝ}
+    (hcountable : ∀ (Z : CountableCopies τ.GNS →L[ℂ] CountableCopies τ.GNS)
+      (δ : ℝ), 0 ≤ δ →
+      (∀ a, ‖commutator Z (countableRepresentation τ.gnsStarAlgHom a)‖ ≤ δ * ‖a‖) →
+      ∀ (n : ℕ) (X : CStarMatrix (Fin n) (Fin n) A),
+        ‖commutator (amplify Z n)
+          (representedMatrix (countableRepresentation τ.gnsStarAlgHom) X)‖ ≤
+          C * δ * ‖X‖)
+    (Y : H →L[ℂ] H) {δ : ℝ} (hδ : 0 ≤ δ)
+    (hscalar : ∀ a, ‖commutator Y (σ a)‖ ≤ δ * ‖a‖)
+…</pre><p class="refs">Mentions: <a href="NormalRepresentationReduction.lean.html#L38">OAI.KadisonSimilarity.HiaiNormalStandardEmbeddingInput</a>, <a href="CountableAmplification.lean.html#L23">OAI.KadisonSimilarity.CountableCopies</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a>, <a href="CountableAmplification.lean.html#L201">OAI.KadisonSimilarity.countableRepresentation</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L50">OAI.KadisonSimilarity.amplify</a>, <a href="../FreeProduct/TracialSymmetryExtraction.lean.html#L67">OAI.KadisonSimilarity.representedMatrix</a></p></li><li id=L66><b>theorem</b> <code>OAI.KadisonSimilarity.normal_representation_bound_of_finite</code> <small>line 66</small><div class="doc"><p>The finite tracial multiplicity estimates imply the estimate for any
+normal representation supplied by the local standard-form input.</p></div><pre>theorem normal_representation_bound_of_finite
+    (τ : A →ₚ[ℂ] ℂ) (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (embedding : HiaiNormalStandardEmbeddingInput τ σ) {C : ℝ} (hC : 0 ≤ C)
+    (hfinite : ∀ (r : ℕ) (T : HilbertCopies τ.GNS r →L[ℂ] HilbertCopies τ.GNS r)
+      (δ : ℝ), 0 ≤ δ →
+      (∀ a, ‖commutator T (amplify (τ.gnsStarAlgHom a) r)‖ ≤ δ * ‖a‖) →
+      ∀ (n : ℕ) (X : CStarMatrix (Fin n) (Fin n) A),
+        ‖commutator (amplify T n)
+          (representedMatrix (amplifiedScalarRepresentation τ.gnsStarAlgHom r) X)‖ ≤
+          C * δ * ‖X‖)
+    (Y : H →L[ℂ] H) {δ : ℝ} (hδ : 0 ≤ δ)
+    (hscalar : ∀ a, ‖commutator Y (σ a)‖ ≤ δ * ‖a‖)
+…</pre><p class="refs">Mentions: <a href="NormalRepresentationReduction.lean.html#L38">OAI.KadisonSimilarity.HiaiNormalStandardEmbeddingInput</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L50">OAI.KadisonSimilarity.amplify</a>, <a href="../FreeProduct/TracialSymmetryExtraction.lean.html#L67">OAI.KadisonSimilarity.representedMatrix</a>, <a href="FiniteAmplificationReduction.lean.html#L22">OAI.KadisonSimilarity.amplifiedScalarRepresentation</a></p></li><li id=L87><b>theorem</b> <code>OAI.KadisonSimilarity.normal_factor_commutatorEstimate_of_finite</code> <small>line 87</small><div class="doc"><p>In the faithful concrete representation this is the paper's full
+operator-matrix commutator estimate.</p></div><pre>theorem normal_factor_commutatorEstimate_of_finite
+    (P : VonNeumannAlgebra H)
+    [IsClosed (P.toStarSubalgebra : Set (H →L[ℂ] H))]
+    (τ : P.toStarSubalgebra →ₚ[ℂ] ℂ)
+    (embedding : HiaiNormalStandardEmbeddingInput τ P.toStarSubalgebra.subtype)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hfinite : ∀ (r : ℕ) (T : HilbertCopies τ.GNS r →L[ℂ] HilbertCopies τ.GNS r)
+      (δ : ℝ), 0 ≤ δ →
+      (∀ a, ‖commutator T (amplify (τ.gnsStarAlgHom a) r)‖ ≤ δ * ‖a‖) →
+      ∀ (n : ℕ) (X : CStarMatrix (Fin n) (Fin n) P.toStarSubalgebra),
+        ‖commutator (amplify T n)
+          (representedMatrix (amplifiedScalarRepresentation τ.gnsStarAlgHom r) X)‖ ≤
+…</pre><p class="refs">Mentions: <a href="NormalRepresentationReduction.lean.html#L38">OAI.KadisonSimilarity.HiaiNormalStandardEmbeddingInput</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L42">OAI.KadisonSimilarity.HilbertCopies</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L50">OAI.KadisonSimilarity.amplify</a>, <a href="../FreeProduct/TracialSymmetryExtraction.lean.html#L67">OAI.KadisonSimilarity.representedMatrix</a>, <a href="FiniteAmplificationReduction.lean.html#L22">OAI.KadisonSimilarity.amplifiedScalarRepresentation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

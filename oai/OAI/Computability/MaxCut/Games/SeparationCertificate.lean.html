@@ -1,0 +1,134 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Games/SeparationCertificate.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Games/SeparationCertificate.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Games</a> / <span>SeparationCertificate.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Games</a>/<span>SeparationCertificate.lean</span></code></h1><p class="muted">37 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Games/SeparationCertificate.lean#L1">source</a></p><div class="doc"><p>A single finite polynomial certifies injectivity and pair separation of
+the actual binary-linear parametrization.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.MaxCutGames.Quadratic.nonzeroBinaryInputs</code> <small>line 21</small></li><li id=L25><b>def</b> <code>OAI.MaxCutGames.Quadratic.distinctNonzeroBinaryPairs</code> <small>line 25</small></li><li id=L29><b>def</b> <code>OAI.MaxCutGames.Quadratic.separationPolynomial</code> <small>line 29</small></li><li id=L33><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.separationPolynomial_ne_zero</code> <small>line 33</small></li><li id=L51><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.parameterMap_separated_of_eval_ne_zero</code> <small>line 51</small><div class="doc"><p>Outside the zero set of the fixed separation polynomial, the actual
+parametrization is injective and no two distinct nonzero inputs have
+proportional images. The same polynomial works over every characteristic-two
+field.</p></div><pre>theorem parameterMap_separated_of_eval_ne_zero
+    {F : Type*} [Field F] [CharP F 2] [Algebra (ZMod 2) F]
+    (x : (Fin 3 × J) → F)
+    (hx : eval₂ (algebraMap (ZMod 2) F) x (separationPolynomial J) ≠ 0) :
+    Function.Injective (parameterMap x) ∧
+      ∀ t u : J → ZMod 2, t ≠ 0 → u ≠ 0 →
+        (∃ a : F, parameterMap x t = a • parameterMap x u) → t = u := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L29">OAI.MaxCutGames.Quadratic.separationPolynomial</a>, <a href="GenericPolynomial.lean.html#L520">OAI.MaxCutGames.Quadratic.parameterMap</a></p></li><li id=L113><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.isGeneric_range_of_injective</code> <small>line 113</small><div class="doc"><p>The actual range of an injective parametrization is generic when its
+nonproportionality and all-lifts alignment bounds hold on the domain.</p></div><pre>theorem isGeneric_range_of_injective
+    (z : V →ₗ[ZMod 2] (Fin 3 → F)) (hz : Function.Injective z)
+    (hseparate : ∀ v w : V, v ≠ 0 → w ≠ 0 →
+      (∃ t : F, z v = t • z w) → v = w)
+    (halign : ∀ g : V →ₗ[ZMod 2] (Fin 3 → F),
+      (alignmentEvent z g (fun v =&gt; alignmentRightHandSide (z v))).card ≤
+        3 * Module.finrank (ZMod 2) V) :
+    IsGeneric (LinearMap.range z) := by
+…</pre><p class="refs">Mentions: <a href="OrientedBlockKernel.lean.html#L546">OAI.MaxCutGames.Quadratic.alignmentEvent</a>, <a href="OrientedBlockKernel.lean.html#L601">OAI.MaxCutGames.Quadratic.alignmentRightHandSide</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a></p></li><li id=L183><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finrank_range_binary_parameters</code> <small>line 183</small><div class="doc"><p>In the basis-parametrized case, the image rank is the number of binary
+input coordinates.</p></div><pre>theorem finrank_range_binary_parameters {J : Type*} [Fintype J]
+    (z : (J → ZMod 2) →ₗ[ZMod 2] (Fin 3 → F)) (hz : Function.Injective z) :
+    Module.finrank (ZMod 2) (LinearMap.range z) = Fintype.card J := by
+…</pre></li><li id=L207><b>def</b> <code>OAI.MaxCutGames.Quadratic.assignmentProbability</code> <small>line 207</small><div class="doc"><p>The exact uniform probability on an explicit finite assignment space.</p></div><pre>def assignmentProbability {n : ℕ} (event : (Fin n → F) → Prop) : ℚ≥0 := by
+…</pre></li><li id=L212><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.assignmentProbability_mono</code> <small>line 212</small></li><li id=L223><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.assignmentProbability_eval_zero_le</code> <small>line 223</small><div class="doc"><p>The checked Schwartz-Zippel theorem on the whole finite field.</p></div><pre>theorem assignmentProbability_eval_zero_le {n : ℕ}
+    (p : MvPolynomial (Fin n) F) (hp : p ≠ 0) :
+    assignmentProbability (fun x =&gt; MvPolynomial.eval x p = 0) ≤
+      (p.totalDegree : ℚ≥0) / Fintype.card F := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L207">OAI.MaxCutGames.Quadratic.assignmentProbability</a></p></li><li id=L233><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.totalDegree_map_eq_of_injective</code> <small>line 233</small><div class="doc"><p>Injective coefficient extension preserves the total degree exactly.</p></div><pre>theorem totalDegree_map_eq_of_injective {σ : Type*}
+    (φ : K →+* F) (hφ : Function.Injective φ) (p : MvPolynomial σ K) :
+    (MvPolynomial.map φ p).totalDegree = p.totalDegree := by
+…</pre></li><li id=L242><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.assignmentProbability_eval₂_zero_le</code> <small>line 242</small><div class="doc"><p>A prime-field polynomial gives the same fixed numerator in every finite
+extension field.  Only the denominator grows with the field size.</p></div><pre>theorem assignmentProbability_eval₂_zero_le {n : ℕ}
+    (φ : K →+* F) (hφ : Function.Injective φ)
+    (p : MvPolynomial (Fin n) K) (hp : p ≠ 0) :
+    assignmentProbability (fun x =&gt; MvPolynomial.eval₂ φ x p = 0) ≤
+      (p.totalDegree : ℚ≥0) / Fintype.card F := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L207">OAI.MaxCutGames.Quadratic.assignmentProbability</a></p></li><li id=L258><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.assignmentProbability_le_of_polynomial</code> <small>line 258</small><div class="doc"><p>An exceptional event contained in a polynomial zero set satisfies the
+same bound, including events expressed by existence of an arbitrary lift.</p></div><pre>theorem assignmentProbability_le_of_polynomial {n : ℕ}
+    (φ : K →+* F) (hφ : Function.Injective φ)
+    (p : MvPolynomial (Fin n) K) (hp : p ≠ 0)
+    (event : (Fin n → F) → Prop)
+    (hvanish : ∀ x, event x → MvPolynomial.eval₂ φ x p = 0) :
+    assignmentProbability event ≤ (p.totalDegree : ℚ≥0) / Fintype.card F :=
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L207">OAI.MaxCutGames.Quadratic.assignmentProbability</a></p></li><li id=L269><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.assignmentProbability_union_le</code> <small>line 269</small><div class="doc"><p>A fixed finite family of exceptional events admits a single fixed-degree
+bound.  There is still no enumeration or union over the possible lifts.</p></div><pre>theorem assignmentProbability_union_le {n : ℕ} {J : Type*} [Fintype J]
+    (φ : K →+* F) (hφ : Function.Injective φ)
+    (p : J → MvPolynomial (Fin n) K) (hp : ∀ j, p j ≠ 0)
+    (event : J → (Fin n → F) → Prop)
+    (hvanish : ∀ j x, event j x → MvPolynomial.eval₂ φ x (p j) = 0) :
+    assignmentProbability (fun x =&gt; ∃ j, event j x) ≤
+      ((∑ j, (p j).totalDegree : ℕ) : ℚ≥0) / Fintype.card F := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L207">OAI.MaxCutGames.Quadratic.assignmentProbability</a></p></li><li id=L309><b>def</b> <code>OAI.MaxCutGames.Quadratic.reindexAssignments</code> <small>line 309</small><div class="doc"><p>Reindexing an assignment transports it contravariantly along the variable
+equivalence.</p></div><pre>def reindexAssignments (e : σ ≃ τ) : (σ → F) ≃ (τ → F) where
+…</pre></li><li id=L316><b>def</b> <code>OAI.MaxCutGames.Quadratic.finiteAssignmentProbability</code> <small>line 316</small><div class="doc"><p>Uniform assignment probability for an arbitrary finite variable set.</p></div><pre>def finiteAssignmentProbability [Fintype σ] (event : (σ → F) → Prop) : ℚ≥0 := by
+…</pre></li><li id=L322><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finiteAssignmentProbability_reindex</code> <small>line 322</small></li><li id=L340><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finiteAssignmentProbability_le_of_polynomial</code> <small>line 340</small><div class="doc"><p>A bad event contained in a fixed nonzero polynomial's zero set has
+probability at most its total degree divided by the field size.</p></div><pre>theorem finiteAssignmentProbability_le_of_polynomial [Fintype σ]
+    (φ : K →+* F) (hφ : Function.Injective φ)
+    (p : MvPolynomial σ K) (hp : p ≠ 0)
+    (event : (σ → F) → Prop)
+    (hvanish : ∀ x, event x → MvPolynomial.eval₂ φ x p = 0) :
+    finiteAssignmentProbability event ≤ (p.totalDegree : ℚ≥0) / Fintype.card F := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L316">OAI.MaxCutGames.Quadratic.finiteAssignmentProbability</a></p></li><li id=L363><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finiteAssignmentProbability_eval₂_zero_le</code> <small>line 363</small></li><li id=L372><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finiteAssignmentProbability_union_le</code> <small>line 372</small><div class="doc"><p>A finite family of input-set obstructions yields a fixed total numerator.
+The family index is independent of the chosen linear lift.</p></div><pre>theorem finiteAssignmentProbability_union_le [Fintype σ] {J : Type*} [Fintype J]
+    (φ : K →+* F) (hφ : Function.Injective φ)
+    (p : J → MvPolynomial σ K) (hp : ∀ j, p j ≠ 0)
+    (event : J → (σ → F) → Prop)
+    (hvanish : ∀ j x, event j x → MvPolynomial.eval₂ φ x (p j) = 0) :
+    finiteAssignmentProbability (fun x =&gt; ∃ j, event j x) ≤
+      ((∑ j, (p j).totalDegree : ℕ) : ℚ≥0) / Fintype.card F := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L316">OAI.MaxCutGames.Quadratic.finiteAssignmentProbability</a></p></li><li id=L409><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.exists_genericity_polynomial</code> <small>line 409</small></li><li id=L429><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.exists_genericity_error_numerator</code> <small>line 429</small><div class="doc"><p>The total exceptional probability for random coordinate entries is
+<code>O_r(1 / |F|)</code>, with a positive integer numerator fixed before <code>F</code> is chosen.
+Both noninjectivity and failure of the all-lifts image property are counted.</p></div><pre>theorem exists_genericity_error_numerator (J : Type*) [Fintype J] :
+    ∃ D : ℕ, 0 &lt; D ∧
+      ∀ (F : Type*) [Field F] [Fintype F] [CharP F 2] [Algebra (ZMod 2) F],
+        finiteAssignmentProbability (fun x : (Fin 3 × J) → F =&gt;
+          ¬(Function.Injective (parameterMap x) ∧ IsGeneric (parameterMap x).range)) ≤
+            (D : ℚ≥0) / Fintype.card F := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L99">OAI.MaxCutGames.Quadratic.D</a>, <a href="SeparationCertificate.lean.html#L316">OAI.MaxCutGames.Quadratic.finiteAssignmentProbability</a>, <a href="GenericPolynomial.lean.html#L520">OAI.MaxCutGames.Quadratic.parameterMap</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a></p></li><li id=L457><b>def</b> <code>OAI.MaxCutGames.Quadratic.parameterMapEquiv</code> <small>line 457</small><div class="doc"><p>Every binary-linear map is determined by its freely chosen field-valued
+basis entries, with no rejection or nonuniform multiplicity.</p></div><pre>def parameterMapEquiv : ((Fin 3 × J) → F) ≃
+    ((J → ZMod 2) →ₗ[ZMod 2] (Fin 3 → F)) where
+…</pre></li><li id=L471><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.parameterMap_event_card</code> <small>line 471</small></li><li id=L484><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.parameterMap_event_probability</code> <small>line 484</small><div class="doc"><p>The uniform probability on field entries is literally the uniform
+probability on all linear maps.  This is the denominator used before
+conditioning on injectivity in <code>UniformSubspaces.bad_subspace_bound</code>.</p></div><pre>theorem parameterMap_event_probability
+    (event : ((J → ZMod 2) →ₗ[ZMod 2] (Fin 3 → F)) → Prop) :
+    (finiteAssignmentProbability (fun x =&gt; event (parameterMap x)) : ℚ) =
+      (Nat.card {g : (J → ZMod 2) →ₗ[ZMod 2] (Fin 3 → F) // event g} : ℚ) /
+        Nat.card ((J → ZMod 2) →ₗ[ZMod 2] (Fin 3 → F)) := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L316">OAI.MaxCutGames.Quadratic.finiteAssignmentProbability</a>, <a href="GenericPolynomial.lean.html#L520">OAI.MaxCutGames.Quadratic.parameterMap</a></p></li><li id=L517><b>def</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.Injection</code> <small>line 517</small><div class="doc"><p>A linear parameter map with its injectivity proof.</p></div><pre>def Injection (K V W : Type*) [Field K] [AddCommGroup V] [Module K V]
+    [AddCommGroup W] [Module K W] :=
+…</pre></li><li id=L521><b>instance</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.injectionAction</code> <small>line 521</small></li><li id=L535><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.injection_transitive</code> <small>line 535</small><div class="doc"><p>Every two injections are carried to each other by an automorphism of the
+ambient space: extend the isomorphism between their two images.</p></div><pre>theorem injection_transitive (J₁ J₂ : Injection K V W) :
+    ∃ a : W ≃ₗ[K] W, a • J₁ = J₂ := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L517">OAI.MaxCutGames.Quadratic.UniformSubspaces.Injection</a></p></li><li id=L550><b>def</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.image</code> <small>line 550</small><div class="doc"><p>The image has the dimension of the parameter space.</p></div><pre>def image (J : Injection K V W) : RankSpace K W (finrank K V) :=
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L517">OAI.MaxCutGames.Quadratic.UniformSubspaces.Injection</a></p></li><li id=L554><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.image_action</code> <small>line 554</small></li><li id=L563><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.mean_image</code> <small>line 563</small><div class="doc"><p>Exact uniform image law, conditional only on injectivity of the map.</p></div><pre>theorem mean_image (J₀ : Injection K V W) (f : RankSpace K W (finrank K V) → ℚ) :
+    (∑ J : Injection K V W, f (image J)) / Fintype.card (Injection K V W) =
+      (∑ S : RankSpace K W (finrank K V), f S) /
+        Fintype.card (RankSpace K W (finrank K V)) := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L517">OAI.MaxCutGames.Quadratic.UniformSubspaces.Injection</a>, <a href="SeparationCertificate.lean.html#L550">OAI.MaxCutGames.Quadratic.UniformSubspaces.image</a></p></li><li id=L573><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.bad_image_count_ratio</code> <small>line 573</small><div class="doc"><p>Indicator specialization of the exact law, without assuming genericity
+or independence of a subsequently chosen lift.</p></div><pre>theorem bad_image_count_ratio (J₀ : Injection K V W)
+    (Bad : RankSpace K W (finrank K V) → Prop) :
+    (Nat.card {J : Injection K V W // Bad (image J)} : ℚ) /
+        Fintype.card (Injection K V W) =
+      (Nat.card {S : RankSpace K W (finrank K V) // Bad S} : ℚ) /
+        Fintype.card (RankSpace K W (finrank K V)) := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L517">OAI.MaxCutGames.Quadratic.UniformSubspaces.Injection</a>, <a href="SeparationCertificate.lean.html#L550">OAI.MaxCutGames.Quadratic.UniformSubspaces.image</a></p></li><li id=L586><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.UniformSubspaces.bad_subspace_bound</code> <small>line 586</small><div class="doc"><p>An unconditional bad-parameter count bound transfers after conditioning
+on injectivity, paying exactly the usual <code>1/(1-β)</code> factor.  The premises are
+ordinary count inequalities and can come from polynomial union bounds.</p></div><pre>theorem bad_subspace_bound (J₀ : Injection K V W)
+    (Bad : RankSpace K W (finrank K V) → Prop) (α β : ℚ) (hα : 0 ≤ α) (hβ : β &lt; 1)
+    (hbad : (Nat.card {J : Injection K V W // Bad (image J)} : ℚ) ≤
+      α * Nat.card (V →ₗ[K] W))
+    (hinj : (1 - β) * Nat.card (V →ₗ[K] W) ≤ Fintype.card (Injection K V W)) :
+    (Nat.card {S : RankSpace K W (finrank K V) // Bad S} : ℚ) /
+        Fintype.card (RankSpace K W (finrank K V)) ≤ α / (1 - β) := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L517">OAI.MaxCutGames.Quadratic.UniformSubspaces.Injection</a>, <a href="SeparationCertificate.lean.html#L550">OAI.MaxCutGames.Quadratic.UniformSubspaces.image</a></p></li><li id=L621><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.conditioning_counts_inline_GenericSubspaceProbability</code> <small>line 621</small></li><li id=L668><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.generic_subspace_and_probability_of_parameter_error</code> <small>line 668</small><div class="doc"><p>Both generic-subspace existence and the conditional Grassmannian bound
+follow from the single unconditional parameter-map exceptional bound.</p></div><pre>theorem generic_subspace_and_probability_of_parameter_error (α : ℚ)
+    (hα₀ : 0 ≤ α) (hα : α &lt; 1)
+    (herror : (finiteAssignmentProbability (fun x : (Fin 3 × J) → F =&gt;
+      ¬(Function.Injective (parameterMap x) ∧ IsGeneric (parameterMap x).range)) : ℚ) ≤ α) :
+    (∃ S : RankSpace (ZMod 2) (Fin 3 → F) (Fintype.card J), IsGeneric S.1) ∧
+      nongenericFraction F (Fintype.card J) ≤ α / (1 - α) := by
+…</pre><p class="refs">Mentions: <a href="SeparationCertificate.lean.html#L316">OAI.MaxCutGames.Quadratic.finiteAssignmentProbability</a>, <a href="GenericPolynomial.lean.html#L520">OAI.MaxCutGames.Quadratic.parameterMap</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a>, <a href="HarmonicLoss.lean.html#L321">OAI.MaxCutGames.Quadratic.nongenericFraction</a></p></li><li id=L712><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.exists_generic_subspace_error_numerator</code> <small>line 712</small><div class="doc"><p>The exact genericity statement with a positive numerator fixed before
+the extension field.  The property quantifies over every binary linear lift.</p></div><pre>theorem exists_generic_subspace_error_numerator (J : Type*) [Fintype J] :
+    ∃ D : ℕ, 0 &lt; D ∧
+      ∀ (F : Type*) [Field F] [Fintype F] [CharP F 2] [Algebra (ZMod 2) F],
+        (D : ℚ) / Fintype.card F &lt; 1 →
+        (∃ S : RankSpace (ZMod 2) (Fin 3 → F) (Fintype.card J), IsGeneric S.1) ∧
+          nongenericFraction F (Fintype.card J) ≤
+            ((D : ℚ) / Fintype.card F) / (1 - (D : ℚ) / Fintype.card F) := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L99">OAI.MaxCutGames.Quadratic.D</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a>, <a href="HarmonicLoss.lean.html#L321">OAI.MaxCutGames.Quadratic.nongenericFraction</a></p></li><li id=L728><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.conditional_error_le_of_small</code> <small>line 728</small><div class="doc"><p>A convenient numerical threshold for choosing one field for finitely
+many ranks: <code>α ≤ min(1/2, ε/2)</code> is sufficient.</p></div><pre>theorem conditional_error_le_of_small (α ε : ℚ) (hα : 0 ≤ α)
+    (hhalf : α ≤ 1 / 2) (hε : α ≤ ε / 2) : α / (1 - α) ≤ ε := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

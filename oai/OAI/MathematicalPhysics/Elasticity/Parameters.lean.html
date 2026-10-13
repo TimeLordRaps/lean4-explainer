@@ -1,0 +1,161 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/Elasticity/Parameters.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/Elasticity/Parameters.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MathematicalPhysics</a> / <a href="index.html">Elasticity</a> / <span>Parameters.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MathematicalPhysics</a>/<a href="index.html">Elasticity</a>/<span>Parameters.lean</span></code></h1><p class="muted">77 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/Elasticity/Parameters.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>abbrev</b> <code>OAI.ElasticityPlanar.PL2</code> <small>line 12</small></li><li id=L14><b>lemma</b> <code>OAI.ElasticityPlanar.lp_dist_add</code> <small>line 14</small></li><li id=L16><b>lemma</b> <code>OAI.ElasticityPlanar.lp_dist_smul</code> <small>line 16</small></li><li id=L19><b>lemma</b> <code>OAI.ElasticityPlanar.lp_dist_sum</code> <small>line 19</small></li><li id=L24><b>theorem</b> <code>OAI.ElasticityPlanar.exists_matrix_multiplier</code> <small>line 24</small><div class="doc"><p>The matrix multiplication here acts on genuine L2 classes and agrees with
+multiplication on distributions; it is not a formal bounded-operator model.</p></div><pre>theorem exists_matrix_multiplier (a : n → n → ℂ → ℂ)
+    (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hc : ∀ i j, HasCompactSupport (a i j)) :
+    ∃ M : Hilbert n →L[ℂ] Hilbert n, ∀ (f : Hilbert n) (i : n),
+      (M f i : 𝓢&#x27;(ℂ,ℂ))=∑ j, smulLeftCLM ℂ (a i j) (f j : 𝓢&#x27;(ℂ,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a></p></li><li id=L55><b>theorem</b> <code>OAI.ElasticityPlanar.local_homotopy_inverse</code> <small>line 55</small><div class="doc"><p>Local smooth dependence of an actual distributional planar inverse along
+the coefficient homotopy s*a. This supplies the parameter ingredient for frame
+construction without invoking holomorphic bundle triviality.</p></div><pre>theorem local_homotopy_inverse {S Ω : Set ℂ} (hS : IsCompact S) (hΩ : Ω ⊆ S)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hc : ∀ i j, HasCompactSupport (a i j)) (s₀ : ℝ) :
+    ∃ (U : Set ℝ) (T : ℝ → Hilbert n →L[ℂ] Hilbert n),
+      IsOpen U ∧ s₀ ∈ U ∧ ContDiffOn ℝ (⊤ : ℕ∞) T U ∧
+      ∀ s ∈ U, ∀ f : Hilbert n, ∀ i,
+        LocalEqual Ω (ElasticityPlanarDistribution.dbar (T s f i : 𝓢&#x27;(ℂ,ℂ))+
+          ∑ j, smulLeftCLM ℂ (fun z =&gt; (s : ℂ)*a i j z)
+            (T s f j : 𝓢&#x27;(ℂ,ℂ))) (f i : 𝓢&#x27;(ℂ,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Planar.lean.html#L908">OAI.ElasticityPlanarDistribution.dbar</a></p></li><li id=L141><b>def</b> <code>OAI.ElasticityPlanar.entryInjection</code> <small>line 141</small></li><li id=L145><b>lemma</b> <code>OAI.ElasticityPlanar.entryInjection_apply</code> <small>line 145</small></li><li id=L147><b>def</b> <code>OAI.ElasticityPlanar.planarOperator</code> <small>line 147</small></li><li id=L151><b>lemma</b> <code>OAI.ElasticityPlanar.planarOperator_apply</code> <small>line 151</small></li><li id=L160><b>theorem</b> <code>OAI.ElasticityPlanar.global_homotopy_inverse</code> <small>line 160</small><div class="doc"><p>A genuine smooth bounded weak inverse along the entire real homotopy.
+The patching uses a proved smooth convex selection theorem from Mathlib;
+it adds no global frame or invertibility assumption to the PDE.</p></div><pre>theorem global_homotopy_inverse {S Ω : Set ℂ} (hS : IsCompact S) (hΩ : Ω ⊆ S)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hc : ∀ i j, HasCompactSupport (a i j)) :
+    ∃ T : ℝ → Hilbert n →L[ℂ] Hilbert n,
+      ContDiff ℝ (⊤ : ℕ∞) T ∧ ∀ s, ∀ f : Hilbert n, ∀ i,
+      LocalEqual Ω (ElasticityPlanarDistribution.dbar (T s f i : 𝓢&#x27;(ℂ,ℂ))+
+        ∑ j, smulLeftCLM ℂ (fun z =&gt; (s : ℂ)*a i j z) (T s f j : 𝓢&#x27;(ℂ,ℂ)))
+        (f i : 𝓢&#x27;(ℂ,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Planar.lean.html#L908">OAI.ElasticityPlanarDistribution.dbar</a></p></li><li id=L199><b>lemma</b> <code>OAI.ElasticityRegularity.complex_clm_apply_smooth</code> <small>line 199</small></li><li id=L204><b>lemma</b> <code>OAI.ElasticityRegularity.complex_clm_comp_smooth</code> <small>line 204</small></li><li id=L214><b>theorem</b> <code>OAI.ElasticityPlanar.exists_smooth_matrix_multiplier</code> <small>line 214</small></li><li id=L239><b>theorem</b> <code>OAI.ElasticityPlanar.local_variable_inverse</code> <small>line 239</small><div class="doc"><p>Local inversion for an arbitrary joint smooth compact coefficient family,
+not merely scalar multiples of one coefficient.</p></div><pre>theorem local_variable_inverse {S Ω K : Set ℂ} (hS : IsCompact S) (hΩ : Ω ⊆ S)
+    (hK : IsCompact K) (a : n → n → P × ℂ → ℂ)
+    (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j p z, z∉K → a i j (p,z)=0) (p₀ : P) :
+    ∃ (U : Set P) (T : P → Hilbert n →L[ℂ] Hilbert n),
+      IsOpen U ∧ p₀∈U ∧ ContDiffOn ℝ (⊤ : ℕ∞) T U ∧
+      ∀ p∈U, ∀ (f : Hilbert n) i,
+        LocalEqual Ω (planarOperator (fun i j z =&gt; a i j (p,z)) i (T p f)) (f i : 𝓢&#x27;(ℂ,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a></p></li><li id=L304><b>theorem</b> <code>OAI.ElasticityPlanar.global_variable_inverse</code> <small>line 304</small><div class="doc"><p>A global smooth weak right inverse for actual smooth compactly supported
+matrix coefficients over any finite-dimensional real parameter space.</p></div><pre>theorem global_variable_inverse {S Ω K : Set ℂ} (hS : IsCompact S) (hΩ : Ω ⊆ S)
+    (hK : IsCompact K) (a : n → n → P × ℂ → ℂ)
+    (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j p z, z∉K → a i j (p,z)=0) :
+    ∃ T : P → Hilbert n →L[ℂ] Hilbert n,
+      ContDiff ℝ (⊤ : ℕ∞) T ∧ ∀ p, ∀ f : Hilbert n, ∀ i,
+      LocalEqual Ω (planarOperator (fun i j z =&gt; a i j (p,z)) i (T p f)) (f i : 𝓢&#x27;(ℂ,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L147">OAI.ElasticityPlanar.planarOperator</a></p></li><li id=L339><b>theorem</b> <code>OAI.ElasticityRegularity.quantitative_laplacian_gain</code> <small>line 339</small><div class="doc"><p>The actual whole-space Laplacian gain has a uniform norm estimate. Its
+constant does not depend on any conjugation parameter or on the unknown.</p></div><pre>theorem quantitative_laplacian_gain (s : ℝ) :
+    ∃ C : ℝ, 0&lt;C ∧ ∀ f g : Lp ℂ 2 (volume : Measure E),
+      Δ (sobolevInjection s f)=sobolevInjection (s-1) g →
+      ∃ q : Lp ℂ 2 (volume : Measure E),
+        sobolevInjection (s+1) q=sobolevInjection s f ∧
+        ‖q‖ ≤ C*(‖f‖+‖g‖) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L1120">OAI.ElasticityRegularity.sobolevInjection</a></p></li><li id=L388><b>theorem</b> <code>OAI.ElasticityRegularity.bounded_laplacian_graph_gain</code> <small>line 388</small><div class="doc"><p>A bounded realization of the actual Laplacian graph gain, extended by
+orthogonal projection only off its graph. On the graph it is the unique actual
+Sobolev representative. This is used for strong parameter regularity.</p></div><pre>theorem bounded_laplacian_graph_gain (s : ℝ) :
+    ∃ L : (Lp ℂ 2 (volume : Measure E) × Lp ℂ 2 (volume : Measure E)) →L[ℂ]
+        Lp ℂ 2 (volume : Measure E),
+      ∀ f g, Δ (sobolevInjection s f)=sobolevInjection (s-1) g →
+        sobolevInjection (s+1) (L (f,g))=sobolevInjection s f := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L1120">OAI.ElasticityRegularity.sobolevInjection</a></p></li><li id=L437><b>theorem</b> <code>OAI.ElasticityRegularity.smooth_laplacian_gain</code> <small>line 437</small></li><li id=L456><b>def</b> <code>OAI.ElasticityRegularity.SmoothSobolev</code> <small>line 456</small><div class="doc"><p>Smooth dependence in the genuine Hilbert Sobolev topology, with the
+representative tied to the given distribution family.</p></div><pre>def SmoothSobolev (s : ℝ) (u : P → 𝓢&#x27;(E,ℂ)) : Prop :=
+…</pre></li><li id=L460><b>def</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev</code> <small>line 460</small></li><li id=L466><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.add</code> <small>line 466</small></li><li id=L471><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.sub</code> <small>line 471</small></li><li id=L476><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.smul</code> <small>line 476</small></li><li id=L480><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.zero</code> <small>line 480</small></li><li id=L482><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.sum</code> <small>line 482</small></li><li id=L492><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.mono</code> <small>line 492</small></li><li id=L496><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.derivative</code> <small>line 496</small></li><li id=L501><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.laplacian_gain</code> <small>line 501</small></li><li id=L511><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.add</code> <small>line 511</small></li><li id=L515><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.sub</code> <small>line 515</small></li><li id=L519><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.smul</code> <small>line 519</small></li><li id=L523><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.sum</code> <small>line 523</small></li><li id=L529><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.mono</code> <small>line 529</small></li><li id=L531><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.coeff</code> <small>line 531</small></li><li id=L536><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.product_derivative</code> <small>line 536</small></li><li id=L546><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.derivative</code> <small>line 546</small></li><li id=L549><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.congr</code> <small>line 549</small></li><li id=L559><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.laplacian_gain</code> <small>line 559</small><div class="doc"><p>Strong smooth parameter regularity is gained for the actual distribution
+family; the proof uses fixed bounded Laplacian graph operators.</p></div><pre>lemma laplacian_gain (hu : SmoothLocalSobolev Ω s u)
+    (hΔ : SmoothLocalSobolev Ω (s-1) (fun p =&gt; Δ (u p))) :
+    SmoothLocalSobolev Ω (s+1) u := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L460">OAI.ElasticityRegularity.SmoothLocalSobolev</a></p></li><li id=L586><b>lemma</b> <code>OAI.ElasticityRegularity.smooth_spatial_derivative</code> <small>line 586</small></li><li id=L602><b>lemma</b> <code>OAI.ElasticityRegularity.compact_slice</code> <small>line 602</small></li><li id=L609><b>lemma</b> <code>OAI.ElasticityRegularity.spatial_derivative_outside</code> <small>line 609</small></li><li id=L620><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.coordinate_gain</code> <small>line 620</small></li><li id=L630><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.variable_zero</code> <small>line 630</small></li><li id=L661><b>theorem</b> <code>OAI.ElasticityRegularity.SmoothSobolev.variable_nat</code> <small>line 661</small><div class="doc"><p>Joint smooth coefficient multiplication in the strong Hilbert Sobolev
+parameter topology, for each actual nonnegative integral order.</p></div><pre>theorem SmoothSobolev.variable_nat {S : Set E} (hS : IsCompact S)
+    (N : ℕ) (a : P × E → ℂ) (ha : ContDiff ℝ (⊤ : ℕ∞) a)
+    (hs : ∀ p x, x∉S → a (p,x)=0) {u : P → 𝓢&#x27;(E,ℂ)}
+    (hu : SmoothSobolev N u) :
+    SmoothSobolev N (fun p =&gt; smulLeftCLM ℂ (fun x =&gt; a (p,x)) (u p)) := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L456">OAI.ElasticityRegularity.SmoothSobolev</a></p></li><li id=L693><b>lemma</b> <code>OAI.ElasticityPlanarDistribution.SmoothLocalSobolev.dhol</code> <small>line 693</small></li><li id=L699><b>theorem</b> <code>OAI.ElasticityPlanarDistribution.smooth_local_gain</code> <small>line 699</small><div class="doc"><p>Actual smooth parameter-dependent elliptic gain for the planar system.</p></div><pre>theorem smooth_local_gain {Ω : Set ℂ} {s : ℝ}
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, (a i j).HasTemperateGrowth)
+    (c : P → ℂ) (hc : ContDiff ℝ (⊤ : ℕ∞) c)
+    (u f : P → n → Dist)
+    (heq : ∀ p i, LocalEqual Ω (dbar (u p i))
+      (f p i+c p • ∑ j, smulLeftCLM ℂ (a i j) (u p j)))
+    (hu : ∀ i, ElasticityRegularity.SmoothLocalSobolev Ω s (fun p =&gt; u p i))
+    (hf : ∀ i, ElasticityRegularity.SmoothLocalSobolev Ω s (fun p =&gt; f p i)) :
+    ∀ i, ElasticityRegularity.SmoothLocalSobolev Ω (s+1) (fun p =&gt; u p i) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L907">OAI.ElasticityPlanarDistribution.Dist</a>, <a href="Planar.lean.html#L908">OAI.ElasticityPlanarDistribution.dbar</a>, <a href="Parameters.lean.html#L460">OAI.ElasticityRegularity.SmoothLocalSobolev</a></p></li><li id=L718><b>theorem</b> <code>OAI.ElasticityPlanarDistribution.smooth_local_all_orders</code> <small>line 718</small></li><li id=L742><b>theorem</b> <code>OAI.ElasticityRegularity.exists_bounded_continuous_embedding</code> <small>line 742</small><div class="doc"><p>The continuous Sobolev embedding is a genuinely bounded operator, obtained
+from the actual Fourier representative and the closed graph theorem.</p></div><pre>theorem exists_bounded_continuous_embedding {s : ℝ} (hs : Module.finrank ℝ E &lt; 2*s) :
+    ∃ L : Lp ℂ 2 (volume : Measure E) →L[ℂ] BoundedContinuousFunction E ℂ,
+      ∀ f, sobolevInjection s f=
+        (((L f).memLp_top.toLp _ : Lp ℂ ∞ (volume : Measure E)) : 𝓢&#x27;(E,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L1120">OAI.ElasticityRegularity.sobolevInjection</a></p></li><li id=L765><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.continuous_representative</code> <small>line 765</small></li><li id=L773><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.joint_continuous_representative</code> <small>line 773</small></li><li id=L786><b>def</b> <code>OAI.ElasticityRegularity.bcfToLinfty</code> <small>line 786</small></li><li id=L796><b>def</b> <code>OAI.ElasticityRegularity.bcfToDist</code> <small>line 796</small></li><li id=L798><b>lemma</b> <code>OAI.ElasticityRegularity.bcfToDist_apply</code> <small>line 798</small></li><li id=L800><b>lemma</b> <code>OAI.ElasticityRegularity.bcfToDist_injective</code> <small>line 800</small></li><li id=L807><b>lemma</b> <code>OAI.ElasticityRegularity.bcf_smooth_of_all_orders</code> <small>line 807</small></li><li id=L816><b>lemma</b> <code>OAI.ElasticityRegularity.bcf_derivative</code> <small>line 816</small><div class="doc"><p>Distributional and classical derivatives agree for the actual bounded smooth
+representatives. A compact smooth multiplier makes every term Schwartz.</p></div><pre>lemma bcf_derivative (g h : BoundedContinuousFunction E ℂ)
+    (hg : ContDiff ℝ (⊤ : ℕ∞) (g : E → ℂ))
+    (hh : ContDiff ℝ (⊤ : ℕ∞) (h : E → ℂ)) (a x : E)
+    (he : ∂_{a} (bcfToDist g)=bcfToDist h) :
+    fderiv ℝ (g : E → ℂ) x a=h x := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L796">OAI.ElasticityRegularity.bcfToDist</a></p></li><li id=L853><b>lemma</b> <code>OAI.ElasticityRegularity.bcf_family_spatial_smooth</code> <small>line 853</small></li><li id=L863><b>lemma</b> <code>OAI.ElasticityRegularity.bcf_parameter_derivative</code> <small>line 863</small></li><li id=L890><b>lemma</b> <code>OAI.ElasticityRegularity.bcf_spatial_derivative</code> <small>line 890</small><div class="doc"><p>Actual spatial derivatives have smoothly parameter-dependent bounded
+representatives in every Sobolev order.</p></div><pre>lemma bcf_spatial_derivative (g : P → BoundedContinuousFunction E ℂ)
+    (hu : ∀ n : ℕ, SmoothSobolev n (fun p =&gt; bcfToDist (g p))) (a : E) :
+    ∃ h : P → BoundedContinuousFunction E ℂ,
+      ContDiff ℝ (⊤ : ℕ∞) h ∧
+      (∀ n : ℕ, SmoothSobolev n (fun p =&gt; bcfToDist (h p))) ∧
+      ∀ p x, fderiv ℝ (g p : E → ℂ) x a=h p x := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L456">OAI.ElasticityRegularity.SmoothSobolev</a>, <a href="Parameters.lean.html#L796">OAI.ElasticityRegularity.bcfToDist</a></p></li><li id=L914><b>lemma</b> <code>OAI.ElasticityRegularity.bcf_joint_hasFDerivAt</code> <small>line 914</small></li><li id=L948><b>theorem</b> <code>OAI.ElasticityRegularity.bcf_joint_smooth</code> <small>line 948</small><div class="doc"><p>Strong smoothness in every Sobolev order yields actual joint smoothness,
+including mixed parameter and spatial derivatives.</p></div><pre>theorem bcf_joint_smooth (g : P → BoundedContinuousFunction E ℂ)
+    (hg : ContDiff ℝ (⊤ : ℕ∞) g)
+    (hu : ∀ n : ℕ, SmoothSobolev n (fun p =&gt; bcfToDist (g p))) :
+    ContDiff ℝ (⊤ : ℕ∞) (fun q : P × E =&gt; g q.1 q.2) := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L456">OAI.ElasticityRegularity.SmoothSobolev</a>, <a href="Parameters.lean.html#L796">OAI.ElasticityRegularity.bcfToDist</a></p></li><li id=L976><b>theorem</b> <code>OAI.ElasticityRegularity.SmoothSobolev.joint_smooth_representative</code> <small>line 976</small></li><li id=L999><b>theorem</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.joint_schwartz_representative</code> <small>line 999</small><div class="doc"><p>Joint smoothness on an arbitrary smaller fixed open set. The representative
+is an actual Schwartz function in space for every parameter.</p></div><pre>theorem SmoothLocalSobolev.joint_schwartz_representative {Ω Ω&#x27; : Set E}
+    (u : P → 𝓢&#x27;(E,ℂ)) (hu : ∀ N : ℕ, SmoothLocalSobolev Ω N u)
+    {g : E → ℂ} (hg : ContDiff ℝ (⊤ : ℕ∞) g) (hc : HasCompactSupport g)
+    (hs : tsupport g ⊆ Ω) (h1 : Set.EqOn g 1 Ω&#x27;) :
+    ∃ f : P → 𝓢(E,ℂ), ContDiff ℝ (⊤ : ℕ∞) (fun q : P × E =&gt; f q.1 q.2) ∧
+      ∀ p, LocalEqual Ω&#x27; (u p) (f p : 𝓢&#x27;(E,ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L460">OAI.ElasticityRegularity.SmoothLocalSobolev</a>, <a href="LocalRegularity.lean.html#L19">OAI.ElasticityRegularity.LocalEqual</a></p></li><li id=L1027><b>def</b> <code>OAI.ElasticityPlanar.schwartzDbar</code> <small>line 1027</small></li><li id=L1028><b>lemma</b> <code>OAI.ElasticityPlanar.dbar_schwartz</code> <small>line 1028</small></li><li id=L1033><b>lemma</b> <code>OAI.ElasticityPlanar.LocalEqual.dbar</code> <small>line 1033</small></li><li id=L1037><b>lemma</b> <code>OAI.ElasticityPlanar.LocalEqual.coeff</code> <small>line 1037</small></li><li id=L1052><b>theorem</b> <code>OAI.ElasticityPlanar.exists_planar_classical_solution</code> <small>line 1052</small><div class="doc"><p>The actual matrix Cauchy--Riemann equation is solvable smoothly on every
+smaller open set. The unknown is produced by the supported estimate and Hilbert
+space duality, and the smooth solution is the same L2 solution almost everywhere.
+No pre-existing local or global frame is used.</p></div><pre>theorem exists_planar_classical_solution {S Ω Ω&#x27; : Set ℂ} (hS : IsCompact S)
+    (hΩS : Ω ⊆ S) (hΩ&#x27; : IsOpen Ω&#x27;) (hsub : Ω&#x27; ⊆ Ω)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, (a i j).HasTemperateGrowth)
+    (f : n → 𝓢(ℂ,ℂ)) {g : ℂ → ℂ} (hg : ContDiff ℝ (⊤ : ℕ∞) g)
+    (hc : HasCompactSupport g) (hs : tsupport g ⊆ Ω) (h1 : Set.EqOn g 1 Ω&#x27;) :
+    ∃ w : Hilbert n, ∃ v : n → 𝓢(ℂ,ℂ),
+      (∀ i, ∀ᵐ z ∂(volume : Measure ℂ), z ∈ Ω&#x27; → w i z=v i z) ∧
+      ∀ i, Set.EqOn (fun z =&gt; schwartzDbar (v i) z+∑ j, a i j z*v j z) (f i) Ω&#x27; := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L761">OAI.ElasticityPlanar.Hilbert</a>, <a href="Parameters.lean.html#L1027">OAI.ElasticityPlanar.schwartzDbar</a></p></li><li id=L1113><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothSobolev.local_nat</code> <small>line 1113</small></li><li id=L1119><b>lemma</b> <code>OAI.ElasticityRegularity.smoothSobolev_schwartz_const</code> <small>line 1119</small></li><li id=L1131><b>theorem</b> <code>OAI.ElasticityPlanar.exists_classical_homotopy</code> <small>line 1131</small><div class="doc"><p>The weak inverse along the entire coefficient homotopy has actual joint smooth
+classical representatives with the exact prescribed source. This is the linear
+PDE input to the frame homotopy, not an assumed family of invertible frames.</p></div><pre>theorem exists_classical_homotopy {S Ω Ω&#x27; : Set ℂ} (hS : IsCompact S)
+    (hΩS : Ω ⊆ S) (hΩ&#x27; : IsOpen Ω&#x27;) (hsub : Ω&#x27; ⊆ Ω)
+    (a : n → n → ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hac : ∀ i j, HasCompactSupport (a i j)) (f : n → 𝓢(ℂ,ℂ))
+    {g : ℂ → ℂ} (hg : ContDiff ℝ (⊤ : ℕ∞) g)
+    (hc : HasCompactSupport g) (hs : tsupport g ⊆ Ω) (h1 : Set.EqOn g 1 Ω&#x27;) :
+    ∃ v : ℝ → n → 𝓢(ℂ,ℂ),
+      (∀ i, ContDiff ℝ (⊤ : ℕ∞) (fun q : ℝ × ℂ =&gt; v q.1 i q.2)) ∧
+      ∀ s i, Set.EqOn (fun z =&gt; schwartzDbar (v s i) z+∑ j, (s:ℂ)*a i j z*v s j z) (f i) Ω&#x27; := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L1027">OAI.ElasticityPlanar.schwartzDbar</a></p></li><li id=L1210><b>lemma</b> <code>OAI.ElasticityRegularity.exists_schwartz_one_on_compact</code> <small>line 1210</small></li><li id=L1224><b>theorem</b> <code>OAI.ElasticityRegularity.compact_smooth_sobolev</code> <small>line 1224</small><div class="doc"><p>The actual Schwartz representatives of joint smooth uniform-compact-support
+families vary smoothly in every nonnegative Hilbert Sobolev norm.</p></div><pre>theorem compact_smooth_sobolev {K : Set E} (hK : IsCompact K)
+    (a : P × E → ℂ) (ha : ContDiff ℝ (⊤ : ℕ∞) a)
+    (hs : ∀ p x, x∉K → a (p,x)=0) :
+    ∃ f : P → 𝓢(E,ℂ), (∀ p x, f p x=a (p,x)) ∧
+      ∀ N : ℕ, SmoothSobolev N (fun p =&gt; (f p : 𝓢&#x27;(E,ℂ))) := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L456">OAI.ElasticityRegularity.SmoothSobolev</a></p></li><li id=L1251><b>lemma</b> <code>OAI.ElasticityRegularity.SmoothLocalSobolev.variable_nat</code> <small>line 1251</small></li><li id=L1271><b>theorem</b> <code>OAI.ElasticityPlanarDistribution.smooth_variable_all_orders</code> <small>line 1271</small><div class="doc"><p>The full variable-coefficient planar weak equation has strong smooth
+parameter regularity at every spatial order.</p></div><pre>theorem smooth_variable_all_orders {Ω S : Set ℂ} (hS : IsCompact S)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hs : ∀ i j p z, z∉S → a i j (p,z)=0)
+    (u f : P → n → Dist)
+    (heq : ∀ p i, LocalEqual Ω (dbar (u p i))
+      (f p i+∑ j, smulLeftCLM ℂ (fun z =&gt; a i j (p,z)) (u p j)))
+    (hu : ∀ i, ElasticityRegularity.SmoothLocalSobolev Ω 0 (fun p =&gt; u p i))
+    (hf : ∀ N : ℕ, ∀ i, ElasticityRegularity.SmoothLocalSobolev Ω N (fun p =&gt; f p i)) :
+    ∀ N : ℕ, ∀ i, ElasticityRegularity.SmoothLocalSobolev Ω N (fun p =&gt; u p i) := by
+…</pre><p class="refs">Mentions: <a href="Planar.lean.html#L907">OAI.ElasticityPlanarDistribution.Dist</a>, <a href="Planar.lean.html#L908">OAI.ElasticityPlanarDistribution.dbar</a>, <a href="Parameters.lean.html#L460">OAI.ElasticityRegularity.SmoothLocalSobolev</a></p></li><li id=L1305><b>theorem</b> <code>OAI.ElasticityPlanar.exists_classical_variable</code> <small>line 1305</small><div class="doc"><p>Actual smooth classical solutions for arbitrary joint smooth compactly
+supported planar coefficient and source families.</p></div><pre>theorem exists_classical_variable {S Ω Ω&#x27; K : Set ℂ} (hS : IsCompact S)
+    (hΩS : Ω ⊆ S) (hΩ&#x27; : IsOpen Ω&#x27;) (hsub : Ω&#x27; ⊆ Ω) (hK : IsCompact K)
+    (a : n → n → P × ℂ → ℂ) (ha : ∀ i j, ContDiff ℝ (⊤ : ℕ∞) (a i j))
+    (hac : ∀ i j p z, z∉K → a i j (p,z)=0)
+    (f : n → P × ℂ → ℂ) (hf : ∀ i, ContDiff ℝ (⊤ : ℕ∞) (f i))
+    (hfc : ∀ i p z, z∉K → f i (p,z)=0)
+    {g : ℂ → ℂ} (hg : ContDiff ℝ (⊤ : ℕ∞) g)
+    (hc : HasCompactSupport g) (hs : tsupport g ⊆ Ω) (h1 : Set.EqOn g 1 Ω&#x27;) :
+    ∃ v : P → n → 𝓢(ℂ,ℂ),
+      (∀ i, ContDiff ℝ (⊤ : ℕ∞) (fun q : P × ℂ =&gt; v q.1 i q.2)) ∧
+      ∀ p i, Set.EqOn (fun z =&gt; schwartzDbar (v p i) z+∑ j, a i j (p,z)*v p j z)
+        (fun z =&gt; f i (p,z)) Ω&#x27; := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L1027">OAI.ElasticityPlanar.schwartzDbar</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

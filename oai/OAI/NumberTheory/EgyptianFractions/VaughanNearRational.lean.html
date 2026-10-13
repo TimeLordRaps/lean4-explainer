@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/VaughanNearRational.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/VaughanNearRational.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>VaughanNearRational.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>VaughanNearRational.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/VaughanNearRational.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_int</code> <small>line 11</small></li><li id=L19><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_fract</code> <small>line 19</small></li><li id=L23><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_eq_geometric_phase</code> <small>line 23</small></li><li id=L31><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.phase_sum_le_truncatedInv</code> <small>line 31</small><div class="doc"><p>The usual truncated reciprocal-distance majorant for a real geometric
+sum. Integer phases use the length cap, never a spurious zero reciprocal.</p></div><pre>theorem phase_sum_le_truncatedInv (x : ℝ) (M : ℕ) :
+    ‖∑ m ∈ Finset.range M, phase (x * m)‖ ≤
+      RationalPhaseSpacing.truncatedInv M (RationalPhaseSpacing.intDistance x) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a>, <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li><li id=L61><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.near_rational_correlation_row_le</code> <small>line 61</small><div class="doc"><p>Rational approximation provides an actual Type-II correlation row bound
+on every short block of integer columns, uniformly in the chosen row.</p></div><pre>theorem near_rational_correlation_row_le
+    (θ : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |θ - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (M : ℕ) (t : Finset ℤ)
+    (hspan : ∀ n ∈ t, ∀ k ∈ t, 2 * |n - k| ≤ (q : ℤ)) (n : ℤ) :
+    (∑ k ∈ t, ‖∑ m ∈ Finset.range M,
+      phase (θ * m * n) * (starRingEnd ℂ) (phase (θ * m * k))‖) ≤
+      2 * (M : ℝ) + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ))) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a></p></li><li id=L108><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.near_rational_bilinear_sq_le</code> <small>line 108</small><div class="doc"><p>A proved near-rational Type-II estimate with both coefficient energies.
+The only number-theoretic hypothesis is the stated reduced approximation;
+all correlation/spacing/cancellation estimates are discharged.</p></div><pre>theorem near_rational_bilinear_sq_le
+    (θ : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |θ - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (M : ℕ) (t : Finset ℤ)
+    (hspan : ∀ n ∈ t, ∀ k ∈ t, 2 * |n - k| ≤ (q : ℤ))
+    (c : ℕ → ℂ) (b : ℤ → ℂ) :
+    ‖∑ m ∈ Finset.range M, c m * ∑ n ∈ t, b n * phase (θ * m * n)‖ ^ 2 ≤
+      (∑ m ∈ Finset.range M, ‖c m‖ ^ 2) *
+        (2 * (M : ℝ) + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ)))) *
+          (∑ n ∈ t, ‖b n‖ ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a></p></li><li id=L125><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.near_rational_interval_correlation_row_le</code> <small>line 125</small><div class="doc"><p>Actual near-rational row cancellation on an arbitrary integer interval,
+also valid for any subset of that interval.</p></div><pre>theorem near_rational_interval_correlation_row_le
+    (θ : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |θ - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (M : ℕ) (t : Finset ℤ) (L : ℤ) (N : ℕ)
+    (ht : t ⊆ Finset.Ico L (L + N)) (n : ℤ) :
+    (∑ k ∈ t, ‖∑ m ∈ Finset.range M,
+      phase (θ * m * n) * (starRingEnd ℂ) (phase (θ * m * k))‖) ≤
+      (2 * (N : ℝ) / q + 1) *
+        (2 * (M : ℝ) + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ)))) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a></p></li><li id=L177><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.near_rational_interval_bilinear_sq_le</code> <small>line 177</small><div class="doc"><p>Full rectangular Type-II estimate from a reduced rational approximation.
+No spacing, correlation, or equidistribution estimate remains as a premise.</p></div><pre>theorem near_rational_interval_bilinear_sq_le
+    (θ : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |θ - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (M : ℕ) (t : Finset ℤ) (L : ℤ) (N : ℕ)
+    (ht : t ⊆ Finset.Ico L (L + N)) (c : ℕ → ℂ) (b : ℤ → ℂ) :
+    ‖∑ m ∈ Finset.range M, c m * ∑ n ∈ t, b n * phase (θ * m * n)‖ ^ 2 ≤
+      (∑ m ∈ Finset.range M, ‖c m‖ ^ 2) *
+        ((2 * (N : ℝ) / q + 1) *
+          (2 * (M : ℝ) + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ))))) *
+            (∑ n ∈ t, ‖b n‖ ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L147">OAI.Problem337.VaughanBilinear.phase</a></p></li><li id=L194><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.geometricBound_le_truncatedInv</code> <small>line 194</small><div class="doc"><p>The explicit geometric majorant itself is bounded by the truncated
+reciprocal distance. This also allows variable inner interval lengths.</p></div><pre>theorem geometricBound_le_truncatedInv (M : ℕ) (x : ℝ) :
+    geometricBound M x ≤
+      RationalPhaseSpacing.truncatedInv M (RationalPhaseSpacing.intDistance x) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L183">OAI.Problem337.VaughanBilinear.geometricBound</a>, <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li><li id=L226><b>theorem</b> <code>OAI.Problem337.VaughanBilinear.sum_geometricBound_difference_le</code> <small>line 226</small><div class="doc"><p>A uniform harmonic row bound for indexed integer frequencies. The map
+into the interval must be injective, but need not exhaust the interval.</p></div><pre>theorem sum_geometricBound_difference_le {β : Type*}
+    (θ : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |θ - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (M : ℕ) (t : Finset β) (f : β → ℤ) (L : ℤ) (N : ℕ)
+    (hf : ∀ k ∈ t, f k ∈ Finset.Ico L (L + N))
+    (hinj : Set.InjOn f t) (n : ℤ) :
+    (∑ k ∈ t, geometricBound M (θ * ((n - f k : ℤ) : ℝ))) ≤
+      (2 * (N : ℝ) / q + 1) *
+        (2 * (M : ℝ) + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ)))) := by
+…</pre><p class="refs">Mentions: <a href="VaughanBilinear.lean.html#L183">OAI.Problem337.VaughanBilinear.geometricBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

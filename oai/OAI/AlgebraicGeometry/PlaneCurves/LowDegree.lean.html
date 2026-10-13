@@ -1,0 +1,135 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/LowDegree.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/LowDegree.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>LowDegree.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>LowDegree.lean</span></code></h1><p class="muted">29 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/LowDegree.lean#L1">source</a></p><div class="doc"><h3>Nonzero low-degree homogeneous equations and configurations</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>def</b> <code>OAI.Nagata.W03.LowDegree.lineNormalPolynomial</code> <small>line 27</small><div class="doc"><p>Actual normal polynomial restricted to component i, with coefficients in
+its affine coordinate ring K[U]. The outer polynomial variable is the fiber.</p></div><pre>def lineNormalPolynomial (R : ℕ → MvPolynomial (Fin 3) K) (d i : ℕ) :
+    Polynomial (Polynomial K) :=
+…</pre></li><li id=L33><b>def</b> <code>OAI.Nagata.W03.LowDegree.fiberPolynomial</code> <small>line 33</small><div class="doc"><p>The ordinary fiber polynomial above the affine point with parameter U.</p></div><pre>def fiberPolynomial (R : ℕ → MvPolynomial (Fin 3) K) (d i : ℕ) (U : K) : K[X] :=
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.lower_coefficient_restrictions_zero</code> <small>line 38</small><div class="doc"><p>Nine marked multiplicity conditions annihilate every coefficient below m
+when d≤3m, including the equality-degree case on the reduced triangle.</p></div><pre>theorem lower_coefficient_restrictions_zero [CharZero K]
+    (R : ℕ → MvPolynomial (Fin 3) K) (d m : ℕ) (hdm : d ≤ 3 * m)
+    (hdegree : ∀ j ≤ d / 3, ∀ i : ℕ, i &lt; 3 →
+      (lineRestriction (i : K) (R j)).natDegree ≤ d - 3 * j)
+    (hfirst : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 →
+      (X + C ((firstMark 3 i : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j))
+    (htail : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 → ∀ s &lt; 2,
+      (X + C ((s + 2 : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j)) :
+    ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 → lineRestriction (i : K) (R j) = 0 := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.strict_low_degree_lineNormal_zero</code> <small>line 56</small><div class="doc"><p>If d&lt;3m all component normal polynomials vanish. This conclusion involves
+actual polynomials, not a formal coefficient-vanishing predicate.</p></div><pre>theorem strict_low_degree_lineNormal_zero
+    (R : ℕ → MvPolynomial (Fin 3) K) (d m : ℕ) (hdm : d &lt; 3 * m)
+    (hlower : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 →
+      lineRestriction (i : K) (R j) = 0) :
+    ∀ i : ℕ, i &lt; 3 → lineNormalPolynomial R d i = 0 := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L70><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.equality_lineNormal_shape</code> <small>line 70</small><div class="doc"><p>At d=3m, vanishing of all lower coefficients leaves the actual top monomial.</p></div><pre>theorem equality_lineNormal_shape
+    (R : ℕ → MvPolynomial (Fin 3) K) (m : ℕ) (a : K)
+    (hlower : ∀ j &lt; m, ∀ i : ℕ, i &lt; 3 → lineRestriction (i : K) (R j) = 0)
+    (htop : R m = MvPolynomial.C a) :
+    ∀ i : ℕ, i &lt; 3 → lineNormalPolynomial R (3 * m) i = Polynomial.monomial m (C a) := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L89><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.equality_fiber_shape</code> <small>line 89</small><div class="doc"><p>Evaluation in the base coordinate preserves the top monomial and its scalar.</p></div><pre>theorem equality_fiber_shape
+    (R : ℕ → MvPolynomial (Fin 3) K) (m i : ℕ) (U a : K)
+    (hshape : lineNormalPolynomial R (3 * m) i = Polynomial.monomial m (C a)) :
+    fiberPolynomial R (3 * m) i U = Polynomial.monomial m a := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a>, <a href="LowDegree.lean.html#L33">OAI.Nagata.W03.LowDegree.fiberPolynomial</a></p></li><li id=L97><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.pure_fiber_root_forces_scalar_zero</code> <small>line 97</small><div class="doc"><p>A pure nonzero top monomial cannot have positive root order at a nonzero
+fiber displacement. The divisibility premise is ordinary polynomial multiplicity.</p></div><pre>theorem pure_fiber_root_forces_scalar_zero (m : ℕ) (hm : 0 &lt; m) (a c : K)
+    (hc : c ≠ 0) (hroot : (X - C c) ^ m ∣ Polynomial.monomial m a) : a = 0 := by
+…</pre></li><li id=L104><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.equality_low_degree_contradiction</code> <small>line 104</small></li><li id=L121><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_normal_polynomial</code> <small>line 121</small><div class="doc"><p>Combined low-degree branch: these actual coefficient and fiber conditions
+force d&gt;3m. The top-constant condition follows from homogeneous degree zero.</p></div><pre>theorem degree_gt_three_mul_of_normal_polynomial [CharZero K]
+    (R : ℕ → MvPolynomial (Fin 3) K) (d m : ℕ) (hm : 0 &lt; m) (U c : K)
+    (hdegree : ∀ j ≤ d / 3, ∀ i : ℕ, i &lt; 3 →
+      (lineRestriction (i : K) (R j)).natDegree ≤ d - 3 * j)
+    (hfirst : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 →
+      (X + C ((firstMark 3 i : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j))
+    (htail : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 → ∀ s &lt; 2,
+      (X + C ((s + 2 : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j))
+    (htop : d = 3 * m → ∃ a : K, R m = MvPolynomial.C a)
+    (hnonzero : ∃ i &lt; 3, lineNormalPolynomial R d i ≠ 0)
+    (hc : c ≠ 0)
+    (hroot : (X - C c) ^ m ∣ fiberPolynomial R d 0 U) : 3 * m &lt; d := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a>, <a href="LowDegree.lean.html#L33">OAI.Nagata.W03.LowDegree.fiberPolynomial</a></p></li><li id=L148><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_ambient_normal_polynomial</code> <small>line 148</small><div class="doc"><p>The ambient total-degree bounds discharge both the component-degree premise
+and the common constant leading coefficient. Genuine homogeneous degree bounds
+imply these total-degree bounds; no smooth-curve section theorem is used.</p></div><pre>theorem degree_gt_three_mul_of_ambient_normal_polynomial [CharZero K]
+    (R : ℕ → MvPolynomial (Fin 3) K) (d m : ℕ) (hm : 0 &lt; m) (U c : K)
+    (hdegree : ∀ j ≤ d / 3, (R j).totalDegree ≤ d - 3 * j)
+    (hfirst : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 →
+      (X + C ((firstMark 3 i : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j))
+    (htail : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 → ∀ s &lt; 2,
+      (X + C ((s + 2 : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j))
+    (hnonzero : ∃ i &lt; 3, lineNormalPolynomial R d i ≠ 0)
+    (hc : c ≠ 0)
+    (hroot : (X - C c) ^ m ∣ fiberPolynomial R d 0 U) : 3 * m &lt; d := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a>, <a href="LowDegree.lean.html#L33">OAI.Nagata.W03.LowDegree.fiberPolynomial</a></p></li><li id=L183><b>def</b> <code>OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</code> <small>line 183</small><div class="doc"><p>Normal polynomial with coefficients in the actual coordinate ring modulo G.</p></div><pre>def quotientNormalPolynomial (R : ℕ → MvPolynomial (Fin 3) K) (d : ℕ)
+    (G : MvPolynomial (Fin 3) K) :
+    Polynomial (MvPolynomial (Fin 3) K ⧸ Ideal.span ({G} : Set (MvPolynomial (Fin 3) K))) :=
+…</pre></li><li id=L190><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.exists_nondivisible_coefficient_of_quotientNormal_ne_zero</code> <small>line 190</small><div class="doc"><p>A nonzero quotient normal polynomial has an actual nonzero residue coefficient.</p></div><pre>theorem exists_nondivisible_coefficient_of_quotientNormal_ne_zero
+    (R : ℕ → MvPolynomial (Fin 3) K) (d : ℕ) (G : MvPolynomial (Fin 3) K)
+    (hN : quotientNormalPolynomial R d G ≠ 0) :
+    ∃ j ≤ d / 3, ¬ G ∣ R j := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a></p></li><li id=L206><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.coeff_lineNormalPolynomial</code> <small>line 206</small><div class="doc"><p>The j-th coefficient of the actual component polynomial is its line restriction.</p></div><pre>theorem coeff_lineNormalPolynomial
+    (R : ℕ → MvPolynomial (Fin 3) K) (d i j : ℕ) (hj : j ≤ d / 3) :
+    (lineNormalPolynomial R d i).coeff j = lineRestriction (i : K) (R j) := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L215><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.exists_nonzero_lineNormal_of_quotientNormal_ne_zero</code> <small>line 215</small><div class="doc"><p>A proved component-noncancellation bridge transports the genuine quotient
+nonzero condition to a nonzero component normal polynomial.</p></div><pre>theorem exists_nonzero_lineNormal_of_quotientNormal_ne_zero
+    (R : ℕ → MvPolynomial (Fin 3) K) (d : ℕ) (G : MvPolynomial (Fin 3) K)
+    (hN : quotientNormalPolynomial R d G ≠ 0)
+    (hcomponents : ∀ j ≤ d / 3, ¬ G ∣ R j →
+      ∃ i : ℕ, i &lt; 3 ∧ lineRestriction (i : K) (R j) ≠ 0) :
+    ∃ i &lt; 3, lineNormalPolynomial R d i ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a>, <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L230><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.quotientNormalPolynomial_coeff_eq_map</code> <small>line 230</small><div class="doc"><p>The finite quotient sum agrees with mapping the actual normal polynomial
+when its coefficient support obeys the source exponent bound.</p></div><pre>theorem quotientNormalPolynomial_coeff_eq_map
+    (F : Polynomial (MvPolynomial (Fin 3) K)) (d : ℕ) (G : MvPolynomial (Fin 3) K)
+    (hbound : ∀ j, d / 3 &lt; j → F.coeff j = 0) :
+    quotientNormalPolynomial F.coeff d G =
+      F.map (Ideal.Quotient.mk (Ideal.span ({G} : Set (MvPolynomial (Fin 3) K)))) := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a></p></li><li id=L244><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.quotientNormalPolynomial_ne_zero_of_map_ne_zero</code> <small>line 244</small></li><li id=L270><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.marked_factors_of_zero_surface_orders</code> <small>line 270</small><div class="doc"><p>The marked surface orders at zero displacement give the exact first and
+tail root-factor conditions needed by the triangle coefficient obstruction.</p></div><pre>theorem marked_factors_of_zero_surface_orders
+    (R : ℕ → MvPolynomial (Fin 3) K) (d m : ℕ)
+    (hfirst : ∀ i &lt; 3, lineNormalPolynomial R d i ∈
+      (nestedPointIdeal (-((firstMark 3 i : ℕ) : K)) 0) ^ m)
+    (htail : ∀ i &lt; 3, ∀ s &lt; 2, lineNormalPolynomial R d i ∈
+      (nestedPointIdeal (-((s + 2 : ℕ) : K)) 0) ^ m) :
+    (∀ j ≤ d / 3, ∀ i : ℕ, i &lt; 3 →
+      (X + C ((firstMark 3 i : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j)) ∧
+    (∀ j ≤ d / 3, ∀ i : ℕ, i &lt; 3 → ∀ s &lt; 2,
+      (X + C ((s + 2 : ℕ) : K)) ^ (m - j) ∣ lineRestriction (i : K) (R j)) := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L290><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_surface_orders</code> <small>line 290</small></li><li id=L318><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.exists_nonzero_lineNormal_of_homogeneous_quotient</code> <small>line 318</small><div class="doc"><p>Homogeneous noncancellation turns the genuine quotient normal polynomial
+into a nonzero polynomial on at least one actual affine line component.</p></div><pre>theorem exists_nonzero_lineNormal_of_homogeneous_quotient
+    (R : ℕ → MvPolynomial (Fin 3) ℂ) (d : ℕ)
+    (hhom : ∀ j ≤ d / 3, (R j).IsHomogeneous (d - 3 * j))
+    (hN : quotientNormalPolynomial R d (Nagata.Workers.W24.homogeneousLineUnion ℂ 3) ≠ 0) :
+    ∃ i &lt; 3, lineNormalPolynomial R d i ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a>, <a href="LineRestriction.lean.html#L176">OAI.Nagata.Workers.W24.homogeneousLineUnion</a>, <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L333><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_homogeneous_normal_polynomial</code> <small>line 333</small><div class="doc"><p>The complete algebraic low-degree branch over the genuine three-line
+homogeneous curve. The first nine multiplicity conditions are actual root
+factors; the tenth condition is ordinary fiber-polynomial root multiplicity.</p></div><pre>theorem degree_gt_three_mul_of_homogeneous_normal_polynomial
+    (R : ℕ → MvPolynomial (Fin 3) ℂ) (d m : ℕ) (hm : 0 &lt; m) (U c : ℂ)
+    (hhom : ∀ j ≤ d / 3, (R j).IsHomogeneous (d - 3 * j))
+    (hfirst : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 →
+      (X + C ((firstMark 3 i : ℕ) : ℂ)) ^ (m - j) ∣ lineRestriction (i : ℂ) (R j))
+    (htail : ∀ j ≤ d / 3, j &lt; m → ∀ i : ℕ, i &lt; 3 → ∀ s &lt; 2,
+      (X + C ((s + 2 : ℕ) : ℂ)) ^ (m - j) ∣ lineRestriction (i : ℂ) (R j))
+    (hN : quotientNormalPolynomial R d (Nagata.Workers.W24.homogeneousLineUnion ℂ 3) ≠ 0)
+    (hc : c ≠ 0)
+    (hroot : (X - C c) ^ m ∣ fiberPolynomial R d 0 U) : 3 * m &lt; d := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a>, <a href="LineRestriction.lean.html#L176">OAI.Nagata.Workers.W24.homogeneousLineUnion</a>, <a href="LowDegree.lean.html#L33">OAI.Nagata.W03.LowDegree.fiberPolynomial</a></p></li><li id=L347><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_grouped_homogeneous_normal_polynomial</code> <small>line 347</small></li><li id=L366><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_homogeneous_surface_orders</code> <small>line 366</small><div class="doc"><p>Final reduced-triangle algebraic low-degree statement: actual homogeneous
+coefficient lifts, actual quotient nonzero polynomial, and ordinary point-ideal
+powers at the nine zero and one nonzero normal displacements imply d&gt;3m.</p></div><pre>theorem degree_gt_three_mul_of_homogeneous_surface_orders
+    (R : ℕ → MvPolynomial (Fin 3) ℂ) (d m : ℕ) (hm : 0 &lt; m) (U c : ℂ)
+    (hhom : ∀ j ≤ d / 3, (R j).IsHomogeneous (d - 3 * j))
+    (hfirst : ∀ i &lt; 3, lineNormalPolynomial R d i ∈
+      (Nagata.W18.nestedPointIdeal (-((firstMark 3 i : ℕ) : ℂ)) 0) ^ m)
+    (htail : ∀ i &lt; 3, ∀ s &lt; 2, lineNormalPolynomial R d i ∈
+      (Nagata.W18.nestedPointIdeal (-((s + 2 : ℕ) : ℂ)) 0) ^ m)
+    (hN : quotientNormalPolynomial R d (Nagata.Workers.W24.homogeneousLineUnion ℂ 3) ≠ 0)
+    (hc : c ≠ 0)
+    (htenth : lineNormalPolynomial R d 0 ∈ (Nagata.W18.nestedPointIdeal U c) ^ m) :
+    3 * m &lt; d :=
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a>, <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a>, <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a>, <a href="LineRestriction.lean.html#L176">OAI.Nagata.Workers.W24.homogeneousLineUnion</a></p></li><li id=L396><b>abbrev</b> <code>OAI.Nagata.W03.LowDegree.TriangleIndex</code> <small>line 396</small></li><li id=L398><b>def</b> <code>OAI.Nagata.W03.LowDegree.triangleComponent</code> <small>line 398</small></li><li id=L401><b>def</b> <code>OAI.Nagata.W03.LowDegree.triangleBasePoint</code> <small>line 401</small></li><li id=L404><b>def</b> <code>OAI.Nagata.W03.LowDegree.triangleDisplacement</code> <small>line 404</small></li><li id=L408><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.triangle_configuration_count_and_injective</code> <small>line 408</small><div class="doc"><p>This actual ordered index set has exactly r distinct base points.</p></div><pre>theorem triangle_configuration_count_and_injective (r : ℕ) (hr : 9 ≤ r) :
+    Fintype.card (TriangleIndex r) = r ∧ Function.Injective (triangleBasePoint r) := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L396">OAI.Nagata.W03.LowDegree.TriangleIndex</a>, <a href="LowDegree.lean.html#L401">OAI.Nagata.W03.LowDegree.triangleBasePoint</a></p></li><li id=L417><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_on_triangle_configuration</code> <small>line 417</small><div class="doc"><p>On the actual r-point configuration, surface orders of the normal
+polynomial force d&gt;3m; the case r=10 and all larger r are treated uniformly.</p></div><pre>theorem degree_gt_three_mul_on_triangle_configuration
+    (r d m : ℕ) (hr : 10 ≤ r) (hm : 0 &lt; m)
+    (R : ℕ → MvPolynomial (Fin 3) ℂ)
+    (hhom : ∀ j ≤ d / 3, (R j).IsHomogeneous (d - 3 * j))
+    (hN : quotientNormalPolynomial R d (Nagata.Workers.W24.homogeneousLineUnion ℂ 3) ≠ 0)
+    (horder : ∀ p : TriangleIndex r,
+      lineNormalPolynomial R d (triangleComponent p) ∈
+        (Nagata.W18.nestedPointIdeal (triangleBasePoint r p).1 (triangleDisplacement p)) ^ m) :
+    3 * m &lt; d := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L183">OAI.Nagata.W03.LowDegree.quotientNormalPolynomial</a>, <a href="LineRestriction.lean.html#L176">OAI.Nagata.Workers.W24.homogeneousLineUnion</a>, <a href="LowDegree.lean.html#L396">OAI.Nagata.W03.LowDegree.TriangleIndex</a>, <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a>, <a href="LowDegree.lean.html#L398">OAI.Nagata.W03.LowDegree.triangleComponent</a>, <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a>, <a href="LowDegree.lean.html#L401">OAI.Nagata.W03.LowDegree.triangleBasePoint</a>, <a href="LowDegree.lean.html#L404">OAI.Nagata.W03.LowDegree.triangleDisplacement</a></p></li><li id=L441><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.degree_gt_three_mul_of_selected_lifts_on_triangle</code> <small>line 441</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

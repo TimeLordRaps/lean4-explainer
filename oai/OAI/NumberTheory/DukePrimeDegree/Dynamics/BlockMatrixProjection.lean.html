@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Dynamics/BlockMatrixProjection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Dynamics/BlockMatrixProjection.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Dynamics</a> / <span>BlockMatrixProjection.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Dynamics</a>/<span>BlockMatrixProjection.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Dynamics/BlockMatrixProjection.lean#L1">source</a></p><div class="doc"><h3>The within-block matrix projection</h3><p>The projection onto the within-block entries commutes with multiplication
+by block-diagonal matrices on either side. Hence a scalar within-block
+part stays scalar under every within-block conjugation, including the
+unipotent shears used in the stopping-time argument.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.DukePrimeDegree.withinBlockPart</code> <small>line 21</small></li><li id=L25><b>lemma</b> <code>OAI.DukePrimeDegree.withinBlockPart_mul_left</code> <small>line 25</small></li><li id=L47><b>lemma</b> <code>OAI.DukePrimeDegree.withinBlockPart_mul_right</code> <small>line 47</small></li><li id=L69><b>lemma</b> <code>OAI.DukePrimeDegree.withinBlockPart_eq_scalar_iff</code> <small>line 69</small></li><li id=L94><b>theorem</b> <code>OAI.DukePrimeDegree.withinBlockPart_conjugate_scalar</code> <small>line 94</small><div class="doc"><p>Conjugation by any block matrix preserves the scalar within-block
+part. The cross-block part cannot produce a hidden within-block limit.</p></div><pre>theorem withinBlockPart_conjugate_scalar {n : ℕ} (r : Setoid (Fin n))
+    (g u : G n) (hu : u ∈ blockMatrixGroup r) (c : ℝ)
+    (hg : withinBlockPart r g.val = Matrix.diagonal (fun _ =&gt; c)) :
+    withinBlockPart r (u * g * u⁻¹).val = Matrix.diagonal (fun _ =&gt; c) := by
+…</pre><p class="refs">Mentions: <a href="BlockOrbit.lean.html#L25">OAI.DukePrimeDegree.blockMatrixGroup</a>, <a href="BlockMatrixProjection.lean.html#L21">OAI.DukePrimeDegree.withinBlockPart</a></p></li><li id=L111><b>theorem</b> <code>OAI.DukePrimeDegree.block_conjugation_transverse_limit_entries</code> <small>line 111</small><div class="doc"><p>The conjugating block matrices may diverge. The scalar block part
+still tends to identity, and no within-block off-diagonal entry appears.</p></div><pre>theorem block_conjugation_transverse_limit_entries {n : ℕ}
+    (r : Setoid (Fin n)) (g u : ℕ → G n) (c : ℕ → ℝ)
+    (hg : Tendsto g atTop (𝓝 1))
+    (hu : ∀ k, u k ∈ blockMatrixGroup r)
+    (hpart : ∀ᶠ k in atTop,
+      withinBlockPart r (g k).val = Matrix.diagonal (fun _ =&gt; c k))
+    (h : G n)
+    (hlim : Tendsto (fun k =&gt; u k * g k * (u k)⁻¹) atTop (𝓝 h)) :
+    (∀ i, h.val i i = 1) ∧ (∀ i j, i ≠ j → r i j → h.val i j = 0) := by
+…</pre><p class="refs">Mentions: <a href="BlockOrbit.lean.html#L25">OAI.DukePrimeDegree.blockMatrixGroup</a>, <a href="BlockMatrixProjection.lean.html#L21">OAI.DukePrimeDegree.withinBlockPart</a></p></li><li id=L146><b>theorem</b> <code>OAI.DukePrimeDegree.block_conjugation_transverse_limit_not_mem</code> <small>line 146</small><div class="doc"><p>In particular the existing root-shearing compactness theorem can
+never return a nonidentity element already in L after this normalization.</p></div><pre>theorem block_conjugation_transverse_limit_not_mem {n : ℕ}
+    (L : Subgroup (G n)) (hclosed : IsClosed (L : Set (G n)))
+    (hnormal : ∀ (ell : Fin n → ℝ) (hsum : ∑ i, ell i = 0) (t : ℝ),
+      ∀ g ∈ L, diagonalOneParameter ell hsum t * g * diagonalOneParameter ell hsum (-t) ∈ L)
+    (r : Setoid (Fin n))
+    (hmax : ∀ (i j : Fin n) (hij : i ≠ j) (c : ℝ), c ≠ 0 →
+      Matrix.SpecialLinearGroup.transvection hij c ∈ L → r i j)
+    (g u : ℕ → G n) (c : ℕ → ℝ) (hg : Tendsto g atTop (𝓝 1))
+    (hu : ∀ k, u k ∈ blockMatrixGroup r)
+    (hpart : ∀ᶠ k in atTop,
+      withinBlockPart r (g k).val = Matrix.diagonal (fun _ =&gt; c k))
+    (h : G n) (hne : h ≠ 1)
+…</pre><p class="refs">Mentions: <a href="BlockOrbit.lean.html#L25">OAI.DukePrimeDegree.blockMatrixGroup</a>, <a href="BlockMatrixProjection.lean.html#L21">OAI.DukePrimeDegree.withinBlockPart</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("kt", [["Arxiv.«1308.0994».KT",23,207],["Arxiv.«1308.0994».KTExtendsK",23,147],["Arxiv.«1308.0994».KTProof",23,129],["Arxiv.«1308.0994».KTProof.subst",23,165],["Erdos690.kthPrimeFactorSet",709,37],["OeisA382590.kthPrimeFactor",1324,70],["OeisA382590.kthPrimeFactor_periodic",1324,111]]);

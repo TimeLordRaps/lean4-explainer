@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/BoundaryHeight.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/BoundaryHeight.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>BoundaryHeight.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>BoundaryHeight.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/BoundaryHeight.lean#L1">source</a></p><div class="doc"><h3>Scalar and vector boundary height estimates</h3><p>Haar-volume distortion on ray quotients yields additive trace bounds after
+taking logarithms. Finitely many spanning traces then bound the full height
+error. A linear coefficient compatible with a sublinear error is unique.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.PolycyclicRecognition.abs_log_sub_le_of_comparison</code> <small>line 18</small><div class="doc"><p>Uniform multiplicative comparison of positive quantities bounds the
+difference of their logarithms.</p></div><pre>theorem abs_log_sub_le_of_comparison {a b K : ℝ} (ha : 0 &lt; a) (hb : 0 &lt; b)
+    (hK : 0 &lt; K) (hab : a ≤ K * b) (hba : b ≤ K * a) :
+    |Real.log a - Real.log b| ≤ Real.log K := by
+…</pre></li><li id=L31><b>theorem</b> <code>OAI.PolycyclicRecognition.abs_sub_le_log_of_exp_comparison</code> <small>line 31</small><div class="doc"><p>Applying the logarithmic comparison to exponential Jacobians.</p></div><pre>theorem abs_sub_le_log_of_exp_comparison {a b K : ℝ} (hK : 0 &lt; K)
+    (hab : Real.exp a ≤ K * Real.exp b) (hba : Real.exp b ≤ K * Real.exp a) :
+    |a - b| ≤ Real.log K := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.PolycyclicRecognition.separates_of_dual_span</code> <small>line 38</small><div class="doc"><p>A family of real linear forms spanning the dual separates points.</p></div><pre>theorem separates_of_dual_span {W I : Type*} [AddCommGroup W] [Module ℝ W]
+    (α : I → Module.Dual ℝ W)
+    (hspan : Submodule.span ℝ (Set.range α) = ⊤)
+    (w : W) (hw : ∀ i, α i w = 0) : w = 0 := by
+…</pre></li><li id=L55><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_bound_of_separating_forms</code> <small>line 55</small><div class="doc"><p>Finitely many separating trace bounds control the vector norm by one
+constant depending only on those traces.</p></div><pre>theorem exists_bound_of_separating_forms {W I : Type*}
+    [NormedAddCommGroup W] [NormedSpace ℝ W] [FiniteDimensional ℝ W] [Fintype I]
+    (α : I → Module.Dual ℝ W)
+    (hsep : ∀ w, (∀ i, α i w = 0) → w = 0) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (w : W) (B : ℝ), 0 ≤ B →
+      (∀ i, |α i w| ≤ B) → ‖w‖ ≤ C * B := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_bound_of_dual_span</code> <small>line 79</small><div class="doc"><p>In the boundary argument the ray traces span the dual height space.</p></div><pre>theorem exists_bound_of_dual_span {W I : Type*}
+    [NormedAddCommGroup W] [NormedSpace ℝ W] [FiniteDimensional ℝ W] [Fintype I]
+    (α : I → Module.Dual ℝ W)
+    (hspan : Submodule.span ℝ (Set.range α) = ⊤) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (w : W) (B : ℝ), 0 ≤ B →
+      (∀ i, |α i w| ≤ B) → ‖w‖ ≤ C * B :=
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.PolycyclicRecognition.eq_zero_of_sublinear_linear_bound</code> <small>line 89</small><div class="doc"><p>Bounded error plus arbitrarily small linear error cannot hide a nonzero
+linear coefficient. This identifies each source trace with its target trace.</p></div><pre>theorem eq_zero_of_sublinear_linear_bound {c B : ℝ}
+    (h : ∀ ε : ℝ, 0 &lt; ε → ∃ R : ℝ, ∀ t : ℝ, R ≤ t → 0 ≤ t →
+      |t * c| ≤ B + ε * t) : c = 0 := by
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.PolycyclicRecognition.trace_eq_of_bounded_and_sublinear</code> <small>line 106</small><div class="doc"><p>A uniformly bounded trace error determines its linear coefficient once
+the vector error is sublinear along every height ray.</p></div><pre>theorem trace_eq_of_bounded_and_sublinear
+    {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
+    [FiniteDimensional ℝ W]
+    (α β : Module.Dual ℝ W) (A : W →ₗ[ℝ] W)
+    (profile : W → ℝ → W) (B : ℝ)
+    (hbound : ∀ w t, 0 ≤ t → |β (profile w t) - t * α w| ≤ B)
+    (hsub : ∀ w ε, 0 &lt; ε → ∃ R : ℝ, ∀ t, R ≤ t → 0 ≤ t →
+      ‖profile w t - t • A w‖ ≤ ε * t) :
+    α = β.comp A := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("sw", [["BSD.weak_birch_swinnerton_dyer_conjecture",56,67],["BSD.weak_birch_swinnerton_dyer_conjecture_rat",56,74],["Erdos36.minimum_overlap.variants.lower.swierczkowski_1958",471,290]]);

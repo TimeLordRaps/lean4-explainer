@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/WeakCommonTerminal.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/WeakCommonTerminal.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>WeakCommonTerminal.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>WeakCommonTerminal.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/WeakCommonTerminal.lean#L1">source</a></p><div class="doc"><h3>A common actual resolvent terminal for weak prediction detectors</h3><p>The scalar convergence is derived from weak convergence of the fully evaluated
+predictions.  The displacement convergence is the proved estimate for the actual
+resolvent terminal sequence and actual generated maps.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.ReflexiveFixedPoints.detector_tendsto_of_weak_tendsto</code> <small>line 27</small><div class="doc"><p>A continuous linear functional converts an actual weak prediction limit to
+the scalar detector limit.  No weak continuity of a nonlinear map is used.</p></div><pre>theorem detector_tendsto_of_weak_tendsto {X : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {J : Type*} {l : Filter J} (f : X →L[ℝ] ℝ) (y z : X) (q : J → X)
+    (hq : Tendsto (fun j =&gt; toWeakSpace ℝ X (q j)) l
+      (𝓝 (toWeakSpace ℝ X z))) :
+    Tendsto (fun j =&gt; f (y - q j)) l (𝓝 (f (y - z))) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.ReflexiveFixedPoints.exists_common_terminalSequence</code> <small>line 43</small><div class="doc"><p>Choose one index of the actual terminal resolvent sequence satisfying every
+finite weak prediction detector and every fixed generated map's total bound.</p></div><pre>theorem exists_common_terminalSequence
+    (hKclosed : IsClosed K) (hKconvex : Convex ℝ K)
+    (T : K → K) (hT : LipschitzWith 1 T)
+    (hdiam : ∀ a c : K, ‖(a : X) - c‖ ≤ 1) (x : K)
+    {I J : Type*} [Finite I] [Fintype J]
+    {l : Filter ℕ} [NeBot l] (hl : l ≤ atTop)
+    (q : I → K → K) (y z : I → K) (f : I → X →L[ℝ] ℝ) (e : I → ℝ)
+    (he : ∀ i, 0 &lt; e i)
+    (hz : ∀ i, Tendsto
+      (fun j =&gt; toWeakSpace ℝ X (q i (terminalSequence hKclosed hKconvex T hT x j)))
+      l (𝓝 (toWeakSpace ℝ X (z i))))
+    (hdet : ∀ i, 1 - e i ≤ f i ((y i : X) - z i))
+…</pre><p class="refs">Mentions: <a href="TerminalSequence.lean.html#L29">OAI.ReflexiveFixedPoints.terminalSequence</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

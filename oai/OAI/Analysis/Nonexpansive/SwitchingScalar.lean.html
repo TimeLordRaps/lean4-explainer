@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/SwitchingScalar.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/SwitchingScalar.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>SwitchingScalar.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>SwitchingScalar.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/SwitchingScalar.lean#L1">source</a></p><div class="doc"><h3>Scalar estimates for finite leaf switching</h3><p>The first estimates telescope the actual scaled ancestor recurrence.  The
+second estimates bound a finite dyadic tolerance tail, including an empty
+tail.  These lemmas involve only real scalars and finite sums; the switching
+construction supplies their hypotheses from its actual maps and weights.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.ReflexiveFixedPoints.scaled_path_step</code> <small>line 26</small><div class="doc"><p>Multiplying the one-step displacement estimate by the parent weight
+produces the telescoping form, using the actual child-weight equation.</p></div><pre>theorem scaled_path_step {w w&#x27; a a&#x27; α δ : ℝ}
+    (hw : 0 ≤ w) (hchild : w&#x27; = w * α)
+    (hstep : a ≤ α * a&#x27; + (1 - α) + δ) :
+    w * a ≤ w&#x27; * a&#x27; + w - w&#x27; + w * δ := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.ReflexiveFixedPoints.scaled_path_telescope</code> <small>line 37</small><div class="doc"><p>The scaled finite path recurrence telescopes without division by weights.
+This identity needs no positive lower bound on any path weight.</p></div><pre>theorem scaled_path_telescope (W A δ : ℕ → ℝ) (k : ℕ)
+    (hstep : ∀ i &lt; k,
+      W i * A i ≤ W (i + 1) * A (i + 1) + W i - W (i + 1) + W i * δ i) :
+    W 0 * A 0 ≤ W k * A k + W 0 - W k +
+      ∑ i ∈ Finset.range k, W i * δ i := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.ReflexiveFixedPoints.before_block_scalar_le</code> <small>line 57</small><div class="doc"><p>The root displacement bound used before a whole descendant block switches.
+Both the terminal displacement and the unweighted ancestor error budget are
+at most <code>e</code>; path weights lie in the unit interval.</p></div><pre>theorem before_block_scalar_le (W A δ : ℕ → ℝ) (k : ℕ) (e : ℝ)
+    (hroot : W 0 = 1)
+    (hW : ∀ i ≤ k, 0 ≤ W i ∧ W i ≤ 1)
+    (he : 0 ≤ e) (hterminal : A k ≤ e)
+    (hδ : ∀ i &lt; k, 0 ≤ δ i)
+    (hbudget : ∑ i ∈ Finset.range k, δ i ≤ e)
+    (hstep : ∀ i &lt; k,
+      W i * A i ≤ W (i + 1) * A (i + 1) + W i - W (i + 1) + W i * δ i) :
+    A 0 ≤ 1 - W k + 2 * e := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.ReflexiveFixedPoints.dyadic_sum_range</code> <small>line 86</small><div class="doc"><p>Exact finite geometric sum for the dyadic tolerance coefficients.</p></div><pre>theorem dyadic_sum_range (N : ℕ) :
+    (∑ d ∈ Finset.range N, (1 / 2 : ℝ) ^ (d + 1)) = 1 - (1 / 2 : ℝ) ^ N := by
+…</pre></li><li id=L97><b>theorem</b> <code>OAI.ReflexiveFixedPoints.dyadic_sum_Ico</code> <small>line 97</small><div class="doc"><p>Exact finite dyadic tail, including the endpoint term that is discarded
+in the later upper bound.</p></div><pre>theorem dyadic_sum_Ico (k N : ℕ) (hkN : k ≤ N) :
+    (∑ d ∈ Finset.Ico k N, (1 / 2 : ℝ) ^ (d + 1)) =
+      (1 / 2 : ℝ) ^ k - (1 / 2 : ℝ) ^ N := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.ReflexiveFixedPoints.dyadic_weighted_tail_le</code> <small>line 105</small><div class="doc"><p>A nonnegative decreasing budget schedule bounds every finite dyadic
+tolerance tail.  No infinite series or limiting interchange is used.</p></div><pre>theorem dyadic_weighted_tail_le (M : ℕ → ℝ)
+    (hM_nonneg : ∀ d, 0 ≤ M d) (hM_anti : Antitone M)
+    (k N : ℕ) (hkN : k ≤ N) :
+    (∑ d ∈ Finset.Ico k N, (1 / 2 : ℝ) ^ (d + 1) * M d) ≤
+      (1 / 2 : ℝ) ^ k * M k := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.ReflexiveFixedPoints.dyadic_weighted_tail_le_initial</code> <small>line 124</small><div class="doc"><p>The same finite tail is at most the budget at its initial level.</p></div><pre>theorem dyadic_weighted_tail_le_initial (M : ℕ → ℝ)
+    (hM_nonneg : ∀ d, 0 ≤ M d) (hM_anti : Antitone M)
+    (k N : ℕ) (hkN : k ≤ N) :
+    (∑ d ∈ Finset.Ico k N, (1 / 2 : ℝ) ^ (d + 1) * M d) ≤ M k := by
+…</pre></li><li id=L137><b>theorem</b> <code>OAI.ReflexiveFixedPoints.dyadic_weighted_tail_le_budget</code> <small>line 137</small><div class="doc"><p>Uniform comparison with any particular node budget at the same level.</p></div><pre>theorem dyadic_weighted_tail_le_budget (M : ℕ → ℝ)
+    (hM_nonneg : ∀ d, 0 ≤ M d) (hM_anti : Antitone M)
+    (k N : ℕ) (hkN : k ≤ N) {e : ℝ} (hbudget : M k ≤ e) :
+    (∑ d ∈ Finset.Ico k N, (1 / 2 : ℝ) ^ (d + 1) * M d) ≤ e :=
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

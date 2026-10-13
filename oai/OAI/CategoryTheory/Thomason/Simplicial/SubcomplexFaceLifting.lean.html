@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Simplicial/SubcomplexFaceLifting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Simplicial/SubcomplexFaceLifting.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Simplicial</a> / <span>SubcomplexFaceLifting.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Simplicial</a>/<span>SubcomplexFaceLifting.lean</span></code></h1><p class="muted">35 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Simplicial/SubcomplexFaceLifting.lean#L1">source</a></p><div class="doc"><h3>Detecting finite simplicial homotopies in a Kan realization</h3><p>A continuous extension over a parameter that embeds in a simplex gives an
+exact simplicial extension. Applying this to the two ends of the actual
+simplicial cylinder detects homotopies in the original Kan target.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L34><b>theorem</b> <code>OAI.Thomason.Construction.kan_extension_of_realization_extension_of_simplex_mono</code> <small>line 34</small><div class="doc"><p>Transport the simplex-subcomplex extension theorem along the actual
+range isomorphisms of a pair of monomorphisms.</p></div><pre>theorem kan_extension_of_realization_extension_of_simplex_mono
+    {A B X : SSet.{0}} [SSet.KanComplex X] {n : ℕ}
+    (e : B ⟶ (Δ[n] : SSet.{0})) [Mono e] (i : A ⟶ B) [Mono i]
+    (a : A ⟶ X) (b : SSet.toTop.obj B ⟶ SSet.toTop.obj X)
+    (h : SSet.toTop.map i ≫ b = SSet.toTop.map a) :
+    ∃ d : B ⟶ X, i ≫ d = a := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.Thomason.Construction.kan_extension_of_finitePoset_realization_extension</code> <small>line 73</small><div class="doc"><p>A finite-poset parameter is an actual simplex subcomplex after a
+finite linear extension, so the same exact extension theorem applies.</p></div><pre>theorem kan_extension_of_finitePoset_realization_extension
+    (P : Type) [PartialOrder P] [Finite P] [Nonempty P]
+    {A X : SSet.{0}} [SSet.KanComplex X]
+    (i : A ⟶ nerve P) [Mono i] (a : A ⟶ X)
+    (b : SSet.toTop.obj (nerve P) ⟶ SSet.toTop.obj X)
+    (h : SSet.toTop.map i ≫ b = SSet.toTop.map a) :
+    ∃ d : nerve P ⟶ X, i ≫ d = a := by
+…</pre></li><li id=L83><b>theorem</b> <code>OAI.Thomason.Construction.simplicialCylinder_inclusion_comp</code> <small>line 83</small></li><li id=L92><b>theorem</b> <code>OAI.Thomason.Construction.simplicialCylinder_desc_comp</code> <small>line 92</small></li><li id=L101><b>def</b> <code>OAI.Thomason.Construction.realizedHomotopyCylinder</code> <small>line 101</small></li><li id=L109><b>theorem</b> <code>OAI.Thomason.Construction.realizedHomotopyCylinder_ends</code> <small>line 109</small><div class="doc"><p>The singular homotopy can be evaluated on the actual simplicial
+cylinder, with the two original realized endpoint maps exact.</p></div><pre>theorem realizedHomotopyCylinder_ends {K X : SSet.{0}} {f g : K ⟶ X}
+    (H : (SSet.toTop.map f).hom.Homotopy (SSet.toTop.map g).hom) :
+    SSet.toTop.map (SimplicialCylinder.inclusion K) ≫ realizedHomotopyCylinder H =
+      SSet.toTop.map (SimplicialCylinder.desc f g) := by
+…</pre><p class="refs">Mentions: <a href="../Gray/DirectedGlobeFaces.lean.html#L152">OAI.Thomason.Construction.SimplicialCylinder.inclusion</a>, <a href="SubcomplexFaceLifting.lean.html#L101">OAI.Thomason.Construction.realizedHomotopyCylinder</a>, <a href="../Gray/DirectedGlobeFaces.lean.html#L131">OAI.Thomason.Construction.SimplicialCylinder.desc</a></p></li><li id=L122><b>theorem</b> <code>OAI.Thomason.Construction.realizedHomotopy_cylinder_extension</code> <small>line 122</small></li><li id=L131><b>theorem</b> <code>OAI.Thomason.Construction.realizedHomotopyCylinder_stationary</code> <small>line 131</small><div class="doc"><p>The same evaluated cylinder retains stationarity on the whole
+realized image of a prescribed simplicial subobject.</p></div><pre>theorem realizedHomotopyCylinder_stationary {A K X : SSet.{0}} {f g : K ⟶ X}
+    (i : A ⟶ K)
+    (H : (SSet.toTop.map f).hom.Homotopy (SSet.toTop.map g).hom)
+    (hH : ∀ (t : unitInterval) (x : SSet.toTop.obj A),
+      H (t, (SSet.toTop.map i).hom x) =
+        (SSet.toTop.map f).hom ((SSet.toTop.map i).hom x)) :
+    SSet.toTop.map (i ▷ Δ[1]) ≫ realizedHomotopyCylinder H =
+      SSet.toTop.map (fst A Δ[1] ≫ i ≫ f) := by
+…</pre><p class="refs">Mentions: <a href="SubcomplexFaceLifting.lean.html#L101">OAI.Thomason.Construction.realizedHomotopyCylinder</a></p></li><li id=L151><b>theorem</b> <code>OAI.Thomason.Construction.cylinder_simplex_embedding</code> <small>line 151</small></li><li id=L175><b>theorem</b> <code>OAI.Thomason.Construction.kan_homotopy_of_realization_homotopy_of_simplex_mono</code> <small>line 175</small><div class="doc"><p>A continuous homotopy between two simplicial maps into a Kan complex
+is detected by a genuine simplicial homotopy for every simplex subcomplex
+parameter, including every finite-poset nerve.</p></div><pre>theorem kan_homotopy_of_realization_homotopy_of_simplex_mono
+    {K X : SSet.{0}} [SSet.KanComplex X] {n : ℕ}
+    (e : K ⟶ (Δ[n] : SSet.{0})) [Mono e] {f g : K ⟶ X}
+    (H : (SSet.toTop.map f).hom.Homotopy (SSet.toTop.map g).hom) :
+    Nonempty (SSet.Homotopy f g) := by
+…</pre></li><li id=L199><b>theorem</b> <code>OAI.Thomason.Construction.kan_finitePoset_homotopy_iff</code> <small>line 199</small></li><li id=L232><b>theorem</b> <code>OAI.Thomason.Construction.intervalBoundaryFamily_comp</code> <small>line 232</small></li><li id=L245><b>theorem</b> <code>OAI.Thomason.Construction.intervalBoundaryFamily_self</code> <small>line 245</small></li><li id=L255><b>theorem</b> <code>OAI.Thomason.Construction.realizedHomotopyCylinder_intervalBoundary</code> <small>line 255</small></li><li id=L270><b>theorem</b> <code>OAI.Thomason.Construction.kan_homotopy_of_realization_homotopy_rel</code> <small>line 270</small><div class="doc"><p>Relative continuous homotopy gives a simplicial homotopy which fixes
+the prescribed subcomplex exactly.</p></div><pre>theorem kan_homotopy_of_realization_homotopy_rel
+    {K X : SSet.{0}} [SSet.KanComplex X] {n : ℕ}
+    (e : K ⟶ (Δ[n] : SSet.{0})) [Mono e] (A : K.Subcomplex)
+    {f g : K ⟶ X} (hfg : A.ι ≫ f = A.ι ≫ g)
+    (H : (SSet.toTop.map f).hom.HomotopyRel (SSet.toTop.map g).hom
+      (Set.range (SSet.toTop.map A.ι).hom)) :
+    ∃ h : SSet.Homotopy f g,
+      A.ι ▷ Δ[1] ≫ h.h = fst A.toSSet Δ[1] ≫ A.ι ≫ f := by
+…</pre></li><li id=L350><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionBarycentric.iteratedChainRealization_homotopy</code> <small>line 350</small></li><li id=L373><b>theorem</b> <code>OAI.Thomason.Construction.SubdivisionBarycentric.exists_iteratedSubdivision_descent_homotopy</code> <small>line 373</small></li><li id=L404><b>theorem</b> <code>OAI.Thomason.Construction.realization_homotopy_of_precomp</code> <small>line 404</small><div class="doc"><p>A weak equivalence of actual realizations reflects continuous
+homotopies after precomposition.</p></div><pre>theorem realization_homotopy_of_precomp {A B : SSet.{0}} (u : A ⟶ B)
+    (hu : realizationWeakEquivalences u) {T : TopCat.{0}}
+    (f g : SSet.toTop.obj B ⟶ T)
+    (H : (f.hom.comp (SSet.toTop.map u).hom).Homotopy
+      (g.hom.comp (SSet.toTop.map u).hom)) :
+    Nonempty (f.hom.Homotopy g.hom) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L420><b>theorem</b> <code>OAI.Thomason.Construction.exists_kan_realization_approximation</code> <small>line 420</small><div class="doc"><p>No subdivision remains in the source, and the comparison is a
+homotopy to the given continuous map in the original Kan realization.</p></div><pre>theorem exists_kan_realization_approximation (P : PartOrd.{0}) [Fintype P]
+    (X : SSet.{0}) [SSet.KanComplex X]
+    (F : C(SSet.toTop.obj (nerve P), SSet.toTop.obj X)) :
+    ∃ g : nerve P ⟶ X, Nonempty (F.Homotopy (SSet.toTop.map g).hom) := by
+…</pre></li><li id=L478><b>theorem</b> <code>OAI.Thomason.Construction.exactify_realization_relative_lift</code> <small>line 478</small><div class="doc"><p>Exactify a relative lift when the projection comparison is an actual
+continuous homotopy fixing the prescribed subcomplex.</p></div><pre>theorem exactify_realization_relative_lift
+    {K E B : SSet.{0}} [SSet.KanComplex B] {n : ℕ}
+    (e : K ⟶ (Δ[n] : SSet.{0})) [Mono e] (A : K.Subcomplex)
+    (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (d : K ⟶ E) (b : K ⟶ B)
+    (hdb : A.ι ≫ (d ≫ p) = A.ι ≫ b)
+    (H : (SSet.toTop.map (d ≫ p)).hom.HomotopyRel (SSet.toTop.map b).hom
+      (Set.range (SSet.toTop.map A.ι).hom)) :
+    ∃ l : K ⟶ E, A.ι ≫ l = A.ι ≫ d ∧ l ≫ p = b := by
+…</pre></li><li id=L494><b>theorem</b> <code>OAI.Thomason.Construction.exists_kan_stationary_lift_of_realization_homotopy</code> <small>line 494</small><div class="doc"><p>The exactification can itself be chosen with a stationary simplicial
+homotopy from the initial map. In particular it preserves the actual
+realization weak-equivalence test.</p></div><pre>theorem exists_kan_stationary_lift_of_realization_homotopy
+    {K E B : SSet.{0}} [SSet.KanComplex B] {n : ℕ}
+    (e : K ⟶ (Δ[n] : SSet.{0})) [Mono e] (A : K.Subcomplex)
+    (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (d : K ⟶ E) (b : K ⟶ B)
+    (hdb : A.ι ≫ (d ≫ p) = A.ι ≫ b)
+    (H : (SSet.toTop.map (d ≫ p)).hom.HomotopyRel (SSet.toTop.map b).hom
+      (Set.range (SSet.toTop.map A.ι).hom)) :
+    ∃ (l : K ⟶ E) (s : SSet.Homotopy d l),
+      A.ι ≫ l = A.ι ≫ d ∧ l ≫ p = b ∧
+      A.ι ▷ Δ[1] ≫ s.h = fst A.toSSet Δ[1] ≫ A.ι ≫ d ∧
+      Nonempty ((SSet.toTop.map d).hom.HomotopyRel (SSet.toTop.map l).hom
+…</pre></li><li id=L543><b>theorem</b> <code>OAI.Thomason.Construction.exactify_realization_relative_lift_mono</code> <small>line 543</small><div class="doc"><p>The relative realization exactification theorem applies to any
+monomorphism into a simplex subcomplex, using its actual range.</p></div><pre>theorem exactify_realization_relative_lift_mono
+    {A K E B : SSet.{0}} [SSet.KanComplex B] {n : ℕ}
+    (e : K ⟶ (Δ[n] : SSet.{0})) [Mono e] (i : A ⟶ K) [Mono i]
+    (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (d : K ⟶ E) (b : K ⟶ B)
+    (hdb : i ≫ (d ≫ p) = i ≫ b)
+    (H : (SSet.toTop.map (d ≫ p)).hom.HomotopyRel (SSet.toTop.map b).hom
+      (Set.range (SSet.toTop.map i).hom)) :
+    ∃ l : K ⟶ E, i ≫ l = i ≫ d ∧ l ≫ p = b := by
+…</pre></li><li id=L603><b>theorem</b> <code>OAI.Thomason.Construction.kan_weak_map_surjective_homotopy</code> <small>line 603</small></li><li id=L619><b>theorem</b> <code>OAI.Thomason.Construction.kan_weak_map_reflects_homotopy</code> <small>line 619</small></li><li id=L645><b>theorem</b> <code>OAI.Thomason.Construction.kan_weak_fibration_lift_finitePoset</code> <small>line 645</small><div class="doc"><p>This lifts the base map exactly; no boundary condition is asserted
+by this intermediate theorem.</p></div><pre>theorem kan_weak_fibration_lift_finitePoset
+    (P : PartOrd.{0}) [Fintype P] [Nonempty P]
+    {E B : SSet.{0}} [SSet.KanComplex E] [SSet.KanComplex B]
+    (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (hp : realizationWeakEquivalences p) (b : nerve P ⟶ B) :
+    ∃ a : nerve P ⟶ E, a ≫ p = b := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L681><b>theorem</b> <code>OAI.Thomason.Construction.weaklyContractible_kan_boundary_extension</code> <small>line 681</small></li><li id=L689><b>theorem</b> <code>OAI.Thomason.Construction.kan_boundary_lifting_of_weak_fibers</code> <small>line 689</small></li><li id=L720><b>theorem</b> <code>OAI.Thomason.Construction.kan_boundary_rlp_of_weak_fibers</code> <small>line 720</small></li><li id=L732><b>theorem</b> <code>OAI.Thomason.Construction.weak_fibers_of_boundary_rlp</code> <small>line 732</small><div class="doc"><p>Boundary lifting also forces actual weak contractibility of every
+original vertex fibre. Thus the preceding sufficient condition captures
+the precise fibre obstruction, independently of any model structure.</p></div><pre>theorem weak_fibers_of_boundary_rlp {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (hp : I.rlp p) (v : B _⦋0⦌) :
+    IsWeakHomotopyEquivalence
+      (ContinuousMap.const (SSet.toTop.obj (simplicialPointFiber p v).toSSet) ()) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L197">OAI.Thomason.Construction.IsWeakHomotopyEquivalence</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a></p></li><li id=L763><b>theorem</b> <code>OAI.Thomason.Construction.kan_boundary_rlp_iff_weak_fibers</code> <small>line 763</small></li><li id=L795><b>theorem</b> <code>OAI.Thomason.Construction.InfiniteExtension.weak_fiber_of_point_pullback_weak</code> <small>line 795</small><div class="doc"><p>Weakness of the actual pullback over a vertex makes the original
+simplicial vertex fibre weakly contractible.</p></div><pre>theorem weak_fiber_of_point_pullback_weak {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (v : B _⦋0⦌)
+    (h : realizationWeakEquivalences
+      (pullback.snd p (SSet.const (X := (Δ[0] : SSet.{0})) v))) :
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L829><b>theorem</b> <code>OAI.Thomason.Construction.InfiniteExtension.boundary_rlp_of_map_arbitrary_base</code> <small>line 829</small><div class="doc"><p>The infinite extension reflects boundary lifting without any Kan
+assumption on the original base.</p></div><pre>theorem boundary_rlp_of_map_arbitrary_base {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (hp : I.rlp (map p)) : I.rlp p := by
+…</pre><p class="refs">Mentions: <a href="InfiniteExtensionKan.lean.html#L596">OAI.Thomason.Construction.InfiniteExtension.map</a></p></li><li id=L840><b>theorem</b> <code>OAI.Thomason.Construction.InfiniteExtension.map_boundary_rlp_iff_arbitrary_base</code> <small>line 840</small></li><li id=L847><b>theorem</b> <code>OAI.Thomason.Construction.InfiniteExtension.acyclicKanLifting_of_fibrant_case</code> <small>line 847</small><div class="doc"><p>Only weak Kan fibrations between Kan complexes remain in the general
+acyclic lifting problem. This is a reduction, not an assumption in the main
+theorem or a proof of that restricted case.</p></div><pre>theorem acyclicKanLifting_of_fibrant_case
+    (h : ∀ {E B : SSet.{0}} [SSet.KanComplex E] [SSet.KanComplex B]
+      (p : E ⟶ B) [HomotopicalAlgebra.Fibration p],
+        realizationWeakEquivalences p → I.rlp p) : PublishedAcyclicKanLifting := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a>, <a href="../Transfer/KanQuillenLiftingReduction.lean.html#L23">OAI.Thomason.Construction.PublishedAcyclicKanLifting</a></p></li><li id=L880><b>theorem</b> <code>OAI.Thomason.Construction.simplexSubcomplex_lift_of_facePoset_lift</code> <small>line 880</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/GeneratorSchemes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/GeneratorSchemes.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>GeneratorSchemes.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>GeneratorSchemes.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/GeneratorSchemes.lean#L1">source</a></p><div class="doc"><h3>Finite generator schemes with locally open endpoint maps</h3><p>A conjugated-generator basis gives a single finite scheme, with fixed
+conjugating words, whose endpoint map covers a neighborhood of the identity.
+The logarithm of that map has the identity-rank differential proved from BCH.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>def</b> <code>OAI.PolycyclicRecognition.inverseGeneratorWord</code> <small>line 29</small><div class="doc"><p>Reverse a generator word and negate its one-parameter amplitudes.</p></div><pre>def inverseGeneratorWord (w : List (I × ℝ)) : List (I × ℝ) :=
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.PolycyclicRecognition.generatorGroupWord_append</code> <small>line 34</small></li><li id=L39><b>theorem</b> <code>OAI.PolycyclicRecognition.generatorGroupWord_inverse</code> <small>line 39</small></li><li id=L54><b>def</b> <code>OAI.PolycyclicRecognition.generatorSchemeWord</code> <small>line 54</small><div class="doc"><p>Fixed conjugating words with one variable generator inserted in each.</p></div><pre>def generatorSchemeWord {n : ℕ} (w : Fin n → List (I × ℝ)) (i : Fin n → I)
+    (t : Fin n → ℝ) : List (I × ℝ) :=
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.PolycyclicRecognition.length_generatorSchemeWord</code> <small>line 59</small><div class="doc"><p>The word length is fixed even though the inserted amplitudes vary.</p></div><pre>theorem length_generatorSchemeWord {n : ℕ} (w : Fin n → List (I × ℝ)) (i : Fin n → I)
+    (t : Fin n → ℝ) :
+    (generatorSchemeWord w i t).length = ∑ k, (2 * (w k).length + 1) := by
+…</pre><p class="refs">Mentions: <a href="GeneratorSchemes.lean.html#L54">OAI.PolycyclicRecognition.generatorSchemeWord</a></p></li><li id=L70><b>theorem</b> <code>OAI.PolycyclicRecognition.generatorScheme_endpoint</code> <small>line 70</small><div class="doc"><p>Endpoint of the expanded scheme is exactly the product in the chosen
+basis directions.</p></div><pre>theorem generatorScheme_endpoint {n : ℕ}
+    (b : Basis (Fin n) ℝ L) (w : Fin n → List (I × ℝ)) (i : Fin n → I)
+    (hneg : ∀ x, Exp (-x) = (Exp x)⁻¹)
+    (hb : ∀ k (s : ℝ), Exp (s • b k) =
+      generatorGroupWord X Exp (w k) * Exp (s • X (i k)) *
+        (generatorGroupWord X Exp (w k))⁻¹)
+    (t : Fin n → ℝ) :
+    generatorGroupWord X Exp (generatorSchemeWord w i t) = basisExponentialProduct Exp b t := by
+…</pre><p class="refs">Mentions: <a href="GeneratorConjugation.lean.html#L21">OAI.PolycyclicRecognition.generatorGroupWord</a>, <a href="GeneratorSchemes.lean.html#L54">OAI.PolycyclicRecognition.generatorSchemeWord</a>, <a href="../Geometry/ExponentialProductChart.lean.html#L46">OAI.PolycyclicRecognition.basisExponentialProduct</a></p></li><li id=L96><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_local_generator_scheme</code> <small>line 96</small><div class="doc"><p>The actual finite scheme and a neighborhood covered with bounded
+variable amplitudes. All the hypotheses are algebraic representation/BCH
+identities; local surjectivity is proved, not assumed.</p></div><pre>theorem exists_local_generator_scheme
+    (hX : LieSubalgebra.lieSpan ℝ L (Set.range X) = ⊤)
+    (hExp : Function.Bijective Exp) (hzero : Exp 0 = 1)
+    (hneg : ∀ x, Exp (-x) = (Exp x)⁻¹)
+    (j : L →ₗ⁅ℝ⁆ A) (ρ : G →* Aˣ) (hρ : Function.Injective ρ)
+    (hmatch : ∀ x, ρ (Exp x) = algebraExpUnit (j x))
+    {c : ℕ} (coeff : DynkinCoefficients c (finrank ℝ L))
+    (hprod : ∀ Z : Fin (finrank ℝ L) → L,
+      (List.ofFn (fun k =&gt; Exp (Z k))).prod = Exp (finiteDynkinPolynomial coeff Z)) :
+    ∃ (w : Fin (finrank ℝ L) → List (I × ℝ)) (i : Fin (finrank ℝ L) → I)
+      (ε : ℝ), 0 &lt; ε ∧ ∀ v : L, ‖v‖ &lt; ε →
+      ∃ t : Fin (finrank ℝ L) → ℝ, ‖t‖ &lt; 1 ∧
+…</pre><p class="refs">Mentions: <a href="../Geometry/AlgebraExponential.lean.html#L17">OAI.PolycyclicRecognition.algebraExpUnit</a>, <a href="DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

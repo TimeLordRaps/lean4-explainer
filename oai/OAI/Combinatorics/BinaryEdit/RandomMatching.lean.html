@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/RandomMatching.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/RandomMatching.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>RandomMatching.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>RandomMatching.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/RandomMatching.lean#L1">source</a></p><div class="doc"><p>Exact finite counting for the prescribed-match probability in
+<code>polynomial-code.tex</code>, Lemma <code>lem:random-segments</code>.
+The constraints identify distinct target coordinates with coordinates outside
+that target set.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.constraintEquiv</code> <small>line 19</small><div class="doc"><p>The coordinates outside the prescribed right endpoints are free.</p></div><pre>noncomputable def constraintEquiv
+    (l : I → A) (r : I ↪ A) (hdisj : ∀ i j, l i ≠ r j) :
+    {f : A → B // ∀ i, f (l i) = f (r i)} ≃
+      ({a : A // a ∉ Set.range r} → B) := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.card_constraints</code> <small>line 67</small><div class="doc"><p>Each independent equality removes exactly one free coordinate.</p></div><pre>theorem card_constraints [Fintype A] [Fintype I] [Fintype B]
+    (l : I → A) (r : I ↪ A) (hdisj : ∀ i j, l i ≠ r j) :
+    Nat.card {f : A → B // ∀ i, f (l i) = f (r i)} =
+      Fintype.card B ^ (Fintype.card A - Fintype.card I) := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.card_prescribed_matching</code> <small>line 79</small><div class="doc"><p>The number of Boolean codebooks realizing one prescribed increasing
+matching in two different codewords. Only injectivity of target positions is
+needed; increasing matchings in particular satisfy it.</p></div><pre>theorem card_prescribed_matching {K P s : ℕ}
+    (i j : Fin K) (hne : i ≠ j) (u v : Fin s → Fin P)
+    (hv : Function.Injective v) :
+    Nat.card {c : Fin K × Fin P → Bool //
+      ∀ t, c (i, u t) = c (j, v t)} = 2 ^ (K * P - s) := by
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.card_prescribed_matching_curried</code> <small>line 96</small><div class="doc"><p>Curried codebooks have the same exact count.</p></div><pre>theorem card_prescribed_matching_curried {K P s : ℕ}
+    (i j : Fin K) (hne : i ≠ j) (u v : Fin s → Fin P)
+    (hv : Function.Injective v) :
+    Nat.card {c : Fin K → Fin P → Bool //
+      ∀ t, c i (u t) = c j (v t)} = 2 ^ (K * P - s) := by
+…</pre></li><li id=L110><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.card_prescribed_matching_mul</code> <small>line 110</small><div class="doc"><p>Denominator-free form of the probability <code>2^(-s)</code>.</p></div><pre>theorem card_prescribed_matching_mul {K P s : ℕ}
+    (i j : Fin K) (hne : i ≠ j) (u v : Fin s → Fin P)
+    (hv : Function.Injective v) :
+    Nat.card {c : Fin K → Fin P → Bool //
+      ∀ t, c i (u t) = c j (v t)} * 2 ^ s = 2 ^ (K * P) := by
+…</pre></li><li id=L123><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.prescribed_matching_fraction</code> <small>line 123</small><div class="doc"><p>The fraction of all independent uniform Boolean assignments satisfying a
+fixed prescribed matching equals <code>1 / 2^s</code>.</p></div><pre>theorem prescribed_matching_fraction {K P s : ℕ}
+    (i j : Fin K) (hne : i ≠ j) (u v : Fin s → Fin P)
+    (hv : Function.Injective v) :
+    (Nat.card {c : Fin K → Fin P → Bool //
+      ∀ t, c i (u t) = c j (v t)} : ℝ) / (2 : ℝ) ^ (K * P) =
+      1 / (2 : ℝ) ^ s := by
+…</pre></li><li id=L135><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.RandomMatching.filter_card_prescribed_matching</code> <small>line 135</small><div class="doc"><p>Finset form, suitable for a finite union bound over forbidden matchings.</p></div><pre>theorem filter_card_prescribed_matching {K P s : ℕ}
+    (i j : Fin K) (hne : i ≠ j) (u v : Fin s → Fin P)
+    (hv : Function.Injective v) :
+    (Finset.univ.filter (fun c : Fin K → Fin P → Bool =&gt;
+      ∀ t, c i (u t) = c j (v t))).card = 2 ^ (K * P - s) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

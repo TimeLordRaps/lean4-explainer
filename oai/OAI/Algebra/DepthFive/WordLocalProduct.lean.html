@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/WordLocalProduct.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/WordLocalProduct.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>WordLocalProduct.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>WordLocalProduct.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/WordLocalProduct.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem335.WordLocalProduct.localFactor</code> <small>line 14</small><div class="doc"><p>A per-layer factor in the normalized four-path moment bound.
+True is the diagonal type; <code>A = alpha⁻¹</code>, <code>B = beta</code>, <code>x = n⁻¹</code>.</p></div><pre>def localFactor (V : Finset ι) (R : ι → ι → Prop) (A B x : ℝ)
+    (w : ι → Bool) (i : ι) : ℝ :=
+…</pre></li><li id=L20><b>lemma</b> <code>OAI.Problem335.WordLocalProduct.localFactor_eq_parts</code> <small>line 20</small></li><li id=L32><b>theorem</b> <code>OAI.Problem335.WordLocalProduct.weight_eq_local_product</code> <small>line 32</small><div class="doc"><p>The count-based word summand is exactly the product of the normalized
+local factors, including the normal-V coincidences.</p></div><pre>theorem weight_eq_local_product (edges : Finset (ι × ι)) (V : Finset ι)
+    (R : ι → ι → Prop) (A B x : ℝ) (w : ι → Bool) :
+    IsolatedWeight.weight edges V R A B x w =
+      x ^ SwitchRestoration.switchCount edges w * ∏ i, localFactor V R A B x w i := by
+…</pre><p class="refs">Mentions: <a href="IsolatedWeight.lean.html#L111">OAI.Problem335.IsolatedWeight.weight</a>, <a href="SwitchRestoration.lean.html#L14">OAI.Problem335.SwitchRestoration.switchCount</a>, <a href="WordLocalProduct.lean.html#L14">OAI.Problem335.WordLocalProduct.localFactor</a></p></li><li id=L43><b>theorem</b> <code>OAI.Problem335.WordLocalProduct.weight_eq_inverse_local_product</code> <small>line 43</small><div class="doc"><p>An inverse-natural-power form matching the manuscript's original parameters.</p></div><pre>theorem weight_eq_inverse_local_product (edges : Finset (ι × ι)) (V : Finset ι)
+    (R : ι → ι → Prop) (a b d : ℝ) (w : ι → Bool) :
+    IsolatedWeight.weight edges V R a⁻¹ b d⁻¹ w =
+      (d ^ SwitchRestoration.switchCount edges w)⁻¹ *
+        ∏ i, if i ∈ V then
+          if w i = true then a⁻¹ else
+            1 + a⁻¹ * (d ^ (IsolatedWeight.falseNeighbors R w i).card)⁻¹
+        else if w i = true then b else 1 := by
+…</pre><p class="refs">Mentions: <a href="IsolatedWeight.lean.html#L111">OAI.Problem335.IsolatedWeight.weight</a>, <a href="SwitchRestoration.lean.html#L14">OAI.Problem335.SwitchRestoration.switchCount</a>, <a href="IsolatedWeight.lean.html#L14">OAI.Problem335.IsolatedWeight.falseNeighbors</a></p></li><li id=L54><b>lemma</b> <code>OAI.Problem335.WordLocalProduct.localFactor_nonneg</code> <small>line 54</small></li><li id=L62><b>def</b> <code>OAI.Problem335.WordLocalProduct.momentLocalFactor</code> <small>line 62</small><div class="doc"><p>Before discarding U-coincidence factors, a normal U layer may have
+weight <code>1+B</code>. The Boolean <code>coincides</code> records the relevant equality event.</p></div><pre>def momentLocalFactor (V : Finset ι) (R : ι → ι → Prop) (A B x : ℝ)
+    (w coincides : ι → Bool) (i : ι) : ℝ :=
+…</pre></li><li id=L67><b>lemma</b> <code>OAI.Problem335.WordLocalProduct.momentLocalFactor_nonneg</code> <small>line 67</small></li><li id=L76><b>lemma</b> <code>OAI.Problem335.WordLocalProduct.momentLocalFactor_le</code> <small>line 76</small></li><li id=L88><b>theorem</b> <code>OAI.Problem335.WordLocalProduct.prod_momentLocalFactor_le</code> <small>line 88</small><div class="doc"><p>The global U-coincidence cost is at most <code>(1+B)^|U|</code>, without any
+independence assumption on U layers.</p></div><pre>theorem prod_momentLocalFactor_le (V : Finset ι) (R : ι → ι → Prop)
+    {A B x : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B) (hx : 0 ≤ x)
+    (w coincides : ι → Bool) :
+    (∏ i, momentLocalFactor V R A B x w coincides i) ≤
+      (∏ i, localFactor V R A B x w i) * (1 + B) ^ (Finset.univ \ V).card := by
+…</pre><p class="refs">Mentions: <a href="WordLocalProduct.lean.html#L62">OAI.Problem335.WordLocalProduct.momentLocalFactor</a>, <a href="WordLocalProduct.lean.html#L14">OAI.Problem335.WordLocalProduct.localFactor</a></p></li><li id=L102><b>theorem</b> <code>OAI.Problem335.WordLocalProduct.switchWeighted_momentLocalFactor_le</code> <small>line 102</small><div class="doc"><p>A switch-weighted local moment product is controlled by the canonical
+word weight and the single global U-coincidence factor.</p></div><pre>theorem switchWeighted_momentLocalFactor_le (edges : Finset (ι × ι))
+    (V : Finset ι) (R : ι → ι → Prop) {A B x : ℝ}
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hx : 0 ≤ x) (w coincides : ι → Bool) :
+    x ^ SwitchRestoration.switchCount edges w *
+        (∏ i, momentLocalFactor V R A B x w coincides i) ≤
+      (1 + B) ^ (Finset.univ \ V).card * IsolatedWeight.weight edges V R A B x w := by
+…</pre><p class="refs">Mentions: <a href="SwitchRestoration.lean.html#L14">OAI.Problem335.SwitchRestoration.switchCount</a>, <a href="WordLocalProduct.lean.html#L62">OAI.Problem335.WordLocalProduct.momentLocalFactor</a>, <a href="IsolatedWeight.lean.html#L111">OAI.Problem335.IsolatedWeight.weight</a></p></li><li id=L116><b>theorem</b> <code>OAI.Problem335.WordLocalProduct.sum_switchWeighted_momentLocalFactor_le</code> <small>line 116</small><div class="doc"><p>The global moment reduction may discard all U-coincidence events,
+even when they depend jointly on the entire word.</p></div><pre>theorem sum_switchWeighted_momentLocalFactor_le (edges : Finset (ι × ι))
+    (V : Finset ι) (R : ι → ι → Prop) {A B x : ℝ}
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hx : 0 ≤ x)
+    (coincides : (ι → Bool) → ι → Bool) :
+    (∑ w : ι → Bool, x ^ SwitchRestoration.switchCount edges w *
+      (∏ i, momentLocalFactor V R A B x w (coincides w) i)) ≤
+      (1 + B) ^ (Finset.univ \ V).card *
+        ∑ w : ι → Bool, IsolatedWeight.weight edges V R A B x w := by
+…</pre><p class="refs">Mentions: <a href="SwitchRestoration.lean.html#L14">OAI.Problem335.SwitchRestoration.switchCount</a>, <a href="WordLocalProduct.lean.html#L62">OAI.Problem335.WordLocalProduct.momentLocalFactor</a>, <a href="IsolatedWeight.lean.html#L111">OAI.Problem335.IsolatedWeight.weight</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

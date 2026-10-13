@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Tensor/DirectSum.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Tensor/DirectSum.lean.html"><link rel="stylesheet" href="../../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../../index.html">All corpora</a> | <a href="../../../../../index.html">Index</a> | <a href="../../../../../glossary.html">Glossary</a> | <a href="../../../../../find.html">Find</a> | <a href="../../../../../implications.html">Implications</a> | <a href="../../../../../annotate.html">Explanation guide</a> | <a href="../../../../../learning-path.html">Learning path</a> | <a href="../../../../../trust.html">Trust</a> | <a href="../../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../../index.html">Corpus home</a> / <a href="../../../../index.html">OAI</a> / <a href="../../../index.html">LinearAlgebra</a> / <a href="../../index.html">MatrixMultiplication</a> / <a href="../index.html">AuxiliarySeparation</a> / <a href="index.html">Tensor</a> / <span>DirectSum.lean</span></nav></header><h1 class="path-title"><code><a href="../../../../index.html">OAI</a>/<a href="../../../index.html">LinearAlgebra</a>/<a href="../../index.html">MatrixMultiplication</a>/<a href="../index.html">AuxiliarySeparation</a>/<a href="index.html">Tensor</a>/<span>DirectSum.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Tensor/DirectSum.lean#L1">source</a></p><div class="doc"><h3>Binary sums of finite coefficient tensors</h3><p>The coordinate types of the summands may differ.  The identities below give
+the explicit changes of coordinates needed for the tensor semiring, together
+with the block-diagonal restriction maps.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</code> <small>line 22</small><div class="doc"><p>The binary direct sum, with each of its three block labels retained.</p></div><pre>def sumTensor (T : Tensor K X Y Z) (S : Tensor K U V W) :
+    Tensor K (X ⊕ U) (Y ⊕ V) (Z ⊕ W)
+  | .inl x, .inl y, .inl z =&gt; T x y z
+  | .inr u, .inr v, .inr w =&gt; S u v w
+  | _, _, _ =&gt; 0
+
+/-- The block-diagonal sum of two restriction matrices. -/</pre></li><li id=L29><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumRestriction</code> <small>line 29</small><div class="doc"><p>The block-diagonal sum of two restriction matrices.</p></div><pre>def sumRestriction {X&#x27; U&#x27; : Type*} (f : X&#x27; → X → K) (g : U&#x27; → U → K) :
+    (X&#x27; ⊕ U&#x27;) → (X ⊕ U) → K
+  | .inl x&#x27;, .inl x =&gt; f x&#x27; x
+  | .inr u&#x27;, .inr u =&gt; g u&#x27; u
+  | _, _ =&gt; 0
+
+/-- Independent restrictions of both summands give a restriction of the sum. -/</pre></li><li id=L36><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor_restrict</code> <small>line 36</small><div class="doc"><p>Independent restrictions of both summands give a restriction of the sum.</p></div><pre>theorem sumTensor_restrict
+    {X&#x27; Y&#x27; Z&#x27; U&#x27; V&#x27; W&#x27; : Type*}
+    [Fintype X] [Fintype Y] [Fintype Z] [Fintype U] [Fintype V] [Fintype W]
+    (f : X&#x27; → X → K) (g : Y&#x27; → Y → K) (h : Z&#x27; → Z → K)
+    (f&#x27; : U&#x27; → U → K) (g&#x27; : V&#x27; → V → K) (h&#x27; : W&#x27; → W → K)
+    (T : Tensor K X Y Z) (S : Tensor K U V W) :
+    Tensor.restrict (sumRestriction f f&#x27;) (sumRestriction g g&#x27;)
+      (sumRestriction h h&#x27;) (sumTensor T S) =
+      sumTensor (Tensor.restrict f g h T) (Tensor.restrict f&#x27; g&#x27; h&#x27; S) := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L29">OAI.MatrixMultiplication.AuxiliarySeparation.sumRestriction</a>, <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L50><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor_comm</code> <small>line 50</small><div class="doc"><p>Exchanging the two blocks is a coordinate permutation.</p></div><pre>theorem sumTensor_comm (T : Tensor K X Y Z) (S : Tensor K U V W) :
+    Tensor.pullback (Equiv.sumComm X U) (Equiv.sumComm Y V)
+      (Equiv.sumComm Z W) (sumTensor S T) = sumTensor T S := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L57><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor_assoc</code> <small>line 57</small><div class="doc"><p>Reassociating the three blocks is a coordinate permutation.</p></div><pre>theorem sumTensor_assoc (T : Tensor K X Y Z) (S : Tensor K U V W)
+    (R : Tensor K A B C) :
+    Tensor.pullback (Equiv.sumAssoc X U A) (Equiv.sumAssoc Y V B)
+      (Equiv.sumAssoc Z W C) (sumTensor T (sumTensor S R)) =
+      sumTensor (sumTensor T S) R := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L68><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor_empty_right</code> <small>line 68</small><div class="doc"><p>An empty right summand disappears under its canonical coordinates.</p></div><pre>theorem sumTensor_empty_right [IsEmpty U] [IsEmpty V] [IsEmpty W]
+    (T : Tensor K X Y Z) (S : Tensor K U V W) :
+    Tensor.pullback (Equiv.sumEmpty X U).symm (Equiv.sumEmpty Y V).symm
+      (Equiv.sumEmpty Z W).symm (sumTensor T S) = T := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L75><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor_empty_left</code> <small>line 75</small><div class="doc"><p>An empty left summand disappears under its canonical coordinates.</p></div><pre>theorem sumTensor_empty_left [IsEmpty X] [IsEmpty Y] [IsEmpty Z]
+    (T : Tensor K X Y Z) (S : Tensor K U V W) :
+    Tensor.pullback (Equiv.emptySum X U).symm (Equiv.emptySum Y V).symm
+      (Equiv.emptySum Z W).symm (sumTensor T S) = S := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L83><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor_product</code> <small>line 83</small><div class="doc"><p>Tensor product distributes over the first binary sum by coordinate
+permutation.</p></div><pre>theorem sumTensor_product (T : Tensor K X Y Z) (S : Tensor K U V W)
+    (R : Tensor K A B C) :
+    Tensor.pullback (Equiv.sumProdDistrib X U A).symm
+      (Equiv.sumProdDistrib Y V B).symm (Equiv.sumProdDistrib Z W C).symm
+      (Tensor.product (sumTensor T S) R) =
+      sumTensor (Tensor.product T R) (Tensor.product S R) := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L95><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.product_sumTensor</code> <small>line 95</small><div class="doc"><p>Tensor product distributes over the second binary sum by coordinate
+permutation.</p></div><pre>theorem product_sumTensor (T : Tensor K X Y Z) (S : Tensor K U V W)
+    (R : Tensor K A B C) :
+    Tensor.pullback (Equiv.prodSumDistrib X U A).symm
+      (Equiv.prodSumDistrib Y V B).symm (Equiv.prodSumDistrib Z W C).symm
+      (Tensor.product T (sumTensor S R)) =
+      sumTensor (Tensor.product T S) (Tensor.product T R) := by
+…</pre><p class="refs">Mentions: <a href="DirectSum.lean.html#L22">OAI.MatrixMultiplication.AuxiliarySeparation.sumTensor</a></p></li><li id=L106><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.tensorProduct_comm</code> <small>line 106</small><div class="doc"><p>Exchanging product factors is a coordinate permutation.</p></div><pre>theorem tensorProduct_comm (T : Tensor K X Y Z) (S : Tensor K U V W) :
+    Tensor.pullback (Equiv.prodComm X U) (Equiv.prodComm Y V)
+      (Equiv.prodComm Z W) (Tensor.product S T) = Tensor.product T S := by
+…</pre></li><li id=L113><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.tensorProduct_assoc</code> <small>line 113</small><div class="doc"><p>Reassociating product factors is a coordinate permutation.</p></div><pre>theorem tensorProduct_assoc (T : Tensor K X Y Z) (S : Tensor K U V W)
+    (R : Tensor K A B C) :
+    Tensor.pullback (Equiv.prodAssoc X U A) (Equiv.prodAssoc Y V B)
+      (Equiv.prodAssoc Z W C) (Tensor.product T (Tensor.product S R)) =
+      Tensor.product (Tensor.product T S) R := by
+…</pre></li><li id=L122><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.tensorProduct_one_right</code> <small>line 122</small><div class="doc"><p>Scalar multiplication by one is the right unit for tensor product.</p></div><pre>theorem tensorProduct_one_right (T : Tensor K X Y Z) :
+    Tensor.pullback (Equiv.prodPUnit X).symm (Equiv.prodPUnit Y).symm
+      (Equiv.prodPUnit Z).symm
+      (Tensor.product T (fun (_ _ _ : PUnit) =&gt; (1 : K))) = T := by
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.tensorProduct_one_left</code> <small>line 130</small><div class="doc"><p>Scalar multiplication by one is the left unit for tensor product.</p></div><pre>theorem tensorProduct_one_left (T : Tensor K X Y Z) :
+    Tensor.pullback (Equiv.punitProd X).symm (Equiv.punitProd Y).symm
+      (Equiv.punitProd Z).symm
+      (Tensor.product (fun (_ _ _ : PUnit) =&gt; (1 : K)) T) = T := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../../_assets/site.js"></script><script src="../../../../../_assets/lean2tex.js" defer></script><script src="../../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("pb", [["Usa2006P3.Pbound",252,59],["Usa2006P3.classification_iff_pbound",252,685],["Usa2006P3.classification_of_pbound",252,633],["Usa2006P3.exists_root_of_pbound",252,447],["Usa2006P3.pbound_of_classification",252,170],["Usa2006P3.pbound_of_mul_factor",252,621]]);

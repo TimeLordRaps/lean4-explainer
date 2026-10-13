@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/ConformalSausageTransfer.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/ConformalSausageTransfer.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>ConformalSausageTransfer.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>ConformalSausageTransfer.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/ConformalSausageTransfer.lean#L1">source</a></p><div class="doc"><p>Deterministic conformal area and sausage transfer in <code>rc:compact-sausage-transfer</code>
+of <em>An explicit exact Hausdorff gauge for SLE</em>. The local patches below may
+depend on the sausage point; their union need not be convex.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>lemma</b> <code>OAI.SLEExactGauge.complex_derivative_real_det</code> <small>line 17</small></li><li id=L24><b>theorem</b> <code>OAI.SLEExactGauge.conformal_area_image_lower</code> <small>line 24</small><div class="doc"><p>An injective complex differentiable map with derivative bounded below
+expands area by at least the square of that lower bound.</p></div><pre>theorem conformal_area_image_lower
+    {F F&#x27; : ℂ → ℂ} {S : Set ℂ} (hS : MeasurableSet S)
+    (hinj : InjOn F S) (hF : ∀ z ∈ S, HasDerivAt F (F&#x27; z) z)
+    {c : ℝ} (hc : 0 ≤ c) (hbound : ∀ z ∈ S, c ≤ ‖F&#x27; z‖) :
+    ENNReal.ofReal (c ^ 2) * volume S ≤ volume (F &#x27;&#x27; S) := by
+…</pre></li><li id=L39><b>theorem</b> <code>OAI.SLEExactGauge.sourceSausage_image_subset_of_lipschitz_patches</code> <small>line 39</small><div class="doc"><p>A point in a small sausage and its witnessing trace point only need to
+lie in one common Lipschitz patch. No global convexity is assumed.</p></div><pre>theorem sourceSausage_image_subset_of_lipschitz_patches
+    (F : ℂ → ℂ) (γ : ℝ≥0 → ℂ) (s t : ℝ≥0)
+    {v ell : ℝ} (hv : 0 &lt; v) (C : ℝ≥0) (hscale : (C : ℝ) * ell ≤ 1)
+    (hpatch : ∀ z ∈ sourceSausageSet γ s t (ell * v),
+      ∃ u ∈ Icc s t, dist z (γ u) &lt; ell * v ∧
+        ∃ K : Set ℂ, z ∈ K ∧ γ u ∈ K ∧ LipschitzOnWith C F K) :
+    F &#x27;&#x27; sourceSausageSet γ s t (ell * v) ⊆
+      sourceSausageSet (fun u =&gt; F (γ u)) s t v := by
+…</pre><p class="refs">Mentions: <a href="../TracePosCombined.lean.html#L580">OAI.SLEExactGauge.sourceSausageSet</a></p></li><li id=L60><b>theorem</b> <code>OAI.SLEExactGauge.sourceSausage_image_subset_of_derivative_patches</code> <small>line 60</small><div class="doc"><p>Complex derivative bounds on convex patches give the local Lipschitz
+comparison required to send the small sausage into the physical sausage.</p></div><pre>theorem sourceSausage_image_subset_of_derivative_patches
+    (F F&#x27; : ℂ → ℂ) (γ : ℝ≥0 → ℂ) (s t : ℝ≥0)
+    {v ell : ℝ} (hv : 0 &lt; v) (C : ℝ≥0) (hscale : (C : ℝ) * ell ≤ 1)
+    (hpatch : ∀ z ∈ sourceSausageSet γ s t (ell * v),
+      ∃ u ∈ Icc s t, dist z (γ u) &lt; ell * v ∧
+        ∃ K : Set ℂ, Convex ℝ K ∧ z ∈ K ∧ γ u ∈ K ∧
+          (∀ w ∈ K, HasDerivWithinAt F (F&#x27; w) K w) ∧
+          (∀ w ∈ K, ‖F&#x27; w‖₊ ≤ C)) :
+    F &#x27;&#x27; sourceSausageSet γ s t (ell * v) ⊆
+      sourceSausageSet (fun u =&gt; F (γ u)) s t v := by
+…</pre><p class="refs">Mentions: <a href="../TracePosCombined.lean.html#L580">OAI.SLEExactGauge.sourceSausageSet</a></p></li><li id=L78><b>theorem</b> <code>OAI.SLEExactGauge.normalized_conformal_area_lower</code> <small>line 78</small><div class="doc"><p>Normalize the area inequality at physical mesh <code>v</code>, expressing the
+small-mesh mass at <code>ell * v</code>. This is the exact factor in the manuscript.</p></div><pre>theorem normalized_conformal_area_lower
+    {F F&#x27; : ℂ → ℂ} {S A : Set ℂ} (hS : MeasurableSet S)
+    (hinj : InjOn F S) (hF : ∀ z ∈ S, HasDerivAt F (F&#x27; z) z)
+    {c v ell p : ℝ} (hc : 0 ≤ c) (hv : 0 &lt; v) (hell : 0 &lt; ell)
+    (hbound : ∀ z ∈ S, c ≤ ‖F&#x27; z‖) (himage : F &#x27;&#x27; S ⊆ A) :
+    ENNReal.ofReal (c ^ 2 * ell ^ p) *
+        (ENNReal.ofReal ((ell * v) ^ (-p)) * volume S) ≤
+      ENNReal.ofReal (v ^ (-p)) * volume A := by
+…</pre></li><li id=L102><b>theorem</b> <code>OAI.SLEExactGauge.sourceSausageMass_conformal_transfer</code> <small>line 102</small><div class="doc"><p>The physical sausage inside the retained middle region receives at
+least <code>c² ell^p</code> times the small-mesh normalized mass.</p></div><pre>theorem sourceSausageMass_conformal_transfer
+    (κ : ℝ) (F F&#x27; : ℂ → ℂ) (γ : ℝ≥0 → ℂ) (s t : ℝ≥0)
+    (R : Set ℂ) {c v ell : ℝ} (hc : 0 ≤ c) (hv : 0 &lt; v) (hell : 0 &lt; ell)
+    (hinj : InjOn F (sourceSausageSet γ s t (ell * v)))
+    (hF : ∀ z ∈ sourceSausageSet γ s t (ell * v), HasDerivAt F (F&#x27; z) z)
+    (hbound : ∀ z ∈ sourceSausageSet γ s t (ell * v), c ≤ ‖F&#x27; z‖)
+    (C : ℝ≥0) (hscale : (C : ℝ) * ell ≤ 1)
+    (hregion : F &#x27;&#x27; sourceSausageSet γ s t (ell * v) ⊆ R)
+    (hpatch : ∀ z ∈ sourceSausageSet γ s t (ell * v),
+      ∃ u ∈ Icc s t, dist z (γ u) &lt; ell * v ∧
+        ∃ K : Set ℂ, Convex ℝ K ∧ z ∈ K ∧ γ u ∈ K ∧
+          (∀ w ∈ K, HasDerivWithinAt F (F&#x27; w) K w) ∧
+…</pre><p class="refs">Mentions: <a href="../TracePosCombined.lean.html#L580">OAI.SLEExactGauge.sourceSausageSet</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

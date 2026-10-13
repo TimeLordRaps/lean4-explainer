@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/JetGerms.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/JetGerms.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>JetGerms.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>JetGerms.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/JetGerms.lean#L1">source</a></p><div class="doc"><h3>Local holomorphic jets and finite jet noncancellation</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.Nagata.Workers.W11.eventually_differentiableOn_normalizedThetaSeries_disk</code> <small>line 25</small><div class="doc"><p>For sufficiently small positive parameters the literal normalized theta
+series is holomorphic on the fixed unit disk. The proof takes the locally
+uniform limit of its actual finite sums of entire exponential functions.</p></div><pre>theorem eventually_differentiableOn_normalizedThetaSeries_disk
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ t in l, 0 &lt; τ t) :
+    ∀ᶠ t in l, DifferentiableOn ℂ (normalizedThetaSeries n a K ε (τ t))
+      {x : ℂ | ‖x‖ &lt; 1} := by
+…</pre></li><li id=L70><b>def</b> <code>OAI.Nagata.Workers.W11.mixedJetAtZero</code> <small>line 70</small><div class="doc"><p>First take <code>b</code> derivatives in <code>y</code>, then <code>ell</code> derivatives in <code>x</code>, at the
+origin, exactly as in the source's jet rows.</p></div><pre>def mixedJetAtZero (F : ℂ → ℂ → ℂ) (ell b : ℕ) : ℂ :=
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.Nagata.Workers.W11.mixedJetAtZero_separated</code> <small>line 75</small><div class="doc"><p>The separated-variable formula, including zero derivative orders and zero
+frequencies, holds for actual derivatives.</p></div><pre>theorem mixedJetAtZero_separated (f : ℂ → ℂ) (j : ℂ) (ell b : ℕ) :
+    mixedJetAtZero (fun x y =&gt; f x * Complex.exp (j * y)) ell b =
+      iteratedDeriv ell f 0 * j ^ b := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a></p></li><li id=L87><b>def</b> <code>OAI.Nagata.Workers.W11.separatedJetMatrix</code> <small>line 87</small><div class="doc"><p>Genuine mixed-derivative matrix on the source's fixed row and column types.</p></div><pre>def separatedJetMatrix (d : ℤ) (q m : ℕ) (a delta : ℝ)
+    (coeff : Column d (m : ℤ) a delta → ℂ → ℂ) :
+    Matrix (JetIndex q m) (Column d (m : ℤ) a delta) ℂ :=
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.Nagata.Workers.W11.tendsto_separatedJetMatrix_entries</code> <small>line 96</small><div class="doc"><p>Coefficient derivative convergence implies entrywise convergence of the
+actual mixed-derivative matrix to <code>B0</code>.</p></div><pre>theorem tendsto_separatedJetMatrix_entries
+    {α : Type*} {l : Filter α} (d : ℤ) (q m : ℕ) (a delta : ℝ)
+    (coeff : α → Column d (m : ℤ) a delta → ℂ → ℂ)
+    (hcoeff : ∀ col ell, Tendsto (fun t =&gt; iteratedDeriv ell (coeff t col) 0) l
+      (𝓝 ((col.val.2 : ℂ) ^ ell))) :
+    ∀ row col, Tendsto (fun t =&gt; separatedJetMatrix d q m a delta (coeff t) row col)
+      l (𝓝 (B0 d q m a delta row col)) := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L87">OAI.Nagata.Workers.W11.separatedJetMatrix</a></p></li><li id=L123><b>theorem</b> <code>OAI.Nagata.Workers.W11.mixedJetAtZero_congr_of_eventuallyEq</code> <small>line 123</small><div class="doc"><p>Equality on a genuine neighborhood in ℂ² implies equality of every mixed
+iterated derivative at the origin. No global identity is required.</p></div><pre>theorem mixedJetAtZero_congr_of_eventuallyEq
+    {F G : ℂ → ℂ → ℂ} (ell b : ℕ)
+    (h : ∀ᶠ z : ℂ × ℂ in 𝓝 (0, 0), F z.1 z.2 = G z.1 z.2) :
+    mixedJetAtZero F ell b = mixedJetAtZero G ell b := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a></p></li><li id=L136><b>theorem</b> <code>OAI.Nagata.Workers.W11.mixedJetAtZero_eq_zero_of_locally_zero</code> <small>line 136</small><div class="doc"><p>A scalar expression vanishing on a chart neighborhood has all its prescribed
+mixed jets zero. This is valid for each finite jet order independently.</p></div><pre>theorem mixedJetAtZero_eq_zero_of_locally_zero
+    {F : ℂ → ℂ → ℂ} (ell b : ℕ)
+    (h : ∀ᶠ z : ℂ × ℂ in 𝓝 (0, 0), F z.1 z.2 = 0) :
+    mixedJetAtZero F ell b = 0 := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a></p></li><li id=L165><b>theorem</b> <code>OAI.Nagata.Workers.W11.mixedJetAtZero_separated_sum</code> <small>line 165</small><div class="doc"><p>Actual mixed derivatives commute with the finite scalar expansion when the
+coefficient functions have the required derivatives.</p></div><pre>theorem mixedJetAtZero_separated_sum {ι : Type*} [Fintype ι]
+    (f : ι → ℂ → ℂ) (j c : ι → ℂ) (ell b : ℕ)
+    (hf : ∀ i, ContDiffAt ℂ ell (f i) 0) :
+    mixedJetAtZero (fun x y =&gt; ∑ i, c i * f i x * Complex.exp (j i * y)) ell b =
+      ∑ i, c i * (iteratedDeriv ell (f i) 0 * j i ^ b) := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a></p></li><li id=L191><b>theorem</b> <code>OAI.Nagata.Workers.W11.separatedJetMatrix_mulVec_eq_mixedJet</code> <small>line 191</small><div class="doc"><p>Multiplying the actual mixed-derivative matrix by coefficients is exactly
+the mixed jet of their finite scalar combination.</p></div><pre>theorem separatedJetMatrix_mulVec_eq_mixedJet
+    (d : ℤ) (q m : ℕ) (a delta : ℝ)
+    (coeff : Column d (m : ℤ) a delta → ℂ → ℂ)
+    (v : Column d (m : ℤ) a delta → ℂ) (row : JetIndex q m)
+    (hcoeff : ∀ col, ContDiffAt ℂ row.2.val (coeff col) 0) :
+    (separatedJetMatrix d q m a delta coeff).mulVec v row =
+      mixedJetAtZero (fun x y =&gt; ∑ col, v col * coeff col x *
+        Complex.exp ((col.val.1 : ℂ) * y)) row.2.val row.1.val := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L87">OAI.Nagata.Workers.W11.separatedJetMatrix</a>, <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a></p></li><li id=L207><b>theorem</b> <code>OAI.Nagata.Workers.W11.separatedJetMatrix_kernel_iff_mixedJets</code> <small>line 207</small><div class="doc"><p>Consequently the entire source-shaped finite jet system vanishes exactly
+when the actual scalar combination has all its prescribed mixed jets zero.</p></div><pre>theorem separatedJetMatrix_kernel_iff_mixedJets
+    (d : ℤ) (q m : ℕ) (a delta : ℝ)
+    (coeff : Column d (m : ℤ) a delta → ℂ → ℂ)
+    (v : Column d (m : ℤ) a delta → ℂ)
+    (hcoeff : ∀ row : JetIndex q m, ∀ col, ContDiffAt ℂ row.2.val (coeff col) 0) :
+    (separatedJetMatrix d q m a delta coeff).mulVec v = 0 ↔
+      ∀ row : JetIndex q m, mixedJetAtZero (fun x y =&gt; ∑ col,
+        v col * coeff col x * Complex.exp ((col.val.1 : ℂ) * y))
+        row.2.val row.1.val = 0 := by
+…</pre><p class="refs">Mentions: <a href="JetGerms.lean.html#L87">OAI.Nagata.Workers.W11.separatedJetMatrix</a>, <a href="JetGerms.lean.html#L70">OAI.Nagata.Workers.W11.mixedJetAtZero</a></p></li><li id=L245><b>theorem</b> <code>OAI.Nagata.Workers.W11.eventually_injective_finite_jet_matrix</code> <small>line 245</small><div class="doc"><p>On the manuscript's actual finite index types, its numerical parameter
+hypotheses and entrywise convergence give eventual injectivity.</p></div><pre>theorem eventually_injective_finite_jet_matrix
+    {α : Type*} {l : Filter α}
+    (d : ℤ) (q m : ℕ) (rho a delta lam : ℝ)
+    (ha : 0 &lt; a) (hm : 0 &lt; m) (hrho : 0 ≤ rho) (hdelta : 0 ≤ delta)
+    (hlam : 0 &lt; lam) (hlam1 : lam &lt; 1)
+    (hratio : 3 * ((d : ℝ) - 3 * (m : ℝ)) = (m : ℝ) * rho)
+    (hslack : rho + delta * rho / 9 &lt; lam * a - 9 * (1 - lam))
+    (hcoef : 2 * a + a ^ 2 / 9 = (q : ℝ))
+    (hmargin : 1 ≤ (q : ℝ) * (1 - lam) * m)
+    (B : α → Matrix (JetIndex q m) (Column d (m : ℤ) a delta) ℂ)
+    (hB : ∀ row col, Tendsto (fun t =&gt; B t row col) l
+      (𝓝 ((col.val.2 : ℂ) ^ row.2.val * (col.val.1 : ℂ) ^ row.1.val))) :
+…</pre></li><li id=L265><b>theorem</b> <code>OAI.Nagata.Workers.W11.finite_jet_matrix_contradiction</code> <small>line 265</small><div class="doc"><p>The fixed-index matrix contradiction under the stated numerical and kernel
+hypotheses. No regular choice of kernel vector is required.</p></div><pre>theorem finite_jet_matrix_contradiction
+    {α : Type*} {l : Filter α} [NeBot l]
+    (d : ℤ) (q m : ℕ) (rho a delta lam : ℝ)
+    (ha : 0 &lt; a) (hm : 0 &lt; m) (hrho : 0 ≤ rho) (hdelta : 0 ≤ delta)
+    (hlam : 0 &lt; lam) (hlam1 : lam &lt; 1)
+    (hratio : 3 * ((d : ℝ) - 3 * (m : ℝ)) = (m : ℝ) * rho)
+    (hslack : rho + delta * rho / 9 &lt; lam * a - 9 * (1 - lam))
+    (hcoef : 2 * a + a ^ 2 / 9 = (q : ℝ))
+    (hmargin : 1 ≤ (q : ℝ) * (1 - lam) * m)
+    (B : α → Matrix (JetIndex q m) (Column d (m : ℤ) a delta) ℂ)
+    (hB : ∀ row col, Tendsto (fun t =&gt; B t row col) l
+      (𝓝 ((col.val.2 : ℂ) ^ row.2.val * (col.val.1 : ℂ) ^ row.1.val)))
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/RecoveryRowDrift.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/RecoveryRowDrift.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>RecoveryRowDrift.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>RecoveryRowDrift.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/RecoveryRowDrift.lean#L1">source</a></p><div class="doc"><h3>Recovery-row drift from the actual errors of the unitary powers</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.KadisonKastler.diagonalAmplification_coordinate_compatibility</code> <small>line 20</small><div class="doc"><p>The diagonal amplification applies the original operator in each coordinate.</p></div><pre>theorem diagonalAmplification_coordinate_compatibility (h : H →L[ℂ] H)
+    (x : Generator.FiniteHilbert (Fin n) H) (a : Fin n) :
+    h (x a) = (hilbertMatrix (diagonalAmplification (n := Fin n) h) x) a := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/Bicommutant.lean.html#L24">OAI.Generator.FiniteHilbert</a>, <a href="HilbertMatrix.lean.html#L27">OAI.KadisonKastler.hilbertMatrix</a>, <a href="ScalarAmplification.lean.html#L16">OAI.KadisonKastler.diagonalAmplification</a></p></li><li id=L36><b>theorem</b> <code>OAI.KadisonKastler.normalized_phase_row_error</code> <small>line 36</small><div class="doc"><p>Coordinate compatibility transports a phase sum of power errors to the
+error of the corresponding normalized row.</p></div><pre>theorem normalized_phase_row_error
+    (h : H →L[ℂ] H)
+    (T : Generator.FiniteHilbert (Fin n) H →L[ℂ] Generator.FiniteHilbert (Fin n) H)
+    (hcoord : ∀ x : Generator.FiniteHilbert (Fin n) H, ∀ a, h (x a) = (T x) a)
+    (χ : I → Ω → ℂ) (X Y : I → Generator.FiniteHilbert (Fin n) H)
+    (s t : ℝ) (z : Ω) (a : Fin n) :
+    h (s • (t • finitePhaseSum χ X z) a) - s • (t • finitePhaseSum χ Y z) a =
+      s • (t • finitePhaseSum χ (fun r =&gt; T (X r) - Y r) z) a := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/Bicommutant.lean.html#L24">OAI.Generator.FiniteHilbert</a>, <a href="FinitePhases.lean.html#L24">OAI.KadisonKastler.finitePhaseSum</a></p></li><li id=L51><b>theorem</b> <code>OAI.KadisonKastler.recoveryForwardRows_drift_le</code> <small>line 51</small><div class="doc"><p>A uniform power-error bound in RMS gives the same bound for the actual
+forward recovery rows after the independent scalar phase and coordinate choice.</p></div><pre>theorem recoveryForwardRows_drift_le (M : VonNeumannAlgebra H)
+    (h : H →L[ℂ] H)
+    (T : Generator.FiniteHilbert (Fin n) H →L[ℂ] Generator.FiniteHilbert (Fin n) H)
+    (hcoord : ∀ x : Generator.FiniteHilbert (Fin n) H, ∀ a, h (x a) = (T x) a)
+    (v : Θ → unitary (Algebra (matrixVonNeumann (ι := Fin n) M)))
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/Bicommutant.lean.html#L24">OAI.Generator.FiniteHilbert</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="MatrixVonNeumann.lean.html#L47">OAI.KadisonKastler.matrixVonNeumann</a></p></li><li id=L79><b>theorem</b> <code>OAI.KadisonKastler.recoveryBackwardRows_drift_le</code> <small>line 79</small><div class="doc"><p>The adjoint power errors control the backward rows, with comparison
+vector <code>T ξ</code> as needed in the scalar quadratic estimate.</p></div><pre>theorem recoveryBackwardRows_drift_le (M : VonNeumannAlgebra H)
+    (h : H →L[ℂ] H)
+    (T : Generator.FiniteHilbert (Fin n) H →L[ℂ] Generator.FiniteHilbert (Fin n) H)
+    (hcoord : ∀ x : Generator.FiniteHilbert (Fin n) H, ∀ a, h (x a) = (T x) a)
+    (v : Θ → unitary (Algebra (matrixVonNeumann (ι := Fin n) M)))
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/Bicommutant.lean.html#L24">OAI.Generator.FiniteHilbert</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="MatrixVonNeumann.lean.html#L47">OAI.KadisonKastler.matrixVonNeumann</a></p></li><li id=L110><b>theorem</b> <code>OAI.KadisonKastler.eventually_recoveryForwardRows_drift_le</code> <small>line 110</small><div class="doc"><p>Finitely many eventual power bounds give the eventual forward-row bound
+with the same arbitrary error tolerance.</p></div><pre>theorem eventually_recoveryForwardRows_drift_le (M : VonNeumannAlgebra H)
+    (l : Filter J) (h : H →L[ℂ] H)
+    (T : Generator.FiniteHilbert (Fin n) H →L[ℂ] Generator.FiniteHilbert (Fin n) H)
+    (hcoord : ∀ x : Generator.FiniteHilbert (Fin n) H, ∀ a, h (x a) = (T x) a)
+    (v : J → Θ → unitary (Algebra (matrixVonNeumann (ι := Fin n) M)))
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/Bicommutant.lean.html#L24">OAI.Generator.FiniteHilbert</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="MatrixVonNeumann.lean.html#L47">OAI.KadisonKastler.matrixVonNeumann</a></p></li><li id=L136><b>theorem</b> <code>OAI.KadisonKastler.eventually_recoveryBackwardRows_drift_le</code> <small>line 136</small><div class="doc"><p>The same finite intersection of eventual events controls the backward rows.</p></div><pre>theorem eventually_recoveryBackwardRows_drift_le (M : VonNeumannAlgebra H)
+    (l : Filter J) (h : H →L[ℂ] H)
+    (T : Generator.FiniteHilbert (Fin n) H →L[ℂ] Generator.FiniteHilbert (Fin n) H)
+    (hcoord : ∀ x : Generator.FiniteHilbert (Fin n) H, ∀ a, h (x a) = (T x) a)
+    (v : J → Θ → unitary (Algebra (matrixVonNeumann (ι := Fin n) M)))
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/Bicommutant.lean.html#L24">OAI.Generator.FiniteHilbert</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="MatrixVonNeumann.lean.html#L47">OAI.KadisonKastler.matrixVonNeumann</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

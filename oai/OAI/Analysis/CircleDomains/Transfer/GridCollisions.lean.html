@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/GridCollisions.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/GridCollisions.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>GridCollisions.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>GridCollisions.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/GridCollisions.lean#L1">source</a></p><div class="doc"><h3>Finite terminal flags from actual independent grid shifts</h3><p>For two different coordinate labels, their lattice-hit events have
+product probability. Countably many flagged points and finitely many
+label pairs can therefore be counted by Tonelli. Square-summable band
+widths imply a finite expected collision count, hence only finitely many
+flagged collisions for almost every choice of the grids.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.pairedLatticeIncidence</code> <small>line 22</small></li><li id=L26><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.measurableSet_pairedLatticeIncidence</code> <small>line 26</small></li><li id=L32><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.measure_pairedLatticeIncidence_le</code> <small>line 32</small></li><li id=L46><b>def</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.gridCollisionCount</code> <small>line 46</small></li><li id=L55><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.lintegral_gridCollisionCount_le</code> <small>line 55</small><div class="doc"><p>Exact pair laws and Tonelli yield the expected collision bound.</p></div><pre>theorem lintegral_gridCollisionCount_le {n : ℕ} {P S : Type*}
+    [Fintype P] [Countable S] {h : ℝ} (hh : 0 &lt; h)
+    (pairs : P → Fin n × Fin n) (hpairs : ∀ p, (pairs p).1 ≠ (pairs p).2)
+    (a b : Fin n → S → ℝ) :
+    (∫⁻ θ, gridCollisionCount h pairs a b θ
+      ∂Measure.pi (fun _ : Fin n =&gt; shiftLaw h)) ≤
+      ∑ p, ∑&#x27; s, ENNReal.ofReal (min 1 ((b (pairs p).1 s - a (pairs p).1 s) / h)) *
+        ENNReal.ofReal (min 1 ((b (pairs p).2 s - a (pairs p).2 s) / h)) := by
+…</pre><p class="refs">Mentions: <a href="GridCollisions.lean.html#L46">OAI.CircleDomainRigidity.FiniteTransfer.gridCollisionCount</a>, <a href="../Probability/RandomShifts.lean.html#L22">OAI.CircleDomainRigidity.FiniteTransfer.shiftLaw</a></p></li><li id=L74><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.summable_grid_pair_probabilities</code> <small>line 74</small><div class="doc"><p>The product majorant for two square-summable band widths is
+summable at every positive grid spacing.</p></div><pre>theorem summable_grid_pair_probabilities {S : Type*} {h : ℝ} (hh : 0 &lt; h)
+    (a b : S → ℝ) (ha : ∀ s, 0 ≤ a s) (hb : ∀ s, 0 ≤ b s)
+    (ha2 : Summable (fun s =&gt; a s ^ 2)) (hb2 : Summable (fun s =&gt; b s ^ 2)) :
+    Summable (fun s =&gt; min 1 (a s / h) * min 1 (b s / h)) := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.tsum_grid_pair_probabilities_lt_top</code> <small>line 89</small></li><li id=L109><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.lintegral_gridCollisionCount_lt_top</code> <small>line 109</small><div class="doc"><p>Square-summable band widths make the actual expected collision
+count finite, rather than merely a formal upper bound.</p></div><pre>theorem lintegral_gridCollisionCount_lt_top {n : ℕ} {P S : Type*}
+    [Fintype P] [Countable S] {h : ℝ} (hh : 0 &lt; h)
+    (pairs : P → Fin n × Fin n) (hpairs : ∀ p, (pairs p).1 ≠ (pairs p).2)
+    (a b : Fin n → S → ℝ)
+    (hwidth : ∀ i s, 0 ≤ b i s - a i s)
+    (hwidth2 : ∀ i, Summable (fun s =&gt; (b i s - a i s) ^ 2)) :
+    (∫⁻ θ, gridCollisionCount h pairs a b θ
+      ∂Measure.pi (fun _ : Fin n =&gt; shiftLaw h)) &lt; ∞ := by
+…</pre><p class="refs">Mentions: <a href="GridCollisions.lean.html#L46">OAI.CircleDomainRigidity.FiniteTransfer.gridCollisionCount</a>, <a href="../Probability/RandomShifts.lean.html#L22">OAI.CircleDomainRigidity.FiniteTransfer.shiftLaw</a></p></li><li id=L129><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.ae_finite_grid_collision_flags</code> <small>line 129</small><div class="doc"><p>A finite expected collision count has only finitely many active
+pair/flag incidences almost surely. Thus its projection onto flagged
+points is finite as well.</p></div><pre>theorem ae_finite_grid_collision_flags {n : ℕ} {P S : Type*}
+    [Fintype P] [Countable S] {h : ℝ} (hh : 0 &lt; h)
+    (pairs : P → Fin n × Fin n) (a b : Fin n → S → ℝ)
+    (hfinite : (∫⁻ θ, gridCollisionCount h pairs a b θ
+      ∂Measure.pi (fun _ : Fin n =&gt; shiftLaw h)) &lt; ∞) :
+    ∀ᵐ θ ∂Measure.pi (fun _ : Fin n =&gt; shiftLaw h),
+      {s | ∃ p, θ ∈ pairedLatticeIncidence h (a (pairs p).1 s) (b (pairs p).1 s)
+        (a (pairs p).2 s) (b (pairs p).2 s) (pairs p).1 (pairs p).2}.Finite := by
+…</pre><p class="refs">Mentions: <a href="GridCollisions.lean.html#L46">OAI.CircleDomainRigidity.FiniteTransfer.gridCollisionCount</a>, <a href="../Probability/RandomShifts.lean.html#L22">OAI.CircleDomainRigidity.FiniteTransfer.shiftLaw</a>, <a href="GridCollisions.lean.html#L22">OAI.CircleDomainRigidity.FiniteTransfer.pairedLatticeIncidence</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

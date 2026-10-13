@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/Incidence.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/Incidence.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>Incidence.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>Incidence.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/Incidence.lean#L1">source</a></p><div class="doc"><h3>Projective incidence and closed multiplicity support loci; Geometric realization of universal multiplicity reduction</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Nagata.Workers.W25.guarded_chart_gluing</code> <small>line 20</small><div class="doc"><p>Equations attached to an open-chart cover glue when each equation vanishes
+outside its own chart. No finiteness is needed for this logical step.</p></div><pre>theorem guarded_chart_gluing {C X : Type*} {I : C → Type*}
+    (U : C → X → Prop) (Z : (c : C) → I c → X → Prop) (S : X → Prop)
+    (hcover : ∀ x, ∃ c, U c x)
+    (houtside : ∀ c e x, ¬ U c x → Z c e x)
+    (hlocal : ∀ c x, U c x → (S x ↔ ∀ e, Z c e x)) :
+    ∀ x, S x ↔ ∀ c e, Z c e x := by
+…</pre></li><li id=L53><b>def</b> <code>OAI.Nagata.ProjectiveGeometry.guardedEquation</code> <small>line 53</small><div class="doc"><p>An actual guarded multihomogeneous extension of an affine chart equation.</p></div><pre>def guardedEquation {r : ℕ} (c : ConfigurationChart r)
+    (f : MvPolynomial (Fin r × Fin 2) ℂ) : MultihomogeneousEquation r where
+…</pre><p class="refs">Mentions: <a href="Configuration.lean.html#L452">OAI.Nagata.ProjectiveGeometry.ConfigurationChart</a></p></li><li id=L59><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.guardedEquation_vanishes_outside</code> <small>line 59</small></li><li id=L69><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.guardedEquation_vanishes_iff</code> <small>line 69</small><div class="doc"><p>Inside its own chart, the guarded homogeneous equation has exactly the
+same zeros as the original affine polynomial.</p></div><pre>theorem guardedEquation_vanishes_iff {r : ℕ} (c : ConfigurationChart r)
+    (f : MvPolynomial (Fin r × Fin 2) ℂ) (p : Fin r → PlanePoint)
+    (hp : InConfigurationChart c p) :
+    equationVanishes (guardedEquation c f) p ↔
+      MvPolynomial.eval (configurationChartCoordinates₂ c p) f = 0 := by
+…</pre><p class="refs">Mentions: <a href="Configuration.lean.html#L452">OAI.Nagata.ProjectiveGeometry.ConfigurationChart</a>, <a href="../../../ComparatorChallenges/Nagata.lean.html#L101">OAI.Nagata.ProjectiveGeometry.PlanePoint</a>, <a href="Configuration.lean.html#L454">OAI.Nagata.ProjectiveGeometry.InConfigurationChart</a>, <a href="Incidence.lean.html#L53">OAI.Nagata.ProjectiveGeometry.guardedEquation</a>, <a href="Configuration.lean.html#L458">OAI.Nagata.ProjectiveGeometry.configurationChartCoordinates₂</a></p></li><li id=L78><b>def</b> <code>OAI.Nagata.ProjectiveGeometry.productCommonZeroLocus</code> <small>line 78</small></li><li id=L82><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.isProductZariskiClosed_commonZeroLocus</code> <small>line 82</small></li><li id=L96><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.productClosed_of_chart_polynomial_equations</code> <small>line 96</small><div class="doc"><p>The ambient version of chartwise polynomial closedness, needed to identify
+the multihomogeneous topology with the standard simultaneous affine charts.</p></div><pre>theorem productClosed_of_chart_polynomial_equations {r : ℕ}
+    {I : ConfigurationChart r → Type*}
+    (f : (c : ConfigurationChart r) → I c → MvPolynomial (Fin r × Fin 2) ℂ)
+    (S : Set (Fin r → PlanePoint))
+    (hlocal : ∀ c p, InConfigurationChart c p →
+      (p ∈ S ↔ ∀ e, MvPolynomial.eval (configurationChartCoordinates₂ c p) (f c e) = 0)) :
+    IsProductZariskiClosed S := by
+…</pre><p class="refs">Mentions: <a href="Configuration.lean.html#L452">OAI.Nagata.ProjectiveGeometry.ConfigurationChart</a>, <a href="../../../ComparatorChallenges/Nagata.lean.html#L101">OAI.Nagata.ProjectiveGeometry.PlanePoint</a>, <a href="Configuration.lean.html#L454">OAI.Nagata.ProjectiveGeometry.InConfigurationChart</a>, <a href="Configuration.lean.html#L458">OAI.Nagata.ProjectiveGeometry.configurationChartCoordinates₂</a></p></li><li id=L125><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.configurationClosed_of_guarded_equations</code> <small>line 125</small><div class="doc"><p>Guarded polynomial equations on all charts produce a relatively closed
+subset of the actual ordered configuration space. Each hypothesis is a
+concrete vanishing identity or chart membership statement.</p></div><pre>theorem configurationClosed_of_guarded_equations {r : ℕ}
+    {I : ConfigurationChart r → Type*}
+    (G : (c : ConfigurationChart r) → I c → MultihomogeneousEquation r)
+    (S : Set (OrderedDistinctPoints r))
+    (houtside : ∀ c e (p : OrderedDistinctPoints r),
+      ¬ InConfigurationChart c p.val → equationVanishes (G c e) p.val)
+    (hlocal : ∀ c p, InConfigurationChart c p.val →
+      (p ∈ S ↔ ∀ e, equationVanishes (G c e) p.val)) :
+    IsConfigurationZariskiClosed S := by
+…</pre><p class="refs">Mentions: <a href="Configuration.lean.html#L452">OAI.Nagata.ProjectiveGeometry.ConfigurationChart</a>, <a href="Configuration.lean.html#L454">OAI.Nagata.ProjectiveGeometry.InConfigurationChart</a></p></li><li id=L151><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.configurationClosed_of_chart_polynomial_equations</code> <small>line 151</small><div class="doc"><p>Polynomial equations in every simultaneous affine chart glue to the
+genuine multihomogeneous Zariski closedness definition. The guarding polynomials,
+boundary vanishing, and normalization factors are all constructed above.</p></div><pre>theorem configurationClosed_of_chart_polynomial_equations {r : ℕ}
+    {I : ConfigurationChart r → Type*}
+    (f : (c : ConfigurationChart r) → I c → MvPolynomial (Fin r × Fin 2) ℂ)
+    (S : Set (OrderedDistinctPoints r))
+    (hlocal : ∀ c p, InConfigurationChart c p.val →
+      (p ∈ S ↔ ∀ e, MvPolynomial.eval (configurationChartCoordinates₂ c p.val) (f c e) = 0)) :
+    IsConfigurationZariskiClosed S := by
+…</pre><p class="refs">Mentions: <a href="Configuration.lean.html#L452">OAI.Nagata.ProjectiveGeometry.ConfigurationChart</a>, <a href="Configuration.lean.html#L454">OAI.Nagata.ProjectiveGeometry.InConfigurationChart</a>, <a href="Configuration.lean.html#L458">OAI.Nagata.ProjectiveGeometry.configurationChartCoordinates₂</a></p></li><li id=L187><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.multiplicityAtLeast_iff_directChart</code> <small>line 187</small></li><li id=L198><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.supportLocus_iff_chart_minors</code> <small>line 198</small><div class="doc"><p>On any containing simultaneous chart the genuine projective support locus
+is exactly the zero set of the actual global-form matrix minors.</p></div><pre>theorem supportLocus_iff_chart_minors (r : ℕ) (index : Workers.W25.IncidenceIndex r)
+    (c : ConfigurationChart r) (p : OrderedDistinctPoints r)
+    (hp : InConfigurationChart c p.val) :
+    p ∈ W13.supportLocus r index ↔
+      ∀ s : W27.HomogeneousMonomial index.1.val → W27.PlaneJet r index.2,
+        MvPolynomial.eval (configurationChartCoordinates₂ c p.val)
+          (W27.minorPolynomial (W27.chartPlaneJetMatrix (R := ℂ) c index.1.val index.2) s) = 0 := by
+…</pre><p class="refs">Mentions: <a href="Avoidance.lean.html#L21">OAI.Nagata.Workers.W25.IncidenceIndex</a>, <a href="Configuration.lean.html#L452">OAI.Nagata.ProjectiveGeometry.ConfigurationChart</a>, <a href="Configuration.lean.html#L454">OAI.Nagata.ProjectiveGeometry.InConfigurationChart</a>, <a href="UniversalReduction.lean.html#L170">OAI.Nagata.W13.supportLocus</a>, <a href="ChartJets.lean.html#L172">OAI.Nagata.W27.HomogeneousMonomial</a>, <a href="ChartJets.lean.html#L31">OAI.Nagata.W27.PlaneJet</a>, <a href="Configuration.lean.html#L458">OAI.Nagata.ProjectiveGeometry.configurationChartCoordinates₂</a>, <a href="ChartJets.lean.html#L304">OAI.Nagata.W27.minorPolynomial</a>, <a href="ChartJets.lean.html#L675">OAI.Nagata.W27.chartPlaneJetMatrix</a></p></li><li id=L228><b>theorem</b> <code>OAI.Nagata.ProjectiveGeometry.supportLocus_isConfigurationZariskiClosed</code> <small>line 228</small><div class="doc"><p>Closedness required by manuscript §1, Lemma <code>lem:universal</code>, for every
+positive degree and every unequal nonnegative multiplicity vector.</p></div><pre>theorem supportLocus_isConfigurationZariskiClosed (r : ℕ)
+    (index : Workers.W25.IncidenceIndex r) :
+    IsConfigurationZariskiClosed (W13.supportLocus r index) := by
+…</pre><p class="refs">Mentions: <a href="Avoidance.lean.html#L21">OAI.Nagata.Workers.W25.IncidenceIndex</a>, <a href="UniversalReduction.lean.html#L170">OAI.Nagata.W13.supportLocus</a></p></li><li id=L264><b>theorem</b> <code>OAI.Nagata.W13.universal_reduction</code> <small>line 264</small><div class="doc"><p>The full source universal reduction for genuine projective configurations,
+actual homogeneous forms, and ordinary chart ideal-power conditions.</p></div><pre>theorem universal_reduction (r : ℕ) (hr : 10 ≤ r) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints r),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints r, ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints r, (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ F : MvPolynomial (Fin 3) ℂ, F ≠ 0 → F.IsHomogeneous d →
+        ∀ m : Fin r → ℕ,
+          (∀ i, multiplicityAtLeast F (p.val i) (m i)) →
+          (d : ℝ) * Real.sqrt r ≤ ∑ i, (m i : ℝ) →
+          ∃ D M : ℕ, 0 &lt; D ∧ 0 &lt; M ∧ (D : ℝ) / M ≤ Real.sqrt r ∧
+            UniversalSupport r D (fun _ =&gt; M) :=
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L282><b>theorem</b> <code>OAI.Nagata.W13.strict_bound_of_no_universal</code> <small>line 282</small><div class="doc"><p>Conditional consequence: actual projective closedness is supplied, but
+excluding all positive equal-multiplicity universal systems remains an explicit
+input, including the square-case equality boundary.</p></div><pre>theorem strict_bound_of_no_universal (r : ℕ) (hr : 10 ≤ r)
+    (hno : ∀ D M : ℕ, 0 &lt; D → 0 &lt; M →
+      (D : ℝ) / M ≤ Real.sqrt r → ¬ UniversalSupport r D (fun _ =&gt; M)) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints r),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints r, ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints r, (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ F : MvPolynomial (Fin 3) ℂ, F ≠ 0 → F.IsHomogeneous d →
+        ∀ m : Fin r → ℕ,
+          (∀ i, multiplicityAtLeast F (p.val i) (m i)) →
+          (∑ i, (m i : ℝ)) &lt; (d : ℝ) * Real.sqrt r :=
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

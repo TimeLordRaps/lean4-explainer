@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/Bounds/QuotientRunPaths.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/Bounds/QuotientRunPaths.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">Bounds</a> / <span>QuotientRunPaths.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">Bounds</a>/<span>QuotientRunPaths.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/Bounds/QuotientRunPaths.lean#L1">source</a></p><div class="doc"><p>Constant perfect runs give the concrete reduced paths used by column coding.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.TwoPointCorrelations.QuotientRunData</code> <small>line 16</small><div class="doc"><p>Each transition ends a nonzero constant run and starts the next regular
+label on its common quotient line. These are local conditions on departures.</p></div><pre>def QuotientRunData (D : Submodule K (α → K))
+    (anchor : ι → (α → K) ⧸ D) (regularLabel : ι → α)
+    (label : ℕ → α) (coefficient : ℕ → K) (a : ℕ) (i : ι) :
+    List (ℕ × ι) → Prop
+  | [] =&gt; True
+  | (b, j) :: rest =&gt;
+      a ≤ b ∧ (∀ t ∈ Ico a b, label t = regularLabel i) ∧
+      (∑ t ∈ Ico a b, coefficient t) ≠ 0 ∧ i ≠ j ∧
+      (∃ c : K, D.mkQ (formalDeparture label coefficient b) = anchor j +
+        c • D.mkQ (Pi.basisFun K α (regularLabel j))) ∧
+      QuotientRunData D anchor regularLabel label coefficient b j rest</pre><p class="refs">Mentions: <a href="FormalDepartures.lean.html#L15">OAI.TwoPointCorrelations.formalDeparture</a></p></li><li id=L28><b>def</b> <code>OAI.TwoPointCorrelations.quotientRunSteps</code> <small>line 28</small></li><li id=L33><b>theorem</b> <code>OAI.TwoPointCorrelations.quotientRunData_incidenceChain</code> <small>line 33</small><div class="doc"><p>Both adjacent lines contain the exact common departure at a transition.</p></div><pre>theorem quotientRunData_incidenceChain (D : Submodule K (α → K))
+    (anchor : ι → (α → K) ⧸ D) (regularLabel : ι → α)
+    (label : ℕ → α) (coefficient : ℕ → K) (a : ℕ) (i : ι) (steps : List (ℕ × ι))
+    (hstart : ∃ c : K, D.mkQ (formalDeparture label coefficient a) = anchor i +
+      c • D.mkQ (Pi.basisFun K α (regularLabel i)))
+    (hdata : QuotientRunData D anchor regularLabel label coefficient a i steps) :
+    IncidenceChain (K := K) anchor (fun j =&gt; D.mkQ (Pi.basisFun K α (regularLabel j))) i
+…</pre><p class="refs">Mentions: <a href="FormalDepartures.lean.html#L15">OAI.TwoPointCorrelations.formalDeparture</a>, <a href="QuotientRunPaths.lean.html#L16">OAI.TwoPointCorrelations.QuotientRunData</a>, <a href="../Walks/ReducedIncidenceWalk.lean.html#L45">OAI.TwoPointCorrelations.IncidenceChain</a></p></li><li id=L52><b>theorem</b> <code>OAI.TwoPointCorrelations.quotientRunData_reduced</code> <small>line 52</small><div class="doc"><p>Nonzero numerical runs prohibit point--line--point reversal; distinct
+adjacent run labels prohibit line--point--line reversal.</p></div><pre>theorem quotientRunData_reduced (D : Submodule K (α → K))
+    (anchor : ι → (α → K) ⧸ D) (regularLabel : ι → α)
+    (label : ℕ → α) (coefficient : ℕ → K)
+    (hdir : ∀ j, D.mkQ (Pi.basisFun K α (regularLabel j)) ≠ 0)
+    (a : ℕ) (i : ι) (steps : List (ℕ × ι))
+    (hdata : QuotientRunData D anchor regularLabel label coefficient a i steps) :
+    IncidenceReduced i (quotientRunSteps D label coefficient steps) := by
+…</pre><p class="refs">Mentions: <a href="QuotientRunPaths.lean.html#L16">OAI.TwoPointCorrelations.QuotientRunData</a>, <a href="../Walks/ReducedIncidenceWalk.lean.html#L53">OAI.TwoPointCorrelations.IncidenceReduced</a>, <a href="QuotientRunPaths.lean.html#L28">OAI.TwoPointCorrelations.quotientRunSteps</a></p></li><li id=L79><b>theorem</b> <code>OAI.TwoPointCorrelations.quotientRunData_simple</code> <small>line 79</small><div class="doc"><p>The path support consists of exactly the canonical regular run lines
+alternating with their actual transition departures.</p></div><pre>theorem quotientRunData_simple (D : Submodule K (α → K))
+    (anchor : ι → (α → K) ⧸ D) (regularLabel : ι → α)
+    (label : ℕ → α) (coefficient : ℕ → K)
+    (hind : LinearIndependent K (fun j =&gt; D.mkQ (Pi.basisFun K α (regularLabel j))))
+    (a : ℕ) (i : ι) (steps : List (ℕ × ι))
+    (hstart : ∃ c : K, D.mkQ (formalDeparture label coefficient a) = anchor i +
+      c • D.mkQ (Pi.basisFun K α (regularLabel i)))
+    (hdata : QuotientRunData D anchor regularLabel label coefficient a i steps) :
+    (Walk.ofSupport (incidenceVertices i (quotientRunSteps D label coefficient steps))
+      (incidenceVertices_ne_nil _ _)
+      (incidenceVertices_isChain anchor _ _ _
+        (quotientRunData_incidenceChain D anchor regularLabel label coefficient a i steps hstart hdata))).IsPath := by
+…</pre><p class="refs">Mentions: <a href="FormalDepartures.lean.html#L15">OAI.TwoPointCorrelations.formalDeparture</a>, <a href="QuotientRunPaths.lean.html#L16">OAI.TwoPointCorrelations.QuotientRunData</a>, <a href="../Walks/ReducedIncidenceWalk.lean.html#L41">OAI.TwoPointCorrelations.incidenceVertices</a>, <a href="QuotientRunPaths.lean.html#L28">OAI.TwoPointCorrelations.quotientRunSteps</a>, <a href="../Walks/ReducedIncidenceWalk.lean.html#L59">OAI.TwoPointCorrelations.incidenceVertices_ne_nil</a>, <a href="../Walks/ReducedIncidenceWalk.lean.html#L63">OAI.TwoPointCorrelations.incidenceVertices_isChain</a>, <a href="QuotientRunPaths.lean.html#L33">OAI.TwoPointCorrelations.quotientRunData_incidenceChain</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

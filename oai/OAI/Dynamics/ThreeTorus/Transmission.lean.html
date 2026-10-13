@@ -1,0 +1,89 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/ThreeTorus/Transmission.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/ThreeTorus/Transmission.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">ThreeTorus</a> / <span>Transmission.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">ThreeTorus</a>/<span>Transmission.lean</span></code></h1><p class="muted">35 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/ThreeTorus/Transmission.lean#L1">source</a></p><div class="doc"><p>Law averaging and weighted errors, folded packet transmission, and concrete signal-circle comparison.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>lemma</b> <code>OAI.ThreeTorus.continuousAt_scaled_periodization_compact</code> <small>line 33</small><div class="doc"><p>Compactly supported realized laws have a locally finite scaled lattice sum,
+jointly in the nonzero scale and the unfolded circle coordinate.</p></div><pre>lemma continuousAt_scaled_periodization_compact {q : ℝ → ℝ} (hq : Continuous q)
+    (hc : HasCompactSupport q) {p : ℝ × ℝ} (hp : p.1 ≠ 0) :
+    ContinuousAt (fun v : ℝ × ℝ =&gt; periodizedReal (scaledDensity q v.1) v.2) p := by
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L1989">OAI.ThreeTorus.periodizedReal</a>, <a href="PositiveLaws.lean.html#L1127">OAI.ThreeTorus.scaledDensity</a></p></li><li id=L80><b>lemma</b> <code>OAI.ThreeTorus.continuousAt_scaled_periodization_bandlimited</code> <small>line 80</small><div class="doc"><p>Compact bandwidth gives local joint continuity of the ideal law's folded density.</p></div><pre>lemma continuousAt_scaled_periodization_bandlimited {q : ℝ → ℝ} (hq : Continuous q)
+    (hqi : Integrable q) {C : ℝ} (hC : 0 ≤ C) (hb : ∀ y, |q y| ≤ C/(1+y^2))
+    {D : ℝ} (hF : ∀ v, D &lt; |v| → 𝓕 (fun y =&gt; (q y : ℂ)) v = 0)
+    {p : ℝ × ℝ} (hp : p.1 ≠ 0) :
+    ContinuousAt (fun v : ℝ × ℝ =&gt; periodizedReal (scaledDensity q v.1) v.2) p := by
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L1989">OAI.ThreeTorus.periodizedReal</a>, <a href="PositiveLaws.lean.html#L1127">OAI.ThreeTorus.scaledDensity</a></p></li><li id=L116><b>lemma</b> <code>OAI.ThreeTorus.continuous_weighted_fold_difference</code> <small>line 116</small></li><li id=L143><b>lemma</b> <code>OAI.ThreeTorus.scaled_fold_l1_difference</code> <small>line 143</small><div class="doc"><p>Scaling and folding are contractions for the total variation distance of
+real densities, including subprobability densities and negative scales.</p></div><pre>lemma scaled_fold_l1_difference {q r : ℝ → ℝ} (hqm : Measurable q) (hqi : Integrable q)
+    (hrm : Measurable r) (hri : Integrable r) {s : ℝ} (hs : s ≠ 0) :
+    (∫ y, |foldCircleDensity (scaledDensity q s) y-foldCircleDensity (scaledDensity r s) y|
+      ∂AddCircle.haarAddCircle) ≤ ∫ x, |q x-r x| := by
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L1991">OAI.ThreeTorus.foldCircleDensity</a>, <a href="PositiveLaws.lean.html#L1127">OAI.ThreeTorus.scaledDensity</a></p></li><li id=L160><b>theorem</b> <code>OAI.ThreeTorus.weighted_fold_law_average</code> <small>line 160</small><div class="doc"><p>Exact fast law comparison, with the missing mass of the
+realized subprobability included. All arbitrary offsets are allowed.</p></div><pre>theorem weighted_fold_law_average {w q r : ℝ → ℝ}
+    (hw : Continuous w) (hwc : HasCompactSupport w) (hw0 : 0 ∉ tsupport w)
+    (hwn : ∀ s, 0 ≤ w s)
+    (hq : Continuous q) (hqc : HasCompactSupport q)
+    (hr : Continuous r) (hri : Integrable r) {C : ℝ} (hC : 0 ≤ C)
+    (hb : ∀ y, |r y| ≤ C/(1+y^2)) {D : ℝ}
+    (hF : ∀ v, D &lt; |v| → 𝓕 (fun y =&gt; (r y : ℂ)) v = 0)
+    (β : ℕ → UnitAddCircle) :
+    Tendsto (fun n : ℕ =&gt; ∫ s, w s *
+      |foldCircleDensity (scaledDensity q s) ((((n:ℝ)*s:ℝ):UnitAddCircle)+β n)-
+        foldCircleDensity (scaledDensity r s) ((((n:ℝ)*s:ℝ):UnitAddCircle)+β n)|) atTop
+      (𝓝 (∫ s, w s * ∫ y,
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L1991">OAI.ThreeTorus.foldCircleDensity</a>, <a href="PositiveLaws.lean.html#L1127">OAI.ThreeTorus.scaledDensity</a></p></li><li id=L211><b>lemma</b> <code>OAI.ThreeTorus.continuous_weighted_fold_of_local</code> <small>line 211</small></li><li id=L230><b>lemma</b> <code>OAI.ThreeTorus.continuous_weighted_fold_compact</code> <small>line 230</small></li><li id=L235><b>lemma</b> <code>OAI.ThreeTorus.continuous_weighted_fold_bandlimited</code> <small>line 235</small></li><li id=L243><b>lemma</b> <code>OAI.ThreeTorus.continuous_fast_circle</code> <small>line 243</small></li><li id=L247><b>lemma</b> <code>OAI.ThreeTorus.continuous_weighted_fast_compact</code> <small>line 247</small></li><li id=L255><b>lemma</b> <code>OAI.ThreeTorus.foldCircleDensity_mul_circle</code> <small>line 255</small></li><li id=L260><b>lemma</b> <code>OAI.ThreeTorus.fast_circle_coe</code> <small>line 260</small></li><li id=L265><b>lemma</b> <code>OAI.ThreeTorus.foldCircleDensity_mul_fast</code> <small>line 265</small></li><li id=L274><b>theorem</b> <code>OAI.ThreeTorus.realized_fold_signal_estimate</code> <small>line 274</small><div class="doc"><p>Quantitative transfer from an ideal folded law to a realized compact law.
+The phase may have any prescribed offset at every passage integer.</p></div><pre>theorem realized_fold_signal_estimate {w q r : ℝ → ℝ}
+    (hw : Continuous w) (hwc : HasCompactSupport w) (hw0 : 0 ∉ tsupport w)
+    (hwn : ∀ s, 0 ≤ w s)
+    (hq : Continuous q) (hqc : HasCompactSupport q)
+    (hr : Continuous r) (hri : Integrable r) {C : ℝ} (hC : 0 ≤ C)
+    (hb : ∀ y, |r y| ≤ C/(1+y^2)) {D : ℝ}
+    (hF : ∀ v, D &lt; |v| → 𝓕 (fun y =&gt; (r y : ℂ)) v = 0)
+    {g : UnitAddCircle → ℝ} (hg : Continuous g) {ε : ℝ}
+    (hideal : ∀ s ∈ support w, ∀ y, |foldCircleDensity (scaledDensity r s) y-g y| ≤ ε)
+    (β : ℕ → UnitAddCircle) {η : ℝ} (hη : 0 &lt; η) :
+    ∀ᶠ n : ℕ in atTop, (∫ z,
+      |foldCircleDensity (fun s =&gt; w s*foldCircleDensity (scaledDensity q s)
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L1991">OAI.ThreeTorus.foldCircleDensity</a>, <a href="PositiveLaws.lean.html#L1127">OAI.ThreeTorus.scaledDensity</a></p></li><li id=L336><b>lemma</b> <code>OAI.ThreeTorus.lawJitter_injOn</code> <small>line 336</small></li><li id=L348><b>lemma</b> <code>OAI.ThreeTorus.lawJitter_branchKernel</code> <small>line 348</small><div class="doc"><p>The inverse-branch Jacobian is exactly the realized quantile density,
+not merely some density representing the same measure.</p></div><pre>lemma lawJitter_branchKernel {ρ : ℝ → ℝ} {δ : ℝ} (c : LawCutoffs δ)
+    (hρ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) ρ) (hi : Integrable ρ)
+    (hp : ∀ y, 0 &lt; ρ y) (hm : ∫ y, ρ y = 1) (hδ : 0 &lt; δ)
+    (w : ℝ → ℝ) (y s : ℝ) :
+    branchKernel (Ioo δ (1-δ)) (lawJitter ρ c) (fun p : ℝ × ℝ =&gt; w p.2*c.ψ p.1^2) (y,s) =
+      w s*lawDensity ρ c y := by
+…</pre><p class="refs">Mentions: <a href="Jitter.lean.html#L236">OAI.ThreeTorus.LawCutoffs</a>, <a href="PassageDensity.lean.html#L488">OAI.ThreeTorus.branchKernel</a>, <a href="Jitter.lean.html#L278">OAI.ThreeTorus.lawJitter</a>, <a href="Jitter.lean.html#L283">OAI.ThreeTorus.lawDensity</a></p></li><li id=L379><b>lemma</b> <code>OAI.ThreeTorus.lawJitter_passageKernel</code> <small>line 379</small></li><li id=L390><b>lemma</b> <code>OAI.ThreeTorus.lawJitter_fineKernel</code> <small>line 390</small></li><li id=L403><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_modulus_independent</code> <small>line 403</small></li><li id=L411><b>lemma</b> <code>OAI.ThreeTorus.stationaryCutoffLift_modulus_independent</code> <small>line 411</small></li><li id=L425><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_nonneg</code> <small>line 425</small></li><li id=L432><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_tsupport_subset</code> <small>line 432</small></li><li id=L437><b>lemma</b> <code>OAI.ThreeTorus.stationaryWeight_slice_regular</code> <small>line 437</small></li><li id=L455><b>theorem</b> <code>OAI.ThreeTorus.quantile_fine_signal_estimate</code> <small>line 455</small><div class="doc"><p>Fully realized smooth quantile law: the exact branch kernel has the desired
+signal, with both its missing mass and total variation error explicitly included.</p></div><pre>theorem quantile_fine_signal_estimate {w ρ : ℝ → ℝ}
+    (hw : Continuous w) (hwc : HasCompactSupport w) (hw0 : 0 ∉ tsupport w)
+    (hwn : ∀ s, 0 ≤ w s)
+    (hρ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) ρ) (hi : Integrable ρ)
+    (hp : ∀ y, 0 &lt; ρ y) (hm : ∫ y, ρ y = 1)
+    {C : ℝ} (hC : 0 ≤ C) (hb : ∀ y, |ρ y| ≤ C/(1+y^2)) {D : ℝ}
+    (hF : ∀ v, D &lt; |v| → 𝓕 (fun y =&gt; (ρ y : ℂ)) v = 0)
+    {δ : ℝ} (c : LawCutoffs δ) (hδ : 0 &lt; δ) (hδ&#x27; : δ &lt; 1/8)
+    {g : UnitAddCircle → ℝ} (hg : Continuous g) {ε : ℝ}
+    (hideal : ∀ s ∈ support w, ∀ y, |foldCircleDensity (scaledDensity ρ s) y-g y| ≤ ε)
+    {η : ℝ} (hη : 0 &lt; η) :
+    ∀ᶠ n : ℕ in atTop, (∫ z,
+…</pre><p class="refs">Mentions: <a href="Jitter.lean.html#L236">OAI.ThreeTorus.LawCutoffs</a>, <a href="PassageDensity.lean.html#L1991">OAI.ThreeTorus.foldCircleDensity</a>, <a href="PositiveLaws.lean.html#L1127">OAI.ThreeTorus.scaledDensity</a></p></li><li id=L494><b>def</b> <code>OAI.ThreeTorus.quantileCircleJitter</code> <small>line 494</small></li><li id=L497><b>lemma</b> <code>OAI.ThreeTorus.quantileCircleJitter_coe</code> <small>line 497</small></li><li id=L500><b>lemma</b> <code>OAI.ThreeTorus.continuous_quantileCircleJitter</code> <small>line 500</small></li><li id=L507><b>def</b> <code>OAI.ThreeTorus.exactRetainedPacketDensity</code> <small>line 507</small><div class="doc"><p>The finite retained spectral density of one actual signed Fourier packet.</p></div><pre>def exactRetainedPacketDensity (I : Set ℝ) (J₀ : ℝ → ℝ) (ψ : UnitAddCircle → ℝ)
+    (χ : ℝ → UnitAddCircle → ℝ) (m : ℤ) (H : ℕ → UnitAddCircle → UnitAddCircle)
+    (A : UnitAddCircle × UnitAddCircle → ℂ) (S : Finset ℤ) (n : ℕ) : UnitAddCircle → ℝ :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L515><b>lemma</b> <code>OAI.ThreeTorus.exactRetainedPacketDensity_integrable</code> <small>line 515</small></li><li id=L531><b>lemma</b> <code>OAI.ThreeTorus.integral_abs_sub_triangle</code> <small>line 531</small></li><li id=L544><b>theorem</b> <code>OAI.ThreeTorus.exact_quantile_circle_spectral_estimate</code> <small>line 544</small><div class="doc"><p>Source transmission analytic assembly, for the actual retained signed
+coefficients and actual smooth quantile jitter. The law's lost mass is counted.
+The model bound has to be established for the ideal law; no passage limit is
+assumed. Every sufficiently large integer works.</p></div><pre>theorem exact_quantile_circle_spectral_estimate
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {A₀ : UnitAddCircle → ℝ → ℂ}
+    {Pr V : ℝ → ℝ} {m : ℤ} {Δ : ℕ → ℝ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {o l u R : ℝ}
+    (hm : m ≠ 0)
+    (hH : ∀ n (x : ℝ), H n (x : UnitAddCircle) = ((n:ℝ)*(Pr x+Δ n*x) : UnitAddCircle))
+    (hA : ∀ a x, x ∈ Ioc o (o+1) → A ((x : UnitAddCircle),a) = A₀ a x)
+    (hA₀ : ∀ a, ContDiff ℝ 2 (A₀ a)) (hAc : Continuous A₀.uncurry)
+    (hAd : Continuous (fun p : UnitAddCircle × ℝ =&gt; deriv (A₀ p.1) p.2))
+    (hAr : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
+      (fun p : ℝ × ℝ =&gt; A₀ (p.2 : UnitAddCircle) p.1))
+    (hsupp : ∀ a, support (A₀ a) ⊆ Ioc l u)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L658><b>def</b> <code>OAI.ThreeTorus.signalCircleModel</code> <small>line 658</small><div class="doc"><p>The exact three-mode index signal, in the source's positive-moment convention.</p></div><pre>noncomputable def signalCircleModel (P : ℕ) (γ B : ℝ) (d : ℝ → ℂ) (m : ℤ) (z : UnitAddCircle) : ℝ := by
+…</pre></li><li id=L662><b>lemma</b> <code>OAI.ThreeTorus.continuous_signalCircleModel</code> <small>line 662</small></li><li id=L667><b>lemma</b> <code>OAI.ThreeTorus.signalCircleModel_uniform_on_weight</code> <small>line 667</small></li><li id=L703><b>lemma</b> <code>OAI.ThreeTorus.signalJitter_law_regular</code> <small>line 703</small><div class="doc"><p>All the analytic prerequisites of the actual signal law, including mass one,
+are consequences of the explicit positive joint law.</p></div><pre>lemma signalJitter_law_regular {α B c D γ : ℝ}
+    (hα : 0 &lt; α) (hB : 0 &lt; B) (hc : 0 &lt; c) (hαD : α ≤ D)
+    {d : ℝ → ℂ} (hd : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) d)
+    (hcomp : HasCompactSupport d) (hr : ∀ v, d (-v) = starRingEnd ℂ (d v))
+    (h0 : d 0 = 0) (hs : Function.support d ⊆ Icc (-D) D) (P : ℕ) [NeZero P]
+    (hbound : ∀ h R, signalBaseline α R/(2*P) ≤ signalJoint α γ d P h R ∧
+      signalJoint α γ d P h R ≤ 3*signalBaseline α R/(2*P)) :
+    let ρ := signalJitter α γ d P B c
+…</pre><p class="refs">Mentions: <a href="PositiveLaws.lean.html#L108">OAI.ThreeTorus.signalBaseline</a>, <a href="PositiveLaws.lean.html#L612">OAI.ThreeTorus.signalJoint</a>, <a href="PositiveLaws.lean.html#L964">OAI.ThreeTorus.signalJitter</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

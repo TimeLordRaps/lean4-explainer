@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/GotsmanLinial/GradingShift.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/GotsmanLinial/GradingShift.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">GotsmanLinial</a> / <span>GradingShift.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">GotsmanLinial</a>/<span>GradingShift.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/GotsmanLinial/GradingShift.lean#L1">source</a></p><div class="doc"><h3>A degree shift is tridiagonal in the associated orthogonal grading</h3><p>These lemmas retain the degree-shift premise explicitly. The cube application
+discharges it using coordinate multiplication and the weighted Fourier flag.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.flagProjection_mul_shift_eq_zero</code> <small>line 27</small><div class="doc"><p>An operator that raises the flag index by at most one has no blocks
+strictly above the first off-diagonal.</p></div><pre>theorem flagProjection_mul_shift_eq_zero
+    (K : ℕ → Submodule 𝕜 E) (hK : Monotone K) (Z : E →L[𝕜] E)
+    (hshift : ∀ k x, x ∈ K k → Z x ∈ K (k + 1))
+    {r s : ℕ} (hrs : r + 1 &lt; s) :
+    flagProjection K s * Z * flagProjection K r = 0 := by
+…</pre><p class="refs">Mentions: <a href="WeightedGrading.lean.html#L40">OAI.LeanBlast.GotsmanLinial.flagProjection</a></p></li><li id=L39><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.flagProjection_tridiagonal</code> <small>line 39</small><div class="doc"><p>Self-adjointness gives the other half of the band by taking adjoints.</p></div><pre>theorem flagProjection_tridiagonal
+    (K : ℕ → Submodule 𝕜 E) (hK : Monotone K) (Z : E →L[𝕜] E)
+    (hZ : IsSelfAdjoint Z)
+    (hshift : ∀ k x, x ∈ K k → Z x ∈ K (k + 1))
+    {r s : ℕ} (hrs : r + 1 &lt; s ∨ s + 1 &lt; r) :
+    flagProjection K s * Z * flagProjection K r = 0 := by
+…</pre><p class="refs">Mentions: <a href="WeightedGrading.lean.html#L40">OAI.LeanBlast.GotsmanLinial.flagProjection</a></p></li><li id=L53><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.map_flagProjection_tridiagonal</code> <small>line 53</small><div class="doc"><p>The band property is preserved by taking matrices or any other ring
+representation of the operator algebra.</p></div><pre>theorem map_flagProjection_tridiagonal
+    {A : Type*} [Ring A] (F : (E →L[𝕜] E) →+* A)
+    (K : ℕ → Submodule 𝕜 E) (hK : Monotone K) (Z : E →L[𝕜] E)
+    (hZ : IsSelfAdjoint Z)
+    (hshift : ∀ k x, x ∈ K k → Z x ∈ K (k + 1))
+    {r s : ℕ} (hrs : r + 1 &lt; s ∨ s + 1 &lt; r) :
+    F (flagProjection K s) * F Z * F (flagProjection K r) = 0 := by
+…</pre><p class="refs">Mentions: <a href="WeightedGrading.lean.html#L40">OAI.LeanBlast.GotsmanLinial.flagProjection</a></p></li><li id=L64><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.shift_mem_map_of_commute</code> <small>line 64</small><div class="doc"><p>Commutation transports a degree-shift statement through a weight map.</p></div><pre>theorem shift_mem_map_of_commute
+    (V : ℕ → Submodule 𝕜 E) (D Z : E →ₗ[𝕜] E)
+    (hcommute : ∀ x, Z (D x) = D (Z x))
+    (hshift : ∀ k x, x ∈ V k → Z x ∈ V (k + 1))
+    (k : ℕ) {x : E} (hx : x ∈ (V k).map D) :
+    Z x ∈ (V (k + 1)).map D := by
+…</pre></li><li id=L83><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.operatorMatrix_flagProjection_tridiagonal</code> <small>line 83</small><div class="doc"><p>The concrete matrix form consumed by the commutator estimate.</p></div><pre>theorem operatorMatrix_flagProjection_tridiagonal
+    (b : OrthonormalBasis ι ℂ E)
+    (K : ℕ → Submodule ℂ E) (hK : Monotone K) (Z : E →L[ℂ] E)
+    (hZ : IsSelfAdjoint Z)
+    (hshift : ∀ k x, x ∈ K k → Z x ∈ K (k + 1))
+    (n : ℕ) (r s : Fin (n + 1))
+    (hrs : r.val + 1 &lt; s.val ∨ s.val + 1 &lt; r.val) :
+    operatorMatrix b (flagProjection K s.val) * operatorMatrix b Z *
+      operatorMatrix b (flagProjection K r.val) = 0 := by
+…</pre><p class="refs">Mentions: <a href="ProjectionBlocks.lean.html#L278">OAI.LeanBlast.GotsmanLinial.operatorMatrix</a>, <a href="WeightedGrading.lean.html#L40">OAI.LeanBlast.GotsmanLinial.flagProjection</a></p></li><li id=L102><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.coordinateMultiplier_sqrtWeight_commute</code> <small>line 102</small><div class="doc"><p>Coordinate signs commute with the actual positive square-root weight.</p></div><pre>theorem coordinateMultiplier_sqrtWeight_commute
+    (w : Cube n → ℝ) (hw : ∀ x, 0 &lt; w x) (i : Fin n)
+    (a : EuclideanSpace ℂ (Cube n)) :
+    coordinateMultiplier i (sqrtWeightEquiv w hw a) =
+      sqrtWeightEquiv w hw (coordinateMultiplier i a) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/CourtadeKumar.lean.html#L9">OAI.LeanBlast.GotsmanLinial.Cube</a>, <a href="CoordinateMultipliers.lean.html#L151">OAI.LeanBlast.GotsmanLinial.coordinateMultiplier</a>, <a href="WeightedGrading.lean.html#L172">OAI.LeanBlast.GotsmanLinial.sqrtWeightEquiv</a></p></li><li id=L112><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.coordinateMultiplier_weightedFlag_shift</code> <small>line 112</small><div class="doc"><p>The actual weighted Fourier flag retains the one-step coordinate shift.</p></div><pre>theorem coordinateMultiplier_weightedFlag_shift
+    (w : Cube n → ℝ) (hw : ∀ x, 0 &lt; w x) (i : Fin n) :
+    ∀ k (a : EuclideanSpace ℂ (Cube n)),
+      a ∈ transportFlag (sqrtWeightEquiv w hw) (fourierFlag n) k →
+      coordinateMultiplier i a ∈
+        transportFlag (sqrtWeightEquiv w hw) (fourierFlag n) (k + 1) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/CourtadeKumar.lean.html#L9">OAI.LeanBlast.GotsmanLinial.Cube</a>, <a href="WeightedGrading.lean.html#L199">OAI.LeanBlast.GotsmanLinial.transportFlag</a>, <a href="WeightedGrading.lean.html#L172">OAI.LeanBlast.GotsmanLinial.sqrtWeightEquiv</a>, <a href="Walsh.lean.html#L166">OAI.LeanBlast.GotsmanLinial.fourierFlag</a>, <a href="CoordinateMultipliers.lean.html#L151">OAI.LeanBlast.GotsmanLinial.coordinateMultiplier</a></p></li><li id=L126><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.weightedFlag_operatorMatrix_tridiagonal</code> <small>line 126</small><div class="doc"><p>Tridiagonality for the actually constructed weighted Fourier projections,
+expressed in an arbitrary orthonormal coordinate system.</p></div><pre>theorem weightedFlag_operatorMatrix_tridiagonal
+    (w : Cube n → ℝ) (hw : ∀ x, 0 &lt; w x)
+    (b : OrthonormalBasis (Cube n) ℂ (EuclideanSpace ℂ (Cube n)))
+    (i : Fin n) (r s : Fin (n + 1))
+    (hrs : r.val + 1 &lt; s.val ∨ s.val + 1 &lt; r.val) :
+    flagProjectionMatrix b (transportFlag (sqrtWeightEquiv w hw) (fourierFlag n)) s.val *
+      operatorMatrix b (coordinateMultiplier i) *
+      flagProjectionMatrix b (transportFlag (sqrtWeightEquiv w hw) (fourierFlag n)) r.val = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/CourtadeKumar.lean.html#L9">OAI.LeanBlast.GotsmanLinial.Cube</a>, <a href="WeightedGrading.lean.html#L238">OAI.LeanBlast.GotsmanLinial.flagProjectionMatrix</a>, <a href="WeightedGrading.lean.html#L199">OAI.LeanBlast.GotsmanLinial.transportFlag</a>, <a href="WeightedGrading.lean.html#L172">OAI.LeanBlast.GotsmanLinial.sqrtWeightEquiv</a>, <a href="Walsh.lean.html#L166">OAI.LeanBlast.GotsmanLinial.fourierFlag</a>, <a href="ProjectionBlocks.lean.html#L278">OAI.LeanBlast.GotsmanLinial.operatorMatrix</a>, <a href="CoordinateMultipliers.lean.html#L151">OAI.LeanBlast.GotsmanLinial.coordinateMultiplier</a></p></li><li id=L142><b>theorem</b> <code>OAI.LeanBlast.GotsmanLinial.weightedProjectionMatrix_tridiagonal</code> <small>line 142</small><div class="doc"><p>The raw coordinate-sign matrices are tridiagonal for the actual weighted
+Fourier projection family. There is no remaining degree-shift hypothesis.</p></div><pre>theorem weightedProjectionMatrix_tridiagonal
+    (w : Cube n → ℝ) (hw : ∀ x, 0 &lt; w x)
+    (i : Fin n) (r s : Fin (n + 1))
+    (hrs : r.val + 1 &lt; s.val ∨ s.val + 1 &lt; r.val) :
+    weightedProjectionMatrix w hw s * coordinateSignMatrix i *
+      weightedProjectionMatrix w hw r = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/CourtadeKumar.lean.html#L9">OAI.LeanBlast.GotsmanLinial.Cube</a>, <a href="WeightedGrading.lean.html#L312">OAI.LeanBlast.GotsmanLinial.weightedProjectionMatrix</a>, <a href="CoordinateMultipliers.lean.html#L30">OAI.LeanBlast.GotsmanLinial.coordinateSignMatrix</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

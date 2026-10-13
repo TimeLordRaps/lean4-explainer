@@ -1,0 +1,1 @@
+window.l4shard("fu", [["Imo2000P4.mod3fun",77,434],["Usa2017P2.coeff_genFun",292,1074],["Usa2017P2.genFun",292,65],["Usa2017P2.genFun_eq_of_valMul_eq",292,296],["Usa2017P2.genFun_rec",292,207],["Usa2017P2.genFun_skipEmb_congr",292,858],["Usa2020P2.xFull",303,344],["Usa2020P2.yFull",303,348],["Usa2020P2.zFull",303,340]]);

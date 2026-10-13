@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicTopology/IntegralHomology/Connected.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicTopology/IntegralHomology/Connected.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicTopology</a> / <a href="index.html">IntegralHomology</a> / <span>Connected.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicTopology</a>/<a href="index.html">IntegralHomology</a>/<span>Connected.lean</span></code></h1><p class="muted">35 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicTopology/IntegralHomology/Connected.lean#L1">source</a></p><div class="doc"><p>Connected-cover homology, degree-zero components, and degree-one generators.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Kaplansky.relativeHomologyBoundary_eq_zero_of_contractible</code> <small>line 16</small><div class="doc"><p>A contractible subspace has zero relative connecting boundary in positive degree.</p></div><pre>theorem relativeHomologyBoundary_eq_zero_of_contractible {A X : TopCat.{0}}
+    (i : A ⟶ X) [Mono i] [ContractibleSpace A] (n : ℕ) (hn : n ≠ 0) :
+    relativeHomologyBoundary i n = 0 :=
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L129">OAI.Kaplansky.relativeHomologyBoundary</a></p></li><li id=L23><b>theorem</b> <code>OAI.Kaplansky.absoluteToRelative_bijective_of_contractible</code> <small>line 23</small><div class="doc"><p>Localization to a relative pair is an isomorphism above degree one when
+its removed subspace is contractible. The map is the actual quotient map.</p></div><pre>theorem absoluteToRelative_bijective_of_contractible {A X : TopCat.{0}}
+    (i : A ⟶ X) [Mono i] [ContractibleSpace A] (n : ℕ) (hn : n ≠ 0) :
+    Function.Bijective (absoluteToRelative i (n+1)) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L92">OAI.Kaplansky.absoluteToRelative</a></p></li><li id=L39><b>def</b> <code>OAI.Kaplansky.contractibleSubspaceLocalizationIso</code> <small>line 39</small></li><li id=L45><b>theorem</b> <code>OAI.Kaplansky.contractibleSubspaceLocalizationIso_hom</code> <small>line 45</small></li><li id=L54><b>abbrev</b> <code>OAI.Kaplansky.pointComponentIso</code> <small>line 54</small></li><li id=L59><b>abbrev</b> <code>OAI.Kaplansky.pointAugmentation</code> <small>line 59</small></li><li id=L64><b>def</b> <code>OAI.Kaplansky.pointHomology</code> <small>line 64</small><div class="doc"><p>The actual integral H₀ class of a point, expressed as a map out of ℤ.</p></div><pre>def pointHomology (X : TopCat.{0}) (x : X) :
+    ModuleCat.of ℤ ℤ ⟶ (integralSingularHomology 0).obj X :=
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a></p></li><li id=L71><b>theorem</b> <code>OAI.Kaplansky.pointHomology_component</code> <small>line 71</small></li><li id=L82><b>theorem</b> <code>OAI.Kaplansky.pointHomology_map</code> <small>line 82</small></li><li id=L97><b>theorem</b> <code>OAI.Kaplansky.pointHomology_eq_of_joined</code> <small>line 97</small><div class="doc"><p>Points in the same path component give equal integral H₀ classes.</p></div><pre>theorem pointHomology_eq_of_joined (X : TopCat.{0}) {x y : X} (h : Joined x y) :
+    pointHomology X x = pointHomology X y := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L64">OAI.Kaplansky.pointHomology</a></p></li><li id=L105><b>theorem</b> <code>OAI.Kaplansky.pointHomology_ne_of_not_joined</code> <small>line 105</small><div class="doc"><p>Distinct path components are separated by the actual integral H₀ class.</p></div><pre>theorem pointHomology_ne_of_not_joined (X : TopCat.{0}) {x y : X}
+    (h : ¬ Joined x y) : pointHomology X x ≠ pointHomology X y := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L64">OAI.Kaplansky.pointHomology</a></p></li><li id=L127><b>theorem</b> <code>OAI.Kaplansky.pointHomology_hom_ext</code> <small>line 127</small><div class="doc"><p>All actual H₀ classes are determined by their values on point classes.</p></div><pre>theorem pointHomology_hom_ext (X : TopCat.{0}) {T : ModuleCat.{0} ℤ}
+    {f g : (integralSingularHomology 0).obj X ⟶ T}
+    (h : ∀ x, pointHomology X x ≫ f = pointHomology X x ≫ g) : f = g := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a>, <a href="Connected.lean.html#L64">OAI.Kaplansky.pointHomology</a></p></li><li id=L143><b>def</b> <code>OAI.Kaplansky.componentCoefficient</code> <small>line 143</small><div class="doc"><p>The integral coefficient of one specified path component.</p></div><pre>def componentCoefficient (X : TopCat.{0}) (a : X) :
+    (integralSingularHomology 0).obj X ⟶ ModuleCat.of ℤ ℤ := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a></p></li><li id=L150><b>theorem</b> <code>OAI.Kaplansky.pointHomology_coefficient_self</code> <small>line 150</small></li><li id=L155><b>theorem</b> <code>OAI.Kaplansky.pointHomology_coefficient_other</code> <small>line 155</small></li><li id=L165><b>theorem</b> <code>OAI.Kaplansky.pointHomology_augmentation</code> <small>line 165</small><div class="doc"><p>The augmentation takes each integral point class to one.</p></div><pre>theorem pointHomology_augmentation (X : TopCat.{0}) (a : X) :
+    pointHomology X a ≫ pointAugmentation X = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L64">OAI.Kaplansky.pointHomology</a>, <a href="Connected.lean.html#L59">OAI.Kaplansky.pointAugmentation</a></p></li><li id=L174><b>theorem</b> <code>OAI.Kaplansky.twoComponent_decomposition</code> <small>line 174</small><div class="doc"><p>For a space with exactly these two path components, their two point
+classes span all integral H₀, with canonical integral coefficients.</p></div><pre>theorem twoComponent_decomposition (X : TopCat.{0}) (a b : X) (hab : ¬ Joined a b)
+    (hcover : ∀ x : X, Joined x a ∨ Joined x b) :
+    componentCoefficient X a ≫ pointHomology X a +
+      componentCoefficient X b ≫ pointHomology X b = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L143">OAI.Kaplansky.componentCoefficient</a>, <a href="Connected.lean.html#L64">OAI.Kaplansky.pointHomology</a></p></li><li id=L187><b>theorem</b> <code>OAI.Kaplansky.twoComponent_decomposition_apply</code> <small>line 187</small></li><li id=L201><b>theorem</b> <code>OAI.Kaplansky.additiveFunctor_biprod_detect_zero</code> <small>line 201</small></li><li id=L215><b>theorem</b> <code>OAI.Kaplansky.homology_biprod_detect_zero</code> <small>line 215</small><div class="doc"><p>Homology of a biproduct is jointly detected by its two projections.</p></div><pre>theorem homology_biprod_detect_zero {C D : ChainComplex (ModuleCat.{0} ℤ) ℕ}
+    {T : ModuleCat.{0} ℤ} (n : ℕ) (f : T ⟶ (C ⊞ D).homology n)
+    (h₁ : f ≫ homologyMap biprod.fst n = 0)
+    (h₂ : f ≫ homologyMap biprod.snd n = 0) : f = 0 := by
+…</pre></li><li id=L226><b>theorem</b> <code>OAI.Kaplansky.pointDifference_mayerVietoris_zero</code> <small>line 226</small><div class="doc"><p>A difference of two point classes in the intersection is killed by
+both inclusion maps when both cover members are path connected.</p></div><pre>theorem pointDifference_mayerVietoris_zero [PathConnectedSpace U] [PathConnectedSpace V]
+    (a b : ↥(U ∩ V)) :
+    (pointHomology (TopCat.of ↥(U ∩ V)) a - pointHomology (TopCat.of ↥(U ∩ V)) b) ≫
+      homologyMap (smallMayerVietorisSequence U V).f 0 = 0 := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L64">OAI.Kaplansky.pointHomology</a>, <a href="SmallExcision.lean.html#L116">OAI.Kaplansky.smallMayerVietorisSequence</a></p></li><li id=L252><b>theorem</b> <code>OAI.Kaplansky.openCover_homologyOne_nonzero</code> <small>line 252</small><div class="doc"><p>Two distinct path components in the intersection of a path-connected
+open cover produce a genuinely nonzero integral H₁ class.</p></div><pre>theorem openCover_homologyOne_nonzero [PathConnectedSpace U] [PathConnectedSpace V]
+    (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ)
+    (a b : ↥(U ∩ V)) (hab : ¬ Joined a b) :
+    ∃ z : (integralSingularHomology 1).obj (TopCat.of X), z ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a></p></li><li id=L285><b>theorem</b> <code>OAI.Kaplansky.twoComponent_inclusion_augmentation</code> <small>line 285</small><div class="doc"><p>The two intersection coefficients sum to the augmentation after inclusion.</p></div><pre>theorem twoComponent_inclusion_augmentation (a b : ↥(U ∩ V)) (hab : ¬ Joined a b)
+    (hcover : ∀ x : ↥(U ∩ V), Joined x a ∨ Joined x b) :
+    componentCoefficient (TopCat.of ↥(U ∩ V)) a + componentCoefficient (TopCat.of ↥(U ∩ V)) b =
+      (integralSingularHomology 0).map
+        (subspaceInclusionOfLE (Set.inter_subset_left : U ∩ V ⊆ U)) ≫
+        pointAugmentation (TopCat.of U) := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L143">OAI.Kaplansky.componentCoefficient</a>, <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a>, <a href="SmallExcision.lean.html#L20">OAI.Kaplansky.subspaceInclusionOfLE</a>, <a href="Connected.lean.html#L59">OAI.Kaplansky.pointAugmentation</a></p></li><li id=L301><b>theorem</b> <code>OAI.Kaplansky.twoComponent_mayerVietoris_kernel</code> <small>line 301</small><div class="doc"><p>Elements killed by the intersection-to-sum map have opposite coefficients.</p></div><pre>theorem twoComponent_mayerVietoris_kernel (a b : ↥(U ∩ V)) (hab : ¬ Joined a b)
+    (hcover : ∀ x : ↥(U ∩ V), Joined x a ∨ Joined x b)
+    (z : (integralSingularHomology 0).obj (TopCat.of ↥(U ∩ V)))
+    (hz : homologyMap (smallMayerVietorisSequence U V).f 0 z = 0) :
+    componentCoefficient (TopCat.of ↥(U ∩ V)) a z +
+      componentCoefficient (TopCat.of ↥(U ∩ V)) b z = 0 := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a>, <a href="SmallExcision.lean.html#L116">OAI.Kaplansky.smallMayerVietorisSequence</a>, <a href="Connected.lean.html#L143">OAI.Kaplansky.componentCoefficient</a></p></li><li id=L329><b>def</b> <code>OAI.Kaplansky.smallMayerVietorisOneCoordinate</code> <small>line 329</small><div class="doc"><p>The coefficient of the first intersection component after the actual
+Mayer–Vietoris boundary. This fixes an integral sign convention.</p></div><pre>def smallMayerVietorisOneCoordinate (a : ↥(U ∩ V)) :
+    (smallSingularChains U V).homology 1 ⟶ ModuleCat.of ℤ ℤ :=
+…</pre><p class="refs">Mentions: <a href="SmallChains.lean.html#L147">OAI.Kaplansky.smallSingularChains</a></p></li><li id=L335><b>theorem</b> <code>OAI.Kaplansky.smallMayerVietorisOneCoordinate_bijective</code> <small>line 335</small><div class="doc"><p>Exact integral H₁ calculation for two contractible sets whose intersection
+has exactly two path components. No homology or normalization premise.</p></div><pre>theorem smallMayerVietorisOneCoordinate_bijective [ContractibleSpace U] [ContractibleSpace V]
+    (a b : ↥(U ∩ V)) (hab : ¬ Joined a b)
+    (hcover : ∀ x : ↥(U ∩ V), Joined x a ∨ Joined x b) :
+    Function.Bijective (smallMayerVietorisOneCoordinate U V a) := by
+…</pre><p class="refs">Mentions: <a href="Connected.lean.html#L329">OAI.Kaplansky.smallMayerVietorisOneCoordinate</a></p></li><li id=L372><b>def</b> <code>OAI.Kaplansky.smallMayerVietorisOneIso</code> <small>line 372</small></li><li id=L381><b>def</b> <code>OAI.Kaplansky.openCoverMayerVietorisOneIso</code> <small>line 381</small><div class="doc"><p>Full integral H₁ with the sign fixed by the ordered two intersection components.</p></div><pre>def openCoverMayerVietorisOneIso [ContractibleSpace U] [ContractibleSpace V]
+    (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ)
+    (a b : ↥(U ∩ V)) (hab : ¬ Joined a b)
+    (hcover : ∀ x : ↥(U ∩ V), Joined x a ∨ Joined x b) :
+    (integralSingularHomology 1).obj (TopCat.of X) ≅ ModuleCat.of ℤ ℤ :=
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a></p></li><li id=L393><b>theorem</b> <code>OAI.Kaplansky.integralHomologyZero_map_injective</code> <small>line 393</small><div class="doc"><p>An inclusion (indeed any map) from a path-connected space is injective
+on integral H₀. The augmentation provides an explicit left inverse.</p></div><pre>theorem integralHomologyZero_map_injective {A X : TopCat.{0}}
+    [PathConnectedSpace A] (f : A ⟶ X) :
+    Function.Injective ((integralSingularHomology 0).map f) := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a></p></li><li id=L415><b>theorem</b> <code>OAI.Kaplansky.openCover_homologyOne_isZero</code> <small>line 415</small><div class="doc"><p>Two contractible open sets with path-connected intersection have zero
+integral H₁. The connected-intersection hypothesis is essential.</p></div><pre>theorem openCover_homologyOne_isZero [ContractibleSpace U] [ContractibleSpace V]
+    [PathConnectedSpace ↥(U ∩ V)]
+    (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) :
+    IsZero ((integralSingularHomology 1).obj (TopCat.of X)) := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a></p></li><li id=L450><b>theorem</b> <code>OAI.Kaplansky.relativeHomologyBoundary_zero_connected</code> <small>line 450</small><div class="doc"><p>A connected removed subspace makes the degree-one connecting map zero.</p></div><pre>theorem relativeHomologyBoundary_zero_connected {A X : TopCat.{0}}
+    (i : A ⟶ X) [Mono i] [PathConnectedSpace A] :
+    relativeHomologyBoundary i 0 = 0 := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L129">OAI.Kaplansky.relativeHomologyBoundary</a></p></li><li id=L461><b>theorem</b> <code>OAI.Kaplansky.relativeHomologyOne_isZero</code> <small>line 461</small><div class="doc"><p>A connected subspace of a contractible ambient space has zero relative H₁.</p></div><pre>theorem relativeHomologyOne_isZero {A X : TopCat.{0}} (i : A ⟶ X) [Mono i]
+    [PathConnectedSpace A] [ContractibleSpace X] :
+    IsZero (relativeSingularHomology i 1) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a></p></li><li id=L476><b>def</b> <code>OAI.Kaplansky.contractibleSubspaceLocalizationOneIso</code> <small>line 476</small><div class="doc"><p>The contractible-subspace localization theorem also holds in degree one;
+the low-degree proof uses H₀ injectivity, not a false H₀ vanishing claim.</p></div><pre>def contractibleSubspaceLocalizationOneIso {A X : TopCat.{0}}
+    (i : A ⟶ X) [Mono i] [ContractibleSpace A] :
+    (integralSingularHomology 1).obj X ≅ relativeSingularHomology i 1 := by
+…</pre><p class="refs">Mentions: <a href="Sections.lean.html#L128">OAI.Kaplansky.integralSingularHomology</a>, <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a></p></li><li id=L493><b>theorem</b> <code>OAI.Kaplansky.contractibleSubspaceLocalizationOneIso_hom</code> <small>line 493</small></li><li id=L499><b>theorem</b> <code>OAI.Kaplansky.relativeHomologyZero_isZero</code> <small>line 499</small><div class="doc"><p>Relative H₀ vanishes if the ambient space is path connected and the
+removed subspace is nonempty.</p></div><pre>theorem relativeHomologyZero_isZero {A X : TopCat.{0}} (i : A ⟶ X)
+    [PathConnectedSpace X] [Nonempty A] :
+    IsZero (relativeSingularHomology i 0) := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L89">OAI.Kaplansky.relativeSingularHomology</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

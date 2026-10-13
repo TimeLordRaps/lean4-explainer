@@ -1,0 +1,167 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Games/FactorizationLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Games/FactorizationLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Games</a> / <span>FactorizationLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Games</a>/<span>FactorizationLemmas.lean</span></code></h1><p class="muted">65 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Games/FactorizationLemmas.lean#L1">source</a></p><div class="doc"><p>The finite product algebra of dependency breaking.</p><p>Revealing one endpoint of each independently sampled question pair turns the
+remaining question weight into a product of two separate functions, one for
+each player. Further separate restrictions on the players' answers preserve
+this product. The final theorem normalizes the displayed weights, rather than
+assuming conditional independence as an abstract hypothesis.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L41><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealedProductWeight</code> <small>line 41</small><div class="doc"><p><code>mask i = false</code> reveals the first question, and <code>true</code> the second.</p></div><pre>def revealedProductWeight (weight : ι → α → β → ℝ) (mask : ι → Bool)
+    (fixedLeft : ι → α) (fixedRight : ι → β) (x : ι → α) (y : ι → β) : ℝ :=
+…</pre></li><li id=L47><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealedLeftWeight</code> <small>line 47</small></li><li id=L52><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealedRightWeight</code> <small>line 52</small></li><li id=L60><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealedProductWeight_factorizes</code> <small>line 60</small><div class="doc"><p>Exact factorization after fixing the selected endpoint at every position.
+No assumption on coordinate alphabets or probabilities is needed for this
+identity, so it applies separately at every fixed outside question tuple.</p></div><pre>theorem revealedProductWeight_factorizes (weight : ι → α → β → ℝ) (mask : ι → Bool)
+    (fixedLeft : ι → α) (fixedRight : ι → β) (x : ι → α) (y : ι → β) :
+    revealedProductWeight weight mask fixedLeft fixedRight x y =
+      revealedLeftWeight weight mask fixedLeft fixedRight x *
+        revealedRightWeight weight mask fixedLeft fixedRight y := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L41">OAI.UniqueGamesTheorem.Foundations.Repetition.revealedProductWeight</a>, <a href="FactorizationLemmas.lean.html#L47">OAI.UniqueGamesTheorem.Foundations.Repetition.revealedLeftWeight</a>, <a href="FactorizationLemmas.lean.html#L52">OAI.UniqueGamesTheorem.Foundations.Repetition.revealedRightWeight</a></p></li><li id=L75><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealedProductWeight_local_restrictions</code> <small>line 75</small><div class="doc"><p>Local answer tests are separate functions of the complete local question
+vectors. Multiplying by both tests leaves a product of two local weights.</p></div><pre>theorem revealedProductWeight_local_restrictions
+    (weight : ι → α → β → ℝ) (mask : ι → Bool)
+    (fixedLeft : ι → α) (fixedRight : ι → β)
+    (leftTest : (ι → α) → ℝ) (rightTest : (ι → β) → ℝ)
+    (x : ι → α) (y : ι → β) :
+    revealedProductWeight weight mask fixedLeft fixedRight x y * leftTest x * rightTest y =
+      (revealedLeftWeight weight mask fixedLeft fixedRight x * leftTest x) *
+      (revealedRightWeight weight mask fixedLeft fixedRight y * rightTest y) := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L41">OAI.UniqueGamesTheorem.Foundations.Repetition.revealedProductWeight</a>, <a href="FactorizationLemmas.lean.html#L47">OAI.UniqueGamesTheorem.Foundations.Repetition.revealedLeftWeight</a>, <a href="FactorizationLemmas.lean.html#L52">OAI.UniqueGamesTheorem.Foundations.Repetition.revealedRightWeight</a></p></li><li id=L88><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.productWeight_mass</code> <small>line 88</small></li><li id=L94><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.normalizedWeight</code> <small>line 94</small></li><li id=L97><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.normalizedWeight_isProbability</code> <small>line 97</small></li><li id=L107><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.normalized_productWeight</code> <small>line 107</small><div class="doc"><p>Normalizing an actual product weight gives the product of its separately
+normalized marginals. This is the finite conditional-independence identity.</p></div><pre>theorem normalized_productWeight (left : X → ℝ) (right : Y → ℝ)
+    (hleft : 0 &lt; ∑ x, left x) (hright : 0 &lt; ∑ y, right y) (xy : X × Y) :
+    normalizedWeight (fun z : X × Y =&gt; left z.1 * right z.2) xy =
+      normalizedWeight left xy.1 * normalizedWeight right xy.2 := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L94">OAI.UniqueGamesTheorem.Foundations.Repetition.normalizedWeight</a></p></li><li id=L117><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.normalized_rectangle_restriction</code> <small>line 117</small><div class="doc"><p>Conditioning a product law on separate local events keeps the two factors
+independent, with each conditioned on its own event.</p></div><pre>theorem normalized_rectangle_restriction
+    (left : X → ℝ) (right : Y → ℝ) (leftTest : X → ℝ) (rightTest : Y → ℝ)
+    (hleft : 0 &lt; ∑ x, left x * leftTest x)
+    (hright : 0 &lt; ∑ y, right y * rightTest y) (xy : X × Y) :
+    normalizedWeight
+      (fun z : X × Y =&gt; left z.1 * right z.2 * leftTest z.1 * rightTest z.2) xy =
+      normalizedWeight (fun x =&gt; left x * leftTest x) xy.1 *
+      normalizedWeight (fun y =&gt; right y * rightTest y) xy.2 := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L94">OAI.UniqueGamesTheorem.Foundations.Repetition.normalizedWeight</a></p></li><li id=L152><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.normalizeOr</code> <small>line 152</small></li><li id=L160><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.sum_mul_normalizeOr</code> <small>line 160</small></li><li id=L177><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.local_completion_recombination</code> <small>line 177</small><div class="doc"><p>Exact reconstruction from two separately normalized local completion
+laws, valid even when either unnormalized row has mass zero.</p></div><pre>theorem local_completion_recombination
+    (left : X → ℝ) (right : Y → ℝ)
+    (hl : ∀ x, 0 ≤ left x) (hr : ∀ y, 0 ≤ right y)
+    (defaultLeft : FiniteDistribution X) (defaultRight : FiniteDistribution Y)
+    (c : ℝ) (x : X) (y : Y) :
+    (c * (∑ z, left z) * (∑ z, right z)) *
+      ((normalizeOr left hl defaultLeft).weight x *
+        (normalizeOr right hr defaultRight).weight y) = c * left x * right y := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L152">OAI.UniqueGamesTheorem.Foundations.Repetition.normalizeOr</a></p></li><li id=L192><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.factorized_completion_row</code> <small>line 192</small><div class="doc"><p>The row mass appearing in reconstruction is the actual sum of product
+weights, not an assumed marginal identity.</p></div><pre>theorem factorized_completion_row
+    (left : X → ℝ) (right : Y → ℝ)
+    (hl : ∀ x, 0 ≤ left x) (hr : ∀ y, 0 ≤ right y)
+    (defaultLeft : FiniteDistribution X) (defaultRight : FiniteDistribution Y)
+    (c : ℝ) (xy : X × Y) :
+    (∑ z : X × Y, c * left z.1 * right z.2) *
+      ((normalizeOr left hl defaultLeft).product
+        (normalizeOr right hr defaultRight)).weight xy = c * left xy.1 * right xy.2 := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L152">OAI.UniqueGamesTheorem.Foundations.Repetition.normalizeOr</a></p></li><li id=L231><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Games.Game.localEmbeddingLaw</code> <small>line 231</small></li><li id=L241><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Games.Game.success_le_value_add_embedding_distance</code> <small>line 241</small><div class="doc"><p>Any finite shared-randomness local embedding yields a valid base-game
+strategy after the seed is fixed. Total variation pays exactly for changing
+the resulting question distribution to the desired one.</p></div><pre>theorem success_le_value_add_embedding_distance
+    (G : Game Q₁ Q₂ A₁ A₂) (H : Game R₁ R₂ B₁ B₂)
+    (seedLaw : FiniteDistribution Seed)
+    (left : Seed → Q₁ → R₁) (right : Seed → Q₂ → R₂)
+    (answerLeft : Seed → Q₁ → B₁ → A₁)
+    (answerRight : Seed → Q₂ → B₂ → A₂)
+    (acceptance : ∀ seed x y a b,
+      H.accepts (left seed x) (right seed y) a b = true →
+      G.accepts x y (answerLeft seed x a) (answerRight seed y b) = true)
+    (strategy : Strategy R₁ R₂ B₁ B₂) :
+    H.success strategy ≤ G.value +
+      H.questions.totalVariation (G.localEmbeddingLaw seedLaw left right) := by
+…</pre><p class="refs">Mentions: <a href="../Foundations/FiniteTrialsLemmas.lean.html#L644">OAI.UniqueGamesTheorem.Foundations.Games.Game</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L529">OAI.UniqueGamesTheorem.Foundations.Games.FiniteDistribution</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L642">OAI.UniqueGamesTheorem.Foundations.Games.Strategy</a></p></li><li id=L271><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Games.Game.coordinateGame</code> <small>line 271</small><div class="doc"><p>A single tested coordinate under an arbitrary full-tuple question law.</p></div><pre>def coordinateGame (G : Game Q₁ Q₂ A₁ A₂) {n : Nat} (coordinate : Fin n)
+    (law : FiniteDistribution ((Fin n → Q₁) × (Fin n → Q₂))) :
+    Game (Fin n → Q₁) (Fin n → Q₂) (Fin n → A₁) (Fin n → A₂) where
+…</pre><p class="refs">Mentions: <a href="../Foundations/FiniteTrialsLemmas.lean.html#L644">OAI.UniqueGamesTheorem.Foundations.Games.Game</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L529">OAI.UniqueGamesTheorem.Foundations.Games.FiniteDistribution</a></p></li><li id=L280><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Games.Game.coordinate_probability_le_value_add_embedding_distance</code> <small>line 280</small><div class="doc"><p>The strategy-extraction step used for a surviving coordinate after
+conditioning on successes at other coordinates. It preserves full local
+question dependence and uses no independence assumption on the target law.</p></div><pre>theorem coordinate_probability_le_value_add_embedding_distance
+    (G : Game Q₁ Q₂ A₁ A₂) {n : Nat} (coordinate : Fin n)
+    (law : FiniteDistribution ((Fin n → Q₁) × (Fin n → Q₂)))
+    (seedLaw : FiniteDistribution Seed)
+    (left : Seed → Q₁ → Fin n → Q₁) (right : Seed → Q₂ → Fin n → Q₂)
+    (left_preserves : ∀ seed x, left seed x coordinate = x)
+    (right_preserves : ∀ seed y, right seed y coordinate = y)
+    (strategy : Strategy (Fin n → Q₁) (Fin n → Q₂) (Fin n → A₁) (Fin n → A₂)) :
+    law.probability (G.coordinateWin strategy coordinate) ≤ G.value +
+      law.totalVariation (G.localEmbeddingLaw seedLaw left right) := by
+…</pre><p class="refs">Mentions: <a href="../Foundations/FiniteTrialsLemmas.lean.html#L644">OAI.UniqueGamesTheorem.Foundations.Games.Game</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L529">OAI.UniqueGamesTheorem.Foundations.Games.FiniteDistribution</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L642">OAI.UniqueGamesTheorem.Foundations.Games.Strategy</a></p></li><li id=L298><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Games.Game.coordinate_probability_le_value_of_approximate_embeddings</code> <small>line 298</small><div class="doc"><p>Finite samplers may have an arbitrarily small exhaustion error. Passing
+to the limit in the numerical bound does not require an infinite seed or a
+claim that any finite sampler terminates with probability one.</p></div><pre>theorem coordinate_probability_le_value_of_approximate_embeddings
+    {SeedFamily : Nat → Type*} [∀ t, Fintype (SeedFamily t)]
+    (G : Game Q₁ Q₂ A₁ A₂) {n : Nat} (coordinate : Fin n)
+    (law : FiniteDistribution ((Fin n → Q₁) × (Fin n → Q₂)))
+    (seedLaw : (t : Nat) → FiniteDistribution (SeedFamily t))
+    (left : (t : Nat) → SeedFamily t → Q₁ → Fin n → Q₁)
+    (right : (t : Nat) → SeedFamily t → Q₂ → Fin n → Q₂)
+    (left_preserves : ∀ t seed x, left t seed x coordinate = x)
+    (right_preserves : ∀ t seed y, right t seed y coordinate = y)
+    (strategy : Strategy (Fin n → Q₁) (Fin n → Q₂) (Fin n → A₁) (Fin n → A₂))
+    (distance : ℝ)
+    (close : ∀ η : ℝ, 0 &lt; η → ∃ t,
+…</pre><p class="refs">Mentions: <a href="../Foundations/FiniteTrialsLemmas.lean.html#L644">OAI.UniqueGamesTheorem.Foundations.Games.Game</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L529">OAI.UniqueGamesTheorem.Foundations.Games.FiniteDistribution</a>, <a href="../Foundations/FiniteTrialsLemmas.lean.html#L642">OAI.UniqueGamesTheorem.Foundations.Games.Strategy</a></p></li><li id=L337><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.ProfileCorrection.seedQuestionMarginal</code> <small>line 337</small></li><li id=L340><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.ProfileCorrection.seedQuestionMarginal_isProbability</code> <small>line 340</small></li><li id=L351><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.ProfileCorrection.seedQuestionMarginal_first</code> <small>line 351</small></li><li id=L356><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.ProfileCorrection.totalVariation_triangle</code> <small>line 356</small></li><li id=L365><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.ProfileCorrection.left_profile_correction</code> <small>line 365</small></li><li id=L426><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealEndpoint</code> <small>line 426</small></li><li id=L430><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw</code> <small>line 430</small><div class="doc"><p>Independently reveal either endpoint with probability one half.</p></div><pre>def revealLaw (μ : FiniteDistribution (X × Y)) :
+    FiniteDistribution ((X × Y) × (X ⊕ Y)) :=
+…</pre></li><li id=L435><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw_weight</code> <small>line 435</small></li><li id=L445><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealFirstLaw</code> <small>line 445</small></li><li id=L450><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealFirstLaw_weight</code> <small>line 450</small></li><li id=L456><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealFallback</code> <small>line 456</small><div class="doc"><p>The default row still preserves the displayed endpoint if that endpoint
+has zero probability in the base question law.</p></div><pre>def revealFallback (μ : FiniteDistribution (X × Y)) (r : X ⊕ Y) :
+    FiniteDistribution (X × Y) :=
+…</pre></li><li id=L462><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile</code> <small>line 462</small></li><li id=L466><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile_inl_support</code> <small>line 466</small></li><li id=L478><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile_inr_support</code> <small>line 478</small></li><li id=L490><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw</code> <small>line 490</small></li><li id=L493><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw_weight</code> <small>line 493</small></li><li id=L501><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.reveal_profile_recombination</code> <small>line 501</small><div class="doc"><p>The conditional product representation is proved from the sampled law,
+including reveal values with zero probability.</p></div><pre>theorem reveal_profile_recombination (μ : FiniteDistribution (X × Y))
+    (r : X ⊕ Y) (q : X × Y) :
+    (revealInputLaw μ).weight r * (revealProfile μ r).weight q =
+      (revealLaw μ).weight (q,r) := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L490">OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw</a>, <a href="FactorizationLemmas.lean.html#L462">OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile</a>, <a href="FactorizationLemmas.lean.html#L430">OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw</a></p></li><li id=L508><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.reveal_profile_inl_recombination</code> <small>line 508</small></li><li id=L515><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.reveal_profile_inr_recombination</code> <small>line 515</small></li><li id=L522><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw_inl</code> <small>line 522</small></li><li id=L530><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw_inr</code> <small>line 530</small></li><li id=L537><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile_inl_diagonal</code> <small>line 537</small></li><li id=L559><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile_inr_diagonal</code> <small>line 559</small></li><li id=L585><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw_sum_left</code> <small>line 585</small></li><li id=L590><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw_sum_right</code> <small>line 590</small></li><li id=L595><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw_forget</code> <small>line 595</small></li><li id=L607><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.reveal_product_factorization</code> <small>line 607</small><div class="doc"><p>A conditional product of independently revealed coordinates has its
+exact point weight. This is the product identity used by the information
+bound, derived from the single-coordinate sampled distribution.</p></div><pre>theorem reveal_product_factorization {ι : Type*} [Fintype ι]
+    (μ : FiniteDistribution (X × Y)) (r : ι → X ⊕ Y) (q : ι → X × Y) :
+    (∏ i, (revealInputLaw μ).weight (r i)) *
+      (∏ i, (revealProfile μ (r i)).weight (q i)) =
+        ∏ i, (revealLaw μ).weight (q i,r i) := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L490">OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw</a>, <a href="FactorizationLemmas.lean.html#L462">OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile</a>, <a href="FactorizationLemmas.lean.html#L430">OAI.UniqueGamesTheorem.Foundations.Repetition.revealLaw</a></p></li><li id=L617><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.reveal_product_forget</code> <small>line 617</small></li><li id=L636><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.reveal_product_expectation</code> <small>line 636</small><div class="doc"><p>Marginalizing the reveal variables restores the original independent
+question law for every observable, including the selected-win likelihood.</p></div><pre>theorem reveal_product_expectation {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (μ : FiniteDistribution (X × Y)) (f : (ι → X × Y) → ℝ) :
+    (∑ r : ι → X ⊕ Y,
+      (∏ i, (revealInputLaw μ).weight (r i)) *
+        ∑ q : ι → X × Y, (∏ i, (revealProfile μ (r i)).weight (q i)) * f q) =
+      ∑ q : ι → X × Y, (∏ i, μ.weight (q i)) * f q := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L490">OAI.UniqueGamesTheorem.Foundations.Repetition.revealInputLaw</a>, <a href="FactorizationLemmas.lean.html#L462">OAI.UniqueGamesTheorem.Foundations.Repetition.revealProfile</a></p></li><li id=L659><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.logTwo</code> <small>line 659</small></li><li id=L661><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.logTwo_one</code> <small>line 661</small></li><li id=L663><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.logTwo_inv_le_of_half_pow_le</code> <small>line 663</small></li><li id=L676><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.contraction_step</code> <small>line 676</small><div class="doc"><p>A nonzero step below the cutoff contracts by <code>(1+v)/2</code>.</p></div><pre>theorem contraction_step {v ell : ℝ} {n m : ℕ} {p next : ℝ}
+    (hv0 : 0 ≤ v) (hv1 : v &lt; 1) (hell : 1 ≤ ell)
+    (hm : 1 ≤ m) (hmn : m &lt; n) (hp : 0 ≤ p)
+    (hmono : next ≤ p)
+    (hprev : p ≤ ((1 + v) / 2) ^ m)
+    (hcut : 2700 * (m : ℝ) * ell ≤ (1 - v) ^ 2 * ((n : ℝ) - m))
+    (hstep : next ≤ p * (v + 15 * Real.sqrt
+      (((m : ℝ) * ell + logTwo (1 / p)) / ((n : ℝ) - m)))) :
+    next ≤ ((1 + v) / 2) ^ (m + 1) := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L659">OAI.UniqueGamesTheorem.Foundations.Repetition.logTwo</a></p></li><li id=L716><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.initial_step</code> <small>line 716</small><div class="doc"><p>The <code>m=0</code> case does not use the estimate <code>m+1 ≤ 2*m*ell</code>.</p></div><pre>theorem initial_step {v ell next : ℝ} {n : ℕ}
+    (hstep : next ≤ 1 * (v + 15 * Real.sqrt
+      (((0 : ℝ) * ell + logTwo (1 / 1)) / ((n : ℝ) - 0)))) :
+    next ≤ v := by simpa using hstep</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L659">OAI.UniqueGamesTheorem.Foundations.Repetition.logTwo</a></p></li><li id=L722><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.cutoff_step</code> <small>line 722</small><div class="doc"><p>A real cutoff gives a valid step at every integer strictly below it.</p></div><pre>theorem cutoff_step {v ell : ℝ} {n m : ℕ}
+    (hv0 : 0 ≤ v) (hv1 : v &lt; 1) (hell : 1 ≤ ell)
+    (hm : (m : ℝ) &lt; (n : ℝ) * (1 - v) ^ 2 / (2925 * ell)) :
+    2700 * (m : ℝ) * ell ≤ (1 - v) ^ 2 * ((n : ℝ) - m) := by
+…</pre></li><li id=L734><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.cutoff_le_length</code> <small>line 734</small></li><li id=L743><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.ScalarRecurrence</code> <small>line 743</small><div class="doc"><p>The explicit recurrence obtained from a <code>15*sqrt</code> embedding error.</p></div><pre>def ScalarRecurrence (p : ℕ → ℝ) (n : ℕ) (v ell : ℝ) : Prop :=
+…</pre></li><li id=L749><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.decay_to_cutoff</code> <small>line 749</small><div class="doc"><p>Induction to the ceiling of the real cutoff repairs the integer-rounding
+omission in the printed scalar proof.</p></div><pre>theorem decay_to_cutoff (p : ℕ → ℝ) (n : ℕ) {v ell : ℝ}
+    (hv0 : 0 ≤ v) (hv1 : v &lt; 1) (hell : 1 ≤ ell)
+    (hp0 : p 0 = 1) (hpnonneg : ∀ m, 0 ≤ p m)
+    (hpmono : Antitone p) (hrec : ScalarRecurrence p n v ell) :
+    p n ≤ ((1 + v) / 2) ^
+      ((n : ℝ) * (1 - v) ^ 2 / (2925 * ell)) := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L743">OAI.UniqueGamesTheorem.Foundations.Repetition.ScalarRecurrence</a></p></li><li id=L787><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.block_contraction</code> <small>line 787</small><div class="doc"><p>The loss in one real-power block is cubic in the initial gap.</p></div><pre>theorem block_contraction {v : ℝ} (hv0 : 0 ≤ v) (hv1 : v &lt; 1) :
+    ((1 + v) / 2) ^ ((1 - v) ^ 2 / 2925 : ℝ) ≤
+      1 - (1 - v) ^ 3 / 5850 := by
+…</pre></li><li id=L802><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.scalar_bound_6000</code> <small>line 802</small><div class="doc"><p>Numerical endpoint of Holenstein's recurrence, with the published constant
+6000. This theorem assumes only a concrete scalar recurrence, not any game
+value bound. The derivation of that recurrence for games is separate.</p></div><pre>theorem scalar_bound_6000 (p : ℕ → ℝ) (n : ℕ) {v ell : ℝ}
+    (hv0 : 0 ≤ v) (hv1 : v &lt; 1) (hell : 1 ≤ ell)
+    (hp0 : p 0 = 1) (hpnonneg : ∀ m, 0 ≤ p m)
+    (hpmono : Antitone p) (hrec : ScalarRecurrence p n v ell) :
+    p n ≤ (1 - (1 - v) ^ 3 / 6000) ^ ((n : ℝ) / ell) := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L743">OAI.UniqueGamesTheorem.Foundations.Repetition.ScalarRecurrence</a></p></li><li id=L825><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate</code> <small>line 825</small></li><li id=L827><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate_pos</code> <small>line 827</small></li><li id=L829><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate_lt_one</code> <small>line 829</small></li><li id=L832><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate_fourth</code> <small>line 832</small><div class="doc"><p>Exact rational arithmetic verifies the fourth-power comparison.</p></div><pre>theorem incidenceRate_fourth :
+    1 - (1 / 192 : ℝ) ^ 3 / 6000 ≤ incidenceRate ^ 4 := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L825">OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate</a></p></li><li id=L838><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.incidence_rate_comparison</code> <small>line 838</small><div class="doc"><p>Converting the real exponent <code>n/4</code> to an integral power loses only the
+explicit slack already built into <code>incidenceRate</code>.</p></div><pre>theorem incidence_rate_comparison (n : ℕ) :
+    (1 - (1 / 192 : ℝ) ^ 3 / 6000) ^ ((n : ℝ) / 4) ≤ incidenceRate ^ n := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L825">OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate</a></p></li><li id=L851><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Repetition.scalar_incidence_bound</code> <small>line 851</small><div class="doc"><p>The incidence-game rate follows from its concrete scalar recurrence.
+The game-to-recurrence proof is deliberately not hidden in this statement.</p></div><pre>theorem scalar_incidence_bound (p : ℕ → ℝ) (n : ℕ) {v : ℝ}
+    (hv : v ≤ 1 - (1 / 192 : ℝ))
+    (hp0 : p 0 = 1) (hpnonneg : ∀ m, 0 ≤ p m)
+    (hpmono : Antitone p) (hrec : ScalarRecurrence p n v 4) :
+    p n ≤ incidenceRate ^ n := by
+…</pre><p class="refs">Mentions: <a href="FactorizationLemmas.lean.html#L743">OAI.UniqueGamesTheorem.Foundations.Repetition.ScalarRecurrence</a>, <a href="FactorizationLemmas.lean.html#L825">OAI.UniqueGamesTheorem.Foundations.Repetition.incidenceRate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

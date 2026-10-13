@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/JointDickman/Amplification/ProductComparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/JointDickman/Amplification/ProductComparison.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">JointDickman</a> / <a href="index.html">Amplification</a> / <span>ProductComparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">JointDickman</a>/<a href="index.html">Amplification</a>/<span>ProductComparison.lean</span></code></h1><p class="muted">25 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/JointDickman/Amplification/ProductComparison.lean#L1">source</a></p><div class="doc"><h3>Comparing finite product laws</h3><p>Replacing one independent coordinate at a time bounds the <code>L¹</code> distance
+of two finite product probability laws by the sum of their coordinate
+distances. Applied to the mutually exclusive prime-site law, this gives
+the accumulated quadratic error for arbitrary bounded complex tests.
+All identities and inequalities here are proved by finite sums.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.JointDickman.finiteProductMass</code> <small>line 20</small><div class="doc"><p>Product mass on a finite family of coordinate spaces.</p></div><pre>noncomputable def finiteProductMass {ι : Type*} [Fintype ι] [DecidableEq ι] {Ω : ι → Type*}
+    (a : ∀ i, Ω i → ℝ) (x : ∀ i, Ω i) : ℝ := ∏ i, a i (x i)</pre></li><li id=L23><b>theorem</b> <code>OAI.JointDickman.finiteProductMass_nonneg</code> <small>line 23</small></li><li id=L28><b>theorem</b> <code>OAI.JointDickman.finiteProductMass_sum</code> <small>line 28</small></li><li id=L36><b>theorem</b> <code>OAI.JointDickman.finiteProductMass_coordinate_l1</code> <small>line 36</small></li><li id=L75><b>theorem</b> <code>OAI.JointDickman.finiteProductMass_l1_le</code> <small>line 75</small><div class="doc"><p>The <code>L¹</code> discrepancy of product probability masses is at most the
+sum of the coordinate discrepancies. No order on the coordinates is needed.</p></div><pre>theorem finiteProductMass_l1_le {ι : Type*} [Fintype ι] [DecidableEq ι] {Ω : ι → Type*}
+    [∀ i, Fintype (Ω i)] (a b : ∀ i, Ω i → ℝ)
+    (ha : ∀ i x, 0 ≤ a i x) (hb : ∀ i x, 0 ≤ b i x)
+    (ha1 : ∀ i, ∑ x, a i x = 1) (hb1 : ∀ i, ∑ x, b i x = 1) :
+    (∑ x, |finiteProductMass a x - finiteProductMass b x|) ≤
+      ∑ i, ∑ y, |a i y - b i y| := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L20">OAI.JointDickman.finiteProductMass</a></p></li><li id=L113><b>theorem</b> <code>OAI.JointDickman.finiteProductMass_test_bound</code> <small>line 113</small><div class="doc"><p>A bounded complex test sees no more than its bound times the sum
+of the coordinate <code>L¹</code> errors.</p></div><pre>theorem finiteProductMass_test_bound {ι : Type*} [Fintype ι] [DecidableEq ι] {Ω : ι → Type*}
+    [∀ i, Fintype (Ω i)] (a b : ∀ i, Ω i → ℝ)
+    (ha : ∀ i x, 0 ≤ a i x) (hb : ∀ i x, 0 ≤ b i x)
+    (ha1 : ∀ i, ∑ x, a i x = 1) (hb1 : ∀ i, ∑ x, b i x = 1)
+    (F : (∀ i, Ω i) → ℂ) {L : ℝ} (hL : 0 ≤ L) (hF : ∀ x, ‖F x‖ ≤ L) :
+    ‖(∑ x, (finiteProductMass a x : ℂ) * F x) -
+      (∑ x, (finiteProductMass b x : ℂ) * F x)‖ ≤
+      L * ∑ i, ∑ y, |a i y - b i y| := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L20">OAI.JointDickman.finiteProductMass</a></p></li><li id=L135><b>def</b> <code>OAI.JointDickman.categoricalProductMass</code> <small>line 135</small><div class="doc"><p>Mutually exclusive site hits, independent between coordinates.</p></div><pre>noncomputable def categoricalProductMass {ι α : Type*} [Fintype ι] [DecidableEq ι] [DecidableEq α]
+    (P : Finset α) (q : ι → α → ℝ) (x : ι → P.powerset) : ℝ :=
+…</pre></li><li id=L140><b>def</b> <code>OAI.JointDickman.bernoulliProductMass</code> <small>line 140</small><div class="doc"><p>Independent site hits, independent also between coordinates.</p></div><pre>noncomputable def bernoulliProductMass {ι α : Type*} [Fintype ι] [DecidableEq ι] [DecidableEq α]
+    (P : Finset α) (q : ι → α → ℝ) (x : ι → P.powerset) : ℝ :=
+…</pre></li><li id=L144><b>theorem</b> <code>OAI.JointDickman.categoricalProduct_l1_le</code> <small>line 144</small></li><li id=L167><b>theorem</b> <code>OAI.JointDickman.categoricalProduct_test_bound</code> <small>line 167</small></li><li id=L196><b>theorem</b> <code>OAI.JointDickman.prime_site_probability_square_sum</code> <small>line 196</small></li><li id=L210><b>theorem</b> <code>OAI.JointDickman.categoricalPrimeProduct_l1_le</code> <small>line 210</small><div class="doc"><p>Accumulated prime-site discrepancy. The site count must not exceed
+any prime, precisely so that the categorical laws are nonnegative.</p></div><pre>theorem categoricalPrimeProduct_l1_le {α : Type*} [DecidableEq α]
+    (P : Finset α) (Q : Finset ℕ)
+    (hQ : ∀ p ∈ Q, p.Prime) (hcard : ∀ p ∈ Q, P.card ≤ p) :
+    (∑ x, |categoricalProductMass P (fun (p : Q) _ =&gt; 1 / (p.val : ℝ)) x -
+      bernoulliProductMass P (fun (p : Q) _ =&gt; 1 / (p.val : ℝ)) x|) ≤
+      2 * (P.card : ℝ) ^ 2 * ∑ p ∈ Q, 1 / (p : ℝ) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L135">OAI.JointDickman.categoricalProductMass</a>, <a href="ProductComparison.lean.html#L140">OAI.JointDickman.bernoulliProductMass</a></p></li><li id=L233><b>theorem</b> <code>OAI.JointDickman.categoricalPrimeProduct_test_bound</code> <small>line 233</small><div class="doc"><p>For any bounded complex function of all prime hit sets, independent
+Bernoulli replacement costs at most <code>2 L M² sum_p 1/p²</code>.</p></div><pre>theorem categoricalPrimeProduct_test_bound {α : Type*} [DecidableEq α]
+    (P : Finset α) (Q : Finset ℕ)
+    (hQ : ∀ p ∈ Q, p.Prime) (hcard : ∀ p ∈ Q, P.card ≤ p)
+    (F : (Q → P.powerset) → ℂ) {L : ℝ} (hL : 0 ≤ L) (hF : ∀ x, ‖F x‖ ≤ L) :
+    ‖(∑ x, (categoricalProductMass P (fun (p : Q) _ =&gt; 1 / (p.val : ℝ)) x : ℂ) * F x) -
+      (∑ x, (bernoulliProductMass P (fun (p : Q) _ =&gt; 1 / (p.val : ℝ)) x : ℂ) * F x)‖ ≤
+      2 * L * (P.card : ℝ) ^ 2 * ∑ p ∈ Q, 1 / (p : ℝ) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L135">OAI.JointDickman.categoricalProductMass</a>, <a href="ProductComparison.lean.html#L140">OAI.JointDickman.bernoulliProductMass</a></p></li><li id=L256><b>def</b> <code>OAI.JointDickman.bernoulliBitMass</code> <small>line 256</small><div class="doc"><p>One Bernoulli coordinate, written as a mass on <code>Bool</code>.</p></div><pre>noncomputable def bernoulliBitMass (q : ℝ) (b : Bool) : ℝ := if b then q else 1 - q</pre></li><li id=L258><b>theorem</b> <code>OAI.JointDickman.bernoulliBitMass_sum</code> <small>line 258</small></li><li id=L261><b>theorem</b> <code>OAI.JointDickman.bernoulliBitMass_nonneg</code> <small>line 261</small></li><li id=L268><b>theorem</b> <code>OAI.JointDickman.bernoulliBitMass_l1</code> <small>line 268</small><div class="doc"><p>Changing a Bernoulli success probability has exactly this <code>L¹</code> cost.</p></div><pre>theorem bernoulliBitMass_l1 (q r : ℝ) :
+    (∑ b, |bernoulliBitMass q b - bernoulliBitMass r b|) = 2 * |q - r| := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L256">OAI.JointDickman.bernoulliBitMass</a></p></li><li id=L275><b>def</b> <code>OAI.JointDickman.subsetHitEquiv</code> <small>line 275</small><div class="doc"><p>The membership indicators of a subset give its finite Boolean coordinates.</p></div><pre>noncomputable def subsetHitEquiv {α : Type*} [DecidableEq α] (P : Finset α) :
+    P.powerset ≃ (P → Bool) where
+…</pre></li><li id=L295><b>theorem</b> <code>OAI.JointDickman.bernoulliSubsetMass_eq_product</code> <small>line 295</small></li><li id=L320><b>theorem</b> <code>OAI.JointDickman.bernoulliSubsetMass_l1_perturb</code> <small>line 320</small><div class="doc"><p>Independent Bernoulli subset laws are Lipschitz in their probabilities.</p></div><pre>theorem bernoulliSubsetMass_l1_perturb {α : Type*} [DecidableEq α]
+    (P : Finset α) (q r : α → ℝ)
+    (hq : ∀ i ∈ P, 0 ≤ q i ∧ q i ≤ 1) (hr : ∀ i ∈ P, 0 ≤ r i ∧ r i ≤ 1) :
+    (∑ S ∈ P.powerset, |bernoulliSubsetMass P q S - bernoulliSubsetMass P r S|) ≤
+      2 * ∑ i ∈ P, |q i - r i| := by
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/PrimeSetWeights.lean.html#L20">OAI.JointDickman.bernoulliSubsetMass</a></p></li><li id=L345><b>theorem</b> <code>OAI.JointDickman.bernoulliProduct_l1_perturb</code> <small>line 345</small><div class="doc"><p>Perturbing all prime/site probabilities costs the sum of their local
+probability changes, with no independence hypothesis beyond the product definition.</p></div><pre>theorem bernoulliProduct_l1_perturb {ι α : Type*} [Fintype ι] [DecidableEq ι]
+    [DecidableEq α] (P : Finset α) (q r : ι → α → ℝ)
+    (hq : ∀ i j, j ∈ P → 0 ≤ q i j ∧ q i j ≤ 1)
+    (hr : ∀ i j, j ∈ P → 0 ≤ r i j ∧ r i j ≤ 1) :
+    (∑ x, |bernoulliProductMass P q x - bernoulliProductMass P r x|) ≤
+      2 * ∑ i, ∑ j ∈ P, |q i j - r i j| := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L140">OAI.JointDickman.bernoulliProductMass</a></p></li><li id=L369><b>theorem</b> <code>OAI.JointDickman.finiteMass_test_bound_of_l1</code> <small>line 369</small><div class="doc"><p>Finite <code>L¹</code> error controls every bounded complex test.</p></div><pre>theorem finiteMass_test_bound_of_l1 {Ω : Type*} [Fintype Ω]
+    (a b : Ω → ℝ) (F : Ω → ℂ) {L ε : ℝ} (hL : 0 ≤ L)
+    (hF : ∀ x, ‖F x‖ ≤ L) (hε : (∑ x, |a x - b x|) ≤ ε) :
+    ‖(∑ x, (a x : ℂ) * F x) - (∑ x, (b x : ℂ) * F x)‖ ≤ L * ε := by
+…</pre></li><li id=L384><b>theorem</b> <code>OAI.JointDickman.bernoulliProduct_test_perturb</code> <small>line 384</small></li><li id=L397><b>theorem</b> <code>OAI.JointDickman.categoricalProduct_l1_perturb</code> <small>line 397</small><div class="doc"><p>Mutually exclusive probabilities may also be perturbed when replacing
+them by independent hits. This combines the two actual comparison errors.</p></div><pre>theorem categoricalProduct_l1_perturb {ι α : Type*} [Fintype ι] [DecidableEq ι]
+    [DecidableEq α] (P : Finset α) (q r : ι → α → ℝ)
+    (hq : ∀ i j, j ∈ P → 0 ≤ q i j ∧ q i j ≤ 1)
+    (hr : ∀ i j, j ∈ P → 0 ≤ r i j ∧ r i j ≤ 1)
+    (hsum : ∀ i, ∑ j ∈ P, q i j ≤ 1) :
+    (∑ x, |categoricalProductMass P q x - bernoulliProductMass P r x|) ≤
+      2 * (∑ i, (∑ j ∈ P, q i j) ^ 2) + 2 * ∑ i, ∑ j ∈ P, |q i j - r i j| := by
+…</pre><p class="refs">Mentions: <a href="ProductComparison.lean.html#L135">OAI.JointDickman.categoricalProductMass</a>, <a href="ProductComparison.lean.html#L140">OAI.JointDickman.bernoulliProductMass</a></p></li><li id=L413><b>theorem</b> <code>OAI.JointDickman.reciprocal_exclusion_perturb</code> <small>line 413</small><div class="doc"><p>The probability change for the extra-root model in <code>graph.tex</code>.</p></div><pre>theorem reciprocal_exclusion_perturb {p M : ℝ} (hp : 0 &lt; p) (hM : 0 ≤ M)
+    (hMp : 2 * M ≤ p) : |1 / (p - M) - 1 / p| ≤ 2 * M / p ^ 2 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

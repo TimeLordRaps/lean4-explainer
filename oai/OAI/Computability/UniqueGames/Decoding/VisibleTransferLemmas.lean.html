@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Decoding/VisibleTransferLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Decoding/VisibleTransferLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Decoding</a> / <span>VisibleTransferLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Decoding</a>/<span>VisibleTransferLemmas.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Decoding/VisibleTransferLemmas.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberEvent</code> <small>line 21</small><div class="doc"><p>The part of an event in one actual visible-data fiber.</p></div><pre>def fiberEvent (observe : Ω → D) (d : D) (event : Ω → Bool) : Ω → Bool := by
+…</pre></li><li id=L25><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberMass</code> <small>line 25</small></li><li id=L30><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberMass_nonnegative</code> <small>line 30</small></li><li id=L35><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberMass_mono</code> <small>line 35</small></li><li id=L44><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.sum_fiberMass</code> <small>line 44</small></li><li id=L54><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.observation_weight</code> <small>line 54</small></li><li id=L62><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness</code> <small>line 62</small><div class="doc"><p>Positive projected column-slice mass and sufficient conditional target
+agreement. Both quantities are computed after fixing actual visible data.</p></div><pre>def visibleWitness (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (d : D) : Bool := by
+…</pre></li><li id=L71><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.witness_margin_le_visible_probability</code> <small>line 71</small><div class="doc"><p>The positive part of the witness margin is paid for by the probability of
+the actual observed data, rather than by the larger hidden sample space.</p></div><pre>theorem witness_margin_le_visible_probability
+    (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (hthreshold : 0 ≤ threshold) :
+    μ.probability (fun x =&gt; slice x &amp;&amp; targetHit x) - threshold * μ.probability slice ≤
+      (μ.pushforward observe).probability (visibleWitness μ observe slice targetHit threshold) := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransferLemmas.lean.html#L62">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness</a></p></li><li id=L114><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness_conditional</code> <small>line 114</small><div class="doc"><p>On every selected datum the conditional distribution is defined on an
+actual nonempty positive-mass slice and has the promised target agreement.</p></div><pre>theorem visibleWitness_conditional
+    (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (d : D)
+    (h : visibleWitness μ observe slice targetHit threshold d = true) :
+    ∃ hpositive : 0 &lt; μ.probability (fiberEvent observe d slice),
+      threshold ≤ (μ.condition (fiberEvent observe d slice) hpositive).probability targetHit := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransferLemmas.lean.html#L62">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness</a>, <a href="VisibleTransferLemmas.lean.html#L21">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberEvent</a></p></li><li id=L138><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness_good</code> <small>line 138</small><div class="doc"><p>Goodness is inherited from any event whose membership requires good
+visible advice. Positivity supplies an actual supporting hidden sample.</p></div><pre>theorem visibleWitness_good
+    (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ)
+    (good : D → Prop) (hslice : ∀ x, slice x = true → good (observe x))
+    (d : D) (h : visibleWitness μ observe slice targetHit threshold d = true) :
+    good d := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransferLemmas.lean.html#L62">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness</a></p></li><li id=L162><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.margin_transfer</code> <small>line 162</small><div class="doc"><p>A pair of full-table event probabilities transfers with error
+<code>(1 + threshold) * TV</code>. This estimate precedes all conditioning.</p></div><pre>theorem margin_transfer (μ ν : FiniteDistribution Ω)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (hthreshold : 0 ≤ threshold) :
+    μ.probability (fun x =&gt; slice x &amp;&amp; targetHit x) - threshold * μ.probability slice -
+        (1 + threshold) * μ.totalVariation ν ≤
+      ν.probability (fun x =&gt; slice x &amp;&amp; targetHit x) - threshold * ν.probability slice := by
+…</pre></li><li id=L175><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.wholeTable_transfer_to_visibleWitness</code> <small>line 175</small><div class="doc"><p>The whole-table comparison and the exact finite disintegration combine
+without any assumption on conditional projection laws.</p></div><pre>theorem wholeTable_transfer_to_visibleWitness
+    {Γ : Type*} [Fintype Γ]
+    (unrestricted : FiniteDistribution Ω) (actual : FiniteDistribution Γ)
+    (pad : Γ → Ω) (observe : Γ → D) (slice targetHit : Ω → Bool)
+    (threshold γ : ℝ) (hthreshold : 0 ≤ threshold)
+    (hmargin : γ ≤
+      unrestricted.probability (fun x =&gt; slice x &amp;&amp; targetHit x) -
+        threshold * unrestricted.probability slice -
+        (1 + threshold) * unrestricted.totalVariation (actual.pushforward pad)) :
+    γ ≤ (actual.pushforward observe).probability
+      (visibleWitness actual observe (fun x =&gt; slice (pad x))
+        (fun x =&gt; targetHit (pad x)) threshold) := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransferLemmas.lean.html#L62">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness</a></p></li><li id=L194><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.projected_witness_mass</code> <small>line 194</small></li><li id=L228><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.UniformFibers.selectedFiberEquiv</code> <small>line 228</small></li><li id=L248><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.UniformFibers.selectedFiberEquiv_point</code> <small>line 248</small></li><li id=L256><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.UniformFibers.conditional_probability</code> <small>line 256</small><div class="doc"><p>Conditioning after fixing the complete datum and the selected column
+event leaves precisely the uniform restricted private fiber.</p></div><pre>theorem conditional_probability [Fintype Ω] [Fintype Y]
+    (μ : FiniteDistribution Ω) (observe : Ω → D) (d : D)
+    (slice event : Ω → Bool)
+    (positive : 0 &lt; μ.probability (VisibleTransfer.fiberEvent observe d slice))
+    (c : ℝ) (hconstant : ∀ x, observe x = d → μ.weight x = c)
+    (e : Y ≃ {x : Ω // observe x = d}) :
+    (μ.condition (VisibleTransfer.fiberEvent observe d slice) positive).probability event =
+      𝔼 y : {y : Y // slice (e y).val = true},
+        if event (e y.val).val then (1 : ℝ) else 0 := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransferLemmas.lean.html#L21">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberEvent</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

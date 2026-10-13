@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Heat/HeatGramError.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Heat/HeatGramError.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Heat</a> / <span>HeatGramError.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Heat</a>/<span>HeatGramError.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Heat/HeatGramError.lean#L1">source</a></p><div class="doc"><h3>Relative error of actual heat Gram matrices</h3><p>After normalizing the coordinate columns, local Gram error and missing
+heat mass control the operator error. The estimates use the actual
+carré du champ and the same kernel as the heat construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.RegularPointCoordinates.weightedGram_sub_mass_id_norm_le</code> <small>line 26</small><div class="doc"><p>Weighted first-order splitting errors bound the Gram operator relative
+to the mass of the weight. No normalization of the weight is assumed.</p></div><pre>theorem weightedGram_sub_mass_id_norm_le {n : ℕ}
+    (u : Fin n → SobolevSpace μ hQ) {w : X → ℝ}
+    (hw : AEStronglyMeasurable w μ) {C : ℝ≥0}
+    (hb : ∀ᵐ x ∂μ, ‖w x‖ ≤ (C : ℝ)) (hiw : Integrable w μ)
+    (hpos : ∀ᵐ x ∂μ, 0 ≤ w x) {epsilon : ℝ} (heps : 0 ≤ epsilon)
+    (herr : ∀ i j : Fin n, ∫ x, w x *
+      |localGamma μ hQ (u i) (u j) x - (if i = j then 1 else 0)| ∂μ ≤ epsilon) :
+    ‖sobolevGram μ hQ (sobolevColumnMap μ hQ u) hw hb -
+      (∫ x, w x ∂μ) • ContinuousLinearMap.id ℝ (Euclidean n)‖ ≤ (n : ℝ) ^ 2 * epsilon := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L6133">OAI.RegularPointCoordinates.localGamma</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L56">OAI.RegularPointCoordinates.sobolevGram</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a></p></li><li id=L69><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_sub_id_norm_le</code> <small>line 69</small><div class="doc"><p>In normalized columns the heat Gram error is bounded by the weighted
+Gram defect, the lost heat mass, and the exact scalar regularizer.</p></div><pre>theorem cutoffHeatGram_sub_id_norm_le {n : ℕ}
+    (u : Fin n → SobolevSpace μ hQ) (hχpos : ∀ y, 0 ≤ χ y)
+    {t : ℝ} (ht : 0 &lt; t) (x : X) (lambda : ℝ) {epsilon : ℝ} (heps : 0 ≤ epsilon)
+    (herr : ∀ i j : Fin n, ∫ y, (χ y * p t x y) *
+      |localGamma μ hQ (u i) (u j) y - (if i = j then 1 else 0)| ∂μ ≤ epsilon) :
+    ‖cutoffHeatGram μ hQ hp hχ hsχ (sobolevColumnMap μ hQ u) ht x lambda -
+      ContinuousLinearMap.id ℝ (Euclidean n)‖ ≤
+      (n : ℝ) ^ 2 * epsilon + |(∫ y, χ y * p t x y ∂μ) - 1| + |lambda * t| := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L6133">OAI.RegularPointCoordinates.localGamma</a>, <a href="ActualHeatGrams.lean.html#L77">OAI.RegularPointCoordinates.cutoffHeatGram</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a></p></li><li id=L109><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_conjugate</code> <small>line 109</small><div class="doc"><p>The scalar regularizer transforms into <code>A* A</code>. This identity keeps
+the conjugated original heat matrix distinct from a freshly regularized
+Gram matrix of the transformed columns.</p></div><pre>theorem cutoffHeatGram_conjugate {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E]
+    (U : E →L[ℝ] SobolevSpace μ hQ) (A : E →L[ℝ] E)
+    {t : ℝ} (ht : 0 &lt; t) (x : X) (lambda : ℝ) :
+    A.adjoint.comp ((cutoffHeatGram μ hQ hp hχ hsχ U ht x lambda).comp A) =
+      sobolevGram μ hQ (U.comp A)
+        ((hχ.mul (hp.continuous_right t ht x)).aestronglyMeasurable)
+        (Filter.Eventually.of_forall (cutoffHeatWeight_le μ hQ hp hχ hsχ ht x)) +
+      (lambda * t) • A.adjoint.comp A := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="ActualHeatGrams.lean.html#L77">OAI.RegularPointCoordinates.cutoffHeatGram</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L56">OAI.RegularPointCoordinates.sobolevGram</a>, <a href="ActualHeatGrams.lean.html#L68">OAI.RegularPointCoordinates.cutoffHeatWeight_le</a></p></li><li id=L126><b>theorem</b> <code>OAI.RegularPointCoordinates.sobolevColumnMap_basis_values</code> <small>line 126</small><div class="doc"><p>Reconstruct a finite coordinate column from its values on the
+Euclidean basis.</p></div><pre>theorem sobolevColumnMap_basis_values {n : ℕ}
+    (U : Euclidean n →L[ℝ] SobolevSpace μ hQ) :
+    sobolevColumnMap μ hQ (fun i =&gt; U (EuclideanSpace.single i 1)) = U := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a></p></li><li id=L139><b>theorem</b> <code>OAI.RegularPointCoordinates.cutoffHeatGram_conjugated_sub_id_norm_le</code> <small>line 139</small><div class="doc"><p>Relative comparison in an arbitrary normalized frame. The cost of
+the regularizer is the squared norm of that frame, as required at small scales.</p></div><pre>theorem cutoffHeatGram_conjugated_sub_id_norm_le {n : ℕ}
+    (U : Euclidean n →L[ℝ] SobolevSpace μ hQ) (A : Euclidean n →L[ℝ] Euclidean n)
+    (hχpos : ∀ y, 0 ≤ χ y) {t : ℝ} (ht : 0 &lt; t) (x : X) (lambda : ℝ)
+    {epsilon : ℝ} (heps : 0 ≤ epsilon)
+    (herr : ∀ i j : Fin n, ∫ y, (χ y * p t x y) *
+      |localGamma μ hQ (U (A (EuclideanSpace.single i 1)))
+        (U (A (EuclideanSpace.single j 1))) y - (if i = j then 1 else 0)| ∂μ ≤ epsilon) :
+    ‖A.adjoint.comp ((cutoffHeatGram μ hQ hp hχ hsχ U ht x lambda).comp A) -
+      ContinuousLinearMap.id ℝ (Euclidean n)‖ ≤
+      (n : ℝ) ^ 2 * epsilon + |(∫ y, χ y * p t x y ∂μ) - 1| +
+        |lambda * t| * ‖A‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L6133">OAI.RegularPointCoordinates.localGamma</a>, <a href="ActualHeatGrams.lean.html#L77">OAI.RegularPointCoordinates.cutoffHeatGram</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

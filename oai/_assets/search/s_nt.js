@@ -1,0 +1,1 @@
+window.l4shard("nt", [["OAI.AffineBernstein.inverseNthRoot",225,99],["OAI.GeneralMahler.Edge.nt_ref",6081,65],["OAI.Nagata.ProjectiveGeometry.chartDehomogenize₂_eq_eval₂_insertNth",11477,365],["OAI.WLIdentification.WordExpressions.Poly.nth",20542,103]]);

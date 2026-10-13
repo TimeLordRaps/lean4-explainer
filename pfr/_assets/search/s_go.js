@@ -1,0 +1,1 @@
+window.l4shard("go", [["averaged_construct_good",13,432],["construct_good",6,414],["construct_good_improved'",13,380],["construct_good_improved''",13,410],["construct_good_prelim",6,351],["construct_good_prelim'",13,327],["goursat",44,46]]);

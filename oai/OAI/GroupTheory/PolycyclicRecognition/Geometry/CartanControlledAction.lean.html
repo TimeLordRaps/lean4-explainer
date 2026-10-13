@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanControlledAction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanControlledAction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>CartanControlledAction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>CartanControlledAction.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanControlledAction.lean#L1">source</a></p><div class="doc"><h3>Cartan actions whose heights stay in a template</h3><p>The normalized width of a root controls every exponential whose exponent is
+below that width. Consequently a Cartan action with height in the scaled
+template sends a fixed coordinate box into the template box with polynomial
+loss in its Cartan logarithm. This is the increment estimate for controlled
+paths.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.PolycyclicRecognition.norm_map_between_bases_le</code> <small>line 21</small></li><li id=L49><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.norm_scaled_root_le_of_exponent_le</code> <small>line 49</small><div class="doc"><p>Any smaller root exponent satisfies the normalized width estimate.</p></div><pre>theorem norm_scaled_root_le_of_exponent_le
+    {E : Set W} (hE : IsCompact E) (hne : E.Nonempty) (β : M.Bases)
+    (i : Fin M.letterCount) (v : cartanRootIdeal H) (hv : (v : L) ∈ rootSpace H (M.weight i))
+    {r t : ℝ} (hr : 0 ≤ r)
+    (ht : t ≤ r * (M.supportIn T hunimod eW).weightSupport E i) :
+    ‖(M.boxBasis T hunimod eW E β r).equivFun (Real.exp t • v)‖ ≤
+      ‖(WordBasisSelections.basis M.letter M.wordList β).equivFun v‖ := by
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li><li id=L65><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.norm_adjoint_letter_le</code> <small>line 65</small><div class="doc"><p>Height containment absorbs the entire scalar part of each letter image.</p></div><pre>theorem norm_adjoint_letter_le
+    {E : Set W} (hE : IsCompact E) (hne : E.Nonempty) (β : M.Bases)
+    {r : ℝ} (hr : 0 ≤ r) (h : H) (w : W) (hw : w ∈ E)
+    (hh : eW (heightProjection T.character (h : L)) = r • w) (i : Fin M.letterCount) :
+    ‖(M.boxBasis T hunimod eW E β r).equivFun
+      (cartanIdealAdjointAutomorphism T H h (M.letter i))‖ ≤
+    ‖(WordBasisSelections.basis M.letter M.wordList β).equivFun
+      (cartanIdealResidualAutomorphism T H h (M.letter i))‖ := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PolycyclicRecognition.lean.html#L148">OAI.PolycyclicRecognition.heightProjection</a>, <a href="CartanAdjointAction.lean.html#L25">OAI.PolycyclicRecognition.cartanIdealAdjointAutomorphism</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a>, <a href="CartanResidualDerivation.lean.html#L206">OAI.PolycyclicRecognition.cartanIdealResidualAutomorphism</a></p></li><li id=L94><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.norm_wordBasis_lieMap_le</code> <small>line 94</small><div class="doc"><p>A bound on generator images controls the map from any word basis to a
+basis with bounded structure constants.</p></div><pre>theorem norm_wordBasis_lieMap_le
+    (γ : M.Bases)
+    (b : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H))
+    (F : cartanRootIdeal H →ₗ⁅ℝ⁆ cartanRootIdeal H) {K A : ℝ} (hK : 0 ≤ K) (hA : 0 ≤ A)
+    (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ K)
+    (hletter : ∀ i, ‖b.equivFun (F (M.letter i))‖ ≤ A) (v : cartanRootIdeal H) :
+    ‖b.equivFun (F v)‖ ≤
+      (finrank ℝ (cartanRootIdeal H) : ℝ) *
+        (1 + (finrank ℝ (cartanRootIdeal H) : ℝ) ^ 2 * K) ^ M.wordDegreeBound *
+        (1 + A) ^ M.wordDegreeBound *
+          ‖(WordBasisSelections.basis M.letter M.wordList γ).equivFun v‖ := by
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li><li id=L141><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_controlled_adjoint_bound</code> <small>line 141</small><div class="doc"><p>Uniform polynomial coordinate control for Cartan actions with height
+inside a scaled template. The input basis is unscaled and need not maximize.</p></div><pre>theorem exists_controlled_adjoint_bound
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ (A : ℝ) (p : ℕ), 0 ≤ A ∧ ∀ {E : Set W}, IsCompact E → E.Nonempty →
+      ∀ β : M.Bases,
+      IsMaximizingColumnBasis (wordListCoordinates M.letter M.wordList b₀)
+        (M.boxCost T hunimod eW E) β.val →
+      ∀ (γ : M.Bases) (r : ℝ), 0 ≤ r → ∀ (h : H) (w : W), w ∈ E →
+      eW (heightProjection T.character (h : L)) = r • w → ∀ v : cartanRootIdeal H,
+      ‖(M.boxBasis T hunimod eW E β r).equivFun (cartanIdealAdjointAutomorphism T H h v)‖ ≤
+        A * (1 + ‖(Module.finBasis ℝ H).equivFun h‖) ^ p *
+          ‖(WordBasisSelections.basis M.letter M.wordList γ).equivFun v‖ := by
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a>, <a href="../../../../ComparatorChallenges/PolycyclicRecognition.lean.html#L148">OAI.PolycyclicRecognition.heightProjection</a>, <a href="CartanAdjointAction.lean.html#L25">OAI.PolycyclicRecognition.cartanIdealAdjointAutomorphism</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

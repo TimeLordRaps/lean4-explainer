@@ -1,0 +1,163 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Simplicial/KanContractedFamilyLifting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Simplicial/KanContractedFamilyLifting.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Simplicial</a> / <span>KanContractedFamilyLifting.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Simplicial</a>/<span>KanContractedFamilyLifting.lean</span></code></h1><p class="muted">48 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Simplicial/KanContractedFamilyLifting.lean#L1">source</a></p><div class="doc"><h3>Stationary contractions and Kan fibres over finite cubes</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.finalVertex</code> <small>line 23</small><div class="doc"><p>The final vertex in every coordinate of the finite simplicial cube.</p></div><pre>def finalVertex : (n : ℕ) → (obj n) _⦋0⦌
+  | 0 =&gt; finalSimplexVertex 0
+  | n+1 =&gt; (finalVertex n, finalSimplexVertex 1)
+
+/-- Simultaneously contract all interval coordinates to their final vertex. -/</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="KanFiberComponentTransport.lean.html#L158">OAI.Thomason.Construction.finalSimplexVertex</a>, <a href="SimplexCubeRetract.lean.html#L322">OAI.Thomason.Construction.RealizedCube.coordinates</a></p></li><li id=L28><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.finalContractionMap</code> <small>line 28</small><div class="doc"><p>Simultaneously contract all interval coordinates to their final vertex.</p></div><pre>def finalContractionMap (n : ℕ) : obj n ⊗ (Δ[1] : SSet.{0}) ⟶ obj n :=
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a></p></li><li id=L43><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.finalContractionMap_zero</code> <small>line 43</small></li><li id=L57><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.finalContractionMap_one</code> <small>line 57</small></li><li id=L81><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.finalContraction</code> <small>line 81</small><div class="doc"><p>The simultaneous contraction is an actual simplicial homotopy.</p></div><pre>def finalContraction (n : ℕ) : SSet.Homotopy (𝟙 (obj n)) (SSet.const (finalVertex n)) where
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="KanContractedFamilyLifting.lean.html#L23">OAI.Thomason.Construction.RealizedCube.finalVertex</a></p></li><li id=L93><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.finalContraction_stationary</code> <small>line 93</small><div class="doc"><p>The entire constant family at the final vertex stays fixed.</p></div><pre>theorem finalContraction_stationary (n : ℕ) (K : SSet.{0}) :
+    (SSet.const (X := K) (finalVertex n)) ▷ Δ[1] ≫ (finalContraction n).h =
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L23">OAI.Thomason.Construction.RealizedCube.finalVertex</a>, <a href="KanContractedFamilyLifting.lean.html#L81">OAI.Thomason.Construction.RealizedCube.finalContraction</a></p></li><li id=L119><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.kan_final_fiber_deformation</code> <small>line 119</small><div class="doc"><p>Every Kan fibration over a finite simplicial cube retracts, by a
+stationary simplicial homotopy, onto its final-vertex fibre.</p></div><pre>theorem kan_final_fiber_deformation {E : SSet.{0}} (n : ℕ)
+    (p : E ⟶ obj n) [HomotopicalAlgebra.Fibration p] :
+    ∃ r : E ⟶ (simplicialPointFiber p (finalVertex n)).toSSet,
+      (simplicialPointFiber p (finalVertex n)).ι ≫ r = 𝟙 _ ∧
+      ∃ T : SSet.Homotopy (𝟙 E) (r ≫ (simplicialPointFiber p (finalVertex n)).ι),
+        (simplicialPointFiber p (finalVertex n)).ι ▷ Δ[1] ≫ T.h =
+          fst (simplicialPointFiber p (finalVertex n)).toSSet Δ[1] ≫
+            (simplicialPointFiber p (finalVertex n)).ι ∧
+        T.h ≫ p = p ▷ Δ[1] ≫ (finalContraction n).h := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanContractedFamilyLifting.lean.html#L23">OAI.Thomason.Construction.RealizedCube.finalVertex</a>, <a href="KanContractedFamilyLifting.lean.html#L81">OAI.Thomason.Construction.RealizedCube.finalContraction</a></p></li><li id=L133><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.kan_final_fiber_weak</code> <small>line 133</small><div class="doc"><p>The final fibre includes by an actual realization weak equivalence.</p></div><pre>theorem kan_final_fiber_weak {E : SSet.{0}} (n : ℕ)
+    (p : E ⟶ obj n) [HomotopicalAlgebra.Fibration p] :
+    realizationWeakEquivalences (simplicialPointFiber p (finalVertex n)).ι := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanContractedFamilyLifting.lean.html#L23">OAI.Thomason.Construction.RealizedCube.finalVertex</a></p></li><li id=L142><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.kan_any_fiber_weak</code> <small>line 142</small><div class="doc"><p>Every vertex fibre of a Kan fibration over a cube includes weakly.
+The already proved realization component comparison transports the final
+fibre result to all vertices, without a global fibre-preservation premise.</p></div><pre>theorem kan_any_fiber_weak {E : SSet.{0}} (n : ℕ)
+    (p : E ⟶ obj n) [HomotopicalAlgebra.Fibration p] (b : (obj n) _⦋0⦌) :
+    realizationWeakEquivalences (simplicialPointFiber p b).ι := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a></p></li><li id=L180><b>theorem</b> <code>OAI.Thomason.Construction.simplexFinalContraction_initial</code> <small>line 180</small><div class="doc"><p>The final contraction on the interval, started at zero, is the original
+interval parameter, in every simplicial degree.</p></div><pre>theorem simplexFinalContraction_initial (K : SSet.{0}) :
+    (SSet.const (X := K) (initialSimplexVertex 1)) ▷ Δ[1] ≫
+…</pre><p class="refs">Mentions: <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a></p></li><li id=L199><b>theorem</b> <code>OAI.Thomason.Construction.kan_interval_fiber_transport</code> <small>line 199</small><div class="doc"><p>A Kan fibration transports its initial fibre to its final fibre along
+any base edge by an actual simplicial weak equivalence. The transporting
+homotopy projects exactly onto that edge, with the same interval parameter.</p></div><pre>theorem kan_interval_fiber_transport {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (g : (Δ[1] : SSet.{0}) ⟶ B) :
+    ∃ t : (simplicialPointFiber p (g.app _ (initialSimplexVertex 1))).toSSet ⟶
+        (simplicialPointFiber p (g.app _ (finalSimplexVertex 1))).toSSet,
+      realizationWeakEquivalences t ∧
+      ∃ H : SSet.Homotopy (simplicialPointFiber p (g.app _ (initialSimplexVertex 1))).ι
+          (t ≫ (simplicialPointFiber p (g.app _ (finalSimplexVertex 1))).ι),
+        H.h ≫ p = snd _ (Δ[1] : SSet.{0}) ≫ g := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="KanFiberComponentTransport.lean.html#L158">OAI.Thomason.Construction.finalSimplexVertex</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L276><b>def</b> <code>OAI.Thomason.Construction.kanSimplexRestriction</code> <small>line 276</small><div class="doc"><p>The canonical restriction map on total spaces above a simplex map.</p></div><pre>def kanSimplexRestriction {E B : SSet.{0}} (p : E ⟶ B) {n m : SimplexCategory}
+    (b : SSet.stdSimplex.obj n ⟶ B) (f : m ⟶ n) :
+    pullback p (SSet.stdSimplex.map f ≫ b) ⟶ pullback p b :=
+…</pre></li><li id=L283><b>theorem</b> <code>OAI.Thomason.Construction.kanSimplexRestriction_fst</code> <small>line 283</small></li><li id=L290><b>theorem</b> <code>OAI.Thomason.Construction.kanSimplexRestriction_snd</code> <small>line 290</small></li><li id=L299><b>theorem</b> <code>OAI.Thomason.Construction.kanSimplexRestriction_weak</code> <small>line 299</small><div class="doc"><p>For an arbitrary Kan fibration, every simplex restriction is a weak
+homotopy equivalence on the actual realization of its pullback total spaces.
+Both face and degeneracy maps are included.</p></div><pre>theorem kanSimplexRestriction_weak {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] {n m : SimplexCategory}
+    (b : SSet.stdSimplex.obj n ⟶ B) (f : m ⟶ n) :
+    realizationWeakEquivalences (kanSimplexRestriction p b f) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a>, <a href="KanContractedFamilyLifting.lean.html#L276">OAI.Thomason.Construction.kanSimplexRestriction</a></p></li><li id=L328><b>theorem</b> <code>OAI.Thomason.Construction.kan_horn_fiber_weak</code> <small>line 328</small><div class="doc"><p>The distinguished-vertex fibre of a Kan fibration over a horn is weakly
+equivalent to its total space. Both homotopies fix that entire fibre.</p></div><pre>theorem kan_horn_fiber_weak {E : SSet.{0}} (n : ℕ) (i : Fin (n+2))
+    (p : E ⟶ (Λ[n+1, i] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    realizationWeakEquivalences (simplicialPointFiber p (hornVertex n i)).ι :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a>, <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanFiberComponentTransport.lean.html#L283">OAI.Thomason.Construction.hornVertex</a></p></li><li id=L338><b>theorem</b> <code>OAI.Thomason.Construction.kan_horn_baseChange_weak</code> <small>line 338</small><div class="doc"><p>For a Kan fibration over a standard simplex, the preimage of each horn
+includes by an actual realization weak equivalence. This is proved directly
+from local fibre contractions, without acyclic-Kan lifting or right properness.</p></div><pre>theorem kan_horn_baseChange_weak {E : SSet.{0}} (n : ℕ) (i : Fin (n+2))
+    (p : E ⟶ (Δ[n+1] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    realizationWeakEquivalences (pullback.fst p (Λ[n+1, i] : SSet.Subcomplex _).ι) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L354><b>theorem</b> <code>OAI.Thomason.Construction.kan_simplex_horn_restriction_weak</code> <small>line 354</small><div class="doc"><p>The same comparison in a general base, restricted over a chosen simplex.
+The actual iterated pullback is retained in the statement.</p></div><pre>theorem kan_simplex_horn_restriction_weak {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] (n : ℕ) (i : Fin (n+2))
+    (b : (Δ[n+1] : SSet.{0}) ⟶ B) :
+    realizationWeakEquivalences
+      (pullback.fst (pullback.snd p b) (Λ[n+1, i] : SSet.Subcomplex _).ι) := by
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L379><b>def</b> <code>OAI.Thomason.Construction.simplexPullbackMap</code> <small>line 379</small></li><li id=L387><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackMap_fst</code> <small>line 387</small></li><li id=L394><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackMap_snd</code> <small>line 394</small></li><li id=L400><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackMap_weak</code> <small>line 400</small></li><li id=L416><b>abbrev</b> <code>OAI.Thomason.Construction.simplexPullbackDiagram</code> <small>line 416</small><div class="doc"><p>Pull back the original fibration along every simplex of its base,
+including degenerate simplices and every ordinal map between them.</p></div><pre>abbrev simplexPullbackDiagram {E B : SSet.{0}} (p : E ⟶ B) :
+    CostructuredArrow SSet.stdSimplex B ⥤ SSet.{0} where
+…</pre></li><li id=L435><b>def</b> <code>OAI.Thomason.Construction.simplexPullbackCocone</code> <small>line 435</small><div class="doc"><p>The canonical cocone is compatible with the original total space.</p></div><pre>def simplexPullbackCocone {E B : SSet.{0}} (p : E ⟶ B) :
+    Cocone (simplexPullbackDiagram p) where
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L416">OAI.Thomason.Construction.simplexPullbackDiagram</a></p></li><li id=L446><b>theorem</b> <code>OAI.Thomason.Construction.simplexPullbackDiagram_map_weak</code> <small>line 446</small><div class="doc"><p>Every arrow in this actual pullback diagram is a realization weak
+equivalence. No homotopy-colimit or global fibre theorem is assumed.</p></div><pre>theorem simplexPullbackDiagram_map_weak {E B : SSet.{0}} (p : E ⟶ B)
+    [HomotopicalAlgebra.Fibration p] {s t : CostructuredArrow SSet.stdSimplex B}
+    (f : s ⟶ t) : realizationWeakEquivalences ((simplexPullbackDiagram p).map f) :=
+…</pre><p class="refs">Mentions: <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a>, <a href="KanContractedFamilyLifting.lean.html#L416">OAI.Thomason.Construction.simplexPullbackDiagram</a></p></li><li id=L470><b>def</b> <code>OAI.Thomason.Construction.productInitialVertex</code> <small>line 470</small><div class="doc"><p>The initial-vertex inclusion with an arbitrary simplicial parameter.</p></div><pre>def productInitialVertex (K : SSet.{0}) (n : ℕ) : K ⟶ K ⊗ (Δ[n] : SSet.{0}) :=
+…</pre></li><li id=L474><b>theorem</b> <code>OAI.Thomason.Construction.productInitialVertex_anodyne</code> <small>line 474</small><div class="doc"><p>The entire parameterized initial face is anodyne.</p></div><pre>theorem productInitialVertex_anodyne (K : SSet.{0}) (n : ℕ) :
+    SSet.anodyneExtensions (productInitialVertex K n) := by
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L470">OAI.Thomason.Construction.productInitialVertex</a></p></li><li id=L492><b>theorem</b> <code>OAI.Thomason.Construction.kan_simplex_fibrewise_trivialization</code> <small>line 492</small><div class="doc"><p>An actual fibrewise homotopy trivialization over a standard simplex.
+Both homotopies project to the constant base homotopy, and both maps retain
+the entire initial fibre exactly. No acyclic lifting or realization
+preservation of pullbacks is assumed.</p></div><pre>theorem kan_simplex_fibrewise_trivialization {E : SSet.{0}} (n : ℕ)
+    (p : E ⟶ (Δ[n] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    ∃ (q : E ⟶ (simplicialPointFiber p (initialSimplexVertex n)).toSSet ⊗ (Δ[n] : SSet.{0}))
+      (s : (simplicialPointFiber p (initialSimplexVertex n)).toSSet ⊗ (Δ[n] : SSet.{0}) ⟶ E),
+      q ≫ snd _ _ = p ∧ s ≫ p = snd _ _ ∧
+      (simplicialPointFiber p (initialSimplexVertex n)).ι ≫ q = productInitialVertex _ n ∧
+      productInitialVertex _ n ≫ s = (simplicialPointFiber p (initialSimplexVertex n)).ι ∧
+      ∃ (H : SSet.Homotopy (𝟙 E) (q ≫ s))
+        (T : SSet.Homotopy (𝟙 _) (s ≫ q)),
+        H.h ≫ p = fst E Δ[1] ≫ p ∧
+        T.h ≫ snd _ _ = fst _ Δ[1] ≫ snd _ _ := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="KanContractedFamilyLifting.lean.html#L470">OAI.Thomason.Construction.productInitialVertex</a></p></li><li id=L544><b>theorem</b> <code>OAI.Thomason.Construction.kan_simplex_trivialization_weak</code> <small>line 544</small><div class="doc"><p>The fibrewise trivialization maps are actual realization weak
+equivalences, while still commuting exactly with the base projection.</p></div><pre>theorem kan_simplex_trivialization_weak {E : SSet.{0}} (n : ℕ)
+    (p : E ⟶ (Δ[n] : SSet.{0})) [HomotopicalAlgebra.Fibration p] :
+    ∃ (q : E ⟶ (simplicialPointFiber p (initialSimplexVertex n)).toSSet ⊗ (Δ[n] : SSet.{0}))
+      (s : (simplicialPointFiber p (initialSimplexVertex n)).toSSet ⊗ (Δ[n] : SSet.{0}) ⟶ E),
+      realizationWeakEquivalences q ∧ realizationWeakEquivalences s ∧
+      q ≫ snd _ _ = p ∧ s ≫ p = snd _ _ := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L573><b>def</b> <code>OAI.Thomason.Construction.contractedVertexInclusion</code> <small>line 573</small><div class="doc"><p>A chosen vertex as a map from the terminal standard simplex.</p></div><pre>def contractedVertexInclusion {B : SSet.{0}} (b : B _⦋0⦌) : (Δ[0] : SSet.{0}) ⟶ B :=
+…</pre></li><li id=L577><b>def</b> <code>OAI.Thomason.Construction.productChosenVertex</code> <small>line 577</small><div class="doc"><p>The product inclusion of that same chosen vertex.</p></div><pre>def productChosenVertex {B : SSet.{0}} (K : SSet.{0}) (b : B _⦋0⦌) : K ⟶ K ⊗ B :=
+…</pre></li><li id=L582><b>theorem</b> <code>OAI.Thomason.Construction.contractedVertexInclusion_anodyne</code> <small>line 582</small><div class="doc"><p>An explicit stationary reverse contraction makes the vertex inclusion
+anodyne by relative cylinder lifting.</p></div><pre>theorem contractedVertexInclusion_anodyne {B : SSet.{0}} (b : B _⦋0⦌)
+    (C : SSet.Homotopy (SSet.const b) (𝟙 B))
+    (hC : ∀ K : SSet.{0}, (SSet.const (X := K) b) ▷ Δ[1] ≫ C.h =
+…</pre></li><li id=L613><b>theorem</b> <code>OAI.Thomason.Construction.productChosenVertex_anodyne</code> <small>line 613</small></li><li id=L632><b>theorem</b> <code>OAI.Thomason.Construction.kan_contracted_base_trivialization</code> <small>line 632</small><div class="doc"><p>The same explicit contraction yields a fibrewise homotopy trivialization
+of every Kan fibration over that base. The hypotheses specify actual maps
+and their stationary equation, not a weak or lifting conclusion.</p></div><pre>theorem kan_contracted_base_trivialization {E B : SSet.{0}} (b : B _⦋0⦌)
+    (C : SSet.Homotopy (SSet.const b) (𝟙 B))
+    (hC : ∀ L : SSet.{0}, (SSet.const (X := L) b) ▷ Δ[1] ≫ C.h =
+…</pre></li><li id=L700><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.initialVertex</code> <small>line 700</small><div class="doc"><p>The initial vertex in every coordinate of the finite simplicial cube.</p></div><pre>def initialVertex : (n : ℕ) → (obj n) _⦋0⦌
+  | 0 =&gt; initialSimplexVertex 0
+  | n+1 =&gt; (initialVertex n, initialSimplexVertex 1)
+
+/-- Simultaneously expand all interval coordinates from the initial vertex. -/</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="SimplexCubeRetract.lean.html#L322">OAI.Thomason.Construction.RealizedCube.coordinates</a></p></li><li id=L705><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.initialContractionMap</code> <small>line 705</small><div class="doc"><p>Simultaneously expand all interval coordinates from the initial vertex.</p></div><pre>def initialContractionMap (n : ℕ) : obj n ⊗ (Δ[1] : SSet.{0}) ⟶ obj n :=
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a></p></li><li id=L720><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.initialContractionMap_one</code> <small>line 720</small></li><li id=L734><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.initialContractionMap_zero</code> <small>line 734</small></li><li id=L758><b>def</b> <code>OAI.Thomason.Construction.RealizedCube.initialContraction</code> <small>line 758</small><div class="doc"><p>The simultaneous contraction is an actual simplicial homotopy.</p></div><pre>def initialContraction (n : ℕ) : SSet.Homotopy (SSet.const (initialVertex n)) (𝟙 (obj n)) where
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L700">OAI.Thomason.Construction.RealizedCube.initialVertex</a>, <a href="SimplexCubeRetract.lean.html#L316">OAI.Thomason.Construction.RealizedCube.obj</a></p></li><li id=L770><b>theorem</b> <code>OAI.Thomason.Construction.RealizedCube.initialContraction_stationary</code> <small>line 770</small><div class="doc"><p>The entire constant family at the initial vertex stays fixed.</p></div><pre>theorem initialContraction_stationary (n : ℕ) (K : SSet.{0}) :
+    (SSet.const (X := K) (initialVertex n)) ▷ Δ[1] ≫ (initialContraction n).h =
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L700">OAI.Thomason.Construction.RealizedCube.initialVertex</a>, <a href="KanContractedFamilyLifting.lean.html#L758">OAI.Thomason.Construction.RealizedCube.initialContraction</a></p></li><li id=L815><b>def</b> <code>OAI.Thomason.Construction.productBaseChangeIso</code> <small>line 815</small><div class="doc"><p>Pulling back a product projection gives the actual product over the
+new base. All maps are canonical and preserve the new base coordinate.</p></div><pre>def productBaseChangeIso (F : SSet.{0}) {A B : SSet.{0}} (g : A ⟶ B) :
+    pullback (snd F B) g ≅ F ⊗ A where
+…</pre></li><li id=L831><b>theorem</b> <code>OAI.Thomason.Construction.productBaseChangeIso_hom_snd</code> <small>line 831</small></li><li id=L839><b>theorem</b> <code>OAI.Thomason.Construction.kan_simplex_arbitrary_baseChange_product</code> <small>line 839</small><div class="doc"><p>For a Kan fibration over a simplex, restriction along ANY simplicial
+map into that simplex is weakly equivalent, over its actual new base,
+to the product with the initial fibre. This is not a claim that arbitrary
+base change preserves all weak equivalences.</p></div><pre>theorem kan_simplex_arbitrary_baseChange_product {E A : SSet.{0}} (n : ℕ)
+    (p : E ⟶ (Δ[n] : SSet.{0})) [HomotopicalAlgebra.Fibration p]
+    (g : A ⟶ (Δ[n] : SSet.{0})) :
+    ∃ t : pullback p g ⟶ (simplicialPointFiber p (initialSimplexVertex n)).toSSet ⊗ A,
+      realizationWeakEquivalences t ∧ t ≫ snd _ A = pullback.snd p g := by
+…</pre><p class="refs">Mentions: <a href="RealizationTopology.lean.html#L541">OAI.Thomason.Construction.simplicialPointFiber</a>, <a href="KanRealizedEdgeComposition.lean.html#L656">OAI.Thomason.Construction.initialSimplexVertex</a>, <a href="LoopDimensionShift.lean.html#L235">OAI.Thomason.Construction.realizationWeakEquivalences</a></p></li><li id=L874><b>theorem</b> <code>OAI.Thomason.Construction.whisker_initialSimplexVertex</code> <small>line 874</small><div class="doc"><p>Whiskering the initial vertex is the actual product initial face.</p></div><pre>@[reassoc] theorem whisker_initialSimplexVertex (K : SSet.{0}) (n : ℕ) :
+    K ◁ initialVertexInclusion n = fst K (Δ[0] : SSet.{0}) ≫ productInitialVertex K n := by
+…</pre><p class="refs">Mentions: <a href="KanFiberComponentTransport.lean.html#L460">OAI.Thomason.Construction.initialVertexInclusion</a>, <a href="KanContractedFamilyLifting.lean.html#L470">OAI.Thomason.Construction.productInitialVertex</a></p></li><li id=L885><b>theorem</b> <code>OAI.Thomason.Construction.exists_kan_simplex_family_lift</code> <small>line 885</small><div class="doc"><p>A Kan fibration lifts a family parameterized by an arbitrary standard
+simplex, retaining its initial value and its entire prescribed subfamily.
+This is the exact higher-parameter version of relative cylinder lifting.</p></div><pre>theorem exists_kan_simplex_family_lift {A K E B : SSet.{0}}
+    (i : A ⟶ K) [Mono i] (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (n : ℕ) (f : K ⟶ E) (h : A ⊗ (Δ[n] : SSet.{0}) ⟶ E)
+    (b : K ⊗ (Δ[n] : SSet.{0}) ⟶ B)
+    (h₀ : productInitialVertex A n ≫ h = i ≫ f)
+    (hb : h ≫ p = i ▷ (Δ[n] : SSet.{0}) ≫ b)
+    (hf : f ≫ p = productInitialVertex K n ≫ b) :
+    ∃ e : K ⊗ (Δ[n] : SSet.{0}) ⟶ E,
+      productInitialVertex K n ≫ e = f ∧
+      i ▷ (Δ[n] : SSet.{0}) ≫ e = h ∧ e ≫ p = b := by
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L470">OAI.Thomason.Construction.productInitialVertex</a></p></li><li id=L924><b>theorem</b> <code>OAI.Thomason.Construction.finite_kan_simplex_family_lift</code> <small>line 924</small><div class="doc"><p>With finite source, the entire exact higher family and its two given
+faces live in a single finite subcomplex of the original total space.</p></div><pre>theorem finite_kan_simplex_family_lift {A K E B : SSet.{0}} [K.Finite]
+    (i : A ⟶ K) [Mono i] (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    (n : ℕ) (f : K ⟶ E) (h : A ⊗ (Δ[n] : SSet.{0}) ⟶ E)
+    (b : K ⊗ (Δ[n] : SSet.{0}) ⟶ B)
+    (h₀ : productInitialVertex A n ≫ h = i ≫ f)
+    (hb : h ≫ p = i ▷ (Δ[n] : SSet.{0}) ≫ b)
+    (hf : f ≫ p = productInitialVertex K n ≫ b) :
+    ∃ (S : E.Subcomplex) (_ : SSet.Finite S.toSSet)
+      (eS : K ⊗ (Δ[n] : SSet.{0}) ⟶ S.toSSet)
+      (fS : K ⟶ S.toSSet) (hS : A ⊗ (Δ[n] : SSet.{0}) ⟶ S.toSSet),
+      fS ≫ S.ι = f ∧ hS ≫ S.ι = h ∧
+      productInitialVertex K n ≫ eS = fS ∧
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L470">OAI.Thomason.Construction.productInitialVertex</a></p></li><li id=L968><b>theorem</b> <code>OAI.Thomason.Construction.whisker_contractedVertex</code> <small>line 968</small><div class="doc"><p>Whiskering the initial vertex is the actual product initial face.</p></div><pre>@[reassoc] theorem whisker_contractedVertex (K : SSet.{0}) {P : SSet.{0}} (v : P _⦋0⦌) :
+    K ◁ contractedVertexInclusion v = fst K (Δ[0] : SSet.{0}) ≫ productChosenVertex K v := by
+…</pre><p class="refs">Mentions: <a href="KanContractedFamilyLifting.lean.html#L573">OAI.Thomason.Construction.contractedVertexInclusion</a>, <a href="KanContractedFamilyLifting.lean.html#L577">OAI.Thomason.Construction.productChosenVertex</a></p></li><li id=L979><b>theorem</b> <code>OAI.Thomason.Construction.exists_kan_contracted_family_lift</code> <small>line 979</small><div class="doc"><p>A Kan fibration lifts a family parameterized by an explicitly contracted
+simplicial parameter, retaining its initial value and its entire prescribed subfamily.
+This is the exact higher-parameter version of relative cylinder lifting, including finite cube parameters.</p></div><pre>theorem exists_kan_contracted_family_lift {A K E B : SSet.{0}}
+    (i : A ⟶ K) [Mono i] (p : E ⟶ B) [HomotopicalAlgebra.Fibration p]
+    {P : SSet.{0}} (v : P _⦋0⦌)
+    (C : SSet.Homotopy (SSet.const v) (𝟙 P))
+    (hC : ∀ L : SSet.{0}, (SSet.const (X := L) v) ▷ Δ[1] ≫ C.h =
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

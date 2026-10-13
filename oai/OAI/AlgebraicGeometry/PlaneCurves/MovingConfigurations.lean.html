@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/MovingConfigurations.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/MovingConfigurations.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>MovingConfigurations.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>MovingConfigurations.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/MovingConfigurations.lean#L1">source</a></p><div class="doc"><h3>Polynomial motion of tuples, exceptional parameters, and gradients</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.Nagata.Workers.W14.finite_polynomial_exceptions</code> <small>line 19</small><div class="doc"><p>Finitely many polynomial conditions, valid at zero, remain valid outside
+one finite union of their actual root sets.</p></div><pre>theorem finite_polynomial_exceptions {K ι : Type*} [Field K] [Fintype ι]
+    (P : ι → Polynomial K) (hP : ∀ i, (P i).eval 0 ≠ 0) :
+    ∃ E : Finset K, 0 ∉ E ∧ ∀ s ∉ E, ∀ i, (P i).eval s ≠ 0 := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.Nagata.Workers.W14.exists_parameter_for_finite_polynomials</code> <small>line 45</small><div class="doc"><p>Arbitrary further finite exclusions can be included without losing
+existence of a good parameter over an infinite field.</p></div><pre>theorem exists_parameter_for_finite_polynomials {K ι : Type*}
+    [Field K] [Infinite K] [Fintype ι]
+    (P : ι → Polynomial K) (hP : ∀ i, (P i).eval 0 ≠ 0) (F : Finset K) :
+    ∃ s : K, s ∉ F ∧ ∀ i, (P i).eval s ≠ 0 := by
+…</pre></li><li id=L69><b>def</b> <code>OAI.Nagata.Workers.W14.evaluateMotion</code> <small>line 69</small><div class="doc"><p>Evaluate a polynomial homogeneous-coordinate motion at a parameter.</p></div><pre>def evaluateMotion {K : Type*} [Field K] {r n : ℕ}
+    (P : Fin r → Fin n → Polynomial K) (s : K) (i : Fin r) : Fin n → K :=
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.Nagata.Workers.W14.polynomial_motion_separated_cofinite</code> <small>line 75</small><div class="doc"><p>A tuple of polynomial vectors with nonzero coordinates and pair-separating
+minors at zero preserves both properties off one finite root set.</p></div><pre>theorem polynomial_motion_separated_cofinite {K : Type*} [Field K] {r n : ℕ}
+    (P : Fin r → Fin n → Polynomial K)
+    (hzero : ∀ i, evaluateMotion P 0 i ≠ 0)
+    (hsep : ∀ i j, i ≠ j → ∃ a b,
+      evaluateMotion P 0 i a * evaluateMotion P 0 j b -
+        evaluateMotion P 0 i b * evaluateMotion P 0 j a ≠ 0) :
+    ∃ E : Finset K, 0 ∉ E ∧
+      (∀ s ∉ E, ∀ i, evaluateMotion P s i ≠ 0) ∧
+      ∀ s ∉ E, ∀ i j, i ≠ j → ∃ a b,
+        evaluateMotion P s i a * evaluateMotion P s j b -
+          evaluateMotion P s i b * evaluateMotion P s j a ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="MovingConfigurations.lean.html#L69">OAI.Nagata.Workers.W14.evaluateMotion</a></p></li><li id=L140><b>theorem</b> <code>OAI.Nagata.Workers.W14.polynomial_projective_motion_cofinite</code> <small>line 140</small><div class="doc"><p>Polynomial representative motions whose classes are distinct at zero
+remain nonzero and pairwise projectively distinct outside one finite set.
+The same finite set controls every representative and every pair simultaneously.</p></div><pre>theorem polynomial_projective_motion_cofinite {K : Type*} [Field K] {r n : ℕ}
+    (P : Fin r → Fin n → Polynomial K)
+    (hzero : ∀ i, evaluateMotion P 0 i ≠ 0)
+    (hinj : Function.Injective
+      (fun i =&gt; Projectivization.mk K (evaluateMotion P 0 i) (hzero i))) :
+    ∃ E : Finset K, 0 ∉ E ∧
+      ∃ hvalid : ∀ s ∉ E, ∀ i, evaluateMotion P s i ≠ 0,
+        ∀ s (hs : s ∉ E), Function.Injective
+          (fun i =&gt; Projectivization.mk K (evaluateMotion P s i) (hvalid s hs i)) := by
+…</pre><p class="refs">Mentions: <a href="MovingConfigurations.lean.html#L69">OAI.Nagata.Workers.W14.evaluateMotion</a></p></li><li id=L165><b>def</b> <code>OAI.Nagata.Workers.W14.linearMotion</code> <small>line 165</small><div class="doc"><p>The affine-linear homogeneous-coordinate motion <code>a + s V</code>.</p></div><pre>def linearMotion {K : Type*} [Field K] {r n : ℕ}
+    (a V : Fin r → Fin n → K) : Fin r → Fin n → Polynomial K :=
+…</pre></li><li id=L169><b>theorem</b> <code>OAI.Nagata.Workers.W14.evaluate_linearMotion</code> <small>line 169</small></li><li id=L178><b>theorem</b> <code>OAI.Nagata.Workers.W14.linear_projective_motion_cofinite</code> <small>line 178</small><div class="doc"><p>The manuscript's actual affine-linear motions satisfy the cofinite tuple
+condition, for arbitrary velocity vectors.</p></div><pre>theorem linear_projective_motion_cofinite {r : ℕ}
+    (a V : Fin r → Fin 3 → ℂ) (ha : ∀ i, a i ≠ 0)
+    (hinj : Function.Injective (fun i =&gt; Projectivization.mk ℂ (a i) (ha i))) :
+    ∃ E : Finset ℂ, 0 ∉ E ∧
+      ∃ hvalid : ∀ s ∉ E, ∀ i, a i + s • V i ≠ 0,
+        ∀ s (hs : s ∉ E), Function.Injective
+          (fun i =&gt; Projectivization.mk ℂ (a i + s • V i) (hvalid s hs i)) := by
+…</pre></li><li id=L195><b>theorem</b> <code>OAI.Nagata.Workers.W14.projective_tuple_linear_motion_cofinite</code> <small>line 195</small><div class="doc"><p>Starting directly from an actual distinct projective tuple, Mathlib's
+nonzero representatives give affine-linear homogeneous-coordinate motions with
+one finite exceptional parameter set.</p></div><pre>theorem projective_tuple_linear_motion_cofinite {r : ℕ}
+    (p : Fin r → Projectivization ℂ (Fin 3 → ℂ)) (hp : Function.Injective p)
+    (V : Fin r → Fin 3 → ℂ) :
+    ∃ E : Finset ℂ, 0 ∉ E ∧
+      ∃ hvalid : ∀ s ∉ E, ∀ i, (p i).rep + s • V i ≠ 0,
+        ∀ s (hs : s ∉ E), Function.Injective
+          (fun i =&gt; Projectivization.mk ℂ ((p i).rep + s • V i) (hvalid s hs i)) := by
+…</pre></li><li id=L268><b>def</b> <code>OAI.Nagata.Workers.W14.chartPolynomialRepresentatives</code> <small>line 268</small><div class="doc"><p>Polynomial homogeneous representatives with fixed distinguished coordinate
+one in a separately chosen affine chart at every marked point.</p></div><pre>def chartPolynomialRepresentatives {r : ℕ} (c : Fin r → Fin 3)
+    (p : Fin r × Fin 2 → Polynomial ℂ) : Fin r → Fin 3 → Polynomial ℂ :=
+…</pre></li><li id=L273><b>theorem</b> <code>OAI.Nagata.Workers.W14.evaluate_chartPolynomialRepresentatives</code> <small>line 273</small><div class="doc"><p>Parameter evaluation commutes with the genuine chart embedding.</p></div><pre>theorem evaluate_chartPolynomialRepresentatives {r : ℕ} (c : Fin r → Fin 3)
+    (p : Fin r × Fin 2 → Polynomial ℂ) (s : ℂ) (i : Fin r) :
+    evaluateMotion (chartPolynomialRepresentatives c p) s i =
+      chartVector₂ (c i) (fun j =&gt; (p (i, j)).eval s) := by
+…</pre><p class="refs">Mentions: <a href="MovingConfigurations.lean.html#L69">OAI.Nagata.Workers.W14.evaluateMotion</a>, <a href="MovingConfigurations.lean.html#L268">OAI.Nagata.Workers.W14.chartPolynomialRepresentatives</a></p></li><li id=L286><b>theorem</b> <code>OAI.Nagata.Workers.W14.chart_polynomial_motion_cofinite</code> <small>line 286</small><div class="doc"><p>Validity of distinct polynomial affine-chart configurations outside one
+finite exceptional parameter set, with no restriction on the polynomial degrees.</p></div><pre>theorem chart_polynomial_motion_cofinite {r : ℕ} (c : Fin r → Fin 3)
+    (p : Fin r × Fin 2 → Polynomial ℂ)
+    (hbase : Function.Injective
+      (configurationChartEmbedding c (fun ij =&gt; (p ij).eval 0))) :
+    ∃ E : Finset ℂ, 0 ∉ E ∧ ∀ s ∉ E, Function.Injective
+      (configurationChartEmbedding c (fun ij =&gt; (p ij).eval s)) := by
+…</pre></li><li id=L309><b>theorem</b> <code>OAI.Nagata.Workers.W14.order_directChart_of_multiplicity</code> <small>line 309</small><div class="doc"><p>A projective multiplicity lower bound gives exactly the direct chart order
+used by the global homogeneous coefficient matrix, at a normalized chart point.</p></div><pre>theorem order_directChart_of_multiplicity {F : MvPolynomial (Fin 3) ℂ}
+    (c : Fin 3) (z : Fin 2 → ℂ) (m : ℕ)
+    (h : multiplicityAtLeast F (chartPoint₂ c z) m) :
+    Nagata.AffineMultiplicity.orderAtLeast z m (Nagata.W27.directChartHom c F) := by
+…</pre><p class="refs">Mentions: <a href="ChartJets.lean.html#L470">OAI.Nagata.W27.directChartHom</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

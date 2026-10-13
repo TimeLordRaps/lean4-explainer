@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/GraphOrbitSelection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/GraphOrbitSelection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>GraphOrbitSelection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>GraphOrbitSelection.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/GraphOrbitSelection.lean#L1">source</a></p><div class="doc"><h3>Actual orbit samples retaining the rescaled graph signal</h3><p>The finite matrix moment estimate and the Hilbert sign selection are
+combined here. The signal is the image of the graph vector under the
+specified bounded operator; its invariance is derived from the common
+unitary graph action.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.KadisonKastler.rescaledGraphOperatorMap</code> <small>line 25</small><div class="doc"><p>The graph formula is linear on all ambient operators.</p></div><pre>def rescaledGraphOperatorMap (J : H ≃ₗᵢ⋆[ℂ] H) (Ω : H) (c : ℝ) :
+    (H →L[ℂ] H) →ₗ[ℂ] TomitaGraphHilbert H where
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li><li id=L41><b>def</b> <code>OAI.KadisonKastler.rescaledGraphSignalMap</code> <small>line 41</small><div class="doc"><p>The actual graph signal, viewed as a real-linear map for sign sums.</p></div><pre>def rescaledGraphSignalMap (J : H ≃ₗᵢ⋆[ℂ] H) (Ω : H) (c : ℝ)
+    (T : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) :
+    (H →L[ℂ] H) →ₗ[ℝ] TomitaGraphHilbert H :=
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li><li id=L46><b>theorem</b> <code>OAI.KadisonKastler.rescaledGraphSignalMap_apply</code> <small>line 46</small></li><li id=L53><b>theorem</b> <code>OAI.KadisonKastler.norm_graphSignal_unitaryDoubleOrbit</code> <small>line 53</small><div class="doc"><p>Commutation with the unitary graph action preserves the signal on
+an actual two-sided orbit.</p></div><pre>theorem norm_graphSignal_unitaryDoubleOrbit
+    (M : VonNeumannAlgebra H) (J : H ≃ₗᵢ⋆[ℂ] H) (hJ : Function.Involutive J)
+    (Ω : H) (c : ℝ) (T : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H)
+    (u v : unitary (H →L[ℂ] H))
+    (hvright : conjugationOperator J (v : H →L[ℂ] H) ∈ M.commutant)
+    (huright : conjugationOperator J (u : H →L[ℂ] H) ∈ M.commutant)
+    (hvΩ : conjugationOperator J (v : H →L[ℂ] H) Ω = star (v : H →L[ℂ] H) Ω)
+    (huΩ : conjugationOperator J (u : H →L[ℂ] H) Ω = star (u : H →L[ℂ] H) Ω)
+    (hT : T * (rescaledGraphAction J hJ u (star v) :
+        TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) =
+      (rescaledGraphAction J hJ u (star v) :
+        TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) * T)
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a>, <a href="CommonRightAction.lean.html#L20">OAI.KadisonKastler.conjugationOperator</a>, <a href="RescaledGraphAction.lean.html#L44">OAI.KadisonKastler.rescaledGraphAction</a></p></li><li id=L84><b>theorem</b> <code>OAI.KadisonKastler.graphProjectionDefect_commutes</code> <small>line 84</small><div class="doc"><p>The defect between two graph projections commutes with every
+common graph unitary that commutes with the two projections.</p></div><pre>theorem graphProjectionDefect_commutes
+    (P Q A : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H)
+    (hP : P * A = A * P) (hQ : Q * A = A * Q) :
+    ((1 - Q) * P) * A = A * ((1 - Q) * P) := by
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li><li id=L97><b>theorem</b> <code>OAI.KadisonKastler.rescaledGraphProjectionDefect_commutes</code> <small>line 97</small><div class="doc"><p>In a common prepared position, the actual graph defect has the
+required common matrix-orbit invariance.</p></div><pre>theorem rescaledGraphProjectionDefect_commutes
+    (M N : VonNeumannAlgebra H) (R : StarSubalgebra ℂ (H →L[ℂ] H))
+    (hRM : R ≤ M.toStarSubalgebra) (hRN : R ≤ N.toStarSubalgebra)
+    (J : H ≃ₗᵢ⋆[ℂ] H) (hJ : Function.Involutive J) (Ω : H) (c : ℝ)
+    (hMcomm : ∀ a ∈ R, conjugationOperator J (star a) ∈ M.commutant)
+    (hNcomm : ∀ a ∈ R, conjugationOperator J (star a) ∈ N.commutant)
+    (hvector : ∀ a ∈ R, conjugationOperator J (star a) Ω = a Ω)
+    (u v : unitary (H →L[ℂ] H))
+    (hu : (u : H →L[ℂ] H) ∈ R) (hv : (v : H →L[ℂ] H) ∈ R) :
+    ((1 - rescaledGraphProjection N J Ω c) * rescaledGraphProjection M J Ω c) *
+        (rescaledGraphAction J hJ u v : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) =
+      (rescaledGraphAction J hJ u v : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) *
+…</pre><p class="refs">Mentions: <a href="CommonRightAction.lean.html#L20">OAI.KadisonKastler.conjugationOperator</a>, <a href="RescaledTomitaGraph.lean.html#L84">OAI.KadisonKastler.rescaledGraphProjection</a>, <a href="RescaledGraphAction.lean.html#L44">OAI.KadisonKastler.rescaledGraphAction</a>, <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a></p></li><li id=L130><b>theorem</b> <code>OAI.KadisonKastler.exists_matrixOrbit_signal_and_cost</code> <small>line 130</small><div class="doc"><p>The matrix cost construction and a constant orbit signal select one
+actual sampled operator, rather than a separate sample for each bound.</p></div><pre>theorem exists_matrixOrbit_signal_and_cost
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    {k : ℝ} (hk : 1 ≤ k) (hxnorm : ‖x Ω‖ ^ 2 + k * ‖star x Ω‖ ^ 2 = 1)
+    (L : (H →L[ℂ] H) →ₗ[ℝ] V) {s : ℝ} (hs : 0 &lt; s)
+    (hsignal : ∀ j g, ‖L (matrixOrbitSample (E j) x g)‖ ^ 2 = s) :
+    ∃ j m, ∃ ω : Fin m → MatrixOrbitIndex (d j), ∃ ε : Fin m → Bool,
+      1 ≤ m ∧
+      s / 2 ≤ ‖L (normalizedFiniteSignSum
+        (fun i =&gt; matrixOrbitSample (E j) x (ω i)) ε)‖ ^ 2 ∧
+      graphMomentCost Ω k (normalizedFiniteSignSum
+        (fun i =&gt; matrixOrbitSample (E j) x (ω i)) ε) ≤ 240 := by
+…</pre><p class="refs">Mentions: <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a>, <a href="MatrixOrbitSampleLaw.lean.html#L24">OAI.KadisonKastler.MatrixOrbitIndex</a>, <a href="FiniteSignFourthMoment.lean.html#L254">OAI.KadisonKastler.normalizedFiniteSignSum</a>, <a href="GraphMomentBounds.lean.html#L29">OAI.KadisonKastler.graphMomentCost</a></p></li><li id=L150><b>theorem</b> <code>OAI.KadisonKastler.exists_rescaledGraph_orbit_signal_and_cost</code> <small>line 150</small><div class="doc"><p>The genuine common graph action discharges the signal-invariance
+premise in the simultaneous selection theorem.</p></div><pre>theorem exists_rescaledGraph_orbit_signal_and_cost
+    (J : H ≃ₗᵢ⋆[ℂ] H) (hJ : Function.Involutive J)
+    {k : ℝ} (hk : 1 ≤ k) (hxnorm : ‖x Ω‖ ^ 2 + k * ‖star x Ω‖ ^ 2 = 1)
+    (T : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H)
+    (hs : 0 &lt; ‖T (rescaledGraphVector J Ω (Real.sqrt k) x)‖)
+    (hcomm : ∀ j a, a ∈ (E j).algebra → conjugationOperator J (star a) ∈ M.commutant)
+    (hvector : ∀ j a, a ∈ (E j).algebra → conjugationOperator J (star a) Ω = a Ω)
+    (hT : ∀ j (u v : unitary (H →L[ℂ] H)), (u : H →L[ℂ] H) ∈ (E j).algebra →
+      (v : H →L[ℂ] H) ∈ (E j).algebra →
+      T * (rescaledGraphAction J hJ u v : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) =
+        (rescaledGraphAction J hJ u v : TomitaGraphHilbert H →L[ℂ] TomitaGraphHilbert H) * T) :
+    ∃ j m, ∃ ω : Fin m → MatrixOrbitIndex (d j), ∃ ε : Fin m → Bool,
+…</pre><p class="refs">Mentions: <a href="RescaledTomitaGraph.lean.html#L26">OAI.KadisonKastler.TomitaGraphHilbert</a>, <a href="RescaledTomitaGraph.lean.html#L29">OAI.KadisonKastler.rescaledGraphVector</a>, <a href="CommonRightAction.lean.html#L20">OAI.KadisonKastler.conjugationOperator</a>, <a href="RescaledGraphAction.lean.html#L44">OAI.KadisonKastler.rescaledGraphAction</a>, <a href="MatrixOrbitSampleLaw.lean.html#L24">OAI.KadisonKastler.MatrixOrbitIndex</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

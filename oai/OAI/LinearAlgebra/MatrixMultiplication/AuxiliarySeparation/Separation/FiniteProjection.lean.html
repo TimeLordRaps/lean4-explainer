@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Separation/FiniteProjection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Separation/FiniteProjection.lean.html"><link rel="stylesheet" href="../../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../../index.html">All corpora</a> | <a href="../../../../../index.html">Index</a> | <a href="../../../../../glossary.html">Glossary</a> | <a href="../../../../../find.html">Find</a> | <a href="../../../../../implications.html">Implications</a> | <a href="../../../../../annotate.html">Explanation guide</a> | <a href="../../../../../learning-path.html">Learning path</a> | <a href="../../../../../trust.html">Trust</a> | <a href="../../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../../index.html">Corpus home</a> / <a href="../../../../index.html">OAI</a> / <a href="../../../index.html">LinearAlgebra</a> / <a href="../../index.html">MatrixMultiplication</a> / <a href="../index.html">AuxiliarySeparation</a> / <a href="index.html">Separation</a> / <span>FiniteProjection.lean</span></nav></header><h1 class="path-title"><code><a href="../../../../index.html">OAI</a>/<a href="../../../index.html">LinearAlgebra</a>/<a href="../../index.html">MatrixMultiplication</a>/<a href="../index.html">AuxiliarySeparation</a>/<a href="index.html">Separation</a>/<span>FiniteProjection.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Separation/FiniteProjection.lean#L1">source</a></p><div class="doc"><h3>Exact finite Fourier projection and square filtering</h3><p>The <code>5 * M</code>-term Fourier average is applied to an arbitrary branch coefficient.
+The label bounds eliminate modular wrap. The weights on the three tensor legs
+then give a nonnegative square degree on every surviving branch. Taking the
+constant coefficient retains exactly the branches with <code>g = h</code> and <code>u = v</code>.</p><p>The finite-family statements permit arbitrary coefficients and arbitrary
+repetitions of labels; they use only linearity of the Fourier projection and
+coefficient extraction, without assumptions on an ambient tensor.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.finiteFourierCoefficient</code> <small>line 26</small><div class="doc"><p>A normalized finite Fourier average of one branch coefficient.</p></div><pre>noncomputable def finiteFourierCoefficient (ζ : ℂ) (L : ℕ) (e : ℤ) (c : ℂ) : ℂ :=
+…</pre></li><li id=L30><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.finiteFourierCoefficient_eq_ite</code> <small>line 30</small><div class="doc"><p>The Fourier average is a scalar support indicator, for every coefficient.</p></div><pre>theorem finiteFourierCoefficient_eq_ite {ζ : ℂ} {L : ℕ}
+    (hL : L ≠ 0) (hζ : IsPrimitiveRoot ζ L) (e : ℤ) (c : ℂ) :
+    finiteFourierCoefficient ζ L e c = if (L : ℤ) ∣ e then c else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L26">OAI.MatrixMultiplication.AuxiliarySeparation.finiteFourierCoefficient</a></p></li><li id=L38><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.finiteFourierCoefficient_sum</code> <small>line 38</small><div class="doc"><p>Averaging a finite family of branches agrees with averaging each branch.</p></div><pre>theorem finiteFourierCoefficient_sum {ι : Type*} (s : Finset ι)
+    (ζ : ℂ) (L : ℕ) (e : ι → ℤ) (c : ι → ℂ) :
+    (L : ℂ)⁻¹ * (∑ r ∈ Finset.range L, ∑ i ∈ s, ζ ^ ((r : ℤ) * e i) * c i) =
+      ∑ i ∈ s, finiteFourierCoefficient ζ L (e i) (c i) := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L26">OAI.MatrixMultiplication.AuxiliarySeparation.finiteFourierCoefficient</a></p></li><li id=L46><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.fiveMFourierCoefficient_eq_ite</code> <small>line 46</small><div class="doc"><p>Exactly <code>5 * M</code> phases select the integer support equation.</p></div><pre>theorem fiveMFourierCoefficient_eq_ite {ζ : ℂ} {M : ℕ} {g h u v : ℤ}
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : 1 ≤ g ∧ g ≤ M) (hh : 1 ≤ h ∧ h ≤ M)
+    (hu : 1 ≤ u ∧ u ≤ M) (hv : 1 ≤ v ∧ v ≤ M) (c : ℂ) :
+    finiteFourierCoefficient ζ (5 * M) (phase g h u v) c =
+      if phase g h u v = 0 then c else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L26">OAI.MatrixMultiplication.AuxiliarySeparation.finiteFourierCoefficient</a>, <a href="SquareWeights.lean.html#L18">OAI.MatrixMultiplication.AuxiliarySeparation.phase</a></p></li><li id=L59><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial</code> <small>line 59</small><div class="doc"><p>A projected branch, recorded as an ordinary polynomial after Fourier averaging.</p></div><pre>noncomputable def projectedBranchPolynomial (ζ : ℂ) (M : ℕ)
+    (g h u v : ℤ) (c : ℂ) : Polynomial ℂ :=
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial_eq_ite</code> <small>line 65</small><div class="doc"><p>The surviving polynomial weight is the square <code>(g - h)^2</code>.</p></div><pre>theorem projectedBranchPolynomial_eq_ite {ζ : ℂ} {M : ℕ} {g h u v : ℤ}
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : 1 ≤ g ∧ g ≤ M) (hh : 1 ≤ h ∧ h ≤ M)
+    (hu : 1 ≤ u ∧ u ≤ M) (hv : 1 ≤ v ∧ v ≤ M) (c : ℂ) :
+    projectedBranchPolynomial ζ M g h u v c =
+      if phase g h u v = 0 then Polynomial.monomial ((g - h) ^ 2).toNat c else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L59">OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial</a>, <a href="SquareWeights.lean.html#L18">OAI.MatrixMultiplication.AuxiliarySeparation.phase</a></p></li><li id=L78><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial_coeff</code> <small>line 78</small><div class="doc"><p>A coefficient occurs exactly on the Fourier support at its integer total weight.</p></div><pre>theorem projectedBranchPolynomial_coeff {ζ : ℂ} {M n : ℕ} {g h u v : ℤ}
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : 1 ≤ g ∧ g ≤ M) (hh : 1 ≤ h ∧ h ≤ M)
+    (hu : 1 ≤ u ∧ u ≤ M) (hv : 1 ≤ v ∧ v ≤ M) (c : ℂ) :
+    (projectedBranchPolynomial ζ M g h u v c).coeff n =
+      if phase g h u v = 0 ∧ totalWeight g h u v = (n : ℤ) then c else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L59">OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial</a>, <a href="SquareWeights.lean.html#L18">OAI.MatrixMultiplication.AuxiliarySeparation.phase</a>, <a href="SquareWeights.lean.html#L30">OAI.MatrixMultiplication.AuxiliarySeparation.totalWeight</a></p></li><li id=L94><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial_coeff_eq_zero_of_lt</code> <small>line 94</small><div class="doc"><p>Each projected branch has no polynomial coefficient above <code>(M - 1)^2</code>.</p></div><pre>theorem projectedBranchPolynomial_coeff_eq_zero_of_lt
+    {ζ : ℂ} {M n : ℕ} {g h u v : ℤ}
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : 1 ≤ g ∧ g ≤ M) (hh : 1 ≤ h ∧ h ≤ M)
+    (hu : 1 ≤ u ∧ u ≤ M) (hv : 1 ≤ v ∧ v ≤ M)
+    (hn : (M - 1) ^ 2 &lt; n) (c : ℂ) :
+    (projectedBranchPolynomial ζ M g h u v c).coeff n = 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L59">OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial</a></p></li><li id=L110><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial_coeff_zero</code> <small>line 110</small><div class="doc"><p>Constant coefficient extraction is the exact square filter, with no restriction
+on the original complex coefficient.</p></div><pre>theorem projectedBranchPolynomial_coeff_zero {ζ : ℂ} {M : ℕ} {g h u v : ℤ}
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : 1 ≤ g ∧ g ≤ M) (hh : 1 ≤ h ∧ h ≤ M)
+    (hu : 1 ≤ u ∧ u ≤ M) (hv : 1 ≤ v ∧ v ≤ M) (c : ℂ) :
+    (projectedBranchPolynomial ζ M g h u v c).coeff 0 =
+      if g = h ∧ u = v then c else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L59">OAI.MatrixMultiplication.AuxiliarySeparation.projectedBranchPolynomial</a></p></li><li id=L127><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial</code> <small>line 127</small><div class="doc"><p>Apply the finite Fourier projection and square weights branch by branch.</p></div><pre>noncomputable def projectedPolynomial {ι : Type*} (s : Finset ι)
+    (ζ : ℂ) (M : ℕ) (g h u v : ι → ℤ) (c : ι → ℂ) : Polynomial ℂ :=
+…</pre></li><li id=L132><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial_coeff</code> <small>line 132</small><div class="doc"><p>Every coefficient of the projected polynomial has the exact integer support.</p></div><pre>theorem projectedPolynomial_coeff {ι : Type*} (s : Finset ι)
+    {ζ : ℂ} {M n : ℕ} (g h u v : ι → ℤ) (c : ι → ℂ)
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : ∀ i ∈ s, 1 ≤ g i ∧ g i ≤ M) (hh : ∀ i ∈ s, 1 ≤ h i ∧ h i ≤ M)
+    (hu : ∀ i ∈ s, 1 ≤ u i ∧ u i ≤ M) (hv : ∀ i ∈ s, 1 ≤ v i ∧ v i ≤ M) :
+    (projectedPolynomial s ζ M g h u v c).coeff n =
+      ∑ i ∈ s, if phase (g i) (h i) (u i) (v i) = 0 ∧
+        totalWeight (g i) (h i) (u i) (v i) = (n : ℤ) then c i else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L127">OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial</a>, <a href="SquareWeights.lean.html#L18">OAI.MatrixMultiplication.AuxiliarySeparation.phase</a>, <a href="SquareWeights.lean.html#L30">OAI.MatrixMultiplication.AuxiliarySeparation.totalWeight</a></p></li><li id=L149><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial_coeff_zero</code> <small>line 149</small><div class="doc"><p>Exact finite filtering for an arbitrary finite family of branch coefficients.</p></div><pre>theorem projectedPolynomial_coeff_zero {ι : Type*} (s : Finset ι)
+    {ζ : ℂ} {M : ℕ} (g h u v : ι → ℤ) (c : ι → ℂ)
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : ∀ i ∈ s, 1 ≤ g i ∧ g i ≤ M) (hh : ∀ i ∈ s, 1 ≤ h i ∧ h i ≤ M)
+    (hu : ∀ i ∈ s, 1 ≤ u i ∧ u i ≤ M) (hv : ∀ i ∈ s, 1 ≤ v i ∧ v i ≤ M) :
+    (projectedPolynomial s ζ M g h u v c).coeff 0 =
+      ∑ i ∈ s, if g i = h i ∧ u i = v i then c i else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L127">OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial</a></p></li><li id=L165><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial_coeff_eq_zero_of_lt</code> <small>line 165</small><div class="doc"><p>The finite projected polynomial has support only in degrees at most <code>(M - 1)^2</code>.</p></div><pre>theorem projectedPolynomial_coeff_eq_zero_of_lt {ι : Type*} (s : Finset ι)
+    {ζ : ℂ} {M n : ℕ} (g h u v : ι → ℤ) (c : ι → ℂ)
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : ∀ i ∈ s, 1 ≤ g i ∧ g i ≤ M) (hh : ∀ i ∈ s, 1 ≤ h i ∧ h i ≤ M)
+    (hu : ∀ i ∈ s, 1 ≤ u i ∧ u i ≤ M) (hv : ∀ i ∈ s, 1 ≤ v i ∧ v i ≤ M)
+    (hn : (M - 1) ^ 2 &lt; n) :
+    (projectedPolynomial s ζ M g h u v c).coeff n = 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L127">OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial</a></p></li><li id=L181><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial_natDegree_le</code> <small>line 181</small><div class="doc"><p>The degree bound is independent of the number or values of the coefficients.</p></div><pre>theorem projectedPolynomial_natDegree_le {ι : Type*} (s : Finset ι)
+    {ζ : ℂ} {M : ℕ} (g h u v : ι → ℤ) (c : ι → ℂ)
+    (hM : 0 &lt; M) (hζ : IsPrimitiveRoot ζ (5 * M))
+    (hg : ∀ i ∈ s, 1 ≤ g i ∧ g i ≤ M) (hh : ∀ i ∈ s, 1 ≤ h i ∧ h i ≤ M)
+    (hu : ∀ i ∈ s, 1 ≤ u i ∧ u i ≤ M) (hv : ∀ i ∈ s, 1 ≤ v i ∧ v i ≤ M) :
+    (projectedPolynomial s ζ M g h u v c).natDegree ≤ (M - 1) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="FiniteProjection.lean.html#L127">OAI.MatrixMultiplication.AuxiliarySeparation.projectedPolynomial</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../../_assets/site.js"></script><script src="../../../../../_assets/lean2tex.js" defer></script><script src="../../../../../_assets/reader.js" defer></script></body></html>

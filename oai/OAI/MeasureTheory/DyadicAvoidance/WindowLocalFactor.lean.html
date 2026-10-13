@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/DyadicAvoidance/WindowLocalFactor.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/DyadicAvoidance/WindowLocalFactor.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MeasureTheory</a> / <a href="index.html">DyadicAvoidance</a> / <span>WindowLocalFactor.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MeasureTheory</a>/<a href="index.html">DyadicAvoidance</a>/<span>WindowLocalFactor.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/DyadicAvoidance/WindowLocalFactor.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.Problem310.WindowLocalFactor.exists_uniform_window_representatives</code> <small>line 18</small><div class="doc"><p>Padded equal-length child windows provide a common representative set for
+all outcomes and all local predicates factoring through their subtree grids.
+The representatives are selected before the outcome or predicates.</p></div><pre>theorem exists_uniform_window_representatives {Ω : Type u_Ω} (M r : ℕ)
+    (a B : Fin M → ℕ) (hpadding : ∀ i, B i + 1 ≤ a i + 2 * r)
+    (x : ℝ) :
+    ∃ R : Finset ℝ,
+      (∀ t ∈ R, t ∈ Set.Icc (1 : ℝ) 2) ∧
+      R.card ≤ 1 + M * r * 2 ^ (2 * r + 2) ∧
+      ∀ t ∈ Set.Icc (1 : ℝ) 2, ∃ t&#x27; ∈ R,
+        ∀ Q : Ω → Fin M → ℝ → Bool,
+          (∀ ω i y z, ⌊(2 : ℝ) ^ (B i + 2) * Int.fract y⌋ =
+            ⌊(2 : ℝ) ^ (B i + 2) * Int.fract z⌋ → Q ω i y = Q ω i z) →
+          ∀ ω (i : Fin M) (j : Fin r),
+            Q ω i (x + t&#x27; * ((2 : ℝ)⁻¹) ^ (a i + j.val)) =
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.Problem310.WindowLocalFactor.exists_window_data_representatives</code> <small>line 48</small><div class="doc"><p>Canonical window data discharges the padding hypothesis for all nondefault
+children of an internal node, whose incoming windows have the same length.</p></div><pre>theorem exists_window_data_representatives {Ω : Type u_Ω} {M d g r₀ : ℕ}
+    (W : WindowData (M + 1) d g r₀) (U : FiniteTableModel.Node M d) (x : ℝ) :
+    ∃ R : Finset ℝ,
+      (∀ t ∈ R, t ∈ Set.Icc (1 : ℝ) 2) ∧
+      R.card ≤ 1 + M * W.r (d - U.val.length) * 2 ^ (2 * W.r (d - U.val.length) + 2) ∧
+      ∀ t ∈ Set.Icc (1 : ℝ) 2, ∃ t&#x27; ∈ R,
+        ∀ Q : Ω → Fin M → ℝ → Bool,
+          (∀ ω i y z,
+            ⌊(2 : ℝ) ^ (W.bstar (U.val ++ [i.castSucc]) + 2) * Int.fract y⌋ =
+            ⌊(2 : ℝ) ^ (W.bstar (U.val ++ [i.castSucc]) + 2) * Int.fract z⌋ →
+              Q ω i y = Q ω i z) →
+          ∀ ω (i : Fin M) (j : Fin (W.r (d - U.val.length))),
+…</pre><p class="refs">Mentions: <a href="WindowData.lean.html#L17">OAI.Problem310.WindowData</a>, <a href="FiniteTableModel.lean.html#L15">OAI.Problem310.FiniteTableModel.Node</a></p></li><li id=L75><b>theorem</b> <code>OAI.Problem310.WindowLocalFactor.window_local_predicate_factors</code> <small>line 75</small><div class="doc"><p>The concrete finite-table local predicate inherits its common grid from
+WindowData's bound on endpoints of descendant edges.</p></div><pre>theorem window_local_predicate_factors {M d g r₀ : ℕ}
+    (W : WindowData (M + 1) d g r₀)
+    (bS : FiniteTableModel.Node M d → Fin M → ℕ)
+    (bT : FiniteTableModel.Leaf M d → ℕ)
+    (hbS : ∀ Q j, bS Q j = W.b (Q.val ++ [j.castSucc]))
+    (hbT : ∀ L, bT L = W.b L.val)
+    (ωS : FiniteTableModel.SelectorTable bS) (ωT : FiniteTableModel.TerminalTable bT)
+    (choose : List (FiniteTableModel.Child M) → ℝ → FiniteTableModel.Child M)
+    (rule : List (FiniteTableModel.Child M) → (Fin M → Bool) → FiniteTableModel.Child M)
+    (hchoose : ∀ Q x, choose Q x = rule Q (fun j =&gt; FiniteTableModel.selectorValue bS ωS Q j x))
+    (U : FiniteTableModel.Node M d) (i : Fin M) (r : ℕ)
+    (hdepth : (U.val ++ [i.castSucc]).length + r = d)
+…</pre><p class="refs">Mentions: <a href="WindowData.lean.html#L17">OAI.Problem310.WindowData</a>, <a href="FiniteTableModel.lean.html#L15">OAI.Problem310.FiniteTableModel.Node</a>, <a href="FiniteTableModel.lean.html#L18">OAI.Problem310.FiniteTableModel.Leaf</a>, <a href="FiniteTableModel.lean.html#L50">OAI.Problem310.FiniteTableModel.SelectorTable</a>, <a href="FiniteTableModel.lean.html#L51">OAI.Problem310.FiniteTableModel.TerminalTable</a>, <a href="FiniteTableModel.lean.html#L12">OAI.Problem310.FiniteTableModel.Child</a>, <a href="FiniteTableModel.lean.html#L64">OAI.Problem310.FiniteTableModel.selectorValue</a></p></li><li id=L126><b>theorem</b> <code>OAI.Problem310.WindowLocalFactor.exists_concrete_local_representatives</code> <small>line 126</small><div class="doc"><p>Complete concrete representative adapter. Here <code>Q</code> is the actual local test,
+with only its defining equality retained as an input for convenient rewriting.
+No grid-factorization or numerical span hypotheses remain.</p></div><pre>theorem exists_concrete_local_representatives {M d g r₀ : ℕ}
+    (W : WindowData (M + 1) d g r₀) (U : FiniteTableModel.Node M d) (x : ℝ)
+    (choose : FiniteTableModel.SelectorTable (FiniteTableModel.selectorEndpoints W) →
+      List (FiniteTableModel.Child M) → ℝ → FiniteTableModel.Child M)
+    (rule : List (FiniteTableModel.Child M) → (Fin M → Bool) → FiniteTableModel.Child M)
+    (hchoose : ∀ ωS P y, choose ωS P y = rule P (fun j =&gt;
+      FiniteTableModel.selectorValue (FiniteTableModel.selectorEndpoints W) ωS P j y))
+    (r : ℕ) (hdepth : ∀ i : Fin M, (U.val ++ [i.castSucc]).length + r = d)
+    (Q : (FiniteTableModel.SelectorTable (FiniteTableModel.selectorEndpoints W) ×
+      FiniteTableModel.TerminalTable (FiniteTableModel.terminalEndpoints W)) →
+        Fin M → ℝ → Bool)
+    (hQ : ∀ ω i y, Q ω i y =
+…</pre><p class="refs">Mentions: <a href="WindowData.lean.html#L17">OAI.Problem310.WindowData</a>, <a href="FiniteTableModel.lean.html#L15">OAI.Problem310.FiniteTableModel.Node</a>, <a href="FiniteTableModel.lean.html#L50">OAI.Problem310.FiniteTableModel.SelectorTable</a>, <a href="WindowTableModel.lean.html#L34">OAI.Problem310.FiniteTableModel.selectorEndpoints</a>, <a href="FiniteTableModel.lean.html#L12">OAI.Problem310.FiniteTableModel.Child</a>, <a href="FiniteTableModel.lean.html#L64">OAI.Problem310.FiniteTableModel.selectorValue</a>, <a href="FiniteTableModel.lean.html#L51">OAI.Problem310.FiniteTableModel.TerminalTable</a>, <a href="WindowTableModel.lean.html#L38">OAI.Problem310.FiniteTableModel.terminalEndpoints</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/ThreePrimeFourier.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/ThreePrimeFourier.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>ThreePrimeFourier.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>ThreePrimeFourier.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/ThreePrimeFourier.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.weighted_triple_character_identity</code> <small>line 11</small><div class="doc"><p>Exact Fourier extraction of a weighted ordered triple in a finite cyclic
+group. No primality or analytic estimate is needed.</p></div><pre>theorem weighted_triple_character_identity {q : ℕ} [NeZero q]
+    {α : Type*} (s : Finset α) (f : α → ZMod q) (w : α → ℂ)
+    (u : ZMod q) :
+    (∑ r : ZMod q, (∑ a ∈ s, w a * ZMod.stdAddChar (f a * r)) ^ 3 *
+      ZMod.stdAddChar (-u * r)) =
+    (q : ℂ) * ∑ a ∈ s, ∑ b ∈ s, ∑ c ∈ s,
+      if f a + f b + f c = u then w a * w b * w c else 0 := by
+…</pre></li><li id=L66><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.weighted_natural_triple_character_identity</code> <small>line 66</small><div class="doc"><p>Choosing the cyclic modulus above every possible sum removes all modular
+aliasing. The resulting identity counts ordinary natural-number sums exactly.</p></div><pre>theorem weighted_natural_triple_character_identity {q : ℕ} [NeZero q]
+    (s : Finset ℕ) (w : ℕ → ℂ) (u : ℕ)
+    (hs : ∀ a ∈ s, a ≤ u) (hq : 3 * u &lt; q) :
+    (∑ r : ZMod q, (∑ a ∈ s, w a * ZMod.stdAddChar ((a : ZMod q) * r)) ^ 3 *
+      ZMod.stdAddChar (-(u : ZMod q) * r)) =
+    (q : ℂ) * ∑ a ∈ s, ∑ b ∈ s, ∑ c ∈ s,
+      if a + b + c = u then w a * w b * w c else 0 := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.weighted_natural_triple_fourier</code> <small>line 95</small><div class="doc"><p>Normalized inverse Fourier extraction for weighted ordinary triples.</p></div><pre>theorem weighted_natural_triple_fourier {q : ℕ} [NeZero q]
+    (s : Finset ℕ) (w : ℕ → ℂ) (u : ℕ)
+    (hs : ∀ a ∈ s, a ≤ u) (hq : 3 * u &lt; q) :
+    (∑ a ∈ s, ∑ b ∈ s, ∑ c ∈ s,
+      if a + b + c = u then w a * w b * w c else 0) =
+    (∑ r : ZMod q, (∑ a ∈ s, w a * ZMod.stdAddChar ((a : ZMod q) * r)) ^ 3 *
+      ZMod.stdAddChar (-(u : ZMod q) * r)) / (q : ℂ) := by
+…</pre></li><li id=L108><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.supply_prime_triple_sum_eq_nested</code> <small>line 108</small><div class="doc"><p>The existing ordered-prime-triple finset is exactly the filtered cube
+of the primes at most <code>u</code>. This identity also applies to arbitrary weights.</p></div><pre>theorem supply_prime_triple_sum_eq_nested (u : ℕ) (w : ℕ → ℂ) :
+    (∑ t ∈ supplyPrimeTriples u, w t.1 * w t.2.1 * w t.2.2) =
+    ∑ a ∈ (Finset.Icc 1 u).filter Nat.Prime,
+      ∑ b ∈ (Finset.Icc 1 u).filter Nat.Prime,
+        ∑ c ∈ (Finset.Icc 1 u).filter Nat.Prime,
+          if a + b + c = u then w a * w b * w c else 0 := by
+…</pre><p class="refs">Mentions: <a href="RationalSupplyReduction.lean.html#L36">OAI.Problem337.supplyPrimeTriples</a></p></li><li id=L127><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.supply_prime_weighted_fourier</code> <small>line 127</small><div class="doc"><p>Exact extraction of the log-weighted prime count that occurs in the
+three-prime lower bound. The modulus condition excludes all circular sums.</p></div><pre>theorem supply_prime_weighted_fourier {q : ℕ} [NeZero q]
+    (u : ℕ) (hq : 3 * u &lt; q) :
+    (∑ t ∈ supplyPrimeTriples u,
+      (Real.log (t.1 : ℝ) : ℂ) * (Real.log (t.2.1 : ℝ) : ℂ) *
+        (Real.log (t.2.2 : ℝ) : ℂ)) =
+    (∑ r : ZMod q,
+      (∑ a ∈ (Finset.Icc 1 u).filter Nat.Prime,
+        (Real.log (a : ℝ) : ℂ) * ZMod.stdAddChar ((a : ZMod q) * r)) ^ 3 *
+          ZMod.stdAddChar (-(u : ZMod q) * r)) / (q : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="RationalSupplyReduction.lean.html#L36">OAI.Problem337.supplyPrimeTriples</a></p></li><li id=L142><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.supply_prime_weighted_fourier_re</code> <small>line 142</small><div class="doc"><p>Real-part version of the exact extraction formula.</p></div><pre>theorem supply_prime_weighted_fourier_re {q : ℕ} [NeZero q]
+    (u : ℕ) (hq : 3 * u &lt; q) :
+    (∑ t ∈ supplyPrimeTriples u,
+      Real.log (t.1 : ℝ) * Real.log (t.2.1 : ℝ) * Real.log (t.2.2 : ℝ)) =
+    (∑ r : ZMod q,
+      (∑ a ∈ (Finset.Icc 1 u).filter Nat.Prime,
+        (Real.log (a : ℝ) : ℂ) * ZMod.stdAddChar ((a : ZMod q) * r)) ^ 3 *
+          ZMod.stdAddChar (-(u : ZMod q) * r)).re / (q : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="RationalSupplyReduction.lean.html#L36">OAI.Problem337.supplyPrimeTriples</a></p></li><li id=L156><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.major_minor_real_lower_bound</code> <small>line 156</small><div class="doc"><p>Splitting frequencies into an arbitrary major set and its complement
+gives the standard lower bound by the major real part minus the minor norm.</p></div><pre>theorem major_minor_real_lower_bound {α : Type*} [Fintype α] [DecidableEq α]
+    (s : Finset α) (F : α → ℂ) (Q : ℝ) (hQ : 0 &lt; Q) :
+    ((∑ r ∈ s, F r).re - ‖∑ r ∈ sᶜ, F r‖) / Q ≤
+      (∑ r, F r).re / Q := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L170><b>theorem</b> <code>OAI.Problem337.ThreePrimeFourier.supply_prime_weighted_lower_of_major_minor</code> <small>line 170</small><div class="doc"><p>A lower major-frequency bound and an upper minor-frequency norm bound
+imply a lower bound for the actual log-weighted ordered-prime-triple count.
+The genuinely analytic estimates remain explicit hypotheses.</p></div><pre>theorem supply_prime_weighted_lower_of_major_minor {q : ℕ} [NeZero q]
+    (u : ℕ) (hq : 3 * u &lt; q) (major : Finset (ZMod q))
+    (A E : ℝ)
+    (hmajor : A * (q : ℝ) ≤
+      (∑ r ∈ major,
+        (∑ a ∈ (Finset.Icc 1 u).filter Nat.Prime,
+          (Real.log (a : ℝ) : ℂ) * ZMod.stdAddChar ((a : ZMod q) * r)) ^ 3 *
+            ZMod.stdAddChar (-(u : ZMod q) * r)).re)
+    (hminor : ‖∑ r ∈ majorᶜ,
+        (∑ a ∈ (Finset.Icc 1 u).filter Nat.Prime,
+          (Real.log (a : ℝ) : ℂ) * ZMod.stdAddChar ((a : ZMod q) * r)) ^ 3 *
+            ZMod.stdAddChar (-(u : ZMod q) * r)‖ ≤ E * (q : ℝ)) :
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

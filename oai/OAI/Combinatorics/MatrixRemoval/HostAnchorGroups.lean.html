@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/HostAnchorGroups.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/HostAnchorGroups.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>HostAnchorGroups.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>HostAnchorGroups.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/HostAnchorGroups.lean#L1">source</a></p><div class="doc"><h3>Group coordinates of a canonical host anchor copy</h3><p>One-mode anchor rigidity, the entries of <code>Construction.host</code>, and distinct
+rows and columns of <code>anchor64</code> force exhaustion of the anchor groups.
+The two axes use independent key functions, with no global order instance
+on the raw carrier.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.Problem348.Construction.AnchorGroups.row_representatives</code> <small>line 22</small><div class="doc"><p>The row groups of a one-mode anchor copy are exactly their pattern indices.
+Only the within-mode comparison property of the chosen row order is needed.</p></div><pre>theorem row_representatives {h : ℕ} {K : Type uK} [LinearOrder K]
+    (key : Position h → K) (r c : Fin 64 → Position h) (t : Mode h)
+    (hr : StrictMono (fun i =&gt; key (r i)))
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (hmode : ∀ i, ∃ u x, r i = Sum.inl (t, u, x))
+    (horder : ∀ u v : Fin 64, ∀ x y : Fin (2 ^ h),
+      key (Sum.inl (t,u,x)) &lt; key (Sum.inl (t,v,y)) → u ≤ v) :
+    ∃ x : Fin 64 → Fin (2 ^ h), ∀ i, r i = Sum.inl (t,i,x i) := by
+…</pre><p class="refs">Mentions: <a href="Host.lean.html#L15">OAI.Problem348.Construction.Position</a>, <a href="Host.lean.html#L16">OAI.Problem348.Construction.Mode</a>, <a href="Host.lean.html#L72">OAI.Problem348.Construction.host</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li><li id=L50><b>theorem</b> <code>OAI.Problem348.Construction.AnchorGroups.column_representatives</code> <small>line 50</small><div class="doc"><p>The analogous conclusion for the independently ordered column axis.</p></div><pre>theorem column_representatives {h : ℕ} {K : Type uK} [LinearOrder K]
+    (key : Position h → K) (r c : Fin 64 → Position h) (t : Mode h)
+    (hc : StrictMono (fun j =&gt; key (c j)))
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (hmode : ∀ j, ∃ v y, c j = Sum.inl (t, v, y))
+    (horder : ∀ u v : Fin 64, ∀ x y : Fin (2 ^ h),
+      key (Sum.inl (t,u,x)) &lt; key (Sum.inl (t,v,y)) → u ≤ v) :
+    ∃ y : Fin 64 → Fin (2 ^ h), ∀ j, c j = Sum.inl (t,j,y j) := by
+…</pre><p class="refs">Mentions: <a href="Host.lean.html#L15">OAI.Problem348.Construction.Position</a>, <a href="Host.lean.html#L16">OAI.Problem348.Construction.Mode</a>, <a href="Host.lean.html#L72">OAI.Problem348.Construction.host</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li><li id=L80><b>theorem</b> <code>OAI.Problem348.Construction.AnchorGroups.representatives</code> <small>line 80</small><div class="doc"><p>Both axes of the canonical anchor copy use every group in its prescribed
+order, with independent choices of the within-group offsets.</p></div><pre>theorem representatives {h : ℕ} {KR : Type uKR} {KC : Type uKC}
+    [LinearOrder KR] [LinearOrder KC]
+    (rowKey : Position h → KR) (colKey : Position h → KC)
+    (r c : Fin 64 → Position h) (t : Mode h)
+    (hr : StrictMono (fun i =&gt; rowKey (r i)))
+    (hc : StrictMono (fun j =&gt; colKey (c j)))
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (hrowmode : ∀ i, ∃ u x, r i = Sum.inl (t,u,x))
+    (hcolmode : ∀ j, ∃ v y, c j = Sum.inl (t,v,y))
+    (hroworder : ∀ u v : Fin 64, ∀ x y : Fin (2 ^ h),
+      rowKey (Sum.inl (t,u,x)) &lt; rowKey (Sum.inl (t,v,y)) → u ≤ v)
+    (hcolorder : ∀ u v : Fin 64, ∀ x y : Fin (2 ^ h),
+…</pre><p class="refs">Mentions: <a href="Host.lean.html#L15">OAI.Problem348.Construction.Position</a>, <a href="Host.lean.html#L16">OAI.Problem348.Construction.Mode</a>, <a href="Host.lean.html#L72">OAI.Problem348.Construction.host</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

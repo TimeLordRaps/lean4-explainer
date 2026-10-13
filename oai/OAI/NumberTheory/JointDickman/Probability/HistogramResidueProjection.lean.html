@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/JointDickman/Probability/HistogramResidueProjection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/JointDickman/Probability/HistogramResidueProjection.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">JointDickman</a> / <a href="index.html">Probability</a> / <span>HistogramResidueProjection.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">JointDickman</a>/<a href="index.html">Probability</a>/<span>HistogramResidueProjection.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/JointDickman/Probability/HistogramResidueProjection.lean#L1">source</a></p><div class="doc"><h3>Residue projection in the actual finite histogram</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.JointDickman.histogram_cell_vector_bound</code> <small>line 12</small><div class="doc"><p>Finite form of (39) for a signed cell vector and arbitrary complex tests.</p></div><pre>theorem histogram_cell_vector_bound {ι : Type*} [DecidableEq ι]
+    {q : ℕ} [NeZero q] (J : Finset ι) {δ M : ℝ}
+    (hδ : 0 ≤ δ) (hM : 0 ≤ M) (U : ι → (ZMod q)ˣ → ℝ)
+    (F : ι → ℂ) (hF : ∀ i ∈ J, ‖F i‖ ≤ M) :
+    (∑ h : ZMod q, ‖unitResidueFourier
+      (fun r =&gt; ∑ i ∈ J, (δ : ℂ)*(U i r : ℂ)*F i) h/(q.totient : ℂ)‖^2) ≤
+      ((q : ℝ)/(q.totient : ℝ))*((J.card : ℝ)*δ)*M^2*
+        (∑ i ∈ J, ∑ r : (ZMod q)ˣ, (δ/(q.totient : ℝ))*U i r^2) := by
+…</pre><p class="refs">Mentions: <a href="ResidueFourierParseval.lean.html#L37">OAI.JointDickman.unitResidueFourier</a></p></li><li id=L36><b>theorem</b> <code>OAI.JointDickman.manuscript_histogram_residue_projection</code> <small>line 36</small><div class="doc"><p>The residue-dependent part of the manuscript channel is controlled by
+its proved squared residue norm, on any selected collection of cells.</p></div><pre>theorem manuscript_histogram_residue_projection {m B q : ℕ} [NeZero q]
+    (hm : 0 &lt; m) (hB : 0 &lt; B) (J : Finset (Fin (channelFineCount m B)))
+    (g : (auxiliaryPrimes B → Bool) → ℝ) (F : Fin (channelFineCount m B) → ℂ)
+    {M : ℝ} (hM : 0 ≤ M) (hF : ∀ i ∈ J, ‖F i‖ ≤ M) :
+    (∑ h : ZMod q, ‖unitResidueFourier
+      (fun r =&gt; ∑ i ∈ J, (channelMesh (channelFineCount m B) : ℂ)*
+        ((manuscriptChannel m B q g (i,r)-
+          finiteResidueAverage (fun s =&gt; manuscriptChannel m B q g (i,s))) : ℝ)*F i)
+      h/(q.totient : ℂ)‖^2) ≤
+      ((q : ℝ)/(q.totient : ℝ))*((J.card : ℝ)*channelMesh (channelFineCount m B))*M^2*
+        (∑ i ∈ J, ∑ r : (ZMod q)ˣ,
+          (channelMesh (channelFineCount m B)/(q.totient : ℝ))*
+…</pre><p class="refs">Mentions: <a href="ChannelGrid.lean.html#L12">OAI.JointDickman.channelFineCount</a>, <a href="../Amplification/AuxiliaryScale.lean.html#L26">OAI.JointDickman.auxiliaryPrimes</a>, <a href="ResidueFourierParseval.lean.html#L37">OAI.JointDickman.unitResidueFourier</a>, <a href="ChannelGrid.lean.html#L15">OAI.JointDickman.channelMesh</a>, <a href="UniformResidueChannel.lean.html#L12">OAI.JointDickman.manuscriptChannel</a>, <a href="ResidueCentering.lean.html#L19">OAI.JointDickman.finiteResidueAverage</a></p></li><li id=L54><b>theorem</b> <code>OAI.JointDickman.manuscript_histogram_residue_projection_rate</code> <small>line 54</small><div class="doc"><p>Summing disjoint local squared errors is bounded by the global channel
+residue norm. The only arithmetic inputs are the published channel inputs.</p></div><pre>theorem manuscript_histogram_residue_projection_rate
+    (hSD : PublishedInputs.SquarefreeSelbergDelangeInput)
+    (hSW : PublishedInputs.SquarefreeCharacterEstimateInput)
+    (hM : PublishedInputs.PrimeReciprocalMertensInput)
+    (hMP : PublishedInputs.PrimeProductMertensInput) :
+    ∃ K : ℝ, 0 &lt; K ∧ ∀ m : ℕ, 0 &lt; m → ∀ᶠ B : ℕ in Filter.atTop,
+      ∀ q : ℕ, [NeZero q] → q ≤ B →
+      ∀ J : Finset (Fin (channelFineCount m B)),
+      ∀ g : (auxiliaryPrimes B → Bool) → ℝ,
+      ∀ (F : Fin (channelFineCount m B) → ℂ) (M : ℝ), 0 ≤ M →
+      (∀ i ∈ J, ‖F i‖ ≤ M) →
+      (∑ h : ZMod q, ‖unitResidueFourier
+…</pre><p class="refs">Mentions: <a href="../Amplification/ArithmeticInputs.lean.html#L35">OAI.JointDickman.PublishedInputs.SquarefreeSelbergDelangeInput</a>, <a href="../Analysis/CharacterInputs.lean.html#L32">OAI.JointDickman.PublishedInputs.SquarefreeCharacterEstimateInput</a>, <a href="../Amplification/ArithmeticInputs.lean.html#L46">OAI.JointDickman.PublishedInputs.PrimeReciprocalMertensInput</a>, <a href="../Amplification/ArithmeticInputs.lean.html#L53">OAI.JointDickman.PublishedInputs.PrimeProductMertensInput</a>, <a href="ChannelGrid.lean.html#L12">OAI.JointDickman.channelFineCount</a>, <a href="../Amplification/AuxiliaryScale.lean.html#L26">OAI.JointDickman.auxiliaryPrimes</a>, <a href="ResidueFourierParseval.lean.html#L37">OAI.JointDickman.unitResidueFourier</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

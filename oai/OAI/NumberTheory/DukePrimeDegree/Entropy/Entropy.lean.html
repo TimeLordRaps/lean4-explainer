@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Entropy/Entropy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Entropy/Entropy.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Entropy</a> / <span>Entropy.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Entropy</a>/<span>Entropy.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Entropy/Entropy.lean#L1">source</a></p><div class="doc"><h3>The ergodic-component step for prime-degree torus packets</h3><p>The entropy functional is a parameter whose restricted-mixture formula
+is the specialization of Rokhlin,
+<em>Lectures on the entropy theory of measure-preserving transformations</em>
+(1967), Theorem 9.8. The measurable probability kernel and its
+restricted-mixture formula are hypotheses; the decomposition theorem of
+Greschonig--Schmidt (2000), Theorem 5.2, gives such kernels for invariant
+probabilities.</p><p>In particular, a lower bound for the entropy of a measure alone is not
+used to infer positive entropy in almost every component.  The lower
+bound must hold for every invariant probability dominated by a finite
+multiple of that measure.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L32><b>def</b> <code>OAI.DukePrimeDegree.restrictedMixture</code> <small>line 32</small><div class="doc"><p>The probability obtained by retaining a positive-measure collection
+of components and renormalizing.</p></div><pre>noncomputable def restrictedMixture (τ : Measure Z) (κ : Z → Measure X)
+    (s : Set Z) : Measure X :=
+…</pre></li><li id=L36><b>lemma</b> <code>OAI.DukePrimeDegree.restricted_bind_le</code> <small>line 36</small></li><li id=L45><b>lemma</b> <code>OAI.DukePrimeDegree.restrictedMixture_le</code> <small>line 45</small></li><li id=L53><b>lemma</b> <code>OAI.DukePrimeDegree.restrictedMixture_probability</code> <small>line 53</small></li><li id=L66><b>lemma</b> <code>OAI.DukePrimeDegree.map_bind_eq_of_component_invariant</code> <small>line 66</small><div class="doc"><p>Taking mixtures commutes with a measurable transformation that fixes
+every component.</p></div><pre>lemma map_bind_eq_of_component_invariant (τ : Measure Z) (κ : Z → Measure X)
+    (hκ : Measurable κ) (T : X → X) (hT : Measurable T)
+    (hinv : ∀ z, Measure.map T (κ z) = κ z) :
+    Measure.map T (τ.bind κ) = τ.bind κ := by
+…</pre></li><li id=L78><b>lemma</b> <code>OAI.DukePrimeDegree.restrictedMixture_invariant</code> <small>line 78</small></li><li id=L94><b>theorem</b> <code>OAI.DukePrimeDegree.ae_positive_component_entropy</code> <small>line 94</small><div class="doc"><p>The domination argument for the zero-entropy components.</p><p><code>hformula</code> is only the restriction case of the published entropy integral
+formula.  <code>hpositive</code> is the manuscript's preceding ball-to-entropy result,
+which has to be established separately.  The proof constructs the
+normalized zero-entropy submixture, proves its domination and invariance,
+and obtains a contradiction.</p></div><pre>theorem ae_positive_component_entropy
+    (τ : Measure Z) [IsProbabilityMeasure τ]
+    (κ : Z → Measure X) (hκ : Measurable κ)
+    (hprob : ∀ z, IsProbabilityMeasure (κ z))
+    (T : I → X → X) (hT : ∀ i, Measurable (T i))
+    (hinv : ∀ i z, Measure.map (T i) (κ z) = κ z)
+    (entropy : Measure X → ℝ≥0∞)
+    (hentropy : Measurable (fun z =&gt; entropy (κ z)))
+    (hformula : ∀ s, MeasurableSet s → τ s ≠ 0 →
+      entropy (restrictedMixture τ κ s) =
+        (τ s)⁻¹ * ∫⁻ z in s, entropy (κ z) ∂τ)
+    (hpositive : ∀ ξ : Measure X, IsProbabilityMeasure ξ →
+…</pre><p class="refs">Mentions: <a href="Entropy.lean.html#L32">OAI.DukePrimeDegree.restrictedMixture</a></p></li><li id=L132><b>theorem</b> <code>OAI.DukePrimeDegree.bind_eq_of_ae_eq</code> <small>line 132</small><div class="doc"><p>A probability mixture of almost-everywhere identical components is
+that same probability.  This is the final integration step after the
+prime-degree rigidity theorem identifies the ergodic components.</p></div><pre>theorem bind_eq_of_ae_eq (τ : Measure Z) [IsProbabilityMeasure τ]
+    (κ : Z → Measure X) (m : Measure X) (heq : ∀ᵐ z ∂τ, κ z = m) :
+    τ.bind κ = m := by
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.DukePrimeDegree.bind_eq_of_positive_entropy_rigidity</code> <small>line 141</small><div class="doc"><p>Combine the preceding component argument with the application-specific
+rigidity implication.  For torus packets, <code>hrigid</code> is supplied by
+Einsiedler--Katok--Lindenstrauss (2006), Theorem 1.3 and Corollary 1.4,
+after checking prime degree and ergodicity.</p></div><pre>theorem bind_eq_of_positive_entropy_rigidity
+    (τ : Measure Z) [IsProbabilityMeasure τ]
+    (κ : Z → Measure X) (entropy : Measure X → ℝ≥0∞) (m : Measure X)
+    (hpositive : ∀ᵐ z ∂τ, 0 &lt; entropy (κ z))
+    (hrigid : ∀ᵐ z ∂τ, 0 &lt; entropy (κ z) → κ z = m) :
+    τ.bind κ = m := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

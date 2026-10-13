@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tracial/FiniteFactorSymmetrization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tracial/FiniteFactorSymmetrization.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tracial</a> / <span>FiniteFactorSymmetrization.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tracial</a>/<span>FiniteFactorSymmetrization.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tracial/FiniteFactorSymmetrization.lean#L1">source</a></p><div class="doc"><p>The finite-factor averaging stage uses actual normalized Haar measures
+on the finite matrix-unitary groups. Their continuity and weak integrability
+are proved here; the resulting operator is within the original scalar
+commutator bound and has scalar commutator bound at most three times it.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>def</b> <code>OAI.KadisonSimilarity.matrixUnitaryAction</code> <small>line 31</small><div class="doc"><p>Restriction of a matrix representation to its unitary group.</p></div><pre>def matrixUnitaryAction (R : Matrix α α ℂ →⋆ₐ[ℂ] (H →L[ℂ] H)) :
+    Matrix.unitaryGroup α ℂ →* (H →L[ℂ] H) :=
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.KadisonSimilarity.matrixUnitaryAction_norm_le</code> <small>line 35</small></li><li id=L41><b>theorem</b> <code>OAI.KadisonSimilarity.matrixUnitaryAction_adjoint</code> <small>line 41</small></li><li id=L49><b>theorem</b> <code>OAI.KadisonSimilarity.matrixUnitaryAction_continuous</code> <small>line 49</small><div class="doc"><p>Finite-dimensional continuity proves strong continuity of the action.</p></div><pre>theorem matrixUnitaryAction_continuous (R : Matrix α α ℂ →⋆ₐ[ℂ] (H →L[ℂ] H)) (x : H) :
+    Continuous (fun u : Matrix.unitaryGroup α ℂ =&gt; matrixUnitaryAction R u x) := by
+…</pre><p class="refs">Mentions: <a href="FiniteFactorSymmetrization.lean.html#L31">OAI.KadisonSimilarity.matrixUnitaryAction</a></p></li><li id=L56><b>theorem</b> <code>OAI.KadisonSimilarity.commutes_matrix_of_unitaries</code> <small>line 56</small><div class="doc"><p>Commutation with matrix unitaries implies commutation with every matrix,
+by the four-unitary spanning theorem in the actual C-star matrix algebra.</p></div><pre>theorem commutes_matrix_of_unitaries [Nonempty α]
+    (R : Matrix α α ℂ →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (S : H →L[ℂ] H) (hS : ∀ u, commutator S (matrixUnitaryAction R u) = 0)
+    (a : Matrix α α ℂ) : commutator S (R a) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a>, <a href="FiniteFactorSymmetrization.lean.html#L31">OAI.KadisonSimilarity.matrixUnitaryAction</a></p></li><li id=L100><b>def</b> <code>OAI.KadisonSimilarity.finiteMatrixHaarProbability</code> <small>line 100</small><div class="doc"><p>Normalized Haar measure on each actual finite matrix-unitary group.</p></div><pre>def finiteMatrixHaarProbability (n : ℕ) : Measure (Matrix.unitaryGroup (I n) ℂ) :=
+…</pre></li><li id=L103><b>instance</b> <code>OAI.KadisonSimilarity.finiteMatrixHaarProbability_probability</code> <small>line 103</small></li><li id=L109><b>instance</b> <code>OAI.KadisonSimilarity.finiteMatrixHaarProbability_leftInvariant</code> <small>line 109</small></li><li id=L116><b>theorem</b> <code>OAI.KadisonSimilarity.exists_finite_matrix_symmetrization</code> <small>line 116</small><div class="doc"><p>Actual Haar averaging over increasing matrix stages produces the
+finite-factor perturbation with the manuscript's factor-three estimate.</p></div><pre>theorem exists_finite_matrix_symmetrization
+    [∀ n, Nonempty (I n)]
+    (M : VonNeumannAlgebra H)
+    (R : ∀ n, Matrix (I n) (I n) ℂ →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (hmem : ∀ n a, R n a ∈ M)
+    (ι : ∀ n m, n ≤ m → Matrix (I n) (I n) ℂ →⋆ₐ[ℂ] Matrix (I m) (I m) ℂ)
+    (hcompat : ∀ n m h a, R m (ι n m h a) = R n a)
+    (Y : H →L[ℂ] H) :
+    ∃ Y₀ : H →L[ℂ] H, ‖Y₀‖ ≤ ‖Y‖ ∧
+      ‖Y₀ - Y‖ ≤ scalarCommutatorNorm M Y ∧
+      scalarCommutatorNorm M Y₀ ≤ 3 * scalarCommutatorNorm M Y ∧
+      ∀ n a, commutator Y₀ (R n a) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L62">OAI.KadisonSimilarity.scalarCommutatorNorm</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a></p></li><li id=L144><b>theorem</b> <code>OAI.KadisonSimilarity.exists_generated_factor_symmetrization</code> <small>line 144</small><div class="doc"><p>Double-commutant generation extends the finite-stage conclusion to the
+whole generated subfactor. No extra invariant operator is assumed.</p></div><pre>theorem exists_generated_factor_symmetrization
+    [∀ n, Nonempty (I n)]
+    (M N : VonNeumannAlgebra H)
+    (R : ∀ n, Matrix (I n) (I n) ℂ →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (hmem : ∀ n a, R n a ∈ M)
+    (ι : ∀ n m, n ≤ m → Matrix (I n) (I n) ℂ →⋆ₐ[ℂ] Matrix (I m) (I m) ℂ)
+    (hcompat : ∀ n m h a, R m (ι n m h a) = R n a)
+    (hgenerate : (N : Set (H →L[ℂ] H)) = Set.centralizer
+      (Set.centralizer {x | ∃ n a, R n a = x}))
+    (Y : H →L[ℂ] H) :
+    ∃ Y₀ : H →L[ℂ] H, ‖Y₀‖ ≤ ‖Y‖ ∧
+      ‖Y₀ - Y‖ ≤ scalarCommutatorNorm M Y ∧
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L62">OAI.KadisonSimilarity.scalarCommutatorNorm</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Rooted/ForestPhysicalCompletion.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Rooted/ForestPhysicalCompletion.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Rooted</a> / <span>ForestPhysicalCompletion.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Rooted</a>/<span>ForestPhysicalCompletion.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Rooted/ForestPhysicalCompletion.lean#L1">source</a></p><div class="doc"><h3>The companion's actual small/free profiles and tree intervals</h3><p>Residual margins subtract the two separate small views and the fixed
+free values. The integral graph completion satisfies every nonroot line.
+The maximum-forest cut bound then supplies, rather than assumes, the
+physical tree interval used by the signature/count marginal.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.fixedRow</code> <small>line 22</small></li><li id=L26><b>def</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.fixedColumn</code> <small>line 26</small></li><li id=L30><b>def</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.rowResidual</code> <small>line 30</small></li><li id=L34><b>def</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.columnResidual</code> <small>line 34</small></li><li id=L38><b>def</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.solved</code> <small>line 38</small></li><li id=L42><b>def</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.completed</code> <small>line 42</small></li><li id=L46><b>lemma</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.row_pointwise</code> <small>line 46</small></li><li id=L57><b>lemma</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.column_pointwise</code> <small>line 57</small></li><li id=L68><b>lemma</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.row_completed_sum</code> <small>line 68</small></li><li id=L77><b>lemma</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.column_completed_sum</code> <small>line 77</small></li><li id=L87><b>lemma</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.nonroot_of_root_component</code> <small>line 87</small></li><li id=L96><b>theorem</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.solved_in_intervals</code> <small>line 96</small><div class="doc"><p>The completion interval holds for the literal residual
+margin equations, including every box-valid unbalanced small profile.</p></div><pre>theorem solved_in_intervals (small : I → J → Bool) (b : I → J → ℕ)
+    (T : SimpleGraph (I⊕J)) (hTG : T≤cellGraph small) (hT : T.IsAcyclic)
+    (hmax : ∀ F : SimpleGraph (I⊕J), F≤cellGraph small → F.IsAcyclic →
+      MaximumForest.weight F (capacity b)≤MaximumForest.weight T (capacity b))
+    (r : I → ℤ) (c : J → ℤ) (x q free X : I → J → ℤ) (d W : ℕ)
+    (hd : 1≤d) (hcard : Fintype.card I*Fintype.card J≤d)
+    (hlarge : ∀ i j, small i j=false → W≤b i j ∧ 1≤b i j)
+    (hsmall : ∀ i j, small i j=true → b i j&lt;W ∧
+      (0≤x i j ∧ x i j≤b i j) ∧ (0≤q i j ∧ q i j≤b i j))
+    (hfree : ∀ i j, small i j=false → ¬T.Adj (.inl i) (.inr j) →
+      0≤free i j ∧ free i j≤b i j)
+    (hX : ∀ i j, 0≤X i j ∧ X i j≤b i j)
+…</pre><p class="refs">Mentions: <a href="MaximumForest.lean.html#L25">OAI.ContingencyTables.MaximumForest.weight</a></p></li><li id=L178><b>theorem</b> <code>OAI.ContingencyTables.ForestPhysicalCompletion.tree_indicator_sum</code> <small>line 178</small><div class="doc"><p>For the literal small/free residual margins, the equality-limit
+sum over the prescribed tree intervals retains exactly one term, with
+precisely the weight of the source's solved tree values.</p></div><pre>theorem tree_indicator_sum (small : I → J → Bool) (b : I → J → ℕ)
+    (T : SimpleGraph (I⊕J)) (hTG : T≤cellGraph small) (hT : T.IsAcyclic)
+    (hmax : ∀ F : SimpleGraph (I⊕J), F≤cellGraph small → F.IsAcyclic →
+      MaximumForest.weight F (capacity b)≤MaximumForest.weight T (capacity b))
+    (r : I → ℤ) (c : J → ℤ) (x q free X : I → J → ℤ) (d W : ℕ)
+    (hd : 1≤d) (hcard : Fintype.card I*Fintype.card J≤d)
+    (hlarge : ∀ i j, small i j=false → W≤b i j ∧ 1≤b i j)
+    (hsmall : ∀ i j, small i j=true → b i j&lt;W ∧
+      (0≤x i j ∧ x i j≤b i j) ∧ (0≤q i j ∧ q i j≤b i j))
+    (hfree : ∀ i j, small i j=false → ¬T.Adj (.inl i) (.inr j) →
+      0≤free i j ∧ free i j≤b i j)
+    (hX : ∀ i j, 0≤X i j ∧ X i j≤b i j)
+…</pre><p class="refs">Mentions: <a href="MaximumForest.lean.html#L25">OAI.ContingencyTables.MaximumForest.weight</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/AnchorPatternFixed.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/AnchorPatternFixed.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>AnchorPatternFixed.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>AnchorPatternFixed.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/AnchorPatternFixed.lean#L1">source</a></p><div class="doc"><h3>Structural anchor bridges for the fixed pattern</h3><p>The generic bridges are specialized to the explicit <code>anchor64</code> definition.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.Problem348.AnchorBridge.anchor64_word_block_complete</code> <small>line 17</small><div class="doc"><p>The exact anchor realizes every five-bit word on the specified suffix.</p></div><pre>theorem anchor64_word_block_complete (w : Fin 5 → Bool) :
+    ∃ a : Fin 32, ∀ b : Fin 5,
+      anchor64 (wordRow a) (wordCol b) = w b := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="AnchorPatternBridge.lean.html#L47">OAI.Problem348.AnchorBridge.wordRow</a>, <a href="AnchorPatternBridge.lean.html#L50">OAI.Problem348.AnchorBridge.wordCol</a></p></li><li id=L28><b>theorem</b> <code>OAI.Problem348.AnchorBridge.anchor64_anchor_majority</code> <small>line 28</small><div class="doc"><p>An exact anchor copy has at least 33 anchors on one of its two axes,
+provided anchors form prefixes and non-anchor rows do not shatter five
+non-anchor columns.</p></div><pre>theorem anchor64_anchor_majority {R : Type uR} {C : Type uC}
+    (A : R → C → Bool) (row : Fin 64 → R) (col : Fin 64 → C)
+    (anchorR : R → Prop) (anchorC : C → Prop)
+    [DecidablePred anchorR] [DecidablePred anchorC]
+    (hcopy : ∀ i j, A (row i) (col j) = anchor64 i j)
+    (hcol : Function.Injective col)
+    (hprefixR : ∀ i j, i ≤ j → anchorR (row j) → anchorR (row i))
+    (hprefixC : ∀ i j, i ≤ j → anchorC (col j) → anchorC (col i))
+    (hnoshatter : ∀ cs : Fin 5 → C, Function.Injective cs →
+      (∀ b, ¬ anchorC (cs b)) → ∃ w : Fin 5 → Bool,
+        ∀ r, ¬ anchorR r → ∃ b, A r (cs b) ≠ w b) :
+    33 ≤ (Finset.univ.filter (fun i =&gt; anchorR (row i))).card ∨
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li><li id=L47><b>theorem</b> <code>OAI.Problem348.AnchorBridge.anchor64_row_class_single_use</code> <small>line 47</small><div class="doc"><p>A row class of equal host rows occurs at most once in an anchor copy.</p></div><pre>theorem anchor64_row_class_single_use {R : Type uR} {C : Type uC}
+    (A : R → C → Bool) (row : Fin 64 → R) (col : Fin 64 → C)
+    (P : R → Prop) [DecidablePred P]
+    (hcopy : ∀ i j, A (row i) (col j) = anchor64 i j)
+    (hclass : ∀ r s, P r → P s → A r = A s) :
+    (Finset.univ.filter (fun i =&gt; P (row i))).card ≤ 1 :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li><li id=L57><b>theorem</b> <code>OAI.Problem348.AnchorBridge.anchor64_col_class_single_use</code> <small>line 57</small><div class="doc"><p>A column class of equal host columns occurs at most once in an anchor copy.</p></div><pre>theorem anchor64_col_class_single_use {R : Type uR} {C : Type uC}
+    (A : R → C → Bool) (row : Fin 64 → R) (col : Fin 64 → C)
+    (P : C → Prop) [DecidablePred P]
+    (hcopy : ∀ i j, A (row i) (col j) = anchor64 i j)
+    (hclass : ∀ c d, P c → P d → ∀ r, A r c = A r d) :
+    (Finset.univ.filter (fun j =&gt; P (col j))).card ≤ 1 :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralFourier.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralFourier.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>DihedralFourier.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>DihedralFourier.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/DihedralFourier.lean#L1">source</a></p><div class="doc"><p>The exact dihedral word identity and the finite Fourier matrix entries.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.KadisonSimilarity.dihedral_word_identity</code> <small>line 18</small><div class="doc"><p>The reflection relation fixes the sum-index in the Hankel term.</p></div><pre>theorem dihedral_word_identity (w d : G) (hd : d * w = w⁻¹ * d) (j k : ℤ) :
+    w ^ j * d * w ^ (-k) = w ^ (j + k + 1) * (w⁻¹ * d) := by
+…</pre></li><li id=L38><b>def</b> <code>OAI.KadisonSimilarity.dihedralHalfProjection</code> <small>line 38</small><div class="doc"><p>The corner of a symmetry, written algebraically.</p></div><pre>def dihedralHalfProjection (d : Rˣ) : R := (1 / 2 : ℂ) • (1 + (d : R))</pre></li><li id=L41><b>theorem</b> <code>OAI.KadisonSimilarity.dihedral_corner_word</code> <small>line 41</small><div class="doc"><p>Exact rotation-plus-reflection decomposition of the corner word.</p></div><pre>theorem dihedral_corner_word (w d : Rˣ) (hd : d * w = w⁻¹ * d) (j k : ℤ) :
+    (↑(w ^ j) : R) * dihedralHalfProjection d * (↑(w ^ (-k)) : R) =
+      (1 / 2 : ℂ) • ((↑(w ^ (j - k)) : R) +
+        (↑(w ^ (j + k + 1)) : R) * (↑(w⁻¹ * d) : R)) := by
+…</pre><p class="refs">Mentions: <a href="DihedralFourier.lean.html#L38">OAI.KadisonSimilarity.dihedralHalfProjection</a></p></li><li id=L56><b>theorem</b> <code>OAI.KadisonSimilarity.dihedral_fourier_entry</code> <small>line 56</small><div class="doc"><p>Once the two Fourier coefficient identities hold, the corner entry has
+both its Toeplitz difference index and its Hankel sum-plus-one index.</p></div><pre>theorem dihedral_fourier_entry
+    (w d : Rˣ) (hd : d * w = w⁻¹ * d) (f : R) (E : R →ₗ[ℂ] R)
+    (γ : ℤ → ℂ)
+    (hrot : ∀ l : ℤ, E (f * (↑(w ^ l) : R)) = γ l • (1 : R))
+    (href : ∀ l : ℤ, E (f * (↑(w ^ l) : R) * (↑(w⁻¹ * d) : R)) =
+      γ l • (↑(w⁻¹ * d) : R)) (j k : ℤ) :
+    E (f * ((↑(w ^ j) : R) * dihedralHalfProjection d * (↑(w ^ (-k)) : R))) =
+      (1 / 2 : ℂ) • (γ (j - k) • (1 : R) +
+        γ (j + k + 1) • (↑(w⁻¹ * d) : R)) := by
+…</pre><p class="refs">Mentions: <a href="DihedralFourier.lean.html#L38">OAI.KadisonSimilarity.dihedralHalfProjection</a></p></li><li id=L69><b>def</b> <code>OAI.KadisonSimilarity.symmetryExpectation</code> <small>line 69</small><div class="doc"><p>The trace-orthogonal projection onto the span of a centered symmetry.</p></div><pre>def symmetryExpectation (τ : R →ₗ[ℂ] ℂ) (s : R) : R →ₗ[ℂ] R where
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.KadisonSimilarity.symmetryExpectation_apply</code> <small>line 76</small></li><li id=L80><b>theorem</b> <code>OAI.KadisonSimilarity.symmetryExpectation_mul_symmetry</code> <small>line 80</small><div class="doc"><p>The two coefficients of <code>x</code> and <code>xs</code> exchange when <code>s²=1</code>.</p></div><pre>theorem symmetryExpectation_mul_symmetry
+    (τ : R →ₗ[ℂ] ℂ) (htr : ∀ a b, τ (a * b) = τ (b * a))
+    (s x : R) (hs : s * s = 1) (hcoset : τ (s * x) = 0) :
+    symmetryExpectation τ s x = τ x • 1 ∧
+      symmetryExpectation τ s (x * s) = τ x • s := by
+…</pre><p class="refs">Mentions: <a href="DihedralFourier.lean.html#L69">OAI.KadisonSimilarity.symmetryExpectation</a></p></li><li id=L94><b>theorem</b> <code>OAI.KadisonSimilarity.dihedral_fourier_entry_from_moments</code> <small>line 94</small><div class="doc"><p>Scalar group Fourier moments alone determine the finite compression
+entry. The coset moment vanishes by dihedral group orthogonality.</p></div><pre>theorem dihedral_fourier_entry_from_moments
+    (w d : Rˣ) (hd : d * w = w⁻¹ * d) (f : R)
+    (τ : R →ₗ[ℂ] ℂ) (htr : ∀ a b, τ (a * b) = τ (b * a))
+    (hs : (↑(w⁻¹ * d) : R) * (↑(w⁻¹ * d) : R) = 1)
+    (γ : ℤ → ℂ) (hcoef : ∀ l : ℤ, τ (f * (↑(w ^ l) : R)) = γ l)
+    (hcoset : ∀ l : ℤ, τ ((↑(w⁻¹ * d) : R) * (f * (↑(w ^ l) : R))) = 0)
+    (j k : ℤ) :
+    symmetryExpectation τ (↑(w⁻¹ * d) : R)
+        (f * ((↑(w ^ j) : R) * dihedralHalfProjection d * (↑(w ^ (-k)) : R))) =
+      (1 / 2 : ℂ) • (γ (j - k) • (1 : R) +
+        γ (j + k + 1) • (↑(w⁻¹ * d) : R)) := by
+…</pre><p class="refs">Mentions: <a href="DihedralFourier.lean.html#L69">OAI.KadisonSimilarity.symmetryExpectation</a>, <a href="DihedralFourier.lean.html#L38">OAI.KadisonSimilarity.dihedralHalfProjection</a></p></li><li id=L113><b>theorem</b> <code>OAI.KadisonSimilarity.compressed_dihedral_fourier_entry</code> <small>line 113</small><div class="doc"><p>Bimodularity and the tower identity transfer the free-compression
+expectation to a dihedral Fourier entry.</p></div><pre>theorem compressed_dihedral_fourier_entry
+    (w d : Rˣ) (hd : d * w = w⁻¹ * d) (f h : R)
+    (EC E₀ : R →ₗ[ℂ] R) (γ : ℤ → ℂ) (u : ℂ)
+    (hEC : EC h = u ^ 2 • (f * dihedralHalfProjection d))
+    (hbimod : ∀ j k : ℤ, EC ((↑(w ^ j) : R) * h * (↑(w ^ (-k)) : R)) =
+      (↑(w ^ j) : R) * EC h * (↑(w ^ (-k)) : R))
+    (htower : ∀ j k : ℤ,
+      E₀ (EC ((↑((w) ^ j) : R) * h * (↑((w) ^ (-k)) : R))) =
+        E₀ ((↑((w) ^ j) : R) * h * (↑((w) ^ (-k)) : R)))
+    (hcomm : ∀ j : ℤ, (↑(w ^ j) : R) * f = f * (↑(w ^ j) : R))
+    (hrot : ∀ l : ℤ, E₀ (f * (↑(w ^ l) : R)) = γ l • (1 : R))
+    (href : ∀ l : ℤ, E₀ (f * (↑(w ^ l) : R) * (↑(w⁻¹ * d) : R)) =
+…</pre><p class="refs">Mentions: <a href="DihedralFourier.lean.html#L38">OAI.KadisonSimilarity.dihedralHalfProjection</a></p></li><li id=L140><b>theorem</b> <code>OAI.KadisonSimilarity.normalized_corner_scalar</code> <small>line 140</small><div class="doc"><p>The normalized corner coefficient is exactly <code>u</code> when <code>u = 2t</code>.</p></div><pre>theorem normalized_corner_scalar (t : ℂ) (ht : t ≠ 0) :
+    t⁻¹ * ((2 * t) ^ 2 / 2) = 2 * t := by field_simp
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

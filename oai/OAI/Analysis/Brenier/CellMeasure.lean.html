@@ -1,0 +1,178 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/CellMeasure.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/CellMeasure.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>CellMeasure.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>CellMeasure.lean</span></code></h1><p class="muted">40 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/CellMeasure.lean#L1">source</a></p><div class="doc"><p>Coordinate assembly and source normalization for genuine vector cell moments.
+The scalar moving-cell calculus is an explicit input; no differentiability of a
+cell or of its coefficients is assumed implicitly.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Problem358.NormalizedCell.measure</code> <small>line 15</small><div class="doc"><p>The probability law obtained by normalizing the restriction to a positive finite cell.</p></div><pre>def measure (ρ : Measure X) (P : Set X) : Measure X :=
+…</pre></li><li id=L21><b>theorem</b> <code>OAI.Problem358.NormalizedCell.real_mass_pos</code> <small>line 21</small><div class="doc"><p>Positive finite extended mass is positive in the real-mass convention.</p></div><pre>theorem real_mass_pos (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) :
+    0 &lt; ρ.real P :=
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem358.NormalizedCell.probability</code> <small>line 26</small><div class="doc"><p>Normalization is a probability whenever the cell has positive finite mass.</p></div><pre>theorem probability (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) :
+    IsProbabilityMeasure (measure ρ P) := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L33><b>theorem</b> <code>OAI.Problem358.NormalizedCell.mass_smul</code> <small>line 33</small><div class="doc"><p>Multiplying the normalized law by its cell mass recovers the raw restriction.</p></div><pre>theorem mass_smul (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) :
+    (ρ P) • measure ρ P = ρ.restrict P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L38><b>theorem</b> <code>OAI.Problem358.NormalizedCell.ofReal_mass_smul</code> <small>line 38</small><div class="doc"><p>The same cancellation in the real-mass notation used by cell derivatives.</p></div><pre>theorem ofReal_mass_smul (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) :
+    ENNReal.ofReal (ρ.real P) • measure ρ P = ρ.restrict P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L44><b>theorem</b> <code>OAI.Problem358.NormalizedCell.ae_mem</code> <small>line 44</small><div class="doc"><p>The normalized restriction remains almost surely inside its measurable cell.</p></div><pre>theorem ae_mem (hP : MeasurableSet P) : ∀ᵐ x ∂measure ρ P, x ∈ P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L50><b>theorem</b> <code>OAI.Problem358.NormalizedCell.integrable_iff</code> <small>line 50</small><div class="doc"><p>No integrability is lost or gained by a positive finite cell normalization.</p></div><pre>theorem integrable_iff {V : Type*} [NormedAddCommGroup V] {f : X → V}
+    (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) :
+    Integrable f (measure ρ P) ↔ IntegrableOn f P ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L58><b>theorem</b> <code>OAI.Problem358.NormalizedCell.mass_smul_integral</code> <small>line 58</small><div class="doc"><p>Weighted averages under the normalized cell law recover raw cell integrals.
+The identity is valid for real or vector valued functions, even without integrability.</p></div><pre>theorem mass_smul_integral {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) (f : X → V) :
+    ρ.real P • (∫ x, f x ∂measure ρ P) = ∫ x in P, f x ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L65><b>theorem</b> <code>OAI.Problem358.NormalizedCell.mass_mul_integral</code> <small>line 65</small><div class="doc"><p>Scalar form of the weighted-average identity.</p></div><pre>theorem mass_mul_integral (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) (f : X → ℝ) :
+    ρ.real P * (∫ x, f x ∂measure ρ P) = ∫ x in P, f x ∂ρ :=
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L70><b>theorem</b> <code>OAI.Problem358.NormalizedCell.mass_smul_integral_of_map_eq</code> <small>line 70</small><div class="doc"><p>Any random variable with the normalized cell law has the same weighted moments.</p></div><pre>theorem mass_smul_integral_of_map_eq
+    {Z : Type*} [MeasurableSpace Z] {π : Measure Z} {g : Z → X}
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (hpos : 0 &lt; ρ P) (hfinite : ρ P ≠ ∞) (hg : Measurable g)
+    (hmap : Measure.map g π = measure ρ P) {f : X → V}
+    (hf : AEStronglyMeasurable f (measure ρ P)) :
+    ρ.real P • (∫ z, f (g z) ∂π) = ∫ x in P, f x ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L82><b>theorem</b> <code>OAI.Problem358.NormalizedCell.measure_smul</code> <small>line 82</small><div class="doc"><p>Normalizing a cell removes any positive finite scalar prefactor in the source.</p></div><pre>theorem measure_smul (c : ℝ≥0∞) (hc0 : c ≠ 0) (hctop : c ≠ ∞) :
+    measure (c • ρ) P = measure ρ P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L90><b>theorem</b> <code>OAI.Problem358.NormalizedCell.measure_restrict</code> <small>line 90</small><div class="doc"><p>Restricting the source to a larger set does not change the normalized cell law.</p></div><pre>theorem measure_restrict {K : Set X} (hP : MeasurableSet P) (hPK : P ⊆ K) :
+    measure (ρ.restrict K) P = measure ρ P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L101><b>def</b> <code>OAI.Problem358.normalizedCellLaw</code> <small>line 101</small><div class="doc"><p>The probability law obtained by conditioning a measure on a positive finite cell.</p></div><pre>def normalizedCellLaw {X : Type*} [MeasurableSpace X]
+    (ρ : Measure X) (P : Set X) : Measure X :=
+…</pre></li><li id=L109><b>lemma</b> <code>OAI.Problem358.normalizedCellLaw_isProbabilityMeasure</code> <small>line 109</small></li><li id=L115><b>lemma</b> <code>OAI.Problem358.normalizedCellLaw_ae_mem</code> <small>line 115</small></li><li id=L120><b>lemma</b> <code>OAI.Problem358.mass_smul_normalizedCellLaw</code> <small>line 120</small><div class="doc"><p>Multiplying a normalized cell law by its original mass recovers the restricted measure.</p></div><pre>lemma mass_smul_normalizedCellLaw (hpos : ρ P ≠ 0) (hfin : ρ P ≠ ∞) :
+    ENNReal.ofReal (ρ.real P) • normalizedCellLaw ρ P = ρ.restrict P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L101">OAI.Problem358.normalizedCellLaw</a></p></li><li id=L125><b>lemma</b> <code>OAI.Problem358.integral_normalizedCellLaw</code> <small>line 125</small></li><li id=L130><b>lemma</b> <code>OAI.Problem358.mass_smul_integral_normalizedCellLaw</code> <small>line 130</small><div class="doc"><p>Raw scalar moments and vector barycentres are the mass times their normalized integrals.</p></div><pre>lemma mass_smul_integral_normalizedCellLaw (f : X → V)
+    (hpos : ρ P ≠ 0) (hfin : ρ P ≠ ∞) :
+    (ρ.real P) • (∫ x, f x ∂normalizedCellLaw ρ P) = ∫ x in P, f x ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L101">OAI.Problem358.normalizedCellLaw</a></p></li><li id=L137><b>lemma</b> <code>OAI.Problem358.integrable_normalizedCellLaw_iff</code> <small>line 137</small></li><li id=L142><b>lemma</b> <code>OAI.Problem358.lintegral_normalizedCellLaw</code> <small>line 142</small></li><li id=L147><b>lemma</b> <code>OAI.Problem358.mass_smul_integral_fst_of_normalizedCellLaw</code> <small>line 147</small><div class="doc"><p>A first marginal equal to a normalized cell law recovers the cell's raw moment.</p></div><pre>lemma mass_smul_integral_fst_of_normalizedCellLaw
+    {Y : Type*} [MeasurableSpace Y] (π : Measure (X × Y)) (f : X → V)
+    (hpos : ρ P ≠ 0) (hfin : ρ P ≠ ∞)
+    (hmarg : Measure.map Prod.fst π = normalizedCellLaw ρ P)
+    (hf : IntegrableOn f P ρ) :
+    (ρ.real P) • (∫ p, f p.1 ∂π) = ∫ x in P, f x ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L101">OAI.Problem358.normalizedCellLaw</a></p></li><li id=L160><b>lemma</b> <code>OAI.Problem358.mass_smul_integral_snd_of_normalizedCellLaw</code> <small>line 160</small><div class="doc"><p>The corresponding second-marginal formula, used for the other coupled cell.</p></div><pre>lemma mass_smul_integral_snd_of_normalizedCellLaw
+    {Y : Type*} [MeasurableSpace Y] (π : Measure (Y × X)) (f : X → V)
+    (hpos : ρ P ≠ 0) (hfin : ρ P ≠ ∞)
+    (hmarg : Measure.map Prod.snd π = normalizedCellLaw ρ P)
+    (hf : IntegrableOn f P ρ) :
+    (ρ.real P) • (∫ p, f p.2 ∂π) = ∫ x in P, f x ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L101">OAI.Problem358.normalizedCellLaw</a></p></li><li id=L173><b>lemma</b> <code>OAI.Problem358.sum_mass_smul_normalizedCellLaw</code> <small>line 173</small><div class="doc"><p>Normalized laws of a finite almost-everywhere partition reconstruct the source.</p></div><pre>lemma sum_mass_smul_normalizedCellLaw {ι : Type*} [Fintype ι]
+    (P : ι → Set X) (hP : ∀ i, MeasurableSet (P i))
+    (hdis : Pairwise (fun i j =&gt; AEDisjoint ρ (P i) (P j)))
+    (hcover : ∀ᵐ x ∂ρ, x ∈ ⋃ i, P i)
+    (hpos : ∀ i, ρ (P i) ≠ 0) (hfin : ∀ i, ρ (P i) ≠ ∞) :
+    (∑ i, ENNReal.ofReal (ρ.real (P i)) • normalizedCellLaw ρ (P i)) = ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L101">OAI.Problem358.normalizedCellLaw</a></p></li><li id=L185><b>lemma</b> <code>OAI.Problem358.sum_mass_smul_integral_normalizedCellLaw</code> <small>line 185</small><div class="doc"><p>Scalar moments and vector barycentres sum over normalized cell laws with raw masses.</p></div><pre>lemma sum_mass_smul_integral_normalizedCellLaw {ι : Type*} [Fintype ι]
+    (P : ι → Set X) (hP : ∀ i, MeasurableSet (P i))
+    (hdis : Pairwise (fun i j =&gt; AEDisjoint ρ (P i) (P j)))
+    (hcover : ∀ᵐ x ∂ρ, x ∈ ⋃ i, P i)
+    (hpos : ∀ i, ρ (P i) ≠ 0) (hfin : ∀ i, ρ (P i) ≠ ∞)
+    (f : X → V) (hf : Integrable f ρ) :
+    (∑ i, (ρ.real (P i)) • ∫ x, f x ∂normalizedCellLaw ρ (P i)) = ∫ x, f x ∂ρ := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L101">OAI.Problem358.normalizedCellLaw</a></p></li><li id=L203><b>theorem</b> <code>OAI.Problem358.normalizedCell_uniformMeasure</code> <small>line 203</small><div class="doc"><p>The normalized restriction of a uniform source to a cell is exactly the
+uniform law of that cell; this identifies the laws used by midpoint couplings.</p></div><pre>theorem normalizedCell_uniformMeasure {d : ℕ} {K P : Set (E d)}
+    (hKpos : 0 &lt; volume K) (hKfinite : volume K ≠ ∞)
+    (hP : MeasurableSet P) (hPK : P ⊆ K) :
+    NormalizedCell.measure (uniformMeasure K) P = uniformMeasure P := by
+…</pre><p class="refs">Mentions: <a href="CellMeasure.lean.html#L15">OAI.Problem358.NormalizedCell.measure</a></p></li><li id=L213><b>theorem</b> <code>OAI.Problem358.uniformMeasure_real_cell</code> <small>line 213</small><div class="doc"><p>Cell mass for a uniform source is the ratio of cell and source volume.</p></div><pre>theorem uniformMeasure_real_cell {d : ℕ} {K P : Set (E d)}
+    (hP : MeasurableSet P) (hPK : P ⊆ K) :
+    (uniformMeasure K).real P = (volume P).toReal / (volume K).toReal := by
+…</pre></li><li id=L236><b>theorem</b> <code>OAI.Problem358.CellGeometry.uniformMass_eq_normalized_integral_one</code> <small>line 236</small><div class="doc"><p>A closed-cell mass is the normalized scalar volume integral used by the
+moving-cut calculus. No positivity or distinct-site hypothesis is needed.</p></div><pre>theorem uniformMass_eq_normalized_integral_one
+    {K : Set (E d)} (hK : IsClosed K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) :
+    (uniformMeasure K).real (closedCell K y c i) =
+      (volume K).toReal⁻¹ * ∫ _x in closedCell K y c i, (1 : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L249><b>theorem</b> <code>OAI.Problem358.CellGeometry.integral_uniform_closedCell</code> <small>line 249</small><div class="doc"><p>The uniform restriction on a cell rescales its volume integral. This also
+holds for nonscalar moments and for degenerate source volume.</p></div><pre>theorem integral_uniform_closedCell
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (K : Set (E d)) (y : ι → E d) (c : ι → ℝ) (i : ι)
+    (f : E d → V) :
+    (∫ x in closedCell K y c i, f x ∂uniformMeasure K) =
+      (volume K).toReal⁻¹ • ∫ x in closedCell K y c i, f x := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L261><b>theorem</b> <code>OAI.Problem358.CellGeometry.hasDerivAt_uniformMass_of_integral_one</code> <small>line 261</small><div class="doc"><p>A scalar moving-volume derivative immediately gives the actual normalized
+real cell-mass derivative.</p></div><pre>theorem hasDerivAt_uniformMass_of_integral_one
+    {K : Set (E d)} (hK : IsClosed K)
+    (y : ℝ → ι → E d) (c : ℝ → ι → ℝ) (i : ι) {t D : ℝ}
+    (hD : HasDerivAt (fun s =&gt; ∫ _x in closedCell K (y s) (c s) i, (1 : ℝ)) D t) :
+    HasDerivAt (fun s =&gt; (uniformMeasure K).real (closedCell K (y s) (c s) i))
+      ((volume K).toReal⁻¹ * D) t := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L272><b>theorem</b> <code>OAI.Problem358.CellGeometry.hasFDerivAt_uniformMass_of_integral_one</code> <small>line 272</small><div class="doc"><p>The same normalization bridge for a Fréchet derivative in an arbitrary
+real normed parameter space.</p></div><pre>theorem hasFDerivAt_uniformMass_of_integral_one
+    {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
+    {K : Set (E d)} (hK : IsClosed K)
+    (y : P → ι → E d) (c : P → ι → ℝ) (i : ι) {p : P} {D : P →L[ℝ] ℝ}
+    (hD : HasFDerivAt (fun q =&gt; ∫ _x in closedCell K (y q) (c q) i, (1 : ℝ)) D p) :
+    HasFDerivAt (fun q =&gt; (uniformMeasure K).real (closedCell K (y q) (c q) i))
+      ((volume K).toReal⁻¹ • D) p := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L284><b>theorem</b> <code>OAI.Problem358.CellGeometry.hasStrictFDerivAt_uniformMass_of_integral_one</code> <small>line 284</small><div class="doc"><p>Strict differentiability is preserved by the fixed source normalization,
+as required by the implicit-function theorem.</p></div><pre>theorem hasStrictFDerivAt_uniformMass_of_integral_one
+    {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
+    {K : Set (E d)} (hK : IsClosed K)
+    (y : P → ι → E d) (c : P → ι → ℝ) (i : ι) {p : P} {D : P →L[ℝ] ℝ}
+    (hD : HasStrictFDerivAt
+      (fun q =&gt; ∫ _x in closedCell K (y q) (c q) i, (1 : ℝ)) D p) :
+    HasStrictFDerivAt
+      (fun q =&gt; (uniformMeasure K).real (closedCell K (y q) (c q) i))
+      ((volume K).toReal⁻¹ • D) p := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L314><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.integral_coordinate</code> <small>line 314</small><div class="doc"><p>A coordinate of a Bochner integral in the problem's Euclidean space.</p></div><pre>theorem integral_coordinate {X : Type*} [MeasurableSpace X]
+    {μ : Measure X} {f : X → E d} (hf : Integrable f μ) (k : Fin d) :
+    (∫ x, f x ∂μ) k = ∫ x, f x k ∂μ :=
+…</pre></li><li id=L320><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.hasDerivAt_of_coordinates</code> <small>line 320</small><div class="doc"><p>Assemble scalar coordinate derivatives in the Euclidean, rather than sup, norm.</p></div><pre>theorem hasDerivAt_of_coordinates {f : ℝ → E d} {b : E d} {t : ℝ}
+    (h : ∀ k : Fin d, HasDerivAt (fun s =&gt; f s k) (b k) t) :
+    HasDerivAt f b t := by
+…</pre></li><li id=L330><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.setIntegral_uniformMeasure</code> <small>line 330</small><div class="doc"><p>Restriction to a subset of the source removes the extra source indicator.
+This identity is valid even in the zero-volume degenerate case.</p></div><pre>theorem setIntegral_uniformMeasure {V : Type*} [NormedAddCommGroup V]
+    [NormedSpace ℝ V] {K P : Set (E d)} (hPK : P ⊆ K) (f : E d → V) :
+    (∫ x in P, f x ∂uniformMeasure K) =
+      (volume K).toReal⁻¹ • ∫ x in P, f x ∂volume := by
+…</pre></li><li id=L339><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.hasDerivAt_uniform_cellMoment_of_coordinates</code> <small>line 339</small><div class="doc"><p>Scalar volume derivatives of the coordinate weights give the actual
+uniform-source vector-moment derivative, with the source normalization explicit.</p></div><pre>theorem hasDerivAt_uniform_cellMoment_of_coordinates
+    {ι : Type*} {K : Set (E d)} (hK : IsCompact K)
+    (y : ℝ → ι → E d) (c : ℝ → ι → ℝ) (i : ι) {t : ℝ} {b : E d}
+    (h : ∀ k : Fin d, HasDerivAt
+      (fun s =&gt; ∫ x in CellGeometry.closedCell K (y s) (c s) i, x k ∂volume)
+      (b k) t) :
+    HasDerivAt
+      (fun s =&gt; ∫ x in CellGeometry.closedCell K (y s) (c s) i, x ∂uniformMeasure K)
+      ((volume K).toReal⁻¹ • b) t := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L363><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.hasDerivAt_uniform_cellMass</code> <small>line 363</small><div class="doc"><p>Normalize the scalar cell-mass derivative using the same source factor.</p></div><pre>theorem hasDerivAt_uniform_cellMass
+    {ι : Type*} {K : Set (E d)} (hK : IsCompact K)
+    (y : ℝ → ι → E d) (c : ℝ → ι → ℝ) (i : ι) {t a : ℝ}
+    (h : HasDerivAt
+      (fun s =&gt; (volume (CellGeometry.closedCell K (y s) (c s) i)).toReal) a t) :
+    HasDerivAt
+      (fun s =&gt; (uniformMeasure K).real (CellGeometry.closedCell K (y s) (c s) i))
+      (a / (volume K).toReal) t := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L376><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.coordinate_sum_integral_smul</code> <small>line 376</small><div class="doc"><p>Coordinate formula for a finite sum of weighted vector surface moments.</p></div><pre>theorem coordinate_sum_integral_smul {ι : Type*} [Fintype ι] {X : ι → Type*} [∀ j, MeasurableSpace (X j)]
+    (μ : ∀ j, Measure (X j)) (z : ∀ j, X j → E d) (w : ∀ j, X j → ℝ)
+    (hw : ∀ j, Integrable (fun x =&gt; w j x • z j x) (μ j)) (k : Fin d) :
+    (∑ j, ∫ x, w j x • z j x ∂μ j) k =
+      ∑ j, ∫ x, w j x * z j x k ∂μ j := by
+…</pre></li><li id=L389><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.hasDerivAt_uniform_cellMoment_of_faces</code> <small>line 389</small><div class="doc"><p>The scalar face formulas for every coordinate assemble into the vector face
+formula; integrability of the actual surface integrands is the only extra input.</p></div><pre>theorem hasDerivAt_uniform_cellMoment_of_faces
+    {ι κ : Type*} [Fintype κ] {X : κ → Type*} [∀ j, MeasurableSpace (X j)]
+    {K : Set (E d)} (hK : IsCompact K)
+    (y : ℝ → ι → E d) (c : ℝ → ι → ℝ) (i : ι) {t : ℝ}
+    (μ : ∀ j, Measure (X j)) (z : ∀ j, X j → E d) (w : ∀ j, X j → ℝ)
+    (hw : ∀ j, Integrable (fun x =&gt; w j x • z j x) (μ j))
+    (h : ∀ k : Fin d, HasDerivAt
+      (fun s =&gt; ∫ x in CellGeometry.closedCell K (y s) (c s) i, x k ∂volume)
+      (∑ j, ∫ x, w j x * z j x k ∂μ j) t) :
+    HasDerivAt
+      (fun s =&gt; ∫ x in CellGeometry.closedCell K (y s) (c s) i, x ∂uniformMeasure K)
+      ((volume K).toReal⁻¹ • ∑ j, ∫ x, w j x • z j x ∂μ j) t := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L408><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.normalized_stationary_face_sum</code> <small>line 408</small><div class="doc"><p>Separate the stationary intercept speed from normalized vector face moments.
+No nonzero denominator assumptions are needed for this algebraic identity.</p></div><pre>theorem normalized_stationary_face_sum
+    {κ : Type*} [Fintype κ] {X : κ → Type*} [∀ j, MeasurableSpace (X j)]
+    (μ : ∀ j, Measure (X j)) (z : ∀ j, X j → E d)
+    (M : ℝ) (a q : κ → ℝ) :
+    M⁻¹ • (∑ j, ∫ x, (q j / a j) • z j x ∂μ j) =
+      ∑ j, q j • ((M * a j)⁻¹ • ∫ x, z j x ∂μ j) := by
+…</pre></li><li id=L423><b>theorem</b> <code>OAI.Problem358.CellVectorDerivative.hasDerivAt_uniform_cellMoment_stationary</code> <small>line 423</small><div class="doc"><p>Convenient stationary-direction form, ready for the canonical face coefficient
+<code>b_ij = (volume(K) * normalLength_ij)⁻¹ • firstMoment_ij</code>.</p></div><pre>theorem hasDerivAt_uniform_cellMoment_stationary
+    {ι κ : Type*} [Fintype κ] {X : κ → Type*} [∀ j, MeasurableSpace (X j)]
+    {K : Set (E d)} (hK : IsCompact K)
+    (y : ι → E d) (c q : ι → ℝ) (i : ι)
+    (μ : ∀ j, Measure (X j)) (z : ∀ j, X j → E d)
+    (a r : κ → ℝ) (hz : ∀ j, Integrable (z j) (μ j))
+    (h : ∀ k : Fin d, HasDerivAt
+      (fun s =&gt; ∫ x in CellGeometry.closedCell K y (fun j =&gt; c j + s * q j) i,
+        x k ∂volume)
+      (∑ j, ∫ x, (r j / a j) * z j x k ∂μ j) 0) :
+    HasDerivAt
+      (fun s =&gt; ∫ x in CellGeometry.closedCell K y (fun j =&gt; c j + s * q j) i,
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

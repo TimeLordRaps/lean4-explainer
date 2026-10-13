@@ -1,0 +1,274 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction/Anchors.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction/Anchors.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">TraceReconstruction</a> / <span>Anchors.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">TraceReconstruction</a>/<span>Anchors.lean</span></code></h1><p class="muted">72 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction/Anchors.lean#L1">source</a></p><div class="doc"><h3>Anchors</h3><p>Forced anchors, extra-leaf closeness, and correlated group square-sum estimates.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.coordinateProduct_expect_two</code> <small>line 26</small><div class="doc"><p>Two distinct actual child coordinates are independent. This does not
+assert independence of their shared parent-global jitter.</p></div><pre>theorem coordinateProduct_expect_two {α : Type*} [Fintype α] {n : ℕ}
+    (P : Fin n → FiniteLaw α) (a c : Fin n) (hne : a≠c) (f h : α → ℝ) :
+    (coordinateProduct P).expect (fun x =&gt; f (x a)*h (x c)) = (P a).expect f*(P c).expect h := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="FiniteLaw.lean.html#L498">OAI.TraceReconstruction.FiniteLaw.expect</a></p></li><li id=L49><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.expect_prod_two</code> <small>line 49</small><div class="doc"><p>Exact local/global/children factorization with the parent-global draw
+outside the product of child expectations.</p></div><pre>theorem expect_prod_two {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    {n : ℕ} (P : FiniteLaw α) (Q : FiniteLaw β) (R : Fin n → FiniteLaw γ)
+    (a c : Fin n) (hne : a≠c) (f : α → ℝ) (h k : β → γ → ℝ) :
+    (P.prod (Q.prod (coordinateProduct R))).expect (fun x =&gt;
+      f x.1 * (h x.2.1 (x.2.2 a)*k x.2.1 (x.2.2 c))) =
+      P.expect f * Q.expect (fun z =&gt; (R a).expect (h z)*(R c).expect (k z)) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="FiniteLaw.lean.html#L498">OAI.TraceReconstruction.FiniteLaw.expect</a></p></li><li id=L61><b>def</b> <code>OAI.TraceReconstruction.BinaryWindowLabels</code> <small>line 61</small><div class="doc"><p>A concrete binary selection of labels in the complete index tree.
+Unlike a free abstract shape this retains every actual column label.</p></div><pre>def BinaryWindowLabels (T : ℕ → ℕ) : ℕ → Type
+  | 0 =&gt; PUnit
+  | b+1 =&gt; Fin (T b) × Fin (T b) × BinaryWindowLabels T b × BinaryWindowLabels T b</pre></li><li id=L65><b>instance</b> <code>OAI.TraceReconstruction.binaryWindowLabelsFintype</code> <small>line 65</small></li><li id=L74><b>def</b> <code>OAI.TraceReconstruction.BinaryWindowLabels.distinct</code> <small>line 74</small><div class="doc"><p>The forced children are distinct at every split. Central restrictions
+are separate deterministic predicates, not conditioning events.</p></div><pre>def BinaryWindowLabels.distinct (T : ℕ → ℕ) : (b : ℕ) → BinaryWindowLabels T b → Prop
+  | 0, _ =&gt; True
+  | b+1, p =&gt; p.1≠p.2.1 ∧ distinct T b p.2.2.1 ∧ distinct T b p.2.2.2
+
+/-- Product of the first-child unsigned anchor at every forced nonleaf,
+evaluated using the literal complete-tree orientation assignment. -/</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a></p></li><li id=L80><b>def</b> <code>OAI.TraceReconstruction.binaryAnchorKernel</code> <small>line 80</small><div class="doc"><p>Product of the first-child unsigned anchor at every forced nonleaf,
+evaluated using the literal complete-tree orientation assignment.</p></div><pre>def binaryAnchorKernel (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ) :
+    (b : ℕ) → BinaryWindowLabels T b → WindowAssignments T n g Bool b → ℤ → ℝ
+  | 0, _, _, _ =&gt; 1
+  | b+1, p, bits, incoming =&gt;
+      motifIndicator s ((p.1.val:ℤ)-center b+(∑i,(bitIndex (bits.1 i):ℤ))+incoming) *
+      (binaryAnchorKernel T n g s center globalShift b p.2.2.1 (bits.2.2 p.1)
+        (globalShift b bits.2.1 p.1) *
+       binaryAnchorKernel T n g s center globalShift b p.2.2.2 (bits.2.2 p.2.1)
+        (globalShift b bits.2.1 p.2.1))</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a></p></li><li id=L91><b>def</b> <code>OAI.TraceReconstruction.binaryAnchorAverage</code> <small>line 91</small></li><li id=L98><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorAverage_zero</code> <small>line 98</small></li><li id=L104><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorAverage_succ</code> <small>line 104</small></li><li id=L125><b>def</b> <code>OAI.TraceReconstruction.localAnchorAverage</code> <small>line 125</small><div class="doc"><p>Local unsigned anchor averaged against its actual known/hidden flags.</p></div><pre>def localAnchorAverage {m : ℕ} (d : Fin m → Option Bool) (s : ℕ) (z : ℤ) : ℝ :=
+…</pre></li><li id=L128><b>theorem</b> <code>OAI.TraceReconstruction.localAnchorAverage_kernel</code> <small>line 128</small></li><li id=L139><b>def</b> <code>OAI.TraceReconstruction.binaryAnchorBelow</code> <small>line 139</small><div class="doc"><p>Product of all lower sibling-group factors. Each group still averages
+its own single common global draw, not two independent global draws.</p></div><pre>def binaryAnchorBelow (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ) :
+    (b : ℕ) → BinaryWindowLabels T (b+1) → WindowAssignments T n g (Option Bool) (b+1) → ℝ
+  | 0, _, _ =&gt; 1
+  | b+1, p, d =&gt;
+      (posteriorArray d.2.1).expect (fun glob =&gt;
+        localAnchorAverage (d.2.2 p.1).1 s
+          ((p.2.2.1.1.val:ℤ)-center b+globalShift (b+1) glob p.1) *
+        localAnchorAverage (d.2.2 p.2.1).1 s
+          ((p.2.2.2.1.val:ℤ)-center b+globalShift (b+1) glob p.2.1)) *
+      (binaryAnchorBelow T n g s center globalShift b p.2.2.1 (d.2.2 p.1) *
+       binaryAnchorBelow T n g s center globalShift b p.2.2.2 (d.2.2 p.2.1))</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L798">OAI.TraceReconstruction.posteriorArray</a>, <a href="Anchors.lean.html#L125">OAI.TraceReconstruction.localAnchorAverage</a></p></li><li id=L154><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorAverage_factor</code> <small>line 154</small><div class="doc"><p>Exact factorization of the forced anchor expectation into its root
+kernel and all correlated sibling groups, at the real metadata/labels.</p></div><pre>theorem binaryAnchorAverage_factor (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (p : BinaryWindowLabels T (b+1)) (d : WindowAssignments T n g (Option Bool) (b+1))
+    (incoming : ℤ) (hd : BinaryWindowLabels.distinct T (b+1) p) :
+    binaryAnchorAverage T n g s center globalShift (b+1) p d incoming =
+      localAnchorAverage d.1 s ((p.1.val:ℤ)-center b+incoming) *
+        binaryAnchorBelow T n g s center globalShift b p d := by
+…</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L74">OAI.TraceReconstruction.BinaryWindowLabels.distinct</a>, <a href="Anchors.lean.html#L91">OAI.TraceReconstruction.binaryAnchorAverage</a>, <a href="Anchors.lean.html#L125">OAI.TraceReconstruction.localAnchorAverage</a>, <a href="Anchors.lean.html#L139">OAI.TraceReconstruction.binaryAnchorBelow</a></p></li><li id=L203><b>theorem</b> <code>OAI.TraceReconstruction.localAnchor_pair_plateau</code> <small>line 203</small><div class="doc"><p>One plateau group's local means are the genuine shared-global joint
+anchor, with exactly the affine shift appearing in the layout.</p></div><pre>theorem localAnchor_pair_plateau {mg m₁ m₂ : ℕ}
+    (dg : Fin mg → Option Bool) (d₁ : Fin m₁ → Option Bool) (d₂ : Fin m₂ → Option Bool)
+    (s : ℕ) (z₁ z₂ shift : ℤ) :
+    (posteriorArray dg).expect (fun glob =&gt;
+      localAnchorAverage d₁ s (z₁+(∑i,(bitIndex (glob i):ℤ))-shift) *
+      localAnchorAverage d₂ s (z₂+(∑i,(bitIndex (glob i):ℤ))-shift)) =
+    posteriorJointAnchors dg d₁ d₂ s (z₁-shift) (z₂-shift) := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L798">OAI.TraceReconstruction.posteriorArray</a>, <a href="Anchors.lean.html#L125">OAI.TraceReconstruction.localAnchorAverage</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="LeafOracle.lean.html#L695">OAI.TraceReconstruction.posteriorJointAnchors</a></p></li><li id=L230><b>def</b> <code>OAI.TraceReconstruction.forcedWindowLabels</code> <small>line 230</small><div class="doc"><p>A role-selected forced subtree remembers the actual complete-tree labels,
+not merely its abstract binary shape.</p></div><pre>def forcedWindowLabels (T : ℕ → ℕ) : (b : ℕ) →
+    (S : Finset (WindowLeaf T (b+1))) → (a : OccupiedWindowChoice T b S) →
+    (occupiedWindowTerm T b S a).Forced → BinaryWindowLabels T (b+1)
+  | 0, S, _, .node i j _ _ _ _ _ =&gt;
+      ((S.equivFin.symm i).val.1,(S.equivFin.symm j).val.1,PUnit.unit,PUnit.unit)
+  | b+1, S, a, .node i j _ _ _ left right =&gt;
+      (((selectedChildren S).equivFin.symm i).val,
+       ((selectedChildren S).equivFin.symm j).val,
+       forcedWindowLabels T b (selectedChildLeaves S ((selectedChildren S).equivFin.symm i).val)
+         (a.1 i) left,
+       forcedWindowLabels T b (selectedChildLeaves S ((selectedChildren S).equivFin.symm j).val)
+         (a.1 j) right)</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="LeafOracle.lean.html#L339">OAI.TraceReconstruction.selectedChildren</a>, <a href="LeafOracle.lean.html#L342">OAI.TraceReconstruction.selectedChildLeaves</a></p></li><li id=L243><b>theorem</b> <code>OAI.TraceReconstruction.forcedWindowLabels_distinct</code> <small>line 243</small></li><li id=L264><b>theorem</b> <code>OAI.TraceReconstruction.motifIndicator_nonneg</code> <small>line 264</small></li><li id=L268><b>theorem</b> <code>OAI.TraceReconstruction.motifIndicator_le_one</code> <small>line 268</small></li><li id=L272><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorKernel_nonneg</code> <small>line 272</small></li><li id=L281><b>theorem</b> <code>OAI.TraceReconstruction.bottomRoleWeight_abs_le_indicator</code> <small>line 281</small></li><li id=L286><b>theorem</b> <code>OAI.TraceReconstruction.internalRoleWeight_active_abs_le_indicator</code> <small>line 286</small></li><li id=L292><b>theorem</b> <code>OAI.TraceReconstruction.occupiedRootWeight_bottom_anchor</code> <small>line 292</small></li><li id=L300><b>theorem</b> <code>OAI.TraceReconstruction.occupiedRootWeight_internal_anchor</code> <small>line 300</small></li><li id=L309><b>theorem</b> <code>OAI.TraceReconstruction.abs_prod_le_two</code> <small>line 309</small></li><li id=L331><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleTerm_forced_anchor</code> <small>line 331</small><div class="doc"><p>The real role term is pointwise dominated by its selected unsigned
+anchors. No independence assumption is used in this domination.</p></div><pre>theorem sourceRoleTerm_forced_anchor (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (bits : WindowAssignments T n g Bool (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S)
+    (F : (occupiedWindowTerm T b S a).Forced) :
+    |sourceRoleTerm T n g s center globalShift b bits incoming S a|≤
+      binaryAnchorKernel T n g s center globalShift (b+1) (forcedWindowLabels T b S a F) bits incoming := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1083">OAI.TraceReconstruction.sourceRoleTerm</a>, <a href="Anchors.lean.html#L80">OAI.TraceReconstruction.binaryAnchorKernel</a>, <a href="Anchors.lean.html#L230">OAI.TraceReconstruction.forcedWindowLabels</a></p></li><li id=L375><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_forced_anchor</code> <small>line 375</small><div class="doc"><p>Therefore the coefficient average is bounded by the actual forced
+anchor average, with the true posterior law and shared jitter retained.</p></div><pre>theorem sourceRoleAverage_forced_anchor (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S)
+    (F : (occupiedWindowTerm T b S a).Forced) :
+    |sourceRoleAverage T n g s center globalShift b d incoming S a|≤
+      binaryAnchorAverage T n g s center globalShift (b+1) (forcedWindowLabels T b S a F) d incoming := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1090">OAI.TraceReconstruction.sourceRoleAverage</a>, <a href="Anchors.lean.html#L91">OAI.TraceReconstruction.binaryAnchorAverage</a>, <a href="Anchors.lean.html#L230">OAI.TraceReconstruction.forcedWindowLabels</a></p></li><li id=L386><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleTerm_valid</code> <small>line 386</small></li><li id=L398><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_valid</code> <small>line 398</small></li><li id=L416><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_alternative</code> <small>line 416</small><div class="doc"><p>The source's two alternatives now apply to actual posterior coefficient
+terms: signed singleton smoothing, or domination by a genuine forced tree.</p></div><pre>theorem sourceRoleAverage_alternative (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S)
+    (η : ℝ) (hη : 0≤η) (hcap : MetadataSmoothingCap T n g s η (b+1) d)
+    (ho : (occupiedWindowTerm T b S a).isOdd) :
+    |sourceRoleAverage T n g s center globalShift b d incoming S a|≤η ∨
+    ∃F : (occupiedWindowTerm T b S a).Forced,
+      BinaryWindowLabels.distinct T (b+1) (forcedWindowLabels T b S a F) ∧
+      |sourceRoleAverage T n g s center globalShift b d incoming S a|≤
+        binaryAnchorAverage T n g s center globalShift (b+1) (forcedWindowLabels T b S a F) d incoming := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L1182">OAI.TraceReconstruction.MetadataSmoothingCap</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1090">OAI.TraceReconstruction.sourceRoleAverage</a>, <a href="Anchors.lean.html#L74">OAI.TraceReconstruction.BinaryWindowLabels.distinct</a>, <a href="Anchors.lean.html#L230">OAI.TraceReconstruction.forcedWindowLabels</a>, <a href="Anchors.lean.html#L91">OAI.TraceReconstruction.binaryAnchorAverage</a></p></li><li id=L444><b>def</b> <code>OAI.TraceReconstruction.sourceBottomIndicator</code> <small>line 444</small><div class="doc"><p>The unsigned bottom constraint at one literal complete-tree leaf.</p></div><pre>def sourceBottomIndicator (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ) :
+    (b : ℕ) → WindowAssignments T n g Bool (b+1) → ℤ → WindowLeaf T (b+1) → ℝ
+  | 0, bits, incoming, v =&gt;
+      motifIndicator s ((v.1.val:ℤ)-center 0+(∑i,(bitIndex (bits.1 i):ℤ))+incoming)
+  | b+1, bits, _, v =&gt; sourceBottomIndicator T n g s center globalShift b
+      (bits.2.2 v.1) (globalShift (b+1) bits.2.1 v.1) v.2</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a></p></li><li id=L452><b>def</b> <code>OAI.TraceReconstruction.sourceLeafProduct</code> <small>line 452</small></li><li id=L458><b>theorem</b> <code>OAI.TraceReconstruction.sourceBottomIndicator_zero_one</code> <small>line 458</small></li><li id=L468><b>theorem</b> <code>OAI.TraceReconstruction.prod_zero_one</code> <small>line 468</small></li><li id=L478><b>theorem</b> <code>OAI.TraceReconstruction.sourceLeafProduct_zero_one</code> <small>line 478</small></li><li id=L486><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorKernel_zero_one</code> <small>line 486</small></li><li id=L501><b>theorem</b> <code>OAI.TraceReconstruction.sourceLeafProduct_succ</code> <small>line 501</small></li><li id=L521><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleTerm_all_leaf_constraints</code> <small>line 521</small><div class="doc"><p>Every selected leaf is active in the bottom expansion, including those
+outside the forced tree. Their absolute constraints are not lost.</p></div><pre>theorem sourceRoleTerm_all_leaf_constraints (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (bits : WindowAssignments T n g Bool (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S) :
+    |sourceRoleTerm T n g s center globalShift b bits incoming S a|≤
+      sourceLeafProduct T n g s center globalShift b bits incoming S := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L1083">OAI.TraceReconstruction.sourceRoleTerm</a>, <a href="Anchors.lean.html#L452">OAI.TraceReconstruction.sourceLeafProduct</a></p></li><li id=L556><b>theorem</b> <code>OAI.TraceReconstruction.sourceLeafProduct_antitone</code> <small>line 556</small></li><li id=L568><b>theorem</b> <code>OAI.TraceReconstruction.le_mul_of_zero_one</code> <small>line 568</small></li><li id=L575><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_forced_extra</code> <small>line 575</small><div class="doc"><p>Actual forced anchor AND extra-leaf constraints in one bit expectation.
+In particular E can be precisely the nonforced leaves; keeping it arbitrary
+here permits the later label summation without any conditioning gates.</p></div><pre>theorem sourceRoleAverage_forced_extra (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1)) (incoming : ℤ)
+    (S E : Finset (WindowLeaf T (b+1))) (hES : E⊆S) (a : OccupiedWindowChoice T b S)
+    (F : (occupiedWindowTerm T b S a).Forced) :
+    |sourceRoleAverage T n g s center globalShift b d incoming S a|≤
+      (windowPosteriorLaw T n g (b+1) d).expect (fun bits =&gt;
+        binaryAnchorKernel T n g s center globalShift (b+1) (forcedWindowLabels T b S a F) bits incoming *
+        sourceLeafProduct T n g s center globalShift b bits incoming E) := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1090">OAI.TraceReconstruction.sourceRoleAverage</a>, <a href="LeafOracle.lean.html#L803">OAI.TraceReconstruction.windowPosteriorLaw</a>, <a href="Anchors.lean.html#L80">OAI.TraceReconstruction.binaryAnchorKernel</a>, <a href="Anchors.lean.html#L230">OAI.TraceReconstruction.forcedWindowLabels</a>, <a href="Anchors.lean.html#L452">OAI.TraceReconstruction.sourceLeafProduct</a></p></li><li id=L605><b>def</b> <code>OAI.TraceReconstruction.BinaryWindowLabels.close</code> <small>line 605</small><div class="doc"><p>Deterministic closeness of each forced split; it is a restriction on
+labels, never an additional conditioning event for the random bits.</p></div><pre>def BinaryWindowLabels.close (T : ℕ → ℕ) (s : ℕ) : (b : ℕ) → BinaryWindowLabels T b → Prop
+  | 0, _ =&gt; True
+  | b+1, p =&gt; |(p.1.val:ℤ)-p.2.1.val|&lt;(2^s:ℕ) ∧ close T s b p.2.2.1 ∧ close T s b p.2.2.2</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a></p></li><li id=L609><b>theorem</b> <code>OAI.TraceReconstruction.motifIndicator_pair_close</code> <small>line 609</small></li><li id=L620><b>theorem</b> <code>OAI.TraceReconstruction.nonzero_of_abs_le</code> <small>line 620</small></li><li id=L627><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleTerm_forced_close</code> <small>line 627</small><div class="doc"><p>A nonzero literal role multiplier enforces all close-child restrictions
+of every forced subtree chosen from its fixed role pattern.</p></div><pre>theorem sourceRoleTerm_forced_close (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (bits : WindowAssignments T n g Bool (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S)
+    (F : (occupiedWindowTerm T b S a).Forced)
+    (h : sourceRoleTerm T n g s center globalShift b bits incoming S a≠0) :
+    BinaryWindowLabels.close T s (b+1) (forcedWindowLabels T b S a F) := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1083">OAI.TraceReconstruction.sourceRoleTerm</a>, <a href="Anchors.lean.html#L605">OAI.TraceReconstruction.BinaryWindowLabels.close</a>, <a href="Anchors.lean.html#L230">OAI.TraceReconstruction.forcedWindowLabels</a></p></li><li id=L666><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_forced_close</code> <small>line 666</small><div class="doc"><p>Closeness remains a pure label condition after averaging, without
+conditioning on it.</p></div><pre>theorem sourceRoleAverage_forced_close (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S)
+    (F : (occupiedWindowTerm T b S a).Forced)
+    (h : sourceRoleAverage T n g s center globalShift b d incoming S a≠0) :
+    BinaryWindowLabels.close T s (b+1) (forcedWindowLabels T b S a F) := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1090">OAI.TraceReconstruction.sourceRoleAverage</a>, <a href="Anchors.lean.html#L605">OAI.TraceReconstruction.BinaryWindowLabels.close</a>, <a href="Anchors.lean.html#L230">OAI.TraceReconstruction.forcedWindowLabels</a></p></li><li id=L691><b>def</b> <code>OAI.TraceReconstruction.finIntegerLabels</code> <small>line 691</small><div class="doc"><p>The literal finite child labels embedded in the integer line.</p></div><pre>def finIntegerLabels (N : ℕ) : Finset ℤ := Finset.univ.image (fun i : Fin N =&gt; (i.val:ℤ))</pre></li><li id=L693><b>theorem</b> <code>OAI.TraceReconstruction.sum_finIntegerLabels</code> <small>line 693</small></li><li id=L701><b>theorem</b> <code>OAI.TraceReconstruction.sum_close_finIntegerLabels</code> <small>line 701</small></li><li id=L708><b>theorem</b> <code>OAI.TraceReconstruction.localAnchor_finite_energy</code> <small>line 708</small><div class="doc"><p>Any deterministic plateau/distinctness restriction can be retained in
+child-pair summation. Only closeness is used to upper bound its cost.</p></div><pre>theorem localAnchor_finite_energy {m N : ℕ} (d : Fin m → Option Bool) (s : ℕ)
+    (c : ℤ) (R : Fin N → Fin N → Prop) [DecidableRel R]
+    (hR : ∀a b,R a b → |(b.val:ℤ)-a.val|&lt;(2^s:ℕ)) :
+    (∑a : Fin N, ∑b : Fin N, if R a b then localAnchorAverage d s ((a.val:ℤ)-c)^2 else 0) ≤
+      2*((2^s:ℕ):ℝ)^3*binomialBound (∑i,hiddenTrial (d i)) := by
+…</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L125">OAI.TraceReconstruction.localAnchorAverage</a>, <a href="Binomial.lean.html#L356">OAI.TraceReconstruction.binomialBound</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a></p></li><li id=L736><b>theorem</b> <code>OAI.TraceReconstruction.posteriorJoint_finite_energy</code> <small>line 736</small><div class="doc"><p>Actual shared-jitter energy over two finite sibling pairs. Parent-label
+plateau restrictions are discharged before applying this lemma; arbitrary
+restrictions on these child pairs are kept, not conditioned on.</p></div><pre>theorem posteriorJoint_finite_energy {mg m₁ m₂ N : ℕ}
+    (dg : Fin mg → Option Bool) (d₁ : Fin m₁ → Option Bool) (d₂ : Fin m₂ → Option Bool)
+    (s : ℕ) (c₁ c₂ : ℤ) (R : Fin N → Fin N → Prop) [DecidableRel R]
+    (hR : ∀a b,R a b → |(b.val:ℤ)-a.val|&lt;(2^s:ℕ)) :
+    (∑a : Fin N, ∑c : Fin N, ∑b : Fin N, ∑d : Fin N,
+      if R a c ∧ R b d then
+        posteriorJointAnchors dg d₁ d₂ s ((a.val:ℤ)-c₁) ((b.val:ℤ)-c₂)^2 else 0) ≤
+       4*((2^s:ℕ):ℝ)^6*binomialBound (∑i,hiddenTrial (dg i))*binomialBound (∑i,hiddenTrial (d₂ i)) := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L695">OAI.TraceReconstruction.posteriorJointAnchors</a>, <a href="Binomial.lean.html#L356">OAI.TraceReconstruction.binomialBound</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a></p></li><li id=L789><b>def</b> <code>OAI.TraceReconstruction.anchorPairAllowed</code> <small>line 789</small><div class="doc"><p>The actual finite central domain, distinctness and close-label restriction.
+It is purely deterministic and is never added to the orientation posterior.</p></div><pre>def anchorPairAllowed (T : ℕ → ℕ) (A : (b : ℕ) → Finset (Fin (T b))) (s b : ℕ)
+    (a c : Fin (T b)) : Prop := a∈A b ∧ c∈A b ∧ a≠c ∧ |(c.val:ℤ)-a.val|&lt;(2^s:ℕ)</pre></li><li id=L794><b>def</b> <code>OAI.TraceReconstruction.HasGlobalPlateau</code> <small>line 794</small><div class="doc"><p>The source global plateau identity is required pointwise for bits, not
+just in distribution and not after conditioning on successful layout.</p></div><pre>def HasGlobalPlateau (T g : ℕ → ℕ) (A : (b : ℕ) → Finset (Fin (T b))) (shift : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ) : Prop :=
+…</pre></li><li id=L800><b>def</b> <code>OAI.TraceReconstruction.MetadataBinomialCaps</code> <small>line 800</small><div class="doc"><p>Numerical binomial caps extracted from the literal known/hidden metadata.
+In applications these are proved using the source hidden-trial lower bounds.</p></div><pre>def MetadataBinomialCaps (T n g : ℕ → ℕ) (B C : ℕ → ℝ) :
+    (b : ℕ) → WindowAssignments T n g (Option Bool) b → Prop
+  | 0, _ =&gt; True
+  | b+1, d =&gt; binomialBound (∑i, hiddenTrial (d.1 i)) ≤ B b ∧
+      binomialBound (∑i, hiddenTrial (d.2.1 i)) ≤ C b ∧
+      ∀u, MetadataBinomialCaps T n g B C b (d.2.2 u)
+
+/-- One correlated sibling-group anchor, using the actual child metadata
+and their parent&#x27;s one shared global orientation collection. -/</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Binomial.lean.html#L356">OAI.TraceReconstruction.binomialBound</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a></p></li><li id=L809><b>def</b> <code>OAI.TraceReconstruction.binarySiblingAnchor</code> <small>line 809</small><div class="doc"><p>One correlated sibling-group anchor, using the actual child metadata
+and their parent's one shared global orientation collection.</p></div><pre>def binarySiblingAnchor (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1+1))
+    (u v : Fin (T (b+1))) (a c : Fin (T b)) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a></p></li><li id=L817><b>theorem</b> <code>OAI.TraceReconstruction.binarySiblingAnchor_plateau</code> <small>line 817</small></li><li id=L842><b>def</b> <code>OAI.TraceReconstruction.binaryDescendantEnergy</code> <small>line 842</small><div class="doc"><p>Exact dynamic sum of squared group anchors over the allowed finite
+labels below a fixed forced split. Distinct groups retain their own metadata.</p></div><pre>def binaryDescendantEnergy (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (A : (b : ℕ) → Finset (Fin (T b))) :
+    (b : ℕ) → WindowAssignments T n g (Option Bool) (b+1) → Fin (T b) → Fin (T b) → ℝ
+  | 0, _, _, _ =&gt; 1
+  | b+1, d, u, v =&gt;
+      ∑a : Fin (T b),∑c : Fin (T b),∑e : Fin (T b),∑f : Fin (T b),
+        if anchorPairAllowed T A s b a c ∧ anchorPairAllowed T A s b e f then
+          binarySiblingAnchor T n g s center globalShift b d u v a e ^ 2 *
+            binaryDescendantEnergy T n g s center globalShift A b (d.2.2 u) a c *
+            binaryDescendantEnergy T n g s center globalShift A b (d.2.2 v) e f
+        else 0</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L789">OAI.TraceReconstruction.anchorPairAllowed</a>, <a href="Anchors.lean.html#L809">OAI.TraceReconstruction.binarySiblingAnchor</a></p></li><li id=L855><b>theorem</b> <code>OAI.TraceReconstruction.binaryDescendantEnergy_nonneg</code> <small>line 855</small></li><li id=L876><b>theorem</b> <code>OAI.TraceReconstruction.binarySiblingAnchor_energy</code> <small>line 876</small><div class="doc"><p>True common-jitter energy at one group, with its exact finite domains.</p></div><pre>theorem binarySiblingAnchor_energy (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (A : (b : ℕ) → Finset (Fin (T b))) (shift : ℕ → ℤ)
+    (hplat : HasGlobalPlateau T g A shift globalShift)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1+1))
+    (u v : Fin (T (b+1))) (hu : u∈A (b+1)) (hv : v∈A (b+1)) :
+    (∑a : Fin (T b),∑c : Fin (T b),∑e : Fin (T b),∑f : Fin (T b),
+        if anchorPairAllowed T A s b a c ∧ anchorPairAllowed T A s b e f then
+          binarySiblingAnchor T n g s center globalShift b d u v a e ^ 2 else 0) ≤
+      4*((2^s:ℕ):ℝ)^6*binomialBound (∑i,hiddenTrial (d.2.1 i))*
+        binomialBound (∑i,hiddenTrial ((d.2.2 v).1 i)) := by
+…</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L794">OAI.TraceReconstruction.HasGlobalPlateau</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L789">OAI.TraceReconstruction.anchorPairAllowed</a>, <a href="Anchors.lean.html#L809">OAI.TraceReconstruction.binarySiblingAnchor</a>, <a href="Binomial.lean.html#L356">OAI.TraceReconstruction.binomialBound</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a></p></li><li id=L895><b>theorem</b> <code>OAI.TraceReconstruction.binaryDescendantEnergy_le</code> <small>line 895</small><div class="doc"><p>The complete bottom-up forced-label energy estimate. Its only numerical
+inputs are actual metadata hidden-count binomial caps. The group bound
+keeps one shared global kernel until AFTER squaring.</p></div><pre>theorem binaryDescendantEnergy_le (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (A : (b : ℕ) → Finset (Fin (T b))) (shift : ℕ → ℤ)
+    (hplat : HasGlobalPlateau T g A shift globalShift)
+    (B C : ℕ → ℝ) (hB : ∀b,0≤B b) (hC : ∀b,0≤C b)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1))
+    (hcap : MetadataBinomialCaps T n g B C (b+1) d)
+    (u v : Fin (T b)) (hu : u∈A b) (hv : v∈A b) :
+    binaryDescendantEnergy T n g s center globalShift A b d u v ≤
+      binaryTreeBudget (fun j =&gt; 4*((2^s:ℕ):ℝ)^6*C (j+1)*B j) b := by
+…</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L794">OAI.TraceReconstruction.HasGlobalPlateau</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L800">OAI.TraceReconstruction.MetadataBinomialCaps</a>, <a href="Anchors.lean.html#L842">OAI.TraceReconstruction.binaryDescendantEnergy</a>, <a href="Oracles.lean.html#L377">OAI.TraceReconstruction.binaryTreeBudget</a></p></li><li id=L952><b>def</b> <code>OAI.TraceReconstruction.BinaryWindowLabels.allowed</code> <small>line 952</small></li><li id=L958><b>theorem</b> <code>OAI.TraceReconstruction.BinaryWindowLabels.allowed_distinct</code> <small>line 958</small></li><li id=L966><b>def</b> <code>OAI.TraceReconstruction.joinBinaryLabels</code> <small>line 966</small><div class="doc"><p>Regroup the two real top child labels, without changing the actual
+finite label type or declaration order.</p></div><pre>def joinBinaryLabels {T : ℕ → ℕ} {b : ℕ} (a : Fin (T b) × Fin (T b))
+    (p : BinaryWindowLabels T b × BinaryWindowLabels T b) : BinaryWindowLabels T (b+1) :=
+…</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a></p></li><li id=L970><b>theorem</b> <code>OAI.TraceReconstruction.sum_binary_labels</code> <small>line 970</small></li><li id=L984><b>theorem</b> <code>OAI.TraceReconstruction.sum_pair_tensor</code> <small>line 984</small><div class="doc"><p>Exact finite tensor summation after preserving both deterministically
+allowed label domains. No probabilistic independence is asserted here.</p></div><pre>theorem sum_pair_tensor {α β σ τ : Type*} [Fintype α] [Fintype β] [Fintype σ] [Fintype τ]
+    (R : α → Prop) (S : β → Prop) (P : σ → Prop) (Q : τ → Prop)
+    [DecidablePred R] [DecidablePred S] [DecidablePred P] [DecidablePred Q]
+    (K : α → β → ℝ) (f : α → σ → ℝ) (h : β → τ → ℝ) :
+    (∑a,∑x,∑b,∑y, if R a ∧ P x ∧ S b ∧ Q y then K a b*f a x*h b y else 0) =
+      ∑a,∑b,if R a ∧ S b then K a b*(∑x,if P x then f a x else 0)*
+        (∑y,if Q y then h b y else 0) else 0 := by
+…</pre></li><li id=L1013><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorBelow_sum</code> <small>line 1013</small><div class="doc"><p>Literal sum over all descendant labels is the recursively compiled
+sibling-group energy. This is the bridge from the actual anchor average to
+bottom-up summation; no coefficient estimate is supplied as a hypothesis.</p></div><pre>theorem binaryAnchorBelow_sum (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (A : (b : ℕ) → Finset (Fin (T b))) (b : ℕ)
+    (d : WindowAssignments T n g (Option Bool) (b+1)) (u v : Fin (T b)) :
+    (∑p : BinaryWindowLabels T b × BinaryWindowLabels T b,
+      if BinaryWindowLabels.allowed T A s b p.1 ∧ BinaryWindowLabels.allowed T A s b p.2 then
+        binaryAnchorBelow T n g s center globalShift b (joinBinaryLabels (u,v) p) d ^ 2 else 0) =
+      binaryDescendantEnergy T n g s center globalShift A b d u v := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="Anchors.lean.html#L952">OAI.TraceReconstruction.BinaryWindowLabels.allowed</a>, <a href="Anchors.lean.html#L139">OAI.TraceReconstruction.binaryAnchorBelow</a>, <a href="Anchors.lean.html#L966">OAI.TraceReconstruction.joinBinaryLabels</a>, <a href="Anchors.lean.html#L842">OAI.TraceReconstruction.binaryDescendantEnergy</a></p></li><li id=L1053><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorAverage_sum</code> <small>line 1053</small><div class="doc"><p>The square-sum of actual anchor averages over all admissible forced
+indices, including the root local smoothing cost exactly once.</p></div><pre>theorem binaryAnchorAverage_sum (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (A : (b : ℕ) → Finset (Fin (T b))) (b : ℕ)
+    (d : WindowAssignments T n g (Option Bool) (b+1)) (incoming : ℤ) :
+    (∑p : BinaryWindowLabels T (b+1), if BinaryWindowLabels.allowed T A s (b+1) p then
+      binaryAnchorAverage T n g s center globalShift (b+1) p d incoming ^ 2 else 0) =
+      ∑u : Fin (T b),∑v : Fin (T b), if anchorPairAllowed T A s b u v then
+        localAnchorAverage d.1 s ((u.val:ℤ)-center b+incoming)^2 *
+          binaryDescendantEnergy T n g s center globalShift A b d u v else 0 := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="Anchors.lean.html#L952">OAI.TraceReconstruction.BinaryWindowLabels.allowed</a>, <a href="Anchors.lean.html#L91">OAI.TraceReconstruction.binaryAnchorAverage</a>, <a href="Anchors.lean.html#L789">OAI.TraceReconstruction.anchorPairAllowed</a>, <a href="Anchors.lean.html#L125">OAI.TraceReconstruction.localAnchorAverage</a>, <a href="Anchors.lean.html#L842">OAI.TraceReconstruction.binaryDescendantEnergy</a></p></li><li id=L1093><b>theorem</b> <code>OAI.TraceReconstruction.binaryAnchorAverage_energy</code> <small>line 1093</small><div class="doc"><p>Full finite forced-anchor squared coefficient budget, with the source
+power of one local root cost and one correlated global/local cost per group.
+This conclusion is about literal posterior averages and actual labels.</p></div><pre>theorem binaryAnchorAverage_energy (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (A : (b : ℕ) → Finset (Fin (T b))) (shift : ℕ → ℤ)
+    (hplat : HasGlobalPlateau T g A shift globalShift)
+    (B C : ℕ → ℝ) (hB : ∀b,0≤B b) (hC : ∀b,0≤C b)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1))
+    (hcap : MetadataBinomialCaps T n g B C (b+1) d) (incoming : ℤ) :
+    (∑p : BinaryWindowLabels T (b+1), if BinaryWindowLabels.allowed T A s (b+1) p then
+      binaryAnchorAverage T n g s center globalShift (b+1) p d incoming ^ 2 else 0) ≤
+        (2*((2^s:ℕ):ℝ)^3*B b) *
+          binaryTreeBudget (fun j =&gt; 4*((2^s:ℕ):ℝ)^6*C (j+1)*B j) b := by
+…</pre><p class="refs">Mentions: <a href="Anchors.lean.html#L794">OAI.TraceReconstruction.HasGlobalPlateau</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Anchors.lean.html#L800">OAI.TraceReconstruction.MetadataBinomialCaps</a>, <a href="Anchors.lean.html#L61">OAI.TraceReconstruction.BinaryWindowLabels</a>, <a href="Anchors.lean.html#L952">OAI.TraceReconstruction.BinaryWindowLabels.allowed</a>, <a href="Anchors.lean.html#L91">OAI.TraceReconstruction.binaryAnchorAverage</a>, <a href="Oracles.lean.html#L377">OAI.TraceReconstruction.binaryTreeBudget</a></p></li><li id=L1138><b>theorem</b> <code>OAI.TraceReconstruction.motifIndicator_finite_sum</code> <small>line 1138</small><div class="doc"><p>A literal unsigned length-L translated motif admits at most L child
+labels in any finite window, even when the intended motif does not fit.</p></div><pre>theorem motifIndicator_finite_sum (s N : ℕ) (X : ℤ) :
+    (∑h : Fin N,motifIndicator s ((h.val:ℤ)-X)) ≤ (2^s:ℕ) := by
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a></p></li><li id=L1165><b>def</b> <code>OAI.TraceReconstruction.extraLabelAverage</code> <small>line 1165</small><div class="doc"><p>The complete bits law is arbitrary. All extra-leaf offsets may be
+mutually correlated and correlated with the retained forced-anchor kernel.
+Only the extra leaf label variables themselves are summed here.</p></div><pre>def extraLabelAverage {Ω : Type*} [Fintype Ω] (P : FiniteLaw Ω)
+    (s N e : ℕ) (f : Ω → ℝ) (X : Ω → Fin e → ℤ) (h : Fin e → Fin N) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a></p></li><li id=L1169><b>theorem</b> <code>OAI.TraceReconstruction.extraLabelAverage_nonneg</code> <small>line 1169</small></li><li id=L1179><b>theorem</b> <code>OAI.TraceReconstruction.extraLabelAverage_sum</code> <small>line 1179</small><div class="doc"><p>Source the correlated-anchor estimate, extra leaf l1 cost before squaring. No free
+T_1 cost and no invalid decoupling of global displacements enter.</p></div><pre>theorem extraLabelAverage_sum {Ω : Type*} [Fintype Ω] (P : FiniteLaw Ω)
+    (s N e : ℕ) (f : Ω → ℝ) (hf : ∀ω,0≤f ω) (X : Ω → Fin e → ℤ) :
+    (∑h : Fin e → Fin N,extraLabelAverage P s N e f X h) ≤
+      ((2^s:ℕ):ℝ)^e*P.expect f := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Anchors.lean.html#L1165">OAI.TraceReconstruction.extraLabelAverage</a></p></li><li id=L1205><b>theorem</b> <code>OAI.TraceReconstruction.extraLabelAverage_energy</code> <small>line 1205</small><div class="doc"><p>The squared extra-leaf cost follows from nonnegativity AFTER the whole
+shared-bit average, exactly as in the source (not from independence).</p></div><pre>theorem extraLabelAverage_energy {Ω : Type*} [Fintype Ω] (P : FiniteLaw Ω)
+    (s N e : ℕ) (f : Ω → ℝ) (hf : ∀ω,0≤f ω) (X : Ω → Fin e → ℤ) :
+    (∑h : Fin e → Fin N,extraLabelAverage P s N e f X h ^ 2) ≤
+      ((2^s:ℕ):ℝ)^(2*e)*(P.expect f)^2 := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Anchors.lean.html#L1165">OAI.TraceReconstruction.extraLabelAverage</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

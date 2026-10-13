@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/DiskMaximal/Potentials.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/DiskMaximal/Potentials.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">DiskMaximal</a> / <span>Potentials.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">DiskMaximal</a>/<span>Potentials.lean</span></code></h1><p class="muted">51 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/DiskMaximal/Potentials.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L57><b>lemma</b> <code>OAI.PlanePotential.green_restrict_density</code> <small>line 57</small></li><li id=L66><b>lemma</b> <code>OAI.PlanePotential.green_root_lp_local</code> <small>line 66</small></li><li id=L93><b>lemma</b> <code>OAI.PlanePotential.green_zero_piece_lp_ae</code> <small>line 93</small></li><li id=L126><b>theorem</b> <code>OAI.PlanePotential.green_decomposition_norm_local</code> <small>line 126</small><div class="doc"><p>The local decomposition theorem does not demand artificial bounded support
+of the original densities: the actual Green kernel vanishes outside the
+observation ball.</p></div><pre>theorem green_decomposition_norm_local {ι : Type*} [Fintype ι]
+    {ψ g : ℂ → ℝ} (hψ : Continuous ψ) (hψc : HasCompactSupport ψ)
+    (hg : ContDiff ℝ 1 g) {D R X B : ℝ}
+    (hD : ∀ y, ‖fderiv ℝ g y‖ ≤ D) (hψ1 : ∫ z, ψ z = 1)
+    (hψs : ∀ z, ψ z ≠ 0 → ‖z‖ ≤ R) (hψB : ∀ z, |ψ z| ≤ B)
+    (hRX : R ≤ X) (hM : 0 &lt; R+X) (hB : 0 ≤ B) (hX : 0 &lt; X)
+    (β : ι → ℂ → ℂ) (hβ : ∀ i, Integrable (β i))
+    (hdecomp : ∀ᵐ y, ‖y‖ ≤ X → gradient g y = ∑ i, β i y) :
+    eLpNorm (fun x =&gt; g x-∫ z, ψ z*g z) (3/2) (volume.restrict {x : ℂ | ‖x‖ ≤ X}) ≤
+      ∑ i, eLpNorm (fun x =&gt; ∫ y, ⟪green ψ x y,β i y⟫) (3/2)
+        (volume.restrict {x : ℂ | ‖x‖ ≤ X}) := by
+…</pre><p class="refs">Mentions: <a href="Kernels.lean.html#L530">OAI.PlanePotential.green</a></p></li><li id=L156><b>theorem</b> <code>OAI.PlanePotential.exists_green_price</code> <small>line 156</small><div class="doc"><p>Uniform fractional small-support gain expressed in the common price
+exponent 1/100, including the unrestricted unit-size terms.</p></div><pre>theorem exists_green_price : ∃ (ψ : ℂ → ℝ) (C : ℝ), 0 &lt; C ∧
+    ContDiff ℝ ∞ ψ ∧ HasCompactSupport ψ ∧ (∫ z, ψ z) = 1 ∧
+    (∀ z, ψ z ≠ 0 → ‖z‖ ≤ 1) ∧
+    ∀ b : ErrorPiece 2,
+      eLpNorm (fun x =&gt; ∫ y, ⟪green ψ x y,b.density y⟫) (3/2)
+        (volume.restrict {x : ℂ | ‖x‖ ≤ 8}) ≤
+        ENNReal.ofReal (C*b.size^(1/100:ℝ)*b.mass) := by
+…</pre><p class="refs">Mentions: <a href="Kernels.lean.html#L530">OAI.PlanePotential.green</a></p></li><li id=L215><b>lemma</b> <code>OAI.DiskMaximalTools.strong_three_halves_norm</code> <small>line 215</small></li><li id=L237><b>lemma</b> <code>OAI.DiskMaximalTools.lintegral_le_three_halves_norm</code> <small>line 237</small></li><li id=L260><b>theorem</b> <code>OAI.PlanePotential.local_value_lp</code> <small>line 260</small><div class="doc"><p>The complete local L^(3/2) value estimate for a genuine finite vector
+cancellation decomposition, with the common 1/100 price.</p></div><pre>theorem local_value_lp : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {ι : Type} [Fintype ι] (b : ι → ErrorPiece 2) {g : ℂ → ℝ},
+    ContDiff ℝ 1 g → (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) →
+    (∀ᵐ y, ‖y‖ ≤ 8 → gradient g y = ∑ i, (b i).density y) →
+    ∃ c : ℝ, eLpNorm (fun x =&gt; g x-c) (3/2) (volume.restrict {x : ℂ | ‖x‖ ≤ 8}) ≤
+      ENNReal.ofReal (C * errorPrice b (1/100)) := by
+…</pre></li><li id=L289><b>lemma</b> <code>OAI.DiskMoments.signedAverage_sub_const</code> <small>line 289</small></li><li id=L303><b>lemma</b> <code>OAI.DiskMoments.local_average_le</code> <small>line 303</small><div class="doc"><p>A true disk average of a continuous function is controlled by the local
+absolute-density maximal function. No maximizing-radius selection is used.</p></div><pre>lemma local_average_le {g : ℂ → ℝ} (hg : Continuous g) (c : ℝ)
+    {x : ℂ} (hx : ‖x‖ ≤ 2) {t : ℝ} (ht : 0 &lt; t) (ht4 : t ≤ 4) :
+    ENNReal.ofReal |signedAverage g x t-c| ≤
+      rationalMaximal (volume.withDensity (fun y =&gt; ENNReal.ofReal
+        (({y : ℂ | ‖y‖ ≤ 8}.indicator (fun y =&gt; |g y-c|)) y))) x := by
+…</pre><p class="refs">Mentions: <a href="Moments.lean.html#L187">OAI.DiskMoments.signedAverage</a></p></li><li id=L345><b>theorem</b> <code>OAI.PlanePotential.local_value_majorant</code> <small>line 345</small><div class="doc"><p>Full local value-oscillation price, for every pair of positive radii at
+most four. The measurable majorant is an actual centered Euclidean disk
+maximal function, not an assumed analytic input.</p></div><pre>theorem local_value_majorant : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {ι : Type} [Fintype ι] (b : ι → ErrorPiece 2) {g : ℂ → ℝ},
+    ContDiff ℝ 1 g → (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) →
+    (∀ᵐ y, ‖y‖ ≤ 8 → gradient g y = ∑ i, (b i).density y) →
+    ∀ Q : Set ℂ, volume Q ≤ ENNReal.ofReal 1 →
+    ∃ F : ℂ → ℝ≥0∞, Measurable F ∧
+      (∫⁻ x in Q, F x) ≤ ENNReal.ofReal (C*errorPrice b (1/100)) ∧
+      ∀ x, ‖x‖ ≤ 2 → ∀ t t&#x27;, 0 &lt; t → t ≤ 4 → 0 &lt; t&#x27; → t&#x27; ≤ 4 →
+        ENNReal.ofReal |signedAverage g x t-signedAverage g x t&#x27;| ≤ F x := by
+…</pre></li><li id=L416><b>lemma</b> <code>OAI.AffineDensities.fderiv_affine_bound</code> <small>line 416</small></li><li id=L437><b>theorem</b> <code>OAI.CommonPrices.value_cell_price</code> <small>line 437</small><div class="doc"><p>The actual common-price value estimate, including every terminal error and
+all roots. This is the third local analytic input to signed run assembly.</p></div><pre>theorem value_cell_price : ∃ C : ℝ, 0 &lt; C ∧
+    ∀ {N : ℕ} {r R : ℝ} (hr : 0 &lt; r) (hR : 0 ≤ R) (hN : R/r+1 ≤ (N:ℝ))
+    {g : ℂ → ℝ}, ContDiff ℝ 1 g → Integrable (gradient g) →
+    (∀ y, gradient g y ≠ 0 → ‖y‖ ≤ R) →
+    (∃ D : ℝ, ∀ y, ‖fderiv ℝ g y‖ ≤ D) → ∀ (k : ℕ) (p : ℤ × ℤ)
+    {n : ℂ}, n ∈ fixedPalette.labels → ∀ Q : Set ℂ, volume Q ≤ ENNReal.ofReal 1 →
+    ∃ F : ℂ → ℝ≥0∞, Measurable F ∧
+      (∫⁻ X in Q, F X) ≤ ENNReal.ofReal (C*(scale r k)⁻¹*
+        (rootMass (gradient g) r k (cellRoots N p)+cellPrice N r (gradient g) k (cellRoots N p))) ∧
+      ∀ X, ‖X‖ ≤ 2 → ∀ t t&#x27;, 0 &lt; t → t ≤ 4 → 0 &lt; t&#x27; → t&#x27; ≤ 4 →
+        ENNReal.ofReal |signedAverage (fun Y =&gt; g (point (scale r k) p+scale r k • Y)) X t-
+          signedAverage (fun Y =&gt; g (point (scale r k) p+scale r k • Y)) X t&#x27;| ≤ F X := by
+…</pre><p class="refs">Mentions: <a href="Envelopes.lean.html#L514">OAI.CommonPrices.rootMass</a>, <a href="Packing.lean.html#L311">OAI.CommonPrices.cellRoots</a>, <a href="Packing.lean.html#L61">OAI.CommonPrices.cellPrice</a></p></li><li id=L477><b>def</b> <code>OAI.PhysicalCells.unitCell</code> <small>line 477</small></li><li id=L478><b>def</b> <code>OAI.PhysicalCells.toUnit</code> <small>line 478</small></li><li id=L479><b>def</b> <code>OAI.PhysicalCells.cell</code> <small>line 479</small></li><li id=L481><b>lemma</b> <code>OAI.PhysicalCells.unitCell_measurable</code> <small>line 481</small></li><li id=L483><b>lemma</b> <code>OAI.PhysicalCells.toUnit_continuous</code> <small>line 483</small></li><li id=L484><b>lemma</b> <code>OAI.PhysicalCells.cell_measurable</code> <small>line 484</small></li><li id=L486><b>lemma</b> <code>OAI.PhysicalCells.volume_unitCell</code> <small>line 486</small></li><li id=L494><b>lemma</b> <code>OAI.PhysicalCells.norm_unitCell</code> <small>line 494</small></li><li id=L498><b>lemma</b> <code>OAI.PhysicalCells.toUnit_affine</code> <small>line 498</small></li><li id=L500><b>lemma</b> <code>OAI.PhysicalCells.affine_toUnit</code> <small>line 500</small></li><li id=L503><b>lemma</b> <code>OAI.PhysicalCells.lintegral_smul</code> <small>line 503</small></li><li id=L511><b>lemma</b> <code>OAI.PhysicalCells.lintegral_toUnit</code> <small>line 511</small></li><li id=L520><b>lemma</b> <code>OAI.PhysicalCells.lintegral_cell</code> <small>line 520</small><div class="doc"><p>Exact physical-space change of variables, with the two-dimensional volume
+factor and no integrability or measurability assumptions on the majorant.</p></div><pre>lemma lintegral_cell (F : ℂ → ℝ≥0∞) (p : ℂ) {r : ℝ} (hr : r ≠ 0) :
+    (∫⁻ y in cell p r, F y) = ENNReal.ofReal (r^2)*∫⁻ X in unitCell, F (p+r • X) := by
+…</pre><p class="refs">Mentions: <a href="Potentials.lean.html#L479">OAI.PhysicalCells.cell</a>, <a href="Potentials.lean.html#L477">OAI.PhysicalCells.unitCell</a></p></li><li id=L531><b>lemma</b> <code>OAI.PhysicalCells.cell_majorant</code> <small>line 531</small></li><li id=L538><b>lemma</b> <code>OAI.DiskMoments.signedAverage_affine</code> <small>line 538</small></li><li id=L549><b>lemma</b> <code>OAI.DiskMoments.gradient_signedAverage</code> <small>line 549</small></li><li id=L566><b>lemma</b> <code>OAI.DiskMoments.gradient_average_affine</code> <small>line 566</small></li><li id=L578><b>def</b> <code>OAI.DiskMoments.PhysicalNeighborhoodRadius</code> <small>line 578</small></li><li id=L581><b>def</b> <code>OAI.DiskMoments.PhysicalEndpointRadius</code> <small>line 581</small></li><li id=L584><b>lemma</b> <code>OAI.DiskMoments.neighborhoodRadius_affine</code> <small>line 584</small></li><li id=L596><b>lemma</b> <code>OAI.DiskMoments.endpointRadius_affine</code> <small>line 596</small></li><li id=L614><b>lemma</b> <code>OAI.PhysicalCells.derivative_majorant_integral</code> <small>line 614</small></li><li id=L623><b>lemma</b> <code>OAI.PhysicalCells.value_majorant_integral</code> <small>line 623</small></li><li id=L634><b>lemma</b> <code>OAI.DiskMoments.average_gradient_norm_le</code> <small>line 634</small></li><li id=L642><b>lemma</b> <code>OAI.DiskMoments.average_gradient_negative_le</code> <small>line 642</small></li><li id=L653><b>lemma</b> <code>OAI.DiskMoments.physical_gradient_norm_majorant</code> <small>line 653</small></li><li id=L664><b>lemma</b> <code>OAI.DiskMoments.physical_gradient_negative_majorant</code> <small>line 664</small></li><li id=L681><b>theorem</b> <code>OAI.CommonPrices.physical_directional_price</code> <small>line 681</small></li><li id=L717><b>theorem</b> <code>OAI.CommonPrices.physical_size_price</code> <small>line 717</small></li><li id=L753><b>theorem</b> <code>OAI.CommonPrices.physical_value_price</code> <small>line 753</small></li><li id=L783><b>lemma</b> <code>OAI.DiskMoments.signedAverage_abs_le</code> <small>line 783</small></li><li id=L794><b>def</b> <code>OAI.DiskMoments.oscillationSet</code> <small>line 794</small></li><li id=L796><b>def</b> <code>OAI.DiskMoments.oscillation</code> <small>line 796</small></li><li id=L798><b>lemma</b> <code>OAI.DiskMoments.oscillationSet_zero</code> <small>line 798</small></li><li id=L800><b>lemma</b> <code>OAI.DiskMoments.oscillationSet_bdd</code> <small>line 800</small></li><li id=L809><b>lemma</b> <code>OAI.DiskMoments.oscillation_nonneg</code> <small>line 809</small></li><li id=L812><b>lemma</b> <code>OAI.DiskMoments.le_oscillation</code> <small>line 812</small></li><li id=L816><b>lemma</b> <code>OAI.DiskMoments.oscillation_majorant</code> <small>line 816</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

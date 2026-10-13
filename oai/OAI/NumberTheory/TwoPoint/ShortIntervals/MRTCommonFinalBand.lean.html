@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/ShortIntervals/MRTCommonFinalBand.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/ShortIntervals/MRTCommonFinalBand.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">ShortIntervals</a> / <span>MRTCommonFinalBand.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">ShortIntervals</a>/<span>MRTCommonFinalBand.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/ShortIntervals/MRTCommonFinalBand.lean#L1">source</a></p><div class="doc"><p>One final original band works for both dyadic polynomials at N and
+2N. The lower-endpoint margin absorbs the change in log-log scale, while
+the upper endpoint remains below the smaller square-root cutoff.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>lemma</b> <code>OAI.TwoPointCorrelations.mrt_eventually_common_band_target</code> <small>line 13</small></li><li id=L31><b>lemma</b> <code>OAI.TwoPointCorrelations.mrt_dyadic_log_comparison</code> <small>line 31</small></li><li id=L52><b>lemma</b> <code>OAI.TwoPointCorrelations.mrt_dyadic_log_error</code> <small>line 52</small></li><li id=L67><b>lemma</b> <code>OAI.TwoPointCorrelations.mrt_common_density_power</code> <small>line 67</small></li><li id=L72><b>lemma</b> <code>OAI.TwoPointCorrelations.mrt_common_density_cutoff</code> <small>line 72</small></li><li id=L80><b>theorem</b> <code>OAI.TwoPointCorrelations.mrt_log_error_published_rate</code> <small>line 80</small><div class="doc"><p>The extra-band logarithmic error is smaller than the squared
+published 1/700 scale.</p></div><pre>theorem mrt_log_error_published_rate :
+    ∀ᶠ L : ℝ in atTop,
+      Real.log L/L^(1/100:ℝ) ≤ L^(-1/350:ℝ) ∧
+      Real.sqrt (Real.log L/L^(1/100:ℝ)) ≤ L^(-1/700:ℝ) := by
+…</pre></li><li id=L101><b>theorem</b> <code>OAI.TwoPointCorrelations.mrt_common_final_band_geometry</code> <small>line 101</small><div class="doc"><p>The same J satisfies the actual final-band bounds at both dyadic
+cutoffs, not merely separate existential choices for the two cutoffs.</p></div><pre>theorem mrt_common_final_band_geometry :
+    ∀ᶠ N : ℕ in atTop, ∀ P Q : ℝ,
+      1 ≤ Real.log P → 1 ≤ Real.log Q → Real.log Q ≤ Real.sqrt (Real.log N) →
+      (400*Real.log (Real.log N)+1 ≤ Real.log P ∨
+        Real.log (mrtBandUpper Q 2) ≤ Real.sqrt (Real.log N)) →
+      ∃ J : ℕ, 1 ≤ J ∧
+        Real.sqrt (Real.log N) &lt; Real.log (mrtBandUpper Q (J+1)) ∧
+        ∀ k ∈ ({N,2*N} : Finset ℕ),
+          200*Real.log (Real.log k)+1 ≤ Real.log (mrtBandLower P Q J) ∧
+          ∀ i ∈ Icc 1 J, mrtBandUpper Q i ≤ Real.exp (Real.sqrt (Real.log k)) := by
+…</pre><p class="refs">Mentions: <a href="MRTBandParameters.lean.html#L16">OAI.TwoPointCorrelations.mrtBandUpper</a>, <a href="MRTBandParameters.lean.html#L13">OAI.TwoPointCorrelations.mrtBandLower</a></p></li><li id=L134><b>theorem</b> <code>OAI.TwoPointCorrelations.mrt_common_final_band_fixed</code> <small>line 134</small><div class="doc"><p>For fixed initial P,Q the second-band alternative always holds
+once N is large, yielding a common final band without extra hypotheses.</p></div><pre>theorem mrt_common_final_band_fixed (P Q : ℝ)
+    (hP : 1 ≤ Real.log P) (hQ : 1 ≤ Real.log Q) :
+    ∀ᶠ N : ℕ in atTop, ∃ J : ℕ, 1 ≤ J ∧
+      Real.sqrt (Real.log N) &lt; Real.log (mrtBandUpper Q (J+1)) ∧
+      ∀ k ∈ ({N,2*N} : Finset ℕ),
+        200*Real.log (Real.log k)+1 ≤ Real.log (mrtBandLower P Q J) ∧
+        ∀ i ∈ Icc 1 J, mrtBandUpper Q i ≤ Real.exp (Real.sqrt (Real.log k)) := by
+…</pre><p class="refs">Mentions: <a href="MRTBandParameters.lean.html#L16">OAI.TwoPointCorrelations.mrtBandUpper</a>, <a href="MRTBandParameters.lean.html#L13">OAI.TwoPointCorrelations.mrtBandLower</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

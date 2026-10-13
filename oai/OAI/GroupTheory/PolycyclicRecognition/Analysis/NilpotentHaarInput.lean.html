@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/NilpotentHaarInput.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/NilpotentHaarInput.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>NilpotentHaarInput.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>NilpotentHaarInput.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/NilpotentHaarInput.lean#L1">source</a></p><div class="doc"><h3>Exponential-coordinate Haar measure</h3><p>E. Le Donne, <em>Metric Lie Groups</em>, Graduate Texts in Mathematics 306,
+Springer (2025), Theorem 9.4.7 (exponential coordinates) and Corollary 9.4.21.
+<a href="https://doi.org/10.1007/978-3-031-98832-5_9">https://doi.org/10.1007/978-3-031-98832-5_9</a></p><p>A global exponential chart identifies Haar measure on a simply connected
+nilpotent Lie group with Lebesgue measure. The Euclidean determinant formula
+then gives the volume of weighted boxes, including their scale factors.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>def</b> <code>OAI.PolycyclicRecognition.NilpotentExponentialHaarInput</code> <small>line 31</small><div class="doc"><p>The part of the nilpotent exponential-coordinate theorem needed for Haar
+volume. The hypotheses concern the actual tangent Lie algebra of the group.</p></div><pre>def NilpotentExponentialHaarInput [T2Space G] [SimplyConnectedSpace G]
+    [MeasurableSpace G] [BorelSpace G] : Prop :=
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_haar_exponential_cube_volume</code> <small>line 44</small><div class="doc"><p>Normalize Haar measure using one exponential coordinate basis.</p></div><pre>theorem exists_haar_exponential_cube_volume
+    (haarInput : NilpotentExponentialHaarInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    (hnil : LieRing.IsNilpotent (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {n : ℕ} (b : Basis (Fin n) ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)) :
+    ∃ (chart : GroupLieAlgebra (𝓘(ℝ, E)) G ≃ₜ G) (μ : Measure G),
+      (∀ x, chart x = Exp x) ∧ μ.IsHaarMeasure ∧
+      ∀ R : ℝ, 0 ≤ R → μ (exponentialCoordinateBox Exp b R) = ENNReal.ofReal (2 * R) ^ n := by
+…</pre><p class="refs">Mentions: <a href="NilpotentHaarInput.lean.html#L31">OAI.PolycyclicRecognition.NilpotentExponentialHaarInput</a>, <a href="NilpotentBoxes.lean.html#L25">OAI.PolycyclicRecognition.exponentialCoordinateBox</a></p></li><li id=L69><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_haar_measure_model_weighted_boxes</code> <small>line 69</small><div class="doc"><p>An actual Haar measure with the exact exponential weighted-box formula.
+All template dependence is in the already proved finite determinant sum.</p></div><pre>theorem exists_haar_measure_model_weighted_boxes
+    (haarInput : NilpotentExponentialHaarInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    {L : Type*} [LieRing L] [LieAlgebra ℝ L]
+    (e : L ≃ₗ⁅ℝ⁆ GroupLieAlgebra (𝓘(ℝ, E)) G)
+    (hnil : LieRing.IsNilpotent L)
+    {I : Type*} (X : I → L) (S : Finset (FreeMagma I))
+    (b₀ : Basis (Fin (finrank ℝ L)) ℝ L) :
+    ∃ μ : Measure G, μ.IsHaarMeasure ∧
+      ∀ (cost : S → ℝ) (β : WordBasisSelections X S) (r R : ℝ), 0 ≤ R →
+        μ (exponentialCoordinateBox (Exp ∘ e)
+          (exponentialRescaleBasis (WordBasisSelections.basis X S β)
+…</pre><p class="refs">Mentions: <a href="NilpotentHaarInput.lean.html#L31">OAI.PolycyclicRecognition.NilpotentExponentialHaarInput</a>, <a href="../Algebra/FiniteWordBases.lean.html#L21">OAI.PolycyclicRecognition.WordBasisSelections</a>, <a href="NilpotentBoxes.lean.html#L25">OAI.PolycyclicRecognition.exponentialCoordinateBox</a>, <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

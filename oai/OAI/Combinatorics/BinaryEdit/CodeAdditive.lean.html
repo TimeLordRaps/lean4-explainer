@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/CodeAdditive.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/CodeAdditive.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>CodeAdditive.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>CodeAdditive.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/CodeAdditive.lean#L1">source</a></p><div class="doc"><p>The longest encoded matching is partitioned by equality of its
+original block labels. Segment separation and the span loss budget bound
+the number of unequal-label matches.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.TreeEdit.BinaryLower.Code.originalLetterAtBit</code> <small>line 17</small><div class="doc"><p>The original letter whose block contains a specified encoded position.</p></div><pre>def originalLetterAtBit {α : Type u} {M P : ℕ} (x : List α)
+    (hx : x.length = M) (hP : 0 &lt; P) (q : Fin (M*P)) : α :=
+…</pre></li><li id=L22><b>def</b> <code>OAI.TreeEdit.BinaryLower.Code.encodedBit</code> <small>line 22</small><div class="doc"><p>A bit of the actual concatenation, with its prescribed-length indexing.</p></div><pre>def encodedBit {α : Type u} {β : Type v} {M P : ℕ}
+    (c : α → Word β P) (x : List α) (hx : x.length = M)
+    (q : Fin (M*P)) : β :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a></p></li><li id=L28><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.ofFn_encodedBit</code> <small>line 28</small><div class="doc"><p>Reading all encoded positions reconstructs the concrete concatenation.</p></div><pre>@[simp] theorem ofFn_encodedBit {α : Type u} {β : Type v} {M P : ℕ}
+    (c : α → Word β P) (x : List α) (hx : x.length = M) :
+    List.ofFn (encodedBit c x hx) = encode c x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="CodeAdditive.lean.html#L22">OAI.TreeEdit.BinaryLower.Code.encodedBit</a>, <a href="../TreeEdit/Model.lean.html#L57">OAI.TreeEdit.encode</a></p></li><li id=L38><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.getElem?_blockLetter</code> <small>line 38</small><div class="doc"><p>Optional lookup at an encoded position's block always succeeds and
+returns exactly its original letter. This avoids partial-label conventions.</p></div><pre>theorem getElem?_blockLetter {α : Type u} {M P : ℕ} (x : List α)
+    (hx : x.length = M) (hP : 0 &lt; P) (q : Fin (M*P)) :
+    x[q.val/P]? = some (originalLetterAtBit x hx hP q) := by
+…</pre><p class="refs">Mentions: <a href="CodeAdditive.lean.html#L17">OAI.TreeEdit.BinaryLower.Code.originalLetterAtBit</a></p></li><li id=L47><b>def</b> <code>OAI.TreeEdit.BinaryLower.Code.unequalEdges</code> <small>line 47</small><div class="doc"><p>Precisely the selected unequal-original-label edges of a matching.</p></div><pre>noncomputable def unequalEdges {α : Type u} {M P r : ℕ}
+    (x y : List α) (hx : x.length = M) (hy : y.length = M) (hP : 0 &lt; P)
+    (f g : Fin r → Fin (M*P)) : Finset (Fin r) := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.unequalEdges_eq_filter_getElem?</code> <small>line 56</small><div class="doc"><p>Unequal-edge selection can equivalently be expressed by a total predicate
+on the two natural-number block indices using optional original-word lookup.</p></div><pre>theorem unequalEdges_eq_filter_getElem? {α : Type u} [DecidableEq α] {M P r : ℕ}
+    (x y : List α) (hx : x.length = M) (hy : y.length = M) (hP : 0 &lt; P)
+    (f g : Fin r → Fin (M*P)) :
+    unequalEdges x y hx hy hP f g =
+      Finset.univ.filter (fun t =&gt; x[(f t).val/P]? ≠ y[(g t).val/P]?) := by
+…</pre><p class="refs">Mentions: <a href="CodeAdditive.lean.html#L47">OAI.TreeEdit.BinaryLower.Code.unequalEdges</a></p></li><li id=L68><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.additive_of_longest_unequal_bound</code> <small>line 68</small><div class="doc"><p>Equal-label coloring and the unequal-label estimate, for actual encoded
+words and a matching of their longest-common-subsequence length.</p></div><pre>theorem additive_of_longest_unequal_bound {α : Type u} {β : Type v}
+    {M P a₀ : ℕ} (c : α → Word β P) (x y : List α)
+    (hx : x.length = M) (hy : y.length = M) (hP : 0 &lt; P)
+    (f g : Fin (lcs (encode c x) (encode c y)) → Fin (M*P))
+    (hf : StrictMono f) (hg : StrictMono g)
+    (hunequal : (unequalEdges x y hx hy hP f g).card ≤
+      200*(M*P-lcs (encode c x) (encode c y))+2*M*a₀) :
+    P*deficit M x y ≤ 201*deficit (M*P) (encode c x) (encode c y)+2*M*a₀ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a>, <a href="../TreeEdit/Model.lean.html#L57">OAI.TreeEdit.encode</a>, <a href="CodeAdditive.lean.html#L47">OAI.TreeEdit.BinaryLower.Code.unequalEdges</a>, <a href="Model.lean.html#L11">OAI.TreeEdit.BinaryLower.deficit</a></p></li><li id=L112><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Code.additive_of_unequal_matching_bound</code> <small>line 112</small><div class="doc"><p>An unequal count proved for every actual encoded matching yields the
+source additive estimate by choosing a longest encoded matching.</p></div><pre>theorem additive_of_unequal_matching_bound {α : Type u} {β : Type v}
+    {M P a₀ : ℕ} (c : α → Word β P) (x y : List α)
+    (hx : x.length = M) (hy : y.length = M) (hP : 0 &lt; P)
+    (hunequal : ∀ (r : ℕ) (f g : Fin r → Fin (M*P)),
+      StrictMono f → StrictMono g →
+      (∀ t, encodedBit c x hx (f t) = encodedBit c y hy (g t)) →
+      (unequalEdges x y hx hy hP f g).card ≤ 200*(M*P-r)+2*M*a₀) :
+    P*deficit M x y ≤ 201*deficit (M*P) (encode c x) (encode c y)+2*M*a₀ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="CodeAdditive.lean.html#L22">OAI.TreeEdit.BinaryLower.Code.encodedBit</a>, <a href="CodeAdditive.lean.html#L47">OAI.TreeEdit.BinaryLower.Code.unequalEdges</a>, <a href="Model.lean.html#L11">OAI.TreeEdit.BinaryLower.deficit</a>, <a href="../TreeEdit/Model.lean.html#L57">OAI.TreeEdit.encode</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

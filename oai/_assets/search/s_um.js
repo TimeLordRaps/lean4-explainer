@@ -1,0 +1,1 @@
+window.l4shard("um", [["OAI.ExactDerandomization.Umbra.Elect.Covenant",4786,176],["OAI.ExactDerandomization.Umbra.TrustQ.coverage",4786,593],["OAI.ExactDerandomization.Umbra.fixed_precision_estimator",4760,70]]);

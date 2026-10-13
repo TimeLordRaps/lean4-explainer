@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RandomSecondMoment.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RandomSecondMoment.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RandomSecondMoment.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RandomSecondMoment.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RandomSecondMoment.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem337.RandomProducts.sampledProduct</code> <small>line 14</small></li><li id=L18><b>def</b> <code>OAI.Problem337.RandomProducts.sampledPhase</code> <small>line 18</small></li><li id=L22><b>theorem</b> <code>OAI.Problem337.RandomProducts.norm_sampledPhase</code> <small>line 22</small></li><li id=L26><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampledPhase_correlation</code> <small>line 26</small></li><li id=L37><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampledProduct_split_first</code> <small>line 37</small></li><li id=L64><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampledProduct_split_other</code> <small>line 64</small></li><li id=L77><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampled_pair_bound_of_good_bad</code> <small>line 77</small><div class="doc"><p>The exact sample-splitting interface for one pair of Boolean words.</p></div><pre>theorem sampled_pair_bound_of_good_bad {m : ℕ} {P : Finset ℕ}
+    (hne : P.Nonempty) (I J : Fin m → Bool) (A B : Finset (Fin m))
+    (hAB : Disjoint A B) (hA : ∀ i ∈ A, I i ≠ J i) (hB : ∀ i ∈ B, I i ≠ J i)
+    (u l : ℕ) [NeZero u] (bad : Finset (ExposedLabel I A B → P))
+    (ε δ : ℝ) (hδ : 0 ≤ δ)
+    (hbad : (bad.card : ℝ) / Fintype.card (ExposedLabel I A B → P) ≤ ε)
+    (hgood : ∀ c, c ∉ bad →
+      ‖𝔼 a : selectedLabels I A → P, 𝔼 b : selectedLabels I B → P,
+        ZMod.stdAddChar
+          (((l * exposedFirstProduct (fun p : P =&gt; (p : ℕ)) I A B c *
+            (∏ z, (a z : ℕ)) * (∏ z, (b z : ℕ)) : ℕ) : ZMod u) -
+            ((l * exposedOtherProduct (fun p : P =&gt; (p : ℕ)) I J A B hA hB c : ℕ) : ZMod u))‖ ≤ δ) :
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampled_product_second_moment_of_correlations</code> <small>line 106</small><div class="doc"><p>The actual labelled-prime-product random quantity, reduced to separated-pair
+correlations. The remaining hypothesis is precisely the output of exposure.</p></div><pre>theorem sampled_product_second_moment_of_correlations {P : Finset ℕ}
+    (hne : P.Nonempty) (m u l : ℕ) [NeZero u] (V : ℝ)
+    (hlarge : 50 ≤ min (m : ℝ) V)
+    (hpair : ∀ I J : Fin m → Bool,
+      (m : ℝ) / 4 ≤ (hammingDist I J : ℝ) →
+      ‖𝔼 p : (Fin m × Bool) → P,
+        ZMod.stdAddChar (((l * sampledProduct p I : ℕ) : ZMod u) -
+          ((l * sampledProduct p J : ℕ) : ZMod u))‖ ≤
+        Real.exp (-V / 20) + Real.exp (-V / 5)) :
+    (𝔼 p : (Fin m × Bool) → P, ‖𝔼 I : Fin m → Bool, sampledPhase u l p I‖ ^ 2) ≤
+      Real.exp (-min (m : ℝ) V / 100) := by
+…</pre><p class="refs">Mentions: <a href="RandomSecondMoment.lean.html#L14">OAI.Problem337.RandomProducts.sampledProduct</a>, <a href="RandomSecondMoment.lean.html#L18">OAI.Problem337.RandomProducts.sampledPhase</a></p></li><li id=L124><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampled_pair_fresh_blocks</code> <small>line 124</small><div class="doc"><p>The actual Hamming condition supplies the two fresh blocks used by exposure.</p></div><pre>theorem sampled_pair_fresh_blocks {S V : ℝ} (hS : 1 &lt; S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S)
+    (I J : Fin (blockLength S) → Bool)
+    (hIJ : (blockLength S : ℝ) / 4 ≤ (hammingDist I J : ℝ)) :
+    ∃ A B : Finset (Fin (blockLength S)), Disjoint A B ∧
+      A.card = freshLength S V ∧ B.card = freshLength S V ∧
+      (∀ i ∈ A, I i ≠ J i) ∧ (∀ i ∈ B, I i ≠ J i) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a>, <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L137><b>theorem</b> <code>OAI.Problem337.RandomProducts.exposed_coordinate_card_le</code> <small>line 137</small><div class="doc"><p>The exposed factor uses at most the full first word's number of coordinates.</p></div><pre>theorem exposed_coordinate_card_le {S : ℝ} (hS : Real.exp 1 ≤ S)
+    (A B : Finset (Fin (blockLength S))) :
+    (Fintype.card ↥(Finset.univ \ (A ∪ B)) : ℝ) ≤ S := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a></p></li><li id=L148><b>theorem</b> <code>OAI.Problem337.RandomProducts.random_min_large</code> <small>line 148</small><div class="doc"><p>The parameter range guarantees the fixed numeric threshold for error absorption.</p></div><pre>theorem random_min_large {S V : ℝ} (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S) :
+    50 ≤ min (blockLength S : ℝ) V := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a></p></li><li id=L162><b>theorem</b> <code>OAI.Problem337.RandomProducts.exposed_bad_gcd_fraction</code> <small>line 162</small><div class="doc"><p>The actual exposed first-word factor has an exponentially small bad-gcd event.
+Unused exposed labels are eliminated by the exact uniform-coordinate marginal law.</p></div><pre>theorem exposed_bad_gcd_fraction (S V : ℝ) (hS : 3 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S)
+    (P : Finset ℕ) (hP : P.Nonempty) (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hinterval : ∀ p ∈ P, S ^ 100 ≤ (p : ℝ) ∧ (p : ℝ) ≤ S ^ 101)
+    (hsize : S ^ 99 ≤ (P.card : ℝ)) (u l : ℕ)
+    (huexp : (u : ℝ) = Real.exp V) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (V / 200))
+    (I : Fin (blockLength S) → Bool) (A B : Finset (Fin (blockLength S))) :
+    ((Finset.univ.filter (fun c : ExposedLabel I A B → P =&gt;
+      ((u / Nat.gcd (l * exposedFirstProduct (fun p : P =&gt; (p : ℕ)) I A B c) u : ℕ) : ℝ)
+        &lt; Real.exp (9 * V / 10))).card : ℝ) /
+      Fintype.card (ExposedLabel I A B → P) ≤ Real.exp (-V / 20) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a></p></li><li id=L194><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampled_product_second_moment_bound</code> <small>line 194</small><div class="doc"><p>The complete random-product second-moment estimate for labelled independent
+prime samples, including Hamming exceptions, bad gcds, and bilinear cancellation.</p></div><pre>theorem sampled_product_second_moment_bound
+    (S V : ℝ) (hS : 3 ≤ S) (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S)
+    (P : Finset ℕ) (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hinterval : ∀ p ∈ P, S ^ 100 ≤ (p : ℝ) ∧ (p : ℝ) ≤ S ^ 101)
+    (hsize : S ^ 99 ≤ (P.card : ℝ)) (u l : ℕ) [NeZero u]
+    (huexp : (u : ℝ) = Real.exp V) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (V / 200)) :
+    (𝔼 p : (Fin (blockLength S) × Bool) → P,
+      ‖𝔼 I : Fin (blockLength S) → Bool, sampledPhase u l p I‖ ^ 2) ≤
+        Real.exp (-min (blockLength S : ℝ) V / 100) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a>, <a href="RandomSecondMoment.lean.html#L18">OAI.Problem337.RandomProducts.sampledPhase</a></p></li><li id=L240><b>theorem</b> <code>OAI.Problem337.RandomProducts.sampled_product_second_moment_log_bound</code> <small>line 240</small><div class="doc"><p>Logarithmic form with <code>V = log u</code> and the smaller common frequency range.</p></div><pre>theorem sampled_product_second_moment_log_bound
+    (S : ℝ) (hS : 3 ≤ S) (P : Finset ℕ)
+    (hprime : ∀ p ∈ P, Nat.Prime p)
+    (hinterval : ∀ p ∈ P, S ^ 100 ≤ (p : ℝ) ∧ (p : ℝ) ≤ S ^ 101)
+    (hsize : S ^ 99 ≤ (P.card : ℝ)) (u l : ℕ) [NeZero u]
+    (hV : 100000 * Real.log S ≤ Real.log (u : ℝ))
+    (hVS : Real.log (u : ℝ) ≤ S) (hl : 0 &lt; l)
+    (hlbound : (l : ℝ) ≤ Real.exp (min (blockLength S : ℝ) (Real.log (u : ℝ)) / 200)) :
+    (𝔼 p : (Fin (blockLength S) × Bool) → P,
+      ‖𝔼 I : Fin (blockLength S) → Bool, sampledPhase u l p I‖ ^ 2) ≤
+        Real.exp (-min (blockLength S : ℝ) (Real.log (u : ℝ)) / 100) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a>, <a href="RandomSecondMoment.lean.html#L18">OAI.Problem337.RandomProducts.sampledPhase</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,255 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction/LeafOracle.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction/LeafOracle.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">TraceReconstruction</a> / <span>LeafOracle.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">TraceReconstruction</a>/<span>LeafOracle.lean</span></code></h1><p class="muted">100 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction/LeafOracle.lean#L1">source</a></p><div class="doc"><h3>LeafOracle</h3><p>Recursive leaf oracles, sparse high tails, occupied shapes, posterior smoothing, source bit trees, and singleton cancellation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.TraceReconstruction.WindowLeaf</code> <small>line 25</small><div class="doc"><p>Complete window-tree leaf indices, with counts numbered from the bottom.
+The tree is fixed before any occupied subset or orientation is selected.</p></div><pre>def WindowLeaf (T : ℕ → ℕ) : ℕ → Type
+  | 0 =&gt; Fin 1
+  | b+1 =&gt; Fin (T b) × WindowLeaf T b</pre></li><li id=L29><b>instance</b> <code>OAI.TraceReconstruction.windowLeafFintype</code> <small>line 29</small></li><li id=L36><b>def</b> <code>OAI.TraceReconstruction.motifChildSign</code> <small>line 36</small><div class="doc"><p>A motif's actual outgoing type, allowing every integer displacement.</p></div><pre>def motifChildSign (s : ℕ) (X : ℤ) (h : ℕ) (τ : ℝ) : ℝ :=
+…</pre></li><li id=L39><b>theorem</b> <code>OAI.TraceReconstruction.motifChildSign_isSign</code> <small>line 39</small></li><li id=L43><b>theorem</b> <code>OAI.TraceReconstruction.motifChildSign_negative_active</code> <small>line 43</small></li><li id=L53><b>def</b> <code>OAI.TraceReconstruction.windowLeafSign</code> <small>line 53</small><div class="doc"><p>Literal top-down type recursion in the source's unconditioned surrogate.
+<code>X path</code> is the root anchor or <code>w_j-Y_path</code>. Dependence of different paths
+through the same global jitter is retained by this single full-tree map.</p></div><pre>def windowLeafSign (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ) :
+    (b : ℕ) → List ℕ → ℝ → WindowLeaf T b → ℝ
+  | 0, _, τ, _ =&gt; τ
+  | b+1, path, τ, v =&gt; windowLeafSign T s X b (path++[v.1.val])
+      (motifChildSign s (X path) v.1.val τ) v.2</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L36">OAI.TraceReconstruction.motifChildSign</a></p></li><li id=L59><b>theorem</b> <code>OAI.TraceReconstruction.windowLeafSign_isSign</code> <small>line 59</small></li><li id=L66><b>def</b> <code>OAI.TraceReconstruction.windowLeafType</code> <small>line 66</small></li><li id=L70><b>theorem</b> <code>OAI.TraceReconstruction.windowLeafType_weight</code> <small>line 70</small></li><li id=L79><b>def</b> <code>OAI.TraceReconstruction.windowFinType</code> <small>line 79</small><div class="doc"><p>A finite indexing of all leaves, not just the active or fitted leaves.</p></div><pre>def windowFinType (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (τ : ℝ) (i : Fin (Fintype.card (WindowLeaf T b))) : Bool :=
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a></p></li><li id=L85><b>def</b> <code>OAI.TraceReconstruction.recursiveLeafLaw</code> <small>line 85</small><div class="doc"><p>The actual mixed leaf oracle at arbitrary exact metadata. The one latent
+law governs the whole map X; no independent-anchor law is substituted.</p></div><pre>def recursiveLeafLaw {Ω α : Type*} [Fintype Ω] [Fintype α]
+    (R : FiniteLaw Ω) (X : Ω → List ℕ → ℤ) (T : ℕ → ℕ) (s b : ℕ)
+    (P Q : FiniteLaw α) (τ : ℝ) :
+    FiniteLaw (Fin (Fintype.card (WindowLeaf T b)) → α) :=
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a></p></li><li id=L91><b>theorem</b> <code>OAI.TraceReconstruction.recursiveLeafLaw_density</code> <small>line 91</small></li><li id=L102><b>theorem</b> <code>OAI.TraceReconstruction.recursive_selectionCoefficient</code> <small>line 102</small><div class="doc"><p>Pointwise recursive coefficient before averaging over the actual bits.</p></div><pre>theorem recursive_selectionCoefficient {Ω : Type*} [Fintype Ω]
+    (X : Ω → List ℕ → ℤ) (T : ℕ → ℕ) (s b : ℕ) (ω : Ω)
+    {τ : ℝ} (hτ : IsTypeSign τ) (σ : Fin (Fintype.card (WindowLeaf T b)) → Bool) :
+    selectionCoefficient (windowFinType T s (X ω) b τ) σ =
+      ∏i, if σ i then
+        (1-windowLeafSign T s (X ω) b [] τ ((Fintype.equivFin (WindowLeaf T b)).symm i))/2 else 1 := by
+…</pre><p class="refs">Mentions: <a href="Parity.lean.html#L189">OAI.TraceReconstruction.IsTypeSign</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="FiniteLaw.lean.html#L1394">OAI.TraceReconstruction.selectionCoefficient</a>, <a href="LeafOracle.lean.html#L79">OAI.TraceReconstruction.windowFinType</a>, <a href="LeafOracle.lean.html#L53">OAI.TraceReconstruction.windowLeafSign</a></p></li><li id=L115><b>theorem</b> <code>OAI.TraceReconstruction.motif_negative_count</code> <small>line 115</small></li><li id=L134><b>def</b> <code>OAI.TraceReconstruction.windowMinusCount</code> <small>line 134</small><div class="doc"><p>Exact number of minus leaves in a fixed realization, without a fit condition.</p></div><pre>def windowMinusCount (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (τ : ℝ) : ℕ :=
+…</pre></li><li id=L138><b>theorem</b> <code>OAI.TraceReconstruction.windowMinusCount_succ</code> <small>line 138</small></li><li id=L150><b>theorem</b> <code>OAI.TraceReconstruction.windowMinusCount_bound</code> <small>line 150</small><div class="doc"><p>Source the block layout high-degree budget, bottom motif length times all
+upper window counts. It holds for every latent realization, typical or not.</p></div><pre>theorem windowMinusCount_bound (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (τ : ℝ) :
+    windowMinusCount T s X (b+1) path τ ≤
+      2^s * ∏j∈Finset.range b, T (j+1) := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L134">OAI.TraceReconstruction.windowMinusCount</a></p></li><li id=L176><b>def</b> <code>OAI.TraceReconstruction.boolSupport</code> <small>line 176</small></li><li id=L179><b>theorem</b> <code>OAI.TraceReconstruction.boolSupport_injective</code> <small>line 179</small></li><li id=L186><b>theorem</b> <code>OAI.TraceReconstruction.selectionCoefficient_eq_support</code> <small>line 186</small></li><li id=L205><b>theorem</b> <code>OAI.TraceReconstruction.selection_degree_sum_le</code> <small>line 205</small><div class="doc"><p>Uniform cardinality bound for the actual selected monomials of a sparse
+0/1 coefficient vector; mixing does not add a squared-cardinality loss.</p></div><pre>theorem selection_degree_sum_le {n : ℕ} (θ : Fin n → Bool) (r : ℕ) :
+    (∑σ : Fin n → Bool, if monomialDegree σ=r then selectionCoefficient θ σ else 0) ≤
+      ((monomialDegree θ).choose r:ℝ) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L1129">OAI.TraceReconstruction.monomialDegree</a>, <a href="FiniteLaw.lean.html#L1394">OAI.TraceReconstruction.selectionCoefficient</a></p></li><li id=L225><b>theorem</b> <code>OAI.TraceReconstruction.averaged_sparse_degree</code> <small>line 225</small></li><li id=L257><b>theorem</b> <code>OAI.TraceReconstruction.windowFinType_degree</code> <small>line 257</small><div class="doc"><p>Genuine sparse complete-tree leaf count in the exact Fin indexing used
+by the independent-product reference law.</p></div><pre>theorem windowFinType_degree (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (τ : ℝ) :
+    monomialDegree (windowFinType T s X b τ) = windowMinusCount T s X b [] τ := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L1129">OAI.TraceReconstruction.monomialDegree</a>, <a href="LeafOracle.lean.html#L79">OAI.TraceReconstruction.windowFinType</a>, <a href="LeafOracle.lean.html#L134">OAI.TraceReconstruction.windowMinusCount</a></p></li><li id=L265><b>theorem</b> <code>OAI.TraceReconstruction.recursive_degree_bound</code> <small>line 265</small></li><li id=L275><b>def</b> <code>OAI.TraceReconstruction.degreeTail</code> <small>line 275</small></li><li id=L278><b>theorem</b> <code>OAI.TraceReconstruction.degreeTail_degree</code> <small>line 278</small></li><li id=L292><b>theorem</b> <code>OAI.TraceReconstruction.averaged_sparse_tail_energy</code> <small>line 292</small><div class="doc"><p>Geometric high-degree energy of an actual mixed sparse leaf law.</p></div><pre>theorem averaged_sparse_tail_energy {Ω : Type*} [Fintype Ω] {n A₀ : ℕ}
+    (R : FiniteLaw Ω) (θ : Ω → Fin n → Bool)
+    (hA : ∀ω, monomialDegree (θ ω) ≤ A₀) (k : ℕ) {w : ℝ}
+    (hw : 0 ≤ w) (ha : w^2*A₀ &lt; 1) :
+    multilinearEnergy (degreeTail (averagedCoefficient R θ) k) w ≤
+      (w^2*A₀)^k/(1-w^2*A₀) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="FiniteLaw.lean.html#L1129">OAI.TraceReconstruction.monomialDegree</a>, <a href="FiniteLaw.lean.html#L1036">OAI.TraceReconstruction.multilinearEnergy</a>, <a href="LeafOracle.lean.html#L275">OAI.TraceReconstruction.degreeTail</a>, <a href="FiniteLaw.lean.html#L1400">OAI.TraceReconstruction.averagedCoefficient</a></p></li><li id=L315><b>theorem</b> <code>OAI.TraceReconstruction.recursive_high_moment</code> <small>line 315</small><div class="doc"><p>Actual recursive-oracle high tail, including arbitrary correlated latent
+bits and displacements. This supplies the block layout's unconditioned high-degree
+input; low degrees still require the signed occupied-tree cancellation.</p></div><pre>theorem recursive_high_moment {Ω α : Type*} [Fintype Ω] [Fintype α]
+    (R : FiniteLaw Ω) (X : Ω → List ℕ → ℤ) (T : ℕ → ℕ) (s b r₀ k : ℕ) (τ : ℝ)
+    (P : FiniteLaw α) (Z : α → ℝ) (hk : 1 ≤ k) (hcenter : P.expect Z=0)
+    {L : ℝ} (hL : 0 &lt; L) (hMoment : P.expect (fun a =&gt; |Z a|^(2*k)) ≤ L^(2*k))
+    (ha : ((6*(2*k:ℕ):ℝ)*L)^2 * (2^s*∏j∈Finset.range b,T (j+1):ℕ) &lt; 1) :
+    (P.product (Fintype.card (WindowLeaf T (b+1)))).evenMomentSq
+      (multilinear (degreeTail (averagedCoefficient R
+        (fun ω =&gt; windowFinType T s (X ω) (b+1) τ)) r₀) Z) k ≤
+      (((6*(2*k:ℕ):ℝ)*L)^2*(2^s*∏j∈Finset.range b,T (j+1):ℕ))^r₀/
+        (1-((6*(2*k:ℕ):ℝ)*L)^2*(2^s*∏j∈Finset.range b,T (j+1):ℕ)) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="FiniteLaw.lean.html#L1033">OAI.TraceReconstruction.multilinear</a>, <a href="LeafOracle.lean.html#L275">OAI.TraceReconstruction.degreeTail</a>, <a href="FiniteLaw.lean.html#L1400">OAI.TraceReconstruction.averagedCoefficient</a>, <a href="LeafOracle.lean.html#L79">OAI.TraceReconstruction.windowFinType</a></p></li><li id=L339><b>def</b> <code>OAI.TraceReconstruction.selectedChildren</code> <small>line 339</small></li><li id=L342><b>def</b> <code>OAI.TraceReconstruction.selectedChildLeaves</code> <small>line 342</small></li><li id=L347><b>theorem</b> <code>OAI.TraceReconstruction.selected_prod_children</code> <small>line 347</small></li><li id=L365><b>theorem</b> <code>OAI.TraceReconstruction.selected_prod_index</code> <small>line 365</small></li><li id=L374><b>def</b> <code>OAI.TraceReconstruction.occupiedWindowShape</code> <small>line 374</small><div class="doc"><p>Occupied shape of an actual subset of a complete window tree. Only
+occupied children are enumerated, so its leaves are exactly the selected
+monomial variables, not the other complete-tree leaves.</p></div><pre>def occupiedWindowShape (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ) :
+    (b : ℕ) → (path : List ℕ) → Finset (WindowLeaf T (b+1)) → CoefficientShape b
+  | 0, path, S =&gt; .bottom S.card
+      (fun i =&gt; motifIndicator s (((S.equivFin.symm i).val.1.val:ℤ)-X path))
+      (fun i =&gt; (prouhetSeries s).coeff (((S.equivFin.symm i).val.1.val:ℤ)-X path))
+  | b+1, path, S =&gt; .node (selectedChildren S).card
+      (fun i =&gt; motifIndicator s ((((selectedChildren S).equivFin.symm i).val.val:ℤ)-X path))
+      (fun i =&gt; (prouhetSeries s).coeff ((((selectedChildren S).equivFin.symm i).val.val:ℤ)-X path))
+      (fun i =&gt; occupiedWindowShape T s X b
+        (path++[((selectedChildren S).equivFin.symm i).val.val])
+        (selectedChildLeaves S ((selectedChildren S).equivFin.symm i).val))</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="Parity.lean.html#L252">OAI.TraceReconstruction.CoefficientShape</a>, <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a>, <a href="Binomial.lean.html#L498">OAI.TraceReconstruction.prouhetSeries</a>, <a href="LeafOracle.lean.html#L339">OAI.TraceReconstruction.selectedChildren</a>, <a href="LeafOracle.lean.html#L342">OAI.TraceReconstruction.selectedChildLeaves</a></p></li><li id=L386><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowShape_admissible</code> <small>line 386</small></li><li id=L395><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowShape_eval</code> <small>line 395</small><div class="doc"><p>The literal coefficient product equals the evaluation of its occupied
+shape; this is before any averaging or parity cancellation.</p></div><pre>theorem occupiedWindowShape_eval (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (S : Finset (WindowLeaf T (b+1))) (τ : ℝ) :
+    (occupiedWindowShape T s X b path S).eval τ =
+      ∏v∈S, (1-windowLeafSign T s X (b+1) path τ v)/2 := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L374">OAI.TraceReconstruction.occupiedWindowShape</a>, <a href="LeafOracle.lean.html#L53">OAI.TraceReconstruction.windowLeafSign</a></p></li><li id=L419><b>theorem</b> <code>OAI.TraceReconstruction.selected_children_card</code> <small>line 419</small></li><li id=L425><b>theorem</b> <code>OAI.TraceReconstruction.selectedChildLeaves_nonempty</code> <small>line 425</small></li><li id=L431><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowShape_leafCount</code> <small>line 431</small></li><li id=L443><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowShape_occupied</code> <small>line 443</small></li><li id=L455><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowShape_forced_count</code> <small>line 455</small><div class="doc"><p>Forced-leaf count for a term of an actual selected monomial.</p></div><pre>theorem occupiedWindowShape_forced_count (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (S : Finset (WindowLeaf T (b+1)))
+    (a : (occupiedWindowShape T s X b path S).Choice)
+    (hw : (occupiedWindowShape T s X b path S).weight a ≠ 0)
+    (ho : ((occupiedWindowShape T s X b path S).termTree a).isOdd)
+    (hn : ((occupiedWindowShape T s X b path S).termTree a).noSingleton) :
+    2^(b+1) ≤ S.card := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L374">OAI.TraceReconstruction.occupiedWindowShape</a></p></li><li id=L467><b>def</b> <code>OAI.TraceReconstruction.OccupiedWindowChoice</code> <small>line 467</small><div class="doc"><p>The role choices depend only on the selected subset, not on any hidden
+orientation. This common index type permits averaging before norm estimates.</p></div><pre>def OccupiedWindowChoice (T : ℕ → ℕ) :
+    (b : ℕ) → Finset (WindowLeaf T (b+1)) → Type
+  | 0, S =&gt; Fin S.card → Fin 3
+  | b+1, S =&gt;
+      ((i : Fin (selectedChildren S).card) → OccupiedWindowChoice T b
+        (selectedChildLeaves S ((selectedChildren S).equivFin.symm i).val)) ×
+      (Fin (selectedChildren S).card → Fin 3)</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L339">OAI.TraceReconstruction.selectedChildren</a>, <a href="LeafOracle.lean.html#L342">OAI.TraceReconstruction.selectedChildLeaves</a></p></li><li id=L475><b>instance</b> <code>OAI.TraceReconstruction.occupiedWindowChoiceFintype</code> <small>line 475</small></li><li id=L485><b>def</b> <code>OAI.TraceReconstruction.occupiedWindowChoiceEquiv</code> <small>line 485</small></li><li id=L496><b>def</b> <code>OAI.TraceReconstruction.occupiedWindowTerm</code> <small>line 496</small><div class="doc"><p>The parity tree of a role choice is independent of all displacement bits.</p></div><pre>noncomputable def occupiedWindowTerm (T : ℕ → ℕ) :
+    (b : ℕ) → (S : Finset (WindowLeaf T (b+1))) →
+      OccupiedWindowChoice T b S → OccupiedParityTree (b+1)
+  | 0, S, a =&gt; .node S.card (fun _ =&gt; .leaf) a
+  | b+1, S, a =&gt; .node (selectedChildren S).card
+      (fun i =&gt; occupiedWindowTerm T b
+        (selectedChildLeaves S ((selectedChildren S).equivFin.symm i).val) (a.1 i)) a.2
+
+ theorem occupiedWindowTerm_eq (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (S : Finset (WindowLeaf T (b+1)))
+    (a : OccupiedWindowChoice T b S) :
+    (occupiedWindowShape T s X b path S).termTree
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="Parity.lean.html#L121">OAI.TraceReconstruction.OccupiedParityTree</a>, <a href="LeafOracle.lean.html#L339">OAI.TraceReconstruction.selectedChildren</a>, <a href="LeafOracle.lean.html#L342">OAI.TraceReconstruction.selectedChildLeaves</a>, <a href="LeafOracle.lean.html#L374">OAI.TraceReconstruction.occupiedWindowShape</a></p></li><li id=L517><b>def</b> <code>OAI.TraceReconstruction.occupiedWindowWeight</code> <small>line 517</small></li><li id=L525><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindow_difference</code> <small>line 525</small><div class="doc"><p>Exact source parity formula for the actual selected leaves, using a
+single role index independent of the latent map. No fit conditioning.</p></div><pre>theorem occupiedWindow_difference (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (S : Finset (WindowLeaf T (b+1))) :
+    (∏v∈S, (1-windowLeafSign T s X (b+1) path 1 v)/2) -
+      (∏v∈S, (1-windowLeafSign T s X (b+1) path (-1) v)/2) =
+      2*∑a : OccupiedWindowChoice T b S,
+        if (occupiedWindowTerm T b S a).isOdd then occupiedWindowWeight T s X b path S a else 0 := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L53">OAI.TraceReconstruction.windowLeafSign</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L517">OAI.TraceReconstruction.occupiedWindowWeight</a></p></li><li id=L542><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindow_averaged_difference</code> <small>line 542</small><div class="doc"><p>Averaging the complete exact expansion keeps all correlations of the
+common hidden map. The indicator of an odd root is deterministic.</p></div><pre>theorem occupiedWindow_averaged_difference {Ω : Type*} [Fintype Ω]
+    (R : FiniteLaw Ω) (T : ℕ → ℕ) (s : ℕ) (X : Ω → List ℕ → ℤ)
+    (b : ℕ) (path : List ℕ) (S : Finset (WindowLeaf T (b+1))) :
+    R.expect (fun ω =&gt; ∏v∈S, (1-windowLeafSign T s (X ω) (b+1) path 1 v)/2) -
+      R.expect (fun ω =&gt; ∏v∈S, (1-windowLeafSign T s (X ω) (b+1) path (-1) v)/2) =
+      2*∑a : OccupiedWindowChoice T b S,
+        if (occupiedWindowTerm T b S a).isOdd then
+          R.expect (fun ω =&gt; occupiedWindowWeight T s (X ω) b path S a) else 0 := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L53">OAI.TraceReconstruction.windowLeafSign</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L517">OAI.TraceReconstruction.occupiedWindowWeight</a></p></li><li id=L571><b>theorem</b> <code>OAI.TraceReconstruction.posterior_count_average</code> <small>line 571</small><div class="doc"><p>Arbitrary functions of the actual posterior count have the translated
+fair-binomial law, not only its generating polynomial.</p></div><pre>theorem posterior_count_average {ι : Type*} [Fintype ι]
+    (d : ι → Option Bool) (F : ℤ → ℝ) :
+    (∑ b : ι → Bool, (∏i, (flagPosterior (d i)).mass (b i)) *
+      F (∑i, (bitIndex (b i):ℤ))) =
+    ∑k∈Finset.range ((∑i, hiddenTrial (d i))+1),
+      fairBinomial (∑i, hiddenTrial (d i)) k * F ((∑i,(visibleOnes (d i):ℤ))+k) := by
+…</pre><p class="refs">Mentions: <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a>, <a href="Binomial.lean.html#L24">OAI.TraceReconstruction.fairBinomial</a>, <a href="Patterns.lean.html#L292">OAI.TraceReconstruction.visibleOnes</a></p></li><li id=L585><b>theorem</b> <code>OAI.TraceReconstruction.fairBinomial_reflect</code> <small>line 585</small></li><li id=L591><b>theorem</b> <code>OAI.TraceReconstruction.posterior_count_average_reflected</code> <small>line 591</small><div class="doc"><p>Reflection of the remaining hidden count. The known visible contribution
+is kept, and no positivity assumption on the metadata mass is needed.</p></div><pre>theorem posterior_count_average_reflected {ι : Type*} [Fintype ι]
+    (d : ι → Option Bool) (F : ℤ → ℝ) :
+    (∑ b : ι → Bool, (∏i, (flagPosterior (d i)).mass (b i)) *
+      F (∑i, (bitIndex (b i):ℤ))) =
+    ∑k∈Finset.range ((∑i, hiddenTrial (d i))+1),
+      fairBinomial (∑i, hiddenTrial (d i)) k *
+        F ((∑i,(visibleOnes (d i):ℤ))+(∑i,hiddenTrial (d i))-k) := by
+…</pre><p class="refs">Mentions: <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a>, <a href="Binomial.lean.html#L24">OAI.TraceReconstruction.fairBinomial</a>, <a href="Patterns.lean.html#L292">OAI.TraceReconstruction.visibleOnes</a></p></li><li id=L609><b>theorem</b> <code>OAI.TraceReconstruction.posterior_signed_motif</code> <small>line 609</small><div class="doc"><p>The actual local signed motif averaged over posterior orientations is
+exactly a translated smoothed Prouhet polynomial.</p></div><pre>theorem posterior_signed_motif {ι : Type*} [Fintype ι]
+    (d : ι → Option Bool) (s : ℕ) (z : ℤ) :
+    (∑b : ι → Bool, (∏i,(flagPosterior (d i)).mass (b i)) *
+      (prouhetSeries s).coeff (z+∑i,(bitIndex (b i):ℤ))) =
+      (prouhetSeries s * fairSeries (∑i,hiddenTrial (d i))).coeff
+        (z+(∑i,(visibleOnes (d i):ℤ))+(∑i,hiddenTrial (d i))) := by
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L498">OAI.TraceReconstruction.prouhetSeries</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Binomial.lean.html#L206">OAI.TraceReconstruction.fairSeries</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a>, <a href="Patterns.lean.html#L292">OAI.TraceReconstruction.visibleOnes</a></p></li><li id=L627><b>theorem</b> <code>OAI.TraceReconstruction.posterior_signed_motif_bound</code> <small>line 627</small><div class="doc"><p>Singleton smoothing for literal hidden orientation bits. Other mechanisms
+can now be conditioned on without changing this bound.</p></div><pre>theorem posterior_signed_motif_bound {ι : Type*} [Fintype ι]
+    (d : ι → Option Bool) (s : ℕ) (z : ℤ) :
+    |∑b : ι → Bool, (∏i,(flagPosterior (d i)).mass (b i)) *
+      (prouhetSeries s).coeff (z+∑i,(bitIndex (b i):ℤ))| ≤
+      (2:ℝ)^(s*s)*((2*binomialBound ((∑i,hiddenTrial (d i))/(s+1)))^s *
+        binomialBound ((∑i,hiddenTrial (d i))/(s+1))) := by
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L498">OAI.TraceReconstruction.prouhetSeries</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Binomial.lean.html#L356">OAI.TraceReconstruction.binomialBound</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a></p></li><li id=L645><b>theorem</b> <code>OAI.TraceReconstruction.windowKernel_binomial</code> <small>line 645</small><div class="doc"><p>The literal unsigned window evaluated at an affine fair-binomial shift.</p></div><pre>theorem windowKernel_binomial (n L : ℕ) (z : ℤ) :
+    windowKernel n L z =
+      ∑k∈Finset.range (n+1), fairBinomial n k *
+        (if 0 ≤ z+(k:ℤ) ∧ z+(k:ℤ)&lt;L then (1:ℝ) else 0) := by
+…</pre><p class="refs">Mentions: <a href="Kernels.lean.html#L294">OAI.TraceReconstruction.windowKernel</a>, <a href="Binomial.lean.html#L24">OAI.TraceReconstruction.fairBinomial</a></p></li><li id=L669><b>theorem</b> <code>OAI.TraceReconstruction.posterior_unsigned_motif</code> <small>line 669</small><div class="doc"><p>Exact local anchor kernel for the actual posterior bits, with the known
+visible contribution retained as a translation.</p></div><pre>theorem posterior_unsigned_motif {ι : Type*} [Fintype ι]
+    (d : ι → Option Bool) (s : ℕ) (z : ℤ) :
+    (∑b : ι → Bool, (∏i,(flagPosterior (d i)).mass (b i)) *
+      motifIndicator s (z+∑i,(bitIndex (b i):ℤ))) =
+      windowKernel (∑i,hiddenTrial (d i)) (2^s) (z+∑i,(visibleOnes (d i):ℤ)) := by
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Kernels.lean.html#L294">OAI.TraceReconstruction.windowKernel</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a>, <a href="Patterns.lean.html#L292">OAI.TraceReconstruction.visibleOnes</a></p></li><li id=L680><b>theorem</b> <code>OAI.TraceReconstruction.posterior_count_support</code> <small>line 680</small><div class="doc"><p>The finite-series functional form of the posterior count identity.</p></div><pre>theorem posterior_count_support {ι : Type*} [Fintype ι]
+    (d : ι → Option Bool) (F : ℤ → ℝ) :
+    (∑b : ι → Bool, (∏i,(flagPosterior (d i)).mass (b i))*F (∑i,(bitIndex (b i):ℤ))) =
+    ∑v∈(fairSeries (∑i,hiddenTrial (d i))).coeff.support,
+      (fairSeries (∑i,hiddenTrial (d i))).coeff v * F ((∑i,(visibleOnes (d i):ℤ))+v) := by
+…</pre><p class="refs">Mentions: <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Binomial.lean.html#L206">OAI.TraceReconstruction.fairSeries</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a>, <a href="Patterns.lean.html#L292">OAI.TraceReconstruction.visibleOnes</a></p></li><li id=L695><b>def</b> <code>OAI.TraceReconstruction.posteriorJointAnchors</code> <small>line 695</small><div class="doc"><p>The actual two-sibling anchor multiplier. Global bits are shared by the
+two siblings until AFTER averaging; their local bits are independent.</p></div><pre>def posteriorJointAnchors {ιg ι₁ ι₂ : Type*} [Fintype ιg] [Fintype ι₁] [Fintype ι₂]
+    (dg : ιg → Option Bool) (d₁ : ι₁ → Option Bool) (d₂ : ι₂ → Option Bool)
+    (s : ℕ) (z₁ z₂ : ℤ) : ℝ :=
+…</pre></li><li id=L704><b>theorem</b> <code>OAI.TraceReconstruction.posteriorJointAnchors_eq</code> <small>line 704</small></li><li id=L728><b>theorem</b> <code>OAI.TraceReconstruction.posterior_sibling_anchor_energy</code> <small>line 728</small><div class="doc"><p>Quantitative sibling summation now directly bounds genuine posterior
+bits, not an independent-anchor surrogate.</p></div><pre>theorem posterior_sibling_anchor_energy {ιg ι₁ ι₂ : Type*}
+    [Fintype ιg] [Fintype ι₁] [Fintype ι₂]
+    (dg : ιg → Option Bool) (d₁ : ι₁ → Option Bool) (d₂ : ι₂ → Option Bool)
+    (s : ℕ) (A B C D : Finset ℤ) (c₁ c₂ : ℤ) :
+    (∑a∈A, ∑b∈B, ∑_c∈closeLabels C (2^s) a, ∑_d∈closeLabels D (2^s) b,
+      (posteriorJointAnchors dg d₁ d₂ s (a-c₁) (b-c₂))^2) ≤
+    4*((2^s:ℕ):ℝ)^6*binomialBound (∑i,hiddenTrial (dg i))*
+      binomialBound (∑i,hiddenTrial (d₂ i)) := by
+…</pre><p class="refs">Mentions: <a href="Oracles.lean.html#L318">OAI.TraceReconstruction.closeLabels</a>, <a href="LeafOracle.lean.html#L695">OAI.TraceReconstruction.posteriorJointAnchors</a>, <a href="Binomial.lean.html#L356">OAI.TraceReconstruction.binomialBound</a>, <a href="Patterns.lean.html#L294">OAI.TraceReconstruction.hiddenTrial</a></p></li><li id=L755><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.expect_mul_const</code> <small>line 755</small></li><li id=L760><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.expect_const_mul</code> <small>line 760</small></li><li id=L765><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.coordinateProduct_expect_product</code> <small>line 765</small></li><li id=L772><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.expect_prod_split</code> <small>line 772</small></li><li id=L785><b>def</b> <code>OAI.TraceReconstruction.WindowAssignments</code> <small>line 785</small><div class="doc"><p>All local and global orientation collections on the complete index tree,
+including unoccupied vertices and paths which do not fit. The type is fixed
+before any selected monomial or role choices. <code>n</code> is the local trial count,
+<code>g</code> the number of global paired trials, and T the full window counts.</p></div><pre>def WindowAssignments (T n g : ℕ → ℕ) (A : Type) : ℕ → Type
+  | 0 =&gt; PUnit
+  | b+1 =&gt; (Fin (n b) → A) × (Fin (g b) → A) ×
+      (Fin (T b) → WindowAssignments T n g A b)</pre></li><li id=L790><b>instance</b> <code>OAI.TraceReconstruction.windowAssignmentsFintype</code> <small>line 790</small></li><li id=L798><b>def</b> <code>OAI.TraceReconstruction.posteriorArray</code> <small>line 798</small></li><li id=L803><b>def</b> <code>OAI.TraceReconstruction.windowPosteriorLaw</code> <small>line 803</small><div class="doc"><p>Actual independent posterior orientations at exact non-leaf metadata.
+The common global bits in a group are drawn only once.</p></div><pre>def windowPosteriorLaw (T n g : ℕ → ℕ) : (b : ℕ) →
+    WindowAssignments T n g (Option Bool) b → FiniteLaw (WindowAssignments T n g Bool b)
+  | 0, _ =&gt; ⟨fun _ =&gt; 1,fun _ =&gt; by norm_num,by change (∑_ : PUnit,(1:ℝ))=1; simp⟩
+  | b+1, d =&gt; (posteriorArray d.1).prod ((posteriorArray d.2.1).prod
+      (coordinateProduct (fun i =&gt; windowPosteriorLaw T n g b (d.2.2 i))))
+
+/-- Displacements from the jointly generated bit tree. The ancestor global
+map may vary off its plateau. No independent jitter per child is introduced.
+The fixed center includes the deterministic half-trial corrections. -/</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="LeafOracle.lean.html#L798">OAI.TraceReconstruction.posteriorArray</a></p></li><li id=L812><b>def</b> <code>OAI.TraceReconstruction.sourceTreeAnchors</code> <small>line 812</small><div class="doc"><p>Displacements from the jointly generated bit tree. The ancestor global
+map may vary off its plateau. No independent jitter per child is introduced.
+The fixed center includes the deterministic half-trial corrections.</p></div><pre>def sourceTreeAnchors (T n g : ℕ → ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ) :
+    (b : ℕ) → WindowAssignments T n g Bool b → ℤ → List ℕ → ℤ
+  | 0, _, _, _ =&gt; 0
+  | b+1, bits, incoming, [] =&gt; center b - (∑i,(bitIndex (bits.1 i):ℤ))-incoming
+  | b+1, bits, _, h::tail =&gt; if hh : h&lt;T b then
+      sourceTreeAnchors T n g center globalShift b (bits.2.2 ⟨h,hh⟩)
+        (globalShift b bits.2.1 ⟨h,hh⟩) tail else 0</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a></p></li><li id=L821><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeAnchors_root</code> <small>line 821</small></li><li id=L827><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeAnchors_child</code> <small>line 827</small></li><li id=L837><b>theorem</b> <code>OAI.TraceReconstruction.windowLeafSign_prefix</code> <small>line 837</small><div class="doc"><p>Moving the origin of a subtree preserves the literal type recursion.</p></div><pre>theorem windowLeafSign_prefix (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (pre path : List ℕ) (τ : ℝ) (v : WindowLeaf T b) :
+    windowLeafSign T s X b (pre++path) τ v =
+      windowLeafSign T s (fun tail =&gt; X (pre++tail)) b path τ v := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L53">OAI.TraceReconstruction.windowLeafSign</a></p></li><li id=L850><b>def</b> <code>OAI.TraceReconstruction.sourceTreeLeafSign</code> <small>line 850</small><div class="doc"><p>Exact recursive leaf signs for the complete bit tree, with one joint
+parent-global shift supplied to each sibling's local mechanism.</p></div><pre>def sourceTreeLeafSign (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ) :
+    (b : ℕ) → WindowAssignments T n g Bool b → ℤ → ℝ → WindowLeaf T b → ℝ
+  | 0, _, _, τ, _ =&gt; τ
+  | b+1, bits, incoming, τ, v =&gt;
+      sourceTreeLeafSign T n g s center globalShift b (bits.2.2 v.1)
+        (globalShift b bits.2.1 v.1)
+        (motifChildSign s (center b-(∑i,(bitIndex (bits.1 i):ℤ))-incoming) v.1.val τ) v.2</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L36">OAI.TraceReconstruction.motifChildSign</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a></p></li><li id=L859><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeLeafSign_eq</code> <small>line 859</small></li><li id=L888><b>def</b> <code>OAI.TraceReconstruction.occupiedRootWeight</code> <small>line 888</small><div class="doc"><p>The factor at the current vertex of a fixed actual occupied role choice.
+It only uses that vertex's displacement, never any descendant mechanism.</p></div><pre>def occupiedRootWeight (T : ℕ → ℕ) (s : ℕ) :
+    (b : ℕ) → (S : Finset (WindowLeaf T (b+1))) →
+      OccupiedWindowChoice T b S → ℤ → ℝ
+  | 0, S, a, X =&gt; ∏i : Fin S.card,
+      bottomRoleWeight (motifIndicator s (((S.equivFin.symm i).val.1.val:ℤ)-X))
+        ((prouhetSeries s).coeff (((S.equivFin.symm i).val.1.val:ℤ)-X)) (a i)
+  | b+1, S, a, X =&gt; ∏i : Fin (selectedChildren S).card,
+      @internalRoleWeight (occupiedWindowTerm T b
+        (selectedChildLeaves S ((selectedChildren S).equivFin.symm i).val) (a.1 i)).isOdd
+        (Classical.propDecidable _)
+        (motifIndicator s ((((selectedChildren S).equivFin.symm i).val.val:ℤ)-X))
+        ((prouhetSeries s).coeff ((((selectedChildren S).equivFin.symm i).val.val:ℤ)-X)) (a.2 i)</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="Parity.lean.html#L222">OAI.TraceReconstruction.bottomRoleWeight</a>, <a href="Differences.lean.html#L2104">OAI.TraceReconstruction.motifIndicator</a>, <a href="Binomial.lean.html#L498">OAI.TraceReconstruction.prouhetSeries</a>, <a href="LeafOracle.lean.html#L339">OAI.TraceReconstruction.selectedChildren</a>, <a href="Parity.lean.html#L225">OAI.TraceReconstruction.internalRoleWeight</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L342">OAI.TraceReconstruction.selectedChildLeaves</a></p></li><li id=L901><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowWeight_zero</code> <small>line 901</small></li><li id=L905><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowWeight_succ</code> <small>line 905</small></li><li id=L928><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowWeight_prefix</code> <small>line 928</small><div class="doc"><p>Moving a subtree's path origin does not change any of its role factors.</p></div><pre>theorem occupiedWindowWeight_prefix (T : ℕ → ℕ) (s : ℕ) (X : List ℕ → ℤ)
+    (b : ℕ) (pre path : List ℕ) (S : Finset (WindowLeaf T (b+1)))
+    (a : OccupiedWindowChoice T b S) :
+    occupiedWindowWeight T s X b (pre++path) S a =
+      occupiedWindowWeight T s (fun tail =&gt; X (pre++tail)) b path S a := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L517">OAI.TraceReconstruction.occupiedWindowWeight</a></p></li><li id=L942><b>theorem</b> <code>OAI.TraceReconstruction.bottomRoleWeight_abs_le_one</code> <small>line 942</small></li><li id=L947><b>theorem</b> <code>OAI.TraceReconstruction.internalRoleWeight_abs_le_one</code> <small>line 947</small></li><li id=L953><b>theorem</b> <code>OAI.TraceReconstruction.occupiedRootWeight_abs_le_one</code> <small>line 953</small></li><li id=L966><b>theorem</b> <code>OAI.TraceReconstruction.occupiedWindowWeight_abs_le_one</code> <small>line 966</small></li><li id=L979><b>theorem</b> <code>OAI.TraceReconstruction.bottom_singleton_factor</code> <small>line 979</small><div class="doc"><p>A singleton signed role factors off its signed motif with a scalar
+independent of all displacements. Bottom zero-role terms really vanish.</p></div><pre>theorem bottom_singleton_factor {n : ℕ} (a : Fin n → Fin 3) (i : Fin n)
+    (hi : a i=2) (hrest : ∀j,j≠i → a j=0) :
+    ∃c : ℝ, |c|≤1 ∧ ∀χ σ : Fin n → ℝ,
+      (∏j,bottomRoleWeight (χ j) (σ j) (a j)) = c*σ i := by
+…</pre><p class="refs">Mentions: <a href="Parity.lean.html#L222">OAI.TraceReconstruction.bottomRoleWeight</a></p></li><li id=L1005><b>theorem</b> <code>OAI.TraceReconstruction.internal_singleton_factor</code> <small>line 1005</small></li><li id=L1021><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.coordinateProduct_expect_subtype</code> <small>line 1021</small><div class="doc"><p>Unoccupied independent coordinates integrate to one.</p></div><pre>theorem coordinateProduct_expect_subtype {α : Type*} [Fintype α] {n : ℕ}
+    (P : Fin n → FiniteLaw α) (S : Finset (Fin n)) (f : S → α → ℝ) :
+    (coordinateProduct P).expect (fun x =&gt; ∏i : S, f i (x i.val)) =
+      ∏i : S, (P i.val).expect (f i) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="FiniteLaw.lean.html#L498">OAI.TraceReconstruction.FiniteLaw.expect</a></p></li><li id=L1049><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.coordinateProduct_expect_selected</code> <small>line 1049</small></li><li id=L1064><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.expect_prod_selected</code> <small>line 1064</small></li><li id=L1074><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.abs_expect_le_const</code> <small>line 1074</small></li><li id=L1083><b>def</b> <code>OAI.TraceReconstruction.sourceRoleTerm</code> <small>line 1083</small><div class="doc"><p>A fixed real coefficient term evaluated on the actual complete bit tree.
+The selected role choice is fixed independently of these bits.</p></div><pre>def sourceRoleTerm (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (bits : WindowAssignments T n g Bool (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a></p></li><li id=L1090><b>def</b> <code>OAI.TraceReconstruction.sourceRoleAverage</code> <small>line 1090</small></li><li id=L1097><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleTerm_zero</code> <small>line 1097</small></li><li id=L1104><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleTerm_succ</code> <small>line 1104</small></li><li id=L1126><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_zero</code> <small>line 1126</small></li><li id=L1143><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_succ</code> <small>line 1143</small></li><li id=L1166><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_abs_le_one</code> <small>line 1166</small></li><li id=L1176><b>def</b> <code>OAI.TraceReconstruction.posteriorSmoothingCost</code> <small>line 1176</small><div class="doc"><p>The exact signed smoothing cost read off the visible metadata alone.</p></div><pre>def posteriorSmoothingCost {ι : Type*} [Fintype ι] (s : ℕ) (d : ι → Option Bool) : ℝ :=
+…</pre></li><li id=L1182><b>def</b> <code>OAI.TraceReconstruction.MetadataSmoothingCap</code> <small>line 1182</small><div class="doc"><p>A purely numerical typical-metadata condition on every local collection.
+It includes unoccupied vertices and is fixed before a coefficient is chosen.</p></div><pre>def MetadataSmoothingCap (T n g : ℕ → ℕ) (s : ℕ) (η : ℝ) :
+    (b : ℕ) → WindowAssignments T n g (Option Bool) b → Prop
+  | 0, _ =&gt; True
+  | b+1, d =&gt; posteriorSmoothingCost s d.1 ≤ η ∧
+      ∀h, MetadataSmoothingCap T n g s η b (d.2.2 h)</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L1176">OAI.TraceReconstruction.posteriorSmoothingCost</a></p></li><li id=L1188><b>def</b> <code>OAI.TraceReconstruction.occupiedRootHasSingleton</code> <small>line 1188</small></li><li id=L1193><b>theorem</b> <code>OAI.TraceReconstruction.occupiedRoot_singleton_factor</code> <small>line 1193</small></li><li id=L1213><b>theorem</b> <code>OAI.TraceReconstruction.occupiedRoot_singleton_average</code> <small>line 1213</small></li><li id=L1239><b>theorem</b> <code>OAI.TraceReconstruction.abs_prod_le_coordinate</code> <small>line 1239</small></li><li id=L1249><b>theorem</b> <code>OAI.TraceReconstruction.sourceRoleAverage_singleton</code> <small>line 1249</small><div class="doc"><p>Literal singleton cancellation for the complete posterior bit tree.
+No successful-fit event is conditioned on, and the common parent-global
+jitter is retained until after the child factors have averaged.</p></div><pre>theorem sourceRoleAverage_singleton (T n g : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ)
+    (globalShift : (b : ℕ) → (Fin (g b) → Bool) → Fin (T b) → ℤ)
+    (b : ℕ) (d : WindowAssignments T n g (Option Bool) (b+1)) (incoming : ℤ)
+    (S : Finset (WindowLeaf T (b+1))) (a : OccupiedWindowChoice T b S)
+    (η : ℝ) (hcap : MetadataSmoothingCap T n g s η (b+1) d)
+    (hsing : ¬(occupiedWindowTerm T b S a).noSingleton) :
+    |sourceRoleAverage T n g s center globalShift b d incoming S a|≤η := by
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="LeafOracle.lean.html#L467">OAI.TraceReconstruction.OccupiedWindowChoice</a>, <a href="LeafOracle.lean.html#L1182">OAI.TraceReconstruction.MetadataSmoothingCap</a>, <a href="LeafOracle.lean.html#L496">OAI.TraceReconstruction.occupiedWindowTerm</a>, <a href="LeafOracle.lean.html#L1090">OAI.TraceReconstruction.sourceRoleAverage</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

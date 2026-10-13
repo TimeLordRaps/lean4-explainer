@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanBoxMaps.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanBoxMaps.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>CartanBoxMaps.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>CartanBoxMaps.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanBoxMaps.lean#L1">source</a></p><div class="doc"><h3>Propagating root-action bounds through Cartan boxes</h3><p>A Lie map which preserves the letter root spaces has a polynomial bound in
+every maximizing box. The proof propagates the bounds on letters through
+actual bracket words, then through their coordinate basis. This is the
+algebraic step in the box-conjugation estimate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.PolycyclicRecognition.evalBracketWord_exp_smul</code> <small>line 25</small><div class="doc"><p>Independent exponential scaling of letters multiplies a word by the
+exponential of the sum of its letter exponents.</p></div><pre>theorem evalBracketWord_exp_smul (X : I → L) (s : I → ℝ) (r : ℝ) (w : FreeMagma I) :
+    evalBracketWord (fun i =&gt; Real.exp (r * s i) • X i) w =
+      Real.exp (r * bracketWordExponent s w) • evalBracketWord X w := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/BracketWords.lean.html#L26">OAI.PolycyclicRecognition.evalBracketWord</a>, <a href="../Algebra/WordExponents.lean.html#L17">OAI.PolycyclicRecognition.bracketWordExponent</a></p></li><li id=L38><b>theorem</b> <code>OAI.PolycyclicRecognition.norm_basis_linearMap_le</code> <small>line 38</small><div class="doc"><p>A bound on the images of basis vectors bounds the full linear map in
+the coordinate maximum norm.</p></div><pre>theorem norm_basis_linearMap_le {J : Type*} [Fintype J] (b : Basis J ℝ L)
+    (F : L →ₗ[ℝ] L) {K : ℝ}
+    (hF : ∀ j, ‖b.equivFun (F (b j))‖ ≤ K) (v : L) :
+    ‖b.equivFun (F v)‖ ≤ (Fintype.card J : ℝ) * K * ‖b.equivFun v‖ := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.PolycyclicRecognition.image_exponentialCoordinateBox_subset</code> <small>line 57</small><div class="doc"><p>A coordinate bound transfers to the exponential image when the maps
+intertwine the exponential.</p></div><pre>theorem image_exponentialCoordinateBox_subset
+    {G J : Type*} [Fintype J] (b : Basis J ℝ L) (Exp : L → G)
+    (F : L →ₗ[ℝ] L) (f : G → G) (hcomm : ∀ x, f (Exp x) = Exp (F x))
+    {A : ℝ} (hA : 0 ≤ A) (hF : ∀ x, ‖b.equivFun (F x)‖ ≤ A * ‖b.equivFun x‖)
+    (R : ℝ) : f &#x27;&#x27; exponentialCoordinateBox Exp b R ⊆ exponentialCoordinateBox Exp b (A * R) := by
+…</pre><p class="refs">Mentions: <a href="../Analysis/NilpotentBoxes.lean.html#L25">OAI.PolycyclicRecognition.exponentialCoordinateBox</a></p></li><li id=L75><b>def</b> <code>OAI.PolycyclicRecognition.CartanWordModel.wordDegreeBound</code> <small>line 75</small><div class="doc"><p>A fixed degree bound for the finite list of actual words.</p></div><pre>def wordDegreeBound : ℕ := ∑ w : M.wordList, bracketWordLength (w : FreeMagma (Fin M.letterCount))
+…</pre><p class="refs">Mentions: <a href="FiniteLieNorm.lean.html#L57">OAI.PolycyclicRecognition.bracketWordLength</a></p></li><li id=L78><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.word_degrees_le</code> <small>line 78</small></li><li id=L88><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_box_lieMap_bound</code> <small>line 88</small><div class="doc"><p>Root-space preservation and a bound on the unscaled letter images imply
+a uniform polynomial bound on a Lie map in every maximizing scaled box.</p></div><pre>theorem exists_box_lieMap_bound
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ A : ℝ, 0 ≤ A ∧ ∀ {E : Set W}, IsCompact E → E.Nonempty →
+      ∀ β : M.Bases,
+      IsMaximizingColumnBasis (wordListCoordinates M.letter M.wordList b₀)
+        (M.boxCost T hunimod eW E) β.val →
+      ∀ r : ℝ, 0 ≤ r → ∀ (F : cartanRootIdeal H →ₗ⁅ℝ⁆ cartanRootIdeal H)
+        (K : ℝ), 0 ≤ K →
+      (∀ i, (F (M.letter i) : L) ∈ LieAlgebra.rootSpace H (M.weight i)) →
+      (∀ i, ‖(WordBasisSelections.basis M.letter M.wordList β).equivFun
+        (F (M.letter i))‖ ≤ K) →
+      ∀ v, ‖(M.boxBasis T hunimod eW E β r).equivFun (F v)‖ ≤
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li><li id=L159><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_groupBox_automorphism_bound</code> <small>line 159</small><div class="doc"><p>The Lie-map estimate gives a bound on the actual nilpotent group boxes,
+using the already constructed group automorphism.</p></div><pre>theorem exists_groupBox_automorphism_bound
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ A : ℝ, 0 ≤ A ∧ ∀ {E : Set W}, IsCompact E → E.Nonempty →
+      ∀ β : M.Bases,
+      IsMaximizingColumnBasis (wordListCoordinates M.letter M.wordList b₀)
+        (M.boxCost T hunimod eW E) β.val →
+      ∀ r : ℝ, 0 ≤ r → ∀ (F : cartanRootIdeal H ≃ₗ⁅ℝ⁆ cartanRootIdeal H)
+        (K : ℝ), 0 ≤ K →
+      (∀ i, (F (M.letter i) : L) ∈ LieAlgebra.rootSpace H (M.weight i)) →
+      (∀ i, ‖(WordBasisSelections.basis M.letter M.wordList β).equivFun
+        (F (M.letter i))‖ ≤ K) →
+      ∀ R : ℝ,
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

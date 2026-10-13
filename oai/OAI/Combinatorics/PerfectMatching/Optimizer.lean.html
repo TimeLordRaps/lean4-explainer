@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/PerfectMatching/Optimizer.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/PerfectMatching/Optimizer.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">PerfectMatching</a> / <span>Optimizer.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">PerfectMatching</a>/<span>Optimizer.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/PerfectMatching/Optimizer.lean#L1">source</a></p><div class="doc"><p>Support and first-order identities for entropy-maximizing matching laws.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.MatchingEntropy.entropy_mix_ge</code> <small>line 19</small><div class="doc"><p>Concavity of actual finite-law Shannon entropy.</p></div><pre>theorem entropy_mix_ge {ι : Type*} [Fintype ι] {p q : ι → ℝ}
+    (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i)
+    {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
+    (1-t) * entropy p + t * entropy q ≤
+      entropy (fun i =&gt; (1-t)*p i + t*q i) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a></p></li><li id=L34><b>theorem</b> <code>OAI.MatchingEntropy.entropy_mix_zero_bonus</code> <small>line 34</small><div class="doc"><p>A zero probability gains a strict logarithmic bonus under mixing.
+This is the boundary argument needed to obtain a positive entropy optimizer
+on the entire face, not an assumed regularity of H.</p></div><pre>theorem entropy_mix_zero_bonus {ι : Type*} [Fintype ι] {p q : ι → ℝ}
+    (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i) {j : ι} (hj : p j = 0)
+    {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
+    (1-t) * entropy p + t * entropy q + q j * Real.negMulLog t ≤
+      entropy (fun i =&gt; (1-t)*p i + t*q i) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a></p></li><li id=L57><b>theorem</b> <code>OAI.MatchingEntropy.entropy_maximizer_support</code> <small>line 57</small><div class="doc"><p>Every entropy maximizer on a convex feasible set has maximal support.</p></div><pre>theorem entropy_maximizer_support {ι : Type*} [Fintype ι] {p q : ι → ℝ}
+    (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i)
+    (hmax : ∀ t ∈ Set.Icc (0 : ℝ) 1,
+      entropy (fun i =&gt; (1-t)*p i+t*q i) ≤ entropy p) {j : ι} (hjq : 0 &lt; q j) :
+    0 &lt; p j := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a></p></li><li id=L81><b>theorem</b> <code>OAI.MatchingEntropy.matching_optimizer_support</code> <small>line 81</small><div class="doc"><p>The preceding support conclusion for the concrete matching-law optimizer.</p></div><pre>theorem matching_optimizer_support (G : LooplessGraph V E) {y : E → ℝ}
+    {p q : G.Matching → ℝ} (hp : p ∈ G.feasibleLaws y)
+    (hq : q ∈ G.feasibleLaws y) (hopt : entropy p = maxMatchingEntropy G y)
+    {M : G.Matching} (hM : 0 &lt; q M) : 0 &lt; p M := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a>, <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L54">OAI.MatchingEntropy.maxMatchingEntropy</a></p></li><li id=L101><b>theorem</b> <code>OAI.MatchingEntropy.negMulLog_tangent</code> <small>line 101</small><div class="doc"><p>Supporting-line inequality for -x log x, with no positivity assumption
+on the comparison probability x.</p></div><pre>theorem negMulLog_tangent {x y : ℝ} (hx : 0 ≤ x) (hy : 0 &lt; y) :
+    Real.negMulLog x ≤ -x * Real.log y + y-x := by
+…</pre></li><li id=L116><b>theorem</b> <code>OAI.MatchingEntropy.entropy_le_crossEntropy</code> <small>line 116</small><div class="doc"><p>Gibbs' inequality on a finite set, with the exact support condition
+needed on boundary faces.</p></div><pre>theorem entropy_le_crossEntropy {ι : Type*} [Fintype ι] {p q : ι → ℝ}
+    (hp : p ∈ probabilitySimplex ι) (hq : q ∈ probabilitySimplex ι)
+    (hsupp : ∀ i, p i = 0 → q i = 0) :
+    entropy q ≤ -∑ i, q i * Real.log (p i) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L12">OAI.MatchingEntropy.probabilitySimplex</a>, <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a></p></li><li id=L132><b>theorem</b> <code>OAI.MatchingEntropy.entropy_line_hasDerivAt</code> <small>line 132</small><div class="doc"><p>Derivative of entropy along a line supported on the positive probabilities.</p></div><pre>theorem entropy_line_hasDerivAt {ι : Type*} [Fintype ι] (p v : ι → ℝ)
+    (hsupp : ∀ i, p i = 0 → v i = 0) :
+    HasDerivAt (fun t : ℝ =&gt; entropy (fun i =&gt; p i+t*v i))
+      (-∑ i, v i * Real.log (p i) - ∑ i, v i) 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a></p></li><li id=L156><b>theorem</b> <code>OAI.MatchingEntropy.matching_optimizer_log_annihilates</code> <small>line 156</small><div class="doc"><p>The log probabilities of the actual optimizer annihilate every feasible
+mass/mean-preserving linear variation. No exponential representation assumed.</p></div><pre>theorem matching_optimizer_log_annihilates (G : LooplessGraph V E) {y : E → ℝ}
+    {p : G.Matching → ℝ} (hp : p ∈ G.feasibleLaws y)
+    (hopt : entropy p = maxMatchingEntropy G y) (v : G.Matching → ℝ)
+    (hvsum : ∑ M, v M = 0) (hvmean : G.mean v = 0)
+    (hsupp : ∀ M, p M = 0 → v M = 0) :
+    ∑ M, v M * Real.log (p M) = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a>, <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L54">OAI.MatchingEntropy.maxMatchingEntropy</a></p></li><li id=L190><b>theorem</b> <code>OAI.MatchingEntropy.exists_pos_nonneg_perturb</code> <small>line 190</small><div class="doc"><p>A finite nonnegative vector permits small positive motion in any direction
+which does not point outwards at its zero coordinates.</p></div><pre>theorem exists_pos_nonneg_perturb {ι : Type*} [Fintype ι] (p v : ι → ℝ)
+    (hp : ∀ i, 0 ≤ p i) (hz : ∀ i, p i = 0 → 0 ≤ v i) :
+    ∃ t : ℝ, 0 &lt; t ∧ ∀ i, 0 ≤ p i+t*v i := by
+…</pre></li><li id=L216><b>theorem</b> <code>OAI.MatchingEntropy.matching_optimizer_face_support</code> <small>line 216</small><div class="doc"><p>The support of an optimizing law is a face: every law at a mean generated
+by that support is itself supported there. This avoids assuming a face
+representation of the marginal polytope in the entropy-optimization step.</p></div><pre>theorem matching_optimizer_face_support (G : LooplessGraph V E) {y : E → ℝ}
+    {p : G.Matching → ℝ} (hp : p ∈ G.feasibleLaws y)
+    (hopt : entropy p = maxMatchingEntropy G y)
+    {q r : G.Matching → ℝ} (hq : q ∈ probabilitySimplex G.Matching)
+    (hr : r ∈ probabilitySimplex G.Matching) (hmean : G.mean q = G.mean r)
+    (hrsupport : ∀ M, p M = 0 → r M = 0) :
+    ∀ M, p M = 0 → q M = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L49">OAI.MatchingEntropy.entropy</a>, <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L54">OAI.MatchingEntropy.maxMatchingEntropy</a>, <a href="../../../ComparatorChallenges/MatchingEntropy.lean.html#L12">OAI.MatchingEntropy.probabilitySimplex</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

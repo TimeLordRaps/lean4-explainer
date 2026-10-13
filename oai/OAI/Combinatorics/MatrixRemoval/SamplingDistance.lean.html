@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/SamplingDistance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/SamplingDistance.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>SamplingDistance.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>SamplingDistance.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/SamplingDistance.lean#L1">source</a></p><div class="doc"><h3>From sampled protected cells to arbitrary-repair distance</h3><p>The guard sets comprise only cells that the path proof requires to stay
+unchanged. The hypotheses do not require preservation of every
+variable-variable entry or of an original copy of the pattern.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.Problem348.Sampling.hammingDistance_ge_of_guard_sampling</code> <small>line 22</small><div class="doc"><p>A sparse family of guards with a deterministic obstruction forces a lower
+bound on every repair to an <code>H</code>-free matrix.  The pattern may be arbitrary.</p></div><pre>theorem hammingDistance_ge_of_guard_sampling
+    {k n : ℕ} {Ω : Type uOmega} [Fintype Ω]
+    (H : BinaryMatrix k) (A B : BinaryMatrix n)
+    (guard : Ω → Finset (Fin n × Fin n)) (m : ℕ)
+    (hΩ : 0 &lt; Fintype.card Ω)
+    (hbound : ∀ e,
+      (Finset.univ.filter (fun ω =&gt; e ∈ guard ω)).card * m ^ 2 ≤ Fintype.card Ω)
+    (hforce : ∀ ω,
+      (∀ e ∈ guard ω, A e.1 e.2 = B e.1 e.2) → ¬ HFree H B)
+    (hfree : HFree H B) : m ^ 2 ≤ hammingDistance A B := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L9">OAI.Problem348.BinaryMatrix</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L22">OAI.Problem348.HFree</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L25">OAI.Problem348.hammingDistance</a></p></li><li id=L48><b>theorem</b> <code>OAI.Problem348.Sampling.hammingDistance_ge_of_three_seed_guards</code> <small>line 48</small><div class="doc"><p>The three-seed specialization: a guard uses each cell in at most <code>m</code>
+of the <code>m³</code> samples.  Therefore no <code>H</code>-free repair changes fewer than <code>m²</code>
+entries.</p></div><pre>theorem hammingDistance_ge_of_three_seed_guards
+    {k n : ℕ} (m : ℕ) (hm : 0 &lt; m)
+    (H : BinaryMatrix k) (A B : BinaryMatrix n)
+    (guard : (Fin m × Fin m × Fin m) → Finset (Fin n × Fin n))
+    (hbound : ∀ e, (Finset.univ.filter (fun ω =&gt; e ∈ guard ω)).card ≤ m)
+    (hforce : ∀ ω,
+      (∀ e ∈ guard ω, A e.1 e.2 = B e.1 e.2) → ¬ HFree H B)
+    (hfree : HFree H B) : m ^ 2 ≤ hammingDistance A B := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L9">OAI.Problem348.BinaryMatrix</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L22">OAI.Problem348.HFree</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L25">OAI.Problem348.hammingDistance</a></p></li><li id=L69><b>theorem</b> <code>OAI.Problem348.Sampling.guard_frequency_le</code> <small>line 69</small><div class="doc"><p>A guard-frequency estimate can be obtained from a larger set of protected
+selected cells.  This is useful when the deterministic path proof uses just a
+subset of all selected anchor, dummy, and root incidences.</p></div><pre>theorem guard_frequency_le {Ω : Type uOmega} {Cell : Type uCell} [Fintype Ω] [DecidableEq Cell]
+    (guard : Ω → Finset Cell) (selected : Ω → Cell → Prop)
+    [DecidableRel selected]
+    (hsub : ∀ ω e, e ∈ guard ω → selected ω e) (e : Cell) :
+    (Finset.univ.filter (fun ω =&gt; e ∈ guard ω)).card ≤
+      (Finset.univ.filter (fun ω =&gt; selected ω e)).card := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

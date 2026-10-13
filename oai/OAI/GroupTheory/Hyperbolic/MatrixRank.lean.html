@@ -1,0 +1,128 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/Hyperbolic/MatrixRank.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/Hyperbolic/MatrixRank.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">GroupTheory</a> / <a href="index.html">Hyperbolic</a> / <span>MatrixRank.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">GroupTheory</a>/<a href="index.html">Hyperbolic</a>/<span>MatrixRank.lean</span></code></h1><p class="muted">67 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/Hyperbolic/MatrixRank.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Release075.det_abs_le_prod_row_norm</code> <small>line 11</small></li><li id=L24><b>theorem</b> <code>OAI.Release075.exists_row_basis</code> <small>line 24</small><div class="doc"><p>A matrix has a spanning independent subset of its rows, with the expected size.</p></div><pre>theorem exists_row_basis {ι κ K : Type*} [Fintype ι] [Fintype κ] [Field K]
+    (M : Matrix ι κ K) :
+    ∃ S : Finset ι, S.card = M.rank ∧
+      LinearIndependent K (fun i : S =&gt; M i.val) ∧
+      ∀ i, ∃ c : S → K, M i = ∑ j : S, c j • M j.val := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.Release075.pow_sub_card_dvd_det</code> <small>line 57</small><div class="doc"><p>Factoring a common divisor from all rows outside a specified set.</p></div><pre>theorem pow_sub_card_dvd_det {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℤ) (S : Finset ι) (q : ℤ)
+    (h : ∀ i, i ∉ S → ∀ j, q ∣ A i j) :
+    q ^ (Fintype.card ι - S.card) ∣ A.det := by
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.Release075.pow_card_sub_rank_dvd_det</code> <small>line 84</small><div class="doc"><p>The integral determinant detects the rank lost in reduction modulo a prime.</p></div><pre>theorem pow_card_sub_rank_dvd_det {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℤ) (q : ℕ) [Fact q.Prime] :
+    (q : ℤ) ^ (Fintype.card ι - (A.map (Int.cast : ℤ → ZMod q)).rank) ∣ A.det := by
+…</pre></li><li id=L129><b>theorem</b> <code>OAI.Release075.exists_full_rank_minor</code> <small>line 129</small><div class="doc"><p>A full-rank minor exists over a field; both index maps are injective.</p></div><pre>theorem exists_full_rank_minor {ι κ K : Type*} [Fintype ι] [Fintype κ] [Field K]
+    (M : Matrix ι κ K) :
+    ∃ (f : Fin M.rank → ι) (g : Fin M.rank → κ),
+      Function.Injective f ∧ Function.Injective g ∧ (M.submatrix f g).det ≠ 0 := by
+…</pre></li><li id=L153><b>theorem</b> <code>OAI.Release075.det_sq_le_pow_of_row_sq_le</code> <small>line 153</small><div class="doc"><p>The squared form of Hadamard's inequality avoids fractional exponents.</p></div><pre>theorem det_sq_le_pow_of_row_sq_le {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    (r : ℝ) (hrow : ∀ i, ∑ j, A i j ^ 2 ≤ r) : A.det ^ 2 ≤ r ^ n := by
+…</pre></li><li id=L172><b>theorem</b> <code>OAI.Release075.nonsingular_rank_reduction_half</code> <small>line 172</small><div class="doc"><p>A nonsingular integer matrix loses less than half its rank modulo a prime
+larger than the common squared row-norm bound.</p></div><pre>theorem nonsingular_rank_reduction_half {n : ℕ} (A : Matrix (Fin n) (Fin n) ℤ)
+    (hdet : A.det ≠ 0) (r : ℝ) (hr : 1 ≤ r)
+    (hrow : ∀ i, ∑ j, (A i j : ℝ) ^ 2 ≤ r)
+    (q : ℕ) [Fact q.Prime] (hqr : r &lt; q) :
+    n ≤ 2 * (A.map (Int.cast : ℤ → ZMod q)).rank := by
+…</pre></li><li id=L201><b>theorem</b> <code>OAI.Release075.rank_reduction_half</code> <small>line 201</small></li><li id=L236><b>theorem</b> <code>OAI.Release075.trace_sq_le_rank_mul_trace_sq</code> <small>line 236</small><div class="doc"><p>The trace-rank inequality used on a Gram matrix in the finite quotient.</p></div><pre>theorem trace_sq_le_rank_mul_trace_sq {ι : Type*} [Fintype ι]
+    (A : Matrix ι ι ℝ) (hA : A.IsHermitian) :
+    A.trace ^ 2 ≤ (A.rank : ℝ) * (A * A).trace := by
+…</pre></li><li id=L260><b>theorem</b> <code>OAI.Release075.rank_add_le</code> <small>line 260</small><div class="doc"><p>Subadditivity of matrix rank over a field.</p></div><pre>theorem rank_add_le {ι κ K : Type*} [Fintype ι] [Fintype κ] [Field K]
+    (A B : Matrix ι κ K) : (A + B).rank ≤ A.rank + B.rank := by
+…</pre></li><li id=L266><b>theorem</b> <code>OAI.Release075.rank_sum_le</code> <small>line 266</small></li><li id=L276><b>def</b> <code>OAI.Release075.regularMatrix</code> <small>line 276</small><div class="doc"><p>The left regular permutation representation over any coefficient semiring.</p></div><pre>def regularMatrix {F R : Type*} [Group F] [Fintype F] [DecidableEq F] [Semiring R] :
+    F →* Matrix F F R := Matrix.permMatrixHom.comp (MulAction.toPermHom F F)</pre></li><li id=L279><b>theorem</b> <code>OAI.Release075.regularMatrix_apply</code> <small>line 279</small></li><li id=L285><b>theorem</b> <code>OAI.Release075.regularMatrix_transpose</code> <small>line 285</small></li><li id=L291><b>theorem</b> <code>OAI.Release075.regularMatrix_trace</code> <small>line 291</small></li><li id=L302><b>def</b> <code>OAI.Release075.flattenMatrix</code> <small>line 302</small><div class="doc"><p>Flatten a rectangular matrix of blocks, with the block index first.</p></div><pre>def flattenMatrix {ι κ α β R : Type*} (A : Matrix ι κ (Matrix α β R)) :
+    Matrix (ι × α) (κ × β) R := fun i j =&gt; A i.1 j.1 i.2 j.2</pre></li><li id=L305><b>theorem</b> <code>OAI.Release075.flattenMatrix_apply</code> <small>line 305</small></li><li id=L309><b>theorem</b> <code>OAI.Release075.flattenMatrix_mul</code> <small>line 309</small></li><li id=L316><b>theorem</b> <code>OAI.Release075.flattenMatrix_transpose</code> <small>line 316</small></li><li id=L320><b>theorem</b> <code>OAI.Release075.flattenMatrix_trace</code> <small>line 320</small></li><li id=L326><b>def</b> <code>OAI.Release075.quotientMatrix</code> <small>line 326</small><div class="doc"><p>The block regular-representation matrix attached to one line label.</p></div><pre>def quotientMatrix {ι F R : Type*} [Group F] [Fintype F] [DecidableEq F]
+    [Semiring R] (g : ι → ι → F) : Matrix (ι × F) (ι × F) R :=
+…</pre></li><li id=L330><b>theorem</b> <code>OAI.Release075.quotientMatrix_gram</code> <small>line 330</small></li><li id=L339><b>theorem</b> <code>OAI.Release075.quotientMatrix_gram_trace</code> <small>line 339</small></li><li id=L348><b>theorem</b> <code>OAI.Release075.quotientMatrix_gram_sq_trace</code> <small>line 348</small><div class="doc"><p>The second trace expansion, before counting degenerate rectangles.</p></div><pre>theorem quotientMatrix_gram_sq_trace {ι F R : Type*} [Fintype ι] [Group F]
+    [Fintype F] [DecidableEq F] [Semiring R] (g : ι → ι → F) :
+    ((quotientMatrix (R := R) g * (quotientMatrix g).transpose) *
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L364><b>def</b> <code>OAI.Release075.RectanglesSurvive</code> <small>line 364</small><div class="doc"><p>Nondegenerate rectangular words survive in the finite group.</p></div><pre>def RectanglesSurvive {ι F : Type*} [Group F] (g : ι → ι → F) : Prop :=
+…</pre></li><li id=L369><b>theorem</b> <code>OAI.Release075.quotientMatrix_gram_sq_trace_of_rectangles</code> <small>line 369</small><div class="doc"><p>The exact count <code>2r^3-r^2</code> of degenerate index choices.</p></div><pre>theorem quotientMatrix_gram_sq_trace_of_rectangles {ι F R : Type*} [Fintype ι]
+    [Group F] [Fintype F] [DecidableEq F] [CommRing R]
+    (g : ι → ι → F) (hg : RectanglesSurvive g) :
+    ((quotientMatrix (R := R) g * (quotientMatrix g).transpose) *
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L364">OAI.Release075.RectanglesSurvive</a>, <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L396><b>theorem</b> <code>OAI.Release075.quotientMatrix_row_sq</code> <small>line 396</small><div class="doc"><p>Each integral row has exactly one unit entry per block column.</p></div><pre>theorem quotientMatrix_row_sq {ι F : Type*} [Fintype ι] [Group F]
+    [Fintype F] [DecidableEq F] (g : ι → ι → F) (i : ι × F) :
+    ∑ j, ((quotientMatrix (R := ℤ) g i j : ℤ) : ℝ) ^ 2 = Fintype.card ι := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L403><b>theorem</b> <code>OAI.Release075.quotientMatrix_map</code> <small>line 403</small><div class="doc"><p>Casting the integral matrix gives the corresponding coefficient representation.</p></div><pre>theorem quotientMatrix_map {ι F R : Type*} [Group F] [Fintype F]
+    [DecidableEq F] [Ring R] (g : ι → ι → F) :
+    (quotientMatrix (R := ℤ) g).map (Int.cast : ℤ → R) = quotientMatrix (R := R) g := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L409><b>theorem</b> <code>OAI.Release075.quotientMatrix_rank_real_lower</code> <small>line 409</small></li><li id=L444><b>theorem</b> <code>OAI.Release075.quotientMatrix_rank_mod_lower</code> <small>line 444</small></li><li id=L459><b>def</b> <code>OAI.Release075.diagonalBlocks</code> <small>line 459</small><div class="doc"><p>Block direct sum with the line-label index first.</p></div><pre>def diagonalBlocks {I ι κ K : Type*} [DecidableEq I] [Zero K]
+    (Y : I → Matrix ι κ K) : Matrix (I × ι) (I × κ) K :=
+…</pre></li><li id=L464><b>theorem</b> <code>OAI.Release075.sum_rank_le_rank_diagonalBlocks</code> <small>line 464</small><div class="doc"><p>The lower rank bound for a direct sum, proved by its full-rank block minors.</p></div><pre>theorem sum_rank_le_rank_diagonalBlocks {I ι κ K : Type*} [Fintype I]
+    [Fintype ι] [Fintype κ] [DecidableEq I] [Field K]
+    (Y : I → Matrix ι κ K) : (∑ i, (Y i).rank) ≤ (diagonalBlocks Y).rank := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L459">OAI.Release075.diagonalBlocks</a></p></li><li id=L491><b>theorem</b> <code>OAI.Release075.rank_neg</code> <small>line 491</small></li><li id=L497><b>def</b> <code>OAI.Release075.weightedMatrix</code> <small>line 497</small><div class="doc"><p>The rank-one scalar matrix <code>f fᵀ</code> tensored with a matrix.</p></div><pre>def weightedMatrix {I ι κ K : Type*} [Mul K] (f : I → K) (Z : Matrix ι κ K) :
+    Matrix (I × ι) (I × κ) K := Matrix.of fun x y =&gt; f x.1 * f y.1 * Z x.2 y.2</pre></li><li id=L501><b>theorem</b> <code>OAI.Release075.weightedMatrix_rank_le</code> <small>line 501</small><div class="doc"><p>A rank-one tensor weight never increases rank.</p></div><pre>theorem weightedMatrix_rank_le {I ι κ K : Type*} [Fintype I] [Fintype ι]
+    [Fintype κ] [Field K] (f : I → K) (Z : Matrix ι κ K) :
+    (weightedMatrix f Z).rank ≤ Z.rank := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L497">OAI.Release075.weightedMatrix</a></p></li><li id=L516><b>theorem</b> <code>OAI.Release075.tensor_certificate</code> <small>line 516</small><div class="doc"><p>Exchanging the incidence sums turns the punctured-line certificate into a
+block-diagonal matrix identity. The coefficient order in each matrix is unchanged.</p></div><pre>theorem tensor_certificate {P I ι κ K : Type*} [Fintype P] [Fintype I]
+    [DecidableEq I] [Field K] (inc : P → Finset I) (f : P → I → K)
+    (Y : I → Matrix ι κ K)
+    (hline : ∀ i j k, (∑ z, if i ∈ inc z then f z j * f z k else 0) =
+      -(if j = i ∧ k = i then 1 else 0)) :
+    (∑ z, weightedMatrix (f z) (∑ i ∈ inc z, Y i)) = -diagonalBlocks Y := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L497">OAI.Release075.weightedMatrix</a>, <a href="MatrixRank.lean.html#L459">OAI.Release075.diagonalBlocks</a></p></li><li id=L538><b>theorem</b> <code>OAI.Release075.rank_budget_of_line_certificate</code> <small>line 538</small></li><li id=L553><b>theorem</b> <code>OAI.Release075.quotientMatrix_sum_rank_le</code> <small>line 553</small><div class="doc"><p>A local Cartesian block factors through one copy of the finite regular module.</p></div><pre>theorem quotientMatrix_sum_rank_le {ι s t F K : Type*} [Fintype ι]
+    [Fintype s] [Fintype t] [Group F] [Fintype F] [DecidableEq F] [Field K]
+    (L : ι → s → F) (R : ι → t → F) :
+    (∑ j : s, ∑ k : t, quotientMatrix (R := K) (fun u v =&gt; (L u j)⁻¹ * R v k)).rank ≤
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L581><b>theorem</b> <code>OAI.Release075.quotientMatrix_sum_reindex</code> <small>line 581</small><div class="doc"><p>An arbitrary relabeling of a Cartesian block does not affect its summed
+regular-representation matrix. Opposite-index shifts are permitted independently.</p></div><pre>theorem quotientMatrix_sum_reindex {ι B s t F K : Type*} [Fintype B]
+    [Fintype s] [Fintype t] [Group F] [Fintype F] [DecidableEq F] [Semiring K]
+    (g : B → ι → ι → F) (L : ι → s → F) (R : ι → t → F)
+    (e : ι → ι → B ≃ s × t)
+    (h : ∀ i u v, g i u v = (L u (e u v i).1)⁻¹ * R v (e u v i).2) :
+    (∑ i, quotientMatrix (R := K) (g i)) =
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L595><b>theorem</b> <code>OAI.Release075.polynomial_sum_eq_zero</code> <small>line 595</small><div class="doc"><p>A polynomial below the finite-field power-sum threshold has zero total sum.</p></div><pre>theorem polynomial_sum_eq_zero {K : Type*} [Field K] [Fintype K]
+    (p : Polynomial K) (hdeg : p.natDegree &lt; Fintype.card K - 1) :
+    ∑ x, p.eval x = 0 := by
+…</pre></li><li id=L605><b>def</b> <code>OAI.Release075.gridLagrange</code> <small>line 605</small></li><li id=L609><b>theorem</b> <code>OAI.Release075.gridLagrange_self</code> <small>line 609</small></li><li id=L617><b>theorem</b> <code>OAI.Release075.gridLagrange_other</code> <small>line 617</small></li><li id=L627><b>def</b> <code>OAI.Release075.gridLagrangeLine</code> <small>line 627</small><div class="doc"><p>Restriction of the grid Lagrange basis along the parametrized affine line.</p></div><pre>noncomputable def gridLagrangeLine {T K : Type*} [Fintype T] [Field K] [DecidableEq K]
+    (S : Finset K) (a b v : T → K) : Polynomial K :=
+…</pre></li><li id=L633><b>theorem</b> <code>OAI.Release075.gridLagrangeLine_eval</code> <small>line 633</small></li><li id=L645><b>theorem</b> <code>OAI.Release075.gridLagrangeLine_natDegree_le</code> <small>line 645</small></li><li id=L668><b>theorem</b> <code>OAI.Release075.polygon_weight_line_sum</code> <small>line 668</small><div class="doc"><p>Every entry of the rank-one weight matrix has zero sum over a full line.</p></div><pre>theorem polygon_weight_line_sum {T K : Type*} [Fintype T] [Field K] [Fintype K]
+    [DecidableEq K] (S : Finset K) (a a&#x27; b v : T → K)
+    (ha : ∀ t, a t ∈ S) (ha&#x27; : ∀ t, a&#x27; t ∈ S)
+    (hdeg : 2 * (Fintype.card T * (S.card - 1)) &lt; Fintype.card K - 1) :
+    (∑ x : K, gridLagrange S a (fun t =&gt; b t + x * v t) *
+      gridLagrange S a&#x27; (fun t =&gt; b t + x * v t)) = 0 := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L605">OAI.Release075.gridLagrange</a></p></li><li id=L681><b>theorem</b> <code>OAI.Release075.exists_finite_separating_family</code> <small>line 681</small><div class="doc"><p>Finite separating families can be combined into one finite target.</p></div><pre>theorem exists_finite_separating_family {G : Type u} {ι : Type v} [Group G] [Fintype ι]
+    [Group.ResiduallyFinite G] (w : ι → G) (hw : ∀ i, w i ≠ 1) :
+    ∃ (Q : Type (max u v)) (_ : Group Q) (_ : Fintype Q) (φ : G →* Q), ∀ i, φ (w i) ≠ 1 := by
+…</pre></li><li id=L695><b>def</b> <code>OAI.Release075.affineLineMap</code> <small>line 695</small><div class="doc"><p>Standard affine parametrization, with the marked point at parameter zero.</p></div><pre>def affineLineMap {T K : Type*} [Field K] (a v : T → K) (x : K) : T → K :=
+…</pre></li><li id=L698><b>theorem</b> <code>OAI.Release075.affineLineMap_injective</code> <small>line 698</small></li><li id=L707><b>def</b> <code>OAI.Release075.puncturedLine</code> <small>line 707</small><div class="doc"><p>The geometric affine line punctured only at its own marked point.</p></div><pre>noncomputable def puncturedLine {T K : Type*} [Fintype T] [Field K] [Fintype K]
+    (a v : T → K) : Finset (T → K) := by
+…</pre></li><li id=L713><b>theorem</b> <code>OAI.Release075.puncturedLine_sum</code> <small>line 713</small><div class="doc"><p>Summation on a punctured line subtracts exactly the value at its own mark.</p></div><pre>theorem puncturedLine_sum {T K R : Type*} [Fintype T] [Field K] [Fintype K]
+    [AddCommGroup R] (a v : T → K) (hv : v ≠ 0) (w : (T → K) → R) :
+    (∑ z ∈ puncturedLine a v, w z) = (∑ x, w (affineLineMap a v x)) - w a := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L707">OAI.Release075.puncturedLine</a>, <a href="MatrixRank.lean.html#L695">OAI.Release075.affineLineMap</a></p></li><li id=L721><b>def</b> <code>OAI.Release075.lineIncidence</code> <small>line 721</small></li><li id=L728><b>theorem</b> <code>OAI.Release075.grid_line_certificate</code> <small>line 728</small><div class="doc"><p>The exact finite-field punctured-line matrix certificate, with no asymptotic
+or characteristic assumption beyond its explicit degree threshold.</p></div><pre>theorem grid_line_certificate {T I K : Type*} [Fintype T] [Fintype I]
+    [DecidableEq T] [DecidableEq I] [Field K] [Fintype K] [DecidableEq K]
+    (S : Finset K) (a v : I → T → K) (ha : ∀ i t, a i t ∈ S)
+    (hinj : Function.Injective a) (hv : ∀ i, v i ≠ 0)
+    (hdeg : 2 * (Fintype.card T * (S.card - 1)) &lt; Fintype.card K - 1) :
+    ∀ i j k, (∑ z, if i ∈ lineIncidence a v z then
+      gridLagrange S (a j) z * gridLagrange S (a k) z else 0) =
+      -(if j = i ∧ k = i then 1 else 0) := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L721">OAI.Release075.lineIncidence</a>, <a href="MatrixRank.lean.html#L605">OAI.Release075.gridLagrange</a></p></li><li id=L753><b>theorem</b> <code>OAI.Release075.two_block_sizes</code> <small>line 753</small></li><li id=L764><b>structure</b> <code>OAI.Release075.CartesianBlock</code> <small>line 764</small></li><li id=L774><b>instance</b> <code>OAI.Release075.(instance at line 774)</code> <small>line 774</small></li><li id=L775><b>instance</b> <code>OAI.Release075.(instance at line 775)</code> <small>line 775</small></li><li id=L778><b>def</b> <code>OAI.Release075.CartesianBlock.shifted</code> <small>line 778</small><div class="doc"><p>Opposite-index shifts are bijections of the block coordinates.</p></div><pre>def CartesianBlock.shifted {I : Type*} {r : ℕ} (b : CartesianBlock I r)
+    (u v : Fin r) : b.labels ≃ ZMod b.s × ZMod b.t :=
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L764">OAI.Release075.CartesianBlock</a></p></li><li id=L783><b>theorem</b> <code>OAI.Release075.CartesianBlock.quotient_rank_le</code> <small>line 783</small></li><li id=L798><b>theorem</b> <code>OAI.Release075.exists_two_cartesian_blocks</code> <small>line 798</small><div class="doc"><p>Every sufficiently large finite set has the two Cartesian blocks required by
+the construction; the coordinate bijections are chosen without deleting labels.</p></div><pre>theorem exists_two_cartesian_blocks {I : Type*} [DecidableEq I] (r : ℕ) (hr : 0 &lt; r)
+    (A : Finset I) (hA : 4 * r ^ 2 ≤ A.card) :
+    ∃ b₀ b₁ : CartesianBlock I r,
+      Disjoint b₀.labels b₁.labels ∧ b₀.labels ∪ b₁.labels = A := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L764">OAI.Release075.CartesianBlock</a></p></li><li id=L823><b>theorem</b> <code>OAI.Release075.finite_quotient_rank_obstruction</code> <small>line 823</small><div class="doc"><p>The numerical rank contradiction. The exceptional incidences are retained;
+the ambient dimension, not a deletion, bounds their matrices.</p></div><pre>theorem finite_quotient_rank_obstruction {P I F : Type*} [Fintype P] [Fintype I]
+    [DecidableEq I] [Group F] [Fintype F] [DecidableEq F]
+    (r q : ℕ) [Fact q.Prime] (hq : r &lt; q)
+    (inc : P → Finset I) (f : P → I → ZMod q) (E : Finset P)
+    (g : I → Fin r → Fin r → F) (hg : ∀ i, RectanglesSurvive (g i))
+    (hline : ∀ i j k, (∑ z, if i ∈ inc z then f z j * f z k else 0) =
+      -(if j = i ∧ k = i then 1 else 0))
+    (hlocal : ∀ z, z ∉ E → (∑ i ∈ inc z, quotientMatrix (R := ZMod q) (g i)).rank ≤
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L364">OAI.Release075.RectanglesSurvive</a>, <a href="MatrixRank.lean.html#L326">OAI.Release075.quotientMatrix</a></p></li><li id=L865><b>def</b> <code>OAI.Release075.CartesianBlock.Relations</code> <small>line 865</small><div class="doc"><p>The exact defining relation of a single block, retaining the order <code>L⁻¹R</code>.</p></div><pre>def CartesianBlock.Relations {I G : Type*} [Group G] {r : ℕ}
+    (b : CartesianBlock I r) (g : I → Fin r → Fin r → G) : Prop :=
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L764">OAI.Release075.CartesianBlock</a></p></li><li id=L872><b>theorem</b> <code>OAI.Release075.CartesianBlock.Relations.map</code> <small>line 872</small></li><li id=L880><b>theorem</b> <code>OAI.Release075.two_block_quotient_rank_le</code> <small>line 880</small></li><li id=L897><b>theorem</b> <code>OAI.Release075.exists_finite_preserving_rectangles</code> <small>line 897</small><div class="doc"><p>All specified nontrivial rectangular words can be preserved in one finite
+image if the group is residually finite.</p></div><pre>theorem exists_finite_preserving_rectangles {I : Type u} {G : Type v} [Fintype I] [Group G]
+    [Group.ResiduallyFinite G] {r : ℕ} (g : I → Fin r → Fin r → G)
+    (hg : ∀ i, RectanglesSurvive (g i)) :
+    ∃ (Q : Type (max u v)) (_ : Group Q) (_ : Fintype Q) (φ : G →* Q),
+      ∀ i, RectanglesSurvive (fun u v =&gt; φ (g i u v)) := by
+…</pre><p class="refs">Mentions: <a href="MatrixRank.lean.html#L364">OAI.Release075.RectanglesSurvive</a></p></li><li id=L914><b>theorem</b> <code>OAI.Release075.not_residuallyFinite_of_line_blocks</code> <small>line 914</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

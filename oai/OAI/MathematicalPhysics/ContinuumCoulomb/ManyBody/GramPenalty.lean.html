@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/ContinuumCoulomb/ManyBody/GramPenalty.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/ContinuumCoulomb/ManyBody/GramPenalty.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">ContinuumCoulomb</a> / <a href="index.html">ManyBody</a> / <span>GramPenalty.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">ContinuumCoulomb</a>/<a href="index.html">ManyBody</a>/<span>GramPenalty.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/ContinuumCoulomb/ManyBody/GramPenalty.lean#L1">source</a></p><div class="doc"><p>The unit-charge application uses full Coulomb Gram coercivity rather
+than absolute row dominance. These supporting estimates keep the actual
+long-range penalty and its exact hole-double denominator.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.ContinuumCoulomb.chargePenalty_Gram_gap</code> <small>line 15</small><div class="doc"><p>Full quadratic coercivity gives a gap on every half-filled charge defect.</p></div><pre>theorem chargePenalty_Gram_gap {m : ℕ} (U c : ℝ) (V : Fin m → Fin m → ℝ)
+    (hc : 0 ≤ c)
+    (hGram : ∀ d : Fin m → ℝ,
+      c * ∑ i, d i ^ 2 ≤ U * ∑ i, d i ^ 2 + ∑ i, ∑ j, V i j * d i * d j)
+    (occupation : Fin m → Fin 3) (hfill : ∑ i, (occupation i : ℕ) = m)
+    (hdefect : ¬∀ i, occupation i = 1) : c ≤ chargePenalty U V occupation := by
+…</pre><p class="refs">Mentions: <a href="ChargePenalty.lean.html#L109">OAI.ContinuumCoulomb.chargePenalty</a></p></li><li id=L29><b>theorem</b> <code>OAI.ContinuumCoulomb.chargeTransfer_Gram_denominator</code> <small>line 29</small><div class="doc"><p>The same Gram condition controls the physical virtual excitation
+without replacing its exact denominator by the global coercivity constant.</p></div><pre>theorem chargeTransfer_Gram_denominator {m : ℕ} (U c : ℝ) (V : Fin m → Fin m → ℝ)
+    (hGram : ∀ d : Fin m → ℝ,
+      c * ∑ i, d i ^ 2 ≤ U * ∑ i, d i ^ 2 + ∑ i, ∑ j, V i j * d i * d j)
+    (hole double : Fin m) (hne : hole ≠ double)
+    (hsymm : ∀ i j, V i j = V j i) (hdiag : ∀ i, V i i = 0) :
+    c ≤ U - V hole double := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.ContinuumCoulomb.chargePenalty_Gram_inverse_data</code> <small>line 41</small></li><li id=L63><b>theorem</b> <code>OAI.ContinuumCoulomb.HubbardGlobal.actual_hubbard_Gram_second_order</code> <small>line 63</small><div class="doc"><p>Actual full Fock blocks, with smallness measured against the Gram gap.</p></div><pre>theorem actual_hubbard_Gram_second_order (m : ℕ) (U c : ℝ)
+    (V : Fin (m + 1) → Fin (m + 1) → ℝ) (hc : 0 &lt; c)
+    (hGram : ∀ d : Fin (m + 1) → ℝ,
+      c * ∑ i, d i ^ 2 ≤ U * ∑ i, d i ^ 2 + ∑ i, ∑ j, V i j * d i * d j)
+    (left right : Edge → Fin (m + 1)) (t : Edge → ℝ)
+    {epsilon : ℝ} (hepsilon : 0 ≤ epsilon) (hsmall : epsilon &lt; 1 / 2)
+    (ht : 4 * ∑ e, |t e| ≤ epsilon * c) :
+    let weight : HalfFilledHighBasis m → ℝ :=
+…</pre><p class="refs">Mentions: <a href="HalfFilledSector.lean.html#L86">OAI.ContinuumCoulomb.HubbardGlobal.HalfFilledHighBasis</a></p></li><li id=L92><b>theorem</b> <code>OAI.ContinuumCoulomb.HubbardGlobal.hubbardFermionBottom_Gram_Heisenberg</code> <small>line 92</small><div class="doc"><p>Complete fixed-particle fermion-to-spin spectrum under full Gram
+coercivity. The exact denominators U−Vij follow from that same condition.</p></div><pre>theorem hubbardFermionBottom_Gram_Heisenberg (m : ℕ) (U c : ℝ)
+    (V : Fin (m + 1) → Fin (m + 1) → ℝ)
+    (hsymm : ∀ i j, V i j = V j i) (hdiag : ∀ i, V i i = 0) (hc : 0 &lt; c)
+    (hGram : ∀ d : Fin (m + 1) → ℝ,
+      c * ∑ i, d i ^ 2 ≤ U * ∑ i, d i ^ 2 + ∑ i, ∑ j, V i j * d i * d j)
+    (left right : Edge → Fin (m + 1)) (t J : Edge → ℝ)
+    (hloop : ∀ e, left e ≠ right e)
+    (hsimple : ∀ e f, e ≠ f →
+      ¬(left e = left f ∧ right e = right f) ∧ ¬(left e = right f ∧ right e = left f))
+    (hcal : ∀ e, t e ^ 2 = J e * (U - V (left e) (right e)))
+    {epsilon : ℝ} (hepsilon : 0 ≤ epsilon) (hsmall : epsilon &lt; 1 / 2)
+    (ht : 4 * ∑ e, |t e| ≤ epsilon * c) :
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

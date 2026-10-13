@@ -1,0 +1,1 @@
+window.l4shard("pu", [["Imo1993P3.purge",64,189],["Imo2010P5.Reachable.push",101,93],["Imo2026P3.pow_two_punch",146,650],["Usa1984P4.card_pupils",184,120],["Usa1984P4.sum_pupils_pair",184,84],["Usa2017P2.pureId_value",292,622],["Usa2024P2.pushDown",318,339]]);

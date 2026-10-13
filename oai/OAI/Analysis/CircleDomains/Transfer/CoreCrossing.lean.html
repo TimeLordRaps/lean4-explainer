@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/CoreCrossing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/CoreCrossing.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>CoreCrossing.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>CoreCrossing.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/CoreCrossing.lean#L1">source</a></p><div class="doc"><h3>Uniform crossing from a compact physical core</h3><p>This supplies the geometric input to the length-payment argument in
+the generic-level-continua lemma. A compact core inside the physical
+domain has a uniform ball neighborhood there. Uniform continuity of
+the quotient map makes these balls too small to contain a large
+quotient continuum.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.CircleDomainRigidity.continuum_meets_core_of_small_open_cover</code> <small>line 25</small><div class="doc"><p>A connected continuum covered off a core by disjoint open sets of
+small diameter must meet that core. In the application the ambient
+compact metric space is the level union itself.</p></div><pre>theorem continuum_meets_core_of_small_open_cover
+    {X ι : Type*} [MetricSpace X] [CompactSpace X]
+    {F C : Set X} (U : ι → Set X) (hopen : ∀ i, IsOpen (U i))
+    (hdisj : Pairwise (Disjoint on U)) (hcover : Fᶜ ⊆ ⋃ i, U i)
+    {ε : ℝ} (hsmall : ∀ i, diam (U i) &lt; ε)
+    (hconn : IsConnected C) (hdiam : ε ≤ diam C) : (C ∩ F).Nonempty := by
+…</pre></li><li id=L61><b>theorem</b> <code>OAI.CircleDomainRigidity.uniform_ball_crossing_of_compact_core</code> <small>line 61</small><div class="doc"><p>A compact physical core meeting every sufficiently large quotient
+continuum supplies uniformly sized physical balls that those continua
+must exit.</p></div><pre>theorem uniform_ball_crossing_of_compact_core
+    {X Y : Type*} [MetricSpace X] [MetricSpace Y] [CompactSpace Y]
+    (π : Y → X) (hπ : Continuous π) (hsurj : Function.Surjective π)
+    {G K : Set Y} (hG : IsOpen G) (hK : IsCompact K) (hKG : K ⊆ G)
+    {ε : ℝ} (hε : 0 &lt; ε)
+    (hcore : ∀ C : Set X, IsCompact C → IsConnected C → ε ≤ diam C →
+      (C ∩ π &#x27;&#x27; K).Nonempty) :
+    ∃ r : ℝ, 0 &lt; r ∧ ∀ C : Set X,
+      IsCompact C → IsConnected C → ε ≤ diam C →
+      ∃ p ∈ π ⁻¹&#x27; C, closedBall p r ⊆ G ∧ ∃ q ∈ π ⁻¹&#x27; C, r &lt; dist q p := by
+…</pre></li><li id=L101><b>theorem</b> <code>OAI.CircleDomainRigidity.finite_large_continuum_bound_of_compact_cores</code> <small>line 101</small><div class="doc"><p>Finite physical level length and arbitrarily fine compact cores give
+the finite large-continuum bound in the quotient. The core-intersection
+hypothesis is explicit; the radius choice, ball crossing, Hausdorff
+payment, and cardinal estimate are all derived.</p></div><pre>theorem finite_large_continuum_bound_of_compact_cores
+    {X Y : Type*} [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
+    [MetricSpace Y] [MeasurableSpace Y] [BorelSpace Y] [CompactSpace Y]
+    (π : Y → X) (hπ : Continuous π) (hsurj : Function.Surjective π)
+    (hfiber : ∀ x, IsConnected (π ⁻¹&#x27; {x})) {G : Set Y} (hG : IsOpen G)
+    (hlength : (μH[1] : Measure Y) G &lt; ∞)
+    (hcores : ∀ ε : ℝ, 0 &lt; ε → ∃ K : Set Y,
+      IsCompact K ∧ K ⊆ G ∧
+      ∀ C : Set X, IsCompact C → IsConnected C → ε ≤ diam C →
+        (C ∩ π &#x27;&#x27; K).Nonempty) : HasFiniteLargeContinuumBound X := by
+…</pre><p class="refs">Mentions: <a href="../Selection/FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L120><b>theorem</b> <code>OAI.CircleDomainRigidity.finite_large_continuum_bound_of_small_open_core_covers</code> <small>line 120</small><div class="doc"><p>The form used for generic level unions: outside a compact physical
+core, the quotient is covered by disjoint relatively open dust disks of
+arbitrarily small diameter. Finite physical length then bounds the
+number of disjoint large subcontinua.</p></div><pre>theorem finite_large_continuum_bound_of_small_open_core_covers
+    {X Y ι : Type*} [MetricSpace X] [MeasurableSpace X] [BorelSpace X] [CompactSpace X]
+    [MetricSpace Y] [MeasurableSpace Y] [BorelSpace Y] [CompactSpace Y]
+    (π : Y → X) (hπ : Continuous π) (hsurj : Function.Surjective π)
+    (hfiber : ∀ x, IsConnected (π ⁻¹&#x27; {x})) {G : Set Y} (hG : IsOpen G)
+    (hlength : (μH[1] : Measure Y) G &lt; ∞)
+    (hcovers : ∀ ε : ℝ, 0 &lt; ε → ∃ (K : Set Y) (U : ι → Set X),
+      IsCompact K ∧ K ⊆ G ∧ (∀ i, IsOpen (U i)) ∧
+      Pairwise (Disjoint on U) ∧ (π &#x27;&#x27; K)ᶜ ⊆ ⋃ i, U i ∧ ∀ i, diam (U i) &lt; ε) :
+    HasFiniteLargeContinuumBound X := by
+…</pre><p class="refs">Mentions: <a href="../Selection/FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

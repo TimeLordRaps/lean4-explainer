@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/ReservoirVariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/ReservoirVariance.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>ReservoirVariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>ReservoirVariance.lean</span></code></h1><p class="muted">19 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/ReservoirVariance.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.DilutedSpinGlass.measurableEmbedding_sigmaMk</code> <small>line 13</small></li><li id=L37><b>theorem</b> <code>OAI.DilutedSpinGlass.measurable_sigmaProd</code> <small>line 37</small><div class="doc"><p>Countable disjoint root laws retain joint parameter measurability.</p></div><pre>theorem measurable_sigmaProd {I : Type*} [Countable I] {X : I → Type*}
+    [∀ i, MeasurableSpace (X i)] {A Y : Type*} [MeasurableSpace A] [MeasurableSpace Y]
+    {f : (i : I) → X i → A → Y}
+    (hf : ∀ i, Measurable (fun z : X i × A =&gt; f i z.1 z.2)) :
+    Measurable (fun z : Sigma X × A =&gt; f z.1.1 z.1.2 z.2) := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.DilutedSpinGlass.KernelTower.measurable_correctedPerturbLog</code> <small>line 67</small></li><li id=L76><b>theorem</b> <code>OAI.DilutedSpinGlass.KernelTower.measurable_correctedPerturbScore</code> <small>line 76</small></li><li id=L87><b>theorem</b> <code>OAI.DilutedSpinGlass.KernelTower.correctedPerturbScore_bound</code> <small>line 87</small></li><li id=L111><b>theorem</b> <code>OAI.DilutedSpinGlass.familyPoisson_count_memLp</code> <small>line 111</small></li><li id=L117><b>theorem</b> <code>OAI.DilutedSpinGlass.familyPoisson_count_variance</code> <small>line 117</small></li><li id=L125><b>theorem</b> <code>OAI.DilutedSpinGlass.familyPoisson_count_deviation</code> <small>line 125</small></li><li id=L146><b>theorem</b> <code>OAI.DilutedSpinGlass.poisson_corrected_score_root_bound</code> <small>line 146</small><div class="doc"><p>The convex concentration estimate instantiated with the literal corrected
+score of the marked hierarchy and its random-dimensional Poisson root law.
+The variance premise is precisely the separate Efron--Stein/count estimate.</p></div><pre>theorem poisson_corrected_score_root_bound
+    (hm : ∀ i, 0 &lt; m i)
+    (hb : ∀ n y, Measurable (fun x =&gt; base n x y))
+    (hD : ∀ n q y, Measurable (fun x =&gt; D n x q y))
+    (hE : ∀ n q y, Measurable (fun x =&gt; E n x q y))
+    (hDb : ∀ n x q y, |D n x q y| ≤ 1)
+    (hEb : ∀ n x q y, |E n x q y| ≤ 1)
+    {t a b ρ V : ℝ} (ht : |t| ≤ 1/4) (hab : a &lt; b) (hρ : 0 &lt; ρ)
+    (hJ : Icc (a-ρ) (b+ρ) ⊆ Ioo (-(1:ℝ)/4) (1/4))
+    (hLp : ∀ u ∈ Ioo (-(1:ℝ)/4) (1/4), MemLp (fun z : Sigma X =&gt;
+      KernelTower.correctedPerturbLog (T z.1) m (base z.1 z.2) (D z.1 z.2) (E z.1 z.2) t u)
+        2 (familyLaw (poissonMeasure r) ν))
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="Perturbations.lean.html#L137">OAI.DilutedSpinGlass.KernelTower.correctedPerturbLog</a>, <a href="MixtureMeasures.lean.html#L41">OAI.DilutedSpinGlass.familyLaw</a></p></li><li id=L213><b>theorem</b> <code>OAI.DilutedSpinGlass.familyPoisson_variance_le</code> <small>line 213</small><div class="doc"><p>Efron--Stein plus the independent Poisson count, on the genuine dependent
+root probability law used by the derivative concentration estimate.</p></div><pre>theorem familyPoisson_variance_le (r : ℝ≥0)
+    {F : (n : ℕ) → RootPath I n → ℝ} {A B C D : ℝ}
+    (hF : ∀ n, Measurable (F n)) (hb : ∀ n x, |F n x| ≤ A+B*n)
+    (hD : 0 ≤ D)
+    (hrep : ∀ n (i : Fin n) x y, |F n x-F n (replaceRoot n x i y)| ≤ C)
+    (hadd : ∀ n x y, |F (n+1) (x,y)-F n y| ≤ D) :
+    variance (fun z : Sigma (RootPath I) =&gt; F z.1 z.2)
+      (familyLaw (poissonMeasure r) (fun n =&gt; rootLaw n (fun _ =&gt; μ))) ≤
+        (C^2/2+D^2)*(r : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonMoments.lean.html#L150">OAI.DilutedSpinGlass.replaceRoot</a>, <a href="MixtureMeasures.lean.html#L41">OAI.DilutedSpinGlass.familyLaw</a>, <a href="PoissonMoments.lean.html#L134">OAI.DilutedSpinGlass.rootLaw</a></p></li><li id=L247><b>theorem</b> <code>OAI.DilutedSpinGlass.correctedMarkedRoot_family_variance</code> <small>line 247</small><div class="doc"><p>The random-count convex correction has its own addition/deletion cost.
+Replacement of an existing root point is unaffected.</p></div><pre>theorem correctedMarkedRoot_family_variance
+    (μ : Measure I) [IsProbabilityMeasure μ] (r : ℝ≥0)
+    (T : KernelTower Ω L) (Q : Fin L → FiniteLaw A)
+    (m : Fin L → ℝ) (hm : ∀ j, 0 &lt; m j)
+    (base : FinitePath Ω L → ℝ)
+    (factor : I → FinitePath Ω L → FinitePath A L → ℝ)
+    (hfmeas : ∀ x y, Measurable (fun i =&gt; factor i x y)) {B C : ℝ}
+    (hb : ∀ y, |base y| ≤ B) (hC : 0 ≤ C)
+    (hf : ∀ i x y, |Real.log (factor i x y)| ≤ C) (c : ℝ) :
+    variance (fun z : Sigma (RootPath I) =&gt;
+      markedRoot T Q m base (rootArray z.1 z.2) factor+c*z.1)
+      (familyLaw (poissonMeasure r) (fun n =&gt; rootLaw n (fun _ =&gt; μ))) ≤
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="FiniteLaw.lean.html#L12">OAI.DilutedSpinGlass.FiniteLaw</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonVariance.lean.html#L132">OAI.DilutedSpinGlass.markedRoot</a>, <a href="PoissonVariance.lean.html#L204">OAI.DilutedSpinGlass.rootArray</a>, <a href="MixtureMeasures.lean.html#L41">OAI.DilutedSpinGlass.familyLaw</a>, <a href="PoissonMoments.lean.html#L134">OAI.DilutedSpinGlass.rootLaw</a></p></li><li id=L299><b>def</b> <code>OAI.DilutedSpinGlass.rootDeviation</code> <small>line 299</small></li><li id=L302><b>theorem</b> <code>OAI.DilutedSpinGlass.rootDeviation_nonneg</code> <small>line 302</small></li><li id=L305><b>theorem</b> <code>OAI.DilutedSpinGlass.rootDeviation_add_le</code> <small>line 305</small></li><li id=L325><b>theorem</b> <code>OAI.DilutedSpinGlass.rootDeviation_smul</code> <small>line 325</small></li><li id=L329><b>theorem</b> <code>OAI.DilutedSpinGlass.rootDeviation_sub_le</code> <small>line 329</small></li><li id=L345><b>theorem</b> <code>OAI.DilutedSpinGlass.measurable_rootDeviation</code> <small>line 345</small></li><li id=L352><b>theorem</b> <code>OAI.DilutedSpinGlass.rootDeviation_bound</code> <small>line 352</small></li><li id=L368><b>theorem</b> <code>OAI.DilutedSpinGlass.intervalIntegrable_rootDeviation</code> <small>line 368</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

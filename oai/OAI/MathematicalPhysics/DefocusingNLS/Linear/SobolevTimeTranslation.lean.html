@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/DefocusingNLS/Linear/SobolevTimeTranslation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/DefocusingNLS/Linear/SobolevTimeTranslation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">DefocusingNLS</a> / <a href="index.html">Linear</a> / <span>SobolevTimeTranslation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">DefocusingNLS</a>/<a href="index.html">Linear</a>/<span>SobolevTimeTranslation.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/DefocusingNLS/Linear/SobolevTimeTranslation.lean#L1">source</a></p><div class="doc"><h3>Time translation and restarting the strong Schrödinger flow</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.DefocusingNLS.hasDerivAt_schrodinger_timeTranslation</code> <small>line 12</small><div class="doc"><p>The strong physical equation is autonomous, so translating time preserves it.</p></div><pre>theorem hasDerivAt_schrodinger_timeTranslation
+    (k : ℝ) (hk : 6 &lt; k) (m : ℕ) (u : ℝ → FourierL2) (s t : ℝ)
+    (hu : HasDerivAt (fun r =&gt; lowerSobolevInclusion (u r))
+      (lowerSobolevGenerator (u (s + t)) -
+        Complex.I • lowerSobolevInclusion (sobolevOddPower k hk m (u (s + t)))) (s + t)) :
+    HasDerivAt (fun r =&gt; lowerSobolevInclusion (u (s + r)))
+      (lowerSobolevGenerator (u (s + t)) -
+        Complex.I • lowerSobolevInclusion (sobolevOddPower k hk m (u (s + t)))) t := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a>, <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L189">OAI.DefocusingNLS.lowerSobolevInclusion</a></p></li><li id=L23><b>theorem</b> <code>OAI.DefocusingNLS.continuousOn_timeTranslation</code> <small>line 23</small></li><li id=L32><b>theorem</b> <code>OAI.DefocusingNLS.strongSobolev_timeTranslation_restricts_maximal</code> <small>line 32</small><div class="doc"><p>A translated strong solution is a restriction of the maximal flow through its new datum.</p></div><pre>theorem strongSobolev_timeTranslation_restricts_maximal
+    (k : ℝ) (hk : 6 &lt; k) (m : ℕ) (u : ℝ → FourierL2) (a b s : ℝ)
+    (hs : s ∈ Ioo a b) (huc : ContinuousOn u (Ioo a b))
+    (hu : ∀ t ∈ Ioo a b, HasDerivAt (fun r =&gt; lowerSobolevInclusion (u r))
+      (lowerSobolevGenerator (u t) -
+        Complex.I • lowerSobolevInclusion (sobolevOddPower k hk m (u t))) t) :
+    Ioo (a - s) (b - s) ⊆ maximalSobolevInteractionDomain k hk m (u s) ∧
+      EqOn (fun t =&gt; u (s + t)) (maximalSobolevSchrodingerFlow k hk m (u s))
+        (Ioo (a - s) (b - s)) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a>, <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L189">OAI.DefocusingNLS.lowerSobolevInclusion</a>, <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L220">OAI.DefocusingNLS.maximalSobolevInteractionDomain</a></p></li><li id=L51><b>theorem</b> <code>OAI.DefocusingNLS.maximalSobolevSchrodingerFlow_local_restart</code> <small>line 51</small><div class="doc"><p>At every time of a maximal trajectory, the local flow through its value agrees with
+the original trajectory on an open interval about that time.</p></div><pre>theorem maximalSobolevSchrodingerFlow_local_restart
+    (k : ℝ) (hk : 6 &lt; k) (m : ℕ) (f₀ : FourierL2) (s : ℝ)
+    (hs : s ∈ maximalSobolevInteractionDomain k hk m f₀) :
+    ∃ a b : ℝ, a &lt; 0 ∧ 0 &lt; b ∧
+      Ioo a b ⊆ maximalSobolevInteractionDomain k hk m
+        (maximalSobolevSchrodingerFlow k hk m f₀ s) ∧
+      ∀ t ∈ Ioo a b,
+        s + t ∈ maximalSobolevInteractionDomain k hk m f₀ ∧
+        maximalSobolevSchrodingerFlow k hk m f₀ (s + t) =
+          maximalSobolevSchrodingerFlow k hk m
+            (maximalSobolevSchrodingerFlow k hk m f₀ s) t := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L58">OAI.DefocusingNLS.FourierL2</a>, <a href="../../../../ComparatorChallenges/DefocusingNLS.lean.html#L220">OAI.DefocusingNLS.maximalSobolevInteractionDomain</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

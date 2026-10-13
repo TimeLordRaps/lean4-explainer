@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/IndependentCoordinates.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/IndependentCoordinates.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>IndependentCoordinates.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>IndependentCoordinates.lean</span></code></h1><p class="muted">32 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/IndependentCoordinates.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.Problem335.IndependentCoordinates.average</code> <small>line 12</small><div class="doc"><p>The uniform average on a finite type, with value zero on an empty type.</p></div><pre>def average {α : Type*} [Fintype α] (f : α → ℝ) : ℝ :=
+…</pre></li><li id=L17><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_equiv</code> <small>line 17</small><div class="doc"><p>Uniform finite averages are unchanged by relabeling.</p></div><pre>theorem average_equiv {α β : Type*} [Fintype α] [Fintype β]
+    (e : α ≃ β) (f : β → ℝ) : average (fun x =&gt; f (e x)) = average f := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L22><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_prod</code> <small>line 22</small><div class="doc"><p>Independent coordinates factor the average of a product.</p></div><pre>theorem average_prod {ι : Type*} [Fintype ι] [DecidableEq ι] {α : ι → Type*}
+    [∀ i, Fintype (α i)] (f : ∀ i, α i → ℝ) :
+    average (fun x : ∀ i, α i =&gt; ∏ i, f i (x i)) = ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L31><b>def</b> <code>OAI.Problem335.IndependentCoordinates.fiberAssignmentEquiv</code> <small>line 31</small><div class="doc"><p>Reorganize coordinates into the fibers of a grouping function.</p></div><pre>def fiberAssignmentEquiv {σ ι α : Type*} (group : σ → ι) :
+    (σ → α) ≃ (∀ i, {s // group s = i} → α) :=
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.fiberAssignmentEquiv_apply</code> <small>line 36</small></li><li id=L42><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_grouped_prod</code> <small>line 42</small><div class="doc"><p>Factors on disjoint groups of coordinates have independent uniform averages.
+An unused group can be included with its factor set equal to one.</p></div><pre>theorem average_grouped_prod {σ ι α : Type*}
+    [Fintype σ] [Fintype ι] [Fintype α] [DecidableEq σ] [DecidableEq ι]
+    (group : σ → ι) (f : ∀ i, ({s // group s = i} → α) → ℝ) :
+    average (fun x : σ → α =&gt; ∏ i, f i (fun s =&gt; x s)) =
+      ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L53><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_pair_eq</code> <small>line 53</small><div class="doc"><p>One independent pair of uniform labels agrees with probability <code>1 / card α</code>.</p></div><pre>theorem average_pair_eq {α : Type*} [Fintype α] [DecidableEq α] :
+    average (fun x : α × α =&gt; if x.1 = x.2 then (1 : ℝ) else 0) =
+      (Fintype.card α : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L63><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_add</code> <small>line 63</small></li><li id=L67><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_const</code> <small>line 67</small></li><li id=L71><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_const_mul</code> <small>line 71</small></li><li id=L76><b>def</b> <code>OAI.Problem335.IndependentCoordinates.pairEq</code> <small>line 76</small><div class="doc"><p>The indicator that two labels agree.</p></div><pre>def pairEq {α : Type*} [DecidableEq α] (x : α × α) : ℝ :=
+…</pre></li><li id=L80><b>def</b> <code>OAI.Problem335.IndependentCoordinates.allPairsEq</code> <small>line 80</small><div class="doc"><p>Simultaneous agreement of <code>card κ</code> independent label pairs.</p></div><pre>def allPairsEq {κ α : Type*} [Fintype κ] [DecidableEq α]
+    (x : κ → α × α) : ℝ := ∏ i, pairEq (x i)</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L76">OAI.Problem335.IndependentCoordinates.pairEq</a></p></li><li id=L83><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_allPairsEq</code> <small>line 83</small></li><li id=L92><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_equality_correction</code> <small>line 92</small></li><li id=L100><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_grouped_equality_corrections</code> <small>line 100</small><div class="doc"><p>The precise independence identity used for nonadjacent derivative layers.
+The fibers of <code>group</code> are the disjoint sets of free endpoints of those layers.</p></div><pre>theorem average_grouped_equality_corrections {σ ι α : Type*}
+    [Fintype σ] [Fintype ι] [Fintype α]
+    [DecidableEq σ] [DecidableEq ι] [DecidableEq α] [Nonempty α]
+    (group : σ → ι) (c : ι → ℝ) :
+    average (fun x : σ → α × α =&gt;
+      ∏ i, (1 + c i * allPairsEq (fun s : {s // group s = i} =&gt; x s))) =
+    ∏ i, (1 + c i * (Fintype.card α : ℝ)⁻¹ ^ Fintype.card {s // group s = i}) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a>, <a href="IndependentCoordinates.lean.html#L80">OAI.Problem335.IndependentCoordinates.allPairsEq</a></p></li><li id=L114><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_selected_grouped_prod</code> <small>line 114</small><div class="doc"><p>Coordinates assigned to <code>none</code> are unused and integrate out.</p></div><pre>theorem average_selected_grouped_prod {σ ι α : Type*}
+    [Fintype σ] [Fintype ι] [Fintype α] [Nonempty α]
+    [DecidableEq σ] [DecidableEq ι]
+    (group : σ → Option ι)
+    (f : ∀ i, ({s // group s = some i} → α) → ℝ) :
+    average (fun x : σ → α =&gt; ∏ i, f i (fun s =&gt; x s)) =
+      ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L130><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_selected_equality_corrections</code> <small>line 130</small><div class="doc"><p>Equality corrections for selected disjoint endpoint groups.  Other vertices
+may be assigned to <code>none</code>, and their choices do not affect the expectation.</p></div><pre>theorem average_selected_equality_corrections {σ ι α : Type*}
+    [Fintype σ] [Fintype ι] [Fintype α]
+    [DecidableEq σ] [DecidableEq ι] [DecidableEq α] [Nonempty α]
+    (group : σ → Option ι) (c : ι → ℝ) :
+    average (fun x : σ → α × α =&gt;
+      ∏ i, (1 + c i * allPairsEq (fun s : {s // group s = some i} =&gt; x s))) =
+    ∏ i, (1 + c i * (Fintype.card α : ℝ)⁻¹ ^
+      Fintype.card {s // group s = some i}) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a>, <a href="IndependentCoordinates.lean.html#L80">OAI.Problem335.IndependentCoordinates.allPairsEq</a></p></li><li id=L145><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_ignore_right</code> <small>line 145</small><div class="doc"><p>Extra independent coordinates that do not appear in the integrand cancel.</p></div><pre>theorem average_ignore_right {α β : Type*} [Fintype α] [Fintype β]
+    [Nonempty β] (f : α → ℝ) :
+    average (fun x : α × β =&gt; f x.1) = average f := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L158><b>def</b> <code>OAI.Problem335.IndependentCoordinates.restrictAssignmentEquiv</code> <small>line 158</small><div class="doc"><p>Split all assignments into their values on an embedded coordinate set and
+on its complement.</p></div><pre>def restrictAssignmentEquiv {σ τ α : Type*} (j : τ → σ)
+    (hj : Function.Injective j) :
+    (σ → α) ≃ (τ → α) × ({s // s ∉ Set.range j} → α) := by
+…</pre></li><li id=L168><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.restrictAssignmentEquiv_fst</code> <small>line 168</small></li><li id=L173><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_precomp_injective</code> <small>line 173</small><div class="doc"><p>Uniform assignments restrict uniformly to any subset of coordinates.</p></div><pre>theorem average_precomp_injective {σ τ α : Type*}
+    [Fintype σ] [Fintype τ] [Fintype α] [Nonempty α]
+    [DecidableEq σ] [DecidableEq τ]
+    (j : τ → σ) (hj : Function.Injective j) (f : (τ → α) → ℝ) :
+    average (fun x : σ → α =&gt; f (fun t =&gt; x (j t))) = average f := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L185><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_sigma_prod</code> <small>line 185</small><div class="doc"><p>A sigma-indexed family of labels is the product of its fiber families.</p></div><pre>theorem average_sigma_prod {ι α : Type*} {κ : ι → Type*}
+    [Fintype ι] [Fintype α] [∀ i, Fintype (κ i)]
+    [DecidableEq ι] [∀ i, DecidableEq (κ i)]
+    (f : ∀ i, (κ i → α) → ℝ) :
+    average (fun x : (Σ i, κ i) → α =&gt; ∏ i, f i (fun t =&gt; x ⟨i, t⟩)) =
+      ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L198><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_embedded_prod</code> <small>line 198</small><div class="doc"><p>Finite factors on an injectively embedded disjoint family of coordinates
+factor under uniform averaging.</p></div><pre>theorem average_embedded_prod {σ ι α : Type*} {κ : ι → Type*}
+    [Fintype σ] [Fintype ι] [Fintype α] [∀ i, Fintype (κ i)] [Nonempty α]
+    [DecidableEq σ] [DecidableEq ι] [∀ i, DecidableEq (κ i)]
+    (j : ∀ i, κ i → σ) (hj : Function.Injective (Sigma.uncurry j))
+    (f : ∀ i, (κ i → α) → ℝ) :
+    average (fun x : σ → α =&gt; ∏ i, f i (fun t =&gt; x (j i t))) =
+      ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L210><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.sigma_val_injective</code> <small>line 210</small><div class="doc"><p>Pairwise disjoint subsets give an injective family of coordinate inclusions.</p></div><pre>theorem sigma_val_injective {σ ι : Type*} (s : ι → Finset σ)
+    (hs : Pairwise (fun i j =&gt; Disjoint (s i) (s j))) :
+    Function.Injective (fun x : Σ i, s i =&gt; (x.2 : σ)) := by
+…</pre></li><li id=L224><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_disjoint_finset_prod</code> <small>line 224</small><div class="doc"><p>Factors depending on pairwise disjoint finite coordinate sets are independent.</p></div><pre>theorem average_disjoint_finset_prod {σ ι α : Type*}
+    [Fintype σ] [Fintype ι] [Fintype α] [Nonempty α]
+    [DecidableEq σ] [DecidableEq ι]
+    (s : ι → Finset σ) (hs : Pairwise (fun i j =&gt; Disjoint (s i) (s j)))
+    (f : ∀ i, (s i → α) → ℝ) :
+    average (fun x : σ → α =&gt; ∏ i, f i (fun t =&gt; x t)) =
+      ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L235><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_disjoint_equality_corrections</code> <small>line 235</small><div class="doc"><p>The endpoint-coincidence average for pairwise disjoint free-endpoint sets.</p></div><pre>theorem average_disjoint_equality_corrections {σ ι α : Type*}
+    [Fintype σ] [Fintype ι] [Fintype α]
+    [DecidableEq σ] [DecidableEq ι] [DecidableEq α] [Nonempty α]
+    (s : ι → Finset σ) (hs : Pairwise (fun i j =&gt; Disjoint (s i) (s j)))
+    (c : ι → ℝ) :
+    average (fun x : σ → α × α =&gt;
+      ∏ i, (1 + c i * allPairsEq (fun t : s i =&gt; x t))) =
+    ∏ i, (1 + c i * (Fintype.card α : ℝ)⁻¹ ^ (s i).card) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a>, <a href="IndependentCoordinates.lean.html#L80">OAI.Problem335.IndependentCoordinates.allPairsEq</a></p></li><li id=L251><b>def</b> <code>OAI.Problem335.IndependentCoordinates.restrictDependentAssignmentEquiv</code> <small>line 251</small><div class="doc"><p>Dependent-coordinate version of restriction to an embedded coordinate set.</p></div><pre>def restrictDependentAssignmentEquiv {σ τ : Type*} (β : σ → Type*)
+    (j : τ → σ) (hj : Function.Injective j) :
+    (∀ s, β s) ≃ (∀ t, β (j t)) × (∀ s : {s // s ∉ Set.range j}, β s) := by
+…</pre></li><li id=L261><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.restrictDependentAssignmentEquiv_fst</code> <small>line 261</small></li><li id=L268><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_precomp_injective_dependent</code> <small>line 268</small><div class="doc"><p>Marginals of a uniform finite product are uniform, allowing different
+coordinate types at different vertices.</p></div><pre>theorem average_precomp_injective_dependent {σ τ : Type*} {β : σ → Type*}
+    [Fintype σ] [Fintype τ] [∀ s, Fintype (β s)] [∀ s, Nonempty (β s)]
+    [DecidableEq σ] [DecidableEq τ]
+    (j : τ → σ) (hj : Function.Injective j) (f : (∀ t, β (j t)) → ℝ) :
+    average (fun x : ∀ s, β s =&gt; f (fun t =&gt; x (j t))) = average f := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li><li id=L280><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_sigma_prod_dependent</code> <small>line 280</small></li><li id=L292><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_embedded_prod_dependent</code> <small>line 292</small></li><li id=L307><b>theorem</b> <code>OAI.Problem335.IndependentCoordinates.average_disjoint_finset_prod_dependent</code> <small>line 307</small><div class="doc"><p>Disjoint coordinate families remain independent when vertex alphabets vary.</p></div><pre>theorem average_disjoint_finset_prod_dependent {σ ι : Type*} {β : σ → Type*}
+    [Fintype σ] [Fintype ι] [∀ s, Fintype (β s)] [∀ s, Nonempty (β s)]
+    [DecidableEq σ] [DecidableEq ι]
+    (s : ι → Finset σ) (hs : Pairwise (fun i j =&gt; Disjoint (s i) (s j)))
+    (f : ∀ i, (∀ t : s i, β t) → ℝ) :
+    average (fun x : ∀ s, β s =&gt; ∏ i, f i (fun t =&gt; x t)) =
+      ∏ i, average (f i) := by
+…</pre><p class="refs">Mentions: <a href="IndependentCoordinates.lean.html#L12">OAI.Problem335.IndependentCoordinates.average</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

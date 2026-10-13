@@ -1,0 +1,186 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/TreeSampling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/TreeSampling.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>TreeSampling.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>TreeSampling.lean</span></code></h1><p class="muted">37 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/TreeSampling.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>inductive</b> <code>OAI.DilutedSpinGlass.PrescribedTree</code> <small>line 13</small><div class="doc"><p>Prescribed trees include a vertex at every depth, including unary vertices.
+Every internal vertex has at least one child; every leaf has the given height.</p></div><pre>inductive PrescribedTree : ℕ → Type
+  | leaf : PrescribedTree 0
+  | node {n : ℕ} (k : ℕ+) (children : Fin k → PrescribedTree n) : PrescribedTree (n+1)
+
+namespace PrescribedTree</pre></li><li id=L19><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.leaves</code> <small>line 19</small></li><li id=L24><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.freshTotal</code> <small>line 24</small><div class="doc"><p>Sum of the fresh-extension coefficients gamma_beta.</p></div><pre>noncomputable def freshTotal (m : ℕ → ℝ) (d : ℕ) : {n : ℕ} → PrescribedTree n → ℝ
+  | 0, .leaf =&gt; 0
+  | _+1, .node k T =&gt; m d - (k : ℝ) * m (d+1) + ∑ i, freshTotal m (d+1) (T i)
+
+/-- Sum of their absolute values. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a></p></li><li id=L29><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.freshAbsolute</code> <small>line 29</small><div class="doc"><p>Sum of their absolute values.</p></div><pre>noncomputable def freshAbsolute (m : ℕ → ℝ) (d : ℕ) : {n : ℕ} → PrescribedTree n → ℝ
+  | 0, .leaf =&gt; 0
+  | _+1, .node k T =&gt; |m d - (k : ℝ) * m (d+1)| +
+      ∑ i, freshAbsolute m (d+1) (T i)
+
+/-- The exact telescoping normalization before specializing m_L=1. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a></p></li><li id=L35><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.fresh_total</code> <small>line 35</small><div class="doc"><p>The exact telescoping normalization before specializing m_L=1.</p></div><pre>theorem fresh_total {n : ℕ} (T : PrescribedTree n) (m : ℕ → ℝ) (d : ℕ) :
+    freshTotal m d T = m d - leaves T * m (d+n) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.freshTotal</a>, <a href="TreeSampling.lean.html#L19">OAI.DilutedSpinGlass.PrescribedTree.leaves</a></p></li><li id=L47><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.fresh_absolute_eq_neg</code> <small>line 47</small></li><li id=L62><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.fresh_absolute_root</code> <small>line 62</small><div class="doc"><p>tree:telescoping. At root depth zero the absolute fresh-choice budget is
+exactly the number of old leaves, uniformly over the number of levels.</p></div><pre>theorem fresh_absolute_root {n : ℕ} (T : PrescribedTree n) (m : ℕ → ℝ)
+    (hm : Monotone m) (hpos : ∀ d, 0 ≤ m d) (hzero : m 0 = 0) (hend : m n = 1) :
+    freshAbsolute m 0 T = leaves T := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L29">OAI.DilutedSpinGlass.PrescribedTree.freshAbsolute</a>, <a href="TreeSampling.lean.html#L19">OAI.DilutedSpinGlass.PrescribedTree.leaves</a></p></li><li id=L71><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.unused_subtree_total</code> <small>line 71</small><div class="doc"><p>The sum of old-leaf and fresh choices in a reference-free subtree is
+m at its incoming depth. This is the nontrivial cancellation used to sum
+reference-constrained extensions, not their absolute values.</p></div><pre>theorem unused_subtree_total {n : ℕ} (T : PrescribedTree n) (m : ℕ → ℝ)
+    (d : ℕ) (hend : m (d+n) = 1) :
+    (leaves T : ℝ) + freshTotal m d T = m d := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L19">OAI.DilutedSpinGlass.PrescribedTree.leaves</a>, <a href="TreeSampling.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.freshTotal</a></p></li><li id=L79><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.reference_total</code> <small>line 79</small><div class="doc"><p>The next color must avoid precisely the reference-containing children.
+All unused subtrees cancel to m_(d+1), giving the required local coefficient.</p></div><pre>theorem reference_total {n : ℕ} (k : ℕ+) (T : Fin k → PrescribedTree n)
+    (m : ℕ → ℝ) (d : ℕ) (J : Finset (Fin k)) (hend : m (d+1+n) = 1) :
+    m d - (k : ℝ) * m (d+1) +
+      (∑ i ∈ Finset.univ \ J, ((leaves (T i) : ℝ) + freshTotal m (d+1) (T i))) =
+        m d - (J.card : ℝ) * m (d+1) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L19">OAI.DilutedSpinGlass.PrescribedTree.leaves</a>, <a href="TreeSampling.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.freshTotal</a></p></li><li id=L98><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.Sample</code> <small>line 98</small><div class="doc"><p>Samples at separate sibling vertices are independent; repeated values are
+allowed. The full unary parts of each prescribed tree are retained.</p></div><pre>def Sample (Ω : Type) : {n : ℕ} → PrescribedTree n → Type
+  | 0, .leaf =&gt; Unit
+  | _+1, .node k C =&gt; (i : Fin k) → Ω × Sample Ω (C i)</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a></p></li><li id=L102><b>instance</b> <code>OAI.DilutedSpinGlass.PrescribedTree.sampleFintype</code> <small>line 102</small></li><li id=L111><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.sampleLaw</code> <small>line 111</small></li><li id=L119><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.vertexPotential</code> <small>line 119</small><div class="doc"><p>The logarithm of the vertex product in tree:density. The first entry of
+m is the incoming edge exponent (zero at the root); the final entry equals
+one in the manuscript applications.</p></div><pre>noncomputable def vertexPotential : {n : ℕ} → (S : PrescribedTree n) →
+    KernelTower Ω n → (Fin (n+1) → ℝ) → (FinitePath Ω n → ℝ) → Sample Ω S → ℝ
+  | 0, .leaf, _, m, f, _ =&gt; m 0 * f ()
+  | n+1, .node k C, T, m, f, x =&gt;
+      (m 0 - (k : ℝ) * m 1) * KernelTower.backwardLog (n+1) T (fun j =&gt; m j.succ) f +
+      ∑ i, vertexPotential (C i) (T.2 (x i).1) (fun j =&gt; m j.succ)
+        (fun y =&gt; f ((x i).1,y)) (x i).2
+
+/-- Exact joint law after insertion, expressed without division by the old
+weight. This handles zero-probability paths and every prescribed tree. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="KernelTower.lean.html#L41">OAI.DilutedSpinGlass.KernelTower.backwardLog</a></p></li><li id=L129><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.sampleLaw_tilt_weight</code> <small>line 129</small><div class="doc"><p>Exact joint law after insertion, expressed without division by the old
+weight. This handles zero-probability paths and every prescribed tree.</p></div><pre>theorem sampleLaw_tilt_weight {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : ∀ j : Fin n, m j.succ ≠ 0) (f : FinitePath Ω n → ℝ)
+    (x : Sample Ω S) :
+    (sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) f)).weight x =
+      (sampleLaw S T).weight x * Real.exp
+        (vertexPotential S T m f x - m 0 * KernelTower.backwardLog n T (fun j =&gt; m j.succ) f) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L111">OAI.DilutedSpinGlass.PrescribedTree.sampleLaw</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a>, <a href="TreeSampling.lean.html#L119">OAI.DilutedSpinGlass.PrescribedTree.vertexPotential</a>, <a href="KernelTower.lean.html#L41">OAI.DilutedSpinGlass.KernelTower.backwardLog</a></p></li><li id=L170><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.sampleLaw_tilt_density</code> <small>line 170</small><div class="doc"><p>At the tree root there is no incoming edge. This is the self-contained,
+finite-kernel version of tree:density, with exactly its vertex exponents.</p></div><pre>theorem sampleLaw_tilt_density {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : ∀ j : Fin n, m j.succ ≠ 0) (hroot : m 0 = 0)
+    (f : FinitePath Ω n → ℝ) (x : Sample Ω S) :
+    (sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) f)).weight x =
+      (sampleLaw S T).weight x * Real.exp (vertexPotential S T m f x) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L111">OAI.DilutedSpinGlass.PrescribedTree.sampleLaw</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a>, <a href="TreeSampling.lean.html#L119">OAI.DilutedSpinGlass.PrescribedTree.vertexPotential</a></p></li><li id=L180><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.vertexScore</code> <small>line 180</small><div class="doc"><p>First variation of the vertex product: one score for every uncontracted
+leaf, and gamma_beta times the score of a fresh path at every internal vertex.</p></div><pre>noncomputable def vertexScore : {n : ℕ} → (S : PrescribedTree n) →
+    KernelTower Ω n → (Fin (n+1) → ℝ) → (FinitePath Ω n → ℝ) →
+      (FinitePath Ω n → ℝ) → Sample Ω S → ℝ
+  | 0, .leaf, _, m, _, f&#x27;, _ =&gt; m 0 * f&#x27; ()
+  | n+1, .node k C, T, m, f, f&#x27;, x =&gt;
+      (m 0 - (k : ℝ) * m 1) *
+        (KernelTower.law (n+1) (KernelTower.tilt (n+1) T (fun j =&gt; m j.succ) f)).expect f&#x27; +
+        ∑ i, vertexScore (C i) (T.2 (x i).1) (fun j =&gt; m j.succ)
+          (fun y =&gt; f ((x i).1,y)) (fun y =&gt; f&#x27; ((x i).1,y)) (x i).2
+
+/-- Differentiate the entire prescribed tree density, without assuming all
+sampled prefixes are distinct or all original kernel weights positive. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="KernelTower.lean.html#L37">OAI.DilutedSpinGlass.KernelTower.law</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a></p></li><li id=L192><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.hasDerivAt_vertexPotential</code> <small>line 192</small><div class="doc"><p>Differentiate the entire prescribed tree density, without assuming all
+sampled prefixes are distinct or all original kernel weights positive.</p></div><pre>theorem hasDerivAt_vertexPotential {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : ∀ j : Fin n, m j.succ ≠ 0)
+    {f : ℝ → FinitePath Ω n → ℝ} {f&#x27; : FinitePath Ω n → ℝ} {u : ℝ}
+    (hf : ∀ y, HasDerivAt (fun t =&gt; f t y) (f&#x27; y) u) (x : Sample Ω S) :
+    HasDerivAt (fun t =&gt; vertexPotential S T m (f t) x)
+      (vertexScore S T m (f u) f&#x27; x) u := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L119">OAI.DilutedSpinGlass.PrescribedTree.vertexPotential</a>, <a href="TreeSampling.lean.html#L180">OAI.DilutedSpinGlass.PrescribedTree.vertexScore</a></p></li><li id=L216><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.sampleLaw_tilt_expect</code> <small>line 216</small><div class="doc"><p>Joint-law density in expectation form; physical root remains fixed.</p></div><pre>theorem sampleLaw_tilt_expect {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : ∀ j : Fin n, m j.succ ≠ 0) (hroot : m 0 = 0)
+    (f : FinitePath Ω n → ℝ) (G : Sample Ω S → ℝ) :
+    (sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) f)).expect G =
+      (sampleLaw S T).expect (fun x =&gt; G x * Real.exp (vertexPotential S T m f x)) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L111">OAI.DilutedSpinGlass.PrescribedTree.sampleLaw</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a>, <a href="TreeSampling.lean.html#L119">OAI.DilutedSpinGlass.PrescribedTree.vertexPotential</a></p></li><li id=L230><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.hasDerivAt_sampleLaw_tilt_expect</code> <small>line 230</small><div class="doc"><p>Tree differentiation rule, including a parameter-dependent test. Choosing
+G as a product of canceled replica factors yields the protected-leaf rule.</p></div><pre>theorem hasDerivAt_sampleLaw_tilt_expect {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : ∀ j : Fin n, m j.succ ≠ 0) (hroot : m 0 = 0)
+    {f : ℝ → FinitePath Ω n → ℝ} {f&#x27; : FinitePath Ω n → ℝ}
+    {G : ℝ → Sample Ω S → ℝ} {G&#x27; : Sample Ω S → ℝ} {u : ℝ}
+    (hf : ∀ y, HasDerivAt (fun t =&gt; f t y) (f&#x27; y) u)
+    (hG : ∀ x, HasDerivAt (fun t =&gt; G t x) (G&#x27; x) u) :
+    HasDerivAt (fun t =&gt; (sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) (f t))).expect (G t))
+      ((sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) (f u))).expect
+        (fun x =&gt; G&#x27; x + G u x * vertexScore S T m (f u) f&#x27; x)) u := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L111">OAI.DilutedSpinGlass.PrescribedTree.sampleLaw</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a>, <a href="TreeSampling.lean.html#L180">OAI.DilutedSpinGlass.PrescribedTree.vertexScore</a></p></li><li id=L249><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.Leaf</code> <small>line 249</small><div class="doc"><p>A leaf label is a vertex, not its sampled spin value.</p></div><pre>def Leaf : {n : ℕ} → PrescribedTree n → Type
+  | 0, .leaf =&gt; Unit
+  | _+1, .node k C =&gt; (i : Fin k) × Leaf (C i)</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a></p></li><li id=L253><b>instance</b> <code>OAI.DilutedSpinGlass.PrescribedTree.leafFintype</code> <small>line 253</small></li><li id=L260><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.pathAt</code> <small>line 260</small><div class="doc"><p>Recover a whole path from a labeled leaf in a sampled tree.</p></div><pre>def pathAt : {n : ℕ} → (S : PrescribedTree n) → Leaf S → Sample Ω S → FinitePath Ω n
+  | 0, .leaf, _, _ =&gt; ()
+  | _+1, .node _ C, a, x =&gt; ((x a.1).1, pathAt (C a.1) a.2 (x a.1).2)
+
+/-- Exactly the denominator cancellation at the selected protected leaves,
+written in logarithmic form. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L249">OAI.DilutedSpinGlass.PrescribedTree.Leaf</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L19">OAI.DilutedSpinGlass.PrescribedTree.leaves</a></p></li><li id=L266><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.protectedLog</code> <small>line 266</small><div class="doc"><p>Exactly the denominator cancellation at the selected protected leaves,
+written in logarithmic form.</p></div><pre>noncomputable def protectedLog {n : ℕ} (S : PrescribedTree n) (C : Finset (Leaf S))
+    (f : FinitePath Ω n → ℝ) (x : Sample Ω S) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L249">OAI.DilutedSpinGlass.PrescribedTree.Leaf</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a></p></li><li id=L271><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.hasDerivAt_protectedLog</code> <small>line 271</small></li><li id=L284><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.hasDerivAt_protected_expect</code> <small>line 284</small></li><li id=L306><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.hasDerivAt_log_affine</code> <small>line 306</small><div class="doc"><p>For positive affine insertions, the logarithmic score is D/A, with the
+actual (not a formal or assumed) analytic derivative.</p></div><pre>theorem hasDerivAt_log_affine {D u : ℝ} (hu : 1 + u*D ≠ 0) :
+    HasDerivAt (fun t : ℝ =&gt; Real.log (1+t*D)) (D/(1+u*D)) u := by
+…</pre></li><li id=L315><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.Internal</code> <small>line 315</small><div class="doc"><p>Internal vertices refer to labeled genealogy, not coincident sampled values.</p></div><pre>def Internal : {n : ℕ} → PrescribedTree n → Type
+  | 0, .leaf =&gt; Empty
+  | _+1, .node _ C =&gt; Option ((i : _) × Internal (C i))</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a></p></li><li id=L319><b>instance</b> <code>OAI.DilutedSpinGlass.PrescribedTree.internalFintype</code> <small>line 319</small></li><li id=L326><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.gamma</code> <small>line 326</small><div class="doc"><p>The signed coefficient at the exact uncontracted divergence vertex.</p></div><pre>noncomputable def gamma : {n : ℕ} → (S : PrescribedTree n) →
+    (Fin (n+1) → ℝ) → Internal S → ℝ
+  | 0, .leaf, _, v =&gt; nomatch v
+  | _+1, .node k C, m, v =&gt;
+      match (v : Option ((i : Fin k) × Internal (C i))) with
+      | none =&gt; m 0 - (k : ℝ) * m 1
+      | some ⟨i,v⟩ =&gt; gamma (C i) (fun j =&gt; m j.succ) v
+
+variable {Ω : Type} [Fintype Ω]
+
+/-- Conditional expectation on a completely new path below the chosen vertex.
+Old sampled descendants are NOT reused, even if their values happen to agree. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a></p></li><li id=L338><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.freshEval</code> <small>line 338</small><div class="doc"><p>Conditional expectation on a completely new path below the chosen vertex.
+Old sampled descendants are NOT reused, even if their values happen to agree.</p></div><pre>noncomputable def freshEval : {n : ℕ} → (S : PrescribedTree n) →
+    KernelTower Ω n → Internal S → (FinitePath Ω n → ℝ) → Sample Ω S → ℝ
+  | 0, .leaf, _, v, _, _ =&gt; nomatch v
+  | n+1, .node k C, T, v, D, x =&gt;
+      match (v : Option ((i : Fin k) × Internal (C i))) with
+      | none =&gt; (KernelTower.law (n+1) T).expect D
+      | some ⟨i,v⟩ =&gt; freshEval (C i) (T.2 (x i).1) v (fun y =&gt; D ((x i).1,y)) (x i).2
+
+/-- Resolves the differentiated density into terminal contributions and actual
+fresh conditional path expectations. No diagonal identification is made. -/</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="KernelTower.lean.html#L37">OAI.DilutedSpinGlass.KernelTower.law</a></p></li><li id=L348><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.vertexScore_decomposition</code> <small>line 348</small><div class="doc"><p>Resolves the differentiated density into terminal contributions and actual
+fresh conditional path expectations. No diagonal identification is made.</p></div><pre>theorem vertexScore_decomposition {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (f D : FinitePath Ω n → ℝ) (x : Sample Ω S) :
+    vertexScore S T m f D x =
+      m (Fin.last n) * (∑ a : Leaf S, D (pathAt S a x)) +
+      ∑ v : Internal S, gamma S m v *
+        freshEval S (KernelTower.tilt n T (fun j =&gt; m j.succ) f) v D x := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L180">OAI.DilutedSpinGlass.PrescribedTree.vertexScore</a>, <a href="TreeSampling.lean.html#L249">OAI.DilutedSpinGlass.PrescribedTree.Leaf</a>, <a href="TreeSampling.lean.html#L260">OAI.DilutedSpinGlass.PrescribedTree.pathAt</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a>, <a href="TreeSampling.lean.html#L326">OAI.DilutedSpinGlass.PrescribedTree.gamma</a>, <a href="TreeSampling.lean.html#L338">OAI.DilutedSpinGlass.PrescribedTree.freshEval</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a></p></li><li id=L385><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.protected_leaf_extension_rule</code> <small>line 385</small><div class="doc"><p>Exact finite-kernel form of the protected-leaf differentiation rule.
+The second line is the expectation on a fresh extended path, conditional on
+its shared prefix. The canceled leaves are removed, not merely bounded.</p></div><pre>theorem protected_leaf_extension_rule {n : ℕ} (S : PrescribedTree n)
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : ∀ j : Fin n, m j.succ ≠ 0) (hroot : m 0 = 0) (hend : m (Fin.last n) = 1)
+    [DecidableEq (Leaf S)] (C : Finset (Leaf S)) (G : Sample Ω S → ℝ)
+    {f : ℝ → FinitePath Ω n → ℝ} {D : FinitePath Ω n → ℝ} {u : ℝ}
+    (hf : ∀ y, HasDerivAt (fun t =&gt; f t y) (D y) u) :
+    HasDerivAt (fun t =&gt; (sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) (f t))).expect
+      (fun x =&gt; G x * Real.exp (-protectedLog S C (f t) x)))
+      ((sampleLaw S (KernelTower.tilt n T (fun j =&gt; m j.succ) (f u))).expect
+        (fun x =&gt; (G x * Real.exp (-protectedLog S C (f u) x)) *
+          ((∑ a ∈ Finset.univ \ C, D (pathAt S a x)) +
+            ∑ v : Internal S, gamma S m v *
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="TreeSampling.lean.html#L249">OAI.DilutedSpinGlass.PrescribedTree.Leaf</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L111">OAI.DilutedSpinGlass.PrescribedTree.sampleLaw</a>, <a href="KernelTower.lean.html#L47">OAI.DilutedSpinGlass.KernelTower.tilt</a>, <a href="TreeSampling.lean.html#L266">OAI.DilutedSpinGlass.PrescribedTree.protectedLog</a>, <a href="TreeSampling.lean.html#L260">OAI.DilutedSpinGlass.PrescribedTree.pathAt</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a>, <a href="TreeSampling.lean.html#L326">OAI.DilutedSpinGlass.PrescribedTree.gamma</a></p></li><li id=L414><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.single</code> <small>line 414</small></li><li id=L420><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.grow</code> <small>line 420</small><div class="doc"><p>Attach a genuinely new child at the divergence vertex; keep every old
+child and every unary level. Child 0 is the new child for root attachment.</p></div><pre>def grow : {n : ℕ} → (S : PrescribedTree n) → Internal S → PrescribedTree n
+  | 0, .leaf, v =&gt; nomatch v
+  | n+1, .node k C, v =&gt;
+    match (v : Option ((i : Fin k) × Internal (C i))) with
+    | none =&gt; .node (k+1) (Fin.cases (single n) C)
+    | some ⟨i,v⟩ =&gt; .node k (Function.update C i (grow (C i) v))
+
+variable {Ω : Type}</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a>, <a href="TreeSampling.lean.html#L414">OAI.DilutedSpinGlass.PrescribedTree.single</a></p></li><li id=L429><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.singlePath</code> <small>line 429</small></li><li id=L434><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.oldSample</code> <small>line 434</small><div class="doc"><p>The projection forgets the new branch but preserves every old value.</p></div><pre>def oldSample : {n : ℕ} → (S : PrescribedTree n) → (v : Internal S) →
+    Sample Ω (grow S v) → Sample Ω S
+  | 0, .leaf, v =&gt; nomatch v
+  | n+1, .node k C, v =&gt; by
+    change Option ((i : Fin k) × Internal (C i)) at v
+    cases v with
+    | none =&gt;
+      intro x i
+      exact x i.succ
+    | some v =&gt;
+      obtain ⟨i,v⟩ := v
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L420">OAI.DilutedSpinGlass.PrescribedTree.grow</a></p></li><li id=L456><b>def</b> <code>OAI.DilutedSpinGlass.PrescribedTree.newPath</code> <small>line 456</small><div class="doc"><p>The new path shares just its prescribed prefix, even for repeated values.</p></div><pre>def newPath : {n : ℕ} → (S : PrescribedTree n) → (v : Internal S) →
+    Sample Ω (grow S v) → FinitePath Ω n
+  | 0, .leaf, v =&gt; nomatch v
+  | n+1, .node k C, v =&gt; by
+    change Option ((i : Fin k) × Internal (C i)) at v
+    cases v with
+    | none =&gt;
+      intro x
+      exact ((x 0).1, singlePath n (x 0).2)
+    | some v =&gt;
+      obtain ⟨i,v⟩ := v
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L315">OAI.DilutedSpinGlass.PrescribedTree.Internal</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L420">OAI.DilutedSpinGlass.PrescribedTree.grow</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L429">OAI.DilutedSpinGlass.PrescribedTree.singlePath</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

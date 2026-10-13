@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/PrefixPredictionOutputs.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/PrefixPredictionOutputs.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>PrefixPredictionOutputs.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>PrefixPredictionOutputs.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/PrefixPredictionOutputs.lean#L1">source</a></p><div class="doc"><h3>Prediction families from a finite constructed frontier</h3><p>The evaluator is the actual evaluator of an already constructed
+finite frontier. Its uniform sensitivity is a proved helper premise. No future
+infinite tree is needed to form the coefficient family or its detector set.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>def</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.residualInput</code> <small>line 30</small><div class="doc"><p>The finite frontier's residual parent input, before any current map is chosen.</p></div><pre>def residualInput (b : K) (theta : Prediction.coefficientSet parent) (p : P) : K :=
+…</pre><p class="refs">Mentions: <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a></p></li><li id=L35><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.residualInput_val</code> <small>line 35</small></li><li id=L41><b>def</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.evaluatedPrediction</code> <small>line 41</small><div class="doc"><p>The actual prediction evaluates the current frontier maps on its residual inputs.</p></div><pre>def evaluatedPrediction (b : K) (theta : Prediction.coefficientSet parent) : K :=
+…</pre><p class="refs">Mentions: <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a></p></li><li id=L45><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.evaluatedPrediction_norm_sub_le</code> <small>line 45</small><div class="doc"><p>Actual norm sensitivity of the finite evaluator gives a uniform coefficient estimate.</p></div><pre>theorem evaluatedPrediction_norm_sub_le
+    (hmaps : ∀ p, LipschitzWith 1 (maps p))
+    (hevaluate : ∀ H H&#x27; (ε : ℝ),
+      (∀ p, ‖(H p : X) - (H&#x27; p : X)‖ ≤ ε) →
+        ‖(evaluate H : X) - (evaluate H&#x27; : X)‖ ≤ ε)
+    (hdiam : ∀ a b : K, ‖(a : X) - (b : X)‖ ≤ 1)
+    (b : K) (theta eta : Prediction.coefficientSet parent) :
+    ‖(evaluatedPrediction hconvex maps evaluate parent y b theta : X) -
+      evaluatedPrediction hconvex maps evaluate parent y b eta‖ ≤
+        ∑ i, |theta.val i - eta.val i| := by
+…</pre><p class="refs">Mentions: <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a>, <a href="PrefixPredictionOutputs.lean.html#L41">OAI.ReflexiveFixedPoints.Prediction.Prefix.evaluatedPrediction</a></p></li><li id=L74><b>def</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit</code> <small>line 74</small><div class="doc"><p>Compactness chooses limits of the already evaluated finite-frontier outputs.</p></div><pre>def predictionWeakLimit (hK : WeaklyCompact K) (b : ℕ → K) (U : Ultrafilter ℕ)
+    (theta : Prediction.coefficientSet parent) : K :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a></p></li><li id=L79><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.tendsto_predictionWeakLimit</code> <small>line 79</small></li><li id=L90><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit_norm_sub_le</code> <small>line 90</small><div class="doc"><p>The selected weak limits preserve the finite coefficient estimate.</p></div><pre>theorem predictionWeakLimit_norm_sub_le
+    (hmaps : ∀ p, LipschitzWith 1 (maps p))
+    (hevaluate : ∀ H H&#x27; (ε : ℝ),
+      (∀ p, ‖(H p : X) - (H&#x27; p : X)‖ ≤ ε) →
+        ‖(evaluate H : X) - (evaluate H&#x27; : X)‖ ≤ ε)
+    (hK : WeaklyCompact K)
+    (hdiam : ∀ a b : K, ‖(a : X) - (b : X)‖ ≤ 1)
+    (b : ℕ → K) (U : Ultrafilter ℕ) (theta eta : Prediction.coefficientSet parent) :
+    ‖(predictionWeakLimit hconvex maps evaluate parent y hK b U theta : X) -
+      predictionWeakLimit hconvex maps evaluate parent y hK b U eta‖ ≤
+        ∑ i, |theta.val i - eta.val i| :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a>, <a href="PrefixPredictionOutputs.lean.html#L74">OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit</a></p></li><li id=L108><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.continuous_predictionWeakLimit_val</code> <small>line 108</small><div class="doc"><p>Continuity of the chosen limit family in the original ambient norm.</p></div><pre>theorem continuous_predictionWeakLimit_val
+    (hmaps : ∀ p, LipschitzWith 1 (maps p))
+    (hevaluate : ∀ H H&#x27; (ε : ℝ),
+      (∀ p, ‖(H p : X) - (H&#x27; p : X)‖ ≤ ε) →
+        ‖(evaluate H : X) - (evaluate H&#x27; : X)‖ ≤ ε)
+    (hK : WeaklyCompact K)
+    (hdiam : ∀ a b : K, ‖(a : X) - (b : X)‖ ≤ 1)
+    (b : ℕ → K) (U : Ultrafilter ℕ) :
+    Continuous (fun theta =&gt;
+      (predictionWeakLimit hconvex maps evaluate parent y hK b U theta : X)) :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PrefixPredictionOutputs.lean.html#L74">OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit</a></p></li><li id=L123><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.continuous_predictionWeakLimit</code> <small>line 123</small><div class="doc"><p>Continuity also holds for the literal norm subtype.</p></div><pre>theorem continuous_predictionWeakLimit
+    (hmaps : ∀ p, LipschitzWith 1 (maps p))
+    (hevaluate : ∀ H H&#x27; (ε : ℝ),
+      (∀ p, ‖(H p : X) - (H&#x27; p : X)‖ ≤ ε) →
+        ‖(evaluate H : X) - (evaluate H&#x27; : X)‖ ≤ ε)
+    (hK : WeaklyCompact K)
+    (hdiam : ∀ a b : K, ‖(a : X) - (b : X)‖ ≤ 1)
+    (b : ℕ → K) (U : Ultrafilter ℕ) :
+    Continuous (predictionWeakLimit hconvex maps evaluate parent y hK b U) :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PrefixPredictionOutputs.lean.html#L74">OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit</a></p></li><li id=L137><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.isCompact_predictionWeakLimit_range</code> <small>line 137</small><div class="doc"><p>The finite-prefix prediction image is norm compact.</p></div><pre>theorem isCompact_predictionWeakLimit_range
+    (hmaps : ∀ p, LipschitzWith 1 (maps p))
+    (hevaluate : ∀ H H&#x27; (ε : ℝ),
+      (∀ p, ‖(H p : X) - (H&#x27; p : X)‖ ≤ ε) →
+        ‖(evaluate H : X) - (evaluate H&#x27; : X)‖ ≤ ε)
+    (hK : WeaklyCompact K)
+    (hdiam : ∀ a b : K, ‖(a : X) - (b : X)‖ ≤ 1)
+    (b : ℕ → K) (U : Ultrafilter ℕ) :
+    IsCompact (Set.range (fun theta =&gt;
+      (predictionWeakLimit hconvex maps evaluate parent y hK b U theta : X))) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PrefixPredictionOutputs.lean.html#L74">OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit</a></p></li><li id=L153><b>def</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.detectorSet</code> <small>line 153</small><div class="doc"><p>The prescribed finite test prefix and all possible evaluated prediction limits.</p></div><pre>def detectorSet (hK : WeaklyCompact K) (b : ℕ → K) (U : Ultrafilter ℕ)
+    (densePoints : ℕ → K) (densePrefixLength : ℕ) : Set X :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a></p></li><li id=L160><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.detectorSet_nonempty</code> <small>line 160</small><div class="doc"><p>Nonemptiness follows from the zero parameter even if the test prefix is empty.</p></div><pre>theorem detectorSet_nonempty (hK : WeaklyCompact K) (b : ℕ → K)
+    (U : Ultrafilter ℕ) (densePoints : ℕ → K) (densePrefixLength : ℕ) :
+    (detectorSet hconvex maps evaluate parent y hK b U densePoints densePrefixLength).Nonempty := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PrefixPredictionOutputs.lean.html#L153">OAI.ReflexiveFixedPoints.Prediction.Prefix.detectorSet</a></p></li><li id=L168><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.detectorSet_subset</code> <small>line 168</small></li><li id=L176><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.mem_detectorSet_prefix</code> <small>line 176</small></li><li id=L183><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.mem_detectorSet_predictionWeakLimit</code> <small>line 183</small></li><li id=L191><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.isCompact_detectorSet</code> <small>line 191</small><div class="doc"><p>Compactness in the original norm topology supplies exactly the compact-detector input.</p></div><pre>theorem isCompact_detectorSet
+    (hmaps : ∀ p, LipschitzWith 1 (maps p))
+    (hevaluate : ∀ H H&#x27; (ε : ℝ),
+      (∀ p, ‖(H p : X) - (H&#x27; p : X)‖ ≤ ε) →
+        ‖(evaluate H : X) - (evaluate H&#x27; : X)‖ ≤ ε)
+    (hK : WeaklyCompact K)
+    (hdiam : ∀ a b : K, ‖(a : X) - (b : X)‖ ≤ 1)
+    (b : ℕ → K) (U : Ultrafilter ℕ)
+    (densePoints : ℕ → K) (densePrefixLength : ℕ) :
+    IsCompact (detectorSet hconvex maps evaluate parent y hK b U densePoints densePrefixLength) :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PrefixPredictionOutputs.lean.html#L153">OAI.ReflexiveFixedPoints.Prediction.Prefix.detectorSet</a></p></li><li id=L206><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.evaluatedPrediction_congr_evaluate</code> <small>line 206</small><div class="doc"><p>An exact evaluator correspondence preserves every actual prediction.</p></div><pre>theorem evaluatedPrediction_congr_evaluate {evaluate&#x27; : (P → K) → K}
+    (heq : ∀ H, evaluate H = evaluate&#x27; H)
+    (b : K) (theta : Prediction.coefficientSet parent) :
+    evaluatedPrediction hconvex maps evaluate parent y b theta =
+      evaluatedPrediction hconvex maps evaluate&#x27; parent y b theta :=
+…</pre><p class="refs">Mentions: <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a>, <a href="PrefixPredictionOutputs.lean.html#L41">OAI.ReflexiveFixedPoints.Prediction.Prefix.evaluatedPrediction</a></p></li><li id=L214><b>theorem</b> <code>OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit_congr_evaluate</code> <small>line 214</small><div class="doc"><p>The chosen weak limits are preserved by equality of the actual evaluated sequences.</p></div><pre>theorem predictionWeakLimit_congr_evaluate {evaluate&#x27; : (P → K) → K}
+    (heq : ∀ H, evaluate H = evaluate&#x27; H)
+    (hK : WeaklyCompact K) (b : ℕ → K) (U : Ultrafilter ℕ)
+    (theta : Prediction.coefficientSet parent) :
+    predictionWeakLimit hconvex maps evaluate parent y hK b U theta =
+      predictionWeakLimit hconvex maps evaluate&#x27; parent y hK b U theta := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L46">OAI.ReflexiveFixedPoints.WeaklyCompact</a>, <a href="PredictionCompact.lean.html#L42">OAI.ReflexiveFixedPoints.Prediction.coefficientSet</a>, <a href="PrefixPredictionOutputs.lean.html#L74">OAI.ReflexiveFixedPoints.Prediction.Prefix.predictionWeakLimit</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

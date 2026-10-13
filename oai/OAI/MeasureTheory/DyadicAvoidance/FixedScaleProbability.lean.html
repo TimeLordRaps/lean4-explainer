@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/DyadicAvoidance/FixedScaleProbability.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/DyadicAvoidance/FixedScaleProbability.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MeasureTheory</a> / <a href="index.html">DyadicAvoidance</a> / <span>FixedScaleProbability.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MeasureTheory</a>/<a href="index.html">DyadicAvoidance</a>/<span>FixedScaleProbability.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/DyadicAvoidance/FixedScaleProbability.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.Problem310.FixedScaleProbability.measure_exposed_adaptive_failures_eq_lintegral</code> <small>line 17</small><div class="doc"><p>Exposing selector coordinates does not change the adaptive terminal-label
+calculation: first restrict the selector measure, then integrate out terminals.</p></div><pre>theorem measure_exposed_adaptive_failures_eq_lintegral
+    {A : Type u_A} {I : Type u_I} {K : Type u_K} [MeasurableSpace A] [Fintype I] [Fintype K]
+    (μ : Measure A) [SFinite μ] (ν : Measure Bool) [IsProbabilityMeasure ν]
+    (E : Set A) (addr : A → I → K)
+    (hinj : ∀ a, Function.Injective (addr a))
+    (active : A → I → Prop) [∀ a i, Decidable (active a i)]
+    (hmeas : MeasurableSet {z : A × (K → Bool) |
+      ∀ i, active z.1 i → z.2 (addr z.1 i) = false}) :
+    (μ.prod (Measure.pi (fun _ : K =&gt; ν)))
+      {z : A × (K → Bool) | z.1 ∈ E ∧
+        ∀ i, active z.1 i → z.2 (addr z.1 i) = false} =
+      ∫⁻ a in E, (ν {false}) ^ (Finset.univ.filter (active a)).card ∂μ := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.Problem310.FixedScaleProbability.measure_exposed_adaptive_failures</code> <small>line 41</small><div class="doc"><p>Fixed-scale failure on an exposure atom is its mass times the fresh-selector
+moment. The selected terminal addresses may depend on every selector coordinate.</p></div><pre>theorem measure_exposed_adaptive_failures
+    {A : Type u_A} {I : Type u_I} {K : Type u_K} [MeasurableSpace A] [Fintype I] [Fintype K]
+    (μ : Measure A) [SFinite μ] (ν : Measure Bool) [IsProbabilityMeasure ν]
+    (E : Set A) (addr : A → I → K)
+    (hinj : ∀ a, Function.Injective (addr a))
+    (fresh : A → I → Bool) (hfresh : Measurable fresh)
+    (σ : Measure (I → Bool))
+    (hjoint : ∀ v, μ (E ∩ {a | fresh a = v}) = μ E * σ {v})
+    (q : ENNReal)
+    (hmoment : (∫⁻ v, (ν {false}) ^
+      (Finset.univ.filter (fun i =&gt; v i = true)).card ∂σ) = q)
+    (hmeas : MeasurableSet {z : A × (K → Bool) |
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.Problem310.FixedScaleProbability.measure_fixed_scale_on_center_atom</code> <small>line 68</small><div class="doc"><p>Exact fixed-scale miss probability on a center-exposure atom. Selector
+lookups are fair, fresh and pairwise distinct. Terminal addresses may depend
+on all selectors, but their injectivity must hold for every selector outcome.
+This is the finite-product version of the conditional estimate.</p></div><pre>theorem measure_fixed_scale_on_center_atom
+    {C : Type u_C} {I : Type u_I} {S : Type u_S} {T : Type u_T} [Fintype C] [Fintype I] [Fintype S] [Fintype T]
+    (νs νt : Measure Bool) [IsProbabilityMeasure νs] [IsProbabilityMeasure νt]
+    (hfalse : νs {false} = 1 / 2) (htrue : νs {true} = 1 / 2)
+    (center : C → S) (fresh : I → S)
+    (hinj : Function.Injective (Sum.elim center fresh)) (value : C → Bool)
+    (addr : (S → Bool) → I → T) (haddr : ∀ a, Function.Injective (addr a))
+    (p : ℝ) (hp : p ≤ 1) (hterminal : νt {false} = ENNReal.ofReal (1 - p)) :
+    ((Measure.pi (fun _ : S =&gt; νs)).prod (Measure.pi (fun _ : T =&gt; νt)))
+      {z : (S → Bool) × (T → Bool) |
+        (∀ c, z.1 (center c) = value c) ∧
+        ∀ i, z.1 (fresh i) = true → z.2 (addr z.1 i) = false} =
+…</pre></li><li id=L101><b>theorem</b> <code>OAI.Problem310.FixedScaleProbability.measure_fixed_scale_eq_atom_mass</code> <small>line 101</small><div class="doc"><p>The preceding identity with the actual center-atom mass as coefficient,
+ready for summation over center exposure values.</p></div><pre>theorem measure_fixed_scale_eq_atom_mass
+    {C : Type u_C} {I : Type u_I} {S : Type u_S} {T : Type u_T} [Fintype C] [Fintype I] [Fintype S] [Fintype T]
+    (νs νt : Measure Bool) [IsProbabilityMeasure νs] [IsProbabilityMeasure νt]
+    (hfalse : νs {false} = 1 / 2) (htrue : νs {true} = 1 / 2)
+    (center : C → S) (fresh : I → S)
+    (hinj : Function.Injective (Sum.elim center fresh)) (value : C → Bool)
+    (addr : (S → Bool) → I → T) (haddr : ∀ a, Function.Injective (addr a))
+    (p : ℝ) (hp : p ≤ 1) (hterminal : νt {false} = ENNReal.ofReal (1 - p)) :
+    ((Measure.pi (fun _ : S =&gt; νs)).prod (Measure.pi (fun _ : T =&gt; νt)))
+      {z : (S → Bool) × (T → Bool) |
+        (∀ c, z.1 (center c) = value c) ∧
+        ∀ i, z.1 (fresh i) = true → z.2 (addr z.1 i) = false} =
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

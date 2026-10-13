@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/HarmonicGrowth/EndpointBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/HarmonicGrowth/EndpointBounds.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">HarmonicGrowth</a> / <span>EndpointBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">HarmonicGrowth</a>/<span>EndpointBounds.lean</span></code></h1><p class="muted">38 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/HarmonicGrowth/EndpointBounds.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.HarmonicCounterexample.PulseTaylor.angular_uniform_bounds</code> <small>line 14</small><div class="doc"><p>Uniform value and derivative bounds on the fixed positive stretch interval.
+These are bounds for the actual nonlinear Berger formula.</p></div><pre>theorem angular_uniform_bounds (r : ℝ) (b D : E) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ q ∈ Icc (1/2:ℝ) (3/2),
+      ‖angular r b D q-b‖ ≤ C*|q-1| ∧ ‖angularD r b D q‖ ≤ C := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Taylor.lean.html#L97">OAI.HarmonicCounterexample.PulseTaylor.angular</a>, <a href="Taylor.lean.html#L100">OAI.HarmonicCounterexample.PulseTaylor.angularD</a></p></li><li id=L51><b>lemma</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.compact_amplitude_jet_bound</code> <small>line 51</small><div class="doc"><p>The finite C1 amplitude family has one bound on its compact parameter set;
+no incoming metric or regular-solution history occurs in this choice.</p></div><pre>lemma compact_amplitude_jet_bound {K : Set H} (hK : IsCompact K)
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K) :
+    ∃ U : ℝ,0 ≤ U ∧ ∀ x ∈ K,∀ j,|amps j x| ≤ U ∧ ‖amps&#x27; j x‖ ≤ U := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.nonlinearBergerWord_uniform_C1_bound</code> <small>line 72</small><div class="doc"><p>Quantitative compact-ball-ready C1 bounds for the nonlinear word on ALL
+of the time axis. The constants precede amplitudes, parameter jets, and duration.</p></div><pre>theorem nonlinearBergerWord_uniform_C1_bound (r : ℝ) (b : E) (D : Fin n → E) :
+    ∃ C₀ C : ℝ,0 ≤ C₀ ∧ 0 ≤ C ∧
+      ∀ (amps : Fin n → ℝ) (jets : Fin n → H →L[ℝ] ℝ) (U T : ℝ),
+        0 ≤ U → (∀ j,|amps j| ≤ U) → (∀ j,‖jets j‖ ≤ U) →
+        0 &lt; T → 2*C₀*U ≤ T → ∀ t,
+        ‖nonlinearBergerWord r b D amps T t-b‖ ≤ C*U/T ∧
+        ‖∑ j : Fin n,((T⁻¹*duration n*bump j (duration n*t)) • jets j).smulRight
+          (PulseTaylor.angularD r b (D j) (packetStretch amps T t j))‖ ≤ C*U/T := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="InsertedWord.lean.html#L101">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.nonlinearBergerWord</a>, <a href="SmoothWord.lean.html#L128">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.duration</a>, <a href="SmoothWord.lean.html#L17">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.bump</a>, <a href="Taylor.lean.html#L100">OAI.HarmonicCounterexample.PulseTaylor.angularD</a>, <a href="InsertedWord.lean.html#L98">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.packetStretch</a></p></li><li id=L151><b>theorem</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.insertWord_compact_C1_bound</code> <small>line 151</small><div class="doc"><p>One parameter-ball bound for the actual inserted coefficient and its actual
+Frechet derivative. Both constants are fixed before ALL histories and time shifts.</p></div><pre>theorem insertWord_compact_C1_bound {K : Set H} (hK : IsCompact K)
+    (r : ℝ) (b : E) (D : Fin n → E)
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (ha : ∀ x ∈ K,∀ j,HasFDerivAt (amps j) (amps&#x27; j x) x)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K) :
+    ∃ T₀ C : ℝ,1 ≤ T₀ ∧ 0 ≤ C ∧ ∀ T ≥ T₀,∀ x ∈ K,
+      (∀ j t,packetStretch (fun i =&gt; amps i x) T t j ∈ Icc (1/2:ℝ) (3/2)) ∧
+      ∀ (history : ℝ → E) (α : ℝ → ℝ) (M a : ℝ),0 ≤ M →
+        (∀ t,|α t| ≤ M) → ∀ t,
+        ‖insertWord history α r b D (fun i =&gt; amps i x) a T t-history t‖ ≤ M*C/T ∧
+        ‖fderiv ℝ (fun y =&gt; insertWord history α r b D (fun i =&gt; amps i y) a T t) x‖ ≤ M*C/T := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="InsertedWord.lean.html#L98">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.packetStretch</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="InsertedWord.lean.html#L374">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.insertWord</a></p></li><li id=L212><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.phaseCoefficientInjection</code> <small>line 212</small><div class="doc"><p>Fixed continuous linear injection from angular coefficients to the
+lower-left phase block. It does not depend on histories or parameters.</p></div><pre>def phaseCoefficientInjection : (E →L[ℝ] E) →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E :=
+…</pre><p class="refs">Mentions: <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a></p></li><li id=L219><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.phaseCoefficientInjection_apply</code> <small>line 219</small></li><li id=L223><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.block_actual_fderiv_coeff</code> <small>line 223</small></li><li id=L236><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.block_actual_fderiv_smooth</code> <small>line 236</small></li><li id=L247><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.operator_phase_jet_norm_le</code> <small>line 247</small></li><li id=L258><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.block_actual_fderiv_norm</code> <small>line 258</small></li><li id=L287><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_insertWord_compact_producer</code> <small>line 287</small><div class="doc"><p>All global coefficient/phase regularity and bounds for a new pulse over
+a fixed compact parameter ball, produced by the actual Berger formula.
+The duration threshold precedes the incoming history and its time origin.</p></div><pre>theorem actual_insertWord_compact_producer {K : Set H} (hK : IsCompact K)
+    (r B : ℝ) (D : Fin n → E →L[ℝ] E)
+    (hD : ∀ j v,inner ℝ v (D j v) ≤ 0)
+    (hBD : ∀ j v,-(B*‖v‖^2) ≤ inner ℝ v (D j v))
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (ha : ∀ x ∈ K,∀ j,HasFDerivAt (amps j) (amps&#x27; j x) x)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K) :
+    ∃ T₀ C : ℝ,1 ≤ T₀ ∧ 0 ≤ C ∧ ∀ T ≥ T₀,
+    ∀ (history : ℝ → E →L[ℝ] E) (α b : ℝ → ℝ) (M MH a : ℝ),
+      ContDiff ℝ ∞ history → ContDiff ℝ ∞ α → 0 ≤ M → 0 ≤ MH →
+      (∀ t,|α t| ≤ M) → (∀ t,‖history t‖ ≤ MH) →
+      (∀ t v,0 ≤ inner ℝ v (history t v)) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L386><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.selected_finite_berger_word_estimates</code> <small>line 386</small><div class="doc"><p>Model-specific value and variational-slope estimates for an EXPLICIT smooth
+finite word, with all shape identities and bounds discharged. The selector and
+constants are chosen before every history, amplitude vector and duration.</p></div><pre>theorem selected_finite_berger_word_estimates (basis : OrthonormalBasis ι ℝ E)
+    (r B β p₀ θ γ : ℝ) (D : Fin n → E →L[ℝ] E) {M U : ℝ}
+    (hM : 0 ≤ M) (hU : 0 ≤ U) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hc : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0) :
+    ∃ Z C : ℝ,∃ d : ℝ → Fin n,0 ≤ Z ∧ 1 ≤ C ∧
+      (∀ u j,j ≠ d u → bump j (duration n*u)=0 ∧ deriv (bump j) (duration n*u)=0) ∧
+      (∀ t,(∀ᶠ s in 𝓝 t,d s=d t) ∨
+        (∀ᶠ s in 𝓝 t,∀ v : Fin n → ℝ,unitPacketScalar v s=0)) ∧ ∀ (A : H → ℝ → E →L[ℝ] E) (b : ℝ → ℝ)
+      (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+      (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E) (x h : H)
+      (α p : ℝ → ℝ) (amps rays : Fin n → ℝ) (Mp MB MA Mb l B₀ a T δ ε : ℝ),
+      (∀ j,|amps j| ≤ U) → (∀ j,|rays j| ≤ U) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L508><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.compact_inserted_physical_estimates</code> <small>line 508</small><div class="doc"><p>The actual smooth insertion satisfies all four physical value/ray error
+bounds, uniformly on a fixed compact parameter ball. Constants and duration
+thresholds precede incoming histories. All incoming jets are proved zero by
+causality, and all coefficient identities are obtained by differentiation.</p></div><pre>theorem compact_inserted_physical_estimates (basis : OrthonormalBasis ι ℝ E)
+    {K : Set H} (hK : IsCompact K)
+    (r B β p₀ θ γ M : ℝ) (D : Fin n → E →L[ℝ] E)
+    (hD : ∀ j v,inner ℝ v (D j v) ≤ 0)
+    (hBD : ∀ j v,-(B*‖v‖^2) ≤ inner ℝ v (D j v))
+    (hM : 0 ≤ M) (hB : 0 ≤ B) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hden : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0)
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (ha : ∀ x ∈ K,∀ j,HasFDerivAt (amps j) (amps&#x27; j x) x)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K) :
+    ∃ T₀ Z C : ℝ,1 ≤ T₀ ∧ 0 ≤ Z ∧ 1 ≤ C ∧ ∀ T ≥ T₀,
+      ∀ (history : ℝ → E →L[ℝ] E) (α b : ℝ → ℝ) (MH Mb l B₀ a δ ε : ℝ),
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L664><b>def</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketJet</code> <small>line 664</small><div class="doc"><p>The actual Frechet derivative of the ideal packet, retained as a continuous
+linear map rather than only its finitely many rays.</p></div><pre>def unitPacketJet (a&#x27; : Fin n → H →L[ℝ] ℝ) (X : Fin n → E) (t : ℝ) : H →L[ℝ] E :=
+…</pre></li><li id=L667><b>lemma</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketJet_smooth</code> <small>line 667</small></li><li id=L683><b>theorem</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.compact_ideal_packet_bound</code> <small>line 683</small><div class="doc"><p>A single value-and-operator-jet bound on a compact parameter set, chosen
+before any physical history, duration or radial coefficients.</p></div><pre>theorem compact_ideal_packet_bound {K : Set H} (hK : IsCompact K)
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K)
+    (X : Fin n → E) :
+    ∃ C : ℝ,0 ≤ C ∧ ∀ x ∈ K,
+      (∀ t,‖unitPacketCoefficient (fun j =&gt; amps j x) X t‖ ≤ C) ∧
+      (∀ t,‖unitPacketJet (fun j =&gt; amps&#x27; j x) X t‖ ≤ C) ∧
+      (∫ t in (0:ℝ)..1,‖unitPacketCoefficient (fun j =&gt; amps j x) X t‖)+
+        (∫ t in (0:ℝ)..1,‖unitPacketJet (fun j =&gt; amps&#x27; j x) X t‖) ≤ 2*C := by
+…</pre><p class="refs">Mentions: <a href="SmoothWord.lean.html#L455">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketCoefficient</a>, <a href="EndpointBounds.lean.html#L664">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketJet</a></p></li><li id=L744><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clipped_scalarBaseline_continuous</code> <small>line 744</small><div class="doc"><p>Positive-time scalar baseline with a continuous global extension. This
+avoids making a false global nonsingularity claim at negative time.</p></div><pre>lemma clipped_scalarBaseline_continuous {A p : ℝ → ℝ}
+    (hA : Continuous A) (hp : Continuous p)
+    {MA Mp : ℝ} (hMA : 0 ≤ MA) (hMp : 0 ≤ Mp)
+    (hAn : ∀ t,|A t| ≤ MA) (hpn : ∀ t,|p t| ≤ Mp)
+    (hAp : ∀ t,0 ≤ t → 0 ≤ A t) {θ : ℝ} (hθ : 0 ≤ θ) (a : ℝ) :
+    Continuous (fun t =&gt; scalarBaseline A p θ (max 0 (t-a))) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="ScalarODE.lean.html#L234">OAI.HarmonicCounterexample.LinearODE.scalarBaseline</a></p></li><li id=L782><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.compact_inserted_endpoint_C1</code> <small>line 782</small><div class="doc"><p>From the actual nonlinear coefficient producer and physical estimates to
+an actual normalized second-order transmission C1 estimate. Every error
+constant and duration threshold is chosen before the incoming history.</p></div><pre>theorem compact_inserted_endpoint_C1 (basis : OrthonormalBasis ι ℝ E)
+    (hbasis : OrthonormalBasis κ ℝ H) {K : Set H} (hK : IsCompact K)
+    (r B β p₀ θ γ M : ℝ) (D : Fin n → E →L[ℝ] E)
+    (hD : ∀ j v,inner ℝ v (D j v) ≤ 0)
+    (hBD : ∀ j v,-(B*‖v‖^2) ≤ inner ℝ v (D j v))
+    (hM : 0 ≤ M) (hB : 0 ≤ B) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hden : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0)
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (ha : ∀ x ∈ K,∀ j,HasFDerivAt (amps j) (amps&#x27; j x) x)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K) :
+    ∃ T₀ Z C J : ℝ,1 ≤ T₀ ∧ 0 ≤ Z ∧ 1 ≤ C ∧ 0 ≤ J ∧ ∀ T ≥ T₀,
+      ∀ (history : ℝ → E →L[ℝ] E) (α b : ℝ → ℝ) (MH Mb l B₀ a δ ε : ℝ)
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L933><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_insertWord_differentiable</code> <small>line 933</small><div class="doc"><p>Actual parameter differentiability of every center-regular value and slope
+for compactly supported smooth insertions. Bounds are local in parameter,
+not artificially global in the unbounded control space.</p></div><pre>theorem actual_insertWord_differentiable {K : Set H} (hK : IsCompact K)
+    (r B : ℝ) (D : Fin n → E →L[ℝ] E)
+    (hD : ∀ j v,inner ℝ v (D j v) ≤ 0)
+    (hBD : ∀ j v,-(B*‖v‖^2) ≤ inner ℝ v (D j v))
+    (amps : Fin n → H → ℝ) (amps&#x27; : Fin n → H → H →L[ℝ] ℝ)
+    (ha : ∀ x ∈ K,∀ j,HasFDerivAt (amps j) (amps&#x27; j x) x)
+    (hc : ∀ j,ContinuousOn (amps j) K) (hd : ∀ j,ContinuousOn (amps&#x27; j) K) :
+    ∃ T₀ C : ℝ,1 ≤ T₀ ∧ 0 ≤ C ∧ ∀ T ≥ T₀,
+    ∀ (history : ℝ → E →L[ℝ] E) (α b : ℝ → ℝ) (M MH Mb a l B₀ : ℝ)
+      (S : Set H), IsOpen S → IsPreconnected S → S ⊆ K →
+      ContDiff ℝ ∞ history → ContDiff ℝ ∞ α → Continuous b → 0 ≤ M → 0 ≤ MH → 0 ≤ Mb →
+      (∀ t,|α t| ≤ M) → (∀ t,‖history t‖ ≤ MH) → (∀ t,|b t| ≤ Mb) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L1021><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.compact_inserted_outgoing_C1</code> <small>line 1021</small></li><li id=L1130><b>lemma</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.leftWord_differentiableAt</code> <small>line 1130</small></li><li id=L1138><b>lemma</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.actual_packet_differentiableAt</code> <small>line 1138</small></li><li id=L1149><b>lemma</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.leftWord_contDiff</code> <small>line 1149</small></li><li id=L1155><b>lemma</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.actual_packet_contDiff</code> <small>line 1155</small></li><li id=L1177><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.normalized_transmission_differentiableAt</code> <small>line 1177</small></li><li id=L1211><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.small_radius_bounds</code> <small>line 1211</small></li><li id=L1227><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.source_small_of_total</code> <small>line 1227</small></li><li id=L1237><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.exponential_error_linear</code> <small>line 1237</small></li><li id=L1246><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.compact_inserted_linear_C1</code> <small>line 1246</small></li><li id=L1353><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.linear_C1_error</code> <small>line 1353</small></li><li id=L1382><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.orthogonalMatrixAlgHom</code> <small>line 1382</small></li><li id=L1391><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix_exp</code> <small>line 1391</small></li><li id=L1396><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix_leftWord</code> <small>line 1396</small></li><li id=L1405><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix_packet</code> <small>line 1405</small><div class="doc"><p>Orthonormal coordinates of the genuine chronological ideal packet.</p></div><pre>lemma orthogonalMatrix_packet (b : OrthonormalBasis ι ℝ E) {n : ℕ}
+    (a : Fin n → ℝ) (X : Fin n → E →L[ℝ] E) :
+    orthogonalMatrix b (flow (fun t =&gt; ContinuousLinearMap.mul ℝ (E →L[ℝ] E)
+      (unitPacketCoefficient a X t)) 1 1)=
+      flow (fun t =&gt; ContinuousLinearMap.mul ℝ (Matrix ι ι ℝ)
+        (unitPacketCoefficient a (fun j =&gt; orthogonalMatrix b (X j)) t)) 1 1 := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Damping.lean.html#L25">OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix</a>, <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L1443><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.compact_inserted_matrix_C1</code> <small>line 1443</small></li><li id=L1517><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.pi_linear_difference_bound</code> <small>line 1517</small></li><li id=L1528><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.finite_C1_error</code> <small>line 1528</small><div class="doc"><p>Simultaneous finite-factor Frechet C1 control in the actual product norm.</p></div><pre>theorem finite_C1_error {f g : (i : β) → H → F i} {x : H} {η : ℝ}
+    (hη : 0 ≤ η) (hf : ∀ i,DifferentiableAt ℝ (f i) x)
+    (hg : ∀ i,DifferentiableAt ℝ (g i) x)
+    (he : ∀ i,max ‖f i x-g i x‖ ‖fderiv ℝ (f i) x-fderiv ℝ (g i) x‖ ≤ η) :
+    DifferentiableAt ℝ (fun y i =&gt; f i y) x ∧
+      max ‖(fun i =&gt; f i x)-(fun i =&gt; g i x)‖
+        ‖fderiv ℝ (fun y i =&gt; f i y) x-fderiv ℝ (fun y i =&gt; g i y) x‖ ≤ η := by
+…</pre></li><li id=L1542><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.finite_C1_norm</code> <small>line 1542</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/SourceMarkedPrediction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/SourceMarkedPrediction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>SourceMarkedPrediction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>SourceMarkedPrediction.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/SourceMarkedPrediction.lean#L1">source</a></p><div class="doc"><p>Marking belongs to an entire coarse line cell. On every unmarked
+cell the prediction factor is exactly one. In particular a cell containing
+an inactive point cannot contribute a marked factor.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.markedValue</code> <small>line 18</small></li><li id=L22><b>def</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.markedError</code> <small>line 22</small></li><li id=L26><b>theorem</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.measurableSet_marked</code> <small>line 26</small></li><li id=L34><b>theorem</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.measurable_markedValue</code> <small>line 34</small></li><li id=L38><b>theorem</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.measurable_markedError</code> <small>line 38</small></li><li id=L44><b>theorem</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.exists_marked_source_prediction</code> <small>line 44</small><div class="doc"><p>Only marked cells require an analytic predictor. The other cells
+have factor one, retaining exact normalization and fine-cell constancy.</p></div><pre>theorem exists_marked_source_prediction (g : FiniteLineGrid) (coarse fine : ℕ)
+    (hcf : coarse ≤ fine) (hf : fine ≤ g.depth)
+    (marked : ℕ → Prop) (good : Set ℝ) (beta error : ℝ → ℝ) (F : ℕ → ℝ → ℝ)
+    (hF : ∀ i &lt; g.branching^coarse, marked i → ∀ x, 0 ≤ F i x)
+    (hint : ∀ i &lt; g.branching^coarse, marked i →
+      Integrable (F i) (intervalProbability (g.lineWindow coarse i (fine-coarse)).origin
+        ((g.lineWindow coarse i (fine-coarse)).origin+(g.lineWindow coarse i (fine-coarse)).width)))
+    (haverage : ∀ i &lt; g.branching^coarse, marked i →
+      (∫ x, F i x ∂intervalProbability (g.lineWindow coarse i (fine-coarse)).origin
+        ((g.lineWindow coarse i (fine-coarse)).origin+(g.lineWindow coarse i (fine-coarse)).width)) ≤ 1)
+    (hconstant : ∀ i &lt; g.branching^coarse, marked i → ∀ x z,
+      (g.lineWindow coarse i (fine-coarse)).index (fine-coarse) x =
+…</pre><p class="refs">Mentions: <a href="../Trees/FiniteLineGrid.lean.html#L15">OAI.LipschitzHilbert.FiniteLineGrid</a>, <a href="../Fourier/FourierAveragingConvolution.lean.html#L73">OAI.LipschitzHilbert.intervalProbability</a>, <a href="../Trees/FiniteLineGrid.lean.html#L51">OAI.LipschitzHilbert.FiniteLineGrid.index</a></p></li><li id=L108><b>theorem</b> <code>OAI.LipschitzHilbert.FiniteLineGrid.unmarked_of_mass_le</code> <small>line 108</small><div class="doc"><p>The source's cellwise condition rules out marked factors as soon as
+the actual point has crossed its mass cutoff.</p></div><pre>theorem unmarked_of_mass_le (g : FiniteLineGrid) (coarse : ℕ) (marked : ℕ → Prop)
+    (n : ℝ → ℝ) (M : ℝ)
+    (hmark : ∀ i &lt; g.branching^coarse, marked i → ∀ x ∈ g.cell coarse i, M &lt; n x)
+    (hcoarse : coarse ≤ g.depth) {x : ℝ} (hx : x ∈ g.root) (hn : n x ≤ M) :
+    ¬marked (g.index coarse x).val := by
+…</pre><p class="refs">Mentions: <a href="../Trees/FiniteLineGrid.lean.html#L15">OAI.LipschitzHilbert.FiniteLineGrid</a></p></li><li id=L127><b>theorem</b> <code>OAI.LipschitzHilbert.eventually_source_marked_error</code> <small>line 127</small><div class="doc"><p>Marked errors are a subfamily of the active forward mass-path errors.
+No claim that pointwise stopping is itself a coarse-cell condition is used.</p></div><pre>theorem eventually_source_marked_error (C A_M : ℝ) (hC : 0 ≤ C) (hAM : 0 ≤ A_M) :
+    ∀ᶠ L : ℝ in atTop, ∀ (n e snapshot : ℕ → ℝ) (count : ℕ) (marked : ℕ → Prop),
+    ∀ N : ℝ, 0 &lt; N → Real.log N ≤ 2*L → n 0 ≤ L^C*N^2 →
+      (∀ j, 0 ≤ n j) → Antitone n → n count ≤ L^A_M →
+      (∀ j &lt; count, marked j → L^A_M &lt; n j) →
+      (∀ j &lt; count, marked j → snapshot j/2 ≤ pathDrop n j) →
+      (∀ j &lt; count, marked j → e j ≤ SourceParameters.step L^(-(1/32:ℝ))*snapshot j) →
+      (∑ j ∈ Finset.range count, if marked j then e j else 0) ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="../Trees/PathDrops.lean.html#L13">OAI.LipschitzHilbert.pathDrop</a>, <a href="../Trees/SourceParameters.lean.html#L21">OAI.LipschitzHilbert.SourceParameters.step</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

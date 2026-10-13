@@ -1,0 +1,1 @@
+window.l4shard("ac", [["Imo1970P6.AcuteSet",25,332],["Imo2019P3.exists_matching_of_isAcyclic",124,836],["Imo2019P3.isAcyclic_toggle",124,769],["Usa1974P4.probFirstAC",160,72],["Usa1975P5.aceSets",162,49],["Usa1975P5.image_mem_aceSets",162,170],["Usa1975P5.image_reflect_aceSets",162,204],["Usa2012P1.IsAcuteTriple",272,37],["Usa2012P1.sq_add_sq_le_of_not_isAcuteTriple",272,57]]);

@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/CoefficientTransforms.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/CoefficientTransforms.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>CoefficientTransforms.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>CoefficientTransforms.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/CoefficientTransforms.lean#L1">source</a></p><div class="doc"><h3>Coefficient and polynomial transforms for marked normal polynomials</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.exists_transformed_coefficient</code> <small>line 15</small><div class="doc"><p>The coefficient operation in Pi^-m F(Pi*v), with its exact algebraic
+identity valid even at the zeros of Pi.</p></div><pre>theorem exists_transformed_coefficient {τ L Q : ℂ}
+    (hτ : τ ≠ 0) (hL : L ≠ 0) (hQ : Q ≠ 0) (d : ℤ) (m j : ℕ)
+    (P : Nagata.W08.automorphicSections τ 9 Q)
+    (f : Nagata.W08.automorphicSections τ (3 * (d - 3 * (j : ℤ)))
+      (L ^ (d - 3 * (j : ℤ))))
+    (hzero : j ≤ m → ∀ z ≠ 0, P.val z = 0 → deriv P.val z ≠ 0 ∧
+      ((m - j : ℕ) : ℕ∞) ≤ analyticOrderAt f.val z) :
+    ∃ g ∈ coefficientSpace τ L Q d (m : ℤ) (j : ℤ) P.val,
+      ∀ z ≠ 0, P.val z ^ m * g z = P.val z ^ j * f.val z := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="CoefficientSpaces.lean.html#L55">OAI.Nagata.CoefficientSpaces.coefficientSpace</a></p></li><li id=L44><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.transformed_coefficient_nonzero</code> <small>line 44</small><div class="doc"><p>The weighted coefficient identity cannot turn a genuine nonzero original
+section into the zero coefficient.</p></div><pre>theorem transformed_coefficient_nonzero {τ L Q : ℂ} (d : ℤ) (m j : ℕ)
+    (P : Nagata.W08.automorphicSections τ 9 Q)
+    (hPfin : ∀ z ≠ 0, analyticOrderAt P.val z ≠ ⊤)
+    (f : Nagata.W08.automorphicSections τ (3 * (d - 3 * (j : ℤ)))
+      (L ^ (d - 3 * (j : ℤ)))) (g : ℂ → ℂ)
+    (hfactor : ∀ z ≠ 0, P.val z ^ m * g z = P.val z ^ j * f.val z)
+    (hf : f ≠ 0) : g ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L73><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.exists_transformed_polynomial</code> <small>line 73</small></li><li id=L142><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.scalarExpression_eq_range</code> <small>line 142</small><div class="doc"><p>Scalar evaluation may be taken over the common finite degree range.</p></div><pre>theorem scalarExpression_eq_range (F : Polynomial (ℂ → ℂ)) (N : ℕ)
+    (hbound : ∀ j, N &lt; j → F.coeff j = 0) (z v : ℂ) :
+    scalarExpression F z v = ∑ j ∈ Finset.range (N + 1), F.coeff j z * v ^ j := by
+…</pre><p class="refs">Mentions: <a href="CoefficientSpaces.lean.html#L125">OAI.Nagata.CoefficientSpaces.scalarExpression</a></p></li><li id=L156><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.scalarExpression_transform</code> <small>line 156</small><div class="doc"><p>The coefficient identities are the manuscript's actual local scalar
+substitution identity, not merely a matrix or an abstract coefficient model.</p></div><pre>theorem scalarExpression_transform (F G : Polynomial (ℂ → ℂ)) (N m : ℕ)
+    (hF : ∀ j, N &lt; j → F.coeff j = 0) (hG : ∀ j, N &lt; j → G.coeff j = 0)
+    (P : ℂ → ℂ) (z v : ℂ)
+    (hfactor : ∀ j, P z ^ m * G.coeff j z = P z ^ j * F.coeff j z) :
+    P z ^ m * scalarExpression G z v = scalarExpression F z (P z * v) := by
+…</pre><p class="refs">Mentions: <a href="CoefficientSpaces.lean.html#L125">OAI.Nagata.CoefficientSpaces.scalarExpression</a></p></li><li id=L178><b>def</b> <code>OAI.Nagata.CoefficientSpaces.nineThetaSection</code> <small>line 178</small><div class="doc"><p>The actual nine-theta product as a degree-nine section.</p></div><pre>noncomputable def nineThetaSection {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0)
+    (a : Fin 9 → ℂ) (ha : ∀ i, a i ≠ 0) :
+    Nagata.W08.automorphicSections τ 9 (∏ i, -a i) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L186><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.exists_marked_transformed_polynomial</code> <small>line 186</small><div class="doc"><p>Nine ordinary numerator-order conditions suffice: period automorphy propagates
+orders to the complete divisor, and the genuine theta product supplies simplicity.</p></div><pre>theorem exists_marked_transformed_polynomial {τ L : ℂ}
+    (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0) (hL : L ≠ 0)
+    (a : Fin 9 → ℂ) (ha : ∀ i, a i ≠ 0)
+    (hdisjoint : Pairwise (fun i j =&gt; ∀ k : ℤ, a i ≠ a j * τ ^ k))
+    (d : ℤ) (m : ℕ) (F : Polynomial (ℂ → ℂ))
+    (hbound : ∀ j : ℕ, (d / 3).toNat &lt; j → F.coeff j = 0)
+    (hsource : ∀ j : ℕ, F.coeff j ∈ Nagata.W08.automorphicSections τ
+      (3 * (d - 3 * (j : ℤ))) (L ^ (d - 3 * (j : ℤ))))
+    (hmarked : ∀ j : ℕ, j ≤ (d / 3).toNat → j ≤ m → ∀ i : Fin 9,
+      ((m - j : ℕ) : ℕ∞) ≤ analyticOrderAt (F.coeff j) (a i)) :
+    ∃ G : polynomialSections τ L (∏ i, -a i) d (m : ℤ)
+        (nineThetaSection hτ hτ0 a ha).val,
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="CoefficientSpaces.lean.html#L99">OAI.Nagata.CoefficientSpaces.polynomialSections</a>, <a href="CoefficientTransforms.lean.html#L178">OAI.Nagata.CoefficientSpaces.nineThetaSection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

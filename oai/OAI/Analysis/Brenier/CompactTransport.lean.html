@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/CompactTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/CompactTransport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>CompactTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>CompactTransport.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/CompactTransport.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.Problem358.IsCoupling.ae_mem</code> <small>line 14</small><div class="doc"><p>A coupling inherits almost-everywhere support from each marginal.</p></div><pre>theorem IsCoupling.ae_mem {d : ℕ} {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} {K Y : Set (E d)}
+    (hπ : IsCoupling μ ν π) (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    ∀ᵐ p ∂π, p.1 ∈ K ∧ p.2 ∈ Y := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.Problem358.IsCoupling.integrable_sqDist_of_compact</code> <small>line 33</small><div class="doc"><p>Finite second cost for a coupling whose two marginals have compact support.</p></div><pre>theorem IsCoupling.integrable_sqDist_of_compact {d : ℕ} {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} {K Y : Set (E d)}
+    (hπ : IsCoupling μ ν π) (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    Integrable (fun p : E d × E d =&gt; ‖p.1 - p.2‖ ^ 2) π := by
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.Problem358.IsCoupling.quadraticPlanCost_ne_top_of_compact</code> <small>line 49</small><div class="doc"><p>On compact marginal supports every coupling has finite ENNReal quadratic cost.</p></div><pre>theorem IsCoupling.quadraticPlanCost_ne_top_of_compact {d : ℕ} {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} {K Y : Set (E d)}
+    (hπ : IsCoupling μ ν π) (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    quadraticPlanCost π ≠ ∞ := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.Problem358.IsCoupling.quadraticPlanCost_le_of_norm_le</code> <small>line 59</small><div class="doc"><p>An explicit uniform cost bound from bounds on the marginal supports.</p></div><pre>theorem IsCoupling.quadraticPlanCost_le_of_norm_le {d : ℕ} {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} {K Y : Set (E d)} {R S : ℝ}
+    (hπ : IsCoupling μ ν π) (hμ : IsSupported μ K) (hν : IsSupported ν Y)
+    (hK : ∀ x ∈ K, ‖x‖ ≤ R) (hY : ∀ y ∈ Y, ‖y‖ ≤ S) :
+    quadraticPlanCost π ≤ ENNReal.ofReal ((R + S) ^ 2) := by
+…</pre></li><li id=L88><b>def</b> <code>OAI.Problem358.probabilityCouplings</code> <small>line 88</small><div class="doc"><p>The closed set of probability measures with two specified marginals.</p></div><pre>def probabilityCouplings (μ : ProbabilityMeasure X) (ν : ProbabilityMeasure Y) :
+    Set (ProbabilityMeasure (X × Y)) :=
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.Problem358.probabilityCouplings_nonempty</code> <small>line 92</small></li><li id=L111><b>theorem</b> <code>OAI.Problem358.isClosed_probabilityCouplings</code> <small>line 111</small></li><li id=L122><b>theorem</b> <code>OAI.Problem358.isCompact_probabilityCouplings</code> <small>line 122</small></li><li id=L127><b>theorem</b> <code>OAI.Problem358.exists_probabilityCoupling_minimizer</code> <small>line 127</small><div class="doc"><p>Every continuous real cost attains its minimum over compact-space probability couplings.</p></div><pre>theorem exists_probabilityCoupling_minimizer (μ : ProbabilityMeasure X)
+    (ν : ProbabilityMeasure Y) (c : X × Y → ℝ) (hc : Continuous c) :
+    ∃ π ∈ probabilityCouplings μ ν,
+      ∀ η ∈ probabilityCouplings μ ν,
+        (∫ p, c p ∂(π : Measure (X × Y))) ≤ ∫ p, c p ∂(η : Measure (X × Y)) := by
+…</pre><p class="refs">Mentions: <a href="CompactTransport.lean.html#L88">OAI.Problem358.probabilityCouplings</a></p></li><li id=L139><b>theorem</b> <code>OAI.Problem358.exists_compact_coupling_minimizer</code> <small>line 139</small><div class="doc"><p>Unbundled continuous-cost minimization, for direct use with measure-valued plans.</p></div><pre>theorem exists_compact_coupling_minimizer (μ : Measure X) (ν : Measure Y)
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    (c : X × Y → ℝ) (hc : Continuous c) :
+    ∃ π : Measure (X × Y), IsProbabilityMeasure π ∧
+      Measure.map Prod.fst π = μ ∧ Measure.map Prod.snd π = ν ∧
+      ∀ η : Measure (X × Y), IsProbabilityMeasure η →
+        Measure.map Prod.fst η = μ → Measure.map Prod.snd η = ν →
+        (∫ p, c p ∂π) ≤ ∫ p, c p ∂η := by
+…</pre></li><li id=L169><b>theorem</b> <code>OAI.Problem358.isCompact_probability_supported</code> <small>line 169</small><div class="doc"><p>Fixed compact support determines a compact set of probability measures.</p></div><pre>theorem isCompact_probability_supported {X : Type*} [MetricSpace X]
+    [MeasurableSpace X] [BorelSpace X] {K : Set X} (hK : IsCompact K) :
+    IsCompact {μ : ProbabilityMeasure X | (μ : Measure X) Kᶜ = 0} := by
+…</pre></li><li id=L179><b>theorem</b> <code>OAI.Problem358.probabilityCouplings_ae_mem_prod</code> <small>line 179</small><div class="doc"><p>Couplings of supported marginals are concentrated on the product of their supports.</p></div><pre>theorem probabilityCouplings_ae_mem_prod {d : ℕ}
+    {μ ν : ProbabilityMeasure (E d)} {K Y : Set (E d)}
+    (hμ : (μ : Measure (E d)) Kᶜ = 0) (hν : (ν : Measure (E d)) Yᶜ = 0)
+    {π : ProbabilityMeasure (E d × E d)} (hπ : π ∈ probabilityCouplings μ ν) :
+    ∀ᵐ p ∂(π : Measure (E d × E d)), p ∈ K ×ˢ Y := by
+…</pre><p class="refs">Mentions: <a href="CompactTransport.lean.html#L88">OAI.Problem358.probabilityCouplings</a></p></li><li id=L196><b>theorem</b> <code>OAI.Problem358.isCompact_probabilityCouplings_of_supported</code> <small>line 196</small><div class="doc"><p>Compactly supported marginals have a compact set of couplings in the weak topology.</p></div><pre>theorem isCompact_probabilityCouplings_of_supported {d : ℕ}
+    {μ ν : ProbabilityMeasure (E d)} {K Y : Set (E d)}
+    (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : (μ : Measure (E d)) Kᶜ = 0) (hν : (ν : Measure (E d)) Yᶜ = 0) :
+    IsCompact (probabilityCouplings μ ν) := by
+…</pre><p class="refs">Mentions: <a href="CompactTransport.lean.html#L88">OAI.Problem358.probabilityCouplings</a></p></li><li id=L207><b>def</b> <code>OAI.Problem358.boundedQuadraticCost</code> <small>line 207</small><div class="doc"><p>A conveniently clipped quadratic cost, bounded and continuous on the full product space.</p></div><pre>def boundedQuadraticCost (d : ℕ) (M : ℝ) (hM : 0 ≤ M) :
+    BoundedContinuousFunction (E d × E d) ℝ where
+…</pre></li><li id=L226><b>theorem</b> <code>OAI.Problem358.exists_quadraticOptimalPlan_of_compact_support</code> <small>line 226</small><div class="doc"><p>Compactly supported probabilities have a minimizing quadratic transport plan.</p></div><pre>theorem exists_quadraticOptimalPlan_of_compact_support {d : ℕ}
+    (μ ν : Measure (E d)) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    ∃ π : Measure (E d × E d), IsCoupling μ ν π ∧
+      quadraticPlanCost π ≠ ∞ ∧
+      ∀ η : Measure (E d × E d), IsCoupling μ ν η →
+        quadraticPlanCost π ≤ quadraticPlanCost η := by
+…</pre></li><li id=L281><b>theorem</b> <code>OAI.Problem358.exists_finite_cost_coupling_of_compact_support</code> <small>line 281</small><div class="doc"><p>In particular, a finite-cost plan is available for any compactly supported probabilities.</p></div><pre>theorem exists_finite_cost_coupling_of_compact_support {d : ℕ}
+    (μ ν : Measure (E d)) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    ∃ π : Measure (E d × E d), IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞ := by
+…</pre></li><li id=L303><b>theorem</b> <code>OAI.Problem358.wasserstein2_attained_of_compact_support</code> <small>line 303</small><div class="doc"><p>The infimum in the exact Wasserstein definition is attained for compact supports.</p></div><pre>theorem wasserstein2_attained_of_compact_support {d : ℕ}
+    (μ ν : Measure (E d)) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    ∃ π : Measure (E d × E d), IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞ ∧
+      wasserstein2 μ ν = Real.sqrt (quadraticPlanCost π).toReal := by
+…</pre></li><li id=L314><b>theorem</b> <code>OAI.Problem358.wasserstein2_eq_zero_iff_of_compact_support</code> <small>line 314</small><div class="doc"><p>Zero distance separates compactly supported probabilities.</p></div><pre>theorem wasserstein2_eq_zero_iff_of_compact_support {d : ℕ}
+    (μ ν : Measure (E d)) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    wasserstein2 μ ν = 0 ↔ μ = ν := by
+…</pre></li><li id=L326><b>theorem</b> <code>OAI.Problem358.wasserstein2_pos_iff_of_compact_support</code> <small>line 326</small><div class="doc"><p>Distinct compactly supported probabilities have strictly positive distance.</p></div><pre>theorem wasserstein2_pos_iff_of_compact_support {d : ℕ}
+    (μ ν : Measure (E d)) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    0 &lt; wasserstein2 μ ν ↔ μ ≠ ν := by
+…</pre></li><li id=L336><b>theorem</b> <code>OAI.Problem358.integral_test_le_wasserstein2_of_compact_support</code> <small>line 336</small><div class="doc"><p>Compact support discharges both the finite-cost and integrability hypotheses
+in the Lipschitz testing inequality.</p></div><pre>theorem integral_test_le_wasserstein2_of_compact_support {d : ℕ}
+    (μ ν : Measure (E d)) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y)
+    {L : ℝ≥0} {f : E d → ℝ} (hf : LipschitzWith L f) :
+    |(∫ x, f x ∂μ) - ∫ y, f y ∂ν| ≤ L * wasserstein2 μ ν := by
+…</pre></li><li id=L349><b>theorem</b> <code>OAI.Problem358.tendsto_probabilityMeasure_of_compact_wasserstein2_tendsto_zero</code> <small>line 349</small><div class="doc"><p>On compact supports, Wasserstein convergence implies weak convergence without
+an additional finite-cost hypothesis; the compact supports may vary with the index.</p></div><pre>theorem tendsto_probabilityMeasure_of_compact_wasserstein2_tendsto_zero
+    {d : ℕ} {ι : Type*} {l : Filter ι} [l.IsCountablyGenerated]
+    {μs : ι → ProbabilityMeasure (E d)} {ν : ProbabilityMeasure (E d)}
+    {Ks : ι → Set (E d)} {Y : Set (E d)}
+    (hKs : ∀ i, IsCompact (Ks i)) (hY : IsCompact Y)
+    (hμs : ∀ i, IsSupported (μs i : Measure (E d)) (Ks i))
+    (hν : IsSupported (ν : Measure (E d)) Y)
+    (hW : Tendsto (fun i =&gt; wasserstein2 (μs i : Measure (E d)) (ν : Measure (E d)))
+      l (𝓝 0)) : Tendsto μs l (𝓝 ν) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

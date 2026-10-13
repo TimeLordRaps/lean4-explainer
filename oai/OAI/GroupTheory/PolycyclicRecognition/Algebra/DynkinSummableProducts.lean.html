@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/DynkinSummableProducts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/DynkinSummableProducts.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>DynkinSummableProducts.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>DynkinSummableProducts.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/DynkinSummableProducts.lean#L1">source</a></p><div class="doc"><h3>Finite BCH products controlled by the sum of input sizes</h3><p>The coefficient bound in the existing finite Dynkin input also controls
+products by the sum of the logarithmic input norms. In particular the
+bound tends to zero with that sum, independently of the number of factors.
+This is the estimate needed for contracting quotient trajectories in
+exponential coordinates; no Riemannian metric comparison is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.PolycyclicRecognition.norm_rightNestedWord_le_product</code> <small>line 25</small><div class="doc"><p>Keep the individual letter sizes when estimating a right-nested word.</p></div><pre>theorem norm_rightNestedWord_le_product (b : Basis J ℝ L)
+    {I : Type*} (X : I → L) {C : ℝ} (hC : 0 ≤ C)
+    (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (d : ℕ) (w : Fin (d + 1) → I) :
+    ‖b.equivFun (evalBracketWord X (rightNestedWord d w))‖ ≤
+      ((Fintype.card J : ℝ) ^ 2 * C) ^ d * ∏ i, ‖b.equivFun (X (w i))‖ := by
+…</pre><p class="refs">Mentions: <a href="BracketWords.lean.html#L26">OAI.PolycyclicRecognition.evalBracketWord</a>, <a href="DynkinWords.lean.html#L20">OAI.PolycyclicRecognition.rightNestedWord</a></p></li><li id=L51><b>theorem</b> <code>OAI.PolycyclicRecognition.norm_finiteDynkinPolynomial_le_sum</code> <small>line 51</small><div class="doc"><p>The finite Dynkin polynomial is bounded by a polynomial in the sum
+of input norms, with zero constant term.</p></div><pre>theorem norm_finiteDynkinPolynomial_le_sum (b : Basis J ℝ L) {c n : ℕ}
+    (coeff : DynkinCoefficients c n) (hcoeff : ∀ d w, |coeff d w| ≤ (2 : ℝ) ^ c)
+    (X : Fin n → L) {C : ℝ} (hC : 0 ≤ C)
+    (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C) :
+    ‖b.equivFun (finiteDynkinPolynomial coeff X)‖ ≤
+      (c : ℝ) * 2 ^ c * (1 + (Fintype.card J : ℝ) ^ 2 * C) ^ c *
+        (∑ i, ‖b.equivFun (X i)‖) * (1 + ∑ i, ‖b.equivFun (X i)‖) ^ c := by
+…</pre><p class="refs">Mentions: <a href="DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a></p></li><li id=L111><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_product_log_with_sum_bound</code> <small>line 111</small><div class="doc"><p>Actual finite products of exponentials have a logarithm controlled by
+the total input size, independently of the number of factors.</p></div><pre>theorem exists_product_log_with_sum_bound
+    (dynkin : NilpotentDynkinExpansionInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    {c n : ℕ} (hc : lowerCentralSeries ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)
+      (GroupLieAlgebra (𝓘(ℝ, E)) G) c = ⊥)
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {C : ℝ} (hC : 0 ≤ C)
+    (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (X : Fin n → GroupLieAlgebra (𝓘(ℝ, E)) G) :
+    ∃ z, (List.ofFn (fun i =&gt; Exp (X i))).prod = Exp z ∧
+      ‖b.equivFun z‖ ≤
+        (c : ℝ) * 2 ^ c * (1 + (Fintype.card J : ℝ) ^ 2 * C) ^ c *
+…</pre><p class="refs">Mentions: <a href="DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

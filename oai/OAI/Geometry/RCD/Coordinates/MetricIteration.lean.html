@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/MetricIteration.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/MetricIteration.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>MetricIteration.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>MetricIteration.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/MetricIteration.lean#L1">source</a></p><div class="doc"><h3>Finite analytic coordinate iteration</h3><p>The maps are defined everywhere. Smoothness and metric estimates are
+local statements on a fixed open set, derived from analytic field bounds.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.RegularPointCoordinates.metricIterate</code> <small>line 24</small><div class="doc"><p>The actual coordinate iteration, starting from the identity.</p></div><pre>def metricIterate (v : ℕ → E → E) : ℕ → E → E
+  | 0 =&gt; id
+  | i + 1 =&gt; fun x =&gt; metricIterate v i x +
+      operatorInverseTranspose (fderiv ℝ (metricIterate v i) x) (v i x)</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a></p></li><li id=L29><b>theorem</b> <code>OAI.RegularPointCoordinates.metricIterate_zero</code> <small>line 29</small></li><li id=L31><b>theorem</b> <code>OAI.RegularPointCoordinates.metricIterate_succ</code> <small>line 31</small></li><li id=L37><b>theorem</b> <code>OAI.RegularPointCoordinates.contDiffAt_normalizedCoordinates</code> <small>line 37</small><div class="doc"><p>Local smoothness is preserved by frozen normalization.</p></div><pre>theorem contDiffAt_normalizedCoordinates {m : ℕ} {r : ℝ} (T : E ≃L[ℝ] E)
+    (x : E) {h : E → E} (hh : ContDiffAt ℝ m h x) :
+    ContDiffAt ℝ m (normalizedCoordinates r T x h) 0 := by
+…</pre><p class="refs">Mentions: <a href="NormalizedUpdate.lean.html#L26">OAI.RegularPointCoordinates.normalizedCoordinates</a></p></li><li id=L48><b>theorem</b> <code>OAI.RegularPointCoordinates.contDiffAt_normalizedCovector</code> <small>line 48</small><div class="doc"><p>Local smoothness is preserved by the dual frozen normalization.</p></div><pre>theorem contDiffAt_normalizedCovector {m : ℕ} {r : ℝ} (T : E ≃L[ℝ] E)
+    (x : E) {v : E → E} (hv : ContDiffAt ℝ m v x) :
+    ContDiffAt ℝ m (normalizedCovector r T x v) 0 := by
+…</pre><p class="refs">Mentions: <a href="NormalizedUpdate.lean.html#L30">OAI.RegularPointCoordinates.normalizedCovector</a></p></li><li id=L62><b>theorem</b> <code>OAI.RegularPointCoordinates.normalizedCoordinates_dyadic</code> <small>line 62</small><div class="doc"><p>The same map at the next radius is obtained by a contracting metric
+change and dyadic output scaling.</p></div><pre>theorem normalizedCoordinates_dyadic {r : ℝ} (hr : r ≠ 0)
+    (T U : E ≃L[ℝ] E) (x : E) (h : E → E) :
+    normalizedCoordinates (r / 2) U x h = fun z =&gt; (2 : ℝ) •
+      normalizedCoordinates r T x h
+        ((1 / 2 : ℝ) • (((T : E →L[ℝ] E) ∘L (U.symm : E →L[ℝ] E)) z)) := by
+…</pre><p class="refs">Mentions: <a href="NormalizedUpdate.lean.html#L26">OAI.RegularPointCoordinates.normalizedCoordinates</a></p></li><li id=L80><b>theorem</b> <code>OAI.RegularPointCoordinates.iteratedFDeriv_normalized_update</code> <small>line 80</small><div class="doc"><p>Positive-order jets of the actual normalized update agree with
+those of the normalized inverse-transpose update. The centering error
+is a constant and the covariance identity is needed only locally.</p></div><pre>theorem iteratedFDeriv_normalized_update {r : ℝ} (hr : r ≠ 0)
+    (T : E ≃L[ℝ] E) (x : E) (h v : E → E) (e : E → E ≃L[ℝ] E)
+    {m : ℕ} (hm : 0 &lt; m) (hh : ContDiffAt ℝ (m + 1) h x)
+    (hv : ContDiffAt ℝ m v x)
+    (he : ∀ᶠ y in 𝓝 x, fderiv ℝ h y = (e y : E →L[ℝ] E)) :
+    iteratedFDeriv ℝ m (normalizedCoordinates r T x
+      (fun y =&gt; h y + operatorInverseTranspose (fderiv ℝ h y) (v y))) 0 =
+    iteratedFDeriv ℝ m (fun z =&gt; normalizedCoordinates r T x h z +
+      operatorInverseTranspose (fderiv ℝ (normalizedCoordinates r T x h) z)
+        (normalizedCovector r T x v z)) 0 := by
+…</pre><p class="refs">Mentions: <a href="NormalizedUpdate.lean.html#L26">OAI.RegularPointCoordinates.normalizedCoordinates</a>, <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a>, <a href="NormalizedUpdate.lean.html#L30">OAI.RegularPointCoordinates.normalizedCovector</a></p></li><li id=L130><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_frozen_normalized_jet_step</code> <small>line 130</small><div class="doc"><p>The next frozen metric preserves a requested jet order, from only
+source orders through <code>m+1</code>. The small parameter is independent of <code>m</code>.</p></div><pre>theorem exists_frozen_normalized_jet_step
+    {A B Cv : ℝ} (hA : 1 ≤ A) (hB : 0 &lt; B) (hCv : 0 ≤ Cv) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧
+      ∀ (r : ℝ), 0 &lt; r → ∀ (T U : E ≃L[ℝ] E) (x : E) (h v : E → E)
+        (e : E → E ≃L[ℝ] E) (m : ℕ), 2 ≤ m →
+      ContDiffAt ℝ (m + 1) h x → ContDiffAt ℝ m v x →
+      (∀ᶠ y in 𝓝 x, fderiv ℝ h y = (e y : E →L[ℝ] E)) →
+      (∀ xi, A⁻¹ * ‖T xi‖ ^ 2 ≤ ‖fderiv ℝ h x xi‖ ^ 2) →
+      (∀ xi, ‖T xi‖ ≤ ‖U xi‖) →
+      (∀ q, 2 ≤ q → q ≤ m + 1 →
+        ‖iteratedFDeriv ℝ q (normalizedCoordinates r T x h) 0‖ ≤
+          B ^ (q - 1) * (q.factorial : ℝ) ^ 3) →
+…</pre><p class="refs">Mentions: <a href="NormalizedUpdate.lean.html#L26">OAI.RegularPointCoordinates.normalizedCoordinates</a></p></li><li id=L189><b>def</b> <code>OAI.RegularPointCoordinates.iterationRadius</code> <small>line 189</small><div class="doc"><p>Dyadic radii, written without integer exponents.</p></div><pre>def iterationRadius (r0 : ℝ) (i : ℕ) : ℝ := r0 / (2 : ℝ) ^ i</pre></li><li id=L191><b>theorem</b> <code>OAI.RegularPointCoordinates.iterationRadius_pos</code> <small>line 191</small></li><li id=L194><b>theorem</b> <code>OAI.RegularPointCoordinates.iterationRadius_succ</code> <small>line 194</small></li><li id=L204><b>structure</b> <code>OAI.RegularPointCoordinates.AnalyticIterationData</code> <small>line 204</small><div class="doc"><p>Explicit analytic inputs for the finite iteration. The mass and
+principal comparisons come before construction of the coordinate maps;
+none of the fields below assumes a coordinate metric or a scalar error
+recurrence.</p></div><pre>structure AnalyticIterationData (Ω : Set E) (r0 T F B epsilon : ℝ) where
+…</pre></li><li id=L242><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_local_jacobian_family</code> <small>line 242</small><div class="doc"><p>An invertible Jacobian representative may be selected locally from
+coercivity on an open set. No smoothness of the selected representative
+is needed: it agrees with the actual Jacobian throughout the set.</p></div><pre>theorem exists_local_jacobian_family [FiniteDimensional ℝ E]
+    {Ω : Set E} (hΩ : IsOpen Ω) (h : E → E) (T : E → E ≃L[ℝ] E)
+    {A : ℝ} (hA : 1 ≤ A)
+    (hlower : ∀ x ∈ Ω, ∀ xi, A⁻¹ * ‖T x xi‖ ^ 2 ≤ ‖fderiv ℝ h x xi‖ ^ 2) :
+    ∃ e : E → E ≃L[ℝ] E, ∀ x ∈ Ω,
+      ∀ᶠ y in 𝓝 x, fderiv ℝ h y = (e y : E →L[ℝ] E) := by
+…</pre></li><li id=L260><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_iteratedFDeriv_id_of_two_le</code> <small>line 260</small><div class="doc"><p>The identity starts the iteration with all higher jets zero.</p></div><pre>theorem norm_iteratedFDeriv_id_of_two_le {m : ℕ} (hm : 2 ≤ m) (x : E) :
+    ‖iteratedFDeriv ℝ m (id : E → E) x‖ = 0 := by
+…</pre></li><li id=L272><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_small_metric_iteration_parameter</code> <small>line 272</small><div class="doc"><p>Both the all-order jet threshold and the metric error threshold can
+be met by a single positive parameter.</p></div><pre>theorem exists_small_metric_iteration_parameter {C T delta : ℝ}
+    (hT : 0 &lt; T) (hdelta : 0 &lt; delta) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧ epsilon ≤ 1 ∧ epsilon ≤ delta ∧
+      scalarMetricErrorCoefficient (pointwiseIterationCoefficient C) T epsilon ≤ (2 * T)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Metric/ScalarMetricBootstrap.lean.html#L164">OAI.RegularPointCoordinates.scalarMetricErrorCoefficient</a>, <a href="PointwiseMetricIteration.lean.html#L24">OAI.RegularPointCoordinates.pointwiseIterationCoefficient</a></p></li><li id=L296><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_analytic_metric_iteration</code> <small>line 296</small><div class="doc"><p>All finite stages are smooth on the given open set, coercive, and
+have the same normalized higher-jet bounds. The constants are chosen in
+order: metric bootstrap <code>4T</code>, inverse constant, fixed jet base, then a
+single positive defect parameter.</p></div><pre>theorem exists_analytic_metric_iteration [FiniteDimensional ℝ E]
+    {T F B : ℝ} (hT : 1 ≤ T) (hF : 1 ≤ F) (hB : 1 ≤ B) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧ epsilon ≤ 1 ∧
+      ∀ (Ω : Set E), IsOpen Ω → ∀ (r0 : ℝ), 0 &lt; r0 →
+      ∀ d : AnalyticIterationData (E := E) Ω r0 T F B epsilon,
+…</pre><p class="refs">Mentions: <a href="MetricIteration.lean.html#L204">OAI.RegularPointCoordinates.AnalyticIterationData</a></p></li><li id=L471><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_analytic_metric_iteration_invertible</code> <small>line 471</small><div class="doc"><p>Every Jacobian produced by the analytic iteration is a unit. In
+finite dimension this is a consequence of the proved metric lower
+bound, rather than an additional input to the construction.</p></div><pre>theorem exists_analytic_metric_iteration_invertible [FiniteDimensional ℝ E]
+    {T F B : ℝ} (hT : 1 ≤ T) (hF : 1 ≤ F) (hB : 1 ≤ B) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧ epsilon ≤ 1 ∧
+      ∀ (Ω : Set E), IsOpen Ω → ∀ (r0 : ℝ), 0 &lt; r0 →
+      ∀ d : AnalyticIterationData (E := E) Ω r0 T F B epsilon,
+…</pre><p class="refs">Mentions: <a href="MetricIteration.lean.html#L204">OAI.RegularPointCoordinates.AnalyticIterationData</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

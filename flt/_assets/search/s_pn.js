@@ -1,0 +1,1 @@
+window.l4shard("pn", [["PNat.pow_add_pow_ne_pow",132,24],["PNat.pow_add_pow_ne_pow_of_FermatLastTheorem",64,60],["TateCurve.Blueprint.hasSum_prod_pnat",153,1151],["TateCurve.Blueprint.tsum_pnat_coe_mul_geometric",153,436],["TateCurve.Blueprint.tsum_pnat_of_zero",153,427]]);

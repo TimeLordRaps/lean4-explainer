@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/EditApproximation/Coarse/CoarseArrayEval.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/EditApproximation/Coarse/CoarseArrayEval.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">EditApproximation</a> / <a href="index.html">Coarse</a> / <span>CoarseArrayEval.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">EditApproximation</a>/<a href="index.html">Coarse</a>/<span>CoarseArrayEval.lean</span></code></h1><p class="muted">20 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/EditApproximation/Coarse/CoarseArrayEval.lean#L1">source</a></p><div class="doc"><h3>Shared coarse array evaluation</h3><p>A missing array is a constant-zero marker. An expanded child is evaluated
+once, then transformed by the two linear sweeps, thresholded, and added
+to its siblings. The instrumented counter charges rational arithmetic and
+comparisons; allocation, source-width preprocessing and integer addressing
+are separate parts of the machine implementation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>abbrev</b> <code>OAI.EditApproximation.CoarseStoredArray</code> <small>line 23</small><div class="doc"><p>Stored cells have the complete shift-domain length; <code>none</code> is zero.</p></div><pre>abbrev CoarseStoredArray (n : ℕ) := Option {cells : List ℚ // cells.length = n}</pre></li><li id=L25><b>def</b> <code>OAI.EditApproximation.coarseStoredRead</code> <small>line 25</small></li><li id=L30><b>def</b> <code>OAI.EditApproximation.coarseStoredOfFn</code> <small>line 30</small></li><li id=L33><b>theorem</b> <code>OAI.EditApproximation.coarseStoredRead_ofFn</code> <small>line 33</small></li><li id=L37><b>def</b> <code>OAI.EditApproximation.coarseStoredMap</code> <small>line 37</small></li><li id=L41><b>theorem</b> <code>OAI.EditApproximation.coarseStoredMap_read</code> <small>line 41</small></li><li id=L48><b>theorem</b> <code>OAI.EditApproximation.coarseStoredMap_cost</code> <small>line 48</small></li><li id=L52><b>def</b> <code>OAI.EditApproximation.coarseStoredAdd</code> <small>line 52</small></li><li id=L59><b>theorem</b> <code>OAI.EditApproximation.coarseStoredAdd_read</code> <small>line 59</small></li><li id=L69><b>theorem</b> <code>OAI.EditApproximation.coarseStoredAdd_cost</code> <small>line 69</small></li><li id=L74><b>def</b> <code>OAI.EditApproximation.coarseStoredPenalty</code> <small>line 74</small><div class="doc"><p>The costed linear sweeps operate on the stored cells.</p></div><pre>def coarseStoredPenalty {n : ℕ} : CoarseStoredArray n → CoarseStoredArray n × ℕ
+  | none =&gt; (none, 0)
+  | some cells =&gt;
+    let result := coarseCostedPenaltyTransform cells.1
+…</pre><p class="refs">Mentions: <a href="CoarseArrayEval.lean.html#L23">OAI.EditApproximation.CoarseStoredArray</a>, <a href="CoarseTransforms.lean.html#L225">OAI.EditApproximation.coarseCostedPenaltyTransform</a></p></li><li id=L81><b>theorem</b> <code>OAI.EditApproximation.coarseStoredPenalty_cost</code> <small>line 81</small></li><li id=L88><b>theorem</b> <code>OAI.EditApproximation.coarseStoredPenalty_read</code> <small>line 88</small></li><li id=L110><b>def</b> <code>OAI.EditApproximation.coarseArrayEvalChildren</code> <small>line 110</small><div class="doc"><p>Each list member is evaluated once and its whole array is reused.</p></div><pre>def coarseArrayEvalChildren {B D : ℕ} {α : Type u}
+    (k : ℕ) (Q lam : ℚ)
+    (evaluate : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ →
+      CoarseStoredArray (2 * k + 1) × ℕ) (allowance : ℚ) :
+    List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D) → ℕ →
+      CoarseStoredArray (2 * k + 1) × ℕ
+  | [], _ =&gt; (none, 0)
+  | (child, draw, below) :: rest, start =&gt;
+    let threshold := coarseChildThreshold B Q allowance draw
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseArrayEval.lean.html#L23">OAI.EditApproximation.CoarseStoredArray</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1293">OAI.EditApproximation.coarseChildThreshold</a></p></li><li id=L130><b>def</b> <code>OAI.EditApproximation.coarseArrayEval</code> <small>line 130</small><div class="doc"><p>Actual shared-array recursion. Pruning creates a zero marker and does
+not traverse any descendants.</p></div><pre>def coarseArrayEval {B : ℕ} {α : Type u} [DecidableEq α]
+    (k : ℕ) (Q lam : ℚ) (frame : List (Option α)) :
+    {D : ℕ} → CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ →
+      CoarseStoredArray (2 * k + 1) × ℕ
+  | _, tree, draws, allowance, start =&gt;
+    if (tree.word.length : ℚ) ≤ allowance then (none, 1) else
+    match tree, draws with
+    | .leaf letter, _ =&gt;
+      (coarseStoredOfFn (fun shift =&gt;
+        (coarseShiftCost k frame (.leaf (B := B) letter) start shift : ℚ)),
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseArrayEval.lean.html#L23">OAI.EditApproximation.CoarseStoredArray</a>, <a href="CoarseArrayEval.lean.html#L30">OAI.EditApproximation.coarseStoredOfFn</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L10879">OAI.EditApproximation.coarseShiftCost</a></p></li><li id=L147><b>theorem</b> <code>OAI.EditApproximation.coarseArrayEvalChildren_read</code> <small>line 147</small></li><li id=L177><b>theorem</b> <code>OAI.EditApproximation.coarseArrayEval_read</code> <small>line 177</small></li><li id=L203><b>theorem</b> <code>OAI.EditApproximation.coarseArrayEvalChildren_cost</code> <small>line 203</small><div class="doc"><p>The instrumented child traversal charges the once-evaluated child plus
+at most sixteen parent shift-array units for each list member.</p></div><pre>theorem coarseArrayEvalChildren_cost {B D : ℕ} {α : Type u}
+    (k : ℕ) (Q lam : ℚ)
+    (evaluate : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ →
+      CoarseStoredArray (2 * k + 1) × ℕ)
+    (work : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ)
+    (children : List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D))
+    (hchild : ∀ child draw below, (child, draw, below) ∈ children →
+      ∀ a start, (evaluate child below a start).2 ≤ 32 * work child below a + 1)
+    (allowance : ℚ) (start : ℕ) :
+    (coarseArrayEvalChildren k Q lam evaluate allowance children start).2 ≤
+      32 * coarseActiveChildrenWork Q lam allowance work children +
+        16 * children.length * (2 * k + 1) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseArrayEval.lean.html#L23">OAI.EditApproximation.CoarseStoredArray</a>, <a href="CoarseArrayEval.lean.html#L110">OAI.EditApproximation.coarseArrayEvalChildren</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L8123">OAI.EditApproximation.coarseActiveChildrenWork</a></p></li><li id=L238><b>theorem</b> <code>OAI.EditApproximation.coarseArrayEval_cost</code> <small>line 238</small><div class="doc"><p>Every execution's shared evaluation has the rational-operation cost
+bounded by the very same pruning-stopped counter used in expectation.</p></div><pre>theorem coarseArrayEval_cost {B D : ℕ} [NeZero B] {α : Type u} [DecidableEq α]
+    (k : ℕ) (Q lam : ℚ) (frame : List (Option α))
+    (tree : CoarseSourceTree B α D) (draws : CoarseThresholdDraws B D)
+    (allowance : ℚ) (start : ℕ) :
+    (coarseArrayEval k Q lam frame tree draws allowance start).2 ≤
+      32 * coarseActiveArrayWork k Q lam tree draws allowance + 1 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseArrayEval.lean.html#L130">OAI.EditApproximation.coarseArrayEval</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L13691">OAI.EditApproximation.coarseActiveArrayWork</a></p></li><li id=L271><b>theorem</b> <code>OAI.EditApproximation.coarseArrayEval_expected_bound</code> <small>line 271</small><div class="doc"><p>Expected rational-operation count for the actual shared-array evaluator.
+This estimate holds on every execution, including inaccurate ones.</p></div><pre>theorem coarseArrayEval_expected_bound {B D : ℕ} [NeZero B] {α : Type u} [DecidableEq α]
+    [MeasurableSpace (Fin B)] [MeasurableSingletonClass (Fin B)]
+    (k : ℕ) (Q lam : ℚ) (frame : List (Option α))
+    (tree : CoarseSourceTree B α D) (allowance : ℚ) (start : ℕ)
+    (hQ : 0 &lt; Q) (hlam : 0 &lt; lam) (ha : 0 &lt; allowance) :
+    (∫ draws, ((coarseArrayEval k Q lam frame tree draws allowance start).2 : ℝ)
+      ∂coarseDrawMeasure B D) ≤
+      32 * ((B * (2 * k + 1) : ℕ) * (tree.word.length : ℝ) / allowance *
+        coarseWorkMultiplier (coarseInverseAllowanceFactor B Q lam) D) + 1 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="CoarseArrayEval.lean.html#L130">OAI.EditApproximation.coarseArrayEval</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L5529">OAI.EditApproximation.coarseDrawMeasure</a>, <a href="CoarseWork.lean.html#L45">OAI.EditApproximation.coarseWorkMultiplier</a>, <a href="CoarseWork.lean.html#L42">OAI.EditApproximation.coarseInverseAllowanceFactor</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

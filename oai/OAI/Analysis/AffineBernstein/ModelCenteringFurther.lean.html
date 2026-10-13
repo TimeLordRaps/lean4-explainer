@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/ModelCenteringFurther.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/ModelCenteringFurther.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>ModelCenteringFurther.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>ModelCenteringFurther.lean</span></code></h1><p class="muted">41 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/ModelCenteringFurther.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L93><b>theorem</b> <code>OAI.AffineBernstein.strictConvexOn_of_hasDerivWithinAt2_pos</code> <small>line 93</small><div class="doc plain">Intrinsic convergence always entails convergence of base points.
+Completeness prevents a finite base endpoint from being lost when graph
+paths make a sequence intrinsically Cauchy.
+A chord bound along a family of segments turns ordinary Cauchy control of
+base and height into control for the actual graph metric.
+Restricting a monotone-height ray to any oriented subsegment gives the
+uniform chord bound used to exhibit an intrinsic Cauchy tail.
+A bounded ray with monotone graph height cannot end at a missing finite
+base point of a complete graph. This proves the metric step rather than
+assuming properness of the embedding.
+A differentiable convex function on a finite half-open interval has a
+monotone tail (in one of the two orientations).
+The tangent line at the initial point bounds a convex ray from below,
+so an upper bound on a finite ray implies a two-sided bound.
+Completeness forbids any bounded convex ray from reaching a missing finite
+endpoint. Convexity and two-sided variation, not a growth hypothesis, produce
+the required metric Cauchy sequence.
+The metric obstruction applied to an arbitrary bounded-height sequence,
+not merely points already lying on a fixed ray. This is the core boundary
+properness argument in geometry.tex:36–55.
+Actual height sublevels are closed in the ambient base space. No convex
+extension of u to missing boundary points is used.
+Finite boundary blow-up, derived from the manuscript&#x27;s literal Euclidean
+intrinsic completeness assumption.
+The epigraph is genuinely closed in Rⁿ × R. Completeness was not
+silently replaced by properness of the graph embedding.
+Strict version of the second-derivative test, with specified derivatives.</div><pre>theorem strictConvexOn_of_hasDerivWithinAt2_pos {D : Set ℝ} (hD : Convex ℝ D)
+    {f f&#x27; f&#x27;&#x27; : ℝ → ℝ} (hf : ContinuousOn f D)
+    (hf&#x27; : ∀ x ∈ interior D, HasDerivWithinAt f (f&#x27; x) (interior D) x)
+    (hf&#x27;&#x27; : ∀ x ∈ interior D, HasDerivWithinAt f&#x27; (f&#x27;&#x27; x) (interior D) x)
+    (hf&#x27;&#x27;₀ : ∀ x ∈ interior D, 0 &lt; f&#x27;&#x27; x) : StrictConvexOn ℝ D f := by
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.AffineBernstein.strictConvexOn_segment</code> <small>line 107</small><div class="doc plain">The standing Hessian hypothesis gives strict convexity on every nonconstant
+base segment, with the literal coordinate Hessian, not an abstract Hessian.</div><pre>theorem strictConvexOn_segment {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    {x y : Space n} (hx : x ∈ Ω) (hy : y ∈ Ω) (hxy : y ≠ x) :
+    StrictConvexOn ℝ (Icc (0 : ℝ) 1) (fun t =&gt; u (x + t • (y - x))) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a></p></li><li id=L141><b>def</b> <code>OAI.AffineBernstein.tangentHeight</code> <small>line 141</small><div class="doc plain">The tangent-plane height used in all source sections.</div><pre>def tangentHeight {n : ℕ} (u : Space n → ℝ) (a x : Space n) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L144><b>theorem</b> <code>OAI.AffineBernstein.tangentHeight_self</code> <small>line 144</small></li><li id=L147><b>theorem</b> <code>OAI.AffineBernstein.tangentHeight_pos</code> <small>line 147</small></li><li id=L166><b>theorem</b> <code>OAI.AffineBernstein.convexOn_tangentHeight</code> <small>line 166</small></li><li id=L183><b>theorem</b> <code>OAI.AffineBernstein.continuousOn_tangentHeight</code> <small>line 183</small></li><li id=L191><b>theorem</b> <code>OAI.AffineBernstein.isClosed_tangent_sublevel</code> <small>line 191</small><div class="doc plain">Tangent-plane sublevels are closed, by closedness of the actual epigraph.
+No implicit completeness-invariance under a shear is needed.</div><pre>theorem isClosed_tangent_sublevel {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hne : Ω.Nonempty) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hcv : ConvexOn ℝ Ω u)
+    (hc : EuclideanGraphComplete Ω u) (a : Space n) (t : ℝ) :
+    IsClosed {x | x ∈ Ω ∧ tangentHeight u a x ≤ t} := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L208><b>theorem</b> <code>OAI.AffineBernstein.tangentHeight_coercive</code> <small>line 208</small><div class="doc plain">A finite-radius positive support gap yields a linear coercivity bound.
+This replaces only the choice of constants in geometry.tex:56–67, not any
+standing hypothesis or conclusion.</div><pre>theorem tangentHeight_coercive {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    {a : Space n} (ha : a ∈ Ω) :
+    ∃ r &gt; 0, ∃ m &gt; 0, ∀ x ∈ Ω, r ≤ ‖x - a‖ →
+      m * ‖x - a‖ ≤ r * tangentHeight u a x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L258><b>theorem</b> <code>OAI.AffineBernstein.isCompact_tangent_sublevel</code> <small>line 258</small><div class="doc plain">The compact tangent sections required throughout the manuscript, proved
+from PD Hessian, convexity of the open base, and intrinsic graph completeness.</div><pre>theorem isCompact_tangent_sublevel {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {a : Space n} (ha : a ∈ Ω) (t : ℝ) :
+    IsCompact {x | x ∈ Ω ∧ tangentHeight u a x ≤ t} := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L276><b>theorem</b> <code>OAI.AffineBernstein.tangentHeight_nonneg</code> <small>line 276</small></li><li id=L287><b>theorem</b> <code>OAI.AffineBernstein.interior_epigraph</code> <small>line 287</small><div class="doc plain">Interior of the epigraph, including the correct restriction to the open
+base domain. This is a local continuity fact and needs no completeness.</div><pre>theorem interior_epigraph {n : ℕ} {Ω : Set (Space n)} (hΩ : IsOpen Ω)
+    {u : Space n → ℝ} (hu : ContinuousOn u Ω) :
+    interior {p : Space n × ℝ | p.1 ∈ Ω ∧ u p.1 ≤ p.2} =
+      {p | p.1 ∈ Ω ∧ u p.1 &lt; p.2} := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L313><b>theorem</b> <code>OAI.AffineBernstein.frontier_epigraph_of_complete</code> <small>line 313</small></li><li id=L330><b>theorem</b> <code>OAI.AffineBernstein.epigraph_interior_nonempty</code> <small>line 330</small></li><li id=L338><b>theorem</b> <code>OAI.AffineBernstein.isCompact_tangent_cap</code> <small>line 338</small><div class="doc plain">Compactness of the entire tangent cap, not just its projection.</div><pre>theorem isCompact_tangent_cap {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {a : Space n} (ha : a ∈ Ω) (t : ℝ) :
+    IsCompact {p : Space n × ℝ | p.1 ∈ Ω ∧ u p.1 ≤ p.2 ∧
+      p.2 - u a - fderiv ℝ u a (p.1 - a) ≤ t} := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a></p></li><li id=L378><b>def</b> <code>OAI.AffineBernstein.tangentSection</code> <small>line 378</small><div class="doc plain">The manuscript&#x27;s open tangent section.</div><pre>def tangentSection {n : ℕ} (Ω : Set (Space n)) (u : Space n → ℝ)
+    (a : Space n) (t : ℝ) : Set (Space n) :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L385><b>theorem</b> <code>OAI.AffineBernstein.closure_tangentSection</code> <small>line 385</small><div class="doc plain">For positive height the closed sublevel is precisely the closure of the
+open tangent section. Completeness supplies closedness; convexity supplies
+approximation from the section interior.</div><pre>theorem closure_tangentSection {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {a : Space n} (ha : a ∈ Ω)
+    {t : ℝ} (ht : 0 &lt; t) :
+    closure (tangentSection Ω u a t) = {x | x ∈ Ω ∧ tangentHeight u a x ≤ t} := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L378">OAI.AffineBernstein.tangentSection</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L416><b>def</b> <code>OAI.AffineBernstein.SectionBalance</code> <small>line 416</small><div class="doc plain">Source equation uniform-section-balance, in unshifted coordinates;
+equivalently, -ρ(closure S-a) ⊆ closure S-a.</div><pre>def SectionBalance {n : ℕ} (Ω : Set (Space n)) (u : Space n → ℝ) (ρ : ℝ) : Prop :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L422><b>theorem</b> <code>OAI.AffineBernstein.sectionBalance_reflection</code> <small>line 422</small><div class="doc plain">A direct form of the closed-section reflection, with arbitrary finite
+height (zero included). No balance conclusion is assumed about the domain.</div><pre>theorem sectionBalance_reflection {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {ρ : ℝ} (hbal : SectionBalance Ω u ρ)
+    {a x : Space n} (ha : a ∈ Ω) (hx : x ∈ Ω) :
+    a - ρ • (x - a) ∈ Ω ∧
+    tangentHeight u a (a - ρ • (x - a)) ≤ tangentHeight u a x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L440><b>theorem</b> <code>OAI.AffineBernstein.eq_univ_of_dilation</code> <small>line 440</small><div class="doc plain">An open set containing a point and invariant under one dilation about it
+of factor greater than one is the whole vector space.</div><pre>theorem eq_univ_of_dilation {n : ℕ} {Ω : Set (Space n)} (hΩ : IsOpen Ω)
+    {a : Space n} (ha : a ∈ Ω) {c : ℝ} (hc : 1 &lt; c)
+    (hexpand : ∀ x ∈ Ω, a + c • (x - a) ∈ Ω) : Ω = univ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L465><b>theorem</b> <code>OAI.AffineBernstein.eq_univ_of_sectionBalance</code> <small>line 465</small><div class="doc plain">The domain-extension conclusion of rigidity.tex:38–87. Uniform reflection
+of actual tangent sections, once proved by the model argument, forces all
+rays to continue. This lemma does not assume whole-domain solvability.</div><pre>theorem eq_univ_of_sectionBalance {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hne : Ω.Nonempty) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {ρ : ℝ} (hρ : 0 &lt; ρ)
+    (hbal : SectionBalance Ω u ρ) : Ω = univ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a></p></li><li id=L479><b>theorem</b> <code>OAI.AffineBernstein.gap_doubling_of_sectionBalance</code> <small>line 479</small><div class="doc plain">The exact gap-doubling constants from rigidity.tex, proved before assuming
+that the base is all of Rⁿ. Thus the same calculation supplies ray extension.</div><pre>theorem gap_doubling_of_sectionBalance {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {ρ : ℝ} (hρ : 0 &lt; ρ)
+    (hbal : SectionBalance Ω u ρ) {a x : Space n} (ha : a ∈ Ω) (hx : x ∈ Ω) :
+    a + (1 + ρ / 2) • (x - a) ∈ Ω ∧
+    tangentHeight u a (a + (1 + ρ / 2) • (x - a)) ≤
+      ((2 + ρ) * (1 + ρ) / ρ) * tangentHeight u a x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L532><b>theorem</b> <code>OAI.AffineBernstein.tangentHeight_ray_mono</code> <small>line 532</small><div class="doc plain">Convexity of the actual support gap gives its monotonicity on every ray.</div><pre>theorem tangentHeight_ray_mono {n : ℕ} {u : Space n → ℝ}
+    (hu : ConvexOn ℝ univ u) (hmin : ∀ a x, 0 ≤ tangentHeight u a x)
+    (a e : Space n) {r s : ℝ} (hr : 0 ≤ r) (hrs : r ≤ s) :
+    tangentHeight u a (a + r • e) ≤ tangentHeight u a (a + s • e) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L552><b>theorem</b> <code>OAI.AffineBernstein.normalized_value_le_quarter</code> <small>line 552</small><div class="doc plain">The normalization B₁⊆{v&lt;1}, at a zero tangent, gives v≤1/4 on B₁/₄.</div><pre>theorem normalized_value_le_quarter {n : ℕ} {v : Space n → ℝ}
+    (hv : ConvexOn ℝ univ v) (hzero : v 0 = 0) (hdzero : fderiv ℝ v 0 = 0)
+    (hinner : Metric.ball 0 1 ⊆ tangentSection univ v 0 1)
+    {x : Space n} (hx : ‖x‖ &lt; 1 / 4) : v x ≤ 1 / 4 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="ModelCenteringFurther.lean.html#L378">OAI.AffineBernstein.tangentSection</a></p></li><li id=L569><b>theorem</b> <code>OAI.AffineBernstein.fixed_radius_gap_of_sectionBalance</code> <small>line 569</small><div class="doc plain">Source fixed-radius-gap. The proof uses reflected closed sections directly,
+rather than choosing the intersection with their radial boundary.</div><pre>theorem fixed_radius_gap_of_sectionBalance {n : ℕ} {v : Space n → ℝ}
+    (hv : ContDiff ℝ ∞ v) (hp : ∀ x, (hessian v x).PosDef)
+    (hc : EuclideanGraphComplete univ v)
+    (hzero : v 0 = 0) (hdzero : fderiv ℝ v 0 = 0)
+    {ρ R : ℝ} (hρ : 0 &lt; ρ) (hρ1 : ρ ≤ 1) (hR : 1 ≤ R)
+    (hbal : SectionBalance univ v ρ)
+    (hinner : Metric.ball 0 1 ⊆ tangentSection univ v 0 1)
+    (houter : tangentSection univ v 0 1 ⊆ Metric.ball 0 R)
+    {x e : Space n} (hx : ‖x‖ &lt; 1 / 4) (he : ‖e‖ = 1) :
+    (1 / 4 : ℝ) ≤ tangentHeight v x (x + (2 * R / ρ) • e) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a>, <a href="ModelCenteringFurther.lean.html#L378">OAI.AffineBernstein.tangentSection</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L618><b>def</b> <code>OAI.AffineBernstein.modulusIterates</code> <small>line 618</small><div class="doc plain">Exact integer in rigidity.tex: N(r)=max(0,ceil(log_beta(R*/r))).
+The natural-number ceiling incorporates max with zero.</div><pre>def modulusIterates (ρ R r : ℝ) : ℕ :=
+…</pre></li><li id=L622><b>def</b> <code>OAI.AffineBernstein.normalizedModulus</code> <small>line 622</small><div class="doc plain">Exact lower modulus b(r)=1/(8 A^N(r)) from the manuscript.</div><pre>def normalizedModulus (ρ R r : ℝ) : ℝ :=
+…</pre></li><li id=L625><b>theorem</b> <code>OAI.AffineBernstein.normalizedModulus_pos</code> <small>line 625</small></li><li id=L630><b>theorem</b> <code>OAI.AffineBernstein.modulusIterates_spec</code> <small>line 630</small></li><li id=L641><b>theorem</b> <code>OAI.AffineBernstein.gap_doubling_iterate</code> <small>line 641</small><div class="doc plain">Iterate the source&#x27;s doubling inequality for the actual gap at a point.</div><pre>theorem gap_doubling_iterate {n : ℕ} {u : Space n → ℝ}
+    (hu : ContDiff ℝ ∞ u) (hp : ∀ x, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete univ u) {ρ : ℝ} (hρ : 0 &lt; ρ)
+    (hbal : SectionBalance univ u ρ) (a x : Space n) (k : ℕ) :
+    tangentHeight u a (a + (1 + ρ / 2) ^ k • (x - a)) ≤
+      ((2 + ρ) * (1 + ρ) / ρ) ^ k * tangentHeight u a x := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a>, <a href="ModelCenteringFurther.lean.html#L141">OAI.AffineBernstein.tangentHeight</a></p></li><li id=L668><b>theorem</b> <code>OAI.AffineBernstein.normalized_modulus_of_sectionBalance</code> <small>line 668</small><div class="doc plain">Uniform normalized modulus, rigidity.tex:118–175. Every quantifier is
+uniform in the normalized function, point and direction; only rho and R occur
+in the explicit modulus. The section balance producer remains separate.</div><pre>theorem normalized_modulus_of_sectionBalance {n : ℕ} {v : Space n → ℝ}
+    (hv : ContDiff ℝ ∞ v) (hp : ∀ x, (hessian v x).PosDef)
+    (hc : EuclideanGraphComplete univ v)
+    (hzero : v 0 = 0) (hdzero : fderiv ℝ v 0 = 0)
+    {ρ R : ℝ} (hρ : 0 &lt; ρ) (hρ1 : ρ ≤ 1) (hR : 1 ≤ R)
+    (hbal : SectionBalance univ v ρ)
+    (hinner : Metric.ball 0 1 ⊆ tangentSection univ v 0 1)
+    (houter : tangentSection univ v 0 1 ⊆ Metric.ball 0 R)
+    {x : Space n} (hx : x ∈ Metric.ball 0 (1 / 4)) {r : ℝ} (hr : 0 &lt; r) :
+    tangentSection univ v x (normalizedModulus ρ R r) ⊆ Metric.ball x r := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a>, <a href="ModelCenteringFurther.lean.html#L378">OAI.AffineBernstein.tangentSection</a>, <a href="ModelCenteringFurther.lean.html#L622">OAI.AffineBernstein.normalizedModulus</a></p></li><li id=L715><b>def</b> <code>OAI.AffineBernstein.tangentModelEquiv</code> <small>line 715</small><div class="doc plain">The manuscript&#x27;s epigraph; the domain is not silently replaced by all of space.
+Literal tangent affine coordinates, ordered as one base direction and n
+transverse directions.</div><pre>def tangentModelEquiv {n : ℕ} (u : Space n → ℝ) (a : Space n) :
+    (Space n × ℝ) ≃ᴬ[ℝ] (Space 1 × Space n) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L735><b>theorem</b> <code>OAI.AffineBernstein.tangentModelEquiv_apply</code> <small>line 735</small></li><li id=L741><b>theorem</b> <code>OAI.AffineBernstein.tangentModelEquiv_fst</code> <small>line 741</small></li><li id=L747><b>theorem</b> <code>OAI.AffineBernstein.tangentModelEquiv_snd</code> <small>line 747</small></li><li id=L753><b>theorem</b> <code>OAI.AffineBernstein.tangent_epigraph_isModelShape</code> <small>line 753</small><div class="doc plain">Completeness supplies an actual one-direction model in the affine family.</div><pre>theorem tangent_epigraph_isModelShape {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u) {a : Space n} (ha : a ∈ Ω) :
+    IsModelShape (tangentModelEquiv u a &#x27;&#x27; sourceEpigraph Ω u) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="ModelCenteringFurther.lean.html#L715">OAI.AffineBernstein.tangentModelEquiv</a>, <a href="TriangularGraph.lean.html#L12">OAI.AffineBernstein.sourceEpigraph</a></p></li><li id=L788><b>theorem</b> <code>OAI.AffineBernstein.tangent_epigraph_in_family</code> <small>line 788</small></li><li id=L798><b>theorem</b> <code>OAI.AffineBernstein.tangent_model_fiber</code> <small>line 798</small></li><li id=L823><b>theorem</b> <code>OAI.AffineBernstein.model_dimension</code> <small>line 823</small><div class="doc plain">A model&#x27;s direction number is bounded by the actual ambient dimension,
+using an invertible affine map from its approximating sequence.</div><pre>theorem model_dimension {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [FiniteDimensional ℝ E] {D : Set E} {k m : ℕ} {C : Set (Space k × Space m)}
+    (hf : InAffineLimitFamily D C) : k+m = Module.finrank ℝ E := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="AffineFamily.lean.html#L129">OAI.AffineBernstein.InAffineLimitFamily</a></p></li><li id=L832><b>theorem</b> <code>OAI.AffineBernstein.exists_maximal_model</code> <small>line 832</small><div class="doc plain">A maximal direction number exists; this is genuine finite-dimensional
+maximality rather than a postulated geometric estimate.</div><pre>theorem exists_maximal_model {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [FiniteDimensional ℝ E] {D : Set E}
+    (h1 : ∃ m, ∃ C : Set (Space 1 × Space m), IsModelShape C ∧ InAffineLimitFamily D C) :
+    ∃ (k m : ℕ) (C : Set (Space k × Space m)), 1 ≤ k ∧ IsModelShape C ∧
+      InAffineLimitFamily D C ∧ ∀ (r d : ℕ) (C&#x27; : Set (Space r × Space d)),
+      IsModelShape C&#x27; → InAffineLimitFamily D C&#x27; → r ≤ k := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="AffineFamily.lean.html#L129">OAI.AffineBernstein.InAffineLimitFamily</a></p></li><li id=L855><b>theorem</b> <code>OAI.AffineBernstein.sectionBalance_of_no_two_model</code> <small>line 855</small><div class="doc plain">Once the geometric/analytic exclusion of two-direction models is proved,
+all tangent sections (all centers and heights) inherit one common balance.
+This is a faithful integration lemma, not the main theorem.</div><pre>theorem sectionBalance_of_no_two_model {n : ℕ} {Ω : Set (Space n)}
+    (hΩ : IsOpen Ω) (hne : Ω.Nonempty) (hcv : Convex ℝ Ω) {u : Space n → ℝ}
+    (hu : ContDiffOn ℝ ∞ u Ω) (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (hc : EuclideanGraphComplete Ω u)
+    (hno : ∀ (d : ℕ), n = d+1 → ∀ C : Set (Space 2 × Space d),
+      IsModelShape C → InAffineLimitFamily (sourceEpigraph Ω u) C → False) :
+    ∃ ρ : ℝ, 0 &lt; ρ ∧ ρ ≤ 1 ∧ SectionBalance Ω u ρ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L58">OAI.AffineBernstein.EuclideanGraphComplete</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="AffineFamily.lean.html#L129">OAI.AffineBernstein.InAffineLimitFamily</a>, <a href="TriangularGraph.lean.html#L12">OAI.AffineBernstein.sourceEpigraph</a>, <a href="ModelCenteringFurther.lean.html#L416">OAI.AffineBernstein.SectionBalance</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

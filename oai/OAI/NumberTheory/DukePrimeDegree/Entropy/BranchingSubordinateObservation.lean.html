@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Entropy/BranchingSubordinateObservation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Entropy/BranchingSubordinateObservation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Entropy</a> / <span>BranchingSubordinateObservation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Entropy</a>/<span>BranchingSubordinateObservation.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Entropy/BranchingSubordinateObservation.lean#L1">source</a></p><div class="doc"><h3>Bounded future observation with finite branching</h3><p>The same low-entropy height and small relative charts provide the weak-stable
+and neutral fiber properties, with uniformly finite predecessor labels.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.DukePrimeDegree.exists_bounded_branching_subordinate_observation_with_lifts</code> <small>line 25</small><div class="doc"><p>The branching observation also retains the uniform radial injectivity
+radius and a single lift whose every future conjugate is radially small.</p></div><pre>theorem exists_bounded_branching_subordinate_observation_with_lifts (d : ℕ)
+    (ell : Fin (d+1) → ℝ) (hell : ∑ i, ell i=0)
+    (hgap : ∀ p : allPositiveRoots (d+1), Real.log 4 ≤ ell p.val.2-ell p.val.1)
+    (μ : Measure (X (d+1))) [IsProbabilityMeasure μ]
+    (hA : ∀ u : LogCoordinates d, μ.map (fun x =&gt; rightAction x (diagonalFlow u))=μ)
+    {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ (B r₀ : ℝ) (H Q : X (d+1) → ℕ),
+      0 &lt; B ∧ 0 &lt; r₀ ∧ r₀ ≤ 1 ∧ Measurable H ∧ Measurable Q ∧
+      (∀ x, quotientLogDistance (Quotient.mk _ (1 : G (d+1))) x ≤ 2*B*(H x:ℝ)+B) ∧
+      (∀ x, Set.InjOn (fun g =&gt; rightAction x g)
+        (matrixBall (d+1) (r₀*Real.exp (-(4*B)*(H x:ℝ))))) ∧
+      (∀ m, IsCompact {x | H x ≤ m}) ∧
+…</pre><p class="refs">Mentions: <a href="../Geometry/OrderedEliminationChain.lean.html#L20">OAI.DukePrimeDegree.allPositiveRoots</a>, <a href="../Geometry/LatticeSpace.lean.html#L97">OAI.DukePrimeDegree.diagonalFlow</a>, <a href="../Geometry/QuotientLogDistance.lean.html#L42">OAI.DukePrimeDegree.quotientLogDistance</a></p></li><li id=L203><b>theorem</b> <code>OAI.DukePrimeDegree.exists_bounded_branching_subordinate_observation</code> <small>line 203</small><div class="doc"><p>A bounded subordinate observation with uniformly finite branching.</p></div><pre>theorem exists_bounded_branching_subordinate_observation (d : ℕ)
+    (ell : Fin (d+1) → ℝ) (hell : ∑ i, ell i=0)
+    (hgap : ∀ p : allPositiveRoots (d+1), Real.log 4 ≤ ell p.val.2-ell p.val.1)
+    (μ : Measure (X (d+1))) [IsProbabilityMeasure μ]
+    (hA : ∀ u : LogCoordinates d, μ.map (fun x =&gt; rightAction x (diagonalFlow u))=μ)
+    {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ H Q : X (d+1) → ℕ, Measurable H ∧ Measurable Q ∧
+      (∀ m, IsCompact {x | H x ≤ m}) ∧
+      (∀ m, (Q &#x27;&#x27; {x | H x ≤ m}).Finite) ∧
+      (∀ N, observationEntropyRate μ
+        (fun x =&gt; rightAction x (diagonalOneParameter ell hell (-1))) (heightClip H N) &lt; ε) ∧
+      (∀ x y, (∀ k : ℕ,
+…</pre><p class="refs">Mentions: <a href="../Geometry/OrderedEliminationChain.lean.html#L20">OAI.DukePrimeDegree.allPositiveRoots</a>, <a href="../Geometry/LatticeSpace.lean.html#L97">OAI.DukePrimeDegree.diagonalFlow</a>, <a href="HeightObservationEntropy.lean.html#L86">OAI.DukePrimeDegree.heightClip</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

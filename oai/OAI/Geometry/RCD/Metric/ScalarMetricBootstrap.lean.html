@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Metric/ScalarMetricBootstrap.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Metric/ScalarMetricBootstrap.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Metric</a> / <span>ScalarMetricBootstrap.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Metric</a>/<span>ScalarMetricBootstrap.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Metric/ScalarMetricBootstrap.lean#L1">source</a></p><div class="doc"><h3>Finite-scale scalar metric bootstrap</h3><p>Fixing a testing point and a direction turns the manuscript's matrix estimates
+into real sequences.  Here <code>z</code> is the local mass in that direction, <code>d</code> is the
+weighted defect, and <code>b</code> is the normalized diagonal second derivative.  The
+signed first-order errors and nonnegative squared increment are kept explicit.</p><p>Finite summation and Cauchy--Schwarz estimates close the bootstrap from
+these scalar premises, without further geometric assumptions.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.RegularPointCoordinates.weighted_defect_sum_le</code> <small>line 26</small><div class="doc"><p>Monotonicity of the scale metrics converts the unweighted defect budget
+to the weighted one used in the metric estimate.</p></div><pre>theorem weighted_defect_sum_le {e H : ℕ → ℝ} {epsilon Q : ℝ}
+    (he : ∀ i, 0 ≤ e i) (hQ : 0 ≤ Q) (k : ℕ)
+    (hH : ∀ i &lt; k, H i ≤ Q)
+    (hebudget : (∑ i ∈ Finset.range k, e i) ≤ epsilon) :
+    (∑ i ∈ Finset.range k, e i * H i) ≤ epsilon * Q := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.RegularPointCoordinates.leading_metric_comparison</code> <small>line 41</small><div class="doc"><p>The cumulative upper/lower local-mass comparisons imply the leading
+metric comparison before the signed error is introduced.</p></div><pre>theorem leading_metric_comparison {s z : ℕ → ℝ} {base Q T : ℝ}
+    (hbase : 0 ≤ base) (hT : 0 &lt; T) (hs : ∀ i, 0 ≤ s i) (k : ℕ)
+    (hsz : ∀ i &lt; k, s i ≤ z i)
+    (hlower : Q ≤ T * (base + ∑ i ∈ Finset.range k, s i))
+    (hupper : base + (∑ i ∈ Finset.range k, z i) ≤ T * Q) :
+    T⁻¹ * Q ≤ base + 2 * (∑ i ∈ Finset.range k, s i) ∧
+      base + 2 * (∑ i ∈ Finset.range k, s i) ≤ 2 * T * Q := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.RegularPointCoordinates.sum_sqrt_mul_sqrt_le</code> <small>line 57</small><div class="doc"><p>Cauchy--Schwarz for square roots of nonnegative scalar budgets.</p></div><pre>theorem sum_sqrt_mul_sqrt_le {z d : ℕ → ℝ}
+    (hz : ∀ i, 0 ≤ z i) (hd : ∀ i, 0 ≤ d i) (k : ℕ) :
+    (∑ i ∈ Finset.range k, Real.sqrt (z i) * Real.sqrt (d i)) ≤
+      Real.sqrt (∑ i ∈ Finset.range k, z i) *
+        Real.sqrt (∑ i ∈ Finset.range k, d i) := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.RegularPointCoordinates.diagonal_recurrence_square_budget</code> <small>line 73</small><div class="doc"><p>The diagonal recurrence converts the forcing budgets to a square sum.</p></div><pre>theorem diagonal_recurrence_square_budget {z d b : ℕ → ℝ} {C : ℝ}
+    (hz : ∀ i, 0 ≤ z i) (hd : ∀ i, 0 ≤ d i) (hb : ∀ i, 0 ≤ b i)
+    (hbzero : b 0 = 0) (k : ℕ)
+    (hrec : ∀ i &lt; k, b (i + 1) ≤ b i / 2 +
+      C * (Real.sqrt (z i) + Real.sqrt (d i))) :
+    (∑ i ∈ Finset.range k, b i ^ 2) ≤
+      8 * C ^ 2 * ((∑ i ∈ Finset.range k, z i) +
+        ∑ i ∈ Finset.range k, d i) := by
+…</pre></li><li id=L98><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_metric_cumulative_error</code> <small>line 98</small><div class="doc"><p>Summing the exact metric increment and estimating its three errors.
+Only the displayed finite-scale premises are used.</p></div><pre>theorem scalar_metric_cumulative_error {m s z d b linear inverse square : ℕ → ℝ}
+    {C epsilon : ℝ} (hC : 0 ≤ C)
+    (hz : ∀ i, 0 ≤ z i) (hd : ∀ i, 0 ≤ d i) (hb : ∀ i, 0 ≤ b i)
+    (hbzero : b 0 = 0) (k : ℕ)
+    (hrec : ∀ i &lt; k, b (i + 1) ≤ b i / 2 +
+      C * (Real.sqrt (z i) + Real.sqrt (d i)))
+    (hlinear : ∀ i &lt; k, |linear i| ≤ C * Real.sqrt (z i) * Real.sqrt (d i))
+    (hinverse : ∀ i &lt; k, |inverse i| ≤ C * b i * Real.sqrt (d i))
+    (hsquare : ∀ i &lt; k, |square i| ≤ C * epsilon * (z i + d i))
+    (hstep : ∀ i &lt; k, m (i + 1) - m i =
+      2 * s i + 2 * linear i + 2 * inverse i + square i) :
+    |m k - m 0 - 2 * ∑ i ∈ Finset.range k, s i| ≤
+…</pre></li><li id=L164><b>def</b> <code>OAI.RegularPointCoordinates.scalarMetricErrorCoefficient</code> <small>line 164</small><div class="doc"><p>An explicit coefficient for the cumulative metric error after using
+the local-mass and weighted-defect budgets.</p></div><pre>noncomputable def scalarMetricErrorCoefficient (C T epsilon : ℝ) : ℝ :=
+…</pre></li><li id=L170><b>theorem</b> <code>OAI.RegularPointCoordinates.scalarMetricErrorCoefficient_tendsto_zero</code> <small>line 170</small><div class="doc"><p>The coefficient can be made arbitrarily small after fixing <code>C</code> and <code>T</code>.</p></div><pre>theorem scalarMetricErrorCoefficient_tendsto_zero (C T : ℝ) :
+    Tendsto (scalarMetricErrorCoefficient C T) (𝓝 0) (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="ScalarMetricBootstrap.lean.html#L164">OAI.RegularPointCoordinates.scalarMetricErrorCoefficient</a></p></li><li id=L179><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_metric_error_of_budgets</code> <small>line 179</small><div class="doc"><p>The full finite metric error is proportional to the final directional
+metric <code>Q</code>, even if that metric grows with the scale.</p></div><pre>theorem scalar_metric_error_of_budgets {m s z d b linear inverse square : ℕ → ℝ}
+    {C T epsilon Q : ℝ} (hC : 0 ≤ C) (hT : 0 ≤ T)
+    (hepsilon : 0 ≤ epsilon) (hQ : 0 ≤ Q)
+    (hz : ∀ i, 0 ≤ z i) (hd : ∀ i, 0 ≤ d i) (hb : ∀ i, 0 ≤ b i)
+    (hbzero : b 0 = 0) (k : ℕ)
+    (hrec : ∀ i &lt; k, b (i + 1) ≤ b i / 2 +
+      C * (Real.sqrt (z i) + Real.sqrt (d i)))
+    (hlinear : ∀ i &lt; k, |linear i| ≤ C * Real.sqrt (z i) * Real.sqrt (d i))
+    (hinverse : ∀ i &lt; k, |inverse i| ≤ C * b i * Real.sqrt (d i))
+    (hsquare : ∀ i &lt; k, |square i| ≤ C * epsilon * (z i + d i))
+    (hstep : ∀ i &lt; k, m (i + 1) - m i =
+      2 * s i + 2 * linear i + 2 * inverse i + square i)
+…</pre></li><li id=L229><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_metric_comparison_closes</code> <small>line 229</small><div class="doc"><p>Leading metric comparison and a small cumulative error close the bootstrap.</p></div><pre>theorem scalar_metric_comparison_closes {M leading Q T eta : ℝ}
+    (hQ : 0 ≤ Q) (hT : 0 &lt; T)
+    (hlower : T⁻¹ * Q ≤ leading) (hupper : leading ≤ 2 * T * Q)
+    (herror : |M - leading| ≤ eta * Q) (hsmall : eta ≤ (2 * T)⁻¹) :
+    (2 * T)⁻¹ * Q ≤ M ∧ M ≤ (2 * T + (2 * T)⁻¹) * Q := by
+…</pre></li><li id=L245><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_metric_fourfold_comparison</code> <small>line 245</small><div class="doc"><p>Choosing the bootstrap constant <code>4T</code> gives its lower and upper bounds.</p></div><pre>theorem scalar_metric_fourfold_comparison {M leading Q T eta : ℝ}
+    (hQ : 0 ≤ Q) (hT : 1 ≤ T)
+    (hlower : T⁻¹ * Q ≤ leading) (hupper : leading ≤ 2 * T * Q)
+    (herror : |M - leading| ≤ eta * Q) (hsmall : eta ≤ (2 * T)⁻¹) :
+    (4 * T)⁻¹ * Q ≤ M ∧ M ≤ (4 * T) * Q := by
+…</pre></li><li id=L263><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_metric_bootstrap</code> <small>line 263</small><div class="doc"><p>The scalar recurrence, three error estimates, two budgets, and leading
+comparison imply the metric bootstrap bounds.</p></div><pre>theorem scalar_metric_bootstrap {m s z d b linear inverse square : ℕ → ℝ}
+    {C T epsilon Q : ℝ} (hC : 0 ≤ C) (hT : 1 ≤ T)
+    (hepsilon : 0 ≤ epsilon) (hQ : 0 ≤ Q)
+    (hz : ∀ i, 0 ≤ z i) (hd : ∀ i, 0 ≤ d i) (hb : ∀ i, 0 ≤ b i)
+    (hbzero : b 0 = 0) (k : ℕ)
+    (hrec : ∀ i &lt; k, b (i + 1) ≤ b i / 2 +
+      C * (Real.sqrt (z i) + Real.sqrt (d i)))
+    (hlinear : ∀ i &lt; k, |linear i| ≤ C * Real.sqrt (z i) * Real.sqrt (d i))
+    (hinverse : ∀ i &lt; k, |inverse i| ≤ C * b i * Real.sqrt (d i))
+    (hsquare : ∀ i &lt; k, |square i| ≤ C * epsilon * (z i + d i))
+    (hstep : ∀ i &lt; k, m (i + 1) - m i =
+      2 * s i + 2 * linear i + 2 * inverse i + square i)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

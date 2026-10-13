@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/AffineSupport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/AffineSupport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>AffineSupport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>AffineSupport.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/AffineSupport.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.AffineBernstein.affineEpigraphFiber</code> <small>line 20</small><div class="doc plain">A genuine affine slice of the original epigraph, in arbitrary transverse
+coordinates.</div><pre>def affineEpigraphFiber {n : ℕ} (Ω : Set (Space n)) (u : Space n → ℝ)
+    (x : Space n) (z : ℝ) (A : E →L[ℝ] Space n) (b : E →L[ℝ] ℝ) : Set E :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L25><b>theorem</b> <code>OAI.AffineBernstein.affineEpigraphFiber_no_vertical</code> <small>line 25</small><div class="doc plain">A compact nonempty affine epigraph fiber has no vertical direction.</div><pre>theorem affineEpigraphFiber_no_vertical {n : ℕ} {Ω : Set (Space n)}
+    {u : Space n → ℝ} {x : Space n} {z : ℝ} {A : E →L[ℝ] Space n}
+    {b : E →L[ℝ] ℝ} (hK : IsCompact (affineEpigraphFiber Ω u x z A b))
+    (hne : (affineEpigraphFiber Ω u x z A b).Nonempty)
+    {v : E} (hv : A v = 0) : b v = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="AffineSupport.lean.html#L20">OAI.AffineBernstein.affineEpigraphFiber</a></p></li><li id=L55><b>theorem</b> <code>OAI.AffineBernstein.affineEpigraphFiber_injective</code> <small>line 55</small><div class="doc plain">For an affine coordinate isomorphism compact fibers force injectivity of
+its horizontal linear part.</div><pre>theorem affineEpigraphFiber_injective {n : ℕ} {Ω : Set (Space n)}
+    {u : Space n → ℝ} {x : Space n} {z : ℝ} {A : E →L[ℝ] Space n}
+    {b : E →L[ℝ] ℝ} (hK : IsCompact (affineEpigraphFiber Ω u x z A b))
+    (hne : (affineEpigraphFiber Ω u x z A b).Nonempty)
+    (hi : Function.Injective (fun y =&gt; (A y, b y))) : Function.Injective A := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="AffineSupport.lean.html#L20">OAI.AffineBernstein.affineEpigraphFiber</a></p></li><li id=L67><b>theorem</b> <code>OAI.AffineBernstein.affineSlice_second</code> <small>line 67</small><div class="doc plain">Chain rule for the actual second differential of an affine epigraph slice.</div><pre>theorem affineSlice_second {n : ℕ} {u : Space n → ℝ} {x : Space n} {z : ℝ}
+    {A : E →L[ℝ] Space n} {b : E →L[ℝ] ℝ} {y : E}
+    (hu : ContDiffAt ℝ ∞ u (x + A y)) (v w : E) :
+    fderiv ℝ (fderiv ℝ (fun q =&gt; u (x + A q) - (z + b q))) y v w =
+      fderiv ℝ (fderiv ℝ u) (x + A y) (A v) (A w) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L92><b>theorem</b> <code>OAI.AffineBernstein.sublevel_interior_strict</code> <small>line 92</small><div class="doc plain">An interior point of a convex sublevel is a strict sublevel point whenever
+its actual Hessian is positive definite.</div><pre>theorem sublevel_interior_strict [Nontrivial E] {W : Set E} {F : E → ℝ}
+    (hcv : ConvexOn ℝ W F) {z : E}
+    (hz : z ∈ interior {y | y ∈ W ∧ F y ≤ 0})
+    (hd : DifferentiableAt ℝ F z)
+    (hH : ∀ v : E, v ≠ 0 → 0 &lt; fderiv ℝ (fderiv ℝ F) z v v) : F z &lt; 0 := by
+…</pre></li><li id=L116><b>theorem</b> <code>OAI.AffineBernstein.convexOn_affineSlice</code> <small>line 116</small><div class="doc plain">Convexity survives the actual affine slice and subtraction of its height.</div><pre>theorem convexOn_affineSlice {n : ℕ} {Ω : Set (Space n)} {u : Space n → ℝ}
+    (hcv : ConvexOn ℝ Ω u) (x : Space n) (z : ℝ)
+    (A : E →L[ℝ] Space n) (b : E →L[ℝ] ℝ) :
+    ConvexOn ℝ {y | x + A y ∈ Ω} (fun y =&gt; u (x + A y) - (z + b y)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L137><b>def</b> <code>OAI.AffineBernstein.affineEpigraphPullback</code> <small>line 137</small><div class="doc plain">The literal inverse image of the original epigraph under affine coordinates.</div><pre>def affineEpigraphPullback {n : ℕ} (Ω : Set (Space n)) (u : Space n → ℝ)
+    (a : Space n × ℝ) (L : (S × E) ≃L[ℝ] (Space n × ℝ)) : Set (S × E) :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L141><b>def</b> <code>OAI.AffineBernstein.affineFiberHorizontal</code> <small>line 141</small></li><li id=L145><b>def</b> <code>OAI.AffineBernstein.affineFiberHeight</code> <small>line 145</small></li><li id=L149><b>theorem</b> <code>OAI.AffineBernstein.affine_coordinates_split</code> <small>line 149</small></li><li id=L157><b>theorem</b> <code>OAI.AffineBernstein.affineEpigraphPullback_fiber</code> <small>line 157</small></li><li id=L167><b>theorem</b> <code>OAI.AffineBernstein.affineFiberHorizontal_injective</code> <small>line 167</small></li><li id=L183><b>theorem</b> <code>OAI.AffineBernstein.affineEpigraph_support_smooth</code> <small>line 183</small><div class="doc plain">The principal support-coordinate regularity assertion in tubes.tex:39–60,
+for actual affine images of the standing epigraph, not abstract smooth bodies.
+The transverse dimension is nonzero, as in the manuscript (m=n+1-k≥1).</div><pre>theorem affineEpigraph_support_smooth [FiniteDimensional ℝ E] [Nontrivial E]
+    {n : ℕ} {Ω : Set (Space n)} (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω)
+    {u : Space n → ℝ} (hu : ContDiffOn ℝ ∞ u Ω)
+    (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (a : Space n × ℝ) (L : (S × E) ≃L[ℝ] (Space n × ℝ))
+    {B : Set S} (hB : IsOpen B)
+    (hK : ∀ s ∈ B, IsCompact {y | (s, y) ∈ affineEpigraphPullback Ω u a L})
+    (hzero : ∀ s ∈ B, (0 : E) ∈ interior {y | (s, y) ∈ affineEpigraphPullback Ω u a L})
+    {s : S} (hs : s ∈ B) {ℓ : E →L[ℝ] ℝ} (hℓ : ℓ ≠ 0) :
+    ContDiffAt ℝ ∞ (fun q : S × (E →L[ℝ] ℝ) =&gt;
+      supportValue {y | (q.1, y) ∈ affineEpigraphPullback Ω u a L} q.2) (s, ℓ) ∧
+    0 &lt; supportValue {y | (s, y) ∈ affineEpigraphPullback Ω u a L} ℓ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="AffineSupport.lean.html#L137">OAI.AffineBernstein.affineEpigraphPullback</a>, <a href="SupportGeometry.lean.html#L19">OAI.AffineBernstein.supportValue</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

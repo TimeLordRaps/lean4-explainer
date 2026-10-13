@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/Falconer/Estimates/IidSampling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/Falconer/Estimates/IidSampling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MeasureTheory</a> / <a href="../index.html">Falconer</a> / <a href="index.html">Estimates</a> / <span>IidSampling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MeasureTheory</a>/<a href="../index.html">Falconer</a>/<a href="index.html">Estimates</a>/<span>IidSampling.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/Falconer/Estimates/IidSampling.lean#L1">source</a></p><div class="doc"><h3>Independent sampling of direction and point labels</h3><p>The finite product law below samples the original labels, before their
+geometric coordinates are taken. Repeated coordinates therefore retain
+their original incidence fibers, as required by <code>ang:planar-measures</code>.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Falconer.iidLaw</code> <small>line 19</small></li><li id=L23><b>instance</b> <code>OAI.Falconer.(instance at line 23)</code> <small>line 23</small></li><li id=L28><b>def</b> <code>OAI.Falconer.iidCount</code> <small>line 28</small></li><li id=L31><b>theorem</b> <code>OAI.Falconer.measurable_iidCount</code> <small>line 31</small></li><li id=L37><b>theorem</b> <code>OAI.Falconer.iid_cell_mass</code> <small>line 37</small></li><li id=L50><b>theorem</b> <code>OAI.Falconer.iid_indicators_independent</code> <small>line 50</small></li><li id=L67><b>theorem</b> <code>OAI.Falconer.iid_finite_cells_tail</code> <small>line 67</small><div class="doc"><p>Counts are simultaneously controlled on every prescribed measurable
+cell, with an exponentially small failure probability.</p></div><pre>theorem iid_finite_cells_tail {X κ : Type*} [MeasurableSpace X] [DecidableEq κ]
+    (ν : ProbabilityMeasure X) (n : ℕ) (B : Finset κ) (A : κ → Set X)
+    (hA : ∀ j, MeasurableSet (A j)) (p T : κ → ℝ) (L : ℝ)
+    (hp : ∀ j ∈ B, 0 ≤ p j)
+    (hprob : ∀ j ∈ B, (ν : Measure X).real (A j) ≤ p j)
+    (hT : ∀ j ∈ B, (n : ℝ) * (exp 1 - 1) * p j + L ≤ T j) :
+    iidLaw ν n (⋃ j ∈ B, {ω | T j ≤ iidCount (A j) ω}) ≤
+      ENNReal.ofReal ((B.card : ℝ) * exp (-L)) := by
+…</pre><p class="refs">Mentions: <a href="IidSampling.lean.html#L19">OAI.Falconer.iidLaw</a>, <a href="IidSampling.lean.html#L28">OAI.Falconer.iidCount</a></p></li><li id=L91><b>def</b> <code>OAI.Falconer.iidAverage</code> <small>line 91</small></li><li id=L94><b>theorem</b> <code>OAI.Falconer.integrable_iidAverage</code> <small>line 94</small></li><li id=L102><b>theorem</b> <code>OAI.Falconer.integral_iidAverage</code> <small>line 102</small></li><li id=L116><b>theorem</b> <code>OAI.Falconer.iidAverage_le_one</code> <small>line 116</small></li><li id=L127><b>theorem</b> <code>OAI.Falconer.exists_iid_sample_with_counts_and_incidence</code> <small>line 127</small><div class="doc"><p>Simultaneous cell bounds and at least half the expected incidence can
+be achieved by one sample of the original labels.</p></div><pre>theorem exists_iid_sample_with_counts_and_incidence {X κ : Type*}
+    [MeasurableSpace X] [DecidableEq κ] (ν : ProbabilityMeasure X)
+    {n : ℕ} (hn : 0 &lt; n) (B : Finset κ) (A : κ → Set X)
+    (hA : ∀ j, MeasurableSet (A j)) (p T : κ → ℝ) (L : ℝ)
+    (hp : ∀ j ∈ B, 0 ≤ p j)
+    (hprob : ∀ j ∈ B, (ν : Measure X).real (A j) ≤ p j)
+    (hT : ∀ j ∈ B, (n : ℝ) * (exp 1 - 1) * p j + L ≤ T j)
+    (f : X → ℝ) (hf : Integrable f (ν : Measure X)) (hf1 : ∀ x, f x ≤ 1)
+    {I : ℝ} (hI : 0 &lt; I) (hmean : I ≤ ∫ x, f x ∂(ν : Measure X))
+    (hsmall : (B.card : ℝ) * exp (-L) ≤ I / 4) :
+    ∃ ω : Fin n → X,
+      (∀ j ∈ B, iidCount (A j) ω &lt; T j) ∧ I / 2 ≤ iidAverage f ω := by
+…</pre><p class="refs">Mentions: <a href="IidSampling.lean.html#L28">OAI.Falconer.iidCount</a>, <a href="IidSampling.lean.html#L91">OAI.Falconer.iidAverage</a></p></li><li id=L161><b>theorem</b> <code>OAI.Falconer.exists_iid_sample_scale_counts</code> <small>line 161</small><div class="doc"><p>For cell masses at most <code>K * s</code>, only the additive term <code>L</code> in the
+sampling constant is needed to pay for simultaneous control, provided
+the expected scale count <code>n * s</code> is at least one.</p></div><pre>theorem exists_iid_sample_scale_counts {X κ : Type*}
+    [MeasurableSpace X] [DecidableEq κ] (ν : ProbabilityMeasure X)
+    {n : ℕ} (hn : 0 &lt; n) (B : Finset κ) (A : κ → Set X)
+    (hA : ∀ j, MeasurableSet (A j)) (s : κ → ℝ) {K L : ℝ}
+    (hK : 0 ≤ K) (hL : 0 ≤ L)
+    (hscale : ∀ j ∈ B, 1 ≤ (n : ℝ) * s j)
+    (hprob : ∀ j ∈ B, (ν : Measure X).real (A j) ≤ K * s j)
+    (f : X → ℝ) (hf : Integrable f (ν : Measure X)) (hf1 : ∀ x, f x ≤ 1)
+    {I : ℝ} (hI : 0 &lt; I) (hmean : I ≤ ∫ x, f x ∂(ν : Measure X))
+    (hsmall : (B.card : ℝ) * exp (-L) ≤ I / 4) :
+    ∃ ω : Fin n → X,
+      (∀ j ∈ B, iidCount (A j) ω &lt; ((exp 1 - 1) * K + L) * (n : ℝ) * s j) ∧
+…</pre><p class="refs">Mentions: <a href="IidSampling.lean.html#L28">OAI.Falconer.iidCount</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

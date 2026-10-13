@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Modulus/LinePayment.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Modulus/LinePayment.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Modulus</a> / <span>LinePayment.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Modulus</a>/<span>LinePayment.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Modulus/LinePayment.lean#L1">source</a></p><div class="doc"><h3>Energy paid by a line crossing a barrier</h3><p>A barrier that is zero at an end of <code>[-L, L]</code> and equals one somewhere
+on the segment has squared derivative integral at least <code>1 / (2 * L)</code>.
+This follows from the fundamental theorem of calculus and the integral
+Cauchy–Schwarz inequality.</p><p>Both absolutely continuous and <code>C¹</code> restrictions satisfy this estimate.
+Fubini's theorem gives the rectangular energy lower bound when horizontal
+slices are almost everywhere absolutely continuous.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.CircleDomainRigidity.integral_sq_le_length_mul_integral_sq</code> <small>line 28</small><div class="doc"><p>Cauchy–Schwarz against the constant function on a finite interval,
+written without square roots.</p></div><pre>theorem integral_sq_le_length_mul_integral_sq {g : ℝ → ℝ} {a b : ℝ}
+    (hab : a ≤ b) (hg : IntervalIntegrable g volume a b)
+    (hg2 : IntervalIntegrable (fun x =&gt; g x ^ 2) volume a b) :
+    (∫ x in a..b, g x) ^ 2 ≤ (b - a) * (∫ x in a..b, g x ^ 2) := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.CircleDomainRigidity.line_payment_of_hasDerivAt</code> <small>line 56</small><div class="doc"><p>A continuous restriction with endpoint value zero and
+an interior or endpoint value one pays at least reciprocal interval length
+in squared derivative energy. The derivative need only exist in the open
+interval, and both integrability assumptions are ordinary FTC hypotheses.</p></div><pre>theorem line_payment_of_hasDerivAt {f d : ℝ → ℝ} {a b c : ℝ}
+    (hc : c ∈ Icc a b) (hf : ContinuousOn f (Icc a b))
+    (hd : ∀ x ∈ Ioo a b, HasDerivAt f (d x) x)
+    (hi : IntervalIntegrable d volume a b)
+    (hi2 : IntervalIntegrable (fun x =&gt; d x ^ 2) volume a b)
+    (ha : f a = 0) (hcone : f c = 1) :
+    1 ≤ (b - a) * (∫ x in a..b, d x ^ 2) := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.CircleDomainRigidity.line_payment_of_contDiff</code> <small>line 89</small><div class="doc"><p>The smooth-barrier specialization needs no separate integrability
+hypotheses: continuity of the derivative on a compact interval supplies
+them.</p></div><pre>theorem line_payment_of_contDiff {f : ℝ → ℝ} {a b c : ℝ}
+    (hf : ContDiff ℝ 1 f) (hc : c ∈ Icc a b)
+    (ha : f a = 0) (hcone : f c = 1) :
+    1 ≤ (b - a) * (∫ x in a..b, deriv f x ^ 2) := by
+…</pre></li><li id=L100><b>theorem</b> <code>OAI.CircleDomainRigidity.line_payment_on_symmetric_interval</code> <small>line 100</small><div class="doc"><p>The <code>1 / (2L)</code> payment of a smooth barrier on a horizontal segment in
+the supporting square <code>[-L,L]²</code>. Only the left endpoint value is needed.</p></div><pre>theorem line_payment_on_symmetric_interval {f : ℝ → ℝ} {L c : ℝ}
+    (hL : 0 &lt; L) (hf : ContDiff ℝ 1 f) (hc : c ∈ Icc (-L) L)
+    (ha : f (-L) = 0) (hcone : f c = 1) :
+    1 / (2 * L) ≤ ∫ x in (-L)..L, deriv f x ^ 2 := by
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.CircleDomainRigidity.line_payment_of_absolutelyContinuous</code> <small>line 111</small><div class="doc"><p>The actual absolutely continuous case of the line-payment estimate.
+Absolute continuity supplies the integrable derivative and its fundamental
+theorem of calculus; only square-integrability is an extra energy hypothesis.</p></div><pre>theorem line_payment_of_absolutelyContinuous {f : ℝ → ℝ} {a b c : ℝ}
+    (hf : AbsolutelyContinuousOnInterval f a b) (hc : c ∈ Icc a b)
+    (hi2 : IntervalIntegrable (fun x =&gt; deriv f x ^ 2) volume a b)
+    (ha : f a = 0) (hcone : f c = 1) :
+    1 ≤ (b - a) * (∫ x in a..b, deriv f x ^ 2) := by
+…</pre></li><li id=L138><b>theorem</b> <code>OAI.CircleDomainRigidity.line_payment_on_symmetric_interval_of_absolutelyContinuous</code> <small>line 138</small><div class="doc"><p>The sharp form needed on each absolutely continuous horizontal slice
+of a Sobolev barrier supported in the square <code>[-L,L]²</code>.</p></div><pre>theorem line_payment_on_symmetric_interval_of_absolutelyContinuous
+    {f : ℝ → ℝ} {L c : ℝ} (hL : 0 &lt; L)
+    (hf : AbsolutelyContinuousOnInterval f (-L) L) (hc : c ∈ Icc (-L) L)
+    (hi2 : IntervalIntegrable (fun x =&gt; deriv f x ^ 2) volume (-L) L)
+    (ha : f (-L) = 0) (hcone : f c = 1) :
+    1 / (2 * L) ≤ ∫ x in (-L)..L, deriv f x ^ 2 := by
+…</pre></li><li id=L153><b>theorem</b> <code>OAI.CircleDomainRigidity.integrated_line_payment_of_absolutelyContinuous</code> <small>line 153</small><div class="doc"><p>Integrating line payment over a transverse interval gives the energy
+lower bound <code>(b-a)/(2L)</code>. The hypotheses are the actual ACL slice conditions
+and integrability of the squared horizontal derivative on the rectangle.
+Fubini supplies square-integrability on almost every slice and integrability
+of the resulting slice energies. Coordinates are written <code>(y,x)</code>.</p></div><pre>theorem integrated_line_payment_of_absolutelyContinuous
+    {v : ℝ → ℝ → ℝ} {L a b : ℝ} (hL : 0 &lt; L) (hab : a ≤ b)
+    (hEnergy : Integrable (fun p : ℝ × ℝ =&gt; deriv (v p.1) p.2 ^ 2)
+      ((volume.restrict (Ioc a b)).prod (volume.restrict (Ioc (-L) L))))
+    (hSlices : ∀ᵐ y ∂volume.restrict (Ioc a b),
+      AbsolutelyContinuousOnInterval (v y) (-L) L ∧ v y (-L) = 0 ∧
+        ∃ c ∈ Icc (-L) L, v y c = 1) :
+    (b - a) / (2 * L) ≤
+      ∫ p : ℝ × ℝ, deriv (v p.1) p.2 ^ 2
+        ∂((volume.restrict (Ioc a b)).prod (volume.restrict (Ioc (-L) L))) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

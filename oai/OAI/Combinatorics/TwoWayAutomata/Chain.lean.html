@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/TwoWayAutomata/Chain.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/TwoWayAutomata/Chain.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">TwoWayAutomata</a> / <span>Chain.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">TwoWayAutomata</a>/<span>Chain.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/TwoWayAutomata/Chain.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.TwoWayComplementation.ChainNode</code> <small>line 10</small><div class="doc"><p>Internal vertices of a chain with one distinguished final cell.</p></div><pre>def ChainNode (m : ℕ) : ℕ → Type
+  | 0 =&gt; Fin m
+  | n + 1 =&gt; Fin m ⊕ ChainNode m n
+
+namespace ChainNode
+
+/-- Zero-based cell coordinate. -/</pre></li><li id=L17><b>def</b> <code>OAI.TwoWayComplementation.ChainNode.position</code> <small>line 17</small><div class="doc"><p>Zero-based cell coordinate.</p></div><pre>def position {m : ℕ} : {n : ℕ} → ChainNode m n → ℕ
+  | 0, _ =&gt; 0
+  | _ + 1, .inl _ =&gt; 0
+  | _ + 1, .inr c =&gt; c.position + 1
+
+/-- State label carried at a cell. -/</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a>, <a href="Chain.lean.html#L23">OAI.TwoWayComplementation.ChainNode.label</a></p></li><li id=L23><b>def</b> <code>OAI.TwoWayComplementation.ChainNode.label</code> <small>line 23</small><div class="doc"><p>State label carried at a cell.</p></div><pre>def label {m : ℕ} : {n : ℕ} → ChainNode m n → Fin m
+  | 0, q =&gt; q
+  | _ + 1, .inl q =&gt; q
+  | _ + 1, .inr c =&gt; c.label
+
+/-- Every vertex belongs to one of the chain&#x27;s cells. -/</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a></p></li><li id=L29><b>theorem</b> <code>OAI.TwoWayComplementation.ChainNode.position_le</code> <small>line 29</small><div class="doc"><p>Every vertex belongs to one of the chain's cells.</p></div><pre>theorem position_le {m n : ℕ} (c : ChainNode m n) : c.position ≤ n := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a></p></li><li id=L38><b>theorem</b> <code>OAI.TwoWayComplementation.ChainNode.coordinates_injective</code> <small>line 38</small><div class="doc"><p>A cell coordinate and a state label uniquely identify an internal vertex.</p></div><pre>theorem coordinates_injective {m n : ℕ} (c d : ChainNode m n)
+    (hp : c.position = d.position) (hq : c.label = d.label) : c = d := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a></p></li><li id=L54><b>theorem</b> <code>OAI.TwoWayComplementation.ChainNode.coordinates_surjective</code> <small>line 54</small><div class="doc"><p>Every valid cell coordinate and state label occurs.</p></div><pre>theorem coordinates_surjective {m n : ℕ} (q : Fin m) (p : ℕ) (hp : p ≤ n) :
+    ∃ c : ChainNode m n, c.label = q ∧ c.position = p := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a></p></li><li id=L68><b>def</b> <code>OAI.TwoWayComplementation.chainSymbol</code> <small>line 68</small><div class="doc"><p>The symbol at a vertex in a nonempty cell chain.</p></div><pre>def chainSymbol {Sigma : Type*} {m : ℕ} (w : List Sigma) (last : Sigma) :
+    ChainNode m w.length → Sigma :=
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a></p></li><li id=L77><b>def</b> <code>OAI.TwoWayComplementation.cellNetwork</code> <small>line 77</small><div class="doc"><p>A single cell retains stays internally and exposes its two moving transitions.</p></div><pre>def cellNetwork {m : ℕ} (moves : Fin 3 → SetRel (Fin m) (Fin m)) : Network m (Fin m) where
+…</pre><p class="refs">Mentions: <a href="Network.lean.html#L79">OAI.TwoWayComplementation.Network</a></p></li><li id=L85><b>def</b> <code>OAI.TwoWayComplementation.chainNetwork</code> <small>line 85</small><div class="doc"><p>Join a list of cells to a distinguished final cell.</p></div><pre>def chainNetwork {Sigma : Type*} {m : ℕ}
+    (moves : Sigma → Fin 3 → SetRel (Fin m) (Fin m)) (w : List Sigma) (last : Sigma) :
+    Network m (ChainNode m w.length) :=
+…</pre><p class="refs">Mentions: <a href="Network.lean.html#L79">OAI.TwoWayComplementation.Network</a>, <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a></p></li><li id=L93><b>theorem</b> <code>OAI.TwoWayComplementation.chainNetwork_summary</code> <small>line 93</small><div class="doc"><p>The path summary of a cell chain is the product of its cell diagrams.</p></div><pre>theorem chainNetwork_summary {Sigma : Type*} {m : ℕ}
+    (moves : Sigma → Fin 3 → SetRel (Fin m) (Fin m)) (w : List Sigma) (last : Sigma) :
+    (chainNetwork moves w last).summary =
+      wordDiagram (fun a =&gt; cellDiagram m (moves a 1) (moves a 2) (moves a 0)) (w ++ [last]) := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L85">OAI.TwoWayComplementation.chainNetwork</a>, <a href="Network.lean.html#L14">OAI.TwoWayComplementation.wordDiagram</a>, <a href="Network.lean.html#L10">OAI.TwoWayComplementation.cellDiagram</a></p></li><li id=L109><b>theorem</b> <code>OAI.TwoWayComplementation.chainNetwork_entrances</code> <small>line 109</small><div class="doc"><p>Entrances attach exactly to the first and last cells with their unchanged labels.</p></div><pre>theorem chainNetwork_entrances {Sigma : Type*} {m : ℕ}
+    (moves : Sigma → Fin 3 → SetRel (Fin m) (Fin m)) (w : List Sigma) (last : Sigma)
+    (q : Fin m) (c : ChainNode m w.length) :
+    ((q, c) ∈ (chainNetwork moves w last).leftIn ↔ c.position = 0 ∧ q = c.label) ∧
+    ((q, c) ∈ (chainNetwork moves w last).rightIn ↔ c.position = w.length ∧ q = c.label) := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a>, <a href="Chain.lean.html#L85">OAI.TwoWayComplementation.chainNetwork</a></p></li><li id=L135><b>theorem</b> <code>OAI.TwoWayComplementation.chainNetwork_exits</code> <small>line 135</small><div class="doc"><p>Only the endpoint cells can exit a chain, using the appropriate moving transition.</p></div><pre>theorem chainNetwork_exits {Sigma : Type*} {m : ℕ}
+    (moves : Sigma → Fin 3 → SetRel (Fin m) (Fin m)) (w : List Sigma) (last : Sigma)
+    (c : ChainNode m w.length) (q : Fin m) :
+    ((c, q) ∈ (chainNetwork moves w last).leftOut ↔
+      c.position = 0 ∧ (c.label, q) ∈ moves (chainSymbol w last c) 0) ∧
+    ((c, q) ∈ (chainNetwork moves w last).rightOut ↔
+      c.position = w.length ∧ (c.label, q) ∈ moves (chainSymbol w last c) 2) := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a>, <a href="Chain.lean.html#L85">OAI.TwoWayComplementation.chainNetwork</a>, <a href="Chain.lean.html#L68">OAI.TwoWayComplementation.chainSymbol</a></p></li><li id=L166><b>theorem</b> <code>OAI.TwoWayComplementation.chainNetwork_edges</code> <small>line 166</small><div class="doc"><p>Internal edges are precisely local transitions that stay within the chain.</p></div><pre>theorem chainNetwork_edges {Sigma : Type*} {m : ℕ}
+    (moves : Sigma → Fin 3 → SetRel (Fin m) (Fin m)) (w : List Sigma) (last : Sigma)
+    (c d : ChainNode m w.length) :
+    (c, d) ∈ (chainNetwork moves w last).edge ↔
+      ∃ move : Fin 3, (c.label, d.label) ∈ moves (chainSymbol w last c) move ∧
+        (d.position : ℤ) = (c.position : ℤ) + (move.val : ℤ) - 1 := by
+…</pre><p class="refs">Mentions: <a href="Chain.lean.html#L10">OAI.TwoWayComplementation.ChainNode</a>, <a href="Chain.lean.html#L85">OAI.TwoWayComplementation.chainNetwork</a>, <a href="Chain.lean.html#L68">OAI.TwoWayComplementation.chainSymbol</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

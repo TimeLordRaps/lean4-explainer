@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/CoverLimits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/CoverLimits.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>CoverLimits.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>CoverLimits.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/CoverLimits.lean#L1">source</a></p><div class="doc"><p>The deterministic and integration steps in the upper-cover arguments of
+the two exact-gauge manuscripts. These lemmas do not assume a Hausdorff
+upper bound: they pass from actual shrinking covers to that bound.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.SLEExactGauge.hausdorff_le_liminf_cover_cost</code> <small>line 18</small><div class="doc"><p>Cover costs control the Hausdorff limit even when they do not converge.</p></div><pre>theorem hausdorff_le_liminf_cover_cost
+    (h : ℝ → ℝ) (hh : IsGauge h) (E : Set ℂ)
+    (U : ℕ → ℕ → Set ℂ) (δ : ℕ → ℝ≥0∞)
+    (hδ : Tendsto δ atTop (𝓝 0))
+    (hcover : ∀ n, E ⊆ ⋃ j, U n j)
+    (hdiam : ∀ n j, ediam (U n j) ≤ δ n) :
+    hausdorffGauge h E ≤
+      liminf (fun n =&gt; ∑&#x27; j, extendedGauge h (ediam (U n j))) atTop := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L50">OAI.SLEExactGauge.IsGauge</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L65">OAI.SLEExactGauge.hausdorffGauge</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L62">OAI.SLEExactGauge.extendedGauge</a></p></li><li id=L35><b>theorem</b> <code>OAI.SLEExactGauge.expected_hausdorff_le_of_shrinking_covers</code> <small>line 35</small><div class="doc"><p>Fatou's lemma for measurable costs of actual covers, with a limiting
+expectation bound rather than an assumption about the target measure.</p></div><pre>theorem expected_hausdorff_le_of_shrinking_covers
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (h : ℝ → ℝ) (hh : IsGauge h) (E : Ω → Set ℂ)
+    (U : ℕ → Ω → ℕ → Set ℂ) (δ : ℕ → ℝ≥0∞)
+    (hδ : Tendsto δ atTop (𝓝 0))
+    (hcover : ∀ᵐ ω ∂P, ∀ n, E ω ⊆ ⋃ j, U n ω j)
+    (hdiam : ∀ᵐ ω ∂P, ∀ n j, ediam (U n ω j) ≤ δ n)
+    (hmeas : ∀ n, AEMeasurable
+      (fun ω =&gt; ∑&#x27; j, extendedGauge h (ediam (U n ω j))) P)
+    (C : ℝ≥0∞)
+    (hcost : liminf (fun n =&gt; ∫⁻ ω,
+      ∑&#x27; j, extendedGauge h (ediam (U n ω j)) ∂P) atTop ≤ C) :
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L50">OAI.SLEExactGauge.IsGauge</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L62">OAI.SLEExactGauge.extendedGauge</a></p></li><li id=L61><b>theorem</b> <code>OAI.SLEExactGauge.disjoint_cover_charge</code> <small>line 61</small><div class="doc"><p>Disjoint candidate sets are all paid for by the same spatial measure.</p></div><pre>theorem disjoint_cover_charge {ι : Type*} (I : Finset ι)
+    (ν : Measure ℂ) (D : ι → Set ℂ) (A : Set ℂ)
+    (hdisj : (I : Set ι).PairwiseDisjoint D)
+    (hmeas : ∀ i ∈ I, MeasurableSet (D i))
+    (hsub : ∀ i ∈ I, D i ⊆ A)
+    (cost : ι → ℝ≥0∞) (C : ℝ≥0∞)
+    (hcost : ∀ i ∈ I, cost i ≤ C * ν (D i)) :
+    ∑ i ∈ I, cost i ≤ C * ν A := by
+…</pre></li><li id=L78><b>theorem</b> <code>OAI.SLEExactGauge.expected_measure_iUnion_le</code> <small>line 78</small><div class="doc"><p>Continuity from below retains a uniform expectation bound as both the
+time cutoff and the distance from the real boundary are removed.</p></div><pre>theorem expected_measure_iUnion_le
+    {Ω X : Type*} [MeasurableSpace Ω] [MeasurableSpace X]
+    (P : Measure Ω) (ν : Measure X) (E : ℕ → Ω → Set X)
+    (hmono : ∀ ω, Monotone (fun n =&gt; E n ω))
+    (hmeas : ∀ n, AEMeasurable (fun ω =&gt; ν (E n ω)) P)
+    (C : ℝ≥0∞) (hbound : ∀ n, (∫⁻ ω, ν (E n ω) ∂P) ≤ C) :
+    (∫⁻ ω, ν (⋃ n, E n ω) ∂P) ≤ C := by
+…</pre></li><li id=L91><b>theorem</b> <code>OAI.SLEExactGauge.measure_inter_eq_interior_of_null_boundary</code> <small>line 91</small><div class="doc"><p>Adding a set contained in a fixed null boundary costs no measure.</p></div><pre>theorem measure_inter_eq_interior_of_null_boundary
+    {X : Type*} [MeasurableSpace X] (ν : Measure X)
+    (E A H : Set X)
+    (hboundary : ν (E ∩ A ∩ Hᶜ) = 0) :
+    ν (E ∩ A) = ν (E ∩ A ∩ H) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

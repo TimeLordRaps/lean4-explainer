@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/EinsteinFour/ScalarPoissonKernelLocalizationChain.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/EinsteinFour/ScalarPoissonKernelLocalizationChain.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">EinsteinFour</a> / <span>ScalarPoissonKernelLocalizationChain.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">EinsteinFour</a>/<span>ScalarPoissonKernelLocalizationChain.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/EinsteinFour/ScalarPoissonKernelLocalizationChain.lean#L1">source</a></p><div class="doc"><p>A finite chain of nested cutoffs upgrades local H1 control to every
+requested finite Sobolev order. Only the localized equation's right-hand
+side needs that order; the starting solution needs one derivative.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_finite_cutoff_chain_gain</code> <small>line 25</small><div class="doc"><p><code>n</code> nested transitions upgrade an outer H1 cutoff to H^(n+1) at the
+innermost cutoff. The sequence outside the finite chain is irrelevant.</p></div><pre>theorem scalar_finite_cutoff_chain_gain
+    (a : Fin 4 → Fin 4 → S) (b : Fin 4 → S) (δ : ℝ) (hδ : 0 ≤ δ)
+    (ha : ∀ i j x, ‖a i j x‖ ≤ δ)
+    (ha1 : ∀ i j k x, ‖D k (a i j) x‖ ≤ δ)
+    (ha2 : ∀ i j k l x, ‖D k (D l (a i j)) x‖ ≤ δ)
+    (hb : ∀ i x, ‖b i x‖ ≤ δ)
+    (hb1 : ∀ i k x, ‖D k (b i) x‖ ≤ δ)
+    (hsmall : (16 * (2 * Real.pi) ^ 2 + 36 * (2 * Real.pi) + 20) * δ &lt; 1)
+    (u : T) (n : ℕ) (ψ : ℕ → S)
+    (hnest : ∀ k &lt; n, ScalarCutoffNested (ψ k) (ψ (k + 1)))
+    (hu : MemSobolev 1 2 (M (ψ n) u))
+    (hf : ∀ k ≤ n, MemSobolev (n : ℝ) 2 (M (ψ k) (scalarPerturbedOperator a b u))) :
+…</pre><p class="refs">Mentions: <a href="ScalarPoissonKernelLocalization.lean.html#L128">OAI.PositiveEinsteinFour.Geometry.ScalarCutoffNested</a>, <a href="ScalarPoissonKernelAdjoint.lean.html#L24">OAI.PositiveEinsteinFour.Geometry.scalarPerturbedOperator</a></p></li><li id=L58><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_cutoff_family_all_orders</code> <small>line 58</small><div class="doc"><p>A family of finite localizing chains gives all integer Sobolev orders
+for a fixed inner cutoff. This is the form used before Fourier inversion.</p></div><pre>theorem scalar_cutoff_family_all_orders
+    (a : Fin 4 → Fin 4 → S) (b : Fin 4 → S) (δ : ℝ) (hδ : 0 ≤ δ)
+    (ha : ∀ i j x, ‖a i j x‖ ≤ δ)
+    (ha1 : ∀ i j k x, ‖D k (a i j) x‖ ≤ δ)
+    (ha2 : ∀ i j k l x, ‖D k (D l (a i j)) x‖ ≤ δ)
+    (hb : ∀ i x, ‖b i x‖ ≤ δ)
+    (hb1 : ∀ i k x, ‖D k (b i) x‖ ≤ δ)
+    (hsmall : (16 * (2 * Real.pi) ^ 2 + 36 * (2 * Real.pi) + 20) * δ &lt; 1)
+    (u : T) (φ : S)
+    (hchain : ∀ n : ℕ, ∃ ψ : ℕ → S, ψ 0 = φ ∧
+      (∀ k &lt; n, ScalarCutoffNested (ψ k) (ψ (k + 1))) ∧
+      MemSobolev 1 2 (M (ψ n) u) ∧
+…</pre><p class="refs">Mentions: <a href="ScalarPoissonKernelLocalization.lean.html#L128">OAI.PositiveEinsteinFour.Geometry.ScalarCutoffNested</a></p></li><li id=L81><b>theorem</b> <code>OAI.PositiveEinsteinFour.Geometry.scalar_cutoff_family_smooth_representative</code> <small>line 81</small><div class="doc"><p>The regular representative is constructed by the Fourier
+Sobolev theorem, once the finite cutoff chains have been supplied.</p></div><pre>theorem scalar_cutoff_family_smooth_representative
+    (a : Fin 4 → Fin 4 → S) (b : Fin 4 → S) (δ : ℝ) (hδ : 0 ≤ δ)
+    (ha : ∀ i j x, ‖a i j x‖ ≤ δ)
+    (ha1 : ∀ i j k x, ‖D k (a i j) x‖ ≤ δ)
+    (ha2 : ∀ i j k l x, ‖D k (D l (a i j)) x‖ ≤ δ)
+    (hb : ∀ i x, ‖b i x‖ ≤ δ)
+    (hb1 : ∀ i k x, ‖D k (b i) x‖ ≤ δ)
+    (hsmall : (16 * (2 * Real.pi) ^ 2 + 36 * (2 * Real.pi) + 20) * δ &lt; 1)
+    (u : T) (φ : S)
+    (hchain : ∀ n : ℕ, ∃ ψ : ℕ → S, ψ 0 = φ ∧
+      (∀ k &lt; n, ScalarCutoffNested (ψ k) (ψ (k + 1))) ∧
+      MemSobolev 1 2 (M (ψ n) u) ∧
+…</pre><p class="refs">Mentions: <a href="ScalarPoissonKernelLocalization.lean.html#L128">OAI.PositiveEinsteinFour.Geometry.ScalarCutoffNested</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

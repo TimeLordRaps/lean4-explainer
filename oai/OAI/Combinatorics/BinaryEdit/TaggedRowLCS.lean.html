@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/TaggedRowLCS.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/TaggedRowLCS.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>TaggedRowLCS.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>TaggedRowLCS.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/TaggedRowLCS.lean#L1">source</a></p><div class="doc"><p>Longest common subsequence bounds for rows over disjoint tagged alphabets.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.row</code> <small>line 12</small><div class="doc"><p>Concatenation in increasing block-index order.</p></div><pre>def row {α : Type*} {m : ℕ} (blocks : Fin m → List α) : List α :=
+…</pre></li><li id=L15><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.row_eq_flatten_ofFn</code> <small>line 15</small></li><li id=L19><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.flatMap_single_index</code> <small>line 19</small></li><li id=L34><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.filter_row</code> <small>line 34</small></li><li id=L57><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.sum_length_filter_tag</code> <small>line 57</small><div class="doc"><p>Tag fibers partition every finite word's positions.</p></div><pre>theorem sum_length_filter_tag {α I : Type*} [Fintype I] [DecidableEq I]
+    (tag : α → I) (z : List α) :
+    (∑ i, (z.filter (fun a =&gt; decide (tag a = i))).length) = z.length := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.common_sublist_length_le_sum_lcs</code> <small>line 73</small><div class="doc"><p>Common subsequences of rows are bounded by the sum of block LCS lengths.</p></div><pre>theorem common_sublist_length_le_sum_lcs {α : Type*} {m : ℕ}
+    (tag : α → Fin m) (X Y : Fin m → List α)
+    (hX : ∀ i, ∀ a ∈ X i, tag a = i)
+    (hY : ∀ i, ∀ a ∈ Y i, tag a = i)
+    {z : List α} (hzX : z.Sublist (row X)) (hzY : z.Sublist (row Y)) :
+    z.length ≤ ∑ i, lcs (X i) (Y i) := by
+…</pre><p class="refs">Mentions: <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a>, <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a></p></li><li id=L89><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.lcs_row_le_sum</code> <small>line 89</small><div class="doc"><p>Local row bound used in the nonsplit-row argument.</p></div><pre>theorem lcs_row_le_sum {α : Type*} {m : ℕ}
+    (tag : α → Fin m) (X Y : Fin m → List α)
+    (hX : ∀ i, ∀ a ∈ X i, tag a = i)
+    (hY : ∀ i, ∀ a ∈ Y i, tag a = i) :
+    lcs (row X) (row Y) ≤ ∑ i, lcs (X i) (Y i) := by
+…</pre><p class="refs">Mentions: <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a>, <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a></p></li><li id=L101><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.length_row</code> <small>line 101</small><div class="doc"><p>Exact length of an equal-block row.</p></div><pre>theorem length_row {α : Type*} {m B : ℕ} (X : Fin m → List α)
+    (hX : ∀ i, (X i).length = B) : (row X).length = m * B := by
+…</pre><p class="refs">Mentions: <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a></p></li><li id=L107><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.sum_deficit_le_row_deficit</code> <small>line 107</small><div class="doc"><p>Tagwise deficits accumulate in a single pair of rows. This is the
+local deficit estimate consumed by the nonsplit-row counting argument.</p></div><pre>theorem sum_deficit_le_row_deficit {α : Type*} {m B : ℕ}
+    (tag : α → Fin m) (X Y : Fin m → List α)
+    (hX : ∀ i, ∀ a ∈ X i, tag a = i)
+    (hY : ∀ i, ∀ a ∈ Y i, tag a = i)
+    (hXL : ∀ i, (X i).length = B) :
+    (∑ i, deficit B (X i) (Y i)) ≤ deficit (m * B) (row X) (row Y) := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L11">OAI.TreeEdit.BinaryLower.deficit</a>, <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a></p></li><li id=L128><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.lcs_row_le_capacity_sub</code> <small>line 128</small><div class="doc"><p>Real-valued LCS row capacity, convenient when a separate matching
+restriction lemma has already bounded a row-pair count by its LCS.</p></div><pre>theorem lcs_row_le_capacity_sub {α : Type*} {m B : ℕ}
+    (tag : α → Fin m) (X Y : Fin m → List α)
+    (hX : ∀ i, ∀ a ∈ X i, tag a = i)
+    (hY : ∀ i, ∀ a ∈ Y i, tag a = i)
+    (hXL : ∀ i, (X i).length = B)
+    {d : ℝ} (hd : d ≤ ∑ i, (deficit B (X i) (Y i) : ℝ)) :
+    (lcs (row X) (row Y) : ℝ) ≤ (m : ℝ) * B - d := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L11">OAI.TreeEdit.BinaryLower.deficit</a>, <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a>, <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a></p></li><li id=L147><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.common_sublist_length_le_capacity_sub</code> <small>line 147</small><div class="doc"><p>Real-valued version matching the manuscript's local row-loss hypothesis.</p></div><pre>theorem common_sublist_length_le_capacity_sub {α : Type*} {m B : ℕ}
+    (tag : α → Fin m) (X Y : Fin m → List α)
+    (hX : ∀ i, ∀ a ∈ X i, tag a = i)
+    (hY : ∀ i, ∀ a ∈ Y i, tag a = i)
+    (hXL : ∀ i, (X i).length = B)
+    {d : ℝ} (hd : d ≤ ∑ i, (deficit B (X i) (Y i) : ℝ))
+    {z : List α} (hzX : z.Sublist (row X)) (hzY : z.Sublist (row Y)) :
+    (z.length : ℝ) ≤ (m : ℝ) * B - d := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L11">OAI.TreeEdit.BinaryLower.deficit</a>, <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a></p></li><li id=L174><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.exists_tag_of_pairwise_disjoint</code> <small>line 174</small><div class="doc"><p>Pairwise disjoint alphabets admit a tag on the ambient alphabet. Values
+outside their union are irrelevant and receive an arbitrary default tag.</p></div><pre>theorem exists_tag_of_pairwise_disjoint {α I : Type*} [Nonempty I]
+    (Γ : I → Set α) (hΓ : Pairwise fun i j =&gt; Disjoint (Γ i) (Γ j)) :
+    ∃ tag : α → I, ∀ i, ∀ a ∈ Γ i, tag a = i := by
+…</pre></li><li id=L190><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.TaggedRow.lcs_row_le_sum_of_disjoint</code> <small>line 190</small><div class="doc"><p>The row LCS bound stated directly for the manuscript's pairwise disjoint
+alphabets, without asking the caller to provide a tag function.</p></div><pre>theorem lcs_row_le_sum_of_disjoint {α : Type*} {m : ℕ} (hm : 0 &lt; m)
+    (Γ : Fin m → Set α)
+    (hΓ : Pairwise fun i j =&gt; Disjoint (Γ i) (Γ j))
+    (X Y : Fin m → List α)
+    (hX : ∀ i, ∀ a ∈ X i, a ∈ Γ i)
+    (hY : ∀ i, ∀ a ∈ Y i, a ∈ Γ i) :
+    lcs (row X) (row Y) ≤ ∑ i, lcs (X i) (Y i) := by
+…</pre><p class="refs">Mentions: <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a>, <a href="TaggedRowLCS.lean.html#L12">OAI.TreeEdit.BinaryLower.TaggedRow.row</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/GridSummability.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/GridSummability.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>GridSummability.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>GridSummability.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/GridSummability.lean#L1">source</a></p><div class="doc"><h3>Vanishing terminal-count bounds for finite transfer</h3><p>In the Koebe manuscript's finite-transfer estimate <code>eq:transfer-terminal-mean</code>,
+the scaled expected terminal count is bounded by a finite-cardinality
+term and finitely many series of clipped oscillation products.
+Square-summability of the oscillations makes these products summable,
+and dominated convergence makes the bound tend to zero as the grid
+spacing tends to zero through positive values.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.min_mul_min_norm_le</code> <small>line 24</small><div class="doc"><p>Clipping two nonnegative oscillations at a nonnegative grid spacing
+preserves the summable mixed-product majorant.</p></div><pre>theorem min_mul_min_norm_le {ι : Type*} {a b : ι → ℝ} {h : ℝ}
+    (ha : ∀ s, 0 ≤ a s) (hb : ∀ s, 0 ≤ b s) (hh : 0 ≤ h) (s : ι) :
+    ‖min h (a s) * min h (b s)‖ ≤ a s * b s := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.summable_min_mul_min</code> <small>line 33</small><div class="doc"><p>Each clipped-product series is summable at every nonnegative spacing.</p></div><pre>theorem summable_min_mul_min {ι : Type*} {a b : ι → ℝ} {h : ℝ}
+    (ha : ∀ s, 0 ≤ a s) (hb : ∀ s, 0 ≤ b s)
+    (ha2 : Summable (fun s =&gt; a s ^ 2)) (hb2 : Summable (fun s =&gt; b s ^ 2))
+    (hh : 0 ≤ h) : Summable (fun s =&gt; min h (a s) * min h (b s)) :=
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.tendsto_tsum_min_mul_min_zero</code> <small>line 42</small><div class="doc"><p>Dominated convergence for the clipped oscillation products in the
+terminal-count estimate.</p></div><pre>theorem tendsto_tsum_min_mul_min_zero {ι : Type*} {a b : ι → ℝ}
+    (ha : ∀ s, 0 ≤ a s) (hb : ∀ s, 0 ≤ b s)
+    (ha2 : Summable (fun s =&gt; a s ^ 2)) (hb2 : Summable (fun s =&gt; b s ^ 2)) :
+    Tendsto (fun h : ℝ =&gt; ∑&#x27; s, min h (a s) * min h (b s))
+      (𝓝[&gt;] 0) (𝓝 0) := by
+…</pre></li><li id=L69><b>theorem</b> <code>OAI.CircleDomainRigidity.FiniteTransfer.terminal_mean_bound_tendsto_zero</code> <small>line 69</small><div class="doc"><p>The complete finite-family bound in <code>eq:transfer-terminal-mean</code>
+vanishes with the positive grid spacing. <code>P</code> can be the finite family of
+coordinate pairs <code>i &lt; j</code>, and <code>F</code> the prescribed finite terminal set.</p></div><pre>theorem terminal_mean_bound_tendsto_zero {κ τ ι : Type*}
+    (F : Finset κ) (P : Finset τ) (a b : τ → ι → ℝ)
+    (ha : ∀ p ∈ P, ∀ s, 0 ≤ a p s) (hb : ∀ p ∈ P, ∀ s, 0 ≤ b p s)
+    (ha2 : ∀ p ∈ P, Summable (fun s =&gt; a p s ^ 2))
+    (hb2 : ∀ p ∈ P, Summable (fun s =&gt; b p s ^ 2)) :
+    Tendsto (fun h : ℝ =&gt; h ^ 2 * (F.card : ℝ) +
+      ∑ p ∈ P, ∑&#x27; s, min h (a p s) * min h (b p s)) (𝓝[&gt;] 0) (𝓝 0) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

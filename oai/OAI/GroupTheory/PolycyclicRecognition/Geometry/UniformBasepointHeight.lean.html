@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/UniformBasepointHeight.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/UniformBasepointHeight.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>UniformBasepointHeight.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>UniformBasepointHeight.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/UniformBasepointHeight.lean#L1">source</a></p><div class="doc"><h3>A uniform sublinear height error from stabilized basepoint labels</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.PolycyclicRecognition.uniform_sublinear_height_of_stable_labels</code> <small>line 14</small><div class="doc"><p>Scale stabilization and the proved basepoint comparison select one
+linear label per map, uniformly at all centers. The error is sublinear
+uniformly in the map and in the two centers.</p></div><pre>theorem uniform_sublinear_height_of_stable_labels
+    {P G L W : Type*} [Group G] [PseudoMetricSpace G]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    (label : P → G → ℝ → L) (A : L → W →L[ℝ] W)
+    (J : P → G → W) (π : G → W)
+    {r₀ t η : ℝ} (ht : 0 &lt; t) (hη : 0 &lt; η)
+    (hstable : ∀ p x r, r₀ ≤ r → label p x r = label p x r₀)
+    (hcompare : ∀ (scale : ℕ → ℝ), Tendsto scale atTop atTop → StrictMono scale →
+      (∀ n, 1 ≤ scale n) → (∀ n, 1 ≤ t * scale n) →
+      ∀ (p : ℕ → P) (x y : ℕ → G), (∀ n, dist (x n) (y n) ≤ η * scale n) →
+      (∀ᶠ n in atTop, label (p n) (x n) (scale n) = label (p n) (y n) (t * scale n)) ∧
+      Tendsto (fun n =&gt; (scale n)⁻¹ • (J (p n) (y n) - J (p n) (x n) -
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.PolycyclicRecognition.uniform_sublinear_of_local_radius_bound</code> <small>line 49</small><div class="doc"><p>A uniform error bound on expanding metric balls has the usual global
+sublinear form, including an additive constant for the bounded initial range.</p></div><pre>theorem uniform_sublinear_of_local_radius_bound
+    {P X W : Type*} [PseudoMetricSpace X] [NormedAddCommGroup W]
+    (error : P → X → X → W) {η : ℝ} (hη : 0 &lt; η)
+    (hlocal : ∀ ε : ℝ, 0 &lt; ε → ∃ R : ℝ, 1 ≤ R ∧ ∀ p x y r,
+      R ≤ r → dist x y ≤ η * r → ‖error p x y‖ ≤ ε * r) :
+    ∀ ε : ℝ, 0 &lt; ε → ∃ C : ℝ, 0 ≤ C ∧ ∀ p x y,
+      ‖error p x y‖ ≤ ε * dist x y + C := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.PolycyclicRecognition.centered_uniform_height_of_two_point_estimate</code> <small>line 73</small><div class="doc"><p>The global two-center estimate gives exactly the centered height
+estimate used to construct the boundary maps, with one constant for all
+centers and all maps.</p></div><pre>theorem centered_uniform_height_of_two_point_estimate
+    {P G W : Type*} [Group G] [PseudoMetricSpace G] [IsIsometricSMul G G]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    (π : G →* Multiplicative W) (f : P → G → G) (A : P → W →L[ℝ] W)
+    (hsub : ∀ ε : ℝ, 0 &lt; ε → ∃ B : ℝ, 0 ≤ B ∧ ∀ p x y,
+      ‖(π (f p y)).toAdd - (π (f p x)).toAdd - A p ((π (x⁻¹ * y)).toAdd)‖ ≤
+        ε * dist x y + B) :
+    ∀ ε : ℝ, 0 &lt; ε → ∃ B : ℝ, 0 ≤ B ∧ ∀ p x g,
+      ‖(π ((f p x)⁻¹ * f p (x * g))).toAdd - A p ((π g).toAdd)‖ ≤
+        ε * dist 1 g + B := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

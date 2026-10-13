@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/SelfSimilar/UnweightedAttractor.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/SelfSimilar/UnweightedAttractor.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MeasureTheory</a> / <a href="index.html">SelfSimilar</a> / <span>UnweightedAttractor.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MeasureTheory</a>/<a href="index.html">SelfSimilar</a>/<span>UnweightedAttractor.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/SelfSimilar/UnweightedAttractor.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.EntropyRateDimension.Extensions.uniformSystem</code> <small>line 16</small><div class="doc"><p>Every nonempty finite family of strict nonzero similarities admits positive
+normalized weights. The uniform choice is bookkeeping, not a geometric hypothesis.</p></div><pre>noncomputable def uniformSystem (r t : ι → ℝ)
+    (hr0 : ∀ i, 0 &lt; |r i|) (hr1 : ∀ i, |r i| &lt; 1) : System ι where
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SelfSimilar.lean.html#L12">OAI.EntropyRateDimension.System</a></p></li><li id=L31><b>def</b> <code>OAI.EntropyRateDimension.Extensions.unweightedAttractor</code> <small>line 31</small><div class="doc"><p>Literal set of all coding limits for the unweighted similarity family.</p></div><pre>def unweightedAttractor (r t : ι → ℝ)
+    (hr0 : ∀ i, 0 &lt; |r i|) (hr1 : ∀ i, |r i| &lt; 1) : Set ℝ :=
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.EntropyRateDimension.Extensions.unweightedAttractor_compact</code> <small>line 35</small></li><li id=L41><b>theorem</b> <code>OAI.EntropyRateDimension.Extensions.unweighted_existsUnique_similarityDimension</code> <small>line 41</small><div class="doc"><p>The similarity exponent exists uniquely even for a one-symbol family.</p></div><pre>theorem unweighted_existsUnique_similarityDimension (r t : ι → ℝ)
+    (hr0 : ∀ i, 0 &lt; |r i|) (hr1 : ∀ i, |r i| &lt; 1) :
+    ∃! s : ℝ, 0 ≤ s ∧ ∑ i, |r i| ^ s = 1 := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.EntropyRateDimension.Extensions.unweighted_no_exact_overlaps_attractor_dimension_of_root</code> <small>line 50</small><div class="doc"><p>Source <code>cor:set</code> for arbitrary unweighted finite similarities. The overlap
+hypothesis uses the manuscript's distinct nonempty finite-word convention, and
+the exponent is characterized by its literal normalization equation.</p></div><pre>theorem unweighted_no_exact_overlaps_attractor_dimension_of_root
+    (r t : ι → ℝ) (hr0 : ∀ i, 0 &lt; |r i|) (hr1 : ∀ i, |r i| &lt; 1)
+    (s : ℝ) (hs : 0 ≤ s) (hroot : ∑ i, |r i| ^ s = 1)
+    (hno : ∀ u v : List ι, u ≠ [] → v ≠ [] →
+      (uniformSystem r t hr0 hr1).wordAffine u =
+        (uniformSystem r t hr0 hr1).wordAffine v → u = v) :
+    dimH (unweightedAttractor r t hr0 hr1) = ENNReal.ofReal (min 1 s) := by
+…</pre><p class="refs">Mentions: <a href="UnweightedAttractor.lean.html#L16">OAI.EntropyRateDimension.Extensions.uniformSystem</a>, <a href="UnweightedAttractor.lean.html#L31">OAI.EntropyRateDimension.Extensions.unweightedAttractor</a></p></li><li id=L61><b>theorem</b> <code>OAI.EntropyRateDimension.Extensions.unweighted_no_exact_overlaps_attractor_dimension</code> <small>line 61</small><div class="doc"><p>The same statement with the uniquely selected similarity exponent.</p></div><pre>theorem unweighted_no_exact_overlaps_attractor_dimension
+    (r t : ι → ℝ) (hr0 : ∀ i, 0 &lt; |r i|) (hr1 : ∀ i, |r i| &lt; 1)
+    (hno : ∀ u v : List ι, u ≠ [] → v ≠ [] →
+      (uniformSystem r t hr0 hr1).wordAffine u =
+        (uniformSystem r t hr0 hr1).wordAffine v → u = v) :
+    dimH (unweightedAttractor r t hr0 hr1) =
+      ENNReal.ofReal (min 1 (similarityDimension (uniformSystem r t hr0 hr1))) := by
+…</pre><p class="refs">Mentions: <a href="UnweightedAttractor.lean.html#L16">OAI.EntropyRateDimension.Extensions.uniformSystem</a>, <a href="UnweightedAttractor.lean.html#L31">OAI.EntropyRateDimension.Extensions.unweightedAttractor</a>, <a href="AttractorDimension.lean.html#L48">OAI.EntropyRateDimension.Extensions.similarityDimension</a></p></li><li id=L72><b>theorem</b> <code>OAI.EntropyRateDimension.Extensions.unweighted_overlap_lengths</code> <small>line 72</small><div class="doc"><p>Unweighted source <code>lem:overlap-lengths</code>; no probability data are inputs.</p></div><pre>theorem unweighted_overlap_lengths
+    (r t : ι → ℝ) (hr0 : ∀ i, 0 &lt; |r i|) (hr1 : ∀ i, |r i| &lt; 1)
+    {u v : List ι} (hu : u ≠ []) (hv : v ≠ []) (hne : u ≠ v)
+    (he : (uniformSystem r t hr0 hr1).wordAffine u =
+      (uniformSystem r t hr0 hr1).wordAffine v) :
+    ∃ a b : List ι, a ≠ [] ∧ b ≠ [] ∧ a.length = b.length ∧ a ≠ b ∧
+      (uniformSystem r t hr0 hr1).wordAffine a =
+        (uniformSystem r t hr0 hr1).wordAffine b :=
+…</pre><p class="refs">Mentions: <a href="UnweightedAttractor.lean.html#L16">OAI.EntropyRateDimension.Extensions.uniformSystem</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

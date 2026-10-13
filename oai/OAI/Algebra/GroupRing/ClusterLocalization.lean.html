@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/GroupRing/ClusterLocalization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/GroupRing/ClusterLocalization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">GroupRing</a> / <span>ClusterLocalization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">GroupRing</a>/<span>ClusterLocalization.lean</span></code></h1><p class="muted">20 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/GroupRing/ClusterLocalization.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.pathEquiv</code> <small>line 17</small></li><li id=L32><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.paths_card</code> <small>line 32</small></li><li id=L34><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.member_exists</code> <small>line 34</small></li><li id=L41><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.paths_card_le</code> <small>line 41</small><div class="doc"><p>A closed retained subset supplied by recursive separation bounds the
+actual connected component, even when the pairing has loops or parallel arcs.</p></div><pre>lemma paths_card_le {K : ℕ}
+    (hs : ∀ t,keep t → ∃ B : Finset T,t∈B ∧ B.card≤K ∧
+      ∀ x∈B,∀ y,keep y → PairingClusters.Rel (fun x : Position len=&gt;x.1) C.pairing.partner x y → y∈B)
+    (c : Cluster C keep) : (paths C keep c).card≤K := by
+…</pre><p class="refs">Mentions: <a href="FiniteClusters.lean.html#L63">OAI.TorsionFreeZeroDivisors.PairingClusters.Rel</a>, <a href="FiniteClusters.lean.html#L259">OAI.TorsionFreeZeroDivisors.ClusterLocalization.Cluster</a>, <a href="FiniteClusters.lean.html#L271">OAI.TorsionFreeZeroDivisors.ClusterLocalization.paths</a></p></li><li id=L57><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.mass_upper</code> <small>line 57</small></li><li id=L64><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.mass_lower</code> <small>line 64</small></li><li id=L69><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.short_mass_refined</code> <small>line 69</small></li><li id=L95><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.short_mass_half</code> <small>line 95</small></li><li id=L124><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.retained_original</code> <small>line 124</small><div class="doc"><p>Retained closures are nonnegative; only deleted original positions are
+charged in the lower bound for retained mass.</p></div><pre>lemma retained_original (old : T → ℕ) (ho : ∀ t,old t≤len t) :
+    (∑t,old t)≤(∑c,mass C keep c)+∑t∈Finset.univ.filter (fun t=&gt;¬keep t),old t := by
+…</pre><p class="refs">Mentions: <a href="FiniteClusters.lean.html#L265">OAI.TorsionFreeZeroDivisors.ClusterLocalization.mass</a></p></li><li id=L134><b>theorem</b> <code>OAI.TorsionFreeZeroDivisors.ClusterLocalization.exists_selected</code> <small>line 134</small><div class="doc"><p>An averaging argument on the actual connected components of the
+retained pairing graph. E counts oriented interval sides, hence its factor 2.</p></div><pre>theorem exists_selected (old : T → ℕ) (ho : ∀ t,old t≤len t)
+    (root : Option T) (L K cap : ℕ) (H₀ ε C₂ : ℝ)
+    (hH₀ : 0&lt;H₀) (hL : 0&lt;L) (hε : 0&lt;ε) (hC₂ : 0&lt;C₂)
+    (hsize : ∀ c : Cluster C keep,(paths C keep c).card≤K)
+    (hcap : ∀ t,len t≤cap*L)
+    (hbase : H₀≤∑t,(old t:ℝ))
+    (hdelete : (∑t∈Finset.univ.filter (fun t=&gt;¬keep t),(old t:ℝ))≤H₀/16)
+    (hbad : ((Finset.univ.filter (fun x : Position len=&gt;C.pairing.partner x=x)).card:ℝ)+
+      ((Finset.univ.filter (fun x : Position len=&gt;¬keep x.1 ∧ C.pairing.partner x≠x)).card:ℝ)≤ε/16*H₀)
+    (hcompare : (Fintype.card E:ℝ)/2≤C₂/(16*L)*H₀)
+    (hlong : ∀ t,root≠some t → L≤len t)
+    (hroot : ∀ t,root=some t → len t&lt;L → (len t:ℝ)≤H₀/2) :
+…</pre><p class="refs">Mentions: <a href="FiniteClusters.lean.html#L259">OAI.TorsionFreeZeroDivisors.ClusterLocalization.Cluster</a>, <a href="FiniteClusters.lean.html#L271">OAI.TorsionFreeZeroDivisors.ClusterLocalization.paths</a></p></li><li id=L185><b>def</b> <code>OAI.TorsionFreeZeroDivisors.RestrictComparisons.rootPath</code> <small>line 185</small></li><li id=L186><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.RestrictComparisons.rootPath_some</code> <small>line 186</small></li><li id=L194><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.RestrictComparisons.rootPath_cyclic</code> <small>line 194</small></li><li id=L196><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.RestrictComparisons.rootPath_map</code> <small>line 196</small></li><li id=L211><b>structure</b> <code>OAI.TorsionFreeZeroDivisors.SampleGraph.PathSystem</code> <small>line 211</small><div class="doc"><p>Literal path/comparison data before the separator and averaging step.
+Unlike BoundedSystem it makes no quantitative smallness or pairing assumption.</p></div><pre>structure PathSystem (rep : ℕ) (r : Match rep) (x : VA rep) (y : VB rep) where
+…</pre><p class="refs">Mentions: <a href="WeightedGirth.lean.html#L275">OAI.TorsionFreeZeroDivisors.SampleGraph.VA</a>, <a href="WeightedGirth.lean.html#L276">OAI.TorsionFreeZeroDivisors.SampleGraph.VB</a></p></li><li id=L242><b>lemma</b> <code>OAI.TorsionFreeZeroDivisors.SampleGraph.PathSystem.dart_embed</code> <small>line 242</small></li><li id=L246><b>abbrev</b> <code>OAI.TorsionFreeZeroDivisors.SampleGraph.PathSystem.restrict</code> <small>line 246</small></li><li id=L283><b>def</b> <code>OAI.TorsionFreeZeroDivisors.SampleGraph.PathSystem.bounded</code> <small>line 283</small><div class="doc"><p>Bounding a literal system adds no realizability or word constraints.</p></div><pre>def bounded {Bnd K I : ℕ}
+    (hP : Fintype.card s.P≤K) (hE : Fintype.card s.E≤I)
+    (hlo : L (size rep)≤∑p,(s.paths p).length)
+    (hhi : (∑p,(s.paths p).length)≤Bnd*L (size rep))
+    (hbad : ((Finset.univ.filter (fun p=&gt;s.comparisons.pairing.partner p=p)).card:ℝ)≤
+      StageFusion.epsilon (1/600) 256*(∑p,(s.paths p).length:ℕ)) : BoundedSystem Bnd K I rep r x y where
+…</pre><p class="refs">Mentions: <a href="IntervalSelfLinks.lean.html#L319">OAI.TorsionFreeZeroDivisors.StageFusion.epsilon</a>, <a href="WeightedGirth.lean.html#L346">OAI.TorsionFreeZeroDivisors.SampleGraph.BoundedSystem</a></p></li><li id=L323><b>def</b> <code>OAI.TorsionFreeZeroDivisors.SampleGraph.PathSystem.selected_bounded</code> <small>line 323</small><div class="doc"><p>Realizes the selected component by exactly its literal retained paths and
+interval sides, with the same signs, noncoincident lifts, and prescribed root.</p></div><pre>def selected_bounded {Bnd K I : ℕ} (c : Cluster s.comparisons keep)
+    (hP : (ClusterLocalization.paths s.comparisons keep c).card≤K)
+    (hE : ClusterLocalization.comparisons s.comparisons keep c≤I)
+    (hlo : L (size rep) ≤ mass s.comparisons keep c)
+    (hhi : mass s.comparisons keep c≤Bnd*L (size rep))
+    (hbad : (bad s.comparisons keep c:ℝ)≤
+      StageFusion.epsilon (1/600) 256*mass s.comparisons keep c) :
+    BoundedSystem Bnd K I rep r x y := by
+…</pre><p class="refs">Mentions: <a href="FiniteClusters.lean.html#L271">OAI.TorsionFreeZeroDivisors.ClusterLocalization.paths</a>, <a href="FiniteClusters.lean.html#L269">OAI.TorsionFreeZeroDivisors.ClusterLocalization.comparisons</a>, <a href="IntervalSelfLinks.lean.html#L319">OAI.TorsionFreeZeroDivisors.StageFusion.epsilon</a>, <a href="WeightedGirth.lean.html#L346">OAI.TorsionFreeZeroDivisors.SampleGraph.BoundedSystem</a></p></li><li id=L369><b>theorem</b> <code>OAI.TorsionFreeZeroDivisors.SampleGraph.PathSystem.excluded_of_local_totals</code> <small>line 369</small><div class="doc"><p>The analytic union bound excludes the localized system using the sharp
+mass and interval estimates.</p></div><pre>theorem excluded_of_local_totals (K cap : ℕ) (C₂ H₀ : ℝ) (old : s.P → ℕ)
+    (ho : ∀ t,old t≤(s.paths t).length)
+    (hH₀ : 0&lt;H₀) (hL : 0&lt;L (size rep)) (hC₂ : 0&lt;C₂)
+    (hsize : ∀ c : Cluster s.comparisons keep,(ClusterLocalization.paths s.comparisons keep c).card≤K)
+    (hcap : ∀ t,(s.paths t).length≤cap*L (size rep))
+    (hbase : H₀≤∑t,(old t:ℝ))
+    (hdelete : (∑t∈Finset.univ.filter (fun t=&gt;¬keep t),(old t:ℝ))≤H₀/16)
+    (hbad : ((Finset.univ.filter (fun p=&gt;s.comparisons.pairing.partner p=p)).card:ℝ)+
+      ((Finset.univ.filter (fun p=&gt;¬keep p.1 ∧ s.comparisons.pairing.partner p≠p)).card:ℝ)≤
+        StageFusion.epsilon (1/600) 256/16*H₀)
+    (hcompare : (Fintype.card s.E:ℝ)/2≤C₂/(16*L (size rep))*H₀)
+    (hlong : ∀ t,s.root≠some t → L (size rep)≤(s.paths t).length)
+…</pre><p class="refs">Mentions: <a href="FiniteClusters.lean.html#L271">OAI.TorsionFreeZeroDivisors.ClusterLocalization.paths</a>, <a href="IntervalSelfLinks.lean.html#L319">OAI.TorsionFreeZeroDivisors.StageFusion.epsilon</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

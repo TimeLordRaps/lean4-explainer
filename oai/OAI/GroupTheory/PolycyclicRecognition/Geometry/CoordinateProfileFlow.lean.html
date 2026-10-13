@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/CoordinateProfileFlow.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/CoordinateProfileFlow.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>CoordinateProfileFlow.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>CoordinateProfileFlow.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/CoordinateProfileFlow.lean#L1">source</a></p><div class="doc"><h3>The actual coordinate flows used by the profile cutoffs</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.PolycyclicRecognition.rescaled_horizontal_flow_tendsto</code> <small>line 19</small><div class="doc"><p>The full rescaled flow converges as a continuous map, so the cutoff
+construction applies simultaneously to every compact time interval.</p></div><pre>theorem rescaled_horizontal_flow_tendsto
+    {L : Type*} [LieRing L] [LieAlgebra ℝ L] {n c : ℕ}
+    (a : DynkinCoefficients c 2) (b : Basis (Fin n) ℝ L) (cost : Fin n → ℝ)
+    (hweight : ∀ i j k, b.repr ⁅b i, b j⁆ k ≠ 0 → cost i + cost j ≤ cost k)
+    (v : L) (hv : ∀ j, b.repr v j ≠ 0 → 1 ≤ cost j) :
+    Tendsto (fun r =&gt; dynkinFlowMap a (basisBracket (exponentialRescaleBasis b cost r))
+      ((exponentialRescaleBasis b cost r).equivFun (Real.exp r • v))) atTop
+      (𝓝 (dynkinFlowMap a (gradedCoordinateBracket b cost) (gradedGenerator b cost 1 v))) := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="GradedFlowLimit.lean.html#L19">OAI.PolycyclicRecognition.dynkinFlowMap</a>, <a href="CoordinateLieBrackets.lean.html#L45">OAI.PolycyclicRecognition.basisBracket</a>, <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a>, <a href="../Algebra/GradedCoordinateLimit.lean.html#L18">OAI.PolycyclicRecognition.gradedCoordinateBracket</a>, <a href="../Algebra/GradedGeneratorLimit.lean.html#L19">OAI.PolycyclicRecognition.gradedGenerator</a></p></li><li id=L32><b>theorem</b> <code>OAI.PolycyclicRecognition.measurePreserving_model_horizontal_flow</code> <small>line 32</small><div class="doc"><p>In actual exponential coordinates the horizontal flow preserves the
+same Lebesgue measure at every scale and time.</p></div><pre>theorem measurePreserving_model_horizontal_flow
+    {E D L : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [FiniteDimensional ℝ E] [TopologicalSpace D] [ChartedSpace E D] [Group D]
+    [LieGroup (𝓘(ℝ, E)) ⊤ D] [T2Space D] [SimplyConnectedSpace D]
+    [MeasurableSpace D] [BorelSpace D] [LieRing L] [LieAlgebra ℝ L]
+    (haar : NilpotentExponentialHaarInput E D)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) D → D) (hExp : IsGroupExponential Exp)
+    (e : L ≃ₗ⁅ℝ⁆ GroupLieAlgebra (𝓘(ℝ, E)) D)
+    (hnil : LieRing.IsNilpotent (GroupLieAlgebra (𝓘(ℝ, E)) D))
+    {n c : ℕ} (b : Basis (Fin n) ℝ L) (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, Exp (finiteDynkinPolynomial a ![x, y]) = Exp x * Exp y)
+    (r t : ℝ) (v : L) :
+…</pre><p class="refs">Mentions: <a href="../Analysis/NilpotentHaarInput.lean.html#L31">OAI.PolycyclicRecognition.NilpotentExponentialHaarInput</a>, <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a></p></li><li id=L53><b>theorem</b> <code>OAI.PolycyclicRecognition.coordinateChartPoint_horizontal_flow</code> <small>line 53</small><div class="doc"><p>Right translation in the ambient group changes the second coordinate
+by exactly the polynomial flow used in the cutoff construction.</p></div><pre>theorem coordinateChartPoint_horizontal_flow
+    {G N D LN LD : Type*} [Group G] [MetricSpace G]
+    [IsTopologicalGroup G] [IsIsometricSMul G G] [Group N] [Group D]
+    [LieRing LN] [LieAlgebra ℝ LN] [LieRing LD] [LieAlgebra ℝ LD]
+    {n m c : ℕ} {Λ : ℝ≥0}
+    (p : NormalizedPair G Λ) (x : G) (ι : N →* G) (κ : D →* G)
+    (ExpN : LN → N) (ExpD : LD → D)
+    (bN : Basis (Fin n) ℝ LN) (bD : Basis (Fin m) ℝ LD) (k : N)
+    (a : DynkinCoefficients c 2)
+    (hm : ∀ x y, ExpD (finiteDynkinPolynomial a ![x, y]) = ExpD x * ExpD y)
+    (v : LD) (r t : ℝ) (z : (Fin n → ℝ) × (Fin m → ℝ)) :
+    (κ (ExpD ((r * t) • v)))⁻¹ • coordinateChartPoint p x ι κ ExpN ExpD bN bD k z =
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Algebra/DynkinWords.lean.html#L34">OAI.PolycyclicRecognition.DynkinCoefficients</a>, <a href="../Algebra/DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a>, <a href="../Analysis/CoordinateChartSampling.lean.html#L50">OAI.PolycyclicRecognition.coordinateChartPoint</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

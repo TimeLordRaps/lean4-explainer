@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/MatroidSecretary/Selection/GreedyExecution.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/MatroidSecretary/Selection/GreedyExecution.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">MatroidSecretary</a> / <a href="index.html">Selection</a> / <span>GreedyExecution.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">MatroidSecretary</a>/<a href="index.html">Selection</a>/<span>GreedyExecution.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/MatroidSecretary/Selection/GreedyExecution.lean#L1">source</a></p><div class="doc"><p>Exact agreement between the source's previous-accepted-label test and the
+concrete implementation's previous-eligible-label test. No arrival-order
+assumption beyond the explicit arrival times is used in span preservation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.MatroidProphet.layerGreedy_closure_prior</code> <small>line 15</small><div class="doc"><p>Rejected earlier eligible labels do not change the span of a layer prefix.</p></div><pre>theorem layerGreedy_closure_prior (M : Matroid α) (E : Finset α)
+    (base : ℤ → Set α) (layer : α → ℤ) (time : α → ℕ)
+    (hE : M.E = Set.univ) (b : ℤ) (k : ℕ) :
+    M.closure (base b ∪ layerPrior E layer time b k) =
+      M.closure (base b ∪
+        layerPrior (layerGreedy M E base layer time) layer time b k) := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/LayerGreedy.lean.html#L10">OAI.MatroidProphet.layerPrior</a>, <a href="../../MatroidProphet/LayerGreedy.lean.html#L13">OAI.MatroidProphet.layerGreedy</a></p></li><li id=L37><b>theorem</b> <code>OAI.MatroidProphet.layerGreedy_mem_iff_previous_accepted</code> <small>line 37</small><div class="doc"><p>The online decision can be implemented using only earlier accepted labels
+of the same layer, exactly as in step 3 of the manuscript algorithm.</p></div><pre>theorem layerGreedy_mem_iff_previous_accepted (M : Matroid α) (E : Finset α)
+    (base : ℤ → Set α) (layer : α → ℤ) (time : α → ℕ)
+    (hE : M.E = Set.univ) (e : α) :
+    e ∈ layerGreedy M E base layer time ↔
+      e ∈ E ∧ e ∉ M.closure (base (layer e) ∪
+        layerPrior (layerGreedy M E base layer time) layer time (layer e) (time e)) := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/LayerGreedy.lean.html#L13">OAI.MatroidProphet.layerGreedy</a>, <a href="../../MatroidProphet/LayerGreedy.lean.html#L10">OAI.MatroidProphet.layerPrior</a></p></li><li id=L51><b>theorem</b> <code>OAI.MatroidProphet.conditionalRank_singleton_eq_one_iff</code> <small>line 51</small><div class="doc"><p>On a finite ground set the source's rank-one test is precisely nonmembership
+in the closure, including rank-zero and loop cases.</p></div><pre>theorem conditionalRank_singleton_eq_one_iff [Fintype α] (M : Matroid α)
+    (hE : M.E = Set.univ) (P : Set α) (e : α) :
+    conditionalRank M {e} P = 1 ↔ e ∉ M.closure P := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/RankAccounting.lean.html#L12">OAI.MatroidProphet.conditionalRank</a></p></li><li id=L61><b>theorem</b> <code>OAI.MatroidProphet.layerGreedy_mem_iff_rank_previous_accepted</code> <small>line 61</small><div class="doc"><p>Exact rank form of the source's accept/reject condition.</p></div><pre>theorem layerGreedy_mem_iff_rank_previous_accepted [Fintype α]
+    (M : Matroid α) (E : Finset α) (base : ℤ → Set α)
+    (layer : α → ℤ) (time : α → ℕ) (hE : M.E = Set.univ) (e : α) :
+    e ∈ layerGreedy M E base layer time ↔
+      e ∈ E ∧ conditionalRank M {e} (base (layer e) ∪
+        layerPrior (layerGreedy M E base layer time) layer time (layer e) (time e)) = 1 := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/LayerGreedy.lean.html#L13">OAI.MatroidProphet.layerGreedy</a>, <a href="../../MatroidProphet/RankAccounting.lean.html#L12">OAI.MatroidProphet.conditionalRank</a>, <a href="../../MatroidProphet/LayerGreedy.lean.html#L10">OAI.MatroidProphet.layerPrior</a></p></li><li id=L72><b>theorem</b> <code>OAI.MatroidProphet.layerKeyDecision_eq_rank_previous_accepted</code> <small>line 72</small><div class="doc"><p>The concrete history-based online decision agrees with the rank test on
+previously accepted labels in the current layer.</p></div><pre>theorem layerKeyDecision_eq_rank_previous_accepted {n : ℕ} {K : Type*}
+    (M : Matroid (Fin n)) (hE : M.E = Set.univ) (base : ℤ → Set (Fin n))
+    (assign : Fin n → K → Option ℤ) (v : Fin n → K)
+    (π : ArrivalOrder n) (k : Fin n) :
+    layerKeyDecision M base assign k (keyHistory v π k) = true ↔
+      π k ∈ assignedEligible assign v ∧
+      conditionalRank M {π k} (base (assignedLayer assign v (π k)) ∪
+        layerPrior
+          (layerGreedy M (assignedEligible assign v) base (assignedLayer assign v)
+            (fun e =&gt; (π.symm e).val))
+          (assignedLayer assign v) (fun e =&gt; (π.symm e).val)
+          (assignedLayer assign v (π k)) k.val) = 1 := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L22">OAI.MatroidProphet.ArrivalOrder</a>, <a href="../../MatroidProphet/LayerOnline.lean.html#L18">OAI.MatroidProphet.layerKeyDecision</a>, <a href="../../MatroidProphet/LayerOnline.lean.html#L30">OAI.MatroidProphet.keyHistory</a>, <a href="../../MatroidProphet/LayerOnline.lean.html#L9">OAI.MatroidProphet.assignedEligible</a>, <a href="../../MatroidProphet/RankAccounting.lean.html#L12">OAI.MatroidProphet.conditionalRank</a>, <a href="../../MatroidProphet/LayerOnline.lean.html#L14">OAI.MatroidProphet.assignedLayer</a>, <a href="../../MatroidProphet/LayerGreedy.lean.html#L10">OAI.MatroidProphet.layerPrior</a>, <a href="../../MatroidProphet/LayerGreedy.lean.html#L13">OAI.MatroidProphet.layerGreedy</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

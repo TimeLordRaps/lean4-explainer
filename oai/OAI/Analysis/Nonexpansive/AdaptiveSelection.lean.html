@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/AdaptiveSelection.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/AdaptiveSelection.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>AdaptiveSelection.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>AdaptiveSelection.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/AdaptiveSelection.lean#L1">source</a></p><div class="doc"><h3>Finite adaptive return to an anchor</h3><p>The tail closures and the anchor's closed-convex-hull membership are the
+actual analytic input to this helper.  The anchor construction proves
+those inputs for the actual resolvent tails.  The arbitrary state below
+can retain every earlier candidate and its auxiliary detector, including
+the candidates which eventually receive coefficient zero.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>theorem</b> <code>OAI.ReflexiveFixedPoints.mem_closedConvexHull_of_weak_subsequence</code> <small>line 31</small><div class="doc"><p>Every weak limit of points from a sequence lies in the norm-closed
+convex hull of that sequence.  This uses weak closedness of a convex norm
+closure, not weak continuity of any nonlinear map.</p></div><pre>theorem mem_closedConvexHull_of_weak_subsequence
+    (u : ℕ → X) (j : ℕ → ℕ) {d : X}
+    (h : Tendsto (fun n =&gt; toWeakSpace ℝ X (u (j n))) atTop
+      (𝓝 (toWeakSpace ℝ X d))) :
+    d ∈ closure (convexHull ℝ (range u)) := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.ReflexiveFixedPoints.adaptive_finite_selection</code> <small>line 57</small><div class="doc"><p>Fully state-dependent finite selection.  Every threshold is read from
+the preceding state, and the legal next state is chosen after the map.
+Only after a finite prefix has been obtained are its coefficients chosen.</p><p>The returned selected list includes every candidate, including those of
+zero weight.  <code>positive_support_reindex</code> separately extracts the retained
+children in their original order without changing this full history.</p></div><pre>theorem adaptive_finite_selection
+    {K : Set X} [TopologicalSpace.MetrizableSpace (WeakCarrier K)]
+    {M : Type v} {S : Type w}
+    (eval : M → K) (family : ℕ → Set M) (x : K) (D : Set X)
+    (hDK : D ⊆ K)
+    (hx : (x : X) ∈ closure (convexHull ℝ D))
+    (hD : ∀ m, 1 ≤ m → ∀ d : D,
+      normToWeak K ⟨d, hDK d.property⟩ ∈
+        closure ((fun a =&gt; normToWeak K (eval a)) &#x27;&#x27; family m))
+    (threshold : ℕ → S → ℕ)
+    (hthreshold : ∀ i s, 1 ≤ threshold i s)
+    (transition : ℕ → S → M → S → Prop) (initial : S)
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L29">OAI.ReflexiveFixedPoints.WeakCarrier</a>, <a href="Basic.lean.html#L33">OAI.ReflexiveFixedPoints.normToWeak</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

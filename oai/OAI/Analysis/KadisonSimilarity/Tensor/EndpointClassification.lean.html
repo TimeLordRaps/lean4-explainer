@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tensor/EndpointClassification.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tensor/EndpointClassification.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tensor</a> / <span>EndpointClassification.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tensor</a>/<span>EndpointClassification.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tensor/EndpointClassification.lean#L1">source</a></p><div class="doc"><h3>Completed invariant intertwiners from matrix-stage geometry</h3><p>Finite-dimensional Schur--Weyl spanning is the only invariant-theory input.
+The remaining assumptions describe a nested dense tracial matrix realization,
+its conjugation, and the operator's actual left and conjugation intertwinings.
+The coefficient identity and completed permutation classification are derived.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.KadisonSimilarity.fullMatrixStage</code> <small>line 25</small></li><li id=L28><b>def</b> <code>OAI.KadisonSimilarity.centeredMatrixStage</code> <small>line 28</small></li><li id=L33><b>structure</b> <code>OAI.KadisonSimilarity.TracialMatrixTower</code> <small>line 33</small><div class="doc"><p>Local tracial realization data for the nested matrix stages. In particular,
+there is no invariant coefficient formula or intertwiner classification here.</p></div><pre>structure TracialMatrixTower where
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.KadisonSimilarity.exists_endpoint_pairing_expansion_of_schurWeyl</code> <small>line 64</small><div class="doc"><p>The full completed coefficient formula is derived from stage geometry,
+left intertwining, and finite Schur--Weyl, rather than assumed.</p></div><pre>theorem exists_endpoint_pairing_expansion_of_schurWeyl
+    (T : TracialMatrixTower (E := E) (F := F) (A := A))
+…</pre><p class="refs">Mentions: <a href="EndpointClassification.lean.html#L33">OAI.KadisonSimilarity.TracialMatrixTower</a></p></li><li id=L100><b>theorem</b> <code>OAI.KadisonSimilarity.endpoint_reconstruct_from_pairing</code> <small>line 100</small><div class="doc"><p>A full endpoint pairing formula reconstructs the identity on the endpoint
+factor and the compression to the normalized trace vector.</p></div><pre>theorem endpoint_reconstruct_from_pairing
+    (Y : EndpointTensor E F k →L[ℂ] EndpointTensor E F l)
+    (Ω : E) (hΩ : ‖Ω‖ = 1) (J : F → F) (hJJ : Function.Involutive J)
+    (B : F →L[ℂ] F →L[ℂ] ℂ) (c : PerfectMatching (Fin k ⊕ Fin l) → ℂ)
+    (hfull : ∀ d a v,
+      inner ℂ (endpointWord a (fun j =&gt; J (v (.inr j))))
+        (Y (endpointWord d (fun i =&gt; v (.inl i)))) =
+      inner ℂ a d * ∑ P, c P * pairingPolynomial sourceFirstRank B P v) :
+    Y = endpointAmplification (endpointCompression Ω Y) ∧
+      (∀ v, tracialWordCoefficient (endpointCompression Ω Y) J v =
+        ∑ P, c P * pairingPolynomial sourceFirstRank B P v) := by
+…</pre><p class="refs">Mentions: <a href="EndpointTensors.lean.html#L33">OAI.KadisonSimilarity.EndpointTensor</a>, <a href="PairingLabels.lean.html#L18">OAI.KadisonSimilarity.PerfectMatching</a>, <a href="EndpointTensors.lean.html#L43">OAI.KadisonSimilarity.endpointWord</a>, <a href="TensorDensity.lean.html#L65">OAI.KadisonSimilarity.pairingPolynomial</a>, <a href="TensorClassification.lean.html#L21">OAI.KadisonSimilarity.sourceFirstRank</a>, <a href="EndpointTensors.lean.html#L142">OAI.KadisonSimilarity.endpointAmplification</a>, <a href="EndpointTensors.lean.html#L193">OAI.KadisonSimilarity.endpointCompression</a>, <a href="TensorDensity.lean.html#L108">OAI.KadisonSimilarity.tracialWordCoefficient</a></p></li><li id=L129><b>theorem</b> <code>OAI.KadisonSimilarity.endpoint_zero_from_pairing</code> <small>line 129</small><div class="doc"><p>Unequal degrees force the full endpoint operator to vanish.</p></div><pre>theorem endpoint_zero_from_pairing
+    (Y : EndpointTensor E F k →L[ℂ] EndpointTensor E F l)
+    (Ω : E) (hΩ : ‖Ω‖ = 1) (J : F → F) (hJ : Continuous J)
+    (hJJ : Function.Involutive J) (B : F →L[ℂ] F →L[ℂ] ℂ)
+    (hB : ∀ x y, B x (J y) = inner ℂ y x)
+    (c : PerfectMatching (Fin k ⊕ Fin l) → ℂ)
+    (h : ℕ → F) (hh : Orthonormal ℂ h) (hfix : ∀ m, J (h m) = h m)
+    (hfull : ∀ d a v,
+      inner ℂ (endpointWord a (fun j =&gt; J (v (.inr j))))
+        (Y (endpointWord d (fun i =&gt; v (.inl i)))) =
+      inner ℂ a d * ∑ P, c P * pairingPolynomial sourceFirstRank B P v)
+    (hkl : k ≠ l) : Y = 0 := by
+…</pre><p class="refs">Mentions: <a href="EndpointTensors.lean.html#L33">OAI.KadisonSimilarity.EndpointTensor</a>, <a href="PairingLabels.lean.html#L18">OAI.KadisonSimilarity.PerfectMatching</a>, <a href="EndpointTensors.lean.html#L43">OAI.KadisonSimilarity.endpointWord</a>, <a href="TensorDensity.lean.html#L65">OAI.KadisonSimilarity.pairingPolynomial</a>, <a href="TensorClassification.lean.html#L21">OAI.KadisonSimilarity.sourceFirstRank</a></p></li><li id=L159><b>theorem</b> <code>OAI.KadisonSimilarity.endpoint_permutations_from_pairing</code> <small>line 159</small><div class="doc"><p>Equal degrees give an actual finite sum of position permutations, with
+identity on the unrestricted endpoint.</p></div><pre>theorem endpoint_permutations_from_pairing {n : ℕ}
+    (Y : EndpointTensor E F n →L[ℂ] EndpointTensor E F n)
+    (Ω : E) (hΩ : ‖Ω‖ = 1) (J : F → F) (hJ : Continuous J)
+    (hJJ : Function.Involutive J) (B : F →L[ℂ] F →L[ℂ] ℂ)
+    (hB : ∀ x y, B x (J y) = inner ℂ y x)
+    (c : PerfectMatching (Fin n ⊕ Fin n) → ℂ)
+    (h : ℕ → F) (hh : Orthonormal ℂ h) (hfix : ∀ m, J (h m) = h m)
+    (hfull : ∀ d a v,
+      inner ℂ (endpointWord a (fun j =&gt; J (v (.inr j))))
+        (Y (endpointWord d (fun i =&gt; v (.inl i)))) =
+      inner ℂ a d * ∑ P, c P * pairingPolynomial sourceFirstRank B P v) :
+    Y = endpointAmplification (crossPairingOperator c) := by
+…</pre><p class="refs">Mentions: <a href="EndpointTensors.lean.html#L33">OAI.KadisonSimilarity.EndpointTensor</a>, <a href="PairingLabels.lean.html#L18">OAI.KadisonSimilarity.PerfectMatching</a>, <a href="EndpointTensors.lean.html#L43">OAI.KadisonSimilarity.endpointWord</a>, <a href="TensorDensity.lean.html#L65">OAI.KadisonSimilarity.pairingPolynomial</a>, <a href="TensorClassification.lean.html#L21">OAI.KadisonSimilarity.sourceFirstRank</a>, <a href="EndpointTensors.lean.html#L142">OAI.KadisonSimilarity.endpointAmplification</a>, <a href="TensorClassification.lean.html#L93">OAI.KadisonSimilarity.crossPairingOperator</a></p></li><li id=L180><b>theorem</b> <code>OAI.KadisonSimilarity.endpoint_intertwiner_zero_of_schurWeyl</code> <small>line 180</small><div class="doc"><p>The unequal-degree invariant-intertwiner theorem, conditional only on
+finite Schur--Weyl and explicit tracial matrix realization data.</p></div><pre>theorem endpoint_intertwiner_zero_of_schurWeyl
+    (T : TracialMatrixTower (E := E) (F := F) (A := A))
+…</pre><p class="refs">Mentions: <a href="EndpointClassification.lean.html#L33">OAI.KadisonSimilarity.TracialMatrixTower</a></p></li><li id=L200><b>theorem</b> <code>OAI.KadisonSimilarity.endpoint_intertwiner_permutations_of_schurWeyl</code> <small>line 200</small><div class="doc"><p>The equal-degree invariant-intertwiner theorem on the completed endpoint
+Hilbert tensor space; the coefficient expansion is a proved conclusion.</p></div><pre>theorem endpoint_intertwiner_permutations_of_schurWeyl {n : ℕ}
+    (T : TracialMatrixTower (E := E) (F := F) (A := A))
+…</pre><p class="refs">Mentions: <a href="EndpointClassification.lean.html#L33">OAI.KadisonSimilarity.TracialMatrixTower</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

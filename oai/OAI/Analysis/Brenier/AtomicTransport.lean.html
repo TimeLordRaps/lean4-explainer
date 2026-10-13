@@ -1,0 +1,169 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/AtomicTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/AtomicTransport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>AtomicTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>AtomicTransport.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/AtomicTransport.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem358.quadraticPlanCost_atomicMatchingPlan_ofReal_toReal</code> <small>line 15</small><div class="doc"><p>Real-valued finite matrix weights have the expected real quadratic cost.</p></div><pre>theorem quadraticPlanCost_atomicMatchingPlan_ofReal_toReal
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (p : ι → κ → ℝ) (hp : ∀ i j, 0 ≤ p i j) (y : ι → E d) (z : κ → E d) :
+    (quadraticPlanCost (atomicMatchingPlan
+      (fun q : ι × κ =&gt; ENNReal.ofReal (p q.1 q.2))
+      (fun q =&gt; y q.1) (fun q =&gt; z q.2))).toReal =
+      ∑ i, ∑ j, p i j * ‖y i - z j‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="Atomic.lean.html#L70">OAI.Problem358.atomicMatchingPlan</a></p></li><li id=L30><b>theorem</b> <code>OAI.Problem358.atomicMatchingPlan_minimal_of_matrix_minimal</code> <small>line 30</small><div class="doc"><p>Criterion turning any real matrix minimizer into a minimum among arbitrary
+couplings, without changing the chosen matrix.</p></div><pre>theorem atomicMatchingPlan_minimal_of_matrix_minimal
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (w : ι → ℝ≥0∞) (v : κ → ℝ≥0∞) (y : ι → E d) (z : κ → E d)
+    (hy : Function.Injective y) (hz : Function.Injective z)
+    (p : ι → κ → ℝ) (hp : ∀ i j, 0 ≤ p i j)
+    (hcoupling : IsCoupling (∑ i, w i • Measure.dirac (y i))
+      (∑ j, v j • Measure.dirac (z j))
+      (atomicMatchingPlan (fun q : ι × κ =&gt; ENNReal.ofReal (p q.1 q.2))
+        (fun q =&gt; y q.1) (fun q =&gt; z q.2)))
+    (hmin : ∀ q : ι → κ → ℝ, (∀ i j, 0 ≤ q i j) →
+      (∀ i, ∑ j, q i j = (w i).toReal) →
+      (∀ j, ∑ i, q i j = (v j).toReal) →
+…</pre><p class="refs">Mentions: <a href="Atomic.lean.html#L70">OAI.Problem358.atomicMatchingPlan</a></p></li><li id=L59><b>theorem</b> <code>OAI.Problem358.exists_optimal_atomic_matrix</code> <small>line 59</small><div class="doc"><p>A minimizing transportation matrix also minimizes over every measure-valued
+coupling of the two injectively indexed finite atomic laws.</p></div><pre>theorem exists_optimal_atomic_matrix
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (w : ι → ℝ≥0∞) (v : κ → ℝ≥0∞) (y : ι → E d) (z : κ → E d)
+    (hw : ∑ i, w i = 1) (hv : ∑ j, v j = 1)
+    (hy : Function.Injective y) (hz : Function.Injective z) :
+    ∃ p : ι → κ → ℝ,
+      (∀ i j, 0 ≤ p i j) ∧
+      (∀ i, ∑ j, p i j = (w i).toReal) ∧
+      (∀ j, ∑ i, p i j = (v j).toReal) ∧
+      IsCoupling (∑ i, w i • Measure.dirac (y i))
+        (∑ j, v j • Measure.dirac (z j))
+        (atomicMatchingPlan (fun q : ι × κ =&gt; ENNReal.ofReal (p q.1 q.2))
+…</pre><p class="refs">Mentions: <a href="Atomic.lean.html#L70">OAI.Problem358.atomicMatchingPlan</a></p></li><li id=L107><b>theorem</b> <code>OAI.Problem358.exists_optimal_atomic_coupling</code> <small>line 107</small><div class="doc"><p>Existence of a globally optimal coupling for two finite atomic probability laws.</p></div><pre>theorem exists_optimal_atomic_coupling
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (w : ι → ℝ≥0∞) (v : κ → ℝ≥0∞) (y : ι → E d) (z : κ → E d)
+    (hw : ∑ i, w i = 1) (hv : ∑ j, v j = 1)
+    (hy : Function.Injective y) (hz : Function.Injective z) :
+    ∃ π, IsCoupling (∑ i, w i • Measure.dirac (y i))
+        (∑ j, v j • Measure.dirac (z j)) π ∧
+      ∀ σ, IsCoupling (∑ i, w i • Measure.dirac (y i))
+          (∑ j, v j • Measure.dirac (z j)) σ →
+        quadraticPlanCost π ≤ quadraticPlanCost σ := by
+…</pre></li><li id=L121><b>theorem</b> <code>OAI.Problem358.wasserstein2_sq_eq_planCost_of_minimal</code> <small>line 121</small><div class="doc"><p>Any actual minimum realizes the infimum in the challenge's Wasserstein definition.</p></div><pre>theorem wasserstein2_sq_eq_planCost_of_minimal {d : ℕ}
+    {μ ν : Measure (E d)} {π : Measure (E d × E d)}
+    (hπ : IsCoupling μ ν π)
+    (hmin : ∀ σ, IsCoupling μ ν σ → quadraticPlanCost π ≤ quadraticPlanCost σ) :
+    wasserstein2 μ ν ^ 2 = (quadraticPlanCost π).toReal := by
+…</pre></li><li id=L136><b>theorem</b> <code>OAI.Problem358.exists_atomic_coupling_matrix_with_wasserstein_cost</code> <small>line 136</small><div class="doc"><p>The finite minimizing matrix has squared speed exactly equal to W₂².</p></div><pre>theorem exists_atomic_coupling_matrix_with_wasserstein_cost
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (w : ι → ℝ≥0∞) (v : κ → ℝ≥0∞) (y : ι → E d) (z : κ → E d)
+    (hw : ∑ i, w i = 1) (hv : ∑ j, v j = 1)
+    (hy : Function.Injective y) (hz : Function.Injective z) :
+    ∃ p : ι → κ → ℝ,
+      (∀ i j, 0 ≤ p i j) ∧
+      (∀ i, ∑ j, p i j = (w i).toReal) ∧
+      (∀ j, ∑ i, p i j = (v j).toReal) ∧
+      (∑ i, ∑ j, p i j * ‖y i - z j‖ ^ 2) =
+        wasserstein2 (∑ i, w i • Measure.dirac (y i))
+          (∑ j, v j • Measure.dirac (z j)) ^ 2 := by
+…</pre></li><li id=L159><b>theorem</b> <code>OAI.Problem358.sum_ofReal_smul_positive_support</code> <small>line 159</small><div class="doc"><p>Removing the zero weights also preserves finite sums of weighted measures.</p></div><pre>theorem sum_ofReal_smul_positive_support {X ι : Type*} [MeasurableSpace X] [Fintype ι]
+    (w : ι → ℝ) (μ : ι → Measure X) (hw : ∀ i, 0 ≤ w i) :
+    (∑ i : PositiveFiniteCoupling.Support w, ENNReal.ofReal (w i) • μ i) =
+      ∑ i, ENNReal.ofReal (w i) • μ i := by
+…</pre><p class="refs">Mentions: <a href="FiniteCoupling.lean.html#L368">OAI.Problem358.PositiveFiniteCoupling.Support</a></p></li><li id=L175><b>theorem</b> <code>OAI.Problem358.real_atomic_matrix_isCoupling</code> <small>line 175</small><div class="doc"><p>A nonnegative real matrix with probability margins induces a coupling of
+those atomic probability laws.</p></div><pre>theorem real_atomic_matrix_isCoupling
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (m : ι → ℝ) (n : κ → ℝ) (y : ι → E d) (z : κ → E d)
+    (hm : ∀ i, 0 ≤ m i) (hm1 : ∑ i, m i = 1)
+    (p : ι → κ → ℝ) (hp : ∀ i j, 0 ≤ p i j)
+    (hrow : ∀ i, ∑ j, p i j = m i) (hcol : ∀ j, ∑ i, p i j = n j) :
+    IsCoupling (∑ i, ENNReal.ofReal (m i) • Measure.dirac (y i))
+      (∑ j, ENNReal.ofReal (n j) • Measure.dirac (z j))
+      (atomicMatchingPlan (fun q : ι × κ =&gt; ENNReal.ofReal (p q.1 q.2))
+        (fun q =&gt; y q.1) (fun q =&gt; z q.2)) := by
+…</pre><p class="refs">Mentions: <a href="Atomic.lean.html#L70">OAI.Problem358.atomicMatchingPlan</a></p></li><li id=L195><b>theorem</b> <code>OAI.Problem358.FiniteCoupling.IsOptimal.wasserstein_cost</code> <small>line 195</small><div class="doc"><p>The cost of any chosen optimal real matrix is exactly the squared Wasserstein
+quantity of its two atomic laws.</p></div><pre>theorem FiniteCoupling.IsOptimal.wasserstein_cost
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
+    {m : ι → ℝ} {n : κ → ℝ} {y : ι → E d} {z : κ → E d}
+    (hm : ∀ i, 0 ≤ m i) (hn : ∀ j, 0 ≤ n j) (hm1 : ∑ i, m i = 1)
+    (hy : Function.Injective y) (hz : Function.Injective z)
+    {p : ι → κ → ℝ} (hopt : FiniteCoupling.IsOptimal (fun i j =&gt; ‖y i - z j‖ ^ 2) p)
+    (hrow : ∀ i, ∑ j, p i j = m i) (hcol : ∀ j, ∑ i, p i j = n j) :
+    (∑ i, ∑ j, p i j * ‖y i - z j‖ ^ 2) =
+      wasserstein2 (∑ i, ENNReal.ofReal (m i) • Measure.dirac (y i))
+        (∑ j, ENNReal.ofReal (n j) • Measure.dirac (z j)) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="FiniteCoupling.lean.html#L170">OAI.Problem358.FiniteCoupling.IsOptimal</a></p></li><li id=L221><b>theorem</b> <code>OAI.Problem358.positive_atomic_plan_eq_full</code> <small>line 221</small><div class="doc"><p>The positive-pair family has the same explicit joint law as the whole matrix.</p></div><pre>theorem positive_atomic_plan_eq_full
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (p : ι → κ → ℝ) (hp : ∀ i j, 0 ≤ p i j) (y : ι → E d) (z : κ → E d) :
+    atomicMatchingPlan
+      (fun q : PositiveFiniteCoupling.Pairs p =&gt; ENNReal.ofReal (p q.1.1 q.1.2))
+      (fun q =&gt; y q.1.1) (fun q =&gt; z q.1.2) =
+    atomicMatchingPlan (fun q : ι × κ =&gt; ENNReal.ofReal (p q.1 q.2))
+      (fun q =&gt; y q.1) (fun q =&gt; z q.2) := by
+…</pre><p class="refs">Mentions: <a href="Atomic.lean.html#L70">OAI.Problem358.atomicMatchingPlan</a>, <a href="FiniteCoupling.lean.html#L403">OAI.Problem358.PositiveFiniteCoupling.Pairs</a></p></li><li id=L233><b>theorem</b> <code>OAI.Problem358.positive_atomic_marginal_laws</code> <small>line 233</small><div class="doc"><p>Endpoint atomic laws survive removal of the zero matrix entries.</p></div><pre>theorem positive_atomic_marginal_laws
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (m : ι → ℝ) (n : κ → ℝ) (y : ι → E d) (z : κ → E d)
+    (hm : ∀ i, 0 ≤ m i) (hm1 : ∑ i, m i = 1)
+    (p : ι → κ → ℝ) (hp : ∀ i j, 0 ≤ p i j)
+    (hrow : ∀ i, ∑ j, p i j = m i) (hcol : ∀ j, ∑ i, p i j = n j) :
+    (∑ q : PositiveFiniteCoupling.Pairs p,
+      ENNReal.ofReal (p q.1.1 q.1.2) • Measure.dirac (y q.1.1)) =
+        ∑ i, ENNReal.ofReal (m i) • Measure.dirac (y i) ∧
+    (∑ q : PositiveFiniteCoupling.Pairs p,
+      ENNReal.ofReal (p q.1.1 q.1.2) • Measure.dirac (z q.1.2)) =
+        ∑ j, ENNReal.ofReal (n j) • Measure.dirac (z j) := by
+…</pre><p class="refs">Mentions: <a href="FiniteCoupling.lean.html#L403">OAI.Problem358.PositiveFiniteCoupling.Pairs</a></p></li><li id=L253><b>theorem</b> <code>OAI.Problem358.exists_positive_atomic_coupling_data</code> <small>line 253</small><div class="doc"><p>Fully semantic positive-pair input for the moving-site stability argument:
+positive normalized weights, the original endpoint laws, exact W₂ speed, and
+no site collisions at interior interpolation times.</p></div><pre>theorem exists_positive_atomic_coupling_data
+    {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (m : ι → ℝ) (n : κ → ℝ) (y : ι → E d) (z : κ → E d)
+    (hm : ∀ i, 0 ≤ m i) (hn : ∀ j, 0 ≤ n j)
+    (hm1 : ∑ i, m i = 1) (hn1 : ∑ j, n j = 1)
+    (hy : Function.Injective y) (hz : Function.Injective z) :
+    ∃ p : ι → κ → ℝ,
+      (∀ q : PositiveFiniteCoupling.Pairs p, 0 &lt; p q.1.1 q.1.2) ∧
+      (∑ q : PositiveFiniteCoupling.Pairs p, p q.1.1 q.1.2) = 1 ∧
+      (∑ q : PositiveFiniteCoupling.Pairs p,
+        ENNReal.ofReal (p q.1.1 q.1.2) • Measure.dirac (y q.1.1)) =
+          (∑ i, ENNReal.ofReal (m i) • Measure.dirac (y i)) ∧
+…</pre><p class="refs">Mentions: <a href="FiniteCoupling.lean.html#L403">OAI.Problem358.PositiveFiniteCoupling.Pairs</a></p></li><li id=L291><b>theorem</b> <code>OAI.Problem358.exists_finite_atomic_motion</code> <small>line 291</small><div class="doc"><p>Two finitely supported probabilities admit a common strictly positive finite
+weight family. Its paired sites give the original laws, exact Wasserstein energy,
+and an injective moving family at every interior interpolation time.</p></div><pre>theorem exists_finite_atomic_motion
+    {d : ℕ} {μ ν : Measure (E d)} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {F G : Set (E d)} (hF : F.Finite) (hG : G.Finite)
+    (hμ : IsSupported μ F) (hν : IsSupported ν G) :
+    ∃ N : ℕ, 0 &lt; N ∧ ∃ (w : Fin N → ℝ) (y z : Fin N → E d),
+      (∀ i, 0 &lt; w i) ∧ (∑ i, w i) = 1 ∧
+      (∀ i, y i ∈ F) ∧ (∀ i, z i ∈ G) ∧
+      μ = (∑ i, ENNReal.ofReal (w i) • Measure.dirac (y i)) ∧
+      ν = (∑ i, ENNReal.ofReal (w i) • Measure.dirac (z i)) ∧
+      Function.Injective (fun i =&gt; (y i, z i)) ∧
+      (∑ i, w i * ‖y i - z i‖ ^ 2) = wasserstein2 μ ν ^ 2 ∧
+      ∀ t : ℝ, 0 &lt; t → t &lt; 1 →
+…</pre></li><li id=L340><b>theorem</b> <code>OAI.Problem358.wasserstein2_interpolated_atomic_le</code> <small>line 340</small><div class="doc"><p>Synchronous linear interpolation has Wasserstein speed at most its weighted
+root-mean-square site velocity. No injectivity or optimality is needed here.</p></div><pre>theorem wasserstein2_interpolated_atomic_le
+    {d : ℕ} {ι : Type*} [Fintype ι]
+    (w : ι → ℝ) (y z : ι → E d) (hw : ∀ i, 0 ≤ w i)
+    (hw1 : ∑ i, w i = 1) (s t : ℝ) :
+    wasserstein2
+      (∑ i, ENNReal.ofReal (w i) • Measure.dirac ((1-s) • y i + s • z i))
+      (∑ i, ENNReal.ofReal (w i) • Measure.dirac ((1-t) • y i + t • z i)) ≤
+        |s-t| * Real.sqrt (∑ i, w i * ‖y i - z i‖ ^ 2) := by
+…</pre></li><li id=L371><b>theorem</b> <code>OAI.Problem358.wasserstein2_interpolated_atomic_le_of_energy</code> <small>line 371</small><div class="doc"><p>In particular, an optimal endpoint pairing gives a constant upper speed
+in terms of the exact endpoint Wasserstein distance.</p></div><pre>theorem wasserstein2_interpolated_atomic_le_of_energy
+    {d : ℕ} {ι : Type*} [Fintype ι]
+    (w : ι → ℝ) (y z : ι → E d) (hw : ∀ i, 0 ≤ w i)
+    (hw1 : ∑ i, w i = 1) {μ ν : Measure (E d)}
+    (henergy : (∑ i, w i * ‖y i-z i‖ ^ 2) = wasserstein2 μ ν ^ 2)
+    (s t : ℝ) :
+    wasserstein2
+      (∑ i, ENNReal.ofReal (w i) • Measure.dirac ((1-s) • y i + s • z i))
+      (∑ i, ENNReal.ofReal (w i) • Measure.dirac ((1-t) • y i + t • z i)) ≤
+        |s-t| * wasserstein2 μ ν := by
+…</pre></li><li id=L385><b>theorem</b> <code>OAI.Problem358.interpolated_atomic_isProbability</code> <small>line 385</small><div class="doc"><p>Those interpolated laws remain probabilities for every real time.</p></div><pre>theorem interpolated_atomic_isProbability
+    {d : ℕ} {ι : Type*} [Fintype ι]
+    (w : ι → ℝ) (y z : ι → E d) (hw : ∀ i, 0 ≤ w i)
+    (hw1 : ∑ i, w i = 1) (t : ℝ) :
+    IsProbabilityMeasure
+      (∑ i, ENNReal.ofReal (w i) • Measure.dirac ((1-t) • y i + t • z i)) := by
+…</pre></li><li id=L399><b>theorem</b> <code>OAI.Problem358.interpolated_atomic_supported</code> <small>line 399</small><div class="doc"><p>On the unit time interval, the whole atomic motion stays in any convex set
+containing both endpoint site families.</p></div><pre>theorem interpolated_atomic_supported
+    {d : ℕ} {ι : Type*} [Fintype ι]
+    (w : ι → ℝ) (y z : ι → E d) {Y : Set (E d)} (hY : Convex ℝ Y)
+    (hy : ∀ i, y i ∈ Y) (hz : ∀ i, z i ∈ Y)
+    {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    IsSupported
+      (∑ i, ENNReal.ofReal (w i) • Measure.dirac ((1-t) • y i + t • z i)) Y := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

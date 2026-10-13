@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceReferenceThreshold.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceReferenceThreshold.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceReferenceThreshold.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceReferenceThreshold.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceReferenceThreshold.lean#L1">source</a></p><div class="doc"><p>Fixed binary reference grids give polynomial thresholds with arbitrarily
+strong exponential tails. The angular grid branching never enters this bound.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.binary_lineMomentBase_le</code> <small>line 16</small><div class="doc"><p>The reference variation constant grows at most linearly with the
+packet envelope constant. All other parameters precede the packet family.</p></div><pre>theorem binary_lineMomentBase_le (M B C : ℝ) (hM : 0 ≤ M) (hB : 0 ≤ B)
+    (hC : 0 ≤ C) :
+    lineMomentBase C (M*C^2*B+1) 2 ≤
+      lineMomentBase 1 (M*B+1) 2*(C+1) := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/PolynomialMomentBound.lean.html#L51">OAI.LipschitzHilbert.lineMomentBase</a></p></li><li id=L42><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.eventually_reference_thresholds</code> <small>line 42</small><div class="doc"><p>One natural moment order works for every reference packet family,
+line position, and binary grid. Its threshold is a fixed power of L.</p></div><pre>theorem eventually_reference_thresholds (M B a J : ℝ)
+    (hM : 0 ≤ M) (hB : 0 ≤ B) (ha : 0 ≤ a) (hJ : 0 ≤ J) :
+    ∀ᶠ L : ℝ in atTop, ∃ n : ℕ, 1 ≤ n ∧
+      (1/4:ℝ)^n ≤ Real.exp (-J*L) ∧ 1 ≤ L^(a+4) ∧
+      ∀ (grid : FiniteLineGrid) (C : ℝ), grid.branching = 2 →
+        0 ≤ C → C ≤ L^a →
+        4*(referenceSquareMomentBase B grid*(n:ℝ)) ≤ L^(a+4) ∧
+        4*(lineMomentBase C (M*C^2*B+1) grid.branching*(n:ℝ)) ≤ L^(a+4) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLineGrid.lean.html#L15">OAI.LipschitzHilbert.FiniteLineGrid</a>, <a href="SourceReferenceTail.lean.html#L15">OAI.LipschitzHilbert.SourceLatticePacket.referenceSquareMomentBase</a>, <a href="../Estimates/PolynomialMomentBound.lean.html#L51">OAI.LipschitzHilbert.lineMomentBase</a></p></li><li id=L102><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.reference_polynomial_tails_of_moments</code> <small>line 102</small><div class="doc"><p>The moment hypotheses are the exact previously proved reference moment
+bounds; no concentration or path estimate is assumed.</p></div><pre>theorem reference_polynomial_tails_of_moments {X : Type*} [MeasurableSpace X]
+    (μ : Measure X) (F V : X → ℝ) (hF : Measurable F) (hV : Measurable V)
+    (M B C T : ℝ) (grid : FiniteLineGrid) (hB : 0 ≤ B) (hC : 0 ≤ C)
+    (n : ℕ) (hn : 1 ≤ n) (hT : 1 ≤ T)
+    (hs : 4*(referenceSquareMomentBase B grid*(n:ℝ)) ≤ T)
+    (hv : 4*(lineMomentBase C (M*C^2*B+1) grid.branching*(n:ℝ)) ≤ T)
+    (hsm : (∫⁻ x, (ENNReal.ofReal |F x|)^(2*(n:ℝ)) ∂μ) ≤
+      referenceSquareMomentCost B grid (2*(n:ℝ))*μ univ)
+    (hvm : (∫⁻ x, (ENNReal.ofReal |V x|)^(n:ℝ) ∂μ) ≤
+      referenceVariationMomentCost M C B grid n*μ univ) :
+    μ {x | T ≤ |F x|} ≤ (1/4:ℝ≥0∞)^n*μ univ ∧
+      μ {x | T ≤ |V x|} ≤ (1/4:ℝ≥0∞)^n*μ univ := by
+…</pre><p class="refs">Mentions: <a href="FiniteLineGrid.lean.html#L15">OAI.LipschitzHilbert.FiniteLineGrid</a>, <a href="SourceReferenceTail.lean.html#L15">OAI.LipschitzHilbert.SourceLatticePacket.referenceSquareMomentBase</a>, <a href="../Estimates/PolynomialMomentBound.lean.html#L51">OAI.LipschitzHilbert.lineMomentBase</a>, <a href="SourceReferenceBounds.lean.html#L16">OAI.LipschitzHilbert.SourceLatticePacket.referenceSquareMomentCost</a>, <a href="SourceReferenceBounds.lean.html#L21">OAI.LipschitzHilbert.SourceLatticePacket.referenceVariationMomentCost</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

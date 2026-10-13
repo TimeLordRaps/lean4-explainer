@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/WordLaw.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/WordLaw.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>WordLaw.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>WordLaw.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/WordLaw.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.SmoothObstruction.WordLaw.lagBack</code> <small>line 15</small><div class="doc"><p>The literal dyadic predecessor schedule of W1, padded by absent equations
+up to K slots. Groups restart this schedule at zero.</p></div><pre>def lagBack (K t : ℕ) (j : Fin K) : Option (Fin t) :=
+…</pre></li><li id=L20><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.lagBack_eq</code> <small>line 20</small></li><li id=L29><b>def</b> <code>OAI.SmoothObstruction.WordLaw.groupLaw</code> <small>line 29</small></li><li id=L35><b>def</b> <code>OAI.SmoothObstruction.WordLaw.rawLaw</code> <small>line 35</small></li><li id=L39><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.group_relations</code> <small>line 39</small></li><li id=L50><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.raw_relations</code> <small>line 50</small></li><li id=L63><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.group_label</code> <small>line 63</small></li><li id=L73><b>def</b> <code>OAI.SmoothObstruction.WordLaw.empirical</code> <small>line 73</small><div class="doc"><p>Empirical probability vector formed from a single group.</p></div><pre>noncomputable def empirical (f : {v : V // v ≠ 0} → C)
+    (w : Fin H → {v : V // v ≠ 0}) (c : C) : ℝ :=
+…</pre></li><li id=L78><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.empirical_nonneg</code> <small>line 78</small></li><li id=L84><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.empirical_total</code> <small>line 84</small></li><li id=L91><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.group_observable</code> <small>line 91</small></li><li id=L108><b>lemma</b> <code>OAI.SmoothObstruction.WordLaw.group_mean</code> <small>line 108</small></li><li id=L121><b>theorem</b> <code>OAI.SmoothObstruction.WordLaw.raw_empirical_tv</code> <small>line 121</small><div class="doc"><p>The first source use of the probability-vector estimate: it averages
+groups, not falsely independent positions within a group.</p></div><pre>theorem raw_empirical_tv (hB : B.IsAlt) (hnd : B.Nondegenerate)
+    (hd : K + 1 ≤ Module.finrank (ZMod 2) V) (hH : 0 &lt; H) (hq : 0 &lt; q)
+    (f : {v : V // v ≠ 0} → C) :
+    expect (rawLaw B hd H q) (fun w =&gt; (1 / 2 : ℝ) * ∑ c,
+      |(∑ b, empirical f (w b) c) / q -
+        (∑ a : {v : V // v ≠ 0}, if f a = c then (1 : ℝ) else 0) /
+          Fintype.card {v : V // v ≠ 0}|) ≤
+      (1 / 2 : ℝ) * Real.sqrt (Fintype.card C / q) := by
+…</pre><p class="refs">Mentions: <a href="WordLaw.lean.html#L35">OAI.SmoothObstruction.WordLaw.rawLaw</a>, <a href="WordLaw.lean.html#L73">OAI.SmoothObstruction.WordLaw.empirical</a></p></li><li id=L138><b>theorem</b> <code>OAI.SmoothObstruction.WordLaw.raw_sublist_groups</code> <small>line 138</small><div class="doc"><p>A specified arbitrary sublist, across any number of groups. The exponent
+is the exact number of specified coordinates, not the size of its span.</p></div><pre>theorem raw_sublist_groups (hd : K + 1 ≤ Module.finrank (ZMod 2) V) (hK : 1 ≤ K)
+    (m : Fin q → Fin H → Option {v : V // v ≠ 0}) :
+    FiniteLaw.expect (rawLaw B hd H q) (fun w =&gt; ∏ b, test (m b) (w b)) ≤
+      ((2 : ℝ) ^ (2 * K) / Fintype.card {v : V // v ≠ 0}) ^
+        (∑ b, (univ.filter (fun r =&gt; (m b r).isSome)).card) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L20">OAI.SmoothObstruction.FiniteLaw.expect</a>, <a href="WordLaw.lean.html#L35">OAI.SmoothObstruction.WordLaw.rawLaw</a></p></li><li id=L154><b>theorem</b> <code>OAI.SmoothObstruction.WordLaw.conditioned_sublist</code> <small>line 154</small><div class="doc"><p>All actual conditioned laws pay the factor two once for the whole word.</p></div><pre>theorem conditioned_sublist (hd : K + 1 ≤ Module.finrank (ZMod 2) V) (hK : 1 ≤ K)
+    (E : Finset (Fin q → Fin H → {v : V // v ≠ 0}))
+    (hE : 1 / 2 ≤ prob (rawLaw B hd H q) E)
+    (m : Fin q → Fin H → Option {v : V // v ≠ 0}) :
+    FiniteLaw.expect (condition (rawLaw B hd H q) E (by change 0 &lt; prob _ E; linarith))
+      (fun w =&gt; ∏ b, test (m b) (w b)) ≤
+      2 * ((2 : ℝ) ^ (2 * K) / Fintype.card {v : V // v ≠ 0}) ^
+        (∑ b, (univ.filter (fun r =&gt; (m b r).isSome)).card) := by
+…</pre><p class="refs">Mentions: <a href="WordLaw.lean.html#L35">OAI.SmoothObstruction.WordLaw.rawLaw</a>, <a href="FiniteLaw.lean.html#L20">OAI.SmoothObstruction.FiniteLaw.expect</a></p></li><li id=L166><b>def</b> <code>OAI.SmoothObstruction.WordLaw.tvFromUniformObservable</code> <small>line 166</small></li><li id=L174><b>theorem</b> <code>OAI.SmoothObstruction.WordLaw.approximation_event</code> <small>line 174</small><div class="doc"><p>A concrete, nonempty conditioning event enforcing the per-word condition
+simultaneously for all the earlier-level windows.</p></div><pre>theorem approximation_event {I : Type*} [Fintype I]
+    (hB : B.IsAlt) (hnd : B.Nondegenerate)
+    (hd : K + 1 ≤ Module.finrank (ZMod 2) V) (hH : 0 &lt; H) (hq : 0 &lt; q)
+    (f : I → {v : V // v ≠ 0} → C) {θ : ℝ} (hθ : 0 &lt; θ)
+    (hbudget : (Fintype.card I : ℝ) *
+      ((1 / 2 : ℝ) * Real.sqrt (Fintype.card C / q)) / θ ≤ 1 / 2) :
+    1 / 2 ≤ prob (rawLaw B hd H q)
+      (univ.filter (fun w =&gt; ∀ i, tvFromUniformObservable (f i) w ≤ θ)) := by
+…</pre><p class="refs">Mentions: <a href="WordLaw.lean.html#L35">OAI.SmoothObstruction.WordLaw.rawLaw</a>, <a href="WordLaw.lean.html#L166">OAI.SmoothObstruction.WordLaw.tvFromUniformObservable</a></p></li><li id=L197><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.product_injective_moment</code> <small>line 197</small></li><li id=L222><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.product_restriction</code> <small>line 222</small></li><li id=L237><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.product_restriction_expect</code> <small>line 237</small></li><li id=L251><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.prob_card_bound</code> <small>line 251</small></li><li id=L258><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.product_mass_upper</code> <small>line 258</small></li><li id=L273><b>lemma</b> <code>OAI.SmoothObstruction.MatchingCount.increasing_count</code> <small>line 273</small><div class="doc"><p>Equalities oriented to a distinct later variable determine the removed
+coordinates uniquely from those left free. This is the acyclic comparison
+count, without an assumption of independence between equality events.</p></div><pre>lemma increasing_count {n : ℕ} (f g : I → Fin n)
+    (hfg : ∀ i, f i &lt; g i) (hg : Function.Injective g) :
+    Nat.card {w : Fin n → A // ∀ i, w (f i) = w (g i)} ≤
+      Fintype.card A ^ (n - Fintype.card I) := by
+…</pre></li><li id=L310><b>theorem</b> <code>OAI.SmoothObstruction.MatchingCount.matching_count</code> <small>line 310</small><div class="doc"><p>For a comparison with two injective endpoint lists and no tautological
+loops, at least half the equality constraints can be oriented to distinct
+later variables. This includes parallel edges and all repeated-word cases.</p></div><pre>theorem matching_count {n : ℕ} (f g : I → Fin n)
+    (hf : Function.Injective f) (hg : Function.Injective g) (hne : ∀ i, f i ≠ g i) :
+    Nat.card {w : Fin n → A // ∀ i, w (f i) = w (g i)} ≤
+      Fintype.card A ^ (n - (Fintype.card I + 1) / 2) := by
+…</pre></li><li id=L362><b>theorem</b> <code>OAI.SmoothObstruction.MatchingCount.matching_count_finite</code> <small>line 362</small><div class="doc"><p>The comparison count in an arbitrary finite ambient coordinate set,
+including several complete sampled words and repeated sample-list indices.</p></div><pre>theorem matching_count_finite (f g : I → W)
+    (hf : Function.Injective f) (hg : Function.Injective g) (hne : ∀ i, f i ≠ g i) :
+    Nat.card {w : W → A // ∀ i, w (f i) = w (g i)} ≤
+      Fintype.card A ^ (Fintype.card W - (Fintype.card I + 1) / 2) := by
+…</pre></li><li id=L380><b>theorem</b> <code>OAI.SmoothObstruction.MatchingCount.comparison_probability</code> <small>line 380</small><div class="doc"><p>Cardinality to probability: the reference comparison estimate, valid for
+any nonnegative finite law with a pointwise full-list bound.</p></div><pre>theorem comparison_probability [DecidableEq W] [DecidableEq A]
+    (P : FiniteLaw.Law (W → A)) {c : ℝ} (hc0 : 0 ≤ c) (hc : ∀ w, P.mass w ≤ c)
+    (f g : I → W) (hf : Function.Injective f) (hg : Function.Injective g)
+    (hne : ∀ i, f i ≠ g i) :
+    FiniteLaw.prob P (univ.filter (fun w =&gt; ∀ i, w (f i) = w (g i))) ≤
+      (Fintype.card A : ℝ) ^ (Fintype.card W - (Fintype.card I + 1) / 2) * c := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L13">OAI.SmoothObstruction.FiniteLaw.Law</a>, <a href="FiniteLaw.lean.html#L253">OAI.SmoothObstruction.FiniteLaw.prob</a></p></li><li id=L400><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.prob_mono</code> <small>line 400</small></li><li id=L408><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.sampled_matching_probability</code> <small>line 408</small><div class="doc"><p>Actual independent complete-list sampling, with arbitrary repeated uses of
+list indices in the comparison endpoints. The index injection counts each
+independently sampled word once and all unused sampled words are integrated.</p></div><pre>lemma sampled_matching_probability (P : I → Law (R → A)) (e : J → I)
+    (he : Function.Injective e) (f g : R → J × R)
+    (hf : Function.Injective f) (hg : Function.Injective g) (hne : ∀ r, f r ≠ g r)
+    (s : Finset R) {c : ℝ} (hc : 0 ≤ c) (hP : ∀ j w, (P (e j)).mass w ≤ c) :
+    prob (product P) (univ.filter (fun x =&gt; ∀ r ∈ s,
+      x (e (f r).1) (f r).2 = x (e (g r).1) (g r).2)) ≤
+      (Fintype.card A : ℝ) ^ (Fintype.card J * Fintype.card R - (s.card + 1) / 2) *
+        c ^ Fintype.card J := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L13">OAI.SmoothObstruction.FiniteLaw.Law</a>, <a href="FiniteLaw.lean.html#L253">OAI.SmoothObstruction.FiniteLaw.prob</a>, <a href="FiniteLaw.lean.html#L63">OAI.SmoothObstruction.FiniteLaw.product</a></p></li><li id=L449><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.sampled_bad_comparison</code> <small>line 449</small><div class="doc"><p>Union over specified matching-position sets. No label independence inside
+a sampled word is assumed.</p></div><pre>lemma sampled_bad_comparison (P : I → Law (R → A)) (e : J → I)
+    (he : Function.Injective e) (f g : R → J × R)
+    (hf : Function.Injective f) (hg : Function.Injective g) (hne : ∀ r, f r ≠ g r)
+    (a : ℕ) {c : ℝ} (hc : 0 ≤ c) (hP : ∀ j w, (P (e j)).mass w ≤ c) :
+    prob (product P) (univ.filter (fun x =&gt; a ≤ (univ.filter (fun r =&gt;
+      x (e (f r).1) (f r).2 = x (e (g r).1) (g r).2)).card)) ≤
+      (2 : ℝ) ^ Fintype.card R *
+        (Fintype.card A : ℝ) ^ (Fintype.card J * Fintype.card R - (a + 1) / 2) *
+        c ^ Fintype.card J := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L13">OAI.SmoothObstruction.FiniteLaw.Law</a>, <a href="FiniteLaw.lean.html#L253">OAI.SmoothObstruction.FiniteLaw.prob</a>, <a href="FiniteLaw.lean.html#L63">OAI.SmoothObstruction.FiniteLaw.product</a></p></li><li id=L502><b>lemma</b> <code>OAI.SmoothObstruction.FiniteLaw.comparison_cost</code> <small>line 502</small><div class="doc"><p>Exact simplification of the sampled comparison cost. The one-time
+conditioning doubles each of at most three word laws, costing eight, not a
+factor per selected label.</p></div><pre>lemma comparison_cost {L U : ℝ} (hL : 1 ≤ L) (hU : 1 ≤ U)
+    {N j a : ℕ} (hj : 1 ≤ j) (hj&#x27; : j ≤ 3) (ha : a ≤ N) :
+    (2 : ℝ) ^ N * L ^ (j * N - (a + 1) / 2) *
+      (2 * (U / L) ^ N) ^ j ≤
+      8 * 2 ^ N * U ^ (3 * N) * L ^ (-(a : ℝ) / 2) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

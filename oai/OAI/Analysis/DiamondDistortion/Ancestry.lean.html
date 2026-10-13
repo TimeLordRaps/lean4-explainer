@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/DiamondDistortion/Ancestry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/DiamondDistortion/Ancestry.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">DiamondDistortion</a> / <span>Ancestry.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">DiamondDistortion</a>/<span>Ancestry.lean</span></code></h1><p class="muted">63 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/DiamondDistortion/Ancestry.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.DiamondDistortion.intervalSystem</code> <small>line 14</small><div class="doc"><p>A finite interval in an ancestral order.  This keeps the root in every tree.</p></div><p class="refs">Also declared: <a href="../../../ComparatorChallenges/DiamondDistortion.lean.html#L207">ComparatorChallenges/DiamondDistortion.lean:207</a> (identical).</p><pre>def intervalSystem {ι : Type*} (r : ι → ι → Prop)
+    (hrefl : ∀ a, r a a) (hanti : ∀ a b, r a b → r b a → a = b) : SegmentSystem ι where
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DiamondDistortion.lean.html#L15">OAI.DiamondDistortion.SegmentSystem</a></p></li><li id=L28><b>class</b> <code>OAI.DiamondDistortion.Ancestry</code> <small>line 28</small><div class="doc"><p>An ancestral partial order: the predecessors of any vertex form a chain.</p></div><p class="refs">Also declared: <a href="../../../ComparatorChallenges/DiamondDistortion.lean.html#L221">ComparatorChallenges/DiamondDistortion.lean:221</a> (identical).</p><pre>class Ancestry (ι : Type*) extends PartialOrder ι where
+…</pre></li><li id=L37><b>def</b> <code>OAI.DiamondDistortion.Ancestry.segments</code> <small>line 37</small><div class="doc"><p>Nonempty finite intervals for an ancestral order.</p></div><p class="refs">Also declared: <a href="../../../ComparatorChallenges/DiamondDistortion.lean.html#L231">ComparatorChallenges/DiamondDistortion.lean:231</a> (identical).</p><pre>def segments : SegmentSystem ι :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DiamondDistortion.lean.html#L15">OAI.DiamondDistortion.SegmentSystem</a></p></li><li id=L41><b>def</b> <code>OAI.DiamondDistortion.Ancestry.Ancestral</code> <small>line 41</small><div class="doc"><p>Downward closed sets are precisely ancestral heads.</p></div><pre>def Ancestral (H : Set ι) : Prop := ∀ ⦃a b : ι⦄, a ≤ b → b ∈ H → a ∈ H</pre></li><li id=L43><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.ancestral_not_above</code> <small>line 43</small></li><li id=L47><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.interval_chain</code> <small>line 47</small></li><li id=L53><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.segment_filter_head</code> <small>line 53</small></li><li id=L76><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.segment_filter_tail</code> <small>line 76</small></li><li id=L102><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.split_energy_le</code> <small>line 102</small><div class="doc"><p>Splitting each member of a disjoint family at its own ancestral cut preserves
+the testing budget. This is the simultaneous, not one-gate-at-a-time, estimate.</p></div><pre>lemma split_energy_le (F : A.segments.Family) (H : Fin F.n → Set ι)
+    (hH : ∀ i, A.Ancestral (H i)) (u : ι →₀ ℝ) :
+    (∑ i, ((∑ v ∈ (F.seg i).filter (· ∈ H i), u v) ^ 2 +
+      (∑ v ∈ (F.seg i).filter (· ∉ H i), u v) ^ 2)) ≤
+      (A.segments.primalSeminorm u) ^ 2 := by
+…</pre></li><li id=L140><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.split_gain_le</code> <small>line 140</small><div class="doc"><p>The explicit increase in the squared test after simultaneous splitting.</p></div><pre>lemma split_gain_le (F : A.segments.Family) (H : Fin F.n → Set ι)
+    (hH : ∀ i, A.Ancestral (H i)) (u : ι →₀ ℝ) :
+    (∑ i, (∑ v ∈ F.seg i, u v) ^ 2) +
+      2 * (∑ i : Fin F.n, ((∑ v ∈ (F.seg i).filter (· ∉ H i), u v) ^ 2 -
+        (∑ v ∈ F.seg i, u v) * (∑ v ∈ (F.seg i).filter (· ∉ H i), u v))) ≤
+        (A.segments.primalSeminorm u) ^ 2 := by
+…</pre></li><li id=L163><b>def</b> <code>OAI.DiamondDistortion.Ancestry.Gate</code> <small>line 163</small><div class="doc"><p>A minimal vertex outside a head. Gates in a tree form an antichain.</p></div><pre>def Gate (H : Set ι) (g : ι) : Prop :=
+…</pre></li><li id=L166><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.gates_eq_of_le</code> <small>line 166</small></li><li id=L171><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.gates_eq_of_common_upper</code> <small>line 171</small></li><li id=L177><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.gate_unique_in_segment</code> <small>line 177</small></li><li id=L184><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.exists_gate_le</code> <small>line 184</small></li><li id=L202><b>def</b> <code>OAI.DiamondDistortion.Ancestry.first</code> <small>line 202</small><div class="doc"><p>Canonical lower endpoint; no ordering is imposed on segment families.</p></div><pre>def first (F : A.segments.Family) (i : Fin F.n) : ι :=
+…</pre></li><li id=L205><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.first_spec</code> <small>line 205</small></li><li id=L209><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.first_le_of_mem</code> <small>line 209</small></li><li id=L214><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.first_mem</code> <small>line 214</small></li><li id=L220><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.crossing_cut_sum</code> <small>line 220</small><div class="doc"><p>Two heads through a common exterior vertex are nested; cutting the longer
+at the shorter's first vertex preserves exactly the shorter head sum.</p></div><pre>lemma crossing_cut_sum {H : Set ι} (hH : A.Ancestral H) (p : ι →₀ ℝ)
+    (hp : ∀ v, v ∉ H → p v = 0) (F G : A.segments.Family)
+    (i : Fin F.n) (j : Fin G.n) {g : ι} (hg : g ∉ H)
+    (hgF : g ∈ F.seg i) (hgG : g ∈ G.seg j)
+    (hfirst : A.first F i ≤ A.first G j) :
+    (∑ v ∈ (F.seg i).filter (fun v =&gt; A.first G j ≤ v), p v) =
+      ∑ v ∈ G.seg j, p v := by
+…</pre></li><li id=L255><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.sum_extend_zero</code> <small>line 255</small><div class="doc"><p>Zero-extension along a finite injection preserves the finite sum.</p></div><pre>lemma sum_extend_zero {κ ν : Type*} [Fintype κ] [Fintype ν]
+    (e : κ ↪ ν) (f : κ → ℝ) :
+    (∑ i, Function.extend e f (fun _ =&gt; 0) i) = ∑ a, f a := by
+…</pre></li><li id=L271><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.matched_split_gain_le</code> <small>line 271</small><div class="doc"><p>Simultaneous splitting restricted to any injected list of original segments.</p></div><pre>lemma matched_split_gain_le {κ : Type*} [Fintype κ]
+    (F : A.segments.Family) (e : κ ↪ Fin F.n) (c : κ → ι) (p : ι →₀ ℝ) :
+    (∑ i, (∑ v ∈ F.seg i, p v) ^ 2) +
+      2 * (∑ a, ((∑ v ∈ (F.seg (e a)).filter (fun v =&gt; c a ≤ v), p v) ^ 2 -
+        (∑ v ∈ F.seg (e a), p v) *
+          (∑ v ∈ (F.seg (e a)).filter (fun v =&gt; c a ≤ v), p v))) ≤
+      (A.segments.primalSeminorm p) ^ 2 := by
+…</pre></li><li id=L312><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.opposite_matching_le</code> <small>line 312</small><div class="doc"><p>Opposite head sums, matched injectively in both families, spend only the
+combined testing deficits. This is the simultaneous boundary cancellation.</p></div><pre>lemma opposite_matching_le {κ : Type*} [Fintype κ]
+    {H : Set ι} (hH : A.Ancestral H) (p : ι →₀ ℝ)
+    (hp : ∀ v, v ∉ H → p v = 0) (F G : A.segments.Family)
+    (eF : κ ↪ Fin F.n) (eG : κ ↪ Fin G.n) (g : κ → ι)
+    (hgH : ∀ a, g a ∉ H) (hgF : ∀ a, g a ∈ F.seg (eF a))
+    (hgG : ∀ a, g a ∈ G.seg (eG a))
+    (hopp : ∀ a, (∑ v ∈ F.seg (eF a), p v) * (∑ v ∈ G.seg (eG a), p v) &lt; 0) :
+    2 * (∑ a, |(∑ v ∈ F.seg (eF a), p v) * (∑ v ∈ G.seg (eG a), p v)|) ≤
+      ((A.segments.primalSeminorm p) ^ 2 - ∑ i, (∑ v ∈ F.seg i, p v) ^ 2) +
+      ((A.segments.primalSeminorm p) ^ 2 - ∑ j, (∑ v ∈ G.seg j, p v) ^ 2) := by
+…</pre></li><li id=L377><b>def</b> <code>OAI.DiamondDistortion.Ancestry.boundaryCoeff</code> <small>line 377</small><div class="doc"><p>The (possibly zero) head sum carried by the unique segment at a gate.</p></div><pre>def boundaryCoeff (F : A.segments.Family) (p : ι →₀ ℝ) (g : ι) : ℝ :=
+…</pre></li><li id=L380><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.boundaryCoeff_eq</code> <small>line 380</small></li><li id=L391><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.boundaryCoeff_nonzero_mem</code> <small>line 391</small></li><li id=L400><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.opposite_crossing_le</code> <small>line 400</small><div class="doc"><p>Exact two-family opposite-crossing estimate, written without a sign-filter
+so that it can be averaged over independent finite endpoint laws.</p></div><pre>lemma opposite_crossing_le {κ : Type*} [Fintype κ]
+    {H : Set ι} (hH : A.Ancestral H) (p : ι →₀ ℝ)
+    (hp : ∀ v, v ∉ H → p v = 0) (F G : A.segments.Family)
+    (gate : κ ↪ ι) (hgate : ∀ a, A.Gate H (gate a)) :
+    (∑ a, (|A.boundaryCoeff F p (gate a)| * |A.boundaryCoeff G p (gate a)| -
+      A.boundaryCoeff F p (gate a) * A.boundaryCoeff G p (gate a))) ≤
+      ((A.segments.primalSeminorm p) ^ 2 - ∑ i, (∑ v ∈ F.seg i, p v) ^ 2) +
+      ((A.segments.primalSeminorm p) ^ 2 - ∑ j, (∑ v ∈ G.seg j, p v) ^ 2) := by
+…</pre></li><li id=L464><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.gate_coefficient_energy</code> <small>line 464</small></li><li id=L501><b>def</b> <code>OAI.DiamondDistortion.Ancestry.tailAt</code> <small>line 501</small><div class="doc"><p>The tail from the unique segment through g, or the empty segment if absent.</p></div><pre>def tailAt (F : A.segments.Family) (H : Finset ι) (g : ι) : Finset ι :=
+…</pre></li><li id=L504><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailAt_eq</code> <small>line 504</small></li><li id=L515><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailAt_mem</code> <small>line 515</small></li><li id=L523><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailAt_outside</code> <small>line 523</small></li><li id=L526><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailAt_allowed</code> <small>line 526</small></li><li id=L539><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailAt_cone</code> <small>line 539</small></li><li id=L548><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailAt_pairwise</code> <small>line 548</small></li><li id=L557><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.gate_on_nonzero_segment</code> <small>line 557</small></li><li id=L576><b>def</b> <code>OAI.DiamondDistortion.Ancestry.gateSet</code> <small>line 576</small><div class="doc"><p>The represented finite set of all gates of H in K.</p></div><pre>def gateSet (H K : Finset ι) : Finset ι := K.filter (A.Gate (H : Set ι))</pre></li><li id=L578><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.mem_gateSet</code> <small>line 578</small></li><li id=L583><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.replaced_tail_eq</code> <small>line 583</small><div class="doc"><p>Replacement coefficients have no wholly exterior contribution. Their entire
+tail is the sum of their crossing tails at the finitely represented gates.</p></div><pre>lemma replaced_tail_eq {H K : Finset ι} (hH : A.Ancestral (H : Set ι))
+    (hK : A.Ancestral (K : Set ι)) (F : A.segments.Family)
+    (hFK : ∀ i, F.seg i ⊆ K) (p : ι →₀ ℝ) (hp : ∀ v, v ∉ H → p v = 0) :
+    A.segments.tailDual H (A.segments.combine F.seg (fun i =&gt; ∑ v ∈ F.seg i, p v)) =
+      A.segments.combine (fun g : A.gateSet H K =&gt; A.tailAt F H g.val)
+        (fun g : A.gateSet H K =&gt; A.boundaryCoeff F p g.val) := by
+…</pre></li><li id=L643><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.primal_filter_le</code> <small>line 643</small></li><li id=L666><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.primal_filter_tail_le</code> <small>line 666</small></li><li id=L691><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.localize_family_energy</code> <small>line 691</small><div class="doc"><p>Restricting any test family to a finite ancestral set gives one of the
+finitely many local families, with exactly the same energy for supported tests.</p></div><pre>lemma localize_family_energy {K : Finset ι} (hK : A.Ancestral (K : Set ι))
+    (F : A.segments.Family) (p : ι →₀ ℝ) (hp : ∀ v, v ∉ K → p v = 0) :
+    ∃ G : A.segments.LocalFamily K,
+      (∑ i, (∑ v ∈ F.seg i, p v) ^ 2) =
+        ∑ S : A.segments.LocalIndex G, (∑ v ∈ S.val, p v) ^ 2 := by
+…</pre></li><li id=L760><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.primal_le_of_local_energies</code> <small>line 760</small></li><li id=L779><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.finite_atomic_representation</code> <small>line 779</small><div class="doc"><p>Finite atomic-ball formula: exact inherited dual restrictions, derived by
+finite-dimensional separation rather than assumed as model data.</p></div><pre>lemma finite_atomic_representation {K : Finset ι} (hK : A.Ancestral (K : Set ι))
+    (x : A.segments.Dual) (hx : ‖x‖ ≤ 1) :
+    ∃ c ∈ A.segments.coefficientBall K 1,
+      A.segments.totalMap K c = fun v : K =&gt; x (A.segments.unitVector v.val) := by
+…</pre></li><li id=L825><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.finite_atomic_representation_radius</code> <small>line 825</small></li><li id=L851><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.headPrimal_norm_le</code> <small>line 851</small></li><li id=L860><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailPrimal_norm_le</code> <small>line 860</small></li><li id=L872><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.headDual_norm_le</code> <small>line 872</small></li><li id=L880><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.tailDual_norm_le</code> <small>line 880</small></li><li id=L888><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.replacement_error_le</code> <small>line 888</small></li><li id=L899><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.replacement_error_gate</code> <small>line 899</small></li><li id=L908><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.replacement_cross</code> <small>line 908</small></li><li id=L919><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.replacement_mass_norm</code> <small>line 919</small></li><li id=L949><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.pooled_tail_test</code> <small>line 949</small><div class="doc"><p>The finite pooled coefficient/slack bound, before taking the supremum over
+head tests. No lens or convexity modulus is postulated for the space.</p></div><pre>lemma pooled_tail_test {Ω : Type*} [Fintype Ω] {H K : Finset ι}
+    (hH : A.Ancestral (H : Set ι)) (hK : A.Ancestral (K : Set ι))
+    {R : ℝ} {x y : A.segments.Dual} (law : A.segments.BipolarLaw Ω R x y)
+    (hFK : ∀ ω i,(law.atom ω).family.seg i ⊆ K)
+    (hx : ∀ v,v ∉ H → x (A.segments.unitVector v)=0)
+    (p : ι →₀ ℝ) (hp : ∀ v,v ∉ H → p v=0) (hpn : A.segments.primalSeminorm p ≤ 1) :
+    ‖A.segments.tailDual H y‖ ≤
+      2*Real.sqrt (R^2 - (x (A.segments.finiteEmbedding p))^2) := by
+…</pre></li><li id=L1073><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.finite_lens_test</code> <small>line 1073</small><div class="doc"><p>Pair the two exact finite atomic representations, retaining their common
+ancestral support and their actual endpoints.</p></div><pre>lemma finite_lens_test {H K : Finset ι}
+    (hH : A.Ancestral (H : Set ι)) (hK : A.Ancestral (K : Set ι)) (hHK : H ⊆ K)
+    {R : ℝ} (hR : 0 &lt; R) {x y : A.segments.Dual}
+    (hx : ∀ v, v ∉ H → x (A.segments.unitVector v) = 0)
+    (hplus : ‖x+y‖ ≤ R) (hminus : ‖x-y‖ ≤ R)
+    (p : ι →₀ ℝ) (hp : ∀ v, v ∉ H → p v = 0) (hpn : A.segments.primalSeminorm p ≤ 1) :
+    ‖A.segments.tailDual H (A.segments.headDual K y)‖ ≤
+      2*Real.sqrt (R^2 - (x (A.segments.finiteEmbedding p))^2) := by
+…</pre></li><li id=L1101><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.intrinsic_tail_test</code> <small>line 1101</small><div class="doc"><p>Finite restrictions suffice for the full dual estimate: no shrinking or
+reflexivity hypothesis is needed for this intrinsic finite-head bound.</p></div><pre>lemma intrinsic_tail_test
+    (hfin : ∀ S : Finset ι, ∃ K : Finset ι, S ⊆ K ∧ A.Ancestral (K : Set ι))
+    {H : Finset ι} (hH : A.Ancestral (H : Set ι)) {R : ℝ} (hR : 0 &lt; R)
+    {x y : A.segments.Dual} (hx : ∀ v, v ∉ H → x (A.segments.unitVector v) = 0)
+    (hplus : ‖x+y‖ ≤ R) (hminus : ‖x-y‖ ≤ R)
+    (p : ι →₀ ℝ) (hp : ∀ v, v ∉ H → p v = 0) (hpn : A.segments.primalSeminorm p ≤ 1) :
+    ‖A.segments.tailDual H y‖ ≤
+      2*Real.sqrt (R^2 - (x (A.segments.finiteEmbedding p))^2) := by
+…</pre></li><li id=L1126><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.norm_center_le</code> <small>line 1126</small></li><li id=L1134><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.intrinsic_tail_sq</code> <small>line 1134</small></li><li id=L1185><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.finite_heads_of_predecessors</code> <small>line 1185</small></li><li id=L1201><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.coordinate_predual_approximation</code> <small>line 1201</small></li><li id=L1220><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.finite_head_pair</code> <small>line 1220</small><div class="doc"><p>Finite-dimensional compactness compares distinct members of any bounded
+sequence; no maximum over the infinitely many children is asserted.</p></div><pre>lemma finite_head_pair {H : Finset ι} (hH : A.Ancestral (H : Set ι))
+    (z : ℕ → A.segments.Dual) {R η : ℝ} (hz : ∀ i, ‖z i‖ ≤ R) (hη : 0 &lt; η) :
+    ∃ i j : ℕ, i ≠ j ∧ ‖A.segments.headDual H ((1/2:ℝ) • (z i-z j))‖ &lt; η := by
+…</pre></li><li id=L1249><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.average_lens</code> <small>line 1249</small></li><li id=L1266><b>lemma</b> <code>OAI.DiamondDistortion.Ancestry.separated_lens</code> <small>line 1266</small><div class="doc"><p>Exact separated-lens consequence of the intrinsic estimate. Its only
+approximation input is explicitly proved for each target model below.</p></div><pre>lemma separated_lens
+    (hfin : ∀ S : Finset ι, ∃ K : Finset ι, S ⊆ K ∧ A.Ancestral (K : Set ι))
+    {x : A.segments.Dual}
+    (happrox : ∀ η &gt; 0, ∃ H : Finset ι, A.Ancestral (H : Set ι) ∧ ‖A.segments.tailDual H x‖ &lt; η)
+    (z : ℕ → A.segments.Dual) {R ε : ℝ} (hR : 0 ≤ R) (hε : 0 &lt; ε)
+    (hplus : ∀ i, ‖x+z i‖ ≤ R) (hminus : ∀ i, ‖x-z i‖ ≤ R)
+    (hsep : ∀ i j, i ≠ j → ε ≤ ‖z i-z j‖) :
+    ‖x‖^2+ε^2/16 ≤ R^2 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

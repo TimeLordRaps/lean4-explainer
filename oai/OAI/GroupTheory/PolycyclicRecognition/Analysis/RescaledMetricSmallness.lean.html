@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/RescaledMetricSmallness.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/RescaledMetricSmallness.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>RescaledMetricSmallness.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>RescaledMetricSmallness.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/RescaledMetricSmallness.lean#L1">source</a></p><div class="doc"><h3>Vanishing normalized coordinates give sublinear metric displacement</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.PolycyclicRecognition.repr_shift_exponentialRescaleBasis</code> <small>line 19</small><div class="doc"><p>Shifting the logarithmic scale changes each coordinate by one fixed
+factor. This identity does not require the costs to be positive.</p></div><pre>theorem repr_shift_exponentialRescaleBasis
+    (b : Basis J ℝ L) (cost : J → ℝ) (r a : ℝ) (x : L) (j : J) :
+    (exponentialRescaleBasis b cost (r + a)).repr x j =
+      Real.exp (-a * cost j) * (exponentialRescaleBasis b cost r).repr x j := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a></p></li><li id=L30><b>theorem</b> <code>OAI.PolycyclicRecognition.norm_shift_exponentialRescaleBasis_le</code> <small>line 30</small><div class="doc"><p>All coordinates obey one common bound for a fixed shift.</p></div><pre>theorem norm_shift_exponentialRescaleBasis_le [Fintype J]
+    (b : Basis J ℝ L) (cost : J → ℝ) (r a : ℝ) (x : L) :
+    ‖(exponentialRescaleBasis b cost (r + a)).equivFun x‖ ≤
+      (∑ j, Real.exp (-a * cost j)) * ‖(exponentialRescaleBasis b cost r).equivFun x‖ := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a></p></li><li id=L49><b>theorem</b> <code>OAI.PolycyclicRecognition.metric_sublinear_of_rescaled_coordinates_tendsto_zero</code> <small>line 49</small><div class="doc"><p>A unit-chart metric estimate at every large scale implies that every
+sequence with normalized coordinates tending to zero has sublinear length.
+The proof uses a fixed smaller scale before passing to the limit.</p></div><pre>theorem metric_sublinear_of_rescaled_coordinates_tendsto_zero
+    {G ι : Type*} [Group G] [PseudoMetricSpace G] [Fintype J]
+    (b : Basis J ℝ L) (cost : J → ℝ) (Exp : L → G)
+    {C : ℝ} (_hC : 0 ≤ C)
+    (hmetric : ∀ s : ℝ, 0 ≤ s → ∀ x : L,
+      ‖(exponentialRescaleBasis b cost s).equivFun x‖ ≤ 1 →
+        dist 1 (Exp x) ≤ C * Real.exp s)
+    {l : Filter ι} (scale : ι → ℝ) (hscale : Tendsto scale l atTop)
+    (x : ι → L)
+    (hsmall : Tendsto (fun i =&gt; (exponentialRescaleBasis b cost (scale i)).equivFun (x i))
+      l (𝓝 0)) :
+    Tendsto (fun i =&gt; dist 1 (Exp (x i)) / Real.exp (scale i)) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/ThetaProducts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/ThetaProducts.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>ThetaProducts.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>ThetaProducts.lean</span></code></h1><p class="muted">40 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/ThetaProducts.lean#L1">source</a></p><div class="doc"><h3>Analytic theta products, zeros, and marked products</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.Nagata.W21.thetaPositive</code> <small>line 24</small></li><li id=L28><b>def</b> <code>OAI.Nagata.W21.thetaProduct</code> <small>line 28</small><div class="doc"><p>The negative-index product is written with index <code>n+1</code>, starting at zero.</p></div><pre>noncomputable def thetaProduct (τ z : ℂ) : ℂ :=
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_multipliable</code> <small>line 32</small><div class="doc"><p>Convergence of the positive half, valid at its zeros as well.</p></div><pre>theorem thetaPositive_multipliable {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (z : ℂ) :
+    Multipliable (fun n : ℕ ↦ 1 - τ ^ n * z) := by
+…</pre></li><li id=L39><b>theorem</b> <code>OAI.Nagata.W21.thetaNegative_multipliable</code> <small>line 39</small><div class="doc"><p>Convergence of the second product as indexed in the manuscript.</p></div><pre>theorem thetaNegative_multipliable {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (z : ℂ) :
+    Multipliable (fun n : ℕ ↦ 1 - τ ^ (n + 1) / z) := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_eq_source</code> <small>line 45</small><div class="doc"><p>The genuine product definition agrees with the two products in the source.</p></div><pre>theorem thetaProduct_eq_source (τ z : ℂ) :
+    thetaProduct τ z = (∏&#x27; n : ℕ, (1 - τ ^ n * z)) *
+      ∏&#x27; n : ℕ, (1 - τ ^ (n + 1) / z) := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L51><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_shift</code> <small>line 51</small><div class="doc"><p>Removing the first factor from a convergent product, without dividing by it.</p></div><pre>theorem thetaPositive_shift {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (z : ℂ) :
+    thetaPositive τ z = (1 - z) * thetaPositive τ (τ * z) := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L59><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_automorphy</code> <small>line 59</small><div class="doc"><p>Theta automorphy on <code>ℂ*</code>, proved from convergent products.</p></div><pre>theorem thetaProduct_automorphy {τ z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (hz : z ≠ 0) :
+    thetaProduct τ (τ * z) = -z⁻¹ * thetaProduct τ z := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L81><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_automorphy_real</code> <small>line 81</small><div class="doc"><p>The automorphy equation with the manuscript's real parameter hypotheses.</p></div><pre>theorem thetaProduct_automorphy_real {τ : ℝ} (hτ0 : 0 &lt; τ) (hτ1 : τ &lt; 1)
+    {z : ℂ} (hz : z ≠ 0) :
+    thetaProduct (τ : ℂ) ((τ : ℂ) * z) = -z⁻¹ * thetaProduct (τ : ℂ) z := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L91><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_scaled_automorphy</code> <small>line 91</small><div class="doc"><p>A theta factor with zero represented by <code>a</code> has multiplier <code>-a</code>.
+This is the covering-space equation used for <code>D(1,-a)</code> in the manuscript.</p></div><pre>theorem thetaProduct_scaled_automorphy {τ a z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (ha : a ≠ 0) (hz : z ≠ 0) :
+    thetaProduct τ ((τ * z) / a) = (-a) * z⁻¹ * thetaProduct τ (z / a) := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L98><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_ne_zero</code> <small>line 98</small><div class="doc"><p>Away from zeros of its factors the positive product is nonzero.</p></div><pre>theorem thetaPositive_ne_zero {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (z : ℂ)
+    (hz : ∀ n : ℕ, 1 - τ ^ n * z ≠ 0) : thetaPositive τ z ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L109><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_eq_zero_iff</code> <small>line 109</small><div class="doc"><p>No extra zeros are introduced by passage to the infinite positive product.</p></div><pre>theorem thetaPositive_eq_zero_iff {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (z : ℂ) :
+    thetaPositive τ z = 0 ↔ ∃ n : ℕ, τ ^ n * z = 1 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L126><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_eq_zero_iff_factors</code> <small>line 126</small><div class="doc"><p>Exact factor-zero description of the full product, before identifying the
+index set with the integer powers of a nonzero parameter.</p></div><pre>theorem thetaProduct_eq_zero_iff_factors {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (z : ℂ) :
+    thetaProduct τ z = 0 ↔
+      (∃ n : ℕ, τ ^ n * z = 1) ∨ (∃ n : ℕ, τ ^ n * (τ * z⁻¹) = 1) := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L145><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_hasProdUniformlyOn_comp</code> <small>line 145</small><div class="doc"><p>Compact uniform convergence after any continuous bounded substitution.</p></div><pre>theorem thetaPositive_hasProdUniformlyOn_comp {α : Type*} [TopologicalSpace α]
+    {τ : ℂ} (hτ : ‖τ‖ &lt; 1) {K : Set α} (hK : IsCompact K)
+    (g : α → ℂ) (hg : ContinuousOn g K) (R : ℝ)
+    (hR : ∀ x ∈ K, ‖g x‖ ≤ R) :
+    HasProdUniformlyOn (fun (n : ℕ) x ↦ 1 - τ ^ n * g x)
+      (fun x ↦ thetaPositive τ (g x)) K := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L164><b>theorem</b> <code>OAI.Nagata.W21.thetaNegative_hasProdUniformlyOn</code> <small>line 164</small><div class="doc"><p>The second source product converges uniformly on every compact subset of
+<code>ℂ*</code>; compactness supplies a bound for inversion.</p></div><pre>theorem thetaNegative_hasProdUniformlyOn {τ : ℂ} (hτ : ‖τ‖ &lt; 1)
+    {K : Set ℂ} (hK : IsCompact K) (hz : ∀ z ∈ K, z ≠ 0) :
+    HasProdUniformlyOn (fun (n : ℕ) (z : ℂ) ↦ 1 - τ ^ (n + 1) / z)
+      (fun z ↦ thetaPositive τ (τ * z⁻¹)) K := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L176><b>theorem</b> <code>OAI.Nagata.W21.thetaNegative_hasProdLocallyUniformlyOn</code> <small>line 176</small><div class="doc"><p>The negative half converges locally uniformly on the punctured plane.</p></div><pre>theorem thetaNegative_hasProdLocallyUniformlyOn {τ : ℂ} (hτ : ‖τ‖ &lt; 1) :
+    HasProdLocallyUniformlyOn (fun (n : ℕ) (z : ℂ) ↦ 1 - τ ^ (n + 1) / z)
+      (fun z ↦ thetaPositive τ (τ * z⁻¹)) {z : ℂ | z ≠ 0} := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L184><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_hasProdLocallyUniformlyOn</code> <small>line 184</small><div class="doc"><p>The positive product converges locally uniformly on the whole complex plane.</p></div><pre>theorem thetaPositive_hasProdLocallyUniformlyOn {τ : ℂ} (hτ : ‖τ‖ &lt; 1) :
+    HasProdLocallyUniformlyOn (fun (n : ℕ) (z : ℂ) ↦ 1 - τ ^ n * z)
+      (thetaPositive τ) Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L194><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_differentiable</code> <small>line 194</small><div class="doc"><p>The positive product is entire, by local uniform convergence of polynomials.</p></div><pre>theorem thetaPositive_differentiable {τ : ℂ} (hτ : ‖τ‖ &lt; 1) :
+    Differentiable ℂ (thetaPositive τ) := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L206><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_differentiableAt</code> <small>line 206</small><div class="doc"><p>The source theta product is holomorphic on the punctured complex plane.</p></div><pre>theorem thetaProduct_differentiableAt {τ z : ℂ} (hτ : ‖τ‖ &lt; 1) (hz : z ≠ 0) :
+    DifferentiableAt ℂ (thetaProduct τ) z := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L212><b>theorem</b> <code>OAI.Nagata.W21.thetaPositive_parameter_ne_zero</code> <small>line 212</small></li><li id=L225><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_one</code> <small>line 225</small><div class="doc"><p>The theta product vanishes at the representative <code>1</code>.</p></div><pre>theorem thetaProduct_one {τ : ℂ} (hτ : ‖τ‖ &lt; 1) : thetaProduct τ 1 = 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L230><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_hasDerivAt_one</code> <small>line 230</small><div class="doc"><p>The derivative at <code>1</code> comes from its single zero factor.</p></div><pre>theorem thetaProduct_hasDerivAt_one {τ : ℂ} (hτ : ‖τ‖ &lt; 1) :
+    HasDerivAt (thetaProduct τ) (-(thetaPositive τ τ) ^ 2) 1 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a>, <a href="ThetaProducts.lean.html#L24">OAI.Nagata.W21.thetaPositive</a></p></li><li id=L248><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_deriv_one_ne_zero</code> <small>line 248</small><div class="doc"><p>Nonzero derivative certifies that the theta zero at <code>1</code> is simple.</p></div><pre>theorem thetaProduct_deriv_one_ne_zero {τ : ℂ} (hτ : ‖τ‖ &lt; 1) :
+    deriv (thetaProduct τ) 1 ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L262><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_eq_zero_iff_nat_powers</code> <small>line 262</small><div class="doc"><p>Separate the inverse natural powers from the strictly positive powers.</p></div><pre>theorem thetaProduct_eq_zero_iff_nat_powers {τ z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (hz : z ≠ 0) :
+    thetaProduct τ z = 0 ↔
+      (∃ n : ℕ, z = (τ ^ n)⁻¹) ∨ (∃ n : ℕ, z = τ ^ (n + 1)) := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L281><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_eq_zero_iff_zpow</code> <small>line 281</small><div class="doc"><p>The source theta product has precisely the zeros <code>τ^ℤ</code> on <code>ℂ*</code>.</p></div><pre>theorem thetaProduct_eq_zero_iff_zpow {τ z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (hz : z ≠ 0) :
+    thetaProduct τ z = 0 ↔ ∃ k : ℤ, z = τ ^ k := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L299><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_scaled_eq_zero_iff</code> <small>line 299</small><div class="doc"><p>The zeros of the theta factor <code>Θ(z/a)</code> are exactly the lifts of <code>a</code>
+in the multiplicative quotient. The quotient itself is not assumed here.</p></div><pre>theorem thetaProduct_scaled_eq_zero_iff {τ a z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (ha : a ≠ 0) (hz : z ≠ 0) :
+    thetaProduct τ (z / a) = 0 ↔ ∃ k : ℤ, z = a * τ ^ k := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L320><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_zpow_eq_zero</code> <small>line 320</small></li><li id=L325><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_deriv_mul_at_zero</code> <small>line 325</small><div class="doc"><p>Differentiate the automorphy equation at a zero.</p></div><pre>theorem thetaProduct_deriv_mul_at_zero {τ z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (hz : z ≠ 0) (hzero : thetaProduct τ z = 0) :
+    deriv (thetaProduct τ) (τ * z) * τ = -z⁻¹ * deriv (thetaProduct τ) z := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L341><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_deriv_mul_ne_zero_iff</code> <small>line 341</small><div class="doc"><p>At zeros, multiplying the argument by the nonzero period preserves a
+nonzero first derivative.</p></div><pre>theorem thetaProduct_deriv_mul_ne_zero_iff {τ z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (hz : z ≠ 0) (hzero : thetaProduct τ z = 0) :
+    deriv (thetaProduct τ) (τ * z) ≠ 0 ↔ deriv (thetaProduct τ) z ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L356><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_deriv_pow_ne_zero</code> <small>line 356</small><div class="doc"><p>The derivative is nonzero at every nonnegative power.</p></div><pre>theorem thetaProduct_deriv_pow_ne_zero {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0)
+    (n : ℕ) : deriv (thetaProduct τ) (τ ^ n) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L367><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_deriv_inv_pow_ne_zero</code> <small>line 367</small><div class="doc"><p>The derivative is nonzero at every inverse natural power.</p></div><pre>theorem thetaProduct_deriv_inv_pow_ne_zero {τ : ℂ} (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0)
+    (n : ℕ) : deriv (thetaProduct τ) ((τ ^ n)⁻¹) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L383><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_zero_has_nonzero_deriv</code> <small>line 383</small><div class="doc"><p>Every theta zero on <code>ℂ*</code> has nonzero first derivative.</p></div><pre>theorem thetaProduct_zero_has_nonzero_deriv {τ z : ℂ} (hτ : ‖τ‖ &lt; 1)
+    (hτ0 : τ ≠ 0) (hz : z ≠ 0) (hzero : thetaProduct τ z = 0) :
+    deriv (thetaProduct τ) z ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L403><b>def</b> <code>OAI.Nagata.W21.markedThetaProduct</code> <small>line 403</small></li><li id=L406><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_scaled_differentiableAt</code> <small>line 406</small></li><li id=L411><b>theorem</b> <code>OAI.Nagata.W21.markedThetaProduct_differentiableAt</code> <small>line 411</small></li><li id=L418><b>theorem</b> <code>OAI.Nagata.W21.markedThetaProduct_analyticOnNhd</code> <small>line 418</small></li><li id=L425><b>theorem</b> <code>OAI.Nagata.W21.markedThetaProduct_eq_zero_iff</code> <small>line 425</small></li><li id=L434><b>theorem</b> <code>OAI.Nagata.W21.thetaProduct_scaled_zero_has_nonzero_deriv</code> <small>line 434</small><div class="doc"><p>The actual rescaling preserves simplicity of every theta zero.</p></div><pre>theorem thetaProduct_scaled_zero_has_nonzero_deriv {τ a z : ℂ}
+    (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0) (ha : a ≠ 0) (hz : z ≠ 0)
+    (hf : thetaProduct τ (z / a) = 0) :
+    deriv (fun w ↦ thetaProduct τ (w / a)) z ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L447><b>theorem</b> <code>OAI.Nagata.W21.finiteProduct_zero_has_nonzero_deriv</code> <small>line 447</small><div class="doc"><p>An elementary finite-product simple-zero theorem used below.</p></div><pre>theorem finiteProduct_zero_has_nonzero_deriv {ι : Type*} [Fintype ι]
+    (f : ι → ℂ → ℂ) (z : ℂ) (hf : ∀ i, DifferentiableAt ℂ (f i) z)
+    (i : ι) (hi : f i z = 0) (hdi : deriv (f i) z ≠ 0)
+    (hother : ∀ j, j ≠ i → f j z ≠ 0) :
+    deriv (fun w ↦ ∏ j, f j w) z ≠ 0 := by
+…</pre></li><li id=L466><b>theorem</b> <code>OAI.Nagata.W21.markedThetaFactors_unique_zero</code> <small>line 466</small><div class="doc"><p>Distinct marked period orbits imply that no two shifted theta factors vanish
+at the same point.</p></div><pre>theorem markedThetaFactors_unique_zero {ι : Type*} {τ : ℂ} {a : ι → ℂ}
+    (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0) (ha : ∀ i, a i ≠ 0)
+    (hdisjoint : Pairwise (fun i j ↦ ∀ k : ℤ, a i ≠ a j * τ ^ k))
+    {z : ℂ} (hz : z ≠ 0) {i j : ι} (hij : i ≠ j)
+    (hi : thetaProduct τ (z / a i) = 0) : thetaProduct τ (z / a j) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L28">OAI.Nagata.W21.thetaProduct</a></p></li><li id=L480><b>theorem</b> <code>OAI.Nagata.W21.markedThetaProduct_zero_has_nonzero_deriv</code> <small>line 480</small><div class="doc"><p>The marked product has simple zeros when the marks represent distinct
+points in the period quotient.</p></div><pre>theorem markedThetaProduct_zero_has_nonzero_deriv {ι : Type*} [Fintype ι]
+    {τ : ℂ} {a : ι → ℂ} (hτ : ‖τ‖ &lt; 1) (hτ0 : τ ≠ 0)
+    (ha : ∀ i, a i ≠ 0)
+    (hdisjoint : Pairwise (fun i j ↦ ∀ k : ℤ, a i ≠ a j * τ ^ k))
+    {z : ℂ} (hz : z ≠ 0) (hzero : markedThetaProduct τ a z = 0) :
+    deriv (markedThetaProduct τ a) z ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ThetaProducts.lean.html#L403">OAI.Nagata.W21.markedThetaProduct</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

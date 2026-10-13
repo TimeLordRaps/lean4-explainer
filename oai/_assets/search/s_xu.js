@@ -1,0 +1,1 @@
+window.l4shard("xu", [["OAI.KadisonSimilarity.RicardXuCompressionInput",8872,95],["OAI.KadisonSimilarity.RicardXuCreationInput",8872,40],["OAI.KadisonSimilarity.RicardXuWordDecompositionInput",8873,79],["OAI.KadisonSimilarity.ricardXuWordDecompositionInput",9212,148]]);

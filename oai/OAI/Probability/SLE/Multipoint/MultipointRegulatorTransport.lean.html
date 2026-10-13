@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Multipoint/MultipointRegulatorTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Multipoint/MultipointRegulatorTransport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Multipoint</a> / <span>MultipointRegulatorTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Multipoint</a>/<span>MultipointRegulatorTransport.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Multipoint/MultipointRegulatorTransport.lean#L1">source</a></p><div class="doc"><p>Deterministic transport of the two-ended regulator to physical time.
+The single-point cost follows by change of variables along the actual
+radius clock, and the pair cost follows from geometric interaction decay.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.SLEExactGauge.Multipoint.regulator_clock_integral_le</code> <small>line 17</small><div class="doc"><p>Change of variables for a regulator on any subinterval of its clock.
+Only ordinary calculus is used here; no stochastic estimate is assumed.</p></div><pre>theorem regulator_clock_integral_le
+    {β U s T : ℝ} (hβ : 0 &lt; β) (hU : 0 ≤ U) (hsT : s ≤ T)
+    (u speed : ℝ → ℝ) (hu : ContinuousOn u (Icc s T))
+    (hspeed : ContinuousOn speed (Icc s T))
+    (hdu : ∀ t ∈ Ioo s T, HasDerivWithinAt u (speed t) (Ioi t) t)
+    (hu0 : 0 ≤ u s) (huT : u T ≤ U) (hmono : u s ≤ u T) :
+    (∫ t in s..T, regulator β U (u t) * speed t) ≤ 2 / β := by
+…</pre><p class="refs">Mentions: <a href="MultipointRegularizer.lean.html#L75">OAI.SLEExactGauge.Multipoint.regulator</a></p></li><li id=L40><b>def</b> <code>OAI.SLEExactGauge.Multipoint.activeRadiusClock</code> <small>line 40</small><div class="doc"><p>The radius clock measured from activation, in capacity-two time.
+The clock derivative is the square of the Poisson rate.</p></div><pre>def activeRadiusClock (G : ℝ≥0 → ℂ → ℂ) (z : ℂ) (σ : ℝ≥0) (t : ℝ) : ℝ :=
+…</pre></li><li id=L44><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.activeRadiusClock_start</code> <small>line 44</small></li><li id=L52><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.activeRadiusClock_hasDerivWithinAt</code> <small>line 52</small></li><li id=L64><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.activeRadiusClock_continuousOn</code> <small>line 64</small></li><li id=L72><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.activeRadiusClock_nonneg</code> <small>line 72</small></li><li id=L88><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.physical_radius_active_clock</code> <small>line 88</small><div class="doc"><p>The physical conformal radius has the same ratio as the half-plane
+radius. In particular, no derivative bound on <code>J</code> is needed.</p></div><pre>theorem IsCapacityTwoWitness.physical_radius_active_clock
+    {U : ℝ≥0 → ℝ} {γ : ℝ≥0 → ℂ} {G F : ℝ≥0 → ℂ → ℂ}
+    (hw : IsCapacityTwoWitness U γ G F) (hU : Continuous U)
+    (J : ℂ → ℂ) (σ t : ℝ≥0) (z : ℂ)
+    (hσ : z ∈ survivingDomain γ σ) (ht : z ∈ survivingDomain γ t) :
+    physicalConformalRadius J G t z = physicalConformalRadius J G σ z *
+      Real.exp (-4 * Multipoint.activeRadiusClock G z σ t) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a>, <a href="MultipointPhysicalGeometry.lean.html#L15">OAI.SLEExactGauge.physicalConformalRadius</a>, <a href="MultipointRegulatorTransport.lean.html#L40">OAI.SLEExactGauge.Multipoint.activeRadiusClock</a></p></li><li id=L110><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.active_regulator_integral_le</code> <small>line 110</small><div class="doc"><p>One complete or partial active interval has regulator cost at most
+<code>2 / β</code>, independently of its target-clock length.</p></div><pre>theorem IsCapacityTwoWitness.active_regulator_integral_le
+    {U : ℝ≥0 → ℝ} {γ : ℝ≥0 → ℂ} {G F : ℝ≥0 → ℂ → ℂ}
+    (hw : IsCapacityTwoWitness U γ G F) (hU : Continuous U)
+    (σ T : ℝ≥0) (hσT : σ ≤ T) (z : ℂ) (hz : z ∈ survivingDomain γ T)
+    {β target : ℝ} (hβ : 0 &lt; β) (htarget : 0 ≤ target)
+    (hclock : Multipoint.activeRadiusClock G z σ T ≤ target) :
+    (∫ t in (σ : ℝ)..(T : ℝ),
+      Multipoint.regulator β target (Multipoint.activeRadiusClock G z σ t) *
+        chartPoissonRate U G t.toNNReal z ^ 2) ≤ 2 / β := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a>, <a href="MultipointRegulatorTransport.lean.html#L40">OAI.SLEExactGauge.Multipoint.activeRadiusClock</a>, <a href="MultipointRegularizer.lean.html#L75">OAI.SLEExactGauge.Multipoint.regulator</a>, <a href="../KernelConsistency.lean.html#L161">OAI.SLEExactGauge.chartPoissonRate</a></p></li><li id=L140><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.physical_pair_regulator_integral_le</code> <small>line 140</small><div class="doc"><p>The inverse pair regulator is paid by the actual physical-domain
+interaction budget. The terminal clock levels can be arbitrary.</p></div><pre>theorem IsCapacityTwoWitness.physical_pair_regulator_integral_le
+    {U : ℝ≥0 → ℝ} {γ : ℝ≥0 → ℂ} {G F : ℝ≥0 → ℂ → ℂ}
+    (hw : IsCapacityTwoWitness U γ G F) (hU : Continuous U)
+    (hgrowth : PublishedDiskUnivalentGrowth)
+    (J : ℂ → ℂ) (hJ : DifferentiableOn ℂ J upperHalfPlane)
+    (hJinj : InjOn J upperHalfPlane)
+    (s T : ℝ≥0) (hsT : s ≤ T) (z w : ℂ)
+    (hz : z ∈ survivingDomain γ T) (hw&#x27; : w ∈ survivingDomain γ T) (hne : z ≠ w)
+    (bz bw : ℝ) (hbz : bz ≤ dist (J z) (J w)) (hbw : bw ≤ dist (J z) (J w))
+    {β M : ℝ} (hβ : 0 ≤ β) (hM : 0 ≤ M) (hdecay : 2 * (M * β) &lt; 2)
+    (Uz Uw : ℝ) (u v : ℝ → ℝ)
+    (hu : ContinuousOn u (Icc (s : ℝ) (T : ℝ)))
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="MultipointGeometry.lean.html#L14">OAI.SLEExactGauge.PublishedDiskUnivalentGrowth</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a></p></li><li id=L186><b>theorem</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.actual_pair_regulator_integral_le</code> <small>line 186</small><div class="doc"><p>The pair discount on a joint active interval, expressed entirely in
+the actual radius clocks measured from the individual activation times.</p></div><pre>theorem IsCapacityTwoWitness.actual_pair_regulator_integral_le
+    {U : ℝ≥0 → ℝ} {γ : ℝ≥0 → ℂ} {G F : ℝ≥0 → ℂ → ℂ}
+    (hw : IsCapacityTwoWitness U γ G F) (hU : Continuous U)
+    (hgrowth : PublishedDiskUnivalentGrowth)
+    (J : ℂ → ℂ) (hJ : DifferentiableOn ℂ J upperHalfPlane)
+    (hJinj : InjOn J upperHalfPlane)
+    (σz σw s T : ℝ≥0) (hσz : σz ≤ s) (hσw : σw ≤ s) (hsT : s ≤ T)
+    (z w : ℂ) (hz : z ∈ survivingDomain γ T) (hw&#x27; : w ∈ survivingDomain γ T)
+    (hne : z ≠ w)
+    (hbz : physicalConformalRadius J G σz z ≤ dist (J z) (J w))
+    (hbw : physicalConformalRadius J G σw w ≤ dist (J z) (J w))
+    {β M : ℝ} (hβ : 0 ≤ β) (hM : 0 ≤ M) (hdecay : 2 * (M * β) &lt; 2)
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="MultipointGeometry.lean.html#L14">OAI.SLEExactGauge.PublishedDiskUnivalentGrowth</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a>, <a href="MultipointPhysicalGeometry.lean.html#L15">OAI.SLEExactGauge.physicalConformalRadius</a></p></li><li id=L248><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.regulator_scale_clock</code> <small>line 248</small><div class="doc"><p>The regulator is unchanged when moving from the capacity-two clock
+<code>u</code> to the manuscript clock <code>κ * u</code>, provided its decay rate is scaled
+by the inverse factor.</p></div><pre>lemma regulator_scale_clock {κ : ℝ} (hκ : 0 ≤ κ) (β U u : ℝ) :
+    regulator (κ * β) U u = regulator β (κ * U) (κ * u) := by
+…</pre><p class="refs">Mentions: <a href="MultipointRegularizer.lean.html#L75">OAI.SLEExactGauge.Multipoint.regulator</a></p></li><li id=L255><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.source_radius_clock_scale</code> <small>line 255</small></li><li id=L261><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.source_pair_exponent_scale</code> <small>line 261</small></li><li id=L266><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.source_pair_exponent_admissible</code> <small>line 266</small></li><li id=L271><b>lemma</b> <code>OAI.SLEExactGauge.Multipoint.source_terminal_factor_scale</code> <small>line 271</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

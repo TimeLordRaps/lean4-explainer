@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/DynkinProductTails.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/DynkinProductTails.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>DynkinProductTails.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>DynkinProductTails.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/DynkinProductTails.lean#L1">source</a></p><div class="doc"><h3>Convergence of products with summable logarithmic increments</h3><p>Finite BCH gives a common bound on every tail product in terms of the
+sum of its logarithmic increments. The global exponential chart then
+gives convergence, without identifying its coordinate metric with a
+left invariant metric.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>def</b> <code>OAI.PolycyclicRecognition.exponentialPartialProduct</code> <small>line 29</small><div class="doc"><p>The ordered product of the first <code>m</code> exponential increments.</p></div><pre>def exponentialPartialProduct
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G)
+    (X : ℕ → GroupLieAlgebra (𝓘(ℝ, E)) G) (m : ℕ) : G :=
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.PolycyclicRecognition.exponentialPartialProduct_add</code> <small>line 35</small></li><li id=L46><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_tail_product_log_bound</code> <small>line 46</small><div class="doc"><p>Summability controls the logarithm of every finite tail product,
+uniformly in the number of tail factors.</p></div><pre>theorem exists_tail_product_log_bound
+    (dynkin : NilpotentDynkinExpansionInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    {c : ℕ} (hc : lowerCentralSeries ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)
+      (GroupLieAlgebra (𝓘(ℝ, E)) G) c = ⊥)
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {C : ℝ} (hC : 0 ≤ C) (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (X : ℕ → GroupLieAlgebra (𝓘(ℝ, E)) G) (d : ℕ → ℝ) (hd : Summable d)
+    (hX : ∀ n, ‖b.equivFun (X n)‖ ≤ d n) (n m : ℕ) :
+    ∃ z, exponentialPartialProduct Exp (fun k =&gt; X (n + k)) m = Exp z ∧
+      ‖b.equivFun z‖ ≤
+        (c : ℝ) * 2 ^ c * (1 + (Fintype.card J : ℝ) ^ 2 * C) ^ c *
+…</pre><p class="refs">Mentions: <a href="DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a>, <a href="DynkinProductTails.lean.html#L29">OAI.PolycyclicRecognition.exponentialPartialProduct</a></p></li><li id=L76><b>theorem</b> <code>OAI.PolycyclicRecognition.dynkin_tail_bound_tendsto_zero</code> <small>line 76</small><div class="doc"><p>The common bound for all finite tail products tends to zero.</p></div><pre>theorem dynkin_tail_bound_tendsto_zero
+    (A : ℝ) (c : ℕ) (d : ℕ → ℝ) :
+    Tendsto (fun n =&gt; A * (∑&#x27; k, d (n + k)) * (1 + ∑&#x27; k, d (n + k)) ^ c)
+      atTop (𝓝 0) := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.PolycyclicRecognition.exponentialPartialProduct_tendsto_of_summable</code> <small>line 87</small><div class="doc"><p>Actual ordered products with summable logarithmic increments converge
+in the global exponential chart. The proof uses the common finite-tail
+bound and compactness in coordinates, not a metric invariance assumption.</p></div><pre>theorem exponentialPartialProduct_tendsto_of_summable
+    (dynkin : NilpotentDynkinExpansionInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    (chart : GroupLieAlgebra (𝓘(ℝ, E)) G ≃ₜ G) (hchart : ∀ v, chart v = Exp v)
+    {c : ℕ} (hc : lowerCentralSeries ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)
+      (GroupLieAlgebra (𝓘(ℝ, E)) G) c = ⊥)
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {C : ℝ} (hC : 0 ≤ C) (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (X : ℕ → GroupLieAlgebra (𝓘(ℝ, E)) G) (d : ℕ → ℝ) (hd : Summable d)
+    (hX : ∀ n, ‖b.equivFun (X n)‖ ≤ d n) :
+    ∃ g : G, Tendsto (exponentialPartialProduct Exp X) atTop (𝓝 g) := by
+…</pre><p class="refs">Mentions: <a href="DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a>, <a href="DynkinProductTails.lean.html#L29">OAI.PolycyclicRecognition.exponentialPartialProduct</a></p></li><li id=L141><b>theorem</b> <code>OAI.PolycyclicRecognition.trajectory_tendsto_of_summable_log_increments</code> <small>line 141</small><div class="doc"><p>The same conclusion for an actual trajectory specified by its
+successive exponential increments.</p></div><pre>theorem trajectory_tendsto_of_summable_log_increments
+    (dynkin : NilpotentDynkinExpansionInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    (chart : GroupLieAlgebra (𝓘(ℝ, E)) G ≃ₜ G) (hchart : ∀ v, chart v = Exp v)
+    {c : ℕ} (hc : lowerCentralSeries ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)
+      (GroupLieAlgebra (𝓘(ℝ, E)) G) c = ⊥)
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {C : ℝ} (hC : 0 ≤ C) (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (X : ℕ → GroupLieAlgebra (𝓘(ℝ, E)) G) (d : ℕ → ℝ) (hd : Summable d)
+    (hX : ∀ n, ‖b.equivFun (X n)‖ ≤ d n)
+    (f : ℕ → G) (hstep : ∀ n, f (n + 1) = f n * Exp (X n)) :
+    ∃ g : G, Tendsto f atTop (𝓝 g) := by
+…</pre><p class="refs">Mentions: <a href="DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a></p></li><li id=L169><b>theorem</b> <code>OAI.PolycyclicRecognition.finite_exp_products_tendsto_one</code> <small>line 169</small><div class="doc"><p>Finite chains whose total logarithmic increment size tends to zero
+have endpoint product tending to the identity, even if their lengths grow.</p></div><pre>theorem finite_exp_products_tendsto_one
+    (dynkin : NilpotentDynkinExpansionInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    (hcontinuous : Continuous Exp)
+    {c : ℕ} (hc : lowerCentralSeries ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)
+      (GroupLieAlgebra (𝓘(ℝ, E)) G) c = ⊥)
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {C : ℝ} (hC : 0 ≤ C) (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (m : ℕ → ℕ) (X : (n : ℕ) → Fin (m n) → GroupLieAlgebra (𝓘(ℝ, E)) G)
+    (hsmall : Tendsto (fun n =&gt; ∑ i, ‖b.equivFun (X n i)‖) atTop (𝓝 0)) :
+    Tendsto (fun n =&gt; (List.ofFn (fun i =&gt; Exp (X n i))).prod) atTop (𝓝 (1 : G)) := by
+…</pre><p class="refs">Mentions: <a href="DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a></p></li><li id=L198><b>theorem</b> <code>OAI.PolycyclicRecognition.sum_norm_tendsto_zero_of_polynomial_count_exp_steps</code> <small>line 198</small><div class="doc"><p>Polynomially many exponentially small increments have vanishing total
+size. This is the endpoint estimate for the representative-independence
+paths in <code>boundary.tex</code>.</p></div><pre>theorem sum_norm_tendsto_zero_of_polynomial_count_exp_steps
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    (m : ℕ → ℕ) (X : (n : ℕ) → Fin (m n) → GroupLieAlgebra (𝓘(ℝ, E)) G)
+    (A K c : ℝ) (p q : ℕ) (hA : 0 ≤ A) (hc : 0 &lt; c)
+    (hcount : ∀ n, (m n : ℝ) ≤ K * (1 + (n : ℝ)) ^ q)
+    (hstep : ∀ n i, ‖b.equivFun (X n i)‖ ≤
+      A * (1 + (n : ℝ)) ^ p * Real.exp (-c * n)) :
+    Tendsto (fun n =&gt; ∑ i, ‖b.equivFun (X n i)‖) atTop (𝓝 0) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

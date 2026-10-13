@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/AsymptoticSplitting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/AsymptoticSplitting.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>AsymptoticSplitting.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>AsymptoticSplitting.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/AsymptoticSplitting.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.SmoothObstruction.EuclideanSplitting.segment_toEuclidean</code> <small>line 16</small></li><li id=L25><b>theorem</b> <code>OAI.SmoothObstruction.EuclideanSplitting.actual_interval_exterior</code> <small>line 25</small><div class="doc"><p>No product bounds are assumed: every interval follows from the actual
+coordinate derivative equations and the uniformly bounded finite gauges.</p></div><pre>theorem actual_interval_exterior
+    (A U V : ℕ → Matrix (Fin d) (Fin d) ℝ) (lam : Fin d → ℝ)
+    (S : Finset (Fin d)) (N : ℕ) {γ g K C : ℝ}
+    (hUV : ∀ t, U t * V t = 1) (hVU : ∀ t, V t * U t = 1)
+    (hA : ∀ t &lt; N, A t * U t = U (t+1) * rate lam 1)
+    (hg : 0 ≤ g) (hK : 0 ≤ K) (hC : 0 ≤ C)
+    (hfast : ∀ j ∈ S, γ + g ≤ lam j) (hslow : ∀ j ∉ S, lam j ≤ γ - g)
+    (hU : ∀ t ≤ N, ‖U t‖ ≤ Real.exp K) (hV : ∀ t ≤ N, ‖V t‖ ≤ Real.exp K)
+    (hpoly : ∀ A : EuclideanSpace ℝ (Fin d) →L[ℝ] EuclideanSpace ℝ (Fin d),
+      ‖exterior S.card A‖ ≤ C * (max 1 ‖A‖)^S.card)
+    (s l : ℕ) (hsl : s + l ≤ N) :
+    ‖exterior S.card (segment (fun t =&gt; Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ) (A t)) s l)‖ ≤
+…</pre><p class="refs">Mentions: <a href="Splitting.lean.html#L59">OAI.SmoothObstruction.EuclideanSplitting.rate</a></p></li><li id=L46><b>lemma</b> <code>OAI.SmoothObstruction.EuclideanSplitting.absorb_prefactor</code> <small>line 46</small></li><li id=L71><b>theorem</b> <code>OAI.SmoothObstruction.EuclideanSplitting.exists_uniform_interval_constant</code> <small>line 71</small><div class="doc"><p>One exponential constant works for every possible fast rank, including
+zero. Dimension dependent polynomial norms and gauge prefactors are derived,
+not added as assumptions about the derivative cocycle.</p></div><pre>theorem exists_uniform_interval_constant (d : ℕ) (D : ℝ) (hD : 0 ≤ D) :
+    ∃ C₁ : ℝ, 0 ≤ C₁ ∧ ∀ (A U V : ℕ → Matrix (Fin d) (Fin d) ℝ)
+      (lam : Fin d → ℝ) (S : Finset (Fin d)) (N : ℕ) (γ g K z : ℝ),
+      1 ≤ z → 0 ≤ g → 0 ≤ K → K ≤ D*z →
+      (∀ t, U t * V t = 1) → (∀ t, V t * U t = 1) →
+      (∀ t &lt; N, A t * U t = U (t+1) * rate lam 1) →
+      (∀ j ∈ S, γ+g ≤ lam j) → (∀ j ∉ S, lam j ≤ γ-g) →
+      (∀ t ≤ N, ‖U t‖ ≤ Real.exp K) → (∀ t ≤ N, ‖V t‖ ≤ Real.exp K) →
+      ∀ s l : ℕ, s+l ≤ N →
+        ‖exterior S.card (segment (fun t =&gt; Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ) (A t)) s l)‖ ≤
+…</pre><p class="refs">Mentions: <a href="Splitting.lean.html#L59">OAI.SmoothObstruction.EuclideanSplitting.rate</a></p></li><li id=L118><b>lemma</b> <code>OAI.SmoothObstruction.EuclideanSplitting.rate_sum_abs_le</code> <small>line 118</small></li><li id=L131><b>theorem</b> <code>OAI.SmoothObstruction.EuclideanSplitting.uniform_relative_gauged</code> <small>line 131</small><div class="doc"><p>Choice-independent relative stability on ALL actual gauged intervals
+at once. The only perturbation hypothesis is the genuine one-step derivative
+error; all subinterval exterior bounds are proved from the gauge equations.
+The same numerical envelope works for every fast rank and every witness.</p></div><pre>theorem uniform_relative_gauged (d : ℕ) (K₀ D : ℝ) (hD : 0 ≤ D) :
+    ∃ C C₁ : ℝ, 0 ≤ C ∧ 0 ≤ C₁ ∧
+      ∀ (A U V : ℕ → Matrix (Fin d) (Fin d) ℝ)
+        (T : ℕ → EuclideanSpace ℝ (Fin d) →L[ℝ] EuclideanSpace ℝ (Fin d))
+        (lam : Fin d → ℝ) (S : Finset (Fin d)) (m : ℕ)
+        (γ g K b n C₀ R C₃ ε : ℝ),
+        0 ≤ b → 0 ≤ n → 1 ≤ b*n → 0 ≤ C₀ → 0 ≤ R → 0 ≤ C₃ →
+        0 ≤ g → 0 ≤ K → K ≤ D*(b*n) → (m:ℝ) ≤ 2*n →
+        (∀ t, U t*V t=1) → (∀ t,V t*U t=1) →
+        (∀ t &lt; m,A t*U t=U (t+1)*rate lam 1) →
+        (∀ i,|lam i| ≤ R) →
+        (∀ j ∈ S, γ+g ≤ lam j) → (∀ j ∉ S, lam j ≤ γ-g) →
+…</pre><p class="refs">Mentions: <a href="Splitting.lean.html#L59">OAI.SmoothObstruction.EuclideanSplitting.rate</a></p></li><li id=L176><b>theorem</b> <code>OAI.SmoothObstruction.EuclideanSplitting.actual_uniform_relative</code> <small>line 176</small><div class="doc"><p>The uniform, all-rank, choice-independent relative error for derivatives
+of actual nonlinear orbit compositions. All interval bounds are derived from
+the genuine gauge equations, and the perturbations from the one-step C²
+bounds and the orbit tube. No long-iterate regularity bound is assumed.</p></div><pre>theorem actual_uniform_relative (d : ℕ) (K₀ Dg : ℝ) (hDg : 0 ≤ Dg) :
+    ∃ C C₁ : ℝ, 0 ≤ C ∧ 0 ≤ C₁ ∧
+      ∀ (f : ℕ → EuclideanSpace ℝ (Fin d) → EuclideanSpace ℝ (Fin d))
+        (x y : ℕ → EuclideanSpace ℝ (Fin d)) (s : ℕ → Set (EuclideanSpace ℝ (Fin d)))
+        (U V : ℕ → Matrix (Fin d) (Fin d) ℝ) (lam : Fin d → ℝ)
+        (S : Finset (Fin d)) (m : ℕ) (γ g K b n C₀ R D : ℝ),
+        0 ≤ b → 0 ≤ n → 1 ≤ b*n → 0 ≤ C₀ → 0 ≤ R → 0 ≤ D →
+        0 ≤ g → 0 ≤ K → K ≤ Dg*(b*n) → (m:ℝ) ≤ 2*n →
+        (∀ t, U t*V t=1) → (∀ t,V t*U t=1) →
+        (∀ t &lt; m, (Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ)).symm
+…</pre></li><li id=L241><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.iterate_localMap_germ</code> <small>line 241</small><div class="doc"><p>The nonautonomous chart composition has exactly the same germ as the
+actual long iterate in the two endpoint charts. Intermediate chart codes
+therefore never have to be encoded in the partition or switch labels.</p></div><pre>theorem iterate_localMap_germ (S : Diffeomorph I I M M ∞) (a : ℕ → M) (x : M)
+    (N : ℕ) (hx : ∀ t≤N,(S^[t]) x∈(extChartAt I (a t)).source)
+    (hint : (extChartAt I (a 0)) x∈interior (range I)) :
+    ShortDerivative.iterate (fun t =&gt; localMap I S (a t) (a (t+1))) N =ᶠ[𝓝 ((extChartAt I (a 0)) x)]
+      extChartAt I (a N) ∘ S^[N] ∘ (extChartAt I (a 0)).symm := by
+…</pre><p class="refs">Mentions: <a href="ShortDerivative.lean.html#L226">OAI.SmoothObstruction.ShortDerivative.iterate</a>, <a href="Charts.lean.html#L937">OAI.SmoothObstruction.ManifoldCoordinates.localMap</a></p></li><li id=L281><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.actual_endpoint_relative</code> <small>line 281</small><div class="doc"><p>The relative exterior estimate for the ACTUAL long iterate, in the old
+input's endpoint charts. The constants are uniform over all ranks, rates,
+gauges and selectors. The tube condition is imposed on the genuine new orbit;
+no assumed derivative or determinant estimate is used.</p></div><pre>theorem actual_endpoint_relative (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (L : ι → Set M)
+    (hL : ∀ i,IsCompact (L i)) (hLU : ∀ i,L i⊆(chartAt H (a i)).source)
+    (Dg : ℝ) (hDg : 0≤Dg) :
+    ∃ r K₀ C C₁ : ℝ,0&lt;r ∧ 1≤K₀ ∧ 0≤C ∧ 0≤C₁ ∧
+      ∀ (c : M → ι) (x y : M) (m : ℕ)
+        (U V : ℕ → Matrix (Fin d) (Fin d) ℝ) (lam : Fin d → ℝ)
+        (T : Finset (Fin d)) (γ g K b n C₀ R : ℝ),
+        (∀ z,z∈L (c z)) → 0≤b → 0≤n → 1≤b*n → 0≤C₀ → 0≤R →
+        0≤g → 0≤K → K≤Dg*(b*n) → (m:ℝ)≤2*n →
+        (∀ t,U t*V t=1) → (∀ t,V t*U t=1) →
+        (∀ t &lt; m,(Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ)).symm
+…</pre></li><li id=L370><b>lemma</b> <code>OAI.SmoothObstruction.ShortDerivative.contDiffAt_iterate</code> <small>line 370</small></li><li id=L392><b>lemma</b> <code>OAI.SmoothObstruction.EuclideanSplitting.derivative_transition</code> <small>line 392</small><div class="doc"><p>A gauge for the actual one-step differentials identifies the derivative
+of the true orbit composition with its genuine transition matrix.</p></div><pre>lemma derivative_transition (f : ℕ → E → E) (x : ℕ → E)
+    (U V : ℕ → Matrix (Fin d) (Fin d) ℝ) (lam : Fin d → ℝ) (N : ℕ)
+    (hUV : ∀ t,U t*V t=1) (hVU : ∀ t,V t*U t=1)
+    (hx : ∀ t&lt;N,f t (x t)=x (t+1))
+    (hd : ∀ t&lt;N,DifferentiableAt ℝ (f t) (x t))
+    (hstep : ∀ t&lt;N,(Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ)).symm
+…</pre></li><li id=L419><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.actual_endpoint_smooth</code> <small>line 419</small><div class="doc"><p>Regularity of the actual endpoint expression in the old charts, not a
+formal composition with unrelated derivatives.</p></div><pre>theorem actual_endpoint_smooth (S : Diffeomorph I I M M ∞) (a : ℕ → M) (x : M) (n : ℕ)
+    (hx : ∀ t ≤ n,S^[t] x∈(extChartAt I (a t)).source)
+    (hi : ∀ t ≤ n,(extChartAt I (a t)) (S^[t] x)∈interior (range I)) :
+    ContDiffAt ℝ ∞ (extChartAt I (a n) ∘ S^[n] ∘ (extChartAt I (a 0)).symm)
+      ((extChartAt I (a 0)) x) := by
+…</pre></li><li id=L441><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.actual_endpoint_differential</code> <small>line 441</small><div class="doc"><p>The old endpoint differential is exactly the transition of its real
+one-step gauge. This equality permits relative exterior control to feed the
+leading-minor estimate at zero rank as well as positive rank.</p></div><pre>theorem actual_endpoint_differential (S : Diffeomorph I I M M ∞) (a : ℕ → M)
+    (x : M) (n : ℕ) (U V : ℕ → Matrix (Fin d) (Fin d) ℝ) (lam : Fin d → ℝ)
+    (hx : ∀ t ≤ n,S^[t] x∈(extChartAt I (a t)).source)
+    (hi : ∀ t ≤ n,(extChartAt I (a t)) (S^[t] x)∈interior (range I))
+    (hUV : ∀ t,U t*V t=1) (hVU : ∀ t,V t*U t=1)
+    (hstep : ∀ t &lt; n,(Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ)).symm
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

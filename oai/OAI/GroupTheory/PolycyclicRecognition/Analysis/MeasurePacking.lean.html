@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/MeasurePacking.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/MeasurePacking.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>MeasurePacking.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>MeasurePacking.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/MeasurePacking.lean#L1">source</a></p><div class="doc"><h3>Counting separated endpoints using Haar volume</h3><p>Disjoint fixed-radius balls around separated endpoints have the same positive
+Haar mass. A polynomial-volume region containing their thickening therefore
+gives a polynomial cardinal bound. This is the counting step of the path
+packing lemma, separated from its Lie-coordinate estimate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.PolycyclicRecognition.measure_ball_eq_identity</code> <small>line 28</small></li><li id=L35><b>theorem</b> <code>OAI.PolycyclicRecognition.separated_card_mul_ball_le</code> <small>line 35</small><div class="doc"><p>The Haar volume of a thickening bounds the number of separated centers.</p></div><pre>theorem separated_card_mul_ball_le (μ : Measure G) [IsMulLeftInvariant μ]
+    (s : Finset G) (r : ℝ) (region : Set G)
+    (hsep : ∀ x ∈ s, ∀ y ∈ s, x ≠ y → r + r ≤ dist x y)
+    (hthick : ∀ x ∈ s, ball x r ⊆ region) :
+    (s.card : ℝ≥0∞) * μ (ball (1 : G) r) ≤ μ region := by
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.PolycyclicRecognition.separated_card_le_polynomial</code> <small>line 53</small><div class="doc"><p>A polynomial Haar-volume upper bound becomes a polynomial bound on every
+finite separated subset. The ball mass is canceled with its nonzero/finite
+hypotheses explicit.</p></div><pre>theorem separated_card_le_polynomial (μ : Measure G) [IsMulLeftInvariant μ]
+    (s : Finset G) (r : ℝ) (region : Set G) (C b t : ℕ)
+    (hq0 : μ (ball (1 : G) r) ≠ 0) (hqtop : μ (ball (1 : G) r) ≠ ⊤)
+    (hsep : ∀ x ∈ s, ∀ y ∈ s, x ≠ y → r + r ≤ dist x y)
+    (hthick : ∀ x ∈ s, ball x r ⊆ region)
+    (hvol : μ region ≤ ((C * (1 + t) ^ b : ℕ) : ℝ≥0∞) * μ (ball (1 : G) r)) :
+    s.card ≤ C * (1 + t) ^ b := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.PolycyclicRecognition.finite_cover_of_separated_bound</code> <small>line 67</small><div class="doc"><p>A cardinal bound on separated subsets gives a finite cover of the original
+finite set. Endpoint sets need not be measurable.</p></div><pre>theorem finite_cover_of_separated_bound {X : Type*} [PseudoMetricSpace X]
+    (s : Finset X) {r : ℝ} (hr : 0 ≤ r) (N : ℕ)
+    (hbound : ∀ t : Finset X, t ⊆ s →
+      (∀ x ∈ t, ∀ y ∈ t, x ≠ y → r &lt; dist x y) → t.card ≤ N) :
+    ∃ t : Finset X, t ⊆ s ∧ t.card ≤ N ∧
+      ∀ x ∈ s, ∃ y ∈ t, dist x y ≤ r := by
+…</pre></li><li id=L110><b>theorem</b> <code>OAI.PolycyclicRecognition.finite_separated_cover_set_of_bound</code> <small>line 110</small><div class="doc"><p>The same maximal-packing argument applies to arbitrary endpoint sets. A
+bound on their finite separated subsets already supplies a finite net; no
+measurability or compactness of the endpoint set is needed.</p></div><pre>theorem finite_separated_cover_set_of_bound {X : Type*} [PseudoMetricSpace X]
+    (S : Set X) {r : ℝ} (hr : 0 ≤ r) (N : ℕ)
+    (hbound : ∀ t : Finset X, (↑t : Set X) ⊆ S →
+      (∀ x ∈ t, ∀ y ∈ t, x ≠ y → r &lt; dist x y) → t.card ≤ N) :
+    ∃ t : Finset X, (↑t : Set X) ⊆ S ∧
+      (∀ x ∈ t, ∀ y ∈ t, x ≠ y → r &lt; dist x y) ∧ t.card ≤ N ∧
+      ∀ x ∈ S, ∃ y ∈ t, dist x y ≤ r := by
+…</pre></li><li id=L156><b>theorem</b> <code>OAI.PolycyclicRecognition.finite_cover_set_of_separated_bound</code> <small>line 156</small><div class="doc"><p>Retain the covering conclusion when separation of the centers is not needed.</p></div><pre>theorem finite_cover_set_of_separated_bound {X : Type*} [PseudoMetricSpace X]
+    (S : Set X) {r : ℝ} (hr : 0 ≤ r) (N : ℕ)
+    (hbound : ∀ t : Finset X, (↑t : Set X) ⊆ S →
+      (∀ x ∈ t, ∀ y ∈ t, x ≠ y → r &lt; dist x y) → t.card ≤ N) :
+    ∃ t : Finset X, (↑t : Set X) ⊆ S ∧ t.card ≤ N ∧
+      ∀ x ∈ S, ∃ y ∈ t, dist x y ≤ r := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

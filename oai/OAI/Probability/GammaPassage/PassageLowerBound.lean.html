@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/PassageLowerBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/PassageLowerBound.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>PassageLowerBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>PassageLowerBound.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/PassageLowerBound.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>lemma</b> <code>OAI.GammaFPP.displacement_natAbs_sum_le_length</code> <small>line 13</small><div class="doc"><p>Each original nearest-neighbor step contributes at most one L1 unit.</p></div><pre>lemma displacement_natAbs_sum_le_length (ds : List Step) :
+    (displacement ds).1.natAbs + (displacement ds).2.natAbs ≤ ds.length := by
+…</pre></li><li id=L28><b>lemma</b> <code>OAI.GammaFPP.latticeDistance_endpoint_le_length</code> <small>line 28</small><div class="doc"><p>Literal latticeDistance, not the product max norm.</p></div><pre>lemma latticeDistance_endpoint_le_length (p : Vertex) (ds : List Step) :
+    latticeDistance p (p + displacement ds) ≤ ds.length := by
+…</pre></li><li id=L35><b>lemma</b> <code>OAI.GammaFPP.pathCost_lower_of_long_trails</code> <small>line 35</small><div class="doc"><p>Erasure preserves the endpoint, so every sufficiently distant arbitrary
+path inherits the long-trail lower bound, even if it repeats edges.</p></div><pre>lemma pathCost_lower_of_long_trails (w : Edge → ℝ) (hw : ∀ e, 0 ≤ w e)
+    (c : ℝ) (hc : 0 ≤ c) (p : Vertex) (N : ℕ)
+    (hN : ∀ es : List Step, N ≤ es.length →
+      ((trace p es).map traversalEdge).Nodup → c * (es.length : ℝ) &lt; pathCost w p es)
+    (q : Vertex) (hq : N ≤ latticeDistance p q) (ds : List Step)
+    (hend : p + displacement ds = q) :
+    c * (latticeDistance p q : ℝ) &lt; pathCost w p ds := by
+…</pre></li><li id=L53><b>lemma</b> <code>OAI.GammaFPP.passageTime_lower_of_long_trails</code> <small>line 53</small><div class="doc"><p>Taking the infimum of path costs preserves the non-strict lower bound,
+without requiring the existence of a minimizing path.</p></div><pre>lemma passageTime_lower_of_long_trails (w : Edge → ℝ) (hw : ∀ e, 0 ≤ w e)
+    (c : ℝ) (hc : 0 ≤ c) (p : Vertex) (N : ℕ)
+    (hN : ∀ es : List Step, N ≤ es.length →
+      ((trace p es).map traversalEdge).Nodup → c * (es.length : ℝ) &lt; pathCost w p es)
+    (q : Vertex) (hq : N ≤ latticeDistance p q) :
+    c * (latticeDistance p q : ℝ) ≤ passageTime w p q := by
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.ae_all_starts_passageTime_lower</code> <small>line 68</small><div class="doc"><p>On one probability-one event, every lattice start has an eventual metric
+lower bound for all distant endpoints. The cutoff may depend on start/sample.</p></div><pre>theorem GammaEnvironment.ae_all_starts_passageTime_lower
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate) :
+    ∀ᵐ ω ∂P, ∀ p : Vertex, ∃ N : ℕ, ∀ q : Vertex,
+      N ≤ latticeDistance p q →
+        cheapSlope shape rate * (latticeDistance p q : ℝ) ≤
+          passageTime (fun e =&gt; τ e ω) p q := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="CheapPathDecay.lean.html#L15">OAI.GammaFPP.cheapSlope</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

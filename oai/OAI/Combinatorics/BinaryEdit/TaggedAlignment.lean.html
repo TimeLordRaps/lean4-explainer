@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/TaggedAlignment.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/TaggedAlignment.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>TaggedAlignment.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>TaggedAlignment.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/TaggedAlignment.lean#L1">source</a></p><div class="doc"><p>The numeric and list-slice forms of the ordered-tag alignment lemma.
+These statements allow arbitrary increasing matchings across row boundaries.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Tagged.numeric_alignment_bound</code> <small>line 17</small><div class="doc"><p>Complete ordered-tag accounting for an arbitrary increasing matching.
+The local bound counts matches in a whole source/target row pair.</p></div><pre>theorem numeric_alignment_bound {L T m B : ℕ} (hm : 2 ≤ m) (hB : 0 &lt; B)
+    (u v : Fin L → ℕ) (hu : StrictMono u) (hv : StrictMono v)
+    (hub : ∀ i, u i &lt; T * m * B) (hvb : ∀ i, v i &lt; T * m * B)
+    (htags : ∀ i, u i / B % m = v i / B % m)
+    (d : ℝ) (hd : 0 ≤ d) (hdW : d ≤ (m * B : ℕ))
+    (hlocal : ∀ a &lt; T, ∀ b &lt; T,
+      ((univ.filter fun i : Fin L =&gt;
+        u i / B / m = a ∧ v i / B / m = b).card : ℝ) ≤ (m * B : ℕ) - d) :
+    (T : ℝ) * d * (((m - 1) * B : ℕ) : ℝ) /
+        (d + (((m - 1) * B : ℕ) : ℝ)) ≤
+      (T * m * B : ℕ) - (L : ℝ) := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.Tagged.tagged_slice_alignment</code> <small>line 59</small><div class="doc"><p>Core list version: local row-pair LCS loss and ordered disjoint tags imply
+the global harmonic lower bound. Slices are literal contiguous rows of width
+<code>m * B</code>, and all intermediate subsequence matchings remain unrestricted.</p></div><pre>theorem tagged_slice_alignment {α : Type*} {T m B : ℕ}
+    (hT : 0 &lt; T) (hm : 2 ≤ m) (hB : 0 &lt; B)
+    (x y : List α) (hx : x.length = T * m * B) (hy : y.length = T * m * B)
+    (htags : ∀ p (hp : p &lt; x.length) q (hq : q &lt; y.length),
+      x[p]&#x27;hp = y[q]&#x27;hq → p / B % m = q / B % m)
+    (d : ℝ) (hd : 0 ≤ d)
+    (hlocal : ∀ a &lt; T, ∀ b &lt; T,
+      (lcs ((x.drop (a * (m * B))).take (m * B))
+        ((y.drop (b * (m * B))).take (m * B)) : ℝ) ≤ (m * B : ℕ) - d) :
+    (T : ℝ) * d * (((m - 1) * B : ℕ) : ℝ) /
+        (d + (((m - 1) * B : ℕ) : ℝ)) ≤
+      (deficit (T * m * B) x y : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a>, <a href="Model.lean.html#L11">OAI.TreeEdit.BinaryLower.deficit</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

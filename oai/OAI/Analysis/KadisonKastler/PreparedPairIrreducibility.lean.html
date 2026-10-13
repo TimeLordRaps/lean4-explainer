@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/PreparedPairIrreducibility.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/PreparedPairIrreducibility.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>PreparedPairIrreducibility.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>PreparedPairIrreducibility.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/PreparedPairIrreducibility.lean#L1">source</a></p><div class="doc"><h3>Relative irreducibility survives a nearby common matrix algebra</h3><p>Finite signed-permutation averages over increasing matrix algebras have
+bounded weak operator cluster points. Such a cluster point commutes with
+every stage. Relative irreducibility in the first algebra makes it scalar;
+the norm ball around a relative projection in the neighbor survives the
+averages and their limit. No trace, invariant mean or averaging limit is
+assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.KadisonKastler.matrixUnitAverage_norm_le</code> <small>line 27</small></li><li id=L34><b>theorem</b> <code>OAI.KadisonKastler.matrixUnitAverage_mem</code> <small>line 34</small></li><li id=L48><b>theorem</b> <code>OAI.KadisonKastler.matrixUnitAverage_sub_fixed_norm_le</code> <small>line 48</small></li><li id=L72><b>theorem</b> <code>OAI.KadisonKastler.matrixUnitAverage_weak_limit_commutes</code> <small>line 72</small><div class="doc"><p>A bounded weak cluster point of the concrete stage averages commutes
+with every fixed stage.</p></div><pre>theorem matrixUnitAverage_weak_limit_commutes
+    (d : ℕ → ℕ) (E : ∀ n, Generator.MatrixUnitSystem (Fin (d n)) (H →L[ℂ] H))
+    (hmono : Monotone (fun n =&gt; (E n).algebra))
+    (x T : H →L[ℂ] H) {l : Filter ℕ} [l.NeBot] (hl : l ≤ atTop)
+    (hlim : ∀ ξ η, Tendsto (fun n =&gt; inner ℂ η (matrixUnitAverage (E n) x ξ)) l
+      (𝓝 (inner ℂ η (T ξ)))) :
+    ∀ n a, a ∈ (E n).algebra → a * T = T * a := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="MatrixAveraging.lean.html#L102">OAI.KadisonKastler.matrixUnitAverage</a></p></li><li id=L99><b>theorem</b> <code>OAI.KadisonKastler.exists_scalar_near_of_increasing_matrix_averages</code> <small>line 99</small><div class="doc"><p>Concrete matrix-stage averages provide a scalar near every ambient
+operator which commutes with those stages.</p></div><pre>theorem exists_scalar_near_of_increasing_matrix_averages
+    (M : VonNeumannAlgebra H)
+    (d : ℕ → ℕ) (E : ∀ n, Generator.MatrixUnitSystem (Fin (d n)) (H →L[ℂ] H))
+    (hmono : Monotone (fun n =&gt; (E n).algebra))
+    (hEM : ∀ n, (E n).algebra ≤ M.toStarSubalgebra)
+    (hirr : ∀ T ∈ M, (∀ n a, a ∈ (E n).algebra → a * T = T * a) →
+      ∃ z : ℂ, T = z • (1 : H →L[ℂ] H))
+    (x p : H →L[ℂ] H) (hx : x ∈ M)
+    (hp : ∀ n a, a ∈ (E n).algebra → a * p = p * a) :
+    ∃ z : ℂ, ‖z • (1 : H →L[ℂ] H) - p‖ ≤ ‖x - p‖ := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a></p></li><li id=L129><b>theorem</b> <code>OAI.KadisonKastler.relative_projection_trivial_of_increasing_matrix_averages</code> <small>line 129</small><div class="doc"><p>The neighbor has no nontrivial projections in the relative commutant
+when the ordinary gap is below one half.</p></div><pre>theorem relative_projection_trivial_of_increasing_matrix_averages
+    (M N : VonNeumannAlgebra H)
+    (d : ℕ → ℕ) (E : ∀ n, Generator.MatrixUnitSystem (Fin (d n)) (H →L[ℂ] H))
+    (hmono : Monotone (fun n =&gt; (E n).algebra))
+    (hEM : ∀ n, (E n).algebra ≤ M.toStarSubalgebra)
+    (hirr : ∀ T ∈ M, (∀ n a, a ∈ (E n).algebra → a * T = T * a) →
+      ∃ z : ℂ, T = z • (1 : H →L[ℂ] H))
+    (hgap : kkDistance M N &lt; 1 / 2)
+    (p : Algebra N) (hp : IsStarProjection p)
+    (hcomm : ∀ n a, a ∈ (E n).algebra → a * p.val = p.val * a) :
+    p = 0 ∨ p = 1 := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="../../../ComparatorChallenges/StrongKadisonKastler.lean.html#L19">OAI.KadisonKastler.kkDistance</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a></p></li><li id=L151><b>theorem</b> <code>OAI.KadisonKastler.commute_generated_of_commute_matrix_stages</code> <small>line 151</small><div class="doc"><p>Commutation with all matrix stages extends to their generated von
+Neumann algebra.</p></div><pre>theorem commute_generated_of_commute_matrix_stages
+    (d : ℕ → ℕ) (E : ∀ n, Generator.MatrixUnitSystem (Fin (d n)) (H →L[ℂ] H))
+    (T : H →L[ℂ] H)
+    (hT : ∀ n a, a ∈ (E n).algebra → a * T = T * a) :
+    ∀ a ∈ generatedVonNeumannAlgebra (⨆ n, (E n).algebra), a * T = T * a := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="PublishedKaplansky.lean.html#L41">OAI.KadisonKastler.generatedVonNeumannAlgebra</a></p></li><li id=L182><b>theorem</b> <code>OAI.KadisonKastler.relative_irreducibility_of_near_increasing_matrices</code> <small>line 182</small><div class="doc"><p>Relative irreducibility in the first algebra passes to the neighbor
+for the actual weakly generated common increasing matrix algebra.</p></div><pre>theorem relative_irreducibility_of_near_increasing_matrices
+    (M N : VonNeumannAlgebra H)
+    (d : ℕ → ℕ) (E : ∀ n, Generator.MatrixUnitSystem (Fin (d n)) (H →L[ℂ] H))
+    (hmono : Monotone (fun n =&gt; (E n).algebra))
+    (hEM : ∀ n, (E n).algebra ≤ M.toStarSubalgebra)
+    (hirr : ∀ T ∈ M,
+      (∀ a ∈ generatedVonNeumannAlgebra (⨆ n, (E n).algebra), a * T = T * a) →
+      ∃ z : ℂ, T = z • (1 : H →L[ℂ] H))
+    (hgap : kkDistance M N &lt; 1 / 2) :
+    ∀ T ∈ N,
+      (∀ a ∈ generatedVonNeumannAlgebra (⨆ n, (E n).algebra), a * T = T * a) →
+      ∃ z : ℂ, T = z • (1 : H →L[ℂ] H) := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="PublishedKaplansky.lean.html#L41">OAI.KadisonKastler.generatedVonNeumannAlgebra</a>, <a href="../../../ComparatorChallenges/StrongKadisonKastler.lean.html#L19">OAI.KadisonKastler.kkDistance</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

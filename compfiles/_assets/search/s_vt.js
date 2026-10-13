@@ -1,0 +1,1 @@
+window.l4shard("vt", [["Usa2018P6.usa2018p6_aux.vtxDecomposeEquiv",298,2256],["Usa2018P6.usa2018p6_aux.vtxSplitType",298,2172],["Usa2018P6.usa2018p6_aux.vtxSubtype",298,1654],["Usa2018P6.usa2018p6_aux.vtxSuccEquiv",298,2218],["Usa2018P6.usa2018p6_aux.vtxZeroEquiv",298,2197]]);

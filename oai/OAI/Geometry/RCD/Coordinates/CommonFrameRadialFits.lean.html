@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/CommonFrameRadialFits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/CommonFrameRadialFits.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>CommonFrameRadialFits.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>CommonFrameRadialFits.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/CommonFrameRadialFits.lean#L1">source</a></p><div class="doc"><h3>Transporting the actual radial fits to a common frame and region</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.RegularPointCoordinates.common_frame_radial_residual</code> <small>line 21</small><div class="doc"><p>The common-frame residual is exactly the original residual at the
+transported covector, including its recentering constant.</p></div><pre>theorem common_frame_radial_residual {n : ℕ}
+    (u : Fin n → SobolevSpace μ hQ) (η : SobolevSpace μ hQ)
+    (G : Euclidean n →L[ℝ] SobolevSpace μ hQ) (x z : Euclidean n)
+    (N M : Euclidean n ≃L[ℝ] Euclidean n) (C : Euclidean n →L[ℝ] Euclidean n)
+    (b : Euclidean n) :
+    G (M.symm (N b)) -
+      (centeredSobolevMap μ hQ u η z).comp N.toContinuousLinearMap
+        (rebasedRadialOperator N M C b) -
+      ⟪z - x, C (M.symm (N b))⟫_ℝ • η =
+    G (M.symm (N b)) - centeredAffineSobolev μ hQ u η x (C (M.symm (N b))) := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="LinearRadialFits.lean.html#L33">OAI.RegularPointCoordinates.centeredSobolevMap</a>, <a href="RebasedRadialFits.lean.html#L15">OAI.RegularPointCoordinates.rebasedRadialOperator</a>, <a href="../Sobolev/CenteredAffineSobolev.lean.html#L16">OAI.RegularPointCoordinates.centeredAffineSobolev</a></p></li><li id=L37><b>theorem</b> <code>OAI.RegularPointCoordinates.common_frame_radial_bounds</code> <small>line 37</small><div class="doc"><p>The volume ratio and frame operator norm account for all losses when
+the original all-covector radial fit is used on the common commutator region.</p></div><pre>theorem common_frame_radial_bounds {n : ℕ}
+    (u : Fin n → SobolevSpace μ hQ) (η : SobolevSpace μ hQ)
+    (G : Euclidean n →L[ℝ] SobolevSpace μ hQ) (x z : Euclidean n)
+    (N M : Euclidean n ≃L[ℝ] Euclidean n) (C : Euclidean n →L[ℝ] Euclidean n)
+    {Ωv Ωe Ω : Set X} (hΩv : Ω ⊆ Ωv) (hΩe : Ω ⊆ Ωe)
+    (hvfin : μ Ωv ≠ ∞) (hfin : μ Ω ≠ ∞)
+    (hvpos : 0 &lt; μ.real Ωv) (hepos : 0 &lt; μ.real Ωe) (hpos : 0 &lt; μ.real Ω)
+    {V W E D : ℝ} (hE : 0 ≤ E) (hD : 0 ≤ D)
+    (hvolv : μ.real Ωv ≤ V * μ.real Ω) (hvole : μ.real Ωe ≤ W * μ.real Ω)
+    (hvalue : ∀ a, ‖normalizeLocalL2 μ Ωv hvfin (SobolevSpace.restrictLp μ hQ Ωv
+      (G a - centeredAffineSobolev μ hQ u η x (C a)))‖ ^ 2 ≤ E * ‖a‖ ^ 2)
+    (henergy : ∀ a, (μ.real Ωe)⁻¹ * (∫ t in Ωe, localGamma μ hQ
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../Harmonic/LocalAffineMoments.lean.html#L19">OAI.RegularPointCoordinates.normalizeLocalL2</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5227">OAI.RegularPointCoordinates.SobolevSpace.restrictLp</a>, <a href="../Sobolev/CenteredAffineSobolev.lean.html#L16">OAI.RegularPointCoordinates.centeredAffineSobolev</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L6133">OAI.RegularPointCoordinates.localGamma</a></p></li><li id=L84><b>theorem</b> <code>OAI.RegularPointCoordinates.centered_sobolev_constant_difference</code> <small>line 84</small><div class="doc"><p>Centering the common harmonic column changes each covector by a
+locally constant function, represented by the same compact cutoff.</p></div><pre>theorem centered_sobolev_constant_difference {n : ℕ}
+    (Ω : Set X) (u : Fin n → SobolevSpace μ hQ) (η : SobolevSpace μ hQ)
+    (z b : Euclidean n)
+    (hη : SobolevSpace.toLp μ hQ η =ᵐ[μ.restrict Ω] fun _ =&gt; (1 : ℝ)) :
+    SobolevSpace.toLp μ hQ (centeredSobolevMap μ hQ u η z b - sobolevColumnMap μ hQ u b)
+      =ᵐ[μ.restrict Ω] fun _ =&gt; -⟪z, b⟫_ℝ := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="LinearRadialFits.lean.html#L33">OAI.RegularPointCoordinates.centeredSobolevMap</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a></p></li><li id=L105><b>theorem</b> <code>OAI.RegularPointCoordinates.common_frame_radial_representative</code> <small>line 105</small><div class="doc"><p>The transported radial family remains a representative of the
+derivative of the same centered coordinate map in the common frame.</p></div><pre>theorem common_frame_radial_representative {n : ℕ}
+    (Ω : Set X) (f : SobolevSpace μ hQ) (u : Fin n → SobolevSpace μ hQ)
+    (η : SobolevSpace μ hQ) (z : Euclidean n)
+    (N M : Euclidean n ≃L[ℝ] Euclidean n)
+    (G : Euclidean n →L[ℝ] SobolevSpace μ hQ)
+    (hη : SobolevSpace.toLp μ hQ η =ᵐ[μ.restrict Ω] fun _ =&gt; (1 : ℝ))
+    (hG : ∀ a, SobolevSpace.toLp μ hQ (G a) =ᵐ[μ.restrict Ω]
+      localGamma μ hQ f (sobolevColumnMap μ hQ u (M a))) (b : Euclidean n) :
+    SobolevSpace.toLp μ hQ (G (M.symm (N b))) =ᵐ[μ.restrict Ω]
+      localGamma μ hQ f ((centeredSobolevMap μ hQ u η z).comp N.toContinuousLinearMap b) := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L27">OAI.RegularPointCoordinates.Euclidean</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L6133">OAI.RegularPointCoordinates.localGamma</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L26">OAI.RegularPointCoordinates.sobolevColumnMap</a>, <a href="LinearRadialFits.lean.html#L33">OAI.RegularPointCoordinates.centeredSobolevMap</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/FixedCurveSections.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/FixedCurveSections.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>FixedCurveSections.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>FixedCurveSections.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/FixedCurveSections.lean#L1">source</a></p><div class="doc"><h3>Necessary-section constructions for fixed smooth curves</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.source_necessary_W_of_smooth_cubic_geometry</code> <small>line 20</small><div class="doc"><p>Genuine universal-support specialization, transported to the exact Wτ used
+by the source basis and collision map, with all scalar identifications discharged.</p></div><pre>theorem source_necessary_W_of_smooth_cubic_geometry {q d m : ℕ} {τ : ℝ}
+    (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (hUniversal : Nagata.W13.UniversalSupport (9 + q) d (fun _ =&gt; m))
+    (marks : Fin 9 → ℝ) (a x0 : ℝ)
+    (hdisjoint : Pairwise (fun i j =&gt; ∀ k : ℤ,
+      ((τ ^ marks i : ℝ) : ℂ) ≠ ((τ ^ marks j : ℝ) : ℂ) * (τ : ℂ) ^ k))
+    (ξ : Fin q → ℂ)
+    (hpP : ∀ i, (Nagata.W22.rayMarkedSection hτ hτone marks).val
+      (tauPower τ x0 * Complex.exp (ξ i)) ≠ 0)
+    (C : MvPolynomial (Fin 3) ℂ) (hC : C.IsHomogeneous 3)
+    (X : Fin 3 → Nagata.W08.automorphicSections (τ : ℂ) 3
+      (tauPower τ (((∑ i, marks i) + a) / 3)))
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="ThetaLimits.lean.html#L203">OAI.Nagata.W22.rayMarkedSection</a>, <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L93><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.source_fixed_necessary_W</code> <small>line 93</small><div class="doc"><p>For every fixed period, all distinct nearby moving configurations have an
+actual nonzero section with the required multiplicities, with the source's
+fixed marks and eta=(sum marks+a)/3 retained literally.</p></div><pre>theorem source_fixed_necessary_W {τ : ℝ} (hτ : 0 &lt; τ) (hτone : τ &lt; 1)
+    (marks : Fin 9 → ℝ) (hmarks : Function.Injective marks)
+    (hmbounds : ∀ i, 0 &lt; marks i ∧ marks i &lt; 1 / 2)
+    (a : ℝ) (d m q : ℕ)
+    (hUniversal : Nagata.W13.UniversalSupport (9 + q) d (fun _ =&gt; m)) :
+    ∃ U : Set ℂ, IsOpen U ∧ (0 : ℂ) ∈ U ∧
+      ∀ ξ : Fin q → ℂ, Function.Injective ξ → (∀ i, ξ i ∈ U) →
+        ∃ F : genuineSourceSections hτ hτone marks a (d : ℤ) m, F ≠ 0 ∧
+          ∀ i, HasAnalyticOrderAtLeast (𝕜 := ℂ)
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L138><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.source_fixed_scaled_construction</code> <small>line 138</small><div class="doc"><p>Scaling the actual universal plane equations gives the source construction
+for the same fixed marks at every period, hence on the required punctured limit.</p></div><pre>theorem source_fixed_scaled_construction {r d m : ℕ} (hr : 9 ≤ r)
+    (hUniversal : Nagata.W13.UniversalSupport r d (fun _ =&gt; m))
+    (n : ℕ) (marks : Fin 9 → ℝ) (hmarks : Function.Injective marks)
+    (hmbounds : ∀ i, 0 &lt; marks i ∧ marks i &lt; 1 / 2) (a : ℝ) :
+    ∀ᶠ τ : ℝ in 𝓝[&gt;] (0 : ℝ),
+      ∃ (hτ : 0 &lt; τ) (hτone : τ &lt; 1) (U : Set ℂ),
+        IsOpen U ∧ (0 : ℂ) ∈ U ∧
+        ∀ ξ : Fin (r - 9) → ℂ, Function.Injective ξ → (∀ i, ξ i ∈ U) →
+          ∃ F : genuineSourceSections hτ hτone marks a ((n * d : ℕ) : ℤ) (n * m),
+            F ≠ 0 ∧ ∀ i, HasAnalyticOrderAtLeast (𝕜 := ℂ)
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

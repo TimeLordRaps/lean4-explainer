@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/CellContinuity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/CellContinuity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>CellContinuity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>CellContinuity.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/CellContinuity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>def</b> <code>OAI.Problem358.scoreCell</code> <small>line 13</small><div class="doc"><p>The closed cell of an affine score, before restriction to the source set.</p></div><pre>def scoreCell {d : ℕ} {ι : Type*} (y : ι → E d) (c : ι → ℝ) (i : ι) : Set (E d) :=
+…</pre></li><li id=L16><b>theorem</b> <code>OAI.Problem358.measurableSet_scoreCell</code> <small>line 16</small></li><li id=L24><b>theorem</b> <code>OAI.Problem358.eventually_le_iff_of_tendsto_ne</code> <small>line 24</small><div class="doc"><p>A strict limiting comparison has an eventually constant truth value.</p></div><pre>theorem eventually_le_iff_of_tendsto_ne {β : Type*} {l : Filter β}
+    {f g : β → ℝ} {a b : ℝ} (hf : Tendsto f l (𝓝 a))
+    (hg : Tendsto g l (𝓝 b)) (hab : a ≠ b) :
+    ∀ᶠ n in l, f n ≤ g n ↔ a ≤ b := by
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.Problem358.eventually_mem_scoreCell_iff</code> <small>line 35</small><div class="doc"><p>Away from limiting ties, membership in a finite affine cell stabilizes.</p></div><pre>theorem eventually_mem_scoreCell_iff {d : ℕ} {ι β : Type*} [Finite ι]
+    {l : Filter β} {ys : β → ι → E d} {cs : β → ι → ℝ}
+    {y : ι → E d} {c : ι → ℝ} (i : ι) (x : E d)
+    (hy : ∀ j, Tendsto (fun n =&gt; ys n j) l (𝓝 (y j)))
+    (hc : ∀ j, Tendsto (fun n =&gt; cs n j) l (𝓝 (c j)))
+    (htie : ∀ j, j ≠ i → inner ℝ (y j) x + c j ≠ inner ℝ (y i) x + c i) :
+    ∀ᶠ n in l, x ∈ scoreCell (ys n) (cs n) i ↔ x ∈ scoreCell y c i := by
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L56><b>theorem</b> <code>OAI.Problem358.ae_eventually_mem_scoreCell_iff</code> <small>line 56</small><div class="doc"><p>Distinct limiting slopes make affine-cell membership stabilize almost everywhere.</p></div><pre>theorem ae_eventually_mem_scoreCell_iff {d : ℕ} {ι β : Type*} [Finite ι]
+    (K : Set (E d)) {l : Filter β} {ys : β → ι → E d} {cs : β → ι → ℝ}
+    {y : ι → E d} {c : ι → ℝ} (i : ι) (hinj : Function.Injective y)
+    (hy : ∀ j, Tendsto (fun n =&gt; ys n j) l (𝓝 (y j)))
+    (hc : ∀ j, Tendsto (fun n =&gt; cs n j) l (𝓝 (c j))) :
+    ∀ᵐ x ∂uniformMeasure K, ∀ᶠ n in l,
+      x ∈ scoreCell (ys n) (cs n) i ↔ x ∈ scoreCell y c i := by
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L70><b>theorem</b> <code>OAI.Problem358.tendsto_uniformMeasure_scoreCell</code> <small>line 70</small><div class="doc"><p>Cell masses converge under convergence of sites and intercepts, provided only
+that the limiting sites are distinct and the uniform source is finite.</p></div><pre>theorem tendsto_uniformMeasure_scoreCell {d : ℕ} {ι β : Type*} [Finite ι]
+    (K : Set (E d))
+    {l : Filter β} [l.IsCountablyGenerated]
+    {ys : β → ι → E d} {cs : β → ι → ℝ} {y : ι → E d} {c : ι → ℝ}
+    (i : ι) (hinj : Function.Injective y)
+    (hy : ∀ j, Tendsto (fun n =&gt; ys n j) l (𝓝 (y j)))
+    (hc : ∀ j, Tendsto (fun n =&gt; cs n j) l (𝓝 (c j))) :
+    Tendsto (fun n =&gt; uniformMeasure K (scoreCell (ys n) (cs n) i)) l
+      (𝓝 (uniformMeasure K (scoreCell y c i))) := by
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L85><b>theorem</b> <code>OAI.Problem358.continuousAt_uniformMeasure_scoreCell</code> <small>line 85</small><div class="doc"><p>Joint continuity in all affine coefficients at configurations with distinct sites.</p></div><pre>theorem continuousAt_uniformMeasure_scoreCell {d : ℕ} {ι : Type*} [Finite ι]
+    (K : Set (E d))
+    (y : ι → E d) (c : ι → ℝ) (i : ι) (hinj : Function.Injective y) :
+    ContinuousAt (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      uniformMeasure K (scoreCell p.1 p.2 i)) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L98><b>theorem</b> <code>OAI.Problem358.tendsto_setIntegral_of_ae_eventually_mem</code> <small>line 98</small><div class="doc"><p>Dominated convergence for an integrable function over varying measurable sets
+whose membership stabilizes almost everywhere.</p></div><pre>theorem tendsto_setIntegral_of_ae_eventually_mem
+    {X V β : Type*} [MeasurableSpace X] [NormedAddCommGroup V] [NormedSpace ℝ V]
+    {μ : Measure X} {l : Filter β} [l.IsCountablyGenerated]
+    {sets : β → Set X} {s : Set X} (hsets : ∀ n, MeasurableSet (sets n))
+    (hs : MeasurableSet s) {f : X → V} (hf : Integrable f μ)
+    (hmem : ∀ᵐ x ∂μ, ∀ᶠ n in l, x ∈ sets n ↔ x ∈ s) :
+    Tendsto (fun n =&gt; ∫ x in sets n, f x ∂μ) l (𝓝 (∫ x in s, f x ∂μ)) := by
+…</pre></li><li id=L122><b>theorem</b> <code>OAI.Problem358.tendsto_setIntegral_scoreCell</code> <small>line 122</small><div class="doc"><p>Integrals over affine cells, including their first moments, converge jointly
+in all coefficients whenever the limiting slopes are distinct.</p></div><pre>theorem tendsto_setIntegral_scoreCell {d : ℕ} {ι β V : Type*} [Finite ι]
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (K : Set (E d)) {l : Filter β} [l.IsCountablyGenerated]
+    {ys : β → ι → E d} {cs : β → ι → ℝ} {y : ι → E d} {c : ι → ℝ}
+    (i : ι) (hinj : Function.Injective y)
+    (hy : ∀ j, Tendsto (fun n =&gt; ys n j) l (𝓝 (y j)))
+    (hc : ∀ j, Tendsto (fun n =&gt; cs n j) l (𝓝 (c j)))
+    {f : E d → V} (hf : Integrable f (uniformMeasure K)) :
+    Tendsto (fun n =&gt; ∫ x in scoreCell (ys n) (cs n) i, f x ∂uniformMeasure K) l
+      (𝓝 (∫ x in scoreCell y c i, f x ∂uniformMeasure K)) :=
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L137><b>theorem</b> <code>OAI.Problem358.continuousAt_setIntegral_scoreCell</code> <small>line 137</small><div class="doc"><p>Joint continuity of any integrable moment of a finite affine cell.</p></div><pre>theorem continuousAt_setIntegral_scoreCell {d : ℕ} {ι V : Type*} [Finite ι]
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (K : Set (E d)) (y : ι → E d) (c : ι → ℝ) (i : ι)
+    (hinj : Function.Injective y) {f : E d → V} (hf : Integrable f (uniformMeasure K)) :
+    ContinuousAt (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      ∫ x in scoreCell p.1 p.2 i, f x ∂uniformMeasure K) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L151><b>theorem</b> <code>OAI.Problem358.eventually_injective_sites</code> <small>line 151</small><div class="doc"><p>Distinctness of a finite family of sites persists locally.</p></div><pre>theorem eventually_injective_sites {d : ℕ} {ι : Type*} [Finite ι]
+    (y : ι → E d) (c : ι → ℝ) (hinj : Function.Injective y) :
+    ∀ᶠ p : (ι → E d) × (ι → ℝ) in 𝓝 (y, c), Function.Injective p.1 := by
+…</pre></li><li id=L171><b>theorem</b> <code>OAI.Problem358.isOpen_distinct_positive_scoreCell</code> <small>line 171</small><div class="doc"><p>The configurations on which the finite-cell differential calculus is used
+(distinct sites and strictly positive cell masses) form an open set.</p></div><pre>theorem isOpen_distinct_positive_scoreCell {d : ℕ} {ι : Type*} [Finite ι]
+    (K : Set (E d)) :
+    IsOpen {p : (ι → E d) × (ι → ℝ) |
+      Function.Injective p.1 ∧ ∀ i, 0 &lt; uniformMeasure K (scoreCell p.1 p.2 i)} := by
+…</pre><p class="refs">Mentions: <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L193><b>theorem</b> <code>OAI.Problem358.CellGeometry.closedCell_eq_inter_scoreCell</code> <small>line 193</small><div class="doc"><p>The geometric closed cell is the score cell restricted to the source body.</p></div><pre>theorem closedCell_eq_inter_scoreCell
+    (K : Set (E d)) (y : ι → E d) (c : ι → ℝ) (i : ι) :
+    closedCell K y c i = K ∩ scoreCell y c i := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L201><b>theorem</b> <code>OAI.Problem358.CellGeometry.closedCell_ae_eq_scoreCell</code> <small>line 201</small><div class="doc"><p>The two cell conventions agree almost everywhere for the uniform source.</p></div><pre>theorem closedCell_ae_eq_scoreCell {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) :
+    closedCell K y c i =ᵐ[uniformMeasure K] scoreCell y c i := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L209><b>theorem</b> <code>OAI.Problem358.CellGeometry.restrict_closedCell_eq_scoreCell</code> <small>line 209</small><div class="doc"><p>Restricting the uniform source is independent of the cell convention.</p></div><pre>theorem restrict_closedCell_eq_scoreCell {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) :
+    (uniformMeasure K).restrict (closedCell K y c i) =
+      (uniformMeasure K).restrict (scoreCell y c i) :=
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L216><b>theorem</b> <code>OAI.Problem358.CellGeometry.uniformMeasure_closedCell_eq_scoreCell</code> <small>line 216</small><div class="doc"><p>Closed-cell masses are exactly the score-cell masses.</p></div><pre>theorem uniformMeasure_closedCell_eq_scoreCell {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) :
+    uniformMeasure K (closedCell K y c i) = uniformMeasure K (scoreCell y c i) :=
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="CellContinuity.lean.html#L13">OAI.Problem358.scoreCell</a></p></li><li id=L222><b>theorem</b> <code>OAI.Problem358.CellGeometry.continuousAt_uniformMeasure_closedCell</code> <small>line 222</small><div class="doc"><p>Joint continuity of the actual geometric closed-cell mass at distinct sites.</p></div><pre>theorem continuousAt_uniformMeasure_closedCell [Finite ι]
+    {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) (hinj : Function.Injective y) :
+    ContinuousAt (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      uniformMeasure K (closedCell K p.1 p.2 i)) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L231><b>theorem</b> <code>OAI.Problem358.CellGeometry.continuousAt_real_closedCell</code> <small>line 231</small><div class="doc"><p>Real-valued closed-cell masses are jointly continuous at distinct sites.</p></div><pre>theorem continuousAt_real_closedCell [Finite ι]
+    {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) (hinj : Function.Injective y) :
+    ContinuousAt (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      (uniformMeasure K).real (closedCell K p.1 p.2 i)) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L244><b>theorem</b> <code>OAI.Problem358.CellGeometry.continuousAt_setIntegral_closedCell</code> <small>line 244</small><div class="doc"><p>Cell integral continuity transfers to the geometric closed-cell convention.</p></div><pre>theorem continuousAt_setIntegral_closedCell [Finite ι]
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) (hinj : Function.Injective y)
+    {f : E d → V} (hf : Integrable f (uniformMeasure K)) :
+    ContinuousAt (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      ∫ x in closedCell K p.1 p.2 i, f x ∂uniformMeasure K) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L255><b>theorem</b> <code>OAI.Problem358.CellGeometry.continuousAt_firstMoment_closedCell</code> <small>line 255</small><div class="doc"><p>The actual first moment of a closed cell is jointly continuous.</p></div><pre>theorem continuousAt_firstMoment_closedCell [Finite ι]
+    {K : Set (E d)} (hK : IsCompact K)
+    (y : ι → E d) (c : ι → ℝ) (i : ι) (hinj : Function.Injective y) :
+    ContinuousAt (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      ∫ x in closedCell K p.1 p.2 i, x ∂uniformMeasure K) (y, c) :=
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L265><b>theorem</b> <code>OAI.Problem358.CellGeometry.isOpen_distinct_positive_real_closedCell</code> <small>line 265</small><div class="doc"><p>The admissible locus used by geometric cell calculus is open, in the real-mass
+convention of the normalized implicit-function construction.</p></div><pre>theorem isOpen_distinct_positive_real_closedCell [Finite ι]
+    {K : Set (E d)} (hK : MeasurableSet K) :
+    IsOpen {p : (ι → E d) × (ι → ℝ) |
+      Function.Injective p.1 ∧ ∀ i, 0 &lt; (uniformMeasure K).real (closedCell K p.1 p.2 i)} := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L282><b>theorem</b> <code>OAI.Problem358.CellGeometry.eventually_real_closedCell_comparable</code> <small>line 282</small><div class="doc"><p>All positive cell masses simultaneously stay between half and twice their
+original masses in a neighborhood of a distinct-site configuration.</p></div><pre>theorem eventually_real_closedCell_comparable [Finite ι]
+    {K : Set (E d)} (hK : MeasurableSet K)
+    (y : ι → E d) (c : ι → ℝ) (hinj : Function.Injective y)
+    (hpos : ∀ i, 0 &lt; (uniformMeasure K).real (closedCell K y c i)) :
+    ∀ᶠ p : (ι → E d) × (ι → ℝ) in 𝓝 (y, c), ∀ i,
+      (uniformMeasure K).real (closedCell K y c i) / 2 &lt;
+        (uniformMeasure K).real (closedCell K p.1 p.2 i) ∧
+      (uniformMeasure K).real (closedCell K p.1 p.2 i) &lt;
+        2 * (uniformMeasure K).real (closedCell K y c i) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

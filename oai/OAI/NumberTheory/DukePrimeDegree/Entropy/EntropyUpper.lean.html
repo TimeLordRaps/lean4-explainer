@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Entropy/EntropyUpper.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Entropy/EntropyUpper.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Entropy</a> / <span>EntropyUpper.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Entropy</a>/<span>EntropyUpper.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Entropy/EntropyUpper.lean#L1">source</a></p><div class="doc"><h3>Entropy bounds from a small collection of orbit names</h3><p>This is the finite-partition estimate used in an entropy upper bound:
+if all but a small mass lies on a short list of names, the entropy is
+bounded by the logarithm of that list, plus the cost of the exceptional
+mass. No dynamical covering or leafwise estimate is assumed here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.DukePrimeDegree.finiteShannon_le_good_card</code> <small>line 23</small><div class="doc"><p>A finite distribution concentrated on a list of names has small
+entropy. The binary coding cost is at most <code>log 2</code>.</p></div><pre>theorem finiteShannon_le_good_card {α : Type*} [Fintype α] [DecidableEq α]
+    (p : α → ℝ) (hp : ∀ a, 0 ≤ p a) (hp1 : ∑ a, p a = 1)
+    (G : Finset α) (hG : G.Nonempty) :
+    finiteShannon p ≤ Real.log 2 + Real.log G.card +
+      (∑ a, if a ∈ G then 0 else p a) * Real.log (Fintype.card α) := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.DukePrimeDegree.observationEntropy_le_good_card</code> <small>line 72</small><div class="doc"><p>If a collection of observation values misses at most <code>ε</code> of the
+measure, its cardinality bounds the observation entropy.</p></div><pre>theorem observationEntropy_le_good_card {Y α : Type*}
+    [MeasurableSpace Y] [Fintype α] [DecidableEq α]
+    (μ : Measure Y) [IsProbabilityMeasure μ] (P : Y → α)
+    (hP : ∀ a, MeasurableSet {y | P y = a})
+    (G : Finset α) (hG : G.Nonempty) {ε : ℝ}
+    (hbad : (∑ a, if a ∈ G then 0 else μ.real {y | P y = a}) ≤ ε) :
+    observationEntropy μ P ≤ Real.log 2 + Real.log G.card +
+      ε * Real.log (Fintype.card α) := by
+…</pre></li><li id=L90><b>theorem</b> <code>OAI.DukePrimeDegree.observationEntropyRate_le_of_good_names</code> <small>line 90</small><div class="doc"><p>The exponential growth of a list of orbit names, together with its
+exceptional mass, bounds the entropy rate of the observation.</p></div><pre>theorem observationEntropyRate_le_of_good_names {Y α : Type*}
+    [MeasurableSpace Y] [Fintype α] [DecidableEq α]
+    (μ : Measure Y) [IsProbabilityMeasure μ] {T : Y → Y}
+    (hT : MeasurePreserving T μ μ) (P : Y → α)
+    (hP : ∀ a, MeasurableSet {y | P y = a})
+    (G : ∀ N : ℕ, Finset (Fin N → α)) {a ε : ℝ}
+    (hne : ∀ᶠ N : ℕ in atTop, (G N).Nonempty)
+    (hbad : ∀ᶠ N : ℕ in atTop,
+      (∑ w, if w ∈ G N then 0 else μ.real {y | orbitName T P N y = w}) ≤ ε)
+    (hcard : ∀ᶠ N : ℕ in atTop, Real.log (G N).card ≤ a * N) :
+    observationEntropyRate μ T P ≤ a + ε * Real.log (Fintype.card α) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

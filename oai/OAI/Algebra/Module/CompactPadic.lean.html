@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/Module/CompactPadic.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/Module/CompactPadic.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">Module</a> / <span>CompactPadic.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">Module</a>/<span>CompactPadic.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/Module/CompactPadic.lean#L1">source</a></p><div class="doc"><h3>Compact p-adic modules</h3><p>The map <code>1 - shift</code> is surjective on the product of a tower of finite abelian groups,
+without any surjectivity assumption on the transition maps. A compact Hausdorff module
+vanishes if a topologically nilpotent scalar acts surjectively. This implies compact
+p-adic Nakayama: a compact Hausdorff <code>ℤ_[p]</code>-module with continuous operations is finitely
+generated exactly when its quotient modulo <code>p</code> is finite. Finitely generated
+<code>ℤ_[p]</code>-modules also have finite <code>p</code>-torsion.</p><p>These are algebraic support results. The <code>K(n)</code>-local sphere, its homotopy groups,
+their p-adic topology and module structure, and their ranks are not constructed here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.one_sub_shift_surjective</code> <small>line 27</small><div class="doc"><p>The map <code>1 - shift</code> is surjective for any tower of finite abelian groups.</p></div><pre>theorem one_sub_shift_surjective (A : ℕ → Type u)
+    [∀ n, AddCommGroup (A n)] [∀ n, Finite (A n)]
+    (f : ∀ n, A (n + 1) →+ A n) :
+    Function.Surjective (fun x : (n : ℕ) → A n =&gt; fun n =&gt; x n - f n (x (n + 1))) := by
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.eq_zero_of_surjective_smul</code> <small>line 46</small><div class="doc"><p>A surjective topologically nilpotent scalar annihilates a compact Hausdorff module.</p></div><pre>theorem eq_zero_of_surjective_smul {R : Type u} {M : Type v}
+    [Semiring R] [TopologicalSpace R] [AddCommMonoid M] [Module R M]
+    [TopologicalSpace M] [CompactSpace M] [T2Space M] [ContinuousSMul R M]
+    (a : R) (ha : Tendsto (fun n : ℕ =&gt; a ^ n) atTop (𝓝 0))
+    (hs : Function.Surjective (fun x : M =&gt; a • x)) (x : M) : x = 0 := by
+…</pre></li><li id=L85><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.finite_of_finite_mod_p</code> <small>line 85</small><div class="doc"><p>Compact p-adic Nakayama: finiteness modulo <code>p</code> implies finite generation over <code>ℤ_[p]</code>.</p></div><pre>theorem finite_of_finite_mod_p (p : ℕ) [Fact p.Prime]
+    (M : Type u) [AddCommGroup M] [Module ℤ_[p] M]
+    [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousSMul ℤ_[p] M]
+    [CompactSpace M] [T2Space M]
+    [Finite (M ⧸ LinearMap.range (LinearMap.lsmul ℤ_[p] M (p : ℤ_[p])))] :
+    Module.Finite ℤ_[p] M := by
+…</pre></li><li id=L127><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.finite_mod_p_of_finite_module</code> <small>line 127</small><div class="doc"><p>A finitely generated <code>ℤ_[p]</code>-module has finite quotient modulo <code>p</code>.</p></div><pre>theorem finite_mod_p_of_finite_module (p : ℕ) [Fact p.Prime]
+    (M : Type u) [AddCommGroup M] [Module ℤ_[p] M] [Module.Finite ℤ_[p] M] :
+    Finite (M ⧸ LinearMap.range (LinearMap.lsmul ℤ_[p] M (p : ℤ_[p]))) := by
+…</pre></li><li id=L143><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.finite_of_finite_module_killed_by_p</code> <small>line 143</small><div class="doc"><p>A finitely generated <code>ℤ_[p]</code>-module killed by <code>p</code> is finite.</p></div><pre>theorem finite_of_finite_module_killed_by_p (p : ℕ) [Fact p.Prime]
+    (M : Type u) [AddCommGroup M] [Module ℤ_[p] M] [Module.Finite ℤ_[p] M]
+    (hp : ∀ x : M, (p : ℤ_[p]) • x = 0) : Finite M := by
+…</pre></li><li id=L156><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.finite_p_torsion</code> <small>line 156</small><div class="doc"><p>The <code>p</code>-torsion of a finitely generated <code>ℤ_[p]</code>-module is finite.</p></div><pre>theorem finite_p_torsion (p : ℕ) [Fact p.Prime]
+    (M : Type u) [AddCommGroup M] [Module ℤ_[p] M] [Module.Finite ℤ_[p] M] :
+    Finite (LinearMap.ker (LinearMap.lsmul ℤ_[p] M (p : ℤ_[p]))) := by
+…</pre></li><li id=L167><b>theorem</b> <code>OAI.KnLocalSphere.IntegralRecovery.module_finite_iff_finite_mod_p</code> <small>line 167</small><div class="doc"><p>A compact Hausdorff <code>ℤ_[p]</code>-module is finitely generated iff it is finite modulo <code>p</code>.</p></div><pre>theorem module_finite_iff_finite_mod_p (p : ℕ) [Fact p.Prime]
+    (M : Type u) [AddCommGroup M] [Module ℤ_[p] M]
+    [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousSMul ℤ_[p] M]
+    [CompactSpace M] [T2Space M] :
+    Module.Finite ℤ_[p] M ↔
+      Finite (M ⧸ LinearMap.range (LinearMap.lsmul ℤ_[p] M (p : ℤ_[p]))) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

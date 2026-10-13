@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/EndpointEnergy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/EndpointEnergy.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>EndpointEnergy.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>EndpointEnergy.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/EndpointEnergy.lean#L1">source</a></p><div class="doc"><p>Bounded intercept speeds give finite endpoint values in the moving-site argument.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem358.intercept_lipschitzOn</code> <small>line 15</small><div class="doc"><p>A differentiable intercept with uniformly bounded speed is Lipschitz on its
+open parameter interval. No value or continuity at either endpoint is assumed.</p></div><pre>theorem intercept_lipschitzOn {a b : ℝ} {c c&#x27; : ℝ → ℝ} {L : ℝ≥0}
+    (hderiv : ∀ t ∈ Ioo a b, HasDerivAt c (c&#x27; t) t)
+    (hbound : ∀ t ∈ Ioo a b, |c&#x27; t| ≤ L) :
+    LipschitzOnWith L c (Ioo a b) := by
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem358.exists_intercept_extension</code> <small>line 26</small><div class="doc"><p>An intercept with bounded speed admits a globally Lipschitz extension from
+the open parameter interval. This is used only for endpoint existence.</p></div><pre>theorem exists_intercept_extension {a b : ℝ} {c c&#x27; : ℝ → ℝ} {L : ℝ≥0}
+    (hderiv : ∀ t ∈ Ioo a b, HasDerivAt c (c&#x27; t) t)
+    (hbound : ∀ t ∈ Ioo a b, |c&#x27; t| ≤ L) :
+    ∃ g : ℝ → ℝ, LipschitzWith L g ∧ EqOn c g (Ioo a b) :=
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.Problem358.intercept_endpoint_limits</code> <small>line 34</small><div class="doc"><p>The original intercept tends to the values of any continuous extension at
+both endpoints, from inside the parameter interval.</p></div><pre>theorem intercept_endpoint_limits {a b : ℝ} (hab : a &lt; b) {c g : ℝ → ℝ}
+    (hg : Continuous g) (hcg : EqOn c g (Ioo a b)) :
+    Tendsto c (𝓝[&gt;] a) (𝓝 (g a)) ∧ Tendsto c (𝓝[&lt;] b) (𝓝 (g b)) := by
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.Problem358.exists_intercept_endpoint_limits</code> <small>line 46</small><div class="doc"><p>Finite one-sided endpoint limits follow directly from the derivative bound.</p></div><pre>theorem exists_intercept_endpoint_limits {a b : ℝ} (hab : a &lt; b)
+    {c c&#x27; : ℝ → ℝ} {L : ℝ≥0}
+    (hderiv : ∀ t ∈ Ioo a b, HasDerivAt c (c&#x27; t) t)
+    (hbound : ∀ t ∈ Ioo a b, |c&#x27; t| ≤ L) :
+    ∃ ca cb : ℝ, Tendsto c (𝓝[&gt;] a) (𝓝 ca) ∧
+      Tendsto c (𝓝[&lt;] b) (𝓝 cb) ∧ |cb - ca| ≤ L * (b - a) := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.Problem358.exists_finite_intercept_extensions</code> <small>line 58</small><div class="doc"><p>The extensions can be chosen simultaneously for a finite family of intercepts.</p></div><pre>theorem exists_finite_intercept_extensions {ι : Type*} {a b : ℝ}
+    {c c&#x27; : ι → ℝ → ℝ} {L : ι → ℝ≥0}
+    (hderiv : ∀ i t, t ∈ Ioo a b → HasDerivAt (c i) (c&#x27; i t) t)
+    (hbound : ∀ i t, t ∈ Ioo a b → |c&#x27; i t| ≤ L i) :
+    ∃ g : ι → ℝ → ℝ, ∀ i, LipschitzWith (L i) (g i) ∧ EqOn (c i) (g i) (Ioo a b) := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.Problem358.intercept_normalization_closed</code> <small>line 67</small><div class="doc"><p>Weighted normalization on the interior persists at both endpoints of a
+continuous family. This avoids any mass-dependent endpoint estimate.</p></div><pre>theorem intercept_normalization_closed {ι : Type*} [Fintype ι]
+    {a b : ℝ} (hab : a &lt; b) (m : ι → ℝ) {g : ι → ℝ → ℝ}
+    (hg : ∀ i, Continuous (g i))
+    (hnorm : ∀ t ∈ Ioo a b, ∑ i, m i * g i t = 0) :
+    ∀ t ∈ Icc a b, ∑ i, m i * g i t = 0 := by
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.Problem358.InterceptEndpointExtension.abs_le_sqrt_energy_div_mass</code> <small>line 92</small><div class="doc"><p>A positive weighted quadratic-energy bound controls every coordinate.
+The mass dependence is used only to construct endpoint intercepts.</p></div><pre>theorem abs_le_sqrt_energy_div_mass
+    {ι : Type*} [Fintype ι] (m r : ι → ℝ) {energy : ℝ}
+    (hm : ∀ i, 0 &lt; m i)
+    (henergy : (∑ i, m i * r i ^ 2) ≤ energy) (i : ι) :
+    |r i| ≤ Real.sqrt (energy / m i) := by
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.Problem358.InterceptEndpointExtension.lipschitzOnWith_of_weighted_derivative_energy</code> <small>line 109</small><div class="doc"><p>Intercept derivatives with a uniform weighted energy bound give a
+coordinatewise Lipschitz estimate on the entire open time interval.</p></div><pre>theorem lipschitzOnWith_of_weighted_derivative_energy
+    {ι : Type*} [Fintype ι] (m : ι → ℝ) (c r : ι → ℝ → ℝ)
+    {a b energy : ℝ} (hm : ∀ i, 0 &lt; m i)
+    (hderiv : ∀ i t, t ∈ Ioo a b → HasDerivAt (c i) (r i t) t)
+    (henergy : ∀ t ∈ Ioo a b, (∑ i, m i * r i t ^ 2) ≤ energy)
+    (i : ι) :
+    LipschitzOnWith ⟨Real.sqrt (energy / m i), Real.sqrt_nonneg _⟩ (c i) (Ioo a b) := by
+…</pre></li><li id=L126><b>theorem</b> <code>OAI.Problem358.InterceptEndpointExtension.exists_lipschitz_extension</code> <small>line 126</small><div class="doc"><p>A fixed-mass intercept path with bounded weighted derivative energy has
+continuous endpoint values.  The extension agrees on the interior and has the
+same interior derivatives.  No separation of endpoint sites is required.</p></div><pre>theorem exists_lipschitz_extension
+    {ι : Type*} [Fintype ι] (m : ι → ℝ) (c r : ι → ℝ → ℝ)
+    {a b energy : ℝ} (hm : ∀ i, 0 &lt; m i)
+    (hderiv : ∀ i t, t ∈ Ioo a b → HasDerivAt (c i) (r i t) t)
+    (henergy : ∀ t ∈ Ioo a b, (∑ i, m i * r i t ^ 2) ≤ energy) :
+    ∃ C : ι → ℝ → ℝ,
+      (∀ i, LipschitzWith ⟨Real.sqrt (energy / m i), Real.sqrt_nonneg _⟩ (C i)) ∧
+      (∀ i, EqOn (c i) (C i) (Ioo a b)) ∧
+      (∀ i t, t ∈ Ioo a b → HasDerivAt (C i) (r i t) t) := by
+…</pre></li><li id=L147><b>theorem</b> <code>OAI.Problem358.InterceptEndpointExtension.exists_normalized_lipschitz_extension</code> <small>line 147</small><div class="doc"><p>The normalization of an interior intercept path extends to both endpoints.
+The extension is globally measurable, hence can be used directly by the finite
+affine-potential time-integration interface.</p></div><pre>theorem exists_normalized_lipschitz_extension
+    {ι : Type*} [Fintype ι] (m : ι → ℝ) (c r : ι → ℝ → ℝ)
+    {a b energy : ℝ} (hab : a &lt; b) (hm : ∀ i, 0 &lt; m i)
+    (hderiv : ∀ i t, t ∈ Ioo a b → HasDerivAt (c i) (r i t) t)
+    (henergy : ∀ t ∈ Ioo a b, (∑ i, m i * r i t ^ 2) ≤ energy)
+    (hnormal : ∀ t ∈ Ioo a b, (∑ i, m i * c i t) = 0) :
+    ∃ C : ι → ℝ → ℝ,
+      (∀ i, LipschitzWith ⟨Real.sqrt (energy / m i), Real.sqrt_nonneg _⟩ (C i)) ∧
+      (∀ i, EqOn (c i) (C i) (Ioo a b)) ∧
+      (∀ i t, t ∈ Ioo a b → HasDerivAt (C i) (r i t) t) ∧
+      (∀ t ∈ Icc a b, (∑ i, m i * C i t) = 0) ∧
+      (∀ i, Measurable (C i)) := by
+…</pre></li><li id=L188><b>def</b> <code>OAI.Problem358.WeightedEndpointEnergy.weightedVector</code> <small>line 188</small><div class="doc"><p>Encode the weighted coefficient norm in a Euclidean space.</p></div><pre>def weightedVector (m z : ι → ℝ) : EuclideanSpace ℝ ι :=
+…</pre></li><li id=L191><b>theorem</b> <code>OAI.Problem358.WeightedEndpointEnergy.norm_weightedVector_sq</code> <small>line 191</small></li><li id=L199><b>theorem</b> <code>OAI.Problem358.WeightedEndpointEnergy.weightedVector_sub</code> <small>line 199</small></li><li id=L204><b>theorem</b> <code>OAI.Problem358.WeightedEndpointEnergy.hasDerivAt_weightedVector</code> <small>line 204</small></li><li id=L215><b>theorem</b> <code>OAI.Problem358.WeightedEndpointEnergy.weighted_path_lipschitzOn_Ioo</code> <small>line 215</small><div class="doc"><p>The weighted coefficient path is Lipschitz with the square root of its
+aggregate energy bound, independently of the number and sizes of the masses.</p></div><pre>theorem weighted_path_lipschitzOn_Ioo
+    (m : ι → ℝ) (c r : ι → ℝ → ℝ) {a b energy : ℝ}
+    (hm : ∀ i, 0 ≤ m i) (he : 0 ≤ energy)
+    (hd : ∀ i t, t ∈ Ioo a b → HasDerivAt (c i) (r i t) t)
+    (henergy : ∀ t ∈ Ioo a b, ∑ i, m i * r i t ^ 2 ≤ energy) :
+    LipschitzOnWith ⟨Real.sqrt energy, Real.sqrt_nonneg _⟩
+      (fun t =&gt; weightedVector m (fun i =&gt; c i t)) (Ioo a b) := by
+…</pre><p class="refs">Mentions: <a href="EndpointEnergy.lean.html#L188">OAI.Problem358.WeightedEndpointEnergy.weightedVector</a></p></li><li id=L232><b>theorem</b> <code>OAI.Problem358.WeightedEndpointEnergy.weighted_path_lipschitzOn_Icc</code> <small>line 232</small><div class="doc"><p>Continuity extends the mass-independent weighted Lipschitz estimate to the
+endpoints. Zero masses are allowed in this estimate.</p></div><pre>theorem weighted_path_lipschitzOn_Icc
+    (m : ι → ℝ) (c r : ι → ℝ → ℝ) {a b energy : ℝ}
+    (hab : a &lt; b) (hm : ∀ i, 0 ≤ m i) (he : 0 ≤ energy)
+    (hc : ∀ i, ContinuousOn (c i) (Icc a b))
+    (hd : ∀ i t, t ∈ Ioo a b → HasDerivAt (c i) (r i t) t)
+    (henergy : ∀ t ∈ Ioo a b, ∑ i, m i * r i t ^ 2 ≤ energy) :
+    LipschitzOnWith ⟨Real.sqrt energy, Real.sqrt_nonneg _⟩
+      (fun t =&gt; weightedVector m (fun i =&gt; c i t)) (Icc a b) := by
+…</pre><p class="refs">Mentions: <a href="EndpointEnergy.lean.html#L188">OAI.Problem358.WeightedEndpointEnergy.weightedVector</a></p></li><li id=L250><b>theorem</b> <code>OAI.Problem358.WeightedEndpointEnergy.weighted_displacement_sq_le</code> <small>line 250</small><div class="doc"><p>Aggregate endpoint coefficient displacement inherits exactly the derivative
+energy constant; unlike coordinatewise summation there is no cardinality loss.</p></div><pre>theorem weighted_displacement_sq_le
+    (m : ι → ℝ) (c r : ι → ℝ → ℝ) {a b energy s t : ℝ}
+    (hab : a &lt; b) (hm : ∀ i, 0 ≤ m i) (he : 0 ≤ energy)
+    (hc : ∀ i, ContinuousOn (c i) (Icc a b))
+    (hd : ∀ i q, q ∈ Ioo a b → HasDerivAt (c i) (r i q) q)
+    (henergy : ∀ q ∈ Ioo a b, ∑ i, m i * r i q ^ 2 ≤ energy)
+    (hs : s ∈ Icc a b) (ht : t ∈ Icc a b) :
+    ∑ i, m i * (c i t - c i s) ^ 2 ≤ energy * (t - s) ^ 2 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

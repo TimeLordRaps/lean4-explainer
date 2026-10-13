@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/CyclicCeilingCount.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/CyclicCeilingCount.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>CyclicCeilingCount.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>CyclicCeilingCount.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/CyclicCeilingCount.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.Problem337.ceiling_remainder_count_of_fourier</code> <small>line 12</small><div class="doc"><p>Positive exponential cancellation supplies many small natural ceiling
+remainders, with repetitions of the indexed numerators retained.</p></div><pre>theorem ceiling_remainder_count_of_fourier {u : ℕ} [NeZero u]
+    {Ω : Type*} [Fintype Ω] (A : Ω → ℕ) (δ : ℝ)
+    (hδ : 0 &lt; δ) (hsmall : δ ≤ 1 / 65536) (hscale : 128 ≤ δ * u)
+    (hdegree : ⌊1 / (64 * δ ^ 3)⌋₊ ≤ u)
+    (hfourier : ∀ l : ℕ, 1 ≤ l → l ≤ ⌊1 / δ ^ 4⌋₊ →
+      ‖∑ ω : Ω, Complex.exp
+        (2 * Real.pi * Complex.I * (l * A ω : ℕ) / (u : ℂ))‖ ≤
+          (Fintype.card Ω : ℝ) * δ ^ 3) :
+    (δ / 2) * (Fintype.card Ω : ℝ) ≤
+      ((Finset.univ.filter (fun ω =&gt;
+        ((u * ⌈(A ω : ℚ) / (u : ℚ)⌉₊ - A ω : ℕ) : ℝ) &lt; δ * u)).card : ℝ) := by
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.Problem337.ceiling_remainder_count_of_fourier_average</code> <small>line 32</small><div class="doc"><p>The same counting conclusion from normalized Fourier averages.</p></div><pre>theorem ceiling_remainder_count_of_fourier_average {u : ℕ} [NeZero u]
+    {Ω : Type*} [Fintype Ω] (A : Ω → ℕ) (δ : ℝ)
+    (hδ : 0 &lt; δ) (hsmall : δ ≤ 1 / 65536) (hscale : 128 ≤ δ * u)
+    (hdegree : ⌊1 / (64 * δ ^ 3)⌋₊ ≤ u)
+    (hfourier : ∀ l : ℕ, 1 ≤ l → l ≤ ⌊1 / δ ^ 4⌋₊ →
+      ‖(∑ ω : Ω, Complex.exp
+        (2 * Real.pi * Complex.I * (l * A ω : ℕ) / (u : ℂ))) /
+          (Fintype.card Ω : ℂ)‖ ≤ δ ^ 3) :
+    (δ / 2) * (Fintype.card Ω : ℝ) ≤
+      ((Finset.univ.filter (fun ω =&gt;
+        ((u * ⌈(A ω : ℚ) / (u : ℚ)⌉₊ - A ω : ℕ) : ℝ) &lt; δ * u)).card : ℝ) := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.Problem337.ceiling_remainder_count_of_character_expect</code> <small>line 59</small><div class="doc"><p>Direct finite-average character interface for the random-product second
+moment route; no conversion to real fractional parts is required.</p></div><pre>theorem ceiling_remainder_count_of_character_expect {u : ℕ} [NeZero u]
+    {Ω : Type*} [Fintype Ω] (A : Ω → ℕ) (δ : ℝ)
+    (hδ : 0 &lt; δ) (hsmall : δ ≤ 1 / 65536) (hscale : 128 ≤ δ * u)
+    (hdegree : ⌊1 / (64 * δ ^ 3)⌋₊ ≤ u)
+    (hfourier : ∀ l : ℕ, 1 ≤ l → l ≤ ⌊1 / δ ^ 4⌋₊ →
+      ‖𝔼 ω : Ω, ZMod.stdAddChar ((l : ZMod u) * (A ω : ZMod u))‖ ≤ δ ^ 3) :
+    (δ / 2) * (Fintype.card Ω : ℝ) ≤
+      ((Finset.univ.filter (fun ω =&gt;
+        ((u * ⌈(A ω : ℚ) / (u : ℚ)⌉₊ - A ω : ℕ) : ℝ) &lt; δ * u)).card : ℝ) := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.Problem337.ceiling_remainder_count_of_character_expect_automatic</code> <small>line 76</small><div class="doc"><p>Cancellation forces its own modulus-size conditions, so the direct
+ceiling-remainder count has no separate scale or degree hypothesis.</p></div><pre>theorem ceiling_remainder_count_of_character_expect_automatic {u : ℕ} [NeZero u]
+    {Ω : Type*} [Fintype Ω] (A : Ω → ℕ) (δ : ℝ)
+    (hδ : 0 &lt; δ) (hsmall : δ ≤ 1 / 65536)
+    (hfourier : ∀ l : ℕ, 1 ≤ l → l ≤ ⌊1 / δ ^ 4⌋₊ →
+      ‖𝔼 ω : Ω, ZMod.stdAddChar ((l : ZMod u) * (A ω : ZMod u))‖ ≤ δ ^ 3) :
+    (δ / 2) * (Fintype.card Ω : ℝ) ≤
+      ((Finset.univ.filter (fun ω =&gt;
+        ((u * ⌈(A ω : ℚ) / (u : ℚ)⌉₊ - A ω : ℕ) : ℝ) &lt; δ * u)).card : ℝ) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

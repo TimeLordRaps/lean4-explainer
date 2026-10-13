@@ -1,0 +1,1 @@
+window.l4shard("av", [["Imo1982P3.le_avg",40,50],["Imo1992P3.exists_avoiding",61,300],["Imo2019P5.averageSteps",125,584],["Usa1993P5.a_avg",211,28],["Usa1993P5.b_avg",211,31],["Usa2004P4.exists_fresh_rat_avoiding",245,165],["Usa2004P4.exists_rat_between_avoiding",245,171],["Usa2015P6.recurrent_averages_absurd",287,64],["Usa2017P4.avail",293,66]]);

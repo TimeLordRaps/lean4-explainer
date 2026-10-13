@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/CoverNormal.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/CoverNormal.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>CoverNormal.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>CoverNormal.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/CoverNormal.lean#L1">source</a></p><div class="doc"><h3>Universal normal polynomials on line and smooth curve coverings</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Nagata.Workers.W17.indexedPlaneFamily_chart_orders</code> <small>line 21</small><div class="doc"><p>A polynomial kernel family specializes to actual chart ideal powers.</p></div><pre>theorem indexedPlaneFamily_chart_orders {r d : ℕ} (m : Fin r → ℕ)
+    (c : Fin r → Fin 3) (p : Fin r × Fin 2 → Polynomial ℂ)
+    (q : HomogeneousMonomial d → Polynomial ℂ)
+    (hq : (parameterMatrix (chartPlaneJetMatrix c d m) p).mulVec q = 0)
+    (s : ℂ) :
+    ∀ i, Nagata.AffineMultiplicity.orderAtLeast (fun j =&gt; (p (i,j)).eval s) (m i)
+      (directChartHom (c i) ((indexedPlaneFamily d q).eval (MvPolynomial.C s))) := by
+…</pre><p class="refs">Mentions: <a href="HomogeneousFamilies.lean.html#L263">OAI.Nagata.Workers.W17.indexedPlaneFamily</a></p></li><li id=L41><b>theorem</b> <code>OAI.Nagata.Workers.W17.universalSupport_polynomial_family</code> <small>line 41</small><div class="doc"><p>The actual family is nonzero at parameter zero and homogeneous of degree d;
+all moving-configuration ordinary orders hold without a genericity assumption
+on the parameter after the polynomial kernel identity is established.</p></div><pre>theorem universalSupport_polynomial_family {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (c : Fin r → Fin 3) (p : Fin r × Fin 2 → Polynomial ℂ)
+    (hbase : Function.Injective
+      (configurationChartEmbedding c (fun ij =&gt; (p ij).eval 0))) :
+    ∃ S : Polynomial (MvPolynomial (Fin 3) ℂ),
+      S.coeff 0 ≠ 0 ∧ (∀ α, (S.coeff α).IsHomogeneous d) ∧
+      ∀ s i, Nagata.AffineMultiplicity.orderAtLeast (fun j =&gt; (p (i,j)).eval s) (m i)
+        (directChartHom (c i) (S.eval (MvPolynomial.C s))) := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L66><b>theorem</b> <code>OAI.Nagata.Workers.W17.universalSupport_degree_bounded_normal_data</code> <small>line 66</small><div class="doc"><p>The complete algebraic input to normal specialization comes from actual
+universal homogeneous equations along any distinct-based polynomial motion.</p></div><pre>theorem universalSupport_degree_bounded_normal_data {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (c : Fin r → Fin 3) (p : Fin r × Fin 2 → Polynomial ℂ)
+    (hbase : Function.Injective
+      (configurationChartEmbedding c (fun ij =&gt; (p ij).eval 0)))
+    (G : MvPolynomial (Fin 3) ℂ) (k : ℕ)
+    (hG : G.IsHomogeneous k) (hunit : ¬IsUnit G) (hk : 0 &lt; k) :
+    ∃ (I : Finset ℕ) (j : ℕ → ℕ) (T : ℕ → MvPolynomial (Fin 3) ℂ) (u : ℕ),
+      (∀ α ∈ I, ¬G ∣ T α) ∧
+      (∀ α ∈ I, j α ≤ d / k ∧ (T α).IsHomogeneous (d - k * j α)) ∧
+      (∀ α ∈ I, u ≤ α + j α) ∧ u ≤ d / k ∧
+      (I.filter (fun α =&gt; α + j α = u)).Nonempty ∧
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L108><b>def</b> <code>OAI.Nagata.Workers.W17.planeCoordinate</code> <small>line 108</small><div class="doc"><p>Ordered affine coordinates of an actual complex-plane point.</p></div><pre>def planeCoordinate (p : ComplexPlane) (a : Fin 2) : ℂ := if a = 0 then p.1 else p.2</pre></li><li id=L111><b>def</b> <code>OAI.Nagata.Workers.W17.affineCoordinateMotion</code> <small>line 111</small><div class="doc"><p>A literal polynomial affine motion, valid for every parameter.</p></div><pre>def affineCoordinateMotion (p V : ComplexPlane) (a : Fin 2) : Polynomial ℂ :=
+…</pre></li><li id=L114><b>theorem</b> <code>OAI.Nagata.Workers.W17.affineCoordinateMotion_eval</code> <small>line 114</small></li><li id=L122><b>def</b> <code>OAI.Nagata.Workers.W17.coveringNormalVelocity</code> <small>line 122</small><div class="doc"><p>Vertical velocity lifting a prescribed covering-frame normal coordinate.</p></div><pre>def coveringNormalVelocity (G : MvPolynomial (Fin 3) ℂ) (k : ℕ)
+    (X : Fin 3 → ℂ → ℂ) (c : Fin 3) (z w : ℂ) : ComplexPlane :=
+…</pre></li><li id=L128><b>theorem</b> <code>OAI.Nagata.Workers.W17.coveringNormalVelocity_derivative</code> <small>line 128</small></li><li id=L140><b>theorem</b> <code>OAI.Nagata.Workers.W17.coveringMotion_base_injective</code> <small>line 140</small><div class="doc"><p>The parameter-zero tuple of these motions is exactly the given genuine
+projective tuple in its selected affine charts.</p></div><pre>theorem coveringMotion_base_injective {r : ℕ}
+    (c : Fin r → Fin 3) (p V : Fin r → ComplexPlane)
+    (hbase : Function.Injective (fun b =&gt; chartPoint₂ (c b) (planeCoordinate (p b)))) :
+    Function.Injective (configurationChartEmbedding c
+      (fun ba =&gt; (affineCoordinateMotion (p ba.1) (V ba.1) ba.2).eval 0)) := by
+…</pre><p class="refs">Mentions: <a href="CoverNormal.lean.html#L108">OAI.Nagata.Workers.W17.planeCoordinate</a>, <a href="CoverNormal.lean.html#L111">OAI.Nagata.Workers.W17.affineCoordinateMotion</a></p></li><li id=L166><b>theorem</b> <code>OAI.Nagata.Workers.W17.universalSupport_selected_line_data</code> <small>line 166</small><div class="doc"><p>Actual universal plane equations give selected homogeneous lifts with
+ordinary surface orders at every prescribed normal displacement.</p></div><pre>theorem universalSupport_selected_line_data {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (G : MvPolynomial (Fin 3) ℂ) (k : ℕ)
+    (hG : G.IsHomogeneous k) (hk : 0 &lt; k)
+    (line ξ displacement : Fin r → ℂ)
+    (hbase : Function.Injective (fun b : Fin r =&gt; (ξ b, (line b)^2 - line b * ξ b)))
+    (hline : ∀ b, Nagata.W04.ReducibleSquare.lineRestriction (line b) G = 0)
+    (hpartial : ∀ b, planePolynomialEval
+      (MvPolynomial.pderiv 1 (Nagata.W27.directChartHom (2 : Fin 3) G))
+      (ξ b, (line b)^2 - line b * ξ b) ≠ 0) :
+    ∃ (indices : Finset ℕ) (j : ℕ → ℕ) (T : ℕ → MvPolynomial (Fin 3) ℂ) (u : ℕ),
+      indices.Nonempty ∧ (∀ α ∈ indices, α + j α = u) ∧
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="LineObstructions.lean.html#L238">OAI.Nagata.W04.ReducibleSquare.lineRestriction</a>, <a href="ChartJets.lean.html#L470">OAI.Nagata.W27.directChartHom</a></p></li><li id=L260><b>theorem</b> <code>OAI.Nagata.Workers.W17.universalSupport_covering_normal_polynomial</code> <small>line 260</small></li><li id=L337><b>theorem</b> <code>OAI.Nagata.Workers.W17.universalSupport_line_normal_polynomial</code> <small>line 337</small><div class="doc"><p>Full literal normal-polynomial conclusion on finitely many smooth line
+components, with all multiplicity and prescribed-displacement quantifiers.</p></div><pre>theorem universalSupport_line_normal_polynomial {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (G : MvPolynomial (Fin 3) ℂ) (k : ℕ)
+    (hG : G.IsHomogeneous k) (hk : 0 &lt; k)
+    (line ξ displacement : Fin r → ℂ)
+    (hbase : Function.Injective (fun b : Fin r =&gt; (ξ b, (line b)^2 - line b * ξ b)))
+    (hline : ∀ b, Nagata.W04.ReducibleSquare.lineRestriction (line b) G = 0)
+    (hpartial : ∀ b, planePolynomialEval
+      (MvPolynomial.pderiv 1 (Nagata.W27.directChartHom (2 : Fin 3) G))
+      (ξ b, (line b)^2 - line b * ξ b) ≠ 0) :
+    ∃ F : Polynomial (MvPolynomial (Fin 3) ℂ),
+      (∀ n, (F.coeff n).IsHomogeneous (d - k*n)) ∧
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="LineObstructions.lean.html#L238">OAI.Nagata.W04.ReducibleSquare.lineRestriction</a>, <a href="ChartJets.lean.html#L470">OAI.Nagata.W27.directChartHom</a></p></li><li id=L379><b>theorem</b> <code>OAI.Nagata.Workers.W17.universalSupport_smooth_covering_normal_polynomial</code> <small>line 379</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/GraphThreshold/OutsideChangeOfMeasure.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/GraphThreshold/OutsideChangeOfMeasure.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">GraphThreshold</a> / <span>OutsideChangeOfMeasure.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">GraphThreshold</a>/<span>OutsideChangeOfMeasure.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/GraphThreshold/OutsideChangeOfMeasure.lean#L1">source</a></p><div class="doc"><h3>Outside-coordinate change of measure for the actual resampling transition</h3><p>The observable may depend on the same Bernoulli set used at every other tree
+node.  The only locality required here is that it ignores the fixed target's
+incoming label.  No independence between different tree nodes is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.LeanBlast.SecondKahnKalai.cutoffTargetMass</code> <small>line 28</small><div class="doc"><p>Actual target marginal restricted to the event that the density is at least <code>δ</code>.</p></div><pre>def cutoffTargetMass (ν : FiniteLaw B) (A : B → Finset X) (p δ : ℝ)
+    (W : Finset X) (b : B) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a></p></li><li id=L33><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.cutoffTargetMass_nonneg</code> <small>line 33</small></li><li id=L44><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.cutoffTargetMass_mul_eq_expectation</code> <small>line 44</small><div class="doc"><p>This marginal is the literal conditional expectation of the target-and-density event.</p></div><pre>theorem cutoffTargetMass_mul_eq_expectation (ν : FiniteLaw B) (A : B → Finset X)
+    {p : ℝ} (hν : ν.IsPositive) (hp : 0 &lt; p) (δ : ℝ)
+    (W : Finset X) (b : B) (f : Finset X → ℝ) :
+    cutoffTargetMass ν A p δ W b * f W =
+      (resamplingLaw ν A p W hν hp).expectation
+        (fun cb =&gt; if cb.2 = b ∧ δ ≤ resamplingZ ν A p (resamplingY A W cb.1)
+          then f W else 0) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="OutsideChangeOfMeasure.lean.html#L28">OAI.LeanBlast.SecondKahnKalai.cutoffTargetMass</a>, <a href="Resampling.lean.html#L98">OAI.LeanBlast.SecondKahnKalai.resamplingLaw</a>, <a href="Resampling.lean.html#L22">OAI.LeanBlast.SecondKahnKalai.resamplingZ</a>, <a href="Resampling.lean.html#L15">OAI.LeanBlast.SecondKahnKalai.resamplingY</a></p></li><li id=L60><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.subset_union_iff_sdiff_subset</code> <small>line 60</small></li><li id=L72><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.dependsOutside_union</code> <small>line 72</small><div class="doc"><p>Modifying only coordinates inside the ignored label leaves the observable unchanged.</p></div><pre>theorem dependsOutside_union {β : Type*} (A S : Finset X) (f : Finset X → β)
+    (hf : DependsOutside A f) (hSA : S ⊆ A) (W : Finset X) :
+    f (W ∪ S) = f W := by
+…</pre><p class="refs">Mentions: <a href="ProbabilityTree.lean.html#L24">OAI.LeanBlast.SecondKahnKalai.DependsOutside</a></p></li><li id=L85><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.inv_pow_card_mul_pow_sdiff</code> <small>line 85</small></li><li id=L97><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.cutoff_source_weight_le</code> <small>line 97</small><div class="doc"><p>The only pointwise change of density is the reciprocal cutoff.
+The remaining event uses coordinates inside the fixed target label.</p></div><pre>theorem cutoff_source_weight_le (ν : FiniteLaw B) (A : B → Finset X)
+    {p δ : ℝ} (hp : 0 ≤ p) (hδ : 0 &lt; δ) (W : Finset X) (c b : B) :
+    (if δ ≤ resamplingZ ν A p (resamplingY A W c)
+      then resamplingWeight ν A p W (c, b) else 0) ≤
+      if A b \ A c ⊆ W then δ⁻¹ * ν.weight c * ν.weight b * (p⁻¹) ^ (A b).card
+      else 0 := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="Resampling.lean.html#L22">OAI.LeanBlast.SecondKahnKalai.resamplingZ</a>, <a href="Resampling.lean.html#L15">OAI.LeanBlast.SecondKahnKalai.resamplingY</a>, <a href="Resampling.lean.html#L31">OAI.LeanBlast.SecondKahnKalai.resamplingWeight</a></p></li><li id=L129><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.bernoulli_subset_expectation_of_dependsOutside</code> <small>line 129</small><div class="doc"><p>A containment event on ignored coordinates is independent of the observable.
+This is derived from the fixed-union formula for the actual Bernoulli product weights.</p></div><pre>theorem bernoulli_subset_expectation_of_dependsOutside
+    {p : ℝ} (hp : p ≠ 0) (A S : Finset X) (f : Finset X → ℝ)
+    (hf : DependsOutside A f) (hSA : S ⊆ A) :
+    bernoulliExpectation p (fun W =&gt; if S ⊆ W then f W else 0) =
+      p ^ S.card * bernoulliExpectation p f := by
+…</pre><p class="refs">Mentions: <a href="ProbabilityTree.lean.html#L24">OAI.LeanBlast.SecondKahnKalai.DependsOutside</a>, <a href="../../../ComparatorChallenges/SecondKahnKalai.lean.html#L19">OAI.LeanBlast.SecondKahnKalai.bernoulliExpectation</a></p></li><li id=L152><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.outside_change_of_measure_moment</code> <small>line 152</small><div class="doc"><p>Change of measure before applying spread: the exact loss is the intersection moment.</p></div><pre>theorem outside_change_of_measure_moment (ν : FiniteLaw B) (A : B → Finset X)
+    {p δ : ℝ} (hp : 0 &lt; p) (hp1 : p ≤ 1) (hδ : 0 &lt; δ)
+    (b : B) (f : Finset X → ℝ) (hf : ∀ W, 0 ≤ f W)
+    (hloc : DependsOutside (A b) f) :
+    bernoulliExpectation p (fun W =&gt; cutoffTargetMass ν A p δ W b * f W) ≤
+      δ⁻¹ * ν.weight b * bernoulliExpectation p f *
+        ν.expectation (fun c =&gt; (p⁻¹) ^ (A c ∩ A b).card) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="ProbabilityTree.lean.html#L24">OAI.LeanBlast.SecondKahnKalai.DependsOutside</a>, <a href="../../../ComparatorChallenges/SecondKahnKalai.lean.html#L19">OAI.LeanBlast.SecondKahnKalai.bernoulliExpectation</a>, <a href="OutsideChangeOfMeasure.lean.html#L28">OAI.LeanBlast.SecondKahnKalai.cutoffTargetMass</a></p></li><li id=L212><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.outside_change_of_measure</code> <small>line 212</small></li><li id=L247><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.outside_change_of_measure_of_le</code> <small>line 247</small><div class="doc"><p>Any smaller target mass, including local non-failure, obeys the same bound.</p></div><pre>theorem outside_change_of_measure_of_le (ν : FiniteLaw B) (A : B → Finset X)
+    {p a : ℝ} (hp : 0 &lt; p) (hp1 : p ≤ 1) (ha : 0 ≤ a)
+    (hs : IsSpread ν A a) (m : ℕ) (b : B) (hAb : (A b).card ≤ m)
+    (hsmall : a / p ≤ Real.exp (-50))
+    (f : Finset X → ℝ) (hf : ∀ W, 0 ≤ f W) (hloc : DependsOutside (A b) f)
+    (t : Finset X → ℝ)
+    (ht : ∀ W, t W ≤ cutoffTargetMass ν A p (Real.exp (-10 * (m : ℝ))) W b) :
+    bernoulliExpectation p (fun W =&gt; t W * f W) ≤
+      Real.exp (11 * (m : ℝ)) * ν.weight b * bernoulliExpectation p f := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="Basic.lean.html#L28">OAI.LeanBlast.SecondKahnKalai.IsSpread</a>, <a href="ProbabilityTree.lean.html#L24">OAI.LeanBlast.SecondKahnKalai.DependsOutside</a>, <a href="OutsideChangeOfMeasure.lean.html#L28">OAI.LeanBlast.SecondKahnKalai.cutoffTargetMass</a>, <a href="../../../ComparatorChallenges/SecondKahnKalai.lean.html#L19">OAI.LeanBlast.SecondKahnKalai.bernoulliExpectation</a></p></li><li id=L264><b>theorem</b> <code>OAI.LeanBlast.SecondKahnKalai.outside_change_of_measure_law</code> <small>line 264</small><div class="doc"><p>The same inequality stated as the expectation of the actual transition event.</p></div><pre>theorem outside_change_of_measure_law (ν : FiniteLaw B) (A : B → Finset X)
+    (hν : ν.IsPositive) {p a : ℝ} (hp : 0 &lt; p) (hp1 : p ≤ 1) (ha : 0 ≤ a)
+    (hs : IsSpread ν A a) (m : ℕ) (b : B) (hAb : (A b).card ≤ m)
+    (hsmall : a / p ≤ Real.exp (-50))
+    (f : Finset X → ℝ) (hf : ∀ W, 0 ≤ f W) (hloc : DependsOutside (A b) f) :
+    bernoulliExpectation p (fun W =&gt;
+      (resamplingLaw ν A p W hν hp).expectation
+        (fun cb =&gt; if cb.2 = b ∧ Real.exp (-10 * (m : ℝ)) ≤
+            resamplingZ ν A p (resamplingY A W cb.1) then f W else 0)) ≤
+      Real.exp (11 * (m : ℝ)) * ν.weight b * bernoulliExpectation p f := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L9">OAI.LeanBlast.SecondKahnKalai.FiniteLaw</a>, <a href="Basic.lean.html#L28">OAI.LeanBlast.SecondKahnKalai.IsSpread</a>, <a href="ProbabilityTree.lean.html#L24">OAI.LeanBlast.SecondKahnKalai.DependsOutside</a>, <a href="../../../ComparatorChallenges/SecondKahnKalai.lean.html#L19">OAI.LeanBlast.SecondKahnKalai.bernoulliExpectation</a>, <a href="Resampling.lean.html#L98">OAI.LeanBlast.SecondKahnKalai.resamplingLaw</a>, <a href="Resampling.lean.html#L22">OAI.LeanBlast.SecondKahnKalai.resamplingZ</a>, <a href="Resampling.lean.html#L15">OAI.LeanBlast.SecondKahnKalai.resamplingY</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

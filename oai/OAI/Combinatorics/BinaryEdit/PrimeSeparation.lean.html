@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/PrimeSeparation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/PrimeSeparation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>PrimeSeparation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>PrimeSeparation.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/PrimeSeparation.lean#L1">source</a></p><div class="doc"><h3>Large-prime divisor counting</h3><p>The prime-divisor counting estimate gives the arithmetic step in the
+finite-tree separation induction, <code>prop:finite-separation</code>.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.PrimeSeparation.card_filter_dvd_lt</code> <small>line 18</small><div class="doc"><p>Fewer than <code>q</code> distinct primes at least <code>L</code> can divide a positive
+integer smaller than <code>L ^ q</code>. The indexing set need not be all of a type.</p></div><pre>theorem card_filter_dvd_lt {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (p : ι → ℕ) (L q n : ℕ)
+    (hp : ∀ i ∈ s, (p i).Prime)
+    (hinj : Set.InjOn p (s : Set ι))
+    (hL : ∀ i ∈ s, L ≤ p i)
+    (hLpos : 0 &lt; L) (hnpos : 0 &lt; n) (hn : n &lt; L ^ q) :
+    (s.filter fun i =&gt; p i ∣ n).card &lt; q := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.PrimeSeparation.card_filter_int_dvd_lt</code> <small>line 45</small><div class="doc"><p>Integer form of <code>card_filter_dvd_lt</code>, with no sign restriction.</p></div><pre>theorem card_filter_int_dvd_lt {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (p : ι → ℕ) (L q : ℕ) (z : ℤ)
+    (hp : ∀ i ∈ s, (p i).Prime)
+    (hinj : Set.InjOn p (s : Set ι))
+    (hL : ∀ i ∈ s, L ≤ p i)
+    (hLpos : 0 &lt; L) (hz : z ≠ 0) (hsmall : z.natAbs &lt; L ^ q) :
+    (s.filter fun i =&gt; (p i : ℤ) ∣ z).card &lt; q := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.PrimeSeparation.finite_tree_few_prime_divisors</code> <small>line 58</small><div class="doc"><p>The numerical divisor estimate used for two different rows of the finite
+construction (<code>T = k^(20*k)</code>, primes at least <code>k^4</code>).</p></div><pre>theorem finite_tree_few_prime_divisors {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (p : ι → ℕ) (k : ℕ) (z : ℤ)
+    (hk : 2 ≤ k) (hp : ∀ i ∈ s, (p i).Prime)
+    (hinj : Set.InjOn p (s : Set ι))
+    (hlarge : ∀ i ∈ s, k ^ 4 ≤ p i)
+    (hz : z ≠ 0) (hsmall : z.natAbs &lt; k ^ (20 * k)) :
+    (s.filter fun i =&gt; (p i : ℤ) ∣ z).card &lt; 10 * k := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.PrimeSeparation.finite_tree_many_nondividing_children</code> <small>line 76</small><div class="doc"><p>At least half of the children have periods not dividing the relative
+shift between different rows. <code>Q</code> is arbitrary here; the product <code>R</code> forces
+each child prime to divide the distinguished-shift contribution.</p></div><pre>theorem finite_tree_many_nondividing_children
+    (k Q : ℕ) (p : Fin (20 * k) → ℕ) (z t : ℤ)
+    (hk : 2 ≤ k) (hp : ∀ i, (p i).Prime)
+    (hinj : Function.Injective p) (hlarge : ∀ i, k ^ 4 ≤ p i)
+    (hz : z ≠ 0) (hsmall : z.natAbs &lt; k ^ (20 * k)) :
+    10 * k ≤ (Finset.univ.filter fun i =&gt;
+      ¬ ((Q * p i : ℕ) : ℤ) ∣ z + t * (∏ j, p j : ℕ)).card := by
+…</pre></li><li id=L113><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.PrimeSeparation.not_child_period_dvd_mul</code> <small>line 113</small><div class="doc"><p>For the same row on both sides, coprimality of the parent period and
+<code>R</code> prevents every child period from dividing the distinguished shift.</p></div><pre>theorem not_child_period_dvd_mul (Q R p : ℕ) (t : ℤ)
+    (hcop : Nat.Coprime Q R) (ht : ¬ (Q : ℤ) ∣ t) :
+    ¬ ((Q * p : ℕ) : ℤ) ∣ t * (R : ℤ) := by
+…</pre></li><li id=L126><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.PrimeSeparation.finite_tree_row_pair_nondivisibility</code> <small>line 126</small><div class="doc"><p>Complete row-pair arithmetic in Proposition <code>prop:finite-separation</code>.
+Every pair of legal row indices has at least <code>m/2 = 10*k</code> children for which
+the relative shift is nonzero modulo the child period.</p></div><pre>theorem finite_tree_row_pair_nondivisibility
+    (k Q : ℕ) (p : Fin (20 * k) → ℕ) (a b : ℕ) (t : ℤ)
+    (hk : 2 ≤ k) (hp : ∀ i, (p i).Prime)
+    (hinj : Function.Injective p) (hlarge : ∀ i, k ^ 4 ≤ p i)
+    (ha : a &lt; k ^ (20 * k)) (hb : b &lt; k ^ (20 * k))
+    (hcop : Nat.Coprime Q (∏ j, p j)) (ht : ¬ (Q : ℤ) ∣ t) :
+    10 * k ≤ (Finset.univ.filter fun i =&gt;
+      ¬ ((Q * p i : ℕ) : ℤ) ∣
+        (b : ℤ) - a + t * (∏ j, p j : ℕ)).card := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/TypeFamily.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/TypeFamily.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>TypeFamily.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>TypeFamily.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/TypeFamily.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Problem326.Affine.typeFamily</code> <small>line 15</small><div class="doc"><p>The type-<code>k</code> family is the finite union over coordinate injections. Indexing by all
+injections avoids dependent coordinate casts; every <code>k</code>-element support is represented.</p></div><pre>def typeFamily {k d : ℕ} (t β : ℝ)
+    (Λ : (Fin k ↪ Fin d) → Finset (Label k)) : Finset (Label d) :=
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a></p></li><li id=L19><b>theorem</b> <code>OAI.Problem326.Affine.mem_typeFamily</code> <small>line 19</small></li><li id=L27><b>theorem</b> <code>OAI.Problem326.Affine.embeddedFamily_subset_typeFamily</code> <small>line 27</small></li><li id=L34><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_nonempty</code> <small>line 34</small></li><li id=L42><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_member_data</code> <small>line 42</small><div class="doc"><p>Every member of a type family has baseline minimum and exactly the injected raised support.</p></div><pre>theorem typeFamily_member_data {k d : ℕ} (hkd : k &lt; d)
+    {a t β b : ℝ} (hat : a ≤ t) (htβ : t &lt; β) (hβb : β &lt; b)
+    (Λ : (Fin k ↪ Fin d) → Finset (Label k))
+    (hslopes : ∀ e L, L ∈ Λ e → Cube β b L.slope)
+    {J : Label d} (hJ : J ∈ typeFamily t β Λ) :
+    Cube a b J.slope ∧ HasMinimum J.slope t ∧
+      ∃ e : Fin k ↪ Fin d, ∀ i, t &lt; J.slope i ↔ i ∈ Set.range e := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L25">OAI.Problem326.Affine.Cube</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a>, <a href="FixedMinimum.lean.html#L28">OAI.Problem326.Affine.HasMinimum</a></p></li><li id=L55><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_support_exists</code> <small>line 55</small><div class="doc"><p>Every prescribed support of size <code>k</code> occurs in the type family.</p></div><pre>theorem typeFamily_support_exists {k d : ℕ} {t β b : ℝ} (htβ : t &lt; β)
+    (Λ : (Fin k ↪ Fin d) → Finset (Label k))
+    (hne : ∀ e, (Λ e).Nonempty)
+    (hslopes : ∀ e L, L ∈ Λ e → Cube β b L.slope)
+    (U : Finset (Fin d)) (hU : U.card = k) :
+    ∃ J ∈ typeFamily t β Λ, ∀ i, t &lt; J.slope i ↔ i ∈ U := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L25">OAI.Problem326.Affine.Cube</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a></p></li><li id=L72><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_active_project</code> <small>line 72</small><div class="doc"><p>All comparisons in the total type family imply the lower-dimensional activity hypothesis.</p></div><pre>theorem typeFamily_active_project {k d : ℕ} (t β h : ℝ)
+    (Λ : (Fin k ↪ Fin d) → Finset (Label k))
+    (e : Fin k ↪ Fin d) {L : Label k} (hL : L ∈ Λ e)
+    (p : Fin d → ℝ)
+    (ha : Active (typeFamily t β Λ) (L.embed e t β) h (powerPoint h p)) :
+    Active (Λ e) L h (powerPoint h (fun j =&gt; p (e j))) :=
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L21">OAI.Problem326.Affine.Active</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a>, <a href="FixedMinimum.lean.html#L31">OAI.Problem326.Affine.powerPoint</a></p></li><li id=L81><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_support_data</code> <small>line 81</small><div class="doc"><p>The support data in finite-set form, matching the layer-certificate interface.</p></div><pre>theorem typeFamily_support_data {k d : ℕ} (t β : ℝ)
+    (Λ : (Fin k ↪ Fin d) → Finset (Label k)) {b : ℝ}
+    (hslopes : ∀ e L, L ∈ Λ e → Cube β b L.slope)
+    {J : Label d} (hJ : J ∈ typeFamily t β Λ) :
+    ∃ U : Finset (Fin d), U.card = k ∧
+      (∀ i ∈ U, β ≤ J.slope i ∧ J.slope i ≤ b) ∧
+      (∀ i ∉ U, J.slope i = t) := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="FixedMinimum.lean.html#L25">OAI.Problem326.Affine.Cube</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a></p></li><li id=L100><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_supported_competitor</code> <small>line 100</small><div class="doc"><p>Every support has a competitor equal to the baseline off that support.</p></div><pre>theorem typeFamily_supported_competitor {k d : ℕ} (t β : ℝ)
+    (Λ : (Fin k ↪ Fin d) → Finset (Label k))
+    (hne : ∀ e, (Λ e).Nonempty)
+    (U : Finset (Fin d)) (hU : U.card = k) :
+    ∃ J ∈ typeFamily t β Λ, ∀ i ∉ U, J.slope i = t := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a></p></li><li id=L116><b>theorem</b> <code>OAI.Problem326.Affine.Label.embed_normalized_offset</code> <small>line 116</small><div class="doc"><p>A lower-dimensional little-offset quotient becomes the normalized <code>-1</code> offset
+required of a positive type.</p></div><pre>theorem Label.embed_normalized_offset {k d : ℕ} (e : Fin k ↪ Fin d)
+    (t β : ℝ) (L : Label k)
+    (hL : Tendsto (fun h : ℝ =&gt; L.offset h / h ^ β) (𝓝[&gt;] 0) (𝓝 0)) :
+    Tendsto (fun h : ℝ =&gt; (L.embed e t β).offset h / h ^ β)
+      (𝓝[&gt;] 0) (𝓝 (-1)) := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("ya", [["Erdos291.erdos_291.variants.wu_yan",413,122],["Erdos522.erdos_522.variants.yakir_solution",605,171],["Erdos60.erdos_60.variants.he_ma_yang",653,58],["Erdos973.erdos_973.variants.luo_yang_zhu",900,69]]);

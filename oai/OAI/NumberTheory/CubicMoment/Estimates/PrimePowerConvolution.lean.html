@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/CubicMoment/Estimates/PrimePowerConvolution.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/CubicMoment/Estimates/PrimePowerConvolution.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">CubicMoment</a> / <a href="index.html">Estimates</a> / <span>PrimePowerConvolution.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">CubicMoment</a>/<a href="index.html">Estimates</a>/<span>PrimePowerConvolution.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/CubicMoment/Estimates/PrimePowerConvolution.lean#L1">source</a></p><div class="doc"><p>Actual prime-power convolution coefficients: bounded prime support absorbs
+all tuple multiplicities in an arbitrarily small norm power.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>lemma</b> <code>OAI.CubicFirstMoment.orderedConvolution_eq_zero_of_not_mem</code> <small>line 14</small></li><li id=L25><b>theorem</b> <code>OAI.CubicFirstMoment.primePower_tuple_fiber_card</code> <small>line 25</small><div class="doc"><p>A tuple with prescribed nonzero product chooses each coordinate among
+its primary divisors. Boundedly many prime bases give a logarithmic bound.</p></div><pre>theorem primePower_tuple_fiber_card (S : ι → Finset Eisenstein)
+    (hS : ∀ i, ∀ a ∈ S i, ∃ p : Eisenstein, ∃ j : ℕ,
+      primaryPrime p ∧ 0 &lt; j ∧ a = p^j) (b : Eisenstein) :
+    ((Fintype.piFinset S).filter (fun f =&gt; (∏ i, f i) = b)).card ≤
+      (Nat.log 2 (normNat b)+1)^((Fintype.card ι)*(Fintype.card ι)) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L30">OAI.CubicFirstMoment.primaryPrime</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a></p></li><li id=L63><b>theorem</b> <code>OAI.CubicFirstMoment.primePower_orderedConvolution_norm_bound</code> <small>line 63</small><div class="doc"><p>Actual independent weights, including arbitrary higher prime powers.</p></div><pre>theorem primePower_orderedConvolution_norm_bound (S : ι → Finset Eisenstein)
+    (w : ι → Eisenstein → ℂ) (M : ι → ℝ)
+    (hS : ∀ i, ∀ a ∈ S i, ∃ p : Eisenstein, ∃ j : ℕ,
+      primaryPrime p ∧ 0 &lt; j ∧ a = p^j)
+    (hM : ∀ i, 0 ≤ M i) (hw : ∀ i, ∀ a ∈ S i, ‖w i a‖ ≤ M i)
+    (b : Eisenstein) :
+    ‖orderedConvolution S w b‖ ≤
+      (((Nat.log 2 (normNat b)+1)^((Fintype.card ι)*(Fintype.card ι)):ℕ):ℝ)*(∏ i, M i) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L30">OAI.CubicFirstMoment.primaryPrime</a>, <a href="StructuredConvolution.lean.html#L19">OAI.CubicFirstMoment.orderedConvolution</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L26">OAI.CubicFirstMoment.normNat</a></p></li><li id=L88><b>theorem</b> <code>OAI.CubicFirstMoment.primePower_orderedConvolution_smallPower</code> <small>line 88</small><div class="doc"><p>The full coefficient multiplicity has arbitrary small-power growth,
+uniformly in the separate prime-power supports and weights.</p></div><pre>theorem primePower_orderedConvolution_smallPower {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (S : ι → Finset Eisenstein)
+      (w : ι → Eisenstein → ℂ) (M : ι → ℝ),
+      (∀ i, ∀ a ∈ S i, ∃ p : Eisenstein, ∃ j : ℕ,
+        primaryPrime p ∧ 0 &lt; j ∧ a = p^j) →
+      (∀ i, 0 ≤ M i) → (∀ i, ∀ a ∈ S i, ‖w i a‖ ≤ M i) →
+      ∀ (Y : ℝ), 1 ≤ Y → ∀ b ∈ orderedConvolutionSupport S, norm b ≤ Y →
+      ‖orderedConvolution S w b‖ ≤ C*Y^ε*(∏ i, M i) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L30">OAI.CubicFirstMoment.primaryPrime</a>, <a href="StructuredConvolution.lean.html#L16">OAI.CubicFirstMoment.orderedConvolutionSupport</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a>, <a href="StructuredConvolution.lean.html#L19">OAI.CubicFirstMoment.orderedConvolution</a></p></li><li id=L112><b>theorem</b> <code>OAI.CubicFirstMoment.primePowerConvolution_balanced_second_moment</code> <small>line 112</small><div class="doc"><p>Actual collected higher-prime-power coefficients on the sparse error
+support satisfy the balanced moment. The only analytic input is Huxley.</p></div><pre>theorem primePowerConvolution_balanced_second_moment
+    (hHuxley : HuxleyAdditiveLargeSieve) {c : ℝ} (hc : 0 &lt; c) (hc₁ : c ≤ 1) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (S : ι → Finset Eisenstein)
+      (w : ι → Eisenstein → ℂ) (M : ι → ℝ),
+      (∀ i, ∀ a ∈ S i, ∃ p : Eisenstein, ∃ j : ℕ,
+        primaryPrime p ∧ 0 &lt; j ∧ a = p^j) →
+      (∀ i, 0 ≤ M i) → (∀ i, ∀ a ∈ S i, ‖w i a‖ ≤ M i) →
+      ∀ Y : ℝ, 1 ≤ Y → ∀ P : Finset (Eisenstein × Eisenstein),
+      (∀ p ∈ P, PrimarySquarefreePair p ∧
+        norm p.1 ≤ Y^(1/3+c/128) ∧ norm p.2 ≤ Y^(1/3+c/128)) →
+      ∀ χ : Eisenstein → ℂ,
+      (∀ b ∈ (orderedConvolutionSupport S).filter
+…</pre><p class="refs">Mentions: <a href="PublishedAdditiveSieve.lean.html#L50">OAI.CubicFirstMoment.HuxleyAdditiveLargeSieve</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L30">OAI.CubicFirstMoment.primaryPrime</a>, <a href="OrdinaryMixedSieve.lean.html#L17">OAI.CubicFirstMoment.PrimarySquarefreePair</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a>, <a href="StructuredConvolution.lean.html#L16">OAI.CubicFirstMoment.orderedConvolutionSupport</a></p></li><li id=L162><b>theorem</b> <code>OAI.CubicFirstMoment.primePowerConvolution_first_shape_second_moment</code> <small>line 162</small><div class="doc"><p>The first exceptional shape for the same actual prime-power convolution.
+The collected coefficient automatically vanishes outside its tuple support.</p></div><pre>theorem primePowerConvolution_first_shape_second_moment
+    {c : ℝ} (hc : 0 &lt; c) (hc₁ : c ≤ 1) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (S : ι → Finset Eisenstein)
+      (w : ι → Eisenstein → ℂ) (M : ι → ℝ),
+      (∀ i, ∀ a ∈ S i, ∃ p : Eisenstein, ∃ j : ℕ,
+        primaryPrime p ∧ 0 &lt; j ∧ a = p^j) →
+      (∀ i, 0 ≤ M i) → (∀ i, ∀ a ∈ S i, ‖w i a‖ ≤ M i) →
+      ∀ Y : ℝ, 1 ≤ Y → ∀ P Q : Finset Eisenstein,
+      (∀ p ∈ P, primary p ∧ Squarefree p ∧ norm p ≤ Y^(1+c/128)) →
+      (∀ q ∈ Q, primary q ∧ norm q ≤ Y^(c/128)) →
+      ∀ χ : Eisenstein → ℂ,
+      (∀ b ∈ largePrimePowerSupport Y c, ‖χ b‖ ≤ 1) →
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L30">OAI.CubicFirstMoment.primaryPrime</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L28">OAI.CubicFirstMoment.primary</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a>, <a href="PrimePowerSupport.lean.html#L42">OAI.CubicFirstMoment.largePrimePowerSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

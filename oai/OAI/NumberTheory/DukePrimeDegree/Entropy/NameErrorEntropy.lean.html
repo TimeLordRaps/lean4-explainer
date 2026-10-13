@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Entropy/NameErrorEntropy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Entropy/NameErrorEntropy.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Entropy</a> / <span>NameErrorEntropy.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Entropy</a>/<span>NameErrorEntropy.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Entropy/NameErrorEntropy.lean#L1">source</a></p><div class="doc"><h3>Entropy of finite names controlled by their coordinate errors</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.DukePrimeDegree.conditionalVectorEntropy_le_sum</code> <small>line 14</small></li><li id=L52><b>theorem</b> <code>OAI.DukePrimeDegree.conditionalNameEntropy_le_errors</code> <small>line 52</small></li><li id=L72><b>theorem</b> <code>OAI.DukePrimeDegree.nameEntropy_le_reference_errors</code> <small>line 72</small><div class="doc"><p>A finite list of reference names pays its logarithmic cardinality;
+the remaining cost is proportional to the expected number of errors.</p></div><pre>theorem nameEntropy_le_reference_errors {Y α β : Type*} [MeasurableSpace Y]
+    [MeasurableSpace α] [MeasurableSingletonClass α]
+    [MeasurableSpace β] [MeasurableSingletonClass β]
+    [Fintype α] [Nonempty α] [DecidableEq α] [Fintype β]
+    (μ : Measure Y) [IsProbabilityMeasure μ] (N : ℕ)
+    (P : Y → Fin N → α) (hP : Measurable P)
+    (r : Y → β) (hr : Measurable r) (v : β → Fin N → α)
+    {δ ε : ℝ} (hδ : 0 &lt; δ) (hδ1 : δ &lt; 1)
+    (herr : (∑ i : Fin N, μ.real {y | P y i ≠ v (r y) i}) ≤ ε*N) :
+    observationEntropy μ P ≤ Real.log (Fintype.card β) +
+      (N : ℝ)*rareLabelCost (Fintype.card α) δ ε := by
+…</pre><p class="refs">Mentions: <a href="RareLabelEntropy.lean.html#L19">OAI.DukePrimeDegree.rareLabelCost</a></p></li><li id=L106><b>theorem</b> <code>OAI.DukePrimeDegree.observationEntropyRate_le_approximate_names</code> <small>line 106</small></li><li id=L135><b>theorem</b> <code>OAI.DukePrimeDegree.name_errors_le_bad_visits</code> <small>line 135</small><div class="doc"><p>Orbit errors confined to a fixed measurable bad set cost at most its
+measure at each coordinate.</p></div><pre>theorem name_errors_le_bad_visits {Y α : Type*} [MeasurableSpace Y]
+    (μ : Measure Y) [IsFiniteMeasure μ] {T : Y → Y}
+    (hT : MeasurePreserving T μ μ) (P : Y → α) (N : ℕ)
+    (R : Y → Fin N → α) (B : Set Y) (hB : MeasurableSet B)
+    (hbad : ∀ y i, P (T^[i.val] y) ≠ R y i → T^[i.val] y ∈ B) :
+    (∑ i : Fin N, μ.real {y | P (T^[i.val] y) ≠ R y i}) ≤ (N : ℝ)*μ.real B := by
+…</pre></li><li id=L153><b>theorem</b> <code>OAI.DukePrimeDegree.observationEntropyRate_le_fixed_reference_errors</code> <small>line 153</small><div class="doc"><p>A fixed finite list of reference trajectories has zero asymptotic
+coding cost. Only the coordinate errors contribute to the entropy rate.</p></div><pre>theorem observationEntropyRate_le_fixed_reference_errors
+    {Y α : Type*} [MeasurableSpace Y]
+    [MeasurableSpace α] [MeasurableSingletonClass α]
+    [Fintype α] [Nonempty α] [DecidableEq α]
+    (μ : Measure Y) [IsProbabilityMeasure μ] {T : Y → Y}
+    (hT : MeasurePreserving T μ μ) (P : Y → α) (hP : Measurable P)
+    (M : ℕ) (r : ℕ → Y → Fin M) (hr : ∀ N, Measurable (r N))
+    (v : ∀ N, Fin M → Fin N → α)
+    {ε δ : ℝ} (hδ : 0 &lt; δ) (hδ1 : δ &lt; 1)
+    (herr : ∀ N,
+      (∑ i : Fin N, μ.real {y | P (T^[i.val] y) ≠ v N (r N y) i}) ≤ ε*N) :
+    observationEntropyRate μ T P ≤ rareLabelCost (Fintype.card α) δ ε := by
+…</pre><p class="refs">Mentions: <a href="RareLabelEntropy.lean.html#L19">OAI.DukePrimeDegree.rareLabelCost</a></p></li><li id=L192><b>theorem</b> <code>OAI.DukePrimeDegree.observationEntropyRate_le_zero_of_fixed_reference_approximations</code> <small>line 192</small><div class="doc"><p>Arbitrarily accurate approximation by a fixed finite list of
+trajectories forces zero entropy for a finite observation.</p></div><pre>theorem observationEntropyRate_le_zero_of_fixed_reference_approximations
+    {Y α : Type*} [MeasurableSpace Y]
+    [MeasurableSpace α] [MeasurableSingletonClass α]
+    [Fintype α] [Nonempty α] [DecidableEq α]
+    (μ : Measure Y) [IsProbabilityMeasure μ] {T : Y → Y}
+    (hT : MeasurePreserving T μ μ) (P : Y → α) (hP : Measurable P)
+    (happrox : ∀ ε : ℝ, 0 &lt; ε →
+      ∃ (M : ℕ) (r : ℕ → Y → Fin M) (v : ∀ N, Fin M → Fin N → α),
+        (∀ N, Measurable (r N)) ∧ ∀ N,
+          (∑ i : Fin N, μ.real {y | P (T^[i.val] y) ≠ v N (r N y) i}) ≤ ε*N) :
+    observationEntropyRate μ T P ≤ 0 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

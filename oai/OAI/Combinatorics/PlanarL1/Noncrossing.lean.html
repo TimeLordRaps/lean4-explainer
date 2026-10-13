@@ -1,0 +1,130 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/PlanarL1/Noncrossing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/PlanarL1/Noncrossing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">PlanarL1</a> / <span>Noncrossing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">PlanarL1</a>/<span>Noncrossing.lean</span></code></h1><p class="muted">34 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/PlanarL1/Noncrossing.lean#L1">source</a></p><div class="doc"><h4>Noncrossing column words</h4><p>These are the exact combinatorial separation tools used in the surviving-seed
+packing argument. The circular set has been cut at index 0.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.PlanarL1.ColumnOrder.Noncrossing</code> <small>line 15</small><div class="doc"><p>No two links have four alternating, distinct endpoints in cyclic order.</p></div><pre>def Noncrossing {n : ℕ} (G : SimpleGraph (Fin n)) : Prop :=
+…</pre></li><li id=L19><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.noncrossing_comap_rotate</code> <small>line 19</small></li><li id=L43><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.noncrossing_comap_iterate</code> <small>line 43</small></li><li id=L51><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.noncrossing_comap_cycle</code> <small>line 51</small></li><li id=L59><b>theorem</b> <code>OAI.PlanarL1.ColumnOrder.adj_stays_between</code> <small>line 59</small><div class="doc"><p>An edge cannot leave the strict interior of a chord without meeting one
+of the chord endpoints.</p></div><pre>theorem adj_stays_between {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {a b x y : Fin n} (hab : G.Adj a b)
+    (hax : a &lt; x) (hxb : x &lt; b) (hxy : G.Adj x y)
+    (hya : y ≠ a) (hyb : y ≠ b) : a &lt; y ∧ y &lt; b := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L73><b>theorem</b> <code>OAI.PlanarL1.ColumnOrder.walk_stays_between</code> <small>line 73</small><div class="doc"><p>A column word avoiding the endpoints of a chord remains on its starting
+strict side. This is the induction behind the chord-separation lemma.</p></div><pre>theorem walk_stays_between {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {a b x y : Fin n} (hab : G.Adj a b)
+    (p : G.Walk x y) (hx : a &lt; x ∧ x &lt; b)
+    (ha : a ∉ p.support) (hb : b ∉ p.support) : a &lt; y ∧ y &lt; b := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L93><b>theorem</b> <code>OAI.PlanarL1.ColumnOrder.chord_separation</code> <small>line 93</small><div class="doc"><p>Geometry, Lemma <code>geo:chord-separation</code>, with a cut in the circular order
+outside the chosen strict interval. It applies to paths as well as walks.</p></div><pre>theorem chord_separation {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {a b x y : Fin n} (hab : G.Adj a b)
+    (p : G.Walk x y) (hx : a &lt; x ∧ x &lt; b)
+    (hy : y &lt; a ∨ b &lt; y) : a ∈ p.support ∨ b ∈ p.support := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L103><b>def</b> <code>OAI.PlanarL1.ColumnOrder.JumpsAcross</code> <small>line 103</small><div class="doc"><p>Occurrence of a step of the word that skips the specified index strictly.</p></div><pre>def JumpsAcross {n : ℕ} {G : SimpleGraph (Fin n)} (i : Fin n)
+    {x y : Fin n} (p : G.Walk x y) : Prop :=
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.PlanarL1.ColumnOrder.visits_or_skips</code> <small>line 109</small><div class="doc"><p>Geometry, Lemma <code>geo:skipping</code>: passage from one side of an index to the
+other either visits it or has a step jumping strictly across it.</p></div><pre>theorem visits_or_skips {n : ℕ} {G : SimpleGraph (Fin n)} {i x y : Fin n}
+    (p : G.Walk x y) (hx : x &lt; i) (hy : i &lt; y) :
+    i ∈ p.support ∨ JumpsAcross i p := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L103">OAI.PlanarL1.ColumnOrder.JumpsAcross</a></p></li><li id=L133><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.adj_between_connected</code> <small>line 133</small><div class="doc"><p>A connected set is a barrier between any two of its vertices in the
+linear order. The edge and the set's connecting paths may belong to different
+subgraphs; only noncrossing in the common ambient graph matters.</p></div><pre>lemma adj_between_connected {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {S : Set (Fin n)} (hS : (G.induce S).Preconnected)
+    {a b x y : Fin n} (ha : a ∈ S) (hb : b ∈ S)
+    (hx : a &lt; x ∧ x &lt; b) (hxy : G.Adj x y) (hxs : x ∉ S) (hys : y ∉ S) :
+    a &lt; y ∧ y &lt; b := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L162><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.walk_same_gap</code> <small>line 162</small><div class="doc"><p>Paths avoiding a connected set have constant membership in every interval
+whose endpoints belong to that set. This is the cut-independent content of
+<code>geo:gap</code>: such a path stays in one open circular gap.</p></div><pre>lemma walk_same_gap {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {S : Set (Fin n)} (hS : (G.induce S).Preconnected)
+    {x y : Fin n} (p : G.Walk x y) (hp : ∀ v ∈ p.support, v ∉ S)
+    {a b : Fin n} (ha : a ∈ S) (hb : b ∈ S) :
+    (a &lt; x ∧ x &lt; b) ↔ (a &lt; y ∧ y &lt; b) := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L183><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.connected_noninterleaving</code> <small>line 183</small><div class="doc"><p>Disjoint connected vertex sets cannot have representatives in alternating
+circular order. This upgrades the individual-chord barrier to branch sets.</p></div><pre>lemma connected_noninterleaving {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {S T : Set (Fin n)}
+    (hS : (G.induce S).Preconnected) (hT : (G.induce T).Preconnected)
+    (hdis : Disjoint S T) {a b c d : Fin n}
+    (ha : a ∈ S) (hb : b ∈ T) (hc : c ∈ S) (hd : d ∈ T)
+    (hab : a &lt; b) (hbc : b &lt; c) (hcd : c &lt; d) : False := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L202><b>structure</b> <code>OAI.PlanarL1.ColumnOrder.BranchModel</code> <small>line 202</small><div class="doc"><p>A genuine finite branch-set model of a graph minor. Each branch is
+nonempty and connected; branches are disjoint and edges are witnessed by
+actual ambient edges. No topological or minor-exclusion axiom is hidden here.</p></div><pre>structure BranchModel {n : ℕ} {W : Type*} (H : SimpleGraph W)
+    (G : SimpleGraph (Fin n)) where
+…</pre></li><li id=L214><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.BranchModel.representative_injective</code> <small>line 214</small></li><li id=L220><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.BranchModel.union_connected</code> <small>line 220</small></li><li id=L228><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.BranchModel.noncrossing</code> <small>line 228</small><div class="doc"><p>Noncrossing is inherited by every genuine branch-set minor, using any
+chosen representative of each branch. This proves the needed minor closure
+directly from walk separation, without a planar cone or a Jordan-curve axiom.</p></div><pre>lemma noncrossing (B : BranchModel H G) (hnc : Noncrossing G)
+    (r : W ↪ Fin n) (hr : ∀ i, r i ∈ B.branch i) : Noncrossing (H.map r) := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L202">OAI.PlanarL1.ColumnOrder.BranchModel</a>, <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L249><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.common_neighbors_opposite</code> <small>line 249</small><div class="doc"><p>For two fixed hubs in a noncrossing graph, two distinct common neighbors
+must lie on opposite open circular arcs of the hubs.</p></div><pre>lemma common_neighbors_opposite {n : ℕ} {G : SimpleGraph (Fin n)}
+    (hnc : Noncrossing G) {a b c d : Fin n} (hab : a &lt; b) (hcd : c ≠ d)
+    (hac : G.Adj a c) (had : G.Adj a d) (hbc : G.Adj b c) (hbd : G.Adj b d) :
+    (a &lt; c ∧ c &lt; b) ↔ ¬ (a &lt; d ∧ d &lt; b) := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L275><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.no_three_common_neighbors</code> <small>line 275</small></li><li id=L292><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.BranchModel.no_three_common_neighbors</code> <small>line 292</small><div class="doc"><p>Geometry <code>geo:outerplanar</code>: no noncrossing circular graph has a
+branch-set minor with two hubs and three distinct common neighbors.</p></div><pre>lemma BranchModel.no_three_common_neighbors {n : ℕ} {W : Type*}
+    {H : SimpleGraph W} {G : SimpleGraph (Fin n)} (B : BranchModel H G)
+    (hnc : Noncrossing G) {a b c d e : W} (hab : a ≠ b)
+    (hcd : c ≠ d) (hce : c ≠ e) (hde : d ≠ e)
+    (hac : H.Adj a c) (had : H.Adj a d) (hae : H.Adj a e)
+    (hbc : H.Adj b c) (hbd : H.Adj b d) (hbe : H.Adj b e) : False := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L202">OAI.PlanarL1.ColumnOrder.BranchModel</a>, <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L312><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.connector_core</code> <small>line 312</small><div class="doc"><p>Trimming a connector after its last visit to one set and before its first
+visit to the other. The nonadjacency assumption guarantees a nonempty core.
+The proof minimizes the number of edges, not the metric length.</p></div><pre>lemma connector_core {V : Type*} {G : SimpleGraph V} {C L T : Set V}
+    (hCL : Disjoint C L) (hno : ∀ x ∈ C, ∀ y ∈ L, ¬ G.Adj x y)
+    {x y : V} (hx : x ∈ C) (hy : y ∈ L) (p : G.Walk x y)
+    (hp : ∀ v ∈ p.support, v ∈ T) :
+    ∃ K : Set V, K.Nonempty ∧ (G.induce K).Preconnected ∧ K ⊆ T ∧
+      Disjoint K C ∧ Disjoint K L ∧
+      (∃ a ∈ C, ∃ b ∈ K, G.Adj a b) ∧
+      (∃ a ∈ L, ∃ b ∈ K, G.Adj a b) := by
+…</pre></li><li id=L379><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.no_three_cores</code> <small>line 379</small><div class="doc"><p>Three disjoint connected connector cores between two disjoint connected
+sets would give the forbidden <code>K₂,₃</code> minor.</p></div><pre>lemma no_three_cores {n : ℕ} {G : SimpleGraph (Fin n)} (hnc : Noncrossing G)
+    {C L : Set (Fin n)} (hC : C.Nonempty) (hL : L.Nonempty)
+    (hc : (G.induce C).Preconnected) (hl : (G.induce L).Preconnected)
+    (hCL : Disjoint C L) (K : Fin 3 → Set (Fin n))
+    (hne : ∀ i, (K i).Nonempty) (hconn : ∀ i, (G.induce (K i)).Preconnected)
+    (hdis : Pairwise (fun i j =&gt; Disjoint (K i) (K j)))
+    (hdC : ∀ i, Disjoint (K i) C) (hdL : ∀ i, Disjoint (K i) L)
+    (heC : ∀ i, ∃ a ∈ C, ∃ b ∈ K i, G.Adj a b)
+    (heL : ∀ i, ∃ a ∈ L, ∃ b ∈ K i, G.Adj a b) : False := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L440><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.no_three_connectors</code> <small>line 440</small><div class="doc"><p>The projected disjoint short portions used in the two-portals argument
+cannot exist. This includes the trimming and nonempty-interior justifications.</p></div><pre>lemma no_three_connectors {n : ℕ} {G : SimpleGraph (Fin n)} (hnc : Noncrossing G)
+    {C L : Set (Fin n)} (hc : (G.induce C).Preconnected)
+    (hl : (G.induce L).Preconnected) (hCL : Disjoint C L)
+    (hno : ∀ x ∈ C, ∀ y ∈ L, ¬ G.Adj x y)
+    (x y : Fin 3 → Fin n) (hx : ∀ i, x i ∈ C) (hy : ∀ i, y i ∈ L)
+    (p : ∀ i, G.Walk (x i) (y i))
+    (hdis : Pairwise (fun i j =&gt; Disjoint
+      {v | v ∈ (p i).support} {v | v ∈ (p j).support})) : False := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li><li id=L456><b>def</b> <code>OAI.PlanarL1.ColumnOrder.componentColumns</code> <small>line 456</small><div class="doc"><p>The vertices of an induced-graph component, as a set in the original
+vertex type. Components here are Mathlib's actual reachability quotients.</p></div><pre>def componentColumns {V : Type*} {G : SimpleGraph V} {S : Set V}
+    (C : (G.induce S).ConnectedComponent) : Set V := Subtype.val &#x27;&#x27; C.supp</pre></li><li id=L459><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.componentColumns_subset</code> <small>line 459</small></li><li id=L464><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.componentColumns_connected</code> <small>line 464</small></li><li id=L477><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.componentColumns_adj</code> <small>line 477</small></li><li id=L486><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.componentColumns_of_walk</code> <small>line 486</small><div class="doc"><p>Any walk inside the induced vertex set propagates membership in an
+actual connected component.</p></div><pre>lemma componentColumns_of_walk {V : Type*} {G : SimpleGraph V} {S : Set V}
+    (C : (G.induce S).ConnectedComponent) {x y : V} (p : G.Walk x y)
+    (hx : x ∈ componentColumns C) (hp : ∀ v ∈ p.support, v ∈ S) :
+    y ∈ componentColumns C := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L456">OAI.PlanarL1.ColumnOrder.componentColumns</a></p></li><li id=L498><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.exists_component_containing</code> <small>line 498</small><div class="doc"><p>A nonempty induced-connected subset lies in one actual component of
+any larger induced subgraph.</p></div><pre>lemma exists_component_containing {V : Type*} {G : SimpleGraph V} {S T : Set V}
+    (hne : S.Nonempty) (hS : (G.induce S).Preconnected) (hST : S ⊆ T) :
+    ∃ C : (G.induce T).ConnectedComponent, S ⊆ componentColumns C := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L456">OAI.PlanarL1.ColumnOrder.componentColumns</a></p></li><li id=L515><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.component_eq_of_column</code> <small>line 515</small><div class="doc"><p>Components of one induced graph sharing an original vertex are equal.</p></div><pre>lemma component_eq_of_column {V : Type*} {G : SimpleGraph V} {S : Set V}
+    {C D : (G.induce S).ConnectedComponent} {i : V}
+    (hC : i ∈ componentColumns C) (hD : i ∈ componentColumns D) : C = D := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L456">OAI.PlanarL1.ColumnOrder.componentColumns</a></p></li><li id=L525><b>def</b> <code>OAI.PlanarL1.ColumnOrder.componentAbove</code> <small>line 525</small><div class="doc"><p>The parent component under inclusion of vertex sets.</p></div><pre>def componentAbove {V : Type*} {G : SimpleGraph V} {S T : Set V}
+    (hST : S ⊆ T) (C : (G.induce S).ConnectedComponent) :
+    (G.induce T).ConnectedComponent :=
+…</pre></li><li id=L530><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.componentColumns_above</code> <small>line 530</small></li><li id=L543><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.connected_two_balls</code> <small>line 543</small><div class="doc"><p>A discrete connected union of two metric balls has controlled diameter.
+The single edge allowance avoids assuming any continuous realization of the
+column graph. It will be absorbed by the source's 10D constant.</p></div><pre>lemma connected_two_balls {V X : Type*} [PseudoMetricSpace X] {G : SimpleGraph V}
+    (hG : G.Preconnected) (f : V → X) (p q : X) {R a : ℝ} (hR : 0 ≤ R)
+    (ha : 0 ≤ a) (hedge : ∀ i j, G.Adj i j → dist (f i) (f j) ≤ a)
+    (hcover : ∀ i, dist (f i) p ≤ R ∨ dist (f i) q ≤ R) (x y : V) :
+    dist (f x) (f y) ≤ 4 * R + a := by
+…</pre></li><li id=L599><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.walk_comap_equiv</code> <small>line 599</small><div class="doc"><p>Walks transport through a relabelling without introducing any new visited
+columns. This is used to cut the circular order at a chosen root.</p></div><pre>lemma walk_comap_equiv {n : ℕ} {G : SimpleGraph (Fin n)} (e : Fin n ≃ Fin n)
+    {i j : Fin n} (w : G.Walk (e i) (e j)) :
+    ∃ p : (G.comap e).Walk i j, ∀ z ∈ p.support, e z ∈ w.support := by
+…</pre></li><li id=L615><b>lemma</b> <code>OAI.PlanarL1.ColumnOrder.collision</code> <small>line 615</small><div class="doc"><p>Collision inequality for a profile whose strict sublevels connect back to
+zero. The ceiling is kept explicit: only thresholds at or below it are used.</p></div><pre>lemma collision {n : ℕ} {G : SimpleGraph (Fin (n + 1))}
+    (hnc : Noncrossing G) (f : Fin (n + 1) → ℝ) (D : ℝ)
+    (hbound : ∀ i, f i ≤ D)
+    (hpath : ∀ t ≤ D, ∀ i, f i &lt; t →
+      ∃ w : G.Walk i 0, ∀ z ∈ w.support, f z &lt; t)
+    {p q : Fin (n + 1)} (_hpq : p &lt; q) (hadj : G.Adj p q) (heq : f p = f q)
+    (hp : p ≠ 0) (z : Fin (n + 1)) (hpz : p ≤ z) (hzq : z ≤ q) : f p ≤ f z := by
+…</pre><p class="refs">Mentions: <a href="Noncrossing.lean.html#L15">OAI.PlanarL1.ColumnOrder.Noncrossing</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

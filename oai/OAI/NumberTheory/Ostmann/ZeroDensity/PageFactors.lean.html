@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/ZeroDensity/PageFactors.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/ZeroDensity/PageFactors.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">ZeroDensity</a> / <span>PageFactors.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">ZeroDensity</a>/<span>PageFactors.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/ZeroDensity/PageFactors.lean#L1">source</a></p><div class="doc"><h3>Keeping the exceptional-character density in the arithmetic measures</h3><p>The correction is retained, including when it correlates with the amplitude.
+Once its conductor is supported on the frequency modulus, CRT places it in
+that coordinate and the other residue averages factor exactly.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.Ostmann.pageMultiplier</code> <small>line 18</small></li><li id=L21><b>theorem</b> <code>OAI.Ostmann.pageMultiplier_bounds</code> <small>line 21</small></li><li id=L33><b>theorem</b> <code>OAI.Ostmann.pageMultiplier_zero</code> <small>line 33</small></li><li id=L38><b>theorem</b> <code>OAI.Ostmann.page_prior_mass_le_two</code> <small>line 38</small><div class="doc"><p>The corrected coordinate prior has mass at most two, even if its
+exceptional character has nonzero mean under the original prior.</p></div><pre>theorem page_prior_mass_le_two {A : Type*} [Fintype A]
+    (μ : A → ℝ) (hμ : ∀ a, 0 ≤ μ a) (hmass : ∑ a, μ a ≤ 1)
+    (χ : A → ℝ) (β t : ℝ) (hχ : ∀ a, |χ a| ≤ 1) (hβ : β ≤ 1) (ht : 0 ≤ t) :
+    (∀ a, 0 ≤ μ a * pageMultiplier χ β t a) ∧
+      (∑ a, μ a * pageMultiplier χ β t a) ≤ 2 := by
+…</pre><p class="refs">Mentions: <a href="PageFactors.lean.html#L18">OAI.Ostmann.pageMultiplier</a></p></li><li id=L54><b>theorem</b> <code>OAI.Ostmann.uniform_equiv_product_average</code> <small>line 54</small><div class="doc"><p>Exact separation of a retained density and all remaining coordinates.
+This also applies to signed and complex amplitudes.</p></div><pre>theorem uniform_equiv_product_average {A B C : Type*}
+    [Fintype A] [Fintype B] [Fintype C]
+    (e : A ≃ B × C) (f : B → ℂ) (g : C → ℂ) :
+    (Fintype.card A : ℂ)⁻¹ * (∑ a, f (e a).1 * g (e a).2) =
+      ((Fintype.card B : ℂ)⁻¹ * ∑ b, f b) *
+        ((Fintype.card C : ℂ)⁻¹ * ∑ c, g c) := by
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.Ostmann.retained_page_average</code> <small>line 68</small><div class="doc"><p>In the finite box decomposition, the Page factor remains inside the
+frequency-coordinate integral; it is never replaced by its mean.</p></div><pre>theorem retained_page_average {A B C : Type*}
+    [Fintype A] [Fintype B] [Fintype C]
+    (e : A ≃ B × C) (χ : B → ℝ) (β t : ℝ) (f : B → ℂ) (g : C → ℂ) :
+    (Fintype.card A : ℂ)⁻¹ *
+        (∑ a, (pageMultiplier χ β t (e a).1 : ℂ) * f (e a).1 * g (e a).2) =
+      ((Fintype.card B : ℂ)⁻¹ * ∑ b, (pageMultiplier χ β t b : ℂ) * f b) *
+        ((Fintype.card C : ℂ)⁻¹ * ∑ c, g c) :=
+…</pre><p class="refs">Mentions: <a href="PageFactors.lean.html#L18">OAI.Ostmann.pageMultiplier</a></p></li><li id=L79><b>def</b> <code>OAI.Ostmann.crtSplitUnitEquiv</code> <small>line 79</small><div class="doc"><p>The retained frequency block and all other unit residues in the actual
+modulus.</p></div><pre>noncomputable def crtSplitUnitEquiv (q r : ℕ) (h : q.Coprime r) :
+    (ZMod (q * r))ˣ ≃ (ZMod q)ˣ × (ZMod r)ˣ :=
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.Ostmann.crt_retained_page_average</code> <small>line 84</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

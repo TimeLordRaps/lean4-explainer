@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/NormalizationCumulative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/NormalizationCumulative.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>NormalizationCumulative.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>NormalizationCumulative.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/NormalizationCumulative.lean#L1">source</a></p><div class="doc"><h3>Finite families of changing mean normalizations</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_normalization_errors_sum_le</code> <small>line 17</small><div class="doc"><p>Summing the proved inverse-normalization estimate over at most <code>J</code>
+centers per scale preserves its weighted heat total.</p></div><pre>theorem inverse_normalization_errors_sum_le
+    (Q : ℕ → E ≃L[ℝ] E) (R : ℕ → ι → E ≃L[ℝ] E)
+    (F : ℕ → E →L[ℝ] E) (s : ℕ → Finset ι)
+    (hQ : ∀ i, (Q i : E →L[ℝ] E).IsPositive)
+    (hR : ∀ i y, y ∈ s i → (R i y : E →L[ℝ] E).IsPositive)
+    (hF : ∀ i, (F i).IsPositive) {c C : ℝ} (hc : 0 &lt; c) (hC : 0 ≤ C)
+    (hcompare : ∀ i y, y ∈ s i → ∀ v, c * ⟪v, Q i v⟫_ℝ ≤ ⟪v, R i y v⟫_ℝ)
+    (hbilinear : ∀ i y, y ∈ s i → ∀ u v,
+      ⟪v, ((R i y : E →L[ℝ] E) - (Q i : E →L[ℝ] E)) u⟫_ℝ ^ 2 ≤
+        (C * ⟪u, F i u⟫_ℝ) * ⟪v, Q i v⟫_ℝ)
+    (J : ℕ) (hcard : ∀ i, (s i).card ≤ J) (xi : E) (k : ℕ) :
+    (∑ i ∈ Finset.range k, ∑ y ∈ s i,
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.RegularPointCoordinates.normalization_mass_errors_sum_le</code> <small>line 54</small><div class="doc"><p>A small positive mass form charges a normalization error by at most
+<code>epsilon</code> times its energy in the reference metric.</p></div><pre>theorem normalization_mass_errors_sum_le
+    (Q : ℕ → E →L[ℝ] E) (C : ℕ → ι → E →L[ℝ] E)
+    (s : ℕ → Finset ι) (e : ℕ → ι → E) {epsilon : ℝ}
+    (hsmall : ∀ i y, y ∈ s i → ∀ v, ⟪v, C i y v⟫_ℝ ≤ epsilon * ⟪v, Q i v⟫_ℝ)
+    (k : ℕ) :
+    (∑ i ∈ Finset.range k, ∑ y ∈ s i, ⟪e i y, C i y (e i y)⟫_ℝ) ≤
+      epsilon * ∑ i ∈ Finset.range k, ∑ y ∈ s i, ⟪e i y, Q i (e i y)⟫_ℝ := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_normalized_mass_le</code> <small>line 67</small><div class="doc"><p>Changing inverse normalization preserves the small pointwise mass bound.</p></div><pre>theorem inverse_normalized_mass_le (Q R : E ≃L[ℝ] E)
+    (hQ : (Q : E →L[ℝ] E).IsPositive) (hR : (R : E →L[ℝ] E).IsPositive)
+    (D : E →L[ℝ] E) {c epsilon : ℝ} (hc : 0 &lt; c) (hepsilon : 0 ≤ epsilon)
+    (hcompare : ∀ v, c * ⟪v, Q v⟫_ℝ ≤ ⟪v, R v⟫_ℝ)
+    (hsmall : ∀ v, ⟪v, D v⟫_ℝ ≤ epsilon * ⟪v, Q v⟫_ℝ) (xi : E) :
+    ⟪R.symm xi, D (R.symm xi)⟫_ℝ ≤ epsilon / c ^ 2 * ⟪xi, Q.symm xi⟫_ℝ := by
+…</pre></li><li id=L83><b>theorem</b> <code>OAI.RegularPointCoordinates.local_mass_cumulative_comparison</code> <small>line 83</small><div class="doc"><p>The finite-family part of the cumulative comparison. Its inputs are
+weighted totals and the central estimate proved from the heat decrements;
+all changes of normalization and the reverse covering argument are proved
+here. The vectors <code>z i y</code> may be the actual local inverse images.</p></div><pre>theorem local_mass_cumulative_comparison
+    (N : ℕ → E →L[ℝ] E) (C : ℕ → ι → E →L[ℝ] E)
+    (s : ℕ → Finset ι) (theta : ℕ → ι → ℝ)
+    (a : ℕ → E) (z : ℕ → ι → E)
+    (hC : ∀ i y, y ∈ s i → (C i y).IsPositive)
+    (htheta : ∀ i y, y ∈ s i → 0 ≤ theta i y)
+    (hcover : ∀ i, ∃ y ∈ s i, theta i y = 1 ∧
+      ∀ v, ⟪v, N i v⟫_ℝ ≤ ⟪v, C i y v⟫_ℝ)
+    {H t U V K epsilon : ℝ} (hH : 0 ≤ H) (hK : 0 ≤ K) (k : ℕ)
+    (hupper : (∑ i ∈ Finset.range k, ∑ y ∈ s i, ⟪a i, C i y (a i)⟫_ℝ) ≤ U * H)
+    (herror : (∑ i ∈ Finset.range k, ∑ y ∈ s i,
+      ⟪z i y - a i, C i y (z i y - a i)⟫_ℝ) ≤ V * epsilon * H)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

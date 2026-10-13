@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/EditApproximation/Coarse/CoarseAccuracy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/EditApproximation/Coarse/CoarseAccuracy.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">EditApproximation</a> / <a href="index.html">Coarse</a> / <span>CoarseAccuracy.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">EditApproximation</a>/<a href="index.html">Coarse</a>/<span>CoarseAccuracy.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/EditApproximation/Coarse/CoarseAccuracy.lean#L1">source</a></p><div class="doc"><h3>Pathwise accuracy of the concrete coarse recurrence</h3><p>The events concern only fixed true child minima sampled with independent
+labels. The deterministic reconstruction requires no independence of
+approximate child costs.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.EditApproximation.coarseTrueThresholdSum</code> <small>line 20</small><div class="doc"><p>The true-cost threshold sum appearing in the simultaneous event.</p></div><pre>noncomputable def coarseTrueThresholdSum {B D : ℕ} {α : Type u}
+    (k : ℕ) (Q : ℚ)
+    (trueValue : CoarseSourceTree B α D → ℕ → Fin (2 * k + 1) → ℕ)
+    (allowance : ℚ) (transform : ℝ → ℝ) :
+    List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D) →
+      ℕ → Fin (2 * k + 1) → ℝ
+  | [], _, _ =&gt; 0
+  | (child, draw, _) :: rest, start, shift =&gt;
+    thresholdContribution (coarseChildThreshold B Q allowance draw) (allowance / Q)
+      (transform ((univ.inf&#x27; univ_nonempty
+        (fun next =&gt; trueValue child start next + 2 * Nat.dist shift.val next.val) : ℕ) : ℝ)) +
+      coarseTrueThresholdSum k Q trueValue allowance transform rest (start + child.word.length) shift</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="../Geometry/Seed.lean.html#L17">OAI.EditApproximation.thresholdContribution</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1293">OAI.EditApproximation.coarseChildThreshold</a></p></li><li id=L35><b>def</b> <code>OAI.EditApproximation.CoarseChildAccuracy</code> <small>line 35</small><div class="doc"><p>Child accuracy at precisely the source positions visited by the
+actual traversal, with its actual per-child allowance.</p></div><pre>noncomputable def CoarseChildAccuracy {B D : ℕ} {α : Type u}
+    (k : ℕ) (Q lam : ℚ)
+    (trueValue : CoarseSourceTree B α D → ℕ → Fin (2 * k + 1) → ℕ)
+    (value : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ → Fin (2 * k + 1) → ℚ)
+    (allowance : ℚ) (f : ℝ) :
+    List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D) → ℕ → Prop
+  | [], _ =&gt; True
+  | (child, draw, below) :: rest, start =&gt;
+    (∀ shift,
+      (trueValue child start shift : ℝ) / f -
+          ((lam * coarseChildThreshold B Q allowance draw : ℚ) : ℝ) ≤
+        value child below (lam * coarseChildThreshold B Q allowance draw) start shift ∧
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1293">OAI.EditApproximation.coarseChildThreshold</a></p></li><li id=L53><b>theorem</b> <code>OAI.EditApproximation.coarseThresholdChildrenCost_sandwich</code> <small>line 53</small><div class="doc"><p>The actual rational estimator is trapped between two sums of fixed
+true costs, even when each child estimate depends on its threshold.</p></div><pre>theorem coarseThresholdChildrenCost_sandwich {B D : ℕ} {α : Type u}
+    (k : ℕ) (Q lam : ℚ)
+    (trueValue : CoarseSourceTree B α D → ℕ → Fin (2 * k + 1) → ℕ)
+    (value : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ → Fin (2 * k + 1) → ℚ)
+    (children : List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D))
+    (allowance : ℚ) (f : ℝ)
+    (hQ : 0 ≤ Q) (ha : 0 ≤ allowance) (hf : 1 ≤ f)
+    (hlam : 0 ≤ lam) (hlamone : lam &lt; 1)
+    (start : ℕ) (shift : Fin (2 * k + 1))
+    (hchild : CoarseChildAccuracy k Q lam trueValue value allowance f children start) :
+    coarseTrueThresholdSum k Q trueValue allowance
+        (fun cost =&gt; cost / (f * (1 + (lam : ℝ)))) children start shift ≤
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseAccuracy.lean.html#L35">OAI.EditApproximation.CoarseChildAccuracy</a>, <a href="CoarseAccuracy.lean.html#L20">OAI.EditApproximation.coarseTrueThresholdSum</a></p></li><li id=L94><b>theorem</b> <code>OAI.EditApproximation.coarseThresholdChildrenCost_reconstruction</code> <small>line 94</small><div class="doc"><p>Combining the true-cost concentration events gives the exact
+structural-factor update for the executable rational child traversal.</p></div><pre>theorem coarseThresholdChildrenCost_reconstruction {B D : ℕ} {α : Type u}
+    (k : ℕ) (Q lam : ℚ)
+    (trueValue : CoarseSourceTree B α D → ℕ → Fin (2 * k + 1) → ℕ)
+    (value : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ → Fin (2 * k + 1) → ℚ)
+    (children : List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D))
+    (allowance : ℚ) (f : ℝ)
+    (hQ : 0 ≤ Q) (ha : 0 ≤ allowance) (hf : 1 ≤ f)
+    (hlam : 0 ≤ lam) (hlamone : lam &lt; 1)
+    (start : ℕ) (shift : Fin (2 * k + 1))
+    (hchild : CoarseChildAccuracy k Q lam trueValue value allowance f children start)
+    (hconcentrationLower :
+      (1 - (lam : ℝ)) *
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseAccuracy.lean.html#L35">OAI.EditApproximation.CoarseChildAccuracy</a></p></li><li id=L136><b>def</b> <code>OAI.EditApproximation.coarseStructuralFactor</code> <small>line 136</small><div class="doc"><p>The exact depth factor in Section 3.</p></div><pre>noncomputable def coarseStructuralFactor (lam : ℚ) (D : ℕ) : ℝ :=
+…</pre></li><li id=L139><b>theorem</b> <code>OAI.EditApproximation.coarseStructuralFactor_one_le</code> <small>line 139</small></li><li id=L147><b>theorem</b> <code>OAI.EditApproximation.coarseStructuralFactor_succ</code> <small>line 147</small></li><li id=L154><b>def</b> <code>OAI.EditApproximation.CoarseDescendantEvents</code> <small>line 154</small><div class="doc"><p>Events for all children, including children below a pruned node.</p></div><pre>def CoarseDescendantEvents {B D : ℕ} {α : Type u} (Q lam allowance : ℚ)
+    (event : CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ → Prop) :
+    List (CoarseSourceTree B α D × Fin B × CoarseThresholdDraws B D) → ℕ → Prop
+  | [], _ =&gt; True
+  | (child, draw, below) :: rest, start =&gt;
+    event child below (lam * coarseChildThreshold B Q allowance draw) start ∧
+      CoarseDescendantEvents Q lam allowance event rest (start + child.word.length)
+
+/-- The actual finite-tree event. At every node it uses only deterministic
+true-cost minima and the node&#x27;s current child threshold labels. -/</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1293">OAI.EditApproximation.coarseChildThreshold</a></p></li><li id=L164><b>def</b> <code>OAI.EditApproximation.CoarseAccuracyEvent</code> <small>line 164</small><div class="doc"><p>The actual finite-tree event. At every node it uses only deterministic
+true-cost minima and the node's current child threshold labels.</p></div><pre>noncomputable def CoarseAccuracyEvent {B : ℕ} {α : Type u} [DecidableEq α]
+    (k : ℕ) (Q lam : ℚ) (frame : List (Option α)) :
+    {D : ℕ} → CoarseSourceTree B α D → CoarseThresholdDraws B D → ℚ → ℕ → Prop
+  | _, .leaf _, _, _, _ =&gt; True
+  | D + 1, .branch children, (draws, below), allowance, start =&gt;
+    let data := List.ofFn (fun i =&gt; (children i, draws i, below i))
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a></p></li><li id=L186><b>theorem</b> <code>OAI.EditApproximation.CoarseDescendantEvents.to_accuracy</code> <small>line 186</small></li><li id=L211><b>theorem</b> <code>OAI.EditApproximation.coarseThresholdEstimate_accurate</code> <small>line 211</small><div class="doc"><p>On the concrete true-cost event, the literal rational pruned
+estimator has exactly the claimed depth-dependent error at every shift.</p></div><pre>theorem coarseThresholdEstimate_accurate {B D : ℕ} {α : Type u} [DecidableEq α]
+    (k : ℕ) (Q lam : ℚ) (frame : List (Option α))
+    (tree : CoarseSourceTree B α D) (draws : CoarseThresholdDraws B D)
+    (allowance : ℚ) (start : ℕ)
+    (hQ : 0 ≤ Q) (hlam : 0 ≤ lam) (hlamone : lam &lt; 1) (ha : 0 ≤ allowance)
+    (hevent : CoarseAccuracyEvent k Q lam frame tree draws allowance start) :
+    ∀ shift : Fin (2 * k + 1),
+      (coarseShiftCost k frame tree start shift : ℝ) / coarseStructuralFactor lam D - allowance ≤
+          coarseThresholdEstimate k Q lam frame tree draws allowance start shift ∧
+      (coarseThresholdEstimate k Q lam frame tree draws allowance start shift : ℝ) ≤
+        coarseStructuralFactor lam D * coarseShiftCost k frame tree start shift + allowance := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L6045">OAI.EditApproximation.CoarseSourceTree</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L1286">OAI.EditApproximation.CoarseThresholdDraws</a>, <a href="CoarseAccuracy.lean.html#L164">OAI.EditApproximation.CoarseAccuracyEvent</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L10879">OAI.EditApproximation.coarseShiftCost</a>, <a href="CoarseAccuracy.lean.html#L136">OAI.EditApproximation.coarseStructuralFactor</a>, <a href="../../../../ComparatorChallenges/EditApproximation.lean.html#L12902">OAI.EditApproximation.coarseThresholdEstimate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

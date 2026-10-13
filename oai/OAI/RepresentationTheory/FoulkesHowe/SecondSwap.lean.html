@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/FoulkesHowe/SecondSwap.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/FoulkesHowe/SecondSwap.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">FoulkesHowe</a> / <span>SecondSwap.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">FoulkesHowe</a>/<span>SecondSwap.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/FoulkesHowe/SecondSwap.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>def</b> <code>OAI.Problem346.SecondTransfer.rowFactorSwap</code> <small>line 9</small><div class="doc"><p>Swap two factor positions in one nonzero row, leaving all other rows fixed.</p></div><pre>def rowFactorSwap {r b : ℕ} (i : Fin r) (j l : Fin b) :
+    Fin (r+1) → Equiv.Perm (Fin b) :=
+…</pre></li><li id=L15><b>theorem</b> <code>OAI.Problem346.SecondTransfer.update_label_eq_progress_rowSwap</code> <small>line 15</small><div class="doc"><p>Changing any remaining source factor to the common block agrees with progressing
+the prefix count, after a permutation internal to that row.</p></div><pre>theorem update_label_eq_progress_rowSwap
+    {r b : ℕ} (k : Fin r → ℕ) (i : Fin r) (hi : k i &lt; b)
+    (j : Fin b) (hj : k i ≤ j.val) (p : Fin (r+1) × Fin b) :
+    Function.update (label k) (i.succ, j) none p =
+      label (Function.update k i (k i+1))
+        (p.1, rowFactorSwap i j ⟨k i, hi⟩ p.1 p.2) := by
+…</pre><p class="refs">Mentions: <a href="SecondLabels.lean.html#L15">OAI.Problem346.SecondTransfer.label</a>, <a href="SecondSwap.lean.html#L9">OAI.Problem346.SecondTransfer.rowFactorSwap</a></p></li><li id=L53><b>theorem</b> <code>OAI.Problem346.SecondTransfer.invariant_update_label_eq_progress</code> <small>line 53</small><div class="doc"><p>Any expression invariant under permutations of factors within each row takes the
+same value on a derivative label update and the progressed prefix labels.</p></div><pre>theorem invariant_update_label_eq_progress
+    {r b : ℕ} {A : Type*}
+    (F : ((Fin (r+1) × Fin b) → Block r) → A)
+    (hF : ∀ (l : (Fin (r+1) × Fin b) → Block r)
+      (σ : Fin (r+1) → Equiv.Perm (Fin b)),
+      F (fun p =&gt; l (p.1, σ p.1 p.2)) = F l)
+    (k : Fin r → ℕ) (i : Fin r) (hi : k i &lt; b)
+    (j : Fin b) (hj : k i ≤ j.val) :
+    F (Function.update (label k) (i.succ,j) none) =
+      F (label (Function.update k i (k i+1))) := by
+…</pre><p class="refs">Mentions: <a href="SecondLabels.lean.html#L12">OAI.Problem346.SecondTransfer.Block</a>, <a href="SecondLabels.lean.html#L15">OAI.Problem346.SecondTransfer.label</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanActualConjugation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanActualConjugation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>CartanActualConjugation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>CartanActualConjugation.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/CartanActualConjugation.lean#L1">source</a></p><div class="doc"><h3>Actual Cartan conjugation and shifted boxes</h3><p>The full Lie action integrates to the nilpotent group. A faithful compatible
+representation identifies this automorphism with ambient conjugation. The
+resulting box estimate retains the polynomial residual factor and the exact
+canonical-height translation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>def</b> <code>OAI.PolycyclicRecognition.CartanWordModel.adjointGroupAutomorphism</code> <small>line 31</small><div class="doc"><p>Integration of the complete adjoint action, including its residual part.</p></div><pre>def adjointGroupAutomorphism (h : H) : N ≃* N :=
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.adjointGroupAutomorphism_eq_conjugation</code> <small>line 43</small><div class="doc"><p>Compatibility of exponentials in a faithful representation identifies
+the constructed automorphism with actual ambient conjugation.</p></div><pre>theorem adjointGroupAutomorphism_eq_conjugation
+    (j : L →ₗ⁅ℝ⁆ A) (ρ : G →* Aˣ) (hρ : Function.Injective ρ)
+    (ι : N →* G) (d : H → G)
+    (hN : ∀ x : cartanRootIdeal H, ρ (ι (Exp (eN x))) = algebraExpUnit (j x))
+    (hd : ∀ h, ρ (d h) = algebraExpUnit (j h)) (h : H) (g : N) :
+    ι (M.adjointGroupAutomorphism T eN Exp hExp hbij dynkin h g) =
+      d h * ι g * (d h)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="AlgebraExponential.lean.html#L17">OAI.PolycyclicRecognition.algebraExpUnit</a></p></li><li id=L69><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.adjointGroupAutomorphism_factor</code> <small>line 69</small><div class="doc"><p>Canonical height determines the scalar factor of the actual action.</p></div><pre>theorem adjointGroupAutomorphism_factor (h : H) (w : W) (r : ℝ)
+    (hh : eW (heightProjection T.character (h : L)) = r • w) (g : N) :
+    M.adjointGroupAutomorphism T eN Exp hExp hbij dynkin h g =
+      M.groupWeightDilation T eW eN Exp hExp hbij dynkin w r
+        (M.residualGroupAutomorphism T eN Exp hExp hbij dynkin h g) := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PolycyclicRecognition.lean.html#L148">OAI.PolycyclicRecognition.heightProjection</a></p></li><li id=L95><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_adjoint_groupBox_bound</code> <small>line 95</small><div class="doc"><p>The actual adjoint action translates the template by canonical height,
+with a polynomial loss in the Cartan logarithm only.</p></div><pre>theorem exists_adjoint_groupBox_bound
+    (b₀ : Basis (Fin (finrank ℝ (cartanRootIdeal H))) ℝ (cartanRootIdeal H)) :
+    ∃ (A : ℝ) (p : ℕ), 0 ≤ A ∧ ∀ {E : Set W}, IsCompact E → E.Nonempty →
+      ∀ β : M.Bases,
+      IsMaximizingColumnBasis (wordListCoordinates M.letter M.wordList b₀)
+        (M.boxCost T hunimod eW E) β.val →
+      ∀ r : ℝ, 0 ≤ r → ∀ (h : H) (w : W),
+      eW (heightProjection T.character (h : L)) = r • w →
+      ∀ (R : ℝ) (g : N), g ∈ M.groupBox T hunimod eW (Exp ∘ eN) E β r R →
+      M.adjointGroupAutomorphism T eN Exp hExp hbij dynkin h g ∈
+        M.groupBox T hunimod eW (Exp ∘ eN) ((fun x =&gt; x + w) &#x27;&#x27; E) β r
+          (A * (1 + ‖(Module.finBasis ℝ H).equivFun h‖) ^ p * R) := by
+…</pre><p class="refs">Mentions: <a href="CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="../Algebra/WordBasisCoordinates.lean.html#L24">OAI.PolycyclicRecognition.wordListCoordinates</a>, <a href="../../../../ComparatorChallenges/PolycyclicRecognition.lean.html#L148">OAI.PolycyclicRecognition.heightProjection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

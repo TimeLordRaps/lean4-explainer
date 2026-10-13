@@ -1,0 +1,213 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/KServer/Allocation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/KServer/Allocation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">KServer</a> / <span>Allocation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">KServer</a>/<span>Allocation.lean</span></code></h1><p class="muted">169 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/KServer/Allocation.lean#L1">source</a></p><div class="doc"><p>The exact source primitives installed in the actual affine minimizer
+recursion. The coefficients use raw core flags; fine caps are deliberately
+absent. The zero-potential cases do not evaluate the marked denominator.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>structure</b> <code>OAI.KServer.SimplexFamilies.Data</code> <small>line 20</small></li><li id=L33><b>def</b> <code>OAI.KServer.SimplexFamilies.K</code> <small>line 33</small></li><li id=L35><b>def</b> <code>OAI.KServer.SimplexFamilies.Z</code> <small>line 35</small></li><li id=L37><b>def</b> <code>OAI.KServer.SimplexFamilies.core</code> <small>line 37</small></li><li id=L39><b>def</b> <code>OAI.KServer.SimplexFamilies.potential</code> <small>line 39</small></li><li id=L42><b>def</b> <code>OAI.KServer.SimplexFamilies.coefficient</code> <small>line 42</small></li><li id=L47><b>lemma</b> <code>OAI.KServer.SimplexFamilies.K_continuous</code> <small>line 47</small></li><li id=L56><b>lemma</b> <code>OAI.KServer.SimplexFamilies.Z_continuous</code> <small>line 56</small></li><li id=L64><b>lemma</b> <code>OAI.KServer.SimplexFamilies.coefficient_continuous</code> <small>line 64</small></li><li id=L73><b>def</b> <code>OAI.KServer.SimplexFamilies.family</code> <small>line 73</small></li><li id=L84><b>lemma</b> <code>OAI.KServer.SimplexFamilies.value_eq</code> <small>line 84</small><div class="doc"><p>Algebraic equality with the literal sum of the source's improper
+integrals. In particular the family does not substitute another potential.</p></div><pre>lemma value_eq (C ell : ℝ) (d : Data J R) (p : J × R → ℝ) (a : J → ℝ)
+    (ha : a ∈ ChangingDomains.simplex d.active) :
+    (family C ell).value d p a=potential C ell d (core d p) a := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L20">OAI.KServer.SimplexFamilies.Data</a>, <a href="Minimization.lean.html#L366">OAI.KServer.ChangingDomains.simplex</a>, <a href="Allocation.lean.html#L73">OAI.KServer.SimplexFamilies.family</a>, <a href="Allocation.lean.html#L39">OAI.KServer.SimplexFamilies.potential</a>, <a href="Allocation.lean.html#L37">OAI.KServer.SimplexFamilies.core</a></p></li><li id=L111><b>lemma</b> <code>OAI.KServer.SimplexFamilies.value_bound</code> <small>line 111</small><div class="doc"><p>Uniform endpoint bound from the same dimension-free rank slopes; the
+finite number of coordinates may occur only in this additive endpoint.</p></div><pre>lemma value_bound (C ell : ℝ) (d : Data J R) (p : J × R → ℝ) (a : J → ℝ) {L : ℝ}
+    (hc : ∀ ir, |coefficient C ell d a ir| ≤ L) (hp : ∀ ir, p ir ∈ Set.Icc 0 1) :
+    |(family C ell).value d p a| ≤ L*Fintype.card (J × R) := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L20">OAI.KServer.SimplexFamilies.Data</a>, <a href="Allocation.lean.html#L42">OAI.KServer.SimplexFamilies.coefficient</a>, <a href="Allocation.lean.html#L73">OAI.KServer.SimplexFamilies.family</a></p></li><li id=L122><b>def</b> <code>OAI.KServer.SimplexFamilies.regular</code> <small>line 122</small></li><li id=L136><b>lemma</b> <code>OAI.KServer.SimplexFamilies.regular_coefficient_bound</code> <small>line 136</small></li><li id=L164><b>def</b> <code>OAI.KServer.SimplexFamilies.marked</code> <small>line 164</small><div class="doc"><p>The marked base point is exactly one; no value with <code>u=0</code> is accepted.</p></div><pre>def marked (A : Finset J) (flags : J → R → Bool) (o : J) (h eta : J → ℝ)
+    (u : ℝ) (hu : 0 &lt; u) (hu1 : u ≤ 1) (hh : ∀ i ≠ o, 1 ≤ h i) : Data J R where
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L20">OAI.KServer.SimplexFamilies.Data</a></p></li><li id=L192><b>lemma</b> <code>OAI.KServer.SimplexFamilies.marked_coefficient_bound</code> <small>line 192</small></li><li id=L241><b>def</b> <code>OAI.KServer.SimplexFamilies.automatic</code> <small>line 241</small><div class="doc"><p>The automatic empty/singleton rule is a genuine zero potential, not a
+singular marked potential evaluated at a zero side parameter.</p></div><pre>def automatic (A : Finset J) (flags : J → R → Bool) : Data J R :=
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L20">OAI.KServer.SimplexFamilies.Data</a></p></li><li id=L244><b>lemma</b> <code>OAI.KServer.SimplexFamilies.automatic_value</code> <small>line 244</small></li><li id=L258><b>def</b> <code>OAI.KServer.SimplexTracker.simplex</code> <small>line 258</small></li><li id=L260><b>def</b> <code>OAI.KServer.SimplexTracker.potential</code> <small>line 260</small></li><li id=L262><b>def</b> <code>OAI.KServer.SimplexTracker.movement</code> <small>line 262</small></li><li id=L264><b>def</b> <code>OAI.KServer.SimplexTracker.objective</code> <small>line 264</small></li><li id=L267><b>lemma</b> <code>OAI.KServer.SimplexTracker.max_coordinate</code> <small>line 267</small></li><li id=L272><b>lemma</b> <code>OAI.KServer.SimplexTracker.weighted_deficit</code> <small>line 272</small><div class="doc"><p>Quantitative deficit from replacing alpha_i by alpha_i/(1+eta_i).</p></div><pre>lemma weighted_deficit {a h η : ι → ℝ} {ct ell ηmax : ℝ}
+    (ha : a ∈ simplex) (hh : ∀ i, 0 ≤ h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hη : ∀ i, η i = ct * h i / ell) (hmax : ∀ i, η i ≤ ηmax) :
+    ∑ i, a i / (1 + η i) ≤
+      1 - ct / (ell * (1 + ηmax)) * ∑ i, a i * h i := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L258">OAI.KServer.SimplexTracker.simplex</a></p></li><li id=L302><b>lemma</b> <code>OAI.KServer.SimplexTracker.exists_negative_derivative</code> <small>line 302</small><div class="doc"><p>The derivative contradiction in eq:alpha-derivative-contradiction,
+with coefficients general enough to include the marked denominator.</p></div><pre>lemma exists_negative_derivative {a h η F B γ : ι → ℝ}
+    {ct ell ηmax Cα CF S : ℝ}
+    (ha : a ∈ simplex) (hh : ∀ i, 0 ≤ h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hη : ∀ i, η i = ct * h i / ell) (hmax : ∀ i, η i ≤ ηmax)
+    (hCa : 0 &lt; Cα) (_hCF : 0 ≤ CF) (hS : 0 &lt; S)
+    (hB : ∑ i, B i = S) (hF : ∀ i, 0 ≤ F i)
+    (hT : 0 &lt; ∑ i, a i * h i)
+    (hden : ∑ i, a i * F i ≤ CF * ∑ i, a i * h i)
+    (hgap : 2 * CF * (1 + ηmax) &lt; Cα * ct)
+    (hidentity : ∀ i, a i * F i / (1 + η i) * γ i =
+      Cα * ell * (S * (a i / (1 + η i)) - B i)) :
+    ∃ i, γ i &lt; -2 * S := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L258">OAI.KServer.SimplexTracker.simplex</a></p></li><li id=L358><b>lemma</b> <code>OAI.KServer.SimplexTracker.simplex_isCompact</code> <small>line 358</small></li><li id=L369><b>lemma</b> <code>OAI.KServer.SimplexTracker.objective_continuousOn</code> <small>line 369</small></li><li id=L381><b>lemma</b> <code>OAI.KServer.SimplexTracker.exists_minimizer</code> <small>line 381</small></li><li id=L386><b>lemma</b> <code>OAI.KServer.SimplexTracker.minimizer_payment</code> <small>line 386</small></li><li id=L395><b>lemma</b> <code>OAI.KServer.SimplexTracker.sum_replace</code> <small>line 395</small></li><li id=L409><b>def</b> <code>OAI.KServer.SimplexTracker.transfer</code> <small>line 409</small><div class="doc"><p>Transfer epsilon from donor i to receiver j, exactly as in §04.</p></div><pre>def transfer [DecidableEq ι] (a : ι → ℝ) (i j : ι) (ε : ℝ) : ι → ℝ :=
+…</pre></li><li id=L412><b>lemma</b> <code>OAI.KServer.SimplexTracker.sum_transfer</code> <small>line 412</small></li><li id=L418><b>lemma</b> <code>OAI.KServer.SimplexTracker.transfer_mem_simplex</code> <small>line 418</small></li><li id=L430><b>lemma</b> <code>OAI.KServer.SimplexTracker.transfer_min_comparison</code> <small>line 430</small></li><li id=L449><b>lemma</b> <code>OAI.KServer.SimplexTracker.minimizer_derivative_gap</code> <small>line 449</small></li><li id=L475><b>lemma</b> <code>OAI.KServer.SimplexTracker.minimizer_not_inward_atBot</code> <small>line 475</small><div class="doc"><p>A singular inward slope cannot occur at a constrained global minimum:
+there is always a positive donor in the unit simplex.</p></div><pre>lemma minimizer_not_inward_atBot [DecidableEq ι] {f : ι → ℝ → ℝ} {S : ℝ} {a₀ a : ι → ℝ}
+    (hS : 0 ≤ S) (ha : a ∈ simplex) (hm : IsMinOn (objective f S a₀) simplex a)
+    (hderiv : ∀ i, 0 &lt; a i → DifferentiableAt ℝ (f i) (a i))
+    {j : ι} (hj : a j = 0) :
+    ¬ Tendsto (fun ε : ℝ =&gt; (f j ε - f j 0) / ε) (𝓝[&gt;] 0) atBot := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L258">OAI.KServer.SimplexTracker.simplex</a>, <a href="Allocation.lean.html#L264">OAI.KServer.SimplexTracker.objective</a></p></li><li id=L516><b>lemma</b> <code>OAI.KServer.SimplexTracker.minimizer_feasible</code> <small>line 516</small><div class="doc"><p>Complete minimizer feasibility reduction, using the genuine derivative and
+singular endpoint properties of the source primitives.</p></div><pre>lemma minimizer_feasible [DecidableEq ι]
+    {f : ι → ℝ → ℝ} {a₀ a h η F B : ι → ℝ} {ct ell ηmax Cα CF S : ℝ}
+    (ha : a ∈ simplex) (hm : IsMinOn (objective f S a₀) simplex a)
+    (hh : ∀ i, 0 ≤ h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hη : ∀ i, η i = ct * h i / ell) (hmax : ∀ i, η i ≤ ηmax)
+    (hCa : 0 &lt; Cα) (hCF : 0 ≤ CF) (hS : 0 &lt; S)
+    (hB0 : ∀ i, 0 ≤ B i) (hB : ∑ i, B i = S)
+    (hF : ∀ i, 0 ≤ F i) (hFp : ∀ i, 0 &lt; a i → 0 &lt; F i)
+    (hT : 0 &lt; ∑ i, a i * h i)
+    (hden : ∑ i, a i * F i ≤ CF * ∑ i, a i * h i)
+    (hgap : 2 * CF * (1 + ηmax) &lt; Cα * ct)
+    (hderiv : ∀ i, 0 &lt; a i → HasDerivAt (f i)
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L258">OAI.KServer.SimplexTracker.simplex</a>, <a href="Allocation.lean.html#L264">OAI.KServer.SimplexTracker.objective</a></p></li><li id=L584><b>lemma</b> <code>OAI.KServer.Allocation.simplex_weight_pos</code> <small>line 584</small></li><li id=L595><b>lemma</b> <code>OAI.KServer.Allocation.log_inverse_nonneg_closed</code> <small>line 595</small></li><li id=L603><b>lemma</b> <code>OAI.KServer.Allocation.exists_simplex_update</code> <small>line 603</small><div class="doc"><p>The exact integral update, including compact existence, singular endpoint
+exclusion, feasibility and payment. Its analytic premises are proved above for
+both displayed denominator types; no convexity is presumed.</p></div><pre>lemma exists_simplex_update [DecidableEq ι]
+    {F : ι → ℝ → ℝ} {a₀ h c B base : ι → ℝ} {ct ell ηmax Cα CF : ℝ}
+    (ha₀ : a₀ ∈ simplex) (hh : ∀ i, 0 &lt; h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hmax : ∀ i, ct * h i / ell ≤ ηmax)
+    (hCa : 0 &lt; Cα) (hCF : 0 ≤ CF)
+    (hB0 : ∀ i, 0 ≤ B i) (hb : ∀ i, base i ∈ Set.Icc 0 1)
+    (hFc : ∀ i, Continuous (F i)) (hci : ∀ i, 0 &lt; c i)
+    (hF : ∀ i y, 0 ≤ y → c i * (1 + y)^2 ≤ F i y)
+    (hdecay : ∀ i, Tendsto (fun s : ℝ =&gt; s * F i (Real.log (1 / s))) (𝓝[&gt;] 0) (𝓝 0))
+    (hden : ∀ a ∈ simplex, ∑ i, a i * F i (Real.log (1 / a i)) ≤ CF * ∑ i, a i * h i)
+    (hgap : 2 * CF * (1 + ηmax) &lt; Cα * ct) :
+    let S := ∑ i, B i
+…</pre></li><li id=L652><b>lemma</b> <code>OAI.KServer.Allocation.regular_simplex_update</code> <small>line 652</small><div class="doc"><p>Instantiation on a domain without a dominant child, with the manuscript's
+regular denominators and base point zero, at all simplex points including zero.</p></div><pre>lemma regular_simplex_update [DecidableEq ι]
+    {a₀ h B : ι → ℝ} {ct ell ηmax Cα Cexp : ℝ}
+    (ha₀ : a₀ ∈ simplex) (hh : ∀ i, 1 ≤ h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hmax : ∀ i, ct * h i / ell ≤ ηmax) (hCa : 0 &lt; Cα)
+    (hB0 : ∀ i, 0 ≤ B i) (hCexp : 0 ≤ Cexp)
+    (htail : ∑ i, Real.exp (-h i) ≤ Cexp)
+    (hgap : 2 * (25 + 32 * Cexp) * (1 + ηmax) &lt; Cα * ct) :
+    let S := ∑ i, B i
+…</pre></li><li id=L677><b>lemma</b> <code>OAI.KServer.Allocation.marked_simplex_update</code> <small>line 677</small><div class="doc"><p>Marked-domain instantiation; the base point is one exactly on the marked
+coordinate, preserving the source's cancellation under parameter changes.</p></div><pre>lemma marked_simplex_update [DecidableEq ι]
+    {a₀ h B : ι → ℝ} {ct ell ηmax Cα Cexp c u H : ℝ} (o : ι)
+    (ha₀ : a₀ ∈ simplex) (hu : 0 &lt; u) (hu1 : u ≤ 1)
+    (hH : H = 1 + Real.log (1 / u)) (ho : h o = u)
+    (hh : ∀ i ≠ o, 1 ≤ h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hmax : ∀ i, ct * h i / ell ≤ ηmax) (hCa : 0 &lt; Cα)
+    (hB0 : ∀ i, 0 ≤ B i) (hCexp : 0 ≤ Cexp)
+    (hsideC : 0 &lt; c) (hsideC1 : c ≤ 1) (hside : ∀ i ≠ o, c * H ≤ h i)
+    (htail : ∑ i ∈ Finset.univ.erase o, Real.exp (-h i) ≤ Cexp * u)
+    (hgap : 2 * ((25 * c + 2 + 32 * Cexp) / c) * (1 + ηmax) &lt; Cα * ct) :
+    let S := ∑ i, B i
+…</pre></li><li id=L748><b>def</b> <code>OAI.KServer.SupportedAllocation.restrict</code> <small>line 748</small></li><li id=L750><b>def</b> <code>OAI.KServer.SupportedAllocation.extend</code> <small>line 750</small></li><li id=L753><b>lemma</b> <code>OAI.KServer.SupportedAllocation.extend_apply_mem</code> <small>line 753</small></li><li id=L757><b>lemma</b> <code>OAI.KServer.SupportedAllocation.extend_apply_not_mem</code> <small>line 757</small></li><li id=L761><b>lemma</b> <code>OAI.KServer.SupportedAllocation.restrict_extend</code> <small>line 761</small></li><li id=L765><b>lemma</b> <code>OAI.KServer.SupportedAllocation.extend_restrict</code> <small>line 765</small></li><li id=L773><b>lemma</b> <code>OAI.KServer.SupportedAllocation.sum_restrict</code> <small>line 773</small></li><li id=L778><b>lemma</b> <code>OAI.KServer.SupportedAllocation.sum_extend</code> <small>line 778</small></li><li id=L783><b>lemma</b> <code>OAI.KServer.SupportedAllocation.restrict_simplex</code> <small>line 783</small></li><li id=L789><b>lemma</b> <code>OAI.KServer.SupportedAllocation.extend_simplex</code> <small>line 789</small></li><li id=L800><b>lemma</b> <code>OAI.KServer.SupportedAllocation.movement_restrict</code> <small>line 800</small></li><li id=L806><b>lemma</b> <code>OAI.KServer.SupportedAllocation.movement_extend</code> <small>line 806</small></li><li id=L813><b>lemma</b> <code>OAI.KServer.SupportedAllocation.potential_restrict</code> <small>line 813</small></li><li id=L821><b>lemma</b> <code>OAI.KServer.SupportedAllocation.restrict_isMin</code> <small>line 821</small><div class="doc"><p>Restriction is exact, including both the movement penalty and the literal
+source potentials. No dummy inactive coordinate enters the denominator bound.</p></div><pre>lemma restrict_isMin {A : Finset J} (hA : A.Nonempty) {f : J → ℝ → ℝ}
+    {S : ℝ} {a a₀ : J → ℝ} (ha : a ∈ ChangingDomains.simplex A)
+    (ha₀ : a₀ ∈ ChangingDomains.simplex A) (hf : ∀ i∉A, f i 0=0)
+    (hm : IsMinOn (fun b =&gt; (∑ i, f i (b i))+S*ChangingDomains.variation b a₀)
+      (ChangingDomains.simplex A) a) :
+    IsMinOn (SimplexTracker.objective (fun i : A =&gt; f i) S (restrict A a₀))
+      SimplexTracker.simplex (restrict A a) := by
+…</pre><p class="refs">Mentions: <a href="Minimization.lean.html#L366">OAI.KServer.ChangingDomains.simplex</a>, <a href="Minimization.lean.html#L354">OAI.KServer.ChangingDomains.variation</a>, <a href="Allocation.lean.html#L264">OAI.KServer.SimplexTracker.objective</a>, <a href="Allocation.lean.html#L748">OAI.KServer.SupportedAllocation.restrict</a>, <a href="Allocation.lean.html#L258">OAI.KServer.SimplexTracker.simplex</a></p></li><li id=L851><b>lemma</b> <code>OAI.KServer.Allocation.every_simplex_minimizer_feasible</code> <small>line 851</small><div class="doc"><p>The feasibility argument holds for every attained minimizer, in particular
+for the fixed noncomputable choice in the causal recurrence.</p></div><pre>lemma every_simplex_minimizer_feasible
+    {F : ι → ℝ → ℝ} {a₀ a h c B base : ι → ℝ} {ct ell ηmax Cα CF : ℝ}
+    (ha : a ∈ simplex) (hh : ∀ i, 0 &lt; h i) (hc : 0 &lt; ct) (hl : 0 &lt; ell)
+    (hmax : ∀ i, ct*h i/ell ≤ ηmax) (hCa : 0 &lt; Cα) (hCF : 0 ≤ CF)
+    (hB0 : ∀ i, 0 ≤ B i) (hb : ∀ i, base i ∈ Set.Icc 0 1)
+    (hFc : ∀ i, Continuous (F i)) (hci : ∀ i, 0 &lt; c i)
+    (hF : ∀ i y, 0 ≤ y → c i*(1+y)^2 ≤ F i y)
+    (hdecay : ∀ i, Tendsto (fun s : ℝ =&gt; s*F i (Real.log (1/s))) (𝓝[&gt;] 0) (𝓝 0))
+    (hden : ∀ b ∈ simplex, ∑ i, b i*F i (Real.log (1/b i)) ≤ CF*∑ i, b i*h i)
+    (hgap : 2*CF*(1+ηmax) &lt; Cα*ct)
+    (hm : IsMinOn (objective (fun i =&gt; primitive (F i) Cα ell (ct*h i/ell)
+      (∑ j, B j) (B i) (base i)) (∑ i, B i) a₀) simplex a) :
+…</pre></li><li id=L897><b>lemma</b> <code>OAI.KServer.Allocation.every_regular_minimizer_feasible</code> <small>line 897</small></li><li id=L926><b>lemma</b> <code>OAI.KServer.SupportedAllocation.regular_supported_minimizer_feasible</code> <small>line 926</small><div class="doc"><p>Uniform feasibility on the changing active domain. Its exp-tail hypothesis
+is a sum over active children only, exactly as in the source.</p></div><pre>lemma regular_supported_minimizer_feasible {A : Finset J} (hA : A.Nonempty)
+    {a₀ a h B : J → ℝ} {ct ell ηmax Cα Cexp : ℝ}
+    (ha : a ∈ ChangingDomains.simplex A) (ha₀ : a₀ ∈ ChangingDomains.simplex A)
+    (hh : ∀ i∈A, 1≤h i) (hc : 0&lt;ct) (hl : 0&lt;ell)
+    (hmax : ∀ i∈A, ct*h i/ell≤ηmax) (hCa : 0&lt;Cα) (hB0 : ∀ i, 0≤B i)
+    (hBout : ∀ i∉A, B i=0) (hCexp : 0≤Cexp) (htail : ∑ i∈A, Real.exp (-h i)≤Cexp)
+    (hgap : 2*(25+32*Cexp)*(1+ηmax)&lt;Cα*ct)
+    (hm : IsMinOn (fun b =&gt; (∑ i, primitive (regularF (h i)) Cα ell (ct*h i/ell)
+      (∑ j, B j) (B i) 0 (b i))+(∑ i, B i)*ChangingDomains.variation b a₀)
+       (ChangingDomains.simplex A) a) :
+    ∀ i, (∑ j, B j)*a i≤(1+ct*h i/ell)*B i := by
+…</pre><p class="refs">Mentions: <a href="Minimization.lean.html#L366">OAI.KServer.ChangingDomains.simplex</a>, <a href="Minimization.lean.html#L354">OAI.KServer.ChangingDomains.variation</a></p></li><li id=L964><b>lemma</b> <code>OAI.KServer.Allocation.every_marked_minimizer_feasible</code> <small>line 964</small></li><li id=L1038><b>lemma</b> <code>OAI.KServer.SupportedAllocation.marked_supported_minimizer_feasible</code> <small>line 1038</small><div class="doc"><p>Feasibility for the actual changing marked domain; inactive coordinates
+are zero instead of being assigned a spurious positive denominator weight.</p></div><pre>lemma marked_supported_minimizer_feasible {A : Finset J} {o : J} (hoA : o ∈ A)
+    {a₀ a h B : J → ℝ} {ct ell ηmax Cα Cexp c u H : ℝ}
+    (ha : a ∈ ChangingDomains.simplex A) (ha₀ : a₀ ∈ ChangingDomains.simplex A)
+    (hu : 0 &lt; u) (hu1 : u ≤ 1) (hH : H = 1 + Real.log (1 / u)) (ho : h o = u)
+    (hh : ∀ i∈A, i ≠ o → 1 ≤ h i) (hc : 0&lt;ct) (hl : 0&lt;ell)
+    (hmax : ∀ i∈A, ct*h i/ell ≤ ηmax) (hCa : 0&lt;Cα)
+    (hB0 : ∀ i, 0≤B i) (hBout : ∀ i∉A, B i=0) (hCexp : 0≤Cexp)
+    (hsideC : 0&lt;c) (hsideC1 : c≤1) (hside : ∀ i∈A, i≠o → c*H≤h i)
+    (htail : ∑ i∈A.erase o, Real.exp (-h i) ≤ Cexp*u)
+    (hgap : 2*((25*c+2+32*Cexp)/c)*(1+ηmax)&lt;Cα*ct)
+    (hm : IsMinOn (fun b =&gt; (∑ i, primitive (if i=o then markedF u H else regularF (h i))
+      Cα ell (ct*h i/ell) (∑ j, B j) (B i) (if i=o then 1 else 0) (b i))+
+…</pre><p class="refs">Mentions: <a href="Minimization.lean.html#L366">OAI.KServer.ChangingDomains.simplex</a></p></li><li id=L1098><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.update_isMin</code> <small>line 1098</small></li><li id=L1110><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_update_feasible</code> <small>line 1110</small></li><li id=L1135><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.core_eq</code> <small>line 1135</small></li><li id=L1141><b>def</b> <code>OAI.KServer.AdaptiveAllocation.preparedFlags</code> <small>line 1141</small><div class="doc"><p>The prepared input is concrete and uses only new flags on the common
+old/new active domain, as in §04 (not intersection of old and new flags).</p></div><pre>def preparedFlags (A B : Finset J) (g : J → R → Bool) : J → R → Bool :=
+…</pre></li><li id=L1144><b>def</b> <code>OAI.KServer.AdaptiveAllocation.preparedInput</code> <small>line 1144</small></li><li id=L1148><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.prepared_flags_outside</code> <small>line 1148</small></li><li id=L1154><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.prepared_input_outside</code> <small>line 1154</small></li><li id=L1160><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_potential_zero</code> <small>line 1160</small></li><li id=L1166><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.nonneg_total_zero</code> <small>line 1166</small></li><li id=L1172><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_transpose_value</code> <small>line 1172</small></li><li id=L1189><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_input_bound</code> <small>line 1189</small></li><li id=L1200><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_parameter_jump</code> <small>line 1200</small></li><li id=L1237><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.total_variation_bound</code> <small>line 1237</small></li><li id=L1243><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.transpose_cap</code> <small>line 1243</small></li><li id=L1255><b>def</b> <code>OAI.KServer.AdaptiveAllocation.regularPrepare</code> <small>line 1255</small><div class="doc"><p>This is the prepared minimizer from the manuscript; no drift inequality
+is an input to its definition.</p></div><pre>def regularPrepare (C ell ct : ℝ) (A B : Finset J) (g : J → R → Bool)
+    (h : J → ℝ) (hh : ∀ i, 1≤h i) (p : J × R → ℝ) (a : J → ℝ) : J → ℝ :=
+…</pre></li><li id=L1262><b>def</b> <code>OAI.KServer.AdaptiveAllocation.regularTransport</code> <small>line 1262</small><div class="doc"><p>Delete and insert zero coordinates following the prepared minimizing
+update, with a canonical simplex state only when its weight is exactly zero.</p></div><pre>def regularTransport (C ell ct : ℝ) (A B : Finset J) (g : J → R → Bool)
+    (h : J → ℝ) (hh : ∀ i, 1≤h i) (p : J × R → ℝ) (a : J → ℝ) : J → ℝ :=
+…</pre></li><li id=L1267><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_transport_mem</code> <small>line 1267</small></li><li id=L1290><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.literal_update_payment</code> <small>line 1290</small></li><li id=L1303><b>def</b> <code>OAI.KServer.AdaptiveAllocation.regularStep</code> <small>line 1303</small><div class="doc"><p>The final update after genuine preparation and transport.</p></div><pre>def regularStep (C ell ct : ℝ) (A B : Finset J) (g : J → R → Bool)
+    (h h&#x27; : J → ℝ) (hh : ∀ i, 1≤h i) (hh&#x27; : ∀ i, 1≤h&#x27; i)
+    (p : J × R → ℝ) (a : J → ℝ) : J → ℝ :=
+…</pre></li><li id=L1310><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.regular_step_payment</code> <small>line 1310</small></li><li id=L1390><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_update_feasible</code> <small>line 1390</small></li><li id=L1416><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_input_bound</code> <small>line 1416</small></li><li id=L1429><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_potential_zero</code> <small>line 1429</small></li><li id=L1436><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_transpose_value</code> <small>line 1436</small></li><li id=L1447><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.simplex_side_weight</code> <small>line 1447</small></li><li id=L1463><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_parameter_jump</code> <small>line 1463</small><div class="doc"><p>Marked parameter edits charge the dominant component only when <code>u</code>
+changes, and charge it to the side total, not the dominant mass.</p></div><pre>lemma marked_parameter_jump (A A&#x27; : Finset J) (hA&#x27; : A&#x27;.Nonempty)
+    (f g : J → R → Bool) (o : J) (h h&#x27; eta eta&#x27; : J → ℝ)
+    {u u&#x27; : ℝ} (hu : 0&lt;u) (hu1 : u≤1) (hu&#x27; : 0&lt;u&#x27;) (hu1&#x27; : u&#x27;≤1)
+    (hh : ∀ i≠o, 1≤h i) (hh&#x27; : ∀ i≠o, 1≤h&#x27; i)
+    (he : ∀ i, eta i∈Set.Icc 0 1) (he&#x27; : ∀ i, eta&#x27; i∈Set.Icc 0 1)
+    (heq : ∀ i, h i=h&#x27; i → eta i=eta&#x27; i)
+    (heqo : u=u&#x27; → eta o=eta&#x27; o) (heo : eta o≤u) (heo&#x27; : eta&#x27; o≤u&#x27;)
+    {C ell : ℝ} (hC : 0≤C) (hl : 0≤ell) {B a : J → ℝ}
+    (hB : ∀ i, 0≤B i) (ha : a∈ChangingDomains.simplex A&#x27;)
+    (hcap : ∀ i, (∑ j, B j)*a i≤(1+eta i)*B i) :
+    |potential C ell (marked A&#x27; g o h&#x27; eta&#x27; u&#x27; hu&#x27; hu1&#x27; hh&#x27;) B a-
+      potential C ell (marked A f o h eta u hu hu1 hh) B a| ≤
+…</pre><p class="refs">Mentions: <a href="Minimization.lean.html#L366">OAI.KServer.ChangingDomains.simplex</a></p></li><li id=L1545><b>def</b> <code>OAI.KServer.AdaptiveAllocation.markedPrepare</code> <small>line 1545</small></li><li id=L1552><b>def</b> <code>OAI.KServer.AdaptiveAllocation.markedTransport</code> <small>line 1552</small></li><li id=L1558><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_transport_mem</code> <small>line 1558</small></li><li id=L1579><b>def</b> <code>OAI.KServer.AdaptiveAllocation.markedStep</code> <small>line 1579</small></li><li id=L1587><b>lemma</b> <code>OAI.KServer.AdaptiveAllocation.marked_step_payment</code> <small>line 1587</small></li><li id=L1680><b>def</b> <code>OAI.KServer.SideTracker.primitive</code> <small>line 1680</small><div class="doc"><p>The explicit integral in eq:side-primitive-explicit.</p></div><pre>def primitive (c b θ z B D w : ℝ) : ℝ :=
+…</pre></li><li id=L1685><b>lemma</b> <code>OAI.KServer.SideTracker.primitive_derivative</code> <small>line 1685</small></li><li id=L1710><b>lemma</b> <code>OAI.KServer.SideTracker.derivative_le_of_left_comparison</code> <small>line 1710</small><div class="doc"><p>One-sided necessary optimality, allowing a nondifferentiable movement cost.</p></div><pre>lemma derivative_le_of_left_comparison {f : ℝ → ℝ} {f&#x27; D x : ℝ}
+    (hx : 0 &lt; x) (hd : HasDerivAt f f&#x27; x)
+    (hc : ∀ y ∈ Set.Icc 0 x, f x ≤ f y + D * (x - y)) : f&#x27; ≤ D := by
+…</pre></li><li id=L1727><b>lemma</b> <code>OAI.KServer.SideTracker.neg_derivative_le_of_right_comparison</code> <small>line 1727</small></li><li id=L1747><b>def</b> <code>OAI.KServer.SideTracker.domain</code> <small>line 1747</small></li><li id=L1749><b>def</b> <code>OAI.KServer.SideTracker.potential</code> <small>line 1749</small></li><li id=L1752><b>def</b> <code>OAI.KServer.SideTracker.movement</code> <small>line 1752</small></li><li id=L1754><b>def</b> <code>OAI.KServer.SideTracker.objective</code> <small>line 1754</small></li><li id=L1757><b>lemma</b> <code>OAI.KServer.SideTracker.movement_self</code> <small>line 1757</small></li><li id=L1759><b>lemma</b> <code>OAI.KServer.SideTracker.domain_isCompact</code> <small>line 1759</small></li><li id=L1770><b>lemma</b> <code>OAI.KServer.SideTracker.primitive_continuousOn</code> <small>line 1770</small></li><li id=L1775><b>lemma</b> <code>OAI.KServer.SideTracker.objective_continuousOn</code> <small>line 1775</small></li><li id=L1788><b>lemma</b> <code>OAI.KServer.SideTracker.exists_minimizer</code> <small>line 1788</small></li><li id=L1794><b>lemma</b> <code>OAI.KServer.SideTracker.minimizer_payment</code> <small>line 1794</small></li><li id=L1804><b>lemma</b> <code>OAI.KServer.SideTracker.sum_replace</code> <small>line 1804</small></li><li id=L1817><b>lemma</b> <code>OAI.KServer.SideTracker.replace_mem_domain</code> <small>line 1817</small></li><li id=L1828><b>lemma</b> <code>OAI.KServer.SideTracker.coordinate_min_comparison</code> <small>line 1828</small></li><li id=L1844><b>lemma</b> <code>OAI.KServer.SideTracker.derivative_upper_violation</code> <small>line 1844</small></li><li id=L1869><b>lemma</b> <code>OAI.KServer.SideTracker.derivative_lower_violation</code> <small>line 1869</small></li><li id=L1897><b>lemma</b> <code>OAI.KServer.SideTracker.minimizer_upper</code> <small>line 1897</small><div class="doc"><p>Every minimizing update has the source's upper side feasibility.</p></div><pre>lemma minimizer_upper {M b D Cw : ℝ} {θ z B w₀ w : ι → ℝ}
+    (hb : 1 ≤ b) (hθ : ∀ i, 0 &lt; θ i) (hz : ∀ i, 0 &lt; z i)
+    (hB : ∀ i, 0 ≤ B i) (hD : 0 ≤ D) (hM : ∀ i, b + θ i ≤ M)
+    (hw : w ∈ domain Cw)
+    (hm : IsMinOn (objective (8 * M) b θ z B D w₀) (domain Cw) w) :
+    ∀ i, D * w i ≤ (b + θ i) * B i := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L1747">OAI.KServer.SideTracker.domain</a>, <a href="Allocation.lean.html#L1754">OAI.KServer.SideTracker.objective</a></p></li><li id=L1930><b>lemma</b> <code>OAI.KServer.SideTracker.minimizer_lower</code> <small>line 1930</small><div class="doc"><p>The lower bound uses the slack proved from the upper bound, not a new
+assumption that the simplex constraint is inactive.</p></div><pre>lemma minimizer_lower {M b D Cw : ℝ} {θ z B w₀ w : ι → ℝ}
+    (hb : 1 ≤ b) (hθ : ∀ i, 0 &lt; θ i) (hz : ∀ i, 0 &lt; z i)
+    (hB : ∀ i, 0 ≤ B i) (hD : 0 ≤ D) (hM : ∀ i, b + θ i ≤ M)
+    (hCw : 2 * M &lt; Cw) (hS : ∑ i, B i ≤ 2 * D)
+    (hw : w ∈ domain Cw)
+    (hm : IsMinOn (objective (8 * M) b θ z B D w₀) (domain Cw) w) :
+    ∀ i, b * B i - θ i * z i * D ≤ D * w i := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L1747">OAI.KServer.SideTracker.domain</a>, <a href="Allocation.lean.html#L1754">OAI.KServer.SideTracker.objective</a></p></li><li id=L1973><b>theorem</b> <code>OAI.KServer.SideTracker.side_update</code> <small>line 1973</small><div class="doc"><p>Section 04, Lemma side-tracker, with the explicit sufficient multiplier
+C'_w = 8M. No rank assumption or positivity assumption on D is added.</p></div><pre>theorem side_update {M b D Cw : ℝ} {θ z B w₀ : ι → ℝ}
+    (hb : 1 ≤ b) (hθ : ∀ i, 0 &lt; θ i) (hz : ∀ i, 0 &lt; z i)
+    (hB : ∀ i, 0 ≤ B i) (hD : 0 ≤ D) (hM : ∀ i, b + θ i ≤ M)
+    (hCw : 2 * M &lt; Cw) (hw₀ : w₀ ∈ domain Cw) :
+    ∃ w ∈ domain Cw,
+      IsMinOn (objective (8 * M) b θ z B D w₀) (domain Cw) w ∧
+      (∀ i, D * w i ≤ (b + θ i) * B i) ∧
+      ((∑ i, B i) ≤ 2 * D → ∀ i, b * B i - θ i * z i * D ≤ D * w i) ∧
+      D * movement w w₀ ≤ potential (8 * M) b θ z B D w₀ -
+        potential (8 * M) b θ z B D w := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L1747">OAI.KServer.SideTracker.domain</a>, <a href="Allocation.lean.html#L1754">OAI.KServer.SideTracker.objective</a>, <a href="Allocation.lean.html#L1752">OAI.KServer.SideTracker.movement</a>, <a href="Allocation.lean.html#L1749">OAI.KServer.SideTracker.potential</a></p></li><li id=L1990><b>lemma</b> <code>OAI.KServer.SideTracker.primitive_eq_integral</code> <small>line 1990</small><div class="doc"><p>The logarithmic formula is exactly the source's interval integral.</p></div><pre>lemma primitive_eq_integral {c b θ z B D w : ℝ} (hθ : 0 &lt; θ) (hz : 0 &lt; z)
+    (hw : 0 ≤ w) :
+    primitive c b θ z B D w =
+      c * ∫ s in (0 : ℝ)..w,
+        (D * s - (b + θ / 2) * B + D * θ * z / 2) / (θ * (s + z)) := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L1680">OAI.KServer.SideTracker.primitive</a></p></li><li id=L2017><b>lemma</b> <code>OAI.KServer.SideTracker.primitive_affine_inputs</code> <small>line 2017</small><div class="doc"><p>Affinity in (B,D), used before every update decision in the all-step
+filtering telescope. In particular the held-D part is constant.</p></div><pre>lemma primitive_affine_inputs (c b θ z B₁ B₂ D₁ D₂ t w : ℝ) :
+    primitive c b θ z ((1 - t) * B₁ + t * B₂) ((1 - t) * D₁ + t * D₂) w =
+      (1 - t) * primitive c b θ z B₁ D₁ w + t * primitive c b θ z B₂ D₂ w := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L1680">OAI.KServer.SideTracker.primitive</a></p></li><li id=L2028><b>lemma</b> <code>OAI.KServer.SideTracker.log_factors</code> <small>line 2028</small></li><li id=L2040><b>lemma</b> <code>OAI.KServer.SideTracker.side_log_bound</code> <small>line 2040</small></li><li id=L2074><b>def</b> <code>OAI.KServer.SideTracker.Dcoef</code> <small>line 2074</small><div class="doc"><p>Coefficients of the actual primitive; all are nonnegative on the side
+domain. Their estimates use size-derived logarithmic cancellation.</p></div><pre>def Dcoef (c θ z w : ℝ) : ℝ :=
+…</pre></li><li id=L2076><b>def</b> <code>OAI.KServer.SideTracker.Bcoef</code> <small>line 2076</small></li><li id=L2079><b>lemma</b> <code>OAI.KServer.SideTracker.primitive_coefficients</code> <small>line 2079</small></li><li id=L2084><b>lemma</b> <code>OAI.KServer.SideTracker.coefficients_nonneg</code> <small>line 2084</small></li><li id=L2093><b>lemma</b> <code>OAI.KServer.SideTracker.Dcoef_bound</code> <small>line 2093</small></li><li id=L2119><b>lemma</b> <code>OAI.KServer.SideTracker.Bcoef_bound</code> <small>line 2119</small></li><li id=L2134><b>lemma</b> <code>OAI.KServer.SideTracker.primitive_component_bound</code> <small>line 2134</small></li><li id=L2155><b>lemma</b> <code>OAI.KServer.SideTracker.side_z_identity</code> <small>line 2155</small></li><li id=L2162><b>lemma</b> <code>OAI.KServer.SideTracker.potential_input_bound</code> <small>line 2162</small></li><li id=L2217><b>def</b> <code>OAI.KServer.SideSupported.restrict</code> <small>line 2217</small></li><li id=L2219><b>def</b> <code>OAI.KServer.SideSupported.extend</code> <small>line 2219</small></li><li id=L2222><b>lemma</b> <code>OAI.KServer.SideSupported.extend_apply_mem</code> <small>line 2222</small></li><li id=L2226><b>lemma</b> <code>OAI.KServer.SideSupported.extend_apply_not_mem</code> <small>line 2226</small></li><li id=L2230><b>lemma</b> <code>OAI.KServer.SideSupported.restrict_extend</code> <small>line 2230</small></li><li id=L2234><b>lemma</b> <code>OAI.KServer.SideSupported.extend_restrict</code> <small>line 2234</small></li><li id=L2242><b>lemma</b> <code>OAI.KServer.SideSupported.sum_restrict</code> <small>line 2242</small></li><li id=L2247><b>lemma</b> <code>OAI.KServer.SideSupported.sum_extend</code> <small>line 2247</small></li><li id=L2259><b>lemma</b> <code>OAI.KServer.SideSupported.restrict_mem</code> <small>line 2259</small></li><li id=L2264><b>lemma</b> <code>OAI.KServer.SideSupported.extend_mem</code> <small>line 2264</small></li><li id=L2276><b>lemma</b> <code>OAI.KServer.SideSupported.sideDomain_compact</code> <small>line 2276</small></li><li id=L2289><b>lemma</b> <code>OAI.KServer.SideSupported.movement_restrict</code> <small>line 2289</small></li><li id=L2295><b>lemma</b> <code>OAI.KServer.SideSupported.potential_restrict</code> <small>line 2295</small></li><li id=L2303><b>lemma</b> <code>OAI.KServer.SideSupported.restrict_isMin</code> <small>line 2303</small></li><li id=L2323><b>lemma</b> <code>OAI.KServer.SideSupported.supported_feasible</code> <small>line 2323</small></li><li id=L2356><b>structure</b> <code>OAI.KServer.SideFamilies.Data</code> <small>line 2356</small></li><li id=L2368><b>def</b> <code>OAI.KServer.SideFamilies.core</code> <small>line 2368</small></li><li id=L2371><b>def</b> <code>OAI.KServer.SideFamilies.coefficient</code> <small>line 2371</small></li><li id=L2374><b>def</b> <code>OAI.KServer.SideFamilies.offset</code> <small>line 2374</small></li><li id=L2377><b>lemma</b> <code>OAI.KServer.SideFamilies.Dcoef_continuousOn</code> <small>line 2377</small></li><li id=L2386><b>lemma</b> <code>OAI.KServer.SideFamilies.Bcoef_continuousOn</code> <small>line 2386</small></li><li id=L2396><b>lemma</b> <code>OAI.KServer.SideFamilies.coefficient_continuous</code> <small>line 2396</small></li><li id=L2405><b>lemma</b> <code>OAI.KServer.SideFamilies.offset_continuous</code> <small>line 2405</small></li><li id=L2413><b>def</b> <code>OAI.KServer.SideFamilies.family</code> <small>line 2413</small></li><li id=L2425><b>lemma</b> <code>OAI.KServer.SideFamilies.value_eq</code> <small>line 2425</small></li><li id=L2437><b>lemma</b> <code>OAI.KServer.SideFamilies.update_feasible</code> <small>line 2437</small></li><li id=L2467><b>lemma</b> <code>OAI.KServer.SideFamilies.update_payment</code> <small>line 2467</small></li><li id=L2483><b>lemma</b> <code>OAI.KServer.SideFamilies.domain_coordinate</code> <small>line 2483</small></li><li id=L2489><b>def</b> <code>OAI.KServer.SideFamilies.fromLog</code> <small>line 2489</small><div class="doc"><p>The exact side regularizers obtained from the stored log size.</p></div><pre>def fromLog (A : Finset J) (f : J → R → Bool) (W b D cw ell : ℝ)
+    (h : J → ℝ) (hW : 0≤W) (hcw : 0&lt;cw) (hell : 0&lt;ell) (hh : ∀ i, 1≤h i) : Data J R where
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L2356">OAI.KServer.SideFamilies.Data</a></p></li><li id=L2503><b>lemma</b> <code>OAI.KServer.SideFamilies.fromLog_input_bound</code> <small>line 2503</small></li><li id=L2525><b>lemma</b> <code>OAI.KServer.SideFamilies.parameter_jump</code> <small>line 2525</small></li><li id=L2567><b>def</b> <code>OAI.KServer.SideFamilies.prepareData</code> <small>line 2567</small><div class="doc"><p>Synthetic ranks use the new flags on the intersection of active sets.</p></div><pre>def prepareData (old new : Data J R) : Data J R :=
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L2356">OAI.KServer.SideFamilies.Data</a></p></li><li id=L2570><b>def</b> <code>OAI.KServer.SideFamilies.prepare</code> <small>line 2570</small></li><li id=L2573><b>def</b> <code>OAI.KServer.SideFamilies.transport</code> <small>line 2573</small></li><li id=L2576><b>def</b> <code>OAI.KServer.SideFamilies.step</code> <small>line 2576</small></li><li id=L2579><b>lemma</b> <code>OAI.KServer.SideFamilies.prepare_mem</code> <small>line 2579</small></li><li id=L2583><b>lemma</b> <code>OAI.KServer.SideFamilies.transport_mem</code> <small>line 2583</small></li><li id=L2589><b>lemma</b> <code>OAI.KServer.SideFamilies.step_mem</code> <small>line 2589</small></li><li id=L2594><b>lemma</b> <code>OAI.KServer.SideFamilies.prepared_core_zero</code> <small>line 2594</small></li><li id=L2598><b>lemma</b> <code>OAI.KServer.SideFamilies.transport_payment</code> <small>line 2598</small></li><li id=L2612><b>lemma</b> <code>OAI.KServer.SideFamilies.transport_value</code> <small>line 2612</small></li><li id=L2643><b>lemma</b> <code>OAI.KServer.SideFamilies.step_payment</code> <small>line 2643</small><div class="doc"><p>Local side edit payment for the actual two minimizers and deletion.  The
+potential discrepancy terms will be bounded with the literal log parameters.</p></div><pre>lemma step_payment (old new : Data J R) {M : ℝ}
+    (hb : 1≤old.b) (hD : 0≤new.D)
+    (hM : ∀ i∈old.active, old.b+old.θ i≤M) (hW : 2*M&lt;old.W)
+    (p : J × R → ℝ) (hp : ∀ ir, 0≤p ir)
+    (a : J → ℝ) (ha : a∈ChangingDomains.sideDomain old.active old.W)
+    (hWW : old.W=new.W) :
+    new.D*ChangingDomains.variation (step (8*M) old new p a) a ≤
+      (family (8*M)).value old p a-(family (8*M)).value new p (step (8*M) old new p a)+
+      |(family (8*M)).value (prepareData old new) p a-(family (8*M)).value old p a|+
+      |(family (8*M)).value new p (transport (8*M) old new p a)-
+        (family (8*M)).value (prepareData old new) p (transport (8*M) old new p a)| := by
+…</pre><p class="refs">Mentions: <a href="Allocation.lean.html#L2356">OAI.KServer.SideFamilies.Data</a>, <a href="Minimization.lean.html#L465">OAI.KServer.ChangingDomains.sideDomain</a>, <a href="Minimization.lean.html#L354">OAI.KServer.ChangingDomains.variation</a>, <a href="Allocation.lean.html#L2576">OAI.KServer.SideFamilies.step</a>, <a href="Allocation.lean.html#L2413">OAI.KServer.SideFamilies.family</a>, <a href="Allocation.lean.html#L2567">OAI.KServer.SideFamilies.prepareData</a>, <a href="Allocation.lean.html#L2573">OAI.KServer.SideFamilies.transport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

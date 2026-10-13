@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/ClockGram.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/ClockGram.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>ClockGram.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>ClockGram.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/ClockGram.lean#L1">source</a></p><div class="doc"><h3>Both Gram errors of the actual clock-corrected path</h3><p>The homogeneous convolution identities follow from the two-isometry
+cancellation formula. The failure of the clock to
+commute with its three coefficients is retained quantitatively. Both Gram
+errors are controlled; neither invertibility nor unitarity is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_commutator_star</code> <small>line 20</small></li><li id=L33><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockDegreeCorrection_star_error</code> <small>line 33</small></li><li id=L39><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_three_sum_norm</code> <small>line 39</small></li><li id=L48><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_three_sum_star_error</code> <small>line 48</small></li><li id=L66><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_three_sum_product_error</code> <small>line 66</small></li><li id=L93><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_three_initial_gram_error</code> <small>line 93</small><div class="doc"><p>Exact convolution and small coefficient commutators bound the initial
+Gram error. The cardinality here is exactly the three terms used above.</p></div><pre>lemma clock_three_initial_gram_error (k : unitary E)
+    (d : Fin 3 → ℤ) (x : Fin 3 → E) (δ M : ℝ)
+    (hδ : 0 ≤ δ) (_hM : 0 ≤ M) (hd : ∀ i, (d i).natAbs ≤ 1)
+    (hc : ∀ i, ‖x i * (k : E) - (k : E) * x i‖ ≤ δ)
+    (hx : ∀ i, ‖x i‖ ≤ M)
+    (hg : (∑ i, ∑ j, clockDegreeCorrection k (-d i + d j) (star (x i) * x j)) = 1) :
+    ‖star (∑ i, clockDegreeCorrection k (d i) (x i)) *
+      (∑ i, clockDegreeCorrection k (d i) (x i)) - 1‖ ≤ 18 * M * δ := by
+…</pre><p class="refs">Mentions: <a href="ClockCorrection.lean.html#L22">OAI.WeakPureInfiniteness.clockDegreeCorrection</a></p></li><li id=L120><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_three_final_gram_error</code> <small>line 120</small><div class="doc"><p>The same argument controls the final Gram error independently.</p></div><pre>lemma clock_three_final_gram_error (k : unitary E)
+    (d : Fin 3 → ℤ) (x : Fin 3 → E) (δ M : ℝ)
+    (hδ : 0 ≤ δ) (hM : 0 ≤ M) (hd : ∀ i, (d i).natAbs ≤ 1)
+    (hc : ∀ i, ‖x i * (k : E) - (k : E) * x i‖ ≤ δ)
+    (hx : ∀ i, ‖x i‖ ≤ M)
+    (hg : (∑ i, ∑ j, clockDegreeCorrection k (d i - d j) (x i * star (x j))) = 1) :
+    ‖(∑ i, clockDegreeCorrection k (d i) (x i)) *
+      star (∑ i, clockDegreeCorrection k (d i) (x i)) - 1‖ ≤ 18 * M * δ := by
+…</pre><p class="refs">Mentions: <a href="ClockCorrection.lean.html#L22">OAI.WeakPureInfiniteness.clockDegreeCorrection</a></p></li><li id=L149><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockCorrectedCancellation_gram_errors</code> <small>line 149</small><div class="doc"><p>Both Gram errors for the actual corrected cancellation, with precisely
+the coefficient commutators still to be supplied by the chosen finite clock.</p></div><pre>lemma clockCorrectedCancellation_gram_errors (k : unitary E) (a b u : E)
+    (ha : star a * a = 1) (hb : star b * b = 1) (hab : star a * b = 0)
+    (hu : u ∈ unitary E) (θ δ M : ℝ) (hδ : 0 ≤ δ) (hM : 0 ≤ M)
+    (hc : ∀ i, ‖clockCancellationCoefficients a b u θ i * (k : E) -
+      (k : E) * clockCancellationCoefficients a b u θ i‖ ≤ δ)
+    (hx : ∀ i, ‖clockCancellationCoefficients a b u θ i‖ ≤ M) :
+    ‖star (clockCorrectedCancellation k a b u θ) *
+        clockCorrectedCancellation k a b u θ - 1‖ ≤ 18 * M * δ ∧
+    ‖clockCorrectedCancellation k a b u θ *
+        star (clockCorrectedCancellation k a b u θ) - 1‖ ≤ 18 * M * δ := by
+…</pre><p class="refs">Mentions: <a href="ClockCancellation.lean.html#L216">OAI.WeakPureInfiniteness.clockCancellationCoefficients</a>, <a href="ClockCorrection.lean.html#L178">OAI.WeakPureInfiniteness.clockCorrectedCancellation</a></p></li><li id=L167><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_isometry_norm</code> <small>line 167</small></li><li id=L173><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_triple_norm</code> <small>line 173</small></li><li id=L183><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockCancellationCoefficients_norm_le</code> <small>line 183</small><div class="doc"><p>All three actual coefficients have a uniform norm bound in the path
+parameter.</p></div><pre>lemma clockCancellationCoefficients_norm_le (a b u : E)
+    (ha : star a * a = 1) (hb : star b * b = 1)
+    (hu : u ∈ unitary E) (θ : ℝ) (i : Fin 3) :
+    ‖clockCancellationCoefficients a b u θ i‖ ≤ 5 := by
+…</pre><p class="refs">Mentions: <a href="ClockCancellation.lean.html#L216">OAI.WeakPureInfiniteness.clockCancellationCoefficients</a></p></li><li id=L228><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_product_commutator</code> <small>line 228</small><p class="refs">Distinct definitions of this name: <a href="ClockFragmentation.lean.html#L54">OAI/Analysis/OInfinity/ClockFragmentation.lean:54</a> (different statement). Qualify references as OAI.WeakPureInfiniteness.clock_product_commutator@path.</p></li><li id=L238><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_triple_commutator</code> <small>line 238</small></li><li id=L262><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockCancellationCoefficients_commutator_le</code> <small>line 262</small><div class="doc"><p>The actual coefficients commute with the clock whenever the two supplied
+isometries and the supplied unitary do; the bound is uniform in the angle.</p></div><pre>lemma clockCancellationCoefficients_commutator_le (k : unitary E) (a b u : E)
+    (ha : star a * a = 1) (hb : star b * b = 1) (hu : u ∈ unitary E)
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (hca : ‖a * (k : E) - (k : E) * a‖ ≤ δ)
+    (hcb : ‖b * (k : E) - (k : E) * b‖ ≤ δ)
+    (hcu : ‖u * (k : E) - (k : E) * u‖ ≤ δ) (θ : ℝ) (i : Fin 3) :
+    ‖clockCancellationCoefficients a b u θ i * (k : E) -
+      (k : E) * clockCancellationCoefficients a b u θ i‖ ≤ 10 * δ := by
+…</pre><p class="refs">Mentions: <a href="ClockCancellation.lean.html#L216">OAI.WeakPureInfiniteness.clockCancellationCoefficients</a></p></li><li id=L329><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockCorrectedCancellation_gram_errors_of_constituents</code> <small>line 329</small><div class="doc"><p>Uniform quantitative near-unitarity of the actual corrected path, from
+only its constituent commutators.</p></div><pre>lemma clockCorrectedCancellation_gram_errors_of_constituents (k : unitary E) (a b u : E)
+    (ha : star a * a = 1) (hb : star b * b = 1) (hab : star a * b = 0)
+    (hu : u ∈ unitary E) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hca : ‖a * (k : E) - (k : E) * a‖ ≤ δ)
+    (hcb : ‖b * (k : E) - (k : E) * b‖ ≤ δ)
+    (hcu : ‖u * (k : E) - (k : E) * u‖ ≤ δ) (θ : ℝ) :
+    ‖star (clockCorrectedCancellation k a b u θ) *
+        clockCorrectedCancellation k a b u θ - 1‖ ≤ 900 * δ ∧
+    ‖clockCorrectedCancellation k a b u θ *
+        star (clockCorrectedCancellation k a b u θ) - 1‖ ≤ 900 * δ := by
+…</pre><p class="refs">Mentions: <a href="ClockCorrection.lean.html#L178">OAI.WeakPureInfiniteness.clockCorrectedCancellation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

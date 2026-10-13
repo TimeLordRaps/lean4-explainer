@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Core/Ward.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Core/Ward.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Core</a> / <span>Ward.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Core</a>/<span>Ward.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Core/Ward.lean#L1">source</a></p><div class="doc"><h3>Finite-volume Gibbs rotation identity</h3><p>Differentiation of a normalized Gibbs average produces the observable
+variation and its covariance with the Hamiltonian variation. Haar invariance
+then gives their exact integral identity. The spin prior may have zero weights.
+No limiting Ward equations or pressure bounds are assumed here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.InvariantIsing.gibbsAverage</code> <small>line 25</small><div class="doc"><p>Finite normalized Gibbs expectation, for an arbitrary nonzero positive prior.</p></div><pre>def gibbsAverage (w H A : S → ℝ) : ℝ :=
+…</pre></li><li id=L28><b>lemma</b> <code>OAI.InvariantIsing.abs_gibbsAverage_le</code> <small>line 28</small></li><li id=L32><b>lemma</b> <code>OAI.InvariantIsing.measurable_gibbsAverage</code> <small>line 32</small></li><li id=L44><b>lemma</b> <code>OAI.InvariantIsing.hasDerivAt_gibbsAverage</code> <small>line 44</small><div class="doc"><p>Derivative of a finite Gibbs expectation: the variation of the observable
+plus its Gibbs covariance with the variation of the Hamiltonian.</p></div><pre>lemma hasDerivAt_gibbsAverage {w : S → ℝ} (hw : GibbsReference w)
+    {H A : ℝ → S → ℝ} {dH dA : S → ℝ} {t : ℝ}
+    (hH : ∀ σ, HasDerivAt (fun s =&gt; H s σ) (dH σ) t)
+    (hA : ∀ σ, HasDerivAt (fun s =&gt; A s σ) (dA σ) t) :
+    HasDerivAt (fun s =&gt; gibbsAverage w (H s) (A s))
+      (gibbsAverage w (H t) dA +
+        gibbsAverage w (H t) (fun σ =&gt; A t σ * dH σ) -
+        gibbsAverage w (H t) (A t) * gibbsAverage w (H t) dH) t := by
+…</pre><p class="refs">Mentions: <a href="Ward.lean.html#L25">OAI.InvariantIsing.gibbsAverage</a></p></li><li id=L62><b>lemma</b> <code>OAI.InvariantIsing.abs_gibbsVariation_le</code> <small>line 62</small></li><li id=L86><b>theorem</b> <code>OAI.InvariantIsing.integral_gibbs_rotation_identity</code> <small>line 86</small><div class="doc"><p>Exact finite-volume Haar Ward identity. All regularity assumptions concern
+finite-dimensional derivatives; none assumes a limiting overlap identity.</p></div><pre>theorem integral_gibbs_rotation_identity {N : ℕ}
+    (μ : Measure (Orthogonal N)) [IsProbabilityMeasure μ] [μ.IsMulLeftInvariant]
+    (R : ℝ → Orthogonal N) (hR : R 0 = 1)
+    {w : S → ℝ} (hw : GibbsReference w)
+    (H A : Orthogonal N → S → ℝ)
+    (hHm : ∀ σ, Measurable (fun U =&gt; H U σ))
+    (hAm : ∀ σ, Measurable (fun U =&gt; A U σ))
+    (dH dA : ℝ → Orthogonal N → S → ℝ)
+    (hdHm : ∀ σ, Measurable (fun U =&gt; dH 0 U σ))
+    (hdAm : ∀ σ, Measurable (fun U =&gt; dA 0 U σ))
+    (hHd : ∀ U t, t ∈ Set.Ioo (-1 : ℝ) 1 → ∀ σ,
+      HasDerivAt (fun s =&gt; H (R s * U) σ) (dH t U σ) t)
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/InvariantIsing.lean.html#L27">OAI.InvariantIsing.Orthogonal</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

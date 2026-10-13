@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/SphereFluxLimit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/SphereFluxLimit.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>SphereFluxLimit.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>SphereFluxLimit.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/SphereFluxLimit.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.Mahler.actualRealComplexJet</code> <small>line 10</small></li><li id=L17><b>theorem</b> <code>OAI.Mahler.sphereDensity_tendstoUniformlyOn</code> <small>line 17</small><div class="doc"><p>Uniform first and second derivative convergence gives uniform convergence
+of the actual outward sphere densities. The nonlinear operation is a continuous
+finite shuffle polynomial.</p></div><pre>theorem sphereDensity_tendstoUniformlyOn {k : ℕ} {I : Type*} {l : Filter I}
+    {u : I → ComplexEuclidean (k+1) → ℂ} {v : ComplexEuclidean (k+1) → ℂ}
+    {K : Set (ComplexEuclidean (k+1))} (hK : IsCompact K)
+    (hv : ContinuousOn (actualRealComplexJet v) K)
+    (h1 : TendstoUniformlyOn (fun i =&gt; fderiv ℝ (u i)) (fderiv ℝ v) l K)
+    (h2 : TendstoUniformlyOn (fun i =&gt; fderiv ℝ (fderiv ℝ (u i)))
+      (fderiv ℝ (fderiv ℝ v)) l K) :
+    TendstoUniformlyOn
+      (fun i x =&gt; sphereJetDensity k (x, actualRealComplexJet (u i) x))
+      (fun x =&gt; sphereJetDensity k (x, actualRealComplexJet v x)) l K := by
+…</pre><p class="refs">Mentions: <a href="MassTarget.lean.html#L12">OAI.Mahler.ComplexEuclidean</a>, <a href="SphereFluxLimit.lean.html#L10">OAI.Mahler.actualRealComplexJet</a>, <a href="SphereFlux.lean.html#L48">OAI.Mahler.sphereJetDensity</a></p></li><li id=L40><b>theorem</b> <code>OAI.Mahler.sphereJetIntegral_tendsto</code> <small>line 40</small><div class="doc"><p>A genuine area integral limit; continuity gives measurability, compactness
+gives a bounded limit density, and uniform convergence supplies a common
+integrable constant bound. No integral convergence is a hypothesis.</p></div><pre>theorem sphereJetIntegral_tendsto {k : ℕ} {I : Type*} {l : Filter I}
+    [l.IsCountablyGenerated]
+    {u : I → ComplexEuclidean (k+1) → ℂ} {v : ComplexEuclidean (k+1) → ℂ}
+    {K : Set (ComplexEuclidean (k+1))} (hK : IsCompact K)
+    (hS : sphere (0 : ComplexEuclidean (k+1)) 1 ⊆ K)
+    (hv : ContinuousOn (actualRealComplexJet v) K)
+    (hu : ∀ᶠ i in l, ContinuousOn (actualRealComplexJet (u i)) K)
+    (h1 : TendstoUniformlyOn (fun i =&gt; fderiv ℝ (u i)) (fderiv ℝ v) l K)
+    (h2 : TendstoUniformlyOn (fun i =&gt; fderiv ℝ (fderiv ℝ (u i)))
+      (fderiv ℝ (fderiv ℝ v)) l K) :
+    Tendsto (fun i =&gt; ∫ z : sphere (0 : ComplexEuclidean (k+1)) 1,
+      sphereJetDensity k ((z : ComplexEuclidean (k+1)), actualRealComplexJet (u i) z)
+…</pre><p class="refs">Mentions: <a href="MassTarget.lean.html#L12">OAI.Mahler.ComplexEuclidean</a>, <a href="SphereFluxLimit.lean.html#L10">OAI.Mahler.actualRealComplexJet</a>, <a href="SphereFlux.lean.html#L48">OAI.Mahler.sphereJetDensity</a></p></li><li id=L86><b>theorem</b> <code>OAI.Mahler.unitSphereFlux_tendsto</code> <small>line 86</small><div class="doc"><p>The limit for actual d^c u wedge (dd^c u)^k, not a surrogate jet integral.</p></div><pre>theorem unitSphereFlux_tendsto {k : ℕ} {I : Type*} {l : Filter I}
+    [l.IsCountablyGenerated]
+    {u : I → ComplexEuclidean (k+1) → ℂ} {v : ComplexEuclidean (k+1) → ℂ}
+    {K : Set (ComplexEuclidean (k+1))} (hK : IsCompact K)
+    (hS : sphere (0 : ComplexEuclidean (k+1)) 1 ⊆ K)
+    (hv : ContinuousOn (actualRealComplexJet v) K)
+    (hu : ∀ᶠ i in l, ContinuousOn (actualRealComplexJet (u i)) K)
+    (hdv : ∀ x ∈ K, DifferentiableAt ℝ (fderiv ℝ v) x)
+    (hdu : ∀ᶠ i in l, ∀ x ∈ K, DifferentiableAt ℝ (fderiv ℝ (u i)) x)
+    (h1 : TendstoUniformlyOn (fun i =&gt; fderiv ℝ (u i)) (fderiv ℝ v) l K)
+    (h2 : TendstoUniformlyOn (fun i =&gt; fderiv ℝ (fderiv ℝ (u i)))
+      (fderiv ℝ (fderiv ℝ v)) l K) :
+…</pre><p class="refs">Mentions: <a href="MassTarget.lean.html#L12">OAI.Mahler.ComplexEuclidean</a>, <a href="SphereFluxLimit.lean.html#L10">OAI.Mahler.actualRealComplexJet</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

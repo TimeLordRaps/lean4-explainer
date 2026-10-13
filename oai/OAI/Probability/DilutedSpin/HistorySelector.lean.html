@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/HistorySelector.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/HistorySelector.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>HistorySelector.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>HistorySelector.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/HistorySelector.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.DilutedSpinGlass.PrescribedTree.labeledHistory_projection</code> <small>line 16</small><div class="doc"><p>Exact transport of the finite history expansion through an old-sample
+projection which commutes with deleting the newly grown branch.</p></div><pre>lemma labeledHistory_projection {n : ℕ} {C ι : Type} [DecidableEq C] [DecidableEq ι]
+    (m : Fin (n+1) → ℝ)
+    (V : (S : PrescribedTree n) → (C → S.Leaf) → (Sample (Ω×Λ) S → ℝ) → ℝ)
+    (W : (S : PrescribedTree n) → (C → S.Leaf) → (Sample Ω S → ℝ) → ℝ)
+    (hVW : ∀ S pos f, V S pos (fun x =&gt; f (sampleFst S x)) = W S pos f)
+    (cs : List C) (S : PrescribedTree n) (U : Finset ι) (loc : ι → S.Leaf)
+    (pos : C → S.Leaf) (f : Sample Ω S → ℝ) :
+    labeledHistory m V cs S U loc pos (fun x =&gt; f (sampleFst S x)) =
+      labeledHistory m W cs S U loc pos f := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="AnchorExtension.lean.html#L667">OAI.DilutedSpinGlass.PrescribedTree.sampleFst</a>, <a href="LabeledColorHistory.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.labeledHistory</a></p></li><li id=L43><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.labeledHistory_mark_selector</code> <small>line 43</small><div class="doc"><p>Mark integration selects the specified sharing constraints, history by
+history, without changing any signed coefficients or the old reservoir.</p></div><pre>theorem labeledHistory_mark_selector {n : ℕ} {C R ι : Type}
+    [Fintype C] [DecidableEq C] [Fintype R] [DecidableEq R] [DecidableEq ι]
+    (T : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (a b : R → C) (d : R → Fin n) (spinColor : C → FinitePath Ω n → ℝ)
+    (cs : List C) (S : PrescribedTree n) (U : Finset ι) (loc : ι → S.Leaf)
+    (pos : C → S.Leaf) (f : Sample Ω S → ℝ) :
+    labeledHistory m (fun S pos f =&gt;
+      (S.sampleLaw (KernelTower.prod n T
+        (markPrior n (fun _ =&gt; FiniteLaw.pi (fun _ : R =&gt; MarkSelector.rademacher))))).expect
+      (fun x =&gt; f x * ∏ c, spinColor c (KernelTower.pathFst n (S.pathAt (pos c) x)) *
+        MarkSelector.pathColor a b d c (KernelTower.pathSnd n (S.pathAt (pos c) x))))
+      cs S U loc pos (fun x =&gt; f (sampleFst S x)) =
+…</pre><p class="refs">Mentions: <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="LabeledColorHistory.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.labeledHistory</a>, <a href="ProductTowers.lean.html#L234">OAI.DilutedSpinGlass.KernelTower.prod</a>, <a href="PoissonVariance.lean.html#L42">OAI.DilutedSpinGlass.markPrior</a>, <a href="FiniteLaw.lean.html#L601">OAI.DilutedSpinGlass.FiniteLaw.pi</a>, <a href="ActualCharging.lean.html#L11">OAI.DilutedSpinGlass.MarkSelector.rademacher</a>, <a href="ProductTowers.lean.html#L239">OAI.DilutedSpinGlass.KernelTower.pathFst</a>, <a href="ActualTreeSelector.lean.html#L28">OAI.DilutedSpinGlass.MarkSelector.pathColor</a>, <a href="ProductTowers.lean.html#L243">OAI.DilutedSpinGlass.KernelTower.pathSnd</a>, <a href="AnchorExtension.lean.html#L667">OAI.DilutedSpinGlass.PrescribedTree.sampleFst</a></p></li><li id=L66><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.coloredAt_mark_selector</code> <small>line 66</small></li><li id=L99><b>lemma</b> <code>OAI.DilutedSpinGlass.PrescribedTree.historyMass_mul</code> <small>line 99</small></li><li id=L118><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.labeledHistory_abs_le_mass</code> <small>line 118</small><div class="doc"><p>Every literal labeled extension contributes its actual absolute coefficient.
+The domination retains all old tests rather than replacing the sampled law by
+an unsigned or independently resampled one.</p></div><pre>theorem labeledHistory_abs_le_mass (F : PrescribedTree L → ℝ)
+    (V : (S : PrescribedTree L) → (C → S.Leaf) → (Sample Ω S → ℝ) → ℝ)
+    (hV : ∀ S pos f, (∀ x, |f x| ≤ 1) → |V S pos f| ≤ F S)
+    (cs : List C) (S : PrescribedTree L) (U : Finset ι) (loc : ι → S.Leaf)
+    (pos : C → S.Leaf) (f : Sample Ω S → ℝ) (hf : ∀ x, |f x| ≤ 1) :
+    |labeledHistory (grid L 0 L) V cs S U loc pos f| ≤ historyMass F cs.length S U.card := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="LabeledColorHistory.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.labeledHistory</a>, <a href="ActualCharging.lean.html#L583">OAI.DilutedSpinGlass.PrescribedTree.grid</a>, <a href="ActualCharging.lean.html#L669">OAI.DilutedSpinGlass.PrescribedTree.historyMass</a></p></li><li id=L155><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.labeledHistory_charging_bound</code> <small>line 155</small><div class="doc"><p>Charging estimate for an actual labeled terminal observable. Restricting
+the allowed splitting matrices and inserting a uniformly bounded projection
+error are both handled in this single estimate.</p></div><pre>theorem labeledHistory_charging_bound (hL : 0 &lt; L) (Q : Finset ℕ) (b : ℕ)
+    (V : (S : PrescribedTree L) → (C → S.Leaf) → (Sample Ω S → ℝ) → ℝ)
+    (E : ℝ) (hE : 0 ≤ E) (cs : List C) (S : PrescribedTree L)
+    (U : Finset ι) (loc : ι → S.Leaf) (pos : C → S.Leaf)
+    (f : Sample Ω S → ℝ) (hf : ∀ x, |f x| ≤ 1) (hU : U.card ≤ leaves S)
+    (hV : ∀ T pos g, (∀ x, |g x| ≤ 1) → |V T pos g| ≤ E *
+      (if branchingCount S (· ∈ Q)+b ≤ branchingCount T (· ∈ Q) then 1 else 0)) :
+    |labeledHistory (grid L 0 L) V cs S U loc pos f| ≤
+      E * (chargeBound (2*(leaves S+cs.length:ℕ)) ((Q.card:ℝ)*(leaves S+cs.length:ℕ))
+        cs.length b * (L:ℝ)⁻¹^b) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="TreeSampling.lean.html#L19">OAI.DilutedSpinGlass.PrescribedTree.leaves</a>, <a href="ActualCharging.lean.html#L476">OAI.DilutedSpinGlass.PrescribedTree.branchingCount</a>, <a href="LabeledColorHistory.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.labeledHistory</a>, <a href="ActualCharging.lean.html#L583">OAI.DilutedSpinGlass.PrescribedTree.grid</a>, <a href="ActualCharging.lean.html#L709">OAI.DilutedSpinGlass.PrescribedTree.chargeBound</a></p></li><li id=L184><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.matrix_paths_expect</code> <small>line 184</small><div class="doc"><p>Complete positional splitting matrices determine the full joint path law,
+not just pair overlaps. The enumerating colors may repeat leaf positions.</p></div><pre>theorem matrix_paths_expect (T S : PrescribedTree n) (q : C → T.Leaf)
+    (hq : Function.Surjective q) (pos : C → S.Leaf)
+    (h : ∀ a b, splitDepth S (pos a) (pos b) = splitDepth T (q a) (q b))
+    (K : KernelTower Ω n) (F : (C → FinitePath Ω n) → ℝ) :
+    (S.sampleLaw K).expect (fun x =&gt; F (fun c =&gt; S.pathAt (pos c) x)) =
+      (T.sampleLaw K).expect (fun x =&gt; F (fun c =&gt; T.pathAt (q c) x)) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="HistoryGeometry.lean.html#L46">OAI.DilutedSpinGlass.PrescribedTree.splitDepth</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a></p></li><li id=L205><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.matrix_weighted_error</code> <small>line 205</small><div class="doc"><p>An arbitrary correlated old test bounded by one costs at most the actual
+single-target L2 error, since the entire target marginal is fixed.</p></div><pre>theorem matrix_weighted_error (T S : PrescribedTree n) (q : C → T.Leaf)
+    (hq : Function.Surjective q) (pos : C → S.Leaf)
+    (h : ∀ a b, splitDepth S (pos a) (pos b) = splitDepth T (q a) (q b))
+    (K : KernelTower Ω n) (D : (C → FinitePath Ω n) → ℝ)
+    (f : Sample Ω S → ℝ) (hf : ∀ x, |f x| ≤ 1) :
+    |(S.sampleLaw K).expect (fun x =&gt; f x * D (fun c =&gt; S.pathAt (pos c) x))| ≤
+      (T.sampleLaw K).l2 (fun x =&gt; D (fun c =&gt; T.pathAt (q c) x)) := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="HistoryGeometry.lean.html#L46">OAI.DilutedSpinGlass.PrescribedTree.splitDepth</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

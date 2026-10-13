@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Construction/SmoothGiantMixedInterval.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Construction/SmoothGiantMixedInterval.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Construction</a> / <span>SmoothGiantMixedInterval.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Construction</a>/<span>SmoothGiantMixedInterval.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Construction/SmoothGiantMixedInterval.lean#L1">source</a></p><div class="doc"><h3>Exact transport of the smooth integer/prime pair, with both scale factors</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Ostmann.smoothInteger_interval</code> <small>line 13</small><div class="doc"><p>The integer coordinate has its original counting weight. Passing to the
+logarithmic cell introduces exactly the displayed exponential scale.</p></div><pre>theorem smoothInteger_interval (φ : ℝ → ℝ) (G center : ℝ) (F : ℕ → ℂ) :
+    (∑ p ∈ Finset.Ioc ⌊Real.exp (G - 1)⌋₊ ⌊Real.exp (G + 1)⌋₊,
+      (φ (Real.log p - G) : ℂ) * F p) =
+    (Real.exp center : ℂ) * complexIntegerInterval 1 0 (G - 1) (G + 1) center
+      (fun x =&gt; (φ (x - G) : ℂ) * F ⌊Real.exp x⌋₊) := by
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/IntegerIntervalVariation.lean.html#L12">OAI.Ostmann.complexIntegerInterval</a></p></li><li id=L36><b>theorem</b> <code>OAI.Ostmann.smoothGiant_integer_interval</code> <small>line 36</small><div class="doc"><p>The remaining giant is averaged with its original normalized harmonic
+prior; no endpoint prime is deleted.</p></div><pre>theorem smoothGiant_integer_interval (φ : ℝ → ℝ) (G H center : ℝ)
+    (hout : ∀ x, 1 ≤ |x| → φ x = 0) (F : ℕ → ℕ → ℂ) :
+    (∑ q : smoothGiantPrimeRange H,
+      (smoothGiantPrior (smoothGiantPrimeRange H) φ H q : ℂ) *
+        ∑ p ∈ Finset.Ioc ⌊Real.exp (G - 1)⌋₊ ⌊Real.exp (G + 1)⌋₊,
+          (φ (Real.log p - G) : ℂ) * F p q) =
+    (Real.exp (smoothGiantLogNormalizer (smoothGiantPrimeRange H) φ H + center) : ℂ) *
+      complexPrimeInterval 1 0 (H - 1) (H + 1) (fun y =&gt;
+        complexIntegerInterval 1 0 (G - 1) (G + 1) center (fun x =&gt;
+          (φ (x - G) : ℂ) * (φ (y - H) : ℂ) * F ⌊Real.exp x⌋₊ ⌊Real.exp y⌋₊)) := by
+…</pre><p class="refs">Mentions: <a href="SmoothGiantSupport.lean.html#L14">OAI.Ostmann.smoothGiantPrimeRange</a>, <a href="SmoothGiantPrior.lean.html#L16">OAI.Ostmann.smoothGiantPrior</a>, <a href="SmoothGiantPrior.lean.html#L13">OAI.Ostmann.smoothGiantLogNormalizer</a>, <a href="../ZeroDensity/ComplexPrimeWeights.lean.html#L12">OAI.Ostmann.complexPrimeInterval</a>, <a href="../Arithmetic/IntegerIntervalVariation.lean.html#L12">OAI.Ostmann.complexIntegerInterval</a></p></li><li id=L66><b>theorem</b> <code>OAI.Ostmann.smoothGiant_mixed_external_interval</code> <small>line 66</small><div class="doc"><p>Finite Fubini retains the original regular law and counting measure on
+frequencies, as well as the exact giant and integer normalizations.</p></div><pre>theorem smoothGiant_mixed_external_interval {A B : Type*} [Fintype A] [Fintype B]
+    (ν : B → A → ℝ) (N : ℕ) (φ : ℝ → ℝ) (G H center : ℝ)
+    (hout : ∀ x, 1 ≤ |x| → φ x = 0)
+    (F : ℤ → (B → A) → ℕ → ℕ → ℂ) :
+    (∑ s : transferFrequencyRange N, ∑ x : B → A, ((∏ i, ν i (x i) : ℝ) : ℂ) *
+      ∑ q : smoothGiantPrimeRange H,
+        (smoothGiantPrior (smoothGiantPrimeRange H) φ H q : ℂ) *
+          ∑ p ∈ Finset.Ioc ⌊Real.exp (G - 1)⌋₊ ⌊Real.exp (G + 1)⌋₊,
+            (φ (Real.log p - G) : ℂ) * F s.val x p q) =
+    (Real.exp (smoothGiantLogNormalizer (smoothGiantPrimeRange H) φ H + center) : ℂ) *
+      mixedExternalAverage ν N (G - 1) (G + 1) (H - 1) (H + 1) center
+        (fun s x z y =&gt; (φ (z - G) : ℂ) * (φ (y - H) : ℂ) *
+…</pre><p class="refs">Mentions: <a href="TransferFrequencyRange.lean.html#L18">OAI.Ostmann.transferFrequencyRange</a>, <a href="SmoothGiantSupport.lean.html#L14">OAI.Ostmann.smoothGiantPrimeRange</a>, <a href="SmoothGiantPrior.lean.html#L16">OAI.Ostmann.smoothGiantPrior</a>, <a href="SmoothGiantPrior.lean.html#L13">OAI.Ostmann.smoothGiantLogNormalizer</a>, <a href="../Characters/MixedExternalAverage.lean.html#L23">OAI.Ostmann.mixedExternalAverage</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CoulombTransport/CommonBranches.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CoulombTransport/CommonBranches.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">CoulombTransport</a> / <span>CommonBranches.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">CoulombTransport</a>/<span>CommonBranches.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CoulombTransport/CommonBranches.lean#L1">source</a></p><div class="doc"><h3>Reparametrizing local branches by their common central component</h3><p>For local homeomorphisms <code>X,Z</code> on the parameter component, the central
+parametrizations are <code>X.symm</code> and <code>X.symm.trans Z</code>. Their common source is
+open, contains the central base point, and inherits both smooth inverses.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.Problem356.CommonBranches.outer</code> <small>line 23</small><div class="doc"><p>Reparametrization of the second outer branch by the central coordinate.</p></div><pre>def outer (X Z : OpenPartialHomeomorph E E) : OpenPartialHomeomorph E E :=
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem356.CommonBranches.outer_apply</code> <small>line 26</small></li><li id=L31><b>theorem</b> <code>OAI.Problem356.CommonBranches.image_mem_outer_source</code> <small>line 31</small><div class="doc"><p>Both local maps being defined at the parameter base point puts the
+central image in the source of the reparametrized outer branch.</p></div><pre>theorem image_mem_outer_source (X Z : OpenPartialHomeomorph E E) {a : E}
+    (haX : a ∈ X.source) (haZ : a ∈ Z.source) :
+    X a ∈ (outer X Z).source := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L42><b>theorem</b> <code>OAI.Problem356.CommonBranches.outer_source_properties</code> <small>line 42</small><div class="doc"><p>The common source permits both the inverse branch and the second outer
+branch, with their expected component containment and inverse identity.</p></div><pre>theorem outer_source_properties (X Z : OpenPartialHomeomorph E E) {x : E}
+    (hx : x ∈ (outer X Z).source) :
+    x ∈ X.target ∧ X.symm x ∈ X.source ∧ X.symm x ∈ Z.source ∧
+      outer X Z x ∈ Z.target ∧ X (X.symm x) = x := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L52><b>theorem</b> <code>OAI.Problem356.CommonBranches.contact_reparametrize</code> <small>line 52</small><div class="doc"><p>Every contact predicate on the original graph transfers to the central
+parametrization. This includes both supporting equality and stationarity.</p></div><pre>theorem contact_reparametrize (X Z : OpenPartialHomeomorph E E)
+    {C : E × (E × E) → Prop}
+    (hC : ∀ y ∈ X.source, C (X y, (y, Z y))) {x : E}
+    (hx : x ∈ (outer X Z).source) :
+    C (x, (X.symm x, outer X Z x)) := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L61><b>def</b> <code>OAI.Problem356.CommonBranches.four</code> <small>line 61</small><div class="doc"><p>The four ordered outer branches associated with two local families.</p></div><pre>def four (X Z : Fin 2 → OpenPartialHomeomorph E E) :
+    Fin 4 → OpenPartialHomeomorph E E :=
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.Problem356.CommonBranches.subset_four_sources</code> <small>line 67</small><div class="doc"><p>A common domain for both composed branches is a common domain for all
+four outer branches, in the indexing used by the smooth marginal construction.</p></div><pre>theorem subset_four_sources (X Z : Fin 2 → OpenPartialHomeomorph E E)
+    {B : Set E} (hB : ∀ i, B ⊆ (outer (X i) (Z i)).source) :
+    ∀ j, B ⊆ (four X Z j).source := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a>, <a href="CommonBranches.lean.html#L61">OAI.Problem356.CommonBranches.four</a></p></li><li id=L80><b>theorem</b> <code>OAI.Problem356.CommonBranches.four_images_subset</code> <small>line 80</small><div class="doc"><p>Image containment in the four prescribed outer components.</p></div><pre>theorem four_images_subset (X Z : Fin 2 → OpenPartialHomeomorph E E)
+    {B : Set E} (hB : ∀ i, B ⊆ (outer (X i) (Z i)).source)
+    (P Q : Fin 2 → Set E)
+    (hP : ∀ i, (X i).source ⊆ P i) (hQ : ∀ i, (Z i).target ⊆ Q i) :
+    ∀ j, four X Z j &#x27;&#x27; B ⊆ ![P 0, Q 0, P 1, Q 1] j := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a>, <a href="CommonBranches.lean.html#L61">OAI.Problem356.CommonBranches.four</a></p></li><li id=L100><b>theorem</b> <code>OAI.Problem356.CommonBranches.exists_common_central_ball</code> <small>line 100</small><div class="doc"><p>Finitely many pairs of local branches sharing a central base point admit
+one positive-radius central ball on which all inverse parametrizations are
+defined. The ball may also be kept inside any prescribed central neighborhood.</p></div><pre>theorem exists_common_central_ball {ι : Type uIndex} [Finite ι]
+    (X Z : ι → OpenPartialHomeomorph M M) (a : ι → M) (x : M)
+    (haX : ∀ i, a i ∈ (X i).source) (haZ : ∀ i, a i ∈ (Z i).source)
+    (hcenter : ∀ i, X i (a i) = x)
+    {U : Set M} (hU : IsOpen U) (hxU : x ∈ U) :
+    ∃ r : ℝ, 0 &lt; r ∧ ball x r ⊆ U ∧
+      ∀ i, ball x r ⊆ (outer (X i) (Z i)).source := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L121><b>theorem</b> <code>OAI.Problem356.CommonBranches.exists_common_central_ball_in_components</code> <small>line 121</small><div class="doc"><p>The central ball can simultaneously keep the inverse and composed
+branches inside arbitrary prescribed outer neighborhoods. Thus shrinking the
+global certificate components does not require changing either local chart.</p></div><pre>theorem exists_common_central_ball_in_components {ι : Type uIndex} [Finite ι]
+    (X Z : ι → OpenPartialHomeomorph M M) (a : ι → M) (x : M)
+    (haX : ∀ i, a i ∈ (X i).source) (haZ : ∀ i, a i ∈ (Z i).source)
+    (hcenter : ∀ i, X i (a i) = x)
+    (P Q : ι → Set M) (hP : ∀ i, IsOpen (P i)) (hQ : ∀ i, IsOpen (Q i))
+    (haP : ∀ i, a i ∈ P i) (haQ : ∀ i, Z i (a i) ∈ Q i)
+    {U : Set M} (hU : IsOpen U) (hxU : x ∈ U) :
+    ∃ r : ℝ, 0 &lt; r ∧ ball x r ⊆ U ∧
+      ∀ i, ∀ y ∈ ball x r,
+        y ∈ (outer (X i) (Z i)).source ∧
+        (X i).symm y ∈ P i ∧ outer (X i) (Z i) y ∈ Q i := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L169><b>theorem</b> <code>OAI.Problem356.CommonBranches.contDiffOn_outer</code> <small>line 169</small><div class="doc"><p>Smoothness of the inverse central branch and original outer branch
+makes the reparametrized branch smooth on its actual open source.</p></div><pre>theorem contDiffOn_outer {n : WithTop ENat} (X Z : OpenPartialHomeomorph F F)
+    (hX : ContDiffOn ℝ n X.symm X.target)
+    (hZ : ContDiffOn ℝ n Z Z.source) :
+    ContDiffOn ℝ n (outer X Z) (outer X Z).source := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L176><b>theorem</b> <code>OAI.Problem356.CommonBranches.contDiffOn_outer_symm</code> <small>line 176</small><div class="doc"><p>The inverse of the reparametrized branch is smooth on its actual target.</p></div><pre>theorem contDiffOn_outer_symm {n : WithTop ENat} (X Z : OpenPartialHomeomorph F F)
+    (hX : ContDiffOn ℝ n X X.source)
+    (hZ : ContDiffOn ℝ n Z.symm Z.target) :
+    ContDiffOn ℝ n (outer X Z).symm (outer X Z).target := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L23">OAI.Problem356.CommonBranches.outer</a></p></li><li id=L183><b>theorem</b> <code>OAI.Problem356.CommonBranches.contDiffOn_four</code> <small>line 183</small><div class="doc"><p>Forward smoothness of all four centrally parametrized branches.</p></div><pre>theorem contDiffOn_four {n : WithTop ENat}
+    (X Z : Fin 2 → OpenPartialHomeomorph F F)
+    (hX : ∀ i, ContDiffOn ℝ n (X i).symm (X i).target)
+    (hZ : ∀ i, ContDiffOn ℝ n (Z i) (Z i).source) :
+    ∀ j, ContDiffOn ℝ n (four X Z j) (four X Z j).source := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L61">OAI.Problem356.CommonBranches.four</a></p></li><li id=L196><b>theorem</b> <code>OAI.Problem356.CommonBranches.contDiffOn_four_symm</code> <small>line 196</small><div class="doc"><p>Inverse smoothness of all four centrally parametrized branches.</p></div><pre>theorem contDiffOn_four_symm {n : WithTop ENat}
+    (X Z : Fin 2 → OpenPartialHomeomorph F F)
+    (hX : ∀ i, ContDiffOn ℝ n (X i) (X i).source)
+    (hZ : ∀ i, ContDiffOn ℝ n (Z i).symm (Z i).target) :
+    ∀ j, ContDiffOn ℝ n (four X Z j).symm (four X Z j).target := by
+…</pre><p class="refs">Mentions: <a href="CommonBranches.lean.html#L61">OAI.Problem356.CommonBranches.four</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

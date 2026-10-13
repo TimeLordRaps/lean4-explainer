@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/GromovInput.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/GromovInput.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>GromovInput.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>GromovInput.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/GromovInput.lean#L1">source</a></p><div class="doc"><h3>The polynomial-growth input in height-kernel recognition</h3><p>Published input: M. Gromov, <em>Groups of polynomial growth and expanding maps</em>,
+Publications Mathématiques de l'IHÉS <strong>53</strong> (1981), 53–78, Main Theorem, p. 54,
+DOI: <code>10.1007/BF02698687</code>.</p><p><code>GromovPolynomialGrowthInput J</code> is precisely the implication needed here: a
+finite symmetric generating set with polynomially bounded intrinsic word balls
+gives a nilpotent subgroup of finite index. The supporting covering-to-cardinality
+argument uses concrete finite word balls, with this implication as an explicit
+hypothesis.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>abbrev</b> <code>OAI.PolycyclicRecognition.IsVirtuallyNilpotent</code> <small>line 29</small><div class="doc"><p>Virtual nilpotency means the existence of a nilpotent subgroup of finite index.</p></div><pre>abbrev IsVirtuallyNilpotent : Prop := Group.IsVirtuallyNilpotent J</pre></li><li id=L33><b>def</b> <code>OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</code> <small>line 33</small><div class="doc"><p>Gromov's Main Theorem (1981, p. 54), specialized to the finite symmetric
+word-ball formulation used by the height-kernel argument.</p></div><pre>def GromovPolynomialGrowthInput [DecidableEq J] : Prop :=
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.PolycyclicRecognition.virtuallyNilpotent_of_polynomial_cover</code> <small>line 46</small><div class="doc"><p>Polynomial packing and bounded multiplicity imply virtual nilpotency,
+conditionally on exactly the stated polynomial-growth input of Gromov.
+No undistortion condition on <code>J</code> is needed.</p></div><pre>theorem virtuallyNilpotent_of_polynomial_cover
+    (gromov : GromovPolynomialGrowthInput J) (T : Finset J)
+    (hsymmetric : ∀ t ∈ T, t⁻¹ ∈ T)
+    (hgenerates : Subgroup.closure (T : Set J) = ⊤)
+    (f : J → X) (C b M : ℕ) (centers : ℕ → Finset X)
+    (hcenters : ∀ n, (centers n).card ≤ C * (1 + n) ^ b)
+    (hcover : ∀ n h, h ∈ wordBall T n → ∃ c ∈ centers n, dist (f h) c ≤ 1)
+    (hmultiplicity : ∀ (c : X) (A : Finset J),
+      (∀ h ∈ A, dist (f h) c ≤ 1) → A.card ≤ M) :
+    IsVirtuallyNilpotent J := by
+…</pre><p class="refs">Mentions: <a href="GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="../Analysis/Packing.lean.html#L78">OAI.PolycyclicRecognition.wordBall</a>, <a href="GromovInput.lean.html#L29">OAI.PolycyclicRecognition.IsVirtuallyNilpotent</a></p></li><li id=L62><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_symmetric_finite_generating_set</code> <small>line 62</small><div class="doc"><p>Finite generation supplies a finite symmetric generating set by adjoining
+inverses to any finite generating set.</p></div><pre>theorem exists_symmetric_finite_generating_set [Group.FG J] :
+    ∃ T : Finset J, (∀ t ∈ T, t⁻¹ ∈ T) ∧ Subgroup.closure (T : Set J) = ⊤ := by
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.PolycyclicRecognition.virtuallyNilpotent_of_finiteGeneration_polynomial_covers</code> <small>line 80</small><div class="doc"><p>If every finite symmetric generating set has polynomially many covering
+balls, finite generation and Gromov's precise input yield virtual nilpotency.
+The uniform multiplicity hypothesis concerns the actual map <code>f</code>.</p></div><pre>theorem virtuallyNilpotent_of_finiteGeneration_polynomial_covers [Group.FG J]
+    (gromov : GromovPolynomialGrowthInput J) (f : J → X) (M : ℕ)
+    (hmultiplicity : ∀ (c : X) (A : Finset J),
+      (∀ h ∈ A, dist (f h) c ≤ 1) → A.card ≤ M)
+    (hcovers : ∀ T : Finset J, (∀ t ∈ T, t⁻¹ ∈ T) →
+      Subgroup.closure (T : Set J) = ⊤ →
+      ∃ (C b : ℕ) (centers : ℕ → Finset X),
+        (∀ n, (centers n).card ≤ C * (1 + n) ^ b) ∧
+        (∀ n h, h ∈ wordBall T n → ∃ c ∈ centers n, dist (f h) c ≤ 1)) :
+    IsVirtuallyNilpotent J := by
+…</pre><p class="refs">Mentions: <a href="GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="../Analysis/Packing.lean.html#L78">OAI.PolycyclicRecognition.wordBall</a>, <a href="GromovInput.lean.html#L29">OAI.PolycyclicRecognition.IsVirtuallyNilpotent</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

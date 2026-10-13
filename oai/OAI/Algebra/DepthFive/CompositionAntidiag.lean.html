@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/CompositionAntidiag.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/CompositionAntidiag.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>CompositionAntidiag.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>CompositionAntidiag.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/CompositionAntidiag.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>def</b> <code>OAI.Problem335.BidegreeAverages.compositionAntidiagEquiv</code> <small>line 13</small><div class="doc"><p>The function representation of a weak composition and the finite
+<code>finsuppAntidiag</code> representation used by occupation moments agree coordinatewise.</p></div><pre>def compositionAntidiagEquiv (σ : Type*) [Fintype σ] [DecidableEq σ] (a : ℕ) :
+    Composition σ a ≃ (Finset.finsuppAntidiag (Finset.univ : Finset σ) a) := by
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L11">OAI.Problem335.BidegreeAverages.Composition</a></p></li><li id=L20><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.compositionAntidiagEquiv_apply</code> <small>line 20</small></li><li id=L25><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.sum_compositions_eq_antidiag</code> <small>line 25</small><div class="doc"><p>Convert a sum over function compositions to the canonical occupation finset.</p></div><pre>theorem sum_compositions_eq_antidiag {σ : Type*} [Fintype σ] [DecidableEq σ]
+    (a : ℕ) (f : (σ → ℕ) → ℝ) :
+    (∑&#x27; d : Composition σ a, f d.val) =
+      ∑ M ∈ Finset.finsuppAntidiag (Finset.univ : Finset σ) a, f M := by
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L11">OAI.Problem335.BidegreeAverages.Composition</a></p></li><li id=L37><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.card_compositions_eq_antidiag</code> <small>line 37</small><div class="doc"><p>Denominator conversion for the same index equivalence.</p></div><pre>theorem card_compositions_eq_antidiag {σ : Type*} [Fintype σ] [DecidableEq σ]
+    (a : ℕ) :
+    Nat.card (Composition σ a) =
+      (Finset.finsuppAntidiag (Finset.univ : Finset σ) a).card := by
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L11">OAI.Problem335.BidegreeAverages.Composition</a></p></li><li id=L45><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.composition_average_eq_occupationAverage</code> <small>line 45</small><div class="doc"><p>The function-composition average is exactly the canonical occupation average.</p></div><pre>theorem composition_average_eq_occupationAverage {σ : Type*}
+    [Fintype σ] [DecidableEq σ] (a : ℕ) (f : (σ → ℕ) → ℝ) :
+    (∑&#x27; d : Composition σ a, f d.val) / (Nat.card (Composition σ a) : ℝ) =
+      occupationAverage a (fun M : σ →₀ ℕ =&gt; f M) := by
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L11">OAI.Problem335.BidegreeAverages.Composition</a>, <a href="FirstOccupationMoment.lean.html#L12">OAI.Problem335.occupationAverage</a></p></li><li id=L55><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.bidegree_average_eq_occupationAverage</code> <small>line 55</small><div class="doc"><p>The actual bidegree-domain average, expressed directly using the canonical
+occupation-average API. This bridges the Fock/matrix source indices and both
+first- and second-moment inequalities.</p></div><pre>theorem bidegree_average_eq_occupationAverage {σ : Type*} [Fintype σ] [DecidableEq σ]
+    (isV : σ → Bool) (a b : ℕ)
+    (f : ({x // isV x = true} → ℕ) → ℝ)
+    (g : ({x // ¬ isV x = true} → ℕ) → ℝ) :
+    (∑&#x27; d : Index isV a b,
+      f (fun x =&gt; d.val x) * g (fun x =&gt; d.val x)) /
+      (Nat.card (Index isV a b) : ℝ) =
+      occupationAverage a (fun M : {x // isV x = true} →₀ ℕ =&gt; f M) *
+        occupationAverage b (fun M : {x // ¬ isV x = true} →₀ ℕ =&gt; g M) := by
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L15">OAI.Problem335.BidegreeAverages.Index</a>, <a href="FirstOccupationMoment.lean.html#L12">OAI.Problem335.occupationAverage</a></p></li><li id=L69><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.bidegree_average_eq_occupationAverage_fintype</code> <small>line 69</small><div class="doc"><p>Matrix-indexed finite-sum version of the bridge.</p></div><pre>theorem bidegree_average_eq_occupationAverage_fintype {σ : Type*}
+    [Fintype σ] [DecidableEq σ] (isV : σ → Bool) (a b : ℕ)
+    [Fintype (Index isV a b)]
+    (f : ({x // isV x = true} → ℕ) → ℝ)
+    (g : ({x // ¬ isV x = true} → ℕ) → ℝ) :
+    (∑ d : Index isV a b,
+      f (fun x =&gt; d.val x) * g (fun x =&gt; d.val x)) /
+      (Fintype.card (Index isV a b) : ℝ) =
+      occupationAverage a (fun M : {x // isV x = true} →₀ ℕ =&gt; f M) *
+        occupationAverage b (fun M : {x // ¬ isV x = true} →₀ ℕ =&gt; g M) := by
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L15">OAI.Problem335.BidegreeAverages.Index</a>, <a href="FirstOccupationMoment.lean.html#L12">OAI.Problem335.occupationAverage</a></p></li><li id=L84><b>theorem</b> <code>OAI.Problem335.BidegreeAverages.bidegree_first_moment_lower</code> <small>line 84</small><div class="doc"><p>The first occupation-moment lower estimate on the ACTUAL bidegree exponent
+source, rather than on an auxiliary Cartesian product of composition finsets.</p></div><pre>theorem bidegree_first_moment_lower {σ : Type*} [Fintype σ] [DecidableEq σ]
+    (isV : σ → Bool) (a b : ℕ)
+    [Fintype (Index isV a b)]
+    [Nonempty {x // isV x = true}] [Nonempty {x // ¬ isV x = true}]
+    (s : Finset {x // isV x = true}) (z : Finset {x // ¬ isV x = true})
+    (ha : 0 &lt; a) (hb : 0 &lt; b) (hs : 2 * s.card ≤ a) (hz : 2 * z.card ≤ b) :
+    Real.exp ((-(s.card : ℝ) ^ 2 / a -
+        (s.card : ℝ) ^ 2 / (2 * Fintype.card {x // isV x = true})) +
+      (-(z.card : ℝ) ^ 2 / b -
+        (z.card : ℝ) ^ 2 / (2 * Fintype.card {x // ¬ isV x = true}))) *
+      (((a : ℝ) / Fintype.card {x // isV x = true}) ^ s.card *
+        (1 + (b : ℝ) / Fintype.card {x // ¬ isV x = true}) ^ z.card) ≤
+…</pre><p class="refs">Mentions: <a href="BidegreeAverages.lean.html#L15">OAI.Problem335.BidegreeAverages.Index</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

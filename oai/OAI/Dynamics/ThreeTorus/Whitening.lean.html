@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/ThreeTorus/Whitening.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/ThreeTorus/Whitening.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">ThreeTorus</a> / <span>Whitening.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">ThreeTorus</a>/<span>Whitening.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/ThreeTorus/Whitening.lean#L1">source</a></p><div class="doc"><p>Exact coefficient-space spectral whitening, including the zero-density set.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.ThreeTorus.energyWeight</code> <small>line 20</small><div class="doc"><p>Squared modulus as a nonnegative measure density.</p></div><pre>def energyWeight {X : Type*} (F : X → ℂ) (x : X) : ℝ≥0∞ :=
+…</pre></li><li id=L23><b>lemma</b> <code>OAI.ThreeTorus.measurable_energyWeight</code> <small>line 23</small></li><li id=L27><b>lemma</b> <code>OAI.ThreeTorus.energyWeight_mul</code> <small>line 27</small></li><li id=L35><b>lemma</b> <code>OAI.ThreeTorus.energy_map_multiplier</code> <small>line 35</small><div class="doc"><p>Spectral multipliers act by multiplying the pushforward energy density.</p></div><pre>lemma energy_map_multiplier {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {μ : Measure X} {ν : Measure Y} {ζ : X → Y} {F : X → ℂ} {p : Y → ℝ≥0∞}
+    (hζ : Measurable ζ) (hF : Measurable F) (hp : Measurable p)
+    (hpush : (μ.withDensity (energyWeight F)).map ζ = ν.withDensity p)
+    {a : Y → ℂ} (ha : Measurable a) :
+    (μ.withDensity (energyWeight (fun x =&gt; a (ζ x) * F x))).map ζ =
+      ν.withDensity (p * energyWeight a) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L31">OAI.ThreeTorus.μ</a>, <a href="Whitening.lean.html#L20">OAI.ThreeTorus.energyWeight</a></p></li><li id=L50><b>lemma</b> <code>OAI.ThreeTorus.energy_zero_fiber</code> <small>line 50</small><div class="doc"><p>A coefficient is zero almost everywhere over the zero set of its spectral density.</p></div><pre>lemma energy_zero_fiber {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {μ : Measure X} {ν : Measure Y} {ζ : X → Y} {F : X → ℂ} {p : Y → ℝ}
+    (hζ : Measurable ζ) (hF : Measurable F) (hp : Measurable p)
+    (hpush : (μ.withDensity (energyWeight F)).map ζ =
+      ν.withDensity (fun y =&gt; ENNReal.ofReal (p y))) :
+    ∀ᵐ x ∂μ, p (ζ x) = 0 → F x = 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L31">OAI.ThreeTorus.μ</a>, <a href="Whitening.lean.html#L20">OAI.ThreeTorus.energyWeight</a></p></li><li id=L72><b>def</b> <code>OAI.ThreeTorus.whitenCoefficient</code> <small>line 72</small><div class="doc"><p>The exact whitening coefficient, filling the density's zero set with a flat vector.</p></div><pre>def whitenCoefficient {X Y : Type*} (ζ : X → Y) (p : Y → ℝ)
+    (F V : X → ℂ) (x : X) : ℂ :=
+…</pre></li><li id=L76><b>lemma</b> <code>OAI.ThreeTorus.measurable_whitenCoefficient</code> <small>line 76</small></li><li id=L83><b>lemma</b> <code>OAI.ThreeTorus.whiten_reconstruct</code> <small>line 83</small></li><li id=L100><b>lemma</b> <code>OAI.ThreeTorus.energy_map_piecewise</code> <small>line 100</small><div class="doc"><p>A piecewise multiplier rule: the two spectral supports can overlap in
+angular index; it is their frequency supports that are disjoint.</p></div><pre>lemma energy_map_piecewise {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {μ : Measure X} {ν : Measure Y} {ζ : X → Y} {F V : X → ℂ}
+    {p q : Y → ℝ≥0∞} {s : Set Y}
+    (hζ : Measurable ζ) (hF : Measurable F) (hV : Measurable V)
+    (hp : Measurable p) (hq : Measurable q) (hs : MeasurableSet s)
+    (hpushF : (μ.withDensity (energyWeight F)).map ζ = ν.withDensity p)
+    (hpushV : (μ.withDensity (energyWeight V)).map ζ = ν.withDensity q)
+    {a b : Y → ℂ} (ha : Measurable a) (hb : Measurable b) :
+    (μ.withDensity (energyWeight (fun x =&gt; if ζ x ∈ s then a (ζ x) * F x
+      else b (ζ x) * V x))).map ζ =
+      ν.withDensity (fun y =&gt; if y ∈ s then p y * energyWeight a y
+        else q y * energyWeight b y) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L31">OAI.ThreeTorus.μ</a>, <a href="Whitening.lean.html#L20">OAI.ThreeTorus.energyWeight</a></p></li><li id=L130><b>lemma</b> <code>OAI.ThreeTorus.positive_whitening_weight</code> <small>line 130</small></li><li id=L139><b>lemma</b> <code>OAI.ThreeTorus.whiten_energy_map</code> <small>line 139</small><div class="doc"><p>Exact flat output intensity, including the zero set, without requiring
+angular supports of the two coefficient families to be disjoint.</p></div><pre>lemma whiten_energy_map {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {μ : Measure X} {ν : Measure Y} {ζ : X → Y} {F V : X → ℂ} {p : Y → ℝ}
+    (hζ : Measurable ζ) (hF : Measurable F) (hV : Measurable V)
+    (hp : Measurable p) (hpn : ∀ y, 0 ≤ p y)
+    (hpush : (μ.withDensity (energyWeight F)).map ζ =
+      ν.withDensity (fun y =&gt; ENNReal.ofReal (p y)))
+    (hflat : (μ.withDensity (energyWeight V)).map ζ = ν) :
+    (μ.withDensity (energyWeight (whitenCoefficient ζ p F V))).map ζ = ν := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L31">OAI.ThreeTorus.μ</a>, <a href="Whitening.lean.html#L20">OAI.ThreeTorus.energyWeight</a>, <a href="Whitening.lean.html#L72">OAI.ThreeTorus.whitenCoefficient</a></p></li><li id=L174><b>lemma</b> <code>OAI.ThreeTorus.whitening_scalar_distance</code> <small>line 174</small></li><li id=L185><b>lemma</b> <code>OAI.ThreeTorus.whiten_error_energy_map</code> <small>line 185</small><div class="doc"><p>The error's entire spectral density, not just its total mass, is exactly
+<code>(√p - 1)²</code>. This entails the source's whitening-distance identity.</p></div><pre>lemma whiten_error_energy_map {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {μ : Measure X} {ν : Measure Y} {ζ : X → Y} {F V : X → ℂ} {p : Y → ℝ}
+    (hζ : Measurable ζ) (hF : Measurable F) (hV : Measurable V)
+    (hp : Measurable p) (hpn : ∀ y, 0 ≤ p y)
+    (hpush : (μ.withDensity (energyWeight F)).map ζ =
+      ν.withDensity (fun y =&gt; ENNReal.ofReal (p y)))
+    (hflat : (μ.withDensity (energyWeight V)).map ζ = ν) :
+    (μ.withDensity (energyWeight (fun x =&gt; whitenCoefficient ζ p F V x - F x))).map ζ =
+      ν.withDensity (fun y =&gt; ENNReal.ofReal ((Real.sqrt (p y) - 1) ^ 2)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L31">OAI.ThreeTorus.μ</a>, <a href="Whitening.lean.html#L20">OAI.ThreeTorus.energyWeight</a>, <a href="Whitening.lean.html#L72">OAI.ThreeTorus.whitenCoefficient</a></p></li><li id=L224><b>lemma</b> <code>OAI.ThreeTorus.energy_map_total</code> <small>line 224</small></li><li id=L235><b>lemma</b> <code>OAI.ThreeTorus.whiten_memLp</code> <small>line 235</small><div class="doc"><p>The whitened coefficient really belongs to L² whenever the spectral reference
+measure is finite; its possible singular multiplier does not obstruct this.</p></div><pre>lemma whiten_memLp {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {μ : Measure X} {ν : Measure Y} [IsFiniteMeasure ν]
+    {ζ : X → Y} {F V : X → ℂ} {p : Y → ℝ}
+    (hζ : Measurable ζ) (hF : Measurable F) (hV : Measurable V)
+    (hp : Measurable p) (hpn : ∀ y, 0 ≤ p y)
+    (hpush : (μ.withDensity (energyWeight F)).map ζ =
+      ν.withDensity (fun y =&gt; ENNReal.ofReal (p y)))
+    (hflat : (μ.withDensity (energyWeight V)).map ζ = ν) :
+    MemLp (whitenCoefficient ζ p F V) 2 μ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L31">OAI.ThreeTorus.μ</a>, <a href="Whitening.lean.html#L20">OAI.ThreeTorus.energyWeight</a>, <a href="Whitening.lean.html#L72">OAI.ThreeTorus.whitenCoefficient</a></p></li><li id=L256><b>lemma</b> <code>OAI.ThreeTorus.whiten_distance_integral</code> <small>line 256</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

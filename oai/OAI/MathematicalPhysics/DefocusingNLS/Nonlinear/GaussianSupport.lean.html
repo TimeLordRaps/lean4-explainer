@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/DefocusingNLS/Nonlinear/GaussianSupport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/DefocusingNLS/Nonlinear/GaussianSupport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MathematicalPhysics</a> / <a href="../index.html">DefocusingNLS</a> / <a href="index.html">Nonlinear</a> / <span>GaussianSupport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MathematicalPhysics</a>/<a href="../index.html">DefocusingNLS</a>/<a href="index.html">Nonlinear</a>/<span>GaussianSupport.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/DefocusingNLS/Nonlinear/GaussianSupport.lean#L1">source</a></p><div class="doc"><h3>Supporting probability lemmas for stable defocusing NLS blowup</h3><p>These lemmas formalize the measure and quantifier steps in the proof of
+Corollary 1.2 of <em>Stable self-similar blowup for a supercritical defocusing
+Schrödinger equation on the torus</em> (September 2026).
+The independent head/tail argument uses Mathlib's
+measure-theoretic independence theorem.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.DefocusingNLS.positive_sublevel_of_lintegral_lt</code> <small>line 27</small><div class="doc"><p>If the expectation of a nonnegative random variable is below a threshold,
+its strict sublevel set has positive probability. Applied to the squared tail
+norm, this supplies the tail event in the Fourier support argument.</p></div><pre>theorem positive_sublevel_of_lintegral_lt {Ω : Type*} [MeasurableSpace Ω]
+    {μ : Measure Ω} [IsProbabilityMeasure μ] {F : Ω → ℝ≥0∞} {c : ℝ≥0∞}
+    (hmean : (∫⁻ ω, F ω ∂μ) &lt; c) : 0 &lt; μ {ω | F ω &lt; c} := by
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.DefocusingNLS.positive_ball_of_independent_head_tail</code> <small>line 48</small><div class="doc"><p>Independent positive-probability head and tail events put the full random
+variable in a prescribed ball with positive probability.</p></div><pre>theorem positive_ball_of_independent_head_tail
+    (happrox : ‖f - g‖ &lt; r / 3)
+    (hhead : 0 &lt; μ {ω | ‖H ω - g‖ &lt; r / 3})
+    (htail : 0 &lt; μ {ω | ‖X ω - H ω‖ &lt; r / 3})
+    (hindep : IndepSet {ω | ‖H ω - g‖ &lt; r / 3}
+      {ω | ‖X ω - H ω‖ &lt; r / 3} μ) :
+    0 &lt; μ (X ⁻¹&#x27; Metric.ball f r) := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.DefocusingNLS.positive_open_of_head_tail</code> <small>line 76</small><div class="doc"><p>Nonempty open sets have positive probability whenever the above head/tail
+approximation can be made at every center and radius. This is the exact
+measure-theoretic part of the Gaussian support argument.</p></div><pre>theorem positive_open_of_head_tail
+    (hsplit : ∀ (f : E) (r : ℝ), 0 &lt; r →
+      ∃ (H : Ω → E) (g : E), ‖f - g‖ &lt; r / 3 ∧
+        0 &lt; μ {ω | ‖H ω - g‖ &lt; r / 3} ∧
+        0 &lt; μ {ω | ‖X ω - H ω‖ &lt; r / 3} ∧
+        IndepSet {ω | ‖H ω - g‖ &lt; r / 3}
+          {ω | ‖X ω - H ω‖ &lt; r / 3} μ)
+    {U : Set E} (hU : IsOpen U) (hne : U.Nonempty) :
+    0 &lt; μ (X ⁻¹&#x27; U) := by
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.DefocusingNLS.not_ae_of_positive_bad_set</code> <small>line 96</small><div class="doc"><p>A positive-probability set of data incompatible with global continuation
+rules out almost-sure global continuation. No measurability of the bad-data
+predicate is needed for this implication.</p></div><pre>theorem not_ae_of_positive_bad_set {B : Set E} {Good : E → Prop}
+    (hB : 0 &lt; μ (X ⁻¹&#x27; B)) (hbad : ∀ x ∈ B, ¬ Good x) :
+    ¬ ∀ᵐ ω ∂μ, Good (X ω) := by
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.DefocusingNLS.no_universal_regularity_threshold</code> <small>line 111</small><div class="doc"><p>The fixed index supplied by the deterministic theorem refutes every finite
+Gaussian regularity threshold, with the strict inequalities in the manuscript.</p></div><pre>theorem no_universal_regularity_threshold {Global : ℝ → ℝ → Prop} {k : ℝ}
+    (hk : 8 &lt; k) (hfailure : ∀ α : ℝ, k + 6 &lt; α → ¬ Global α k) :
+    ¬ ∃ α₀ : ℝ, ∀ α : ℝ, α₀ &lt; α →
+      ∀ m : ℝ, 8 &lt; m → m &lt; α - 6 → Global α m := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

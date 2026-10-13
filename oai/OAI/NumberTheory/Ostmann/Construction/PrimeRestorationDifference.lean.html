@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Construction/PrimeRestorationDifference.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Construction/PrimeRestorationDifference.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Construction</a> / <span>PrimeRestorationDifference.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Construction</a>/<span>PrimeRestorationDifference.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Construction/PrimeRestorationDifference.lean#L1">source</a></p><div class="doc"><h3>Deletion and collision errors for arbitrary signed prime observables</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Ostmann.finite_product_restoration_difference</code> <small>line 13</small><div class="doc"><p>Monotone restoration costs exactly the excess mass of the product law.
+The observable can retain residue classes and every other arithmetic factor.</p></div><pre>theorem finite_product_restoration_difference {J A : Type*} [Fintype J] [Fintype A]
+    (μ ν : J → A → ℝ) (hμ : ∀ j a, 0 ≤ μ j a) (hle : ∀ j a, μ j a ≤ ν j a)
+    (hmass : ∀ j, ∑ a, μ j a = 1) (F : (J → A) → ℂ)
+    (B : ℝ) (hF : ∀ x, ‖F x‖ ≤ B) :
+    ‖(∑ x, ((∏ j, μ j (x j) : ℝ) : ℂ) * F x) -
+      ∑ x, ((∏ j, ν j (x j) : ℝ) : ℂ) * F x‖ ≤
+      B * ((∏ j, ∑ a, ν j a) - 1) := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.Ostmann.original_prime_restoration_difference</code> <small>line 37</small><div class="doc"><p>Restoring deleted atoms retains the old normalization.</p></div><pre>theorem original_prime_restoration_difference {J : Type*} [Fintype J]
+    (P : Finset ℕ) (S D : J → Finset ℕ) (hSP : ∀ j, S j ⊆ P)
+    (hS : ∀ j, (∑ p ∈ S j \ D j, (p : ℝ)⁻¹) ≠ 0)
+    (F : (J → P) → ℂ) (B : ℝ) (hF : ∀ x, ‖F x‖ ≤ B) :
+    let Z := fun j =&gt; (∑ p ∈ S j \ D j, (p : ℝ)⁻¹)⁻¹
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.Ostmann.norm_le_from_restoration</code> <small>line 76</small></li><li id=L87><b>theorem</b> <code>OAI.Ostmann.original_bulk_collision_restoration_bound</code> <small>line 87</small><div class="doc"><p>The original injective expectation is bounded by the restored expectation,
+with separate collision and deleted-atom costs.</p></div><pre>theorem original_bulk_collision_restoration_bound {J : Type*} [Fintype J]
+    (P : Finset ℕ) (S D : J → Finset ℕ) (hSP : ∀ j, S j ⊆ P)
+    (hS : ∀ j, (∑ p ∈ S j \ D j, (p : ℝ)⁻¹) ≠ 0)
+    (H T : ℝ) (hmass : ∀ j, (∑ p ∈ S j \ D j, (p : ℝ)⁻¹)⁻¹ ≤ Real.exp H)
+    (hlow : ∀ j p, p ∈ S j \ D j → Real.exp T ≤ (p : ℝ))
+    (F : (J → P) → ℂ) (B : ℝ) (hB : 0 ≤ B) (hF : ∀ x, ‖F x‖ ≤ B)
+    (M : ℝ)
+    (hmain : ‖∑ x, ((∏ j, (if (x j : ℕ) ∈ S j then
+      (∑ p ∈ S j \ D j, (p : ℝ)⁻¹)⁻¹ * (x j : ℝ)⁻¹ else 0) : ℝ) : ℂ) * F x‖ ≤ M) :
+    ‖∑ x, ((∏ j, primeSubsetPrior P (S j \ D j) (x j) : ℝ) : ℂ) *
+      (if Function.Injective x then F x else 0)‖ ≤
+      M + B * (Fintype.card J : ℝ) ^ 2 * Real.exp (H - T) +
+…</pre><p class="refs">Mentions: <a href="HarmonicWordPriors.lean.html#L11">OAI.Ostmann.primeSubsetPrior</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

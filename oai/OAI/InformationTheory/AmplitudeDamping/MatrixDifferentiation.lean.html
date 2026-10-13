@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/InformationTheory/AmplitudeDamping/MatrixDifferentiation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/InformationTheory/AmplitudeDamping/MatrixDifferentiation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">InformationTheory</a> / <a href="index.html">AmplitudeDamping</a> / <span>MatrixDifferentiation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">InformationTheory</a>/<a href="index.html">AmplitudeDamping</a>/<span>MatrixDifferentiation.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/InformationTheory/AmplitudeDamping/MatrixDifferentiation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.GAD.detMultilinear</code> <small>line 16</small><div class="doc"><p>The determinant as a continuous multilinear map in its rows.</p></div><pre>def detMultilinear : ContinuousMultilinearMap ℂ (fun _ : ι ↦ ι → ℂ) ℂ :=
+…</pre></li><li id=L23><b>theorem</b> <code>OAI.GAD.det_linearDeriv</code> <small>line 23</small><div class="doc"><p>Jacobi's differential, without an invertibility assumption.</p></div><pre>theorem det_linearDeriv (A H : Matrix ι ι ℂ) :
+    detMultilinear.linearDeriv A H = Matrix.trace (H * A.adjugate) := by
+…</pre></li><li id=L39><b>theorem</b> <code>OAI.GAD.hasDerivAt_det</code> <small>line 39</small><div class="doc"><p>Jacobi's formula along any differentiable complex-matrix curve.</p></div><pre>theorem hasDerivAt_det {A : ℝ → Matrix ι ι ℂ} {H : Matrix ι ι ℂ} {t : ℝ}
+    (hA : HasDerivAt A H t) :
+    HasDerivAt (fun s ↦ (A s).det) (Matrix.trace (H * (A t).adjugate)) t := by
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.GAD.hasDerivAt_matrix_mul</code> <small>line 48</small><div class="doc"><p>Product differentiation with the entrywise matrix topology.</p></div><pre>theorem hasDerivAt_matrix_mul {A B : ℝ → Matrix ι ι ℂ}
+    {H K : Matrix ι ι ℂ} {t : ℝ}
+    (hA : HasDerivAt A H t) (hB : HasDerivAt B K t) :
+    HasDerivAt (fun s ↦ A s * B s) (H * B t + A t * K) t := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.GAD.hasDerivAt_updateRow</code> <small>line 65</small><div class="doc"><p>The row replacement operation is affine.</p></div><pre>theorem hasDerivAt_updateRow {A : ℝ → Matrix ι ι ℂ} {H : Matrix ι ι ℂ} {t : ℝ}
+    (hA : HasDerivAt A H t) (i : ι) (x : ι → ℂ) :
+    HasDerivAt (fun s ↦ (A s).updateRow i x) (H.updateRow i 0) t := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.GAD.differentiableAt_adjugate</code> <small>line 76</small><div class="doc"><p>Polynomial differentiability of the adjugate, with no nonsingularity restriction.</p></div><pre>theorem differentiableAt_adjugate {A : ℝ → Matrix ι ι ℂ} {H : Matrix ι ι ℂ} {t : ℝ}
+    (hA : HasDerivAt A H t) :
+    DifferentiableAt ℝ (fun s ↦ (A s).adjugate) t := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.GAD.hasDerivAt_matrix_inv</code> <small>line 87</small><div class="doc"><p>The full noncommutative derivative of matrix inversion.</p></div><pre>theorem hasDerivAt_matrix_inv {A : ℝ → Matrix ι ι ℂ} {H : Matrix ι ι ℂ} {t : ℝ}
+    (hA : HasDerivAt A H t) (hdet : (A t).det ≠ 0) :
+    HasDerivAt (fun s ↦ (A s)⁻¹) (-(A t)⁻¹ * H * (A t)⁻¹) t := by
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.GAD.hasDerivAt_log_norm_of_mul</code> <small>line 109</small><div class="doc"><p>Logarithmic norm differentiation, without choosing a complex logarithm branch.</p></div><pre>theorem hasDerivAt_log_norm_of_mul {z : ℝ → ℂ} {w : ℂ} {t : ℝ}
+    (hz : HasDerivAt z (z t * w) t) (h0 : z t ≠ 0) :
+    HasDerivAt (fun s ↦ Real.log ‖z s‖) w.re t := by
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.GAD.hasDerivAt_logNormDet</code> <small>line 130</small><div class="doc"><p>Jacobi's formula for log absolute determinant, valid for every nonsingular complex matrix.</p></div><pre>theorem hasDerivAt_logNormDet {A : ℝ → Matrix ι ι ℂ} {H : Matrix ι ι ℂ} {t : ℝ}
+    (hA : HasDerivAt A H t) (hdet : (A t).det ≠ 0) :
+    HasDerivAt (fun s ↦ Real.log ‖(A s).det‖) (Matrix.trace (H * (A t)⁻¹)).re t := by
+…</pre></li><li id=L149><b>theorem</b> <code>OAI.GAD.trace_square_re_le</code> <small>line 149</small><div class="doc"><p>Entrywise real trace bound, avoiding any norm convention for matrices.</p></div><pre>theorem trace_square_re_le (B : Matrix ι ι ℂ) :
+    (Matrix.trace (B * B)).re ≤ (Matrix.trace (B.conjTranspose * B)).re := by
+…</pre></li><li id=L169><b>theorem</b> <code>OAI.GAD.skew_one_add_isUnit</code> <small>line 169</small><div class="doc"><p>A skew-Hermitian perturbation of the identity is nonsingular.</p></div><pre>theorem skew_one_add_isUnit (K : Matrix ι ι ℂ) (hK : K.conjTranspose = -K) :
+    IsUnit (1 + K) := by
+…</pre></li><li id=L182><b>theorem</b> <code>OAI.GAD.skew_resolvent_contraction</code> <small>line 182</small><div class="doc"><p>The resolvent of a skew-Hermitian matrix is a contraction in quadratic-form order.</p></div><pre>theorem skew_resolvent_contraction (K : Matrix ι ι ℂ) (hK : K.conjTranspose = -K) :
+    (1 - ((1 + K)⁻¹).conjTranspose * (1 + K)⁻¹).PosSemidef := by
+…</pre></li><li id=L207><b>theorem</b> <code>OAI.GAD.skew_resolvent_trace_bound</code> <small>line 207</small></li><li id=L225><b>theorem</b> <code>OAI.GAD.skew_shift_trace_bound</code> <small>line 225</small><div class="doc"><p>The Hessian bound at an arbitrary positive definite base point.</p></div><pre>theorem skew_shift_trace_bound (D Z H : Matrix ι ι ℂ)
+    (hD : D.PosDef) (hZ : Z.conjTranspose = -Z) (hH : H.IsHermitian) :
+    IsUnit (D + Z) ∧
+      (Matrix.trace (((D + Z)⁻¹ * H) * ((D + Z)⁻¹ * H))).re ≤
+        (Matrix.trace ((D⁻¹ * H) * (D⁻¹ * H))).re := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

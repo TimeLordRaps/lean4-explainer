@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Geometry/FiniteCenteredConsistency.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Geometry/FiniteCenteredConsistency.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Geometry</a> / <span>FiniteCenteredConsistency.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Geometry</a>/<span>FiniteCenteredConsistency.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Geometry/FiniteCenteredConsistency.lean#L1">source</a></p><div class="doc"><p>Exact consistency of the finite centered laws on the past of an
+earlier conformal-radius stop. Extended stopping times are exhausted
+through finite cutoffs; the finite centered laws give the earlier stop
+finite time almost surely.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>lemma</b> <code>OAI.SLEExactGauge.IsCapacityTwoWitness.physicalStoppedGreen_at_or_before</code> <small>line 18</small></li><li id=L37><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_consistent_at_finite_stop</code> <small>line 37</small><div class="doc"><p>Finite-stop consistency holds on the entire earlier stopped past,
+including events on which the later radius level is never reached.</p></div><pre>theorem finiteCenteredLaw_consistent_at_finite_stop
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hBm : Measurable (fun p : ℝ≥0 × Ω =&gt; B p.1 p.2))
+    (hc : ∀ ω, Continuous (fun t =&gt; B t ω)) (hB0 : ∀ ω, B 0 ω = 0)
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ᵐ ω ∂P, IsCapacityTwoWitness
+      (fun t =&gt; Real.sqrt κ * B t ω) (γ ω) (G ω) (F ω))
+    (z : ℂ) (hz : z ∈ upperHalfPlane) (v V : ℝ) (hv : 0 ≤ v) (hvV : v ≤ V)
+    (σ : Ω → ℝ≥0)
+    (hσ : IsStoppingTime (Filtration.natural B
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li><li id=L84><b>lemma</b> <code>OAI.SLEExactGauge.stopped_past_cover_of_ae_finite</code> <small>line 84</small></li><li id=L104><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_earlier_stop_ae_finite</code> <small>line 104</small><div class="doc"><p>Every earlier stop is finite under a later finite centered law, even
+when it is infinite on a set of positive original probability.</p></div><pre>theorem finiteCenteredLaw_earlier_stop_ae_finite
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hc : ∀ ω, Continuous (fun t =&gt; B t ω))
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ᵐ ω ∂P, IsCapacityTwoWitness
+      (fun t =&gt; Real.sqrt κ * B t ω) (γ ω) (G ω) (F ω))
+    (z : ℂ) (hz : z ∈ upperHalfPlane) (v V : ℝ) (hv : 0 ≤ v) (hvV : v ≤ V)
+    (σ : Ω → WithTop ℝ≥0)
+    (hbefore : ∀ᵐ ω ∂P, σ ω ≤ radiusLevelTime (γ ω) (G ω) z v) :
+    ∀ᵐ ω ∂finiteCenteredLaw P κ B γ G z V, σ ω ≠ ⊤ := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../SwallowExit.lean.html#L290">OAI.SLEExactGauge.radiusLevelTime</a>, <a href="../FiniteStoppedLaw.lean.html#L188">OAI.SLEExactGauge.finiteCenteredLaw</a></p></li><li id=L128><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_consistent_at_extended_stop</code> <small>line 128</small><div class="doc"><p>Extended-stop consistency. The sole geometric requirement is that
+this stop occur no later than the earlier conformal-radius level almost
+surely under the original law.</p></div><pre>theorem finiteCenteredLaw_consistent_at_extended_stop
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hBm : Measurable (fun p : ℝ≥0 × Ω =&gt; B p.1 p.2))
+    (hc : ∀ ω, Continuous (fun t =&gt; B t ω)) (hB0 : ∀ ω, B 0 ω = 0)
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ᵐ ω ∂P, IsCapacityTwoWitness
+      (fun t =&gt; Real.sqrt κ * B t ω) (γ ω) (G ω) (F ω))
+    (z : ℂ) (hz : z ∈ upperHalfPlane) (v V : ℝ) (hv : 0 ≤ v) (hvV : v ≤ V)
+    (σ : Ω → WithTop ℝ≥0)
+    (hσ : IsStoppingTime (Filtration.natural B
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li><li id=L176><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_consistent_at_radius_stop</code> <small>line 176</small><div class="doc"><p>The cover application: any stopping-time version of the actual
+radius-v time has exactly the same stopped-past law under every later
+finite centered measure.</p></div><pre>theorem finiteCenteredLaw_consistent_at_radius_stop
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (hBm : Measurable (fun p : ℝ≥0 × Ω =&gt; B p.1 p.2))
+    (hc : ∀ ω, Continuous (fun t =&gt; B t ω)) (hB0 : ∀ ω, B 0 ω = 0)
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ᵐ ω ∂P, IsCapacityTwoWitness
+      (fun t =&gt; Real.sqrt κ * B t ω) (γ ω) (G ω) (F ω))
+    (z : ℂ) (hz : z ∈ upperHalfPlane) (v V : ℝ) (hv : 0 ≤ v) (hvV : v ≤ V)
+    (σ : Ω → WithTop ℝ≥0)
+    (hσ : IsStoppingTime (Filtration.natural B
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

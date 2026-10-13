@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/FullTarget.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/FullTarget.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>FullTarget.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>FullTarget.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/FullTarget.lean#L1">source</a></p><div class="doc"><h3>Coordinate and ordinary-multiplicity assemblies of the full target</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>def</b> <code>OAI.Nagata.W13.FullNagataOrdinary</code> <small>line 27</small><div class="doc"><p>The unchanged full baseline quantifier pattern, with each multiplicity
+lower bound written as an inequality between actual natural numbers.</p></div><pre>def FullNagataOrdinary : Prop :=
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.Nagata.W13.fullNagata_iff_ordinary</code> <small>line 41</small><div class="doc"><p>Numerical ordinary multiplicity gives exactly the original lower-bound
+predicate at every point, hence exactly the full baseline proposition.</p></div><pre>theorem fullNagata_iff_ordinary : Nagata.FullNagata ↔ FullNagataOrdinary := by
+…</pre><p class="refs">Mentions: <a href="FullTarget.lean.html#L27">OAI.Nagata.W13.FullNagataOrdinary</a></p></li><li id=L63><b>def</b> <code>OAI.Nagata.W13.FullNagataClassOrdinary</code> <small>line 63</small><div class="doc"><p>The equivalent numerical formulation for projective classes of nonzero
+homogeneous equations. Classes identify only nonzero scalar multiples, not
+zero loci or radicals; reducible and nonreduced equations remain represented.</p></div><pre>def FullNagataClassOrdinary : Prop :=
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.Nagata.W13.ordinary_iff_classOrdinary</code> <small>line 77</small><div class="doc"><p>Passing between a nonzero equation and its scalar class preserves its
+numerical ordinary multiplicity and the very same exceptional sequence.</p></div><pre>theorem ordinary_iff_classOrdinary : FullNagataOrdinary ↔ FullNagataClassOrdinary := by
+…</pre><p class="refs">Mentions: <a href="FullTarget.lean.html#L27">OAI.Nagata.W13.FullNagataOrdinary</a>, <a href="FullTarget.lean.html#L63">OAI.Nagata.W13.FullNagataClassOrdinary</a></p></li><li id=L94><b>theorem</b> <code>OAI.Nagata.W13.fullNagata_iff_classOrdinary</code> <small>line 94</small></li><li id=L121><b>theorem</b> <code>OAI.Nagata.W13.square_veryGeneral</code> <small>line 121</small><div class="doc"><p>For <code>k≥4</code>, one proper closed exceptional sequence with nonempty complement
+handles all curves and unequal multiplicity vectors at <code>k²</code> projective points.
+This assembles the already-proved outside-union inequality without reproving it.</p></div><pre>theorem square_veryGeneral (k : ℕ) (hk : 4 ≤ k) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints (k * k)),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints (k * k), ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints (k * k), (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ F : MvPolynomial (Fin 3) ℂ, F ≠ 0 → F.IsHomogeneous d →
+        ∀ m : Fin (k * k) → ℕ,
+          (∀ i, multiplicityAtLeast F (p.val i) (m i)) →
+          (∑ i, (m i : ℝ)) &lt; (d : ℝ) * Real.sqrt ((k * k : ℕ) : ℝ) := by
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.Nagata.W13.square_veryGeneral_of_isSquare</code> <small>line 141</small><div class="doc"><p>Exactly the original target's quantifiers, restricted explicitly to square
+<code>r≥10</code>; no restriction to uniform multiplicities or reduced equations appears.</p></div><pre>theorem square_veryGeneral_of_isSquare (r : ℕ) (hr : 10 ≤ r) (hsquare : IsSquare r) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints r),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints r, ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints r, (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ F : MvPolynomial (Fin 3) ℂ, F ≠ 0 → F.IsHomogeneous d →
+        ∀ m : Fin r → ℕ,
+          (∀ i, multiplicityAtLeast F (p.val i) (m i)) →
+          (∑ i, (m i : ℝ)) &lt; (d : ℝ) * Real.sqrt (r : ℝ) := by
+…</pre></li><li id=L158><b>theorem</b> <code>OAI.Nagata.W13.square_veryGeneral_ordinary</code> <small>line 158</small><div class="doc"><p>The same square result using actual natural-number ordinary multiplicities,
+while preserving every raw polynomial and multiplicity-vector quantifier.</p></div><pre>theorem square_veryGeneral_ordinary (r : ℕ) (hr : 10 ≤ r) (hsquare : IsSquare r) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints r),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints r, ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints r, (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ (F : MvPolynomial (Fin 3) ℂ) (hFne : F ≠ 0) (hFhom : F.IsHomogeneous d),
+        ∀ m : Fin r → ℕ,
+          (∀ i, m i ≤ formOrdinaryMultiplicity ⟨F, hFhom, hFne⟩ (p.val i)) →
+          (∑ i, (m i : ℝ)) &lt; (d : ℝ) * Real.sqrt (r : ℝ) := by
+…</pre></li><li id=L178><b>theorem</b> <code>OAI.Nagata.W13.square_veryGeneral_classOrdinary</code> <small>line 178</small><div class="doc"><p>The same strict square theorem for scalar classes of equations and numerical
+ordinary multiplicities. Classes identify scalar multiples, not radicals.</p></div><pre>theorem square_veryGeneral_classOrdinary (r : ℕ) (hr : 10 ≤ r) (hsquare : IsSquare r) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints r),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints r, ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints r, (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ C : W16.PlaneEquationClass d,
+        ∀ m : Fin r → ℕ,
+          (∀ i, m i ≤ classOrdinaryMultiplicity C (p.val i)) →
+          (∑ i, (m i : ℝ)) &lt; (d : ℝ) * Real.sqrt (r : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="ProjectiveMultiplicity.lean.html#L31">OAI.Nagata.W16.PlaneEquationClass</a></p></li><li id=L212><b>theorem</b> <code>OAI.Nagata.W13.fullNagata_of_nonsquare_interior_exclusion</code> <small>line 212</small><div class="doc"><p>Once genuine universal systems in the nonsquare interior are excluded,
+the unchanged original full coordinate target follows. Every other branch and
+the single simultaneous exceptional sequence are supplied by checked proofs.</p></div><pre>theorem fullNagata_of_nonsquare_interior_exclusion
+    (hinterior : ∀ r : ℕ, 10 ≤ r → ¬ IsSquare r → ∀ d m : ℕ,
+      0 &lt; d → 0 &lt; m → 3 &lt; (d : ℝ) / m → (d : ℝ) / m &lt; Real.sqrt r →
+      ¬ UniversalSupport r d (fun _ =&gt; m)) : Nagata.FullNagata := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L227><b>theorem</b> <code>OAI.Nagata.W13.fullNagataOrdinary_of_nonsquare_interior_exclusion</code> <small>line 227</small><div class="doc"><p>The same conditional assembly concludes the proved-equivalent formulation
+with numerical ordinary multiplicities and identical original quantifiers.</p></div><pre>theorem fullNagataOrdinary_of_nonsquare_interior_exclusion
+    (hinterior : ∀ r : ℕ, 10 ≤ r → ¬ IsSquare r → ∀ d m : ℕ,
+      0 &lt; d → 0 &lt; m → 3 &lt; (d : ℝ) / m → (d : ℝ) / m &lt; Real.sqrt r →
+      ¬ UniversalSupport r d (fun _ =&gt; m)) : FullNagataOrdinary :=
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="FullTarget.lean.html#L27">OAI.Nagata.W13.FullNagataOrdinary</a></p></li><li id=L246><b>theorem</b> <code>OAI.Nagata.W13.fullNagata_of_genuine_source_construction</code> <small>line 246</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

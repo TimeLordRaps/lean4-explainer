@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/StableCoordinate/FactorialClosure.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/StableCoordinate/FactorialClosure.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">StableCoordinate</a> / <span>FactorialClosure.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">StableCoordinate</a>/<span>FactorialClosure.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/StableCoordinate/FactorialClosure.lean#L1">source</a></p><div class="doc"><h3>Factorial closure of the kernel of a locally nilpotent derivation</h3><p>This file formalizes <code>bun:factorial-closure</code> from Section 4 of the paper, using the highest nonzero iterates and the general Leibniz rule.
+No exponential/action correspondence is needed for this elementary step.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.StableCoordinate.IsLocallyNilpotent</code> <small>line 22</small><div class="doc"><p>A derivation is locally nilpotent if each element is killed by some iterate.</p></div><pre>def IsLocallyNilpotent (D : Derivation k A A) : Prop :=
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.StableCoordinate.derivation_iterate_mul</code> <small>line 26</small><div class="doc"><p>The general Leibniz formula for a ring derivation, with natural binomial coefficients.</p></div><pre>theorem derivation_iterate_mul (D : Derivation k A A) (n : ℕ) (a b : A) :
+    (D : A → A)^[n] (a * b) =
+      ∑ ij ∈ antidiagonal n,
+        n.choose ij.1 • ((D : A → A)^[ij.1] a * (D : A → A)^[ij.2] b) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.StableCoordinate.derivation_iterate_eq_zero_of_le</code> <small>line 43</small><div class="doc"><p>Once an iterate vanishes, all later iterates vanish.</p></div><pre>theorem derivation_iterate_eq_zero_of_le (D : Derivation k A A) {a : A} {m n : ℕ}
+    (hm : (D : A → A)^[m] a = 0) (hmn : m ≤ n) :
+    (D : A → A)^[n] a = 0 := by
+…</pre></li><li id=L51><b>theorem</b> <code>OAI.StableCoordinate.exists_last_nonzero_iterate</code> <small>line 51</small><div class="doc"><p>A nonzero locally nilpotent element has a last nonzero iterate.</p></div><pre>theorem exists_last_nonzero_iterate (D : Derivation k A A) {a : A}
+    (ha : a ≠ 0) (hnil : ∃ n : ℕ, (D : A → A)^[n] a = 0) :
+    ∃ m : ℕ, (D : A → A)^[m] a ≠ 0 ∧ (D : A → A)^[m + 1] a = 0 := by
+…</pre></li><li id=L66><b>theorem</b> <code>OAI.StableCoordinate.derivation_iterate_top_mul</code> <small>line 66</small><div class="doc"><p>The only surviving term at the sum of the last possible derivative indices.</p></div><pre>theorem derivation_iterate_top_mul (D : Derivation k A A) (a b : A) (m n : ℕ)
+    (hm : (D : A → A)^[m + 1] a = 0)
+    (hn : (D : A → A)^[n + 1] b = 0) :
+    (D : A → A)^[m + n] (a * b) =
+      (m + n).choose m • ((D : A → A)^[m] a * (D : A → A)^[n] b) := by
+…</pre></li><li id=L88><b>theorem</b> <code>OAI.StableCoordinate.lnd_factorial_closure</code> <small>line 88</small><div class="doc"><p>The kernel of a locally nilpotent derivation on a characteristic-zero domain
+is factorially closed. This is <code>bun:factorial-closure</code> from the source.</p></div><pre>theorem lnd_factorial_closure [IsDomain A] [CharZero A]
+    (D : Derivation k A A) (hD : IsLocallyNilpotent D) {a b : A}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hab : D (a * b) = 0) :
+    D a = 0 ∧ D b = 0 := by
+…</pre><p class="refs">Mentions: <a href="FactorialClosure.lean.html#L22">OAI.StableCoordinate.IsLocallyNilpotent</a></p></li><li id=L107><b>theorem</b> <code>OAI.StableCoordinate.lnd_fixed_of_difference_of_squares</code> <small>line 107</small><div class="doc"><p>The difference-of-squares step of the rigidity proof: fixing
+<code>a²u²-d²</code> forces the three factors <code>a</code>, <code>d</code>, and <code>u</code> to be fixed.</p></div><pre>theorem lnd_fixed_of_difference_of_squares [IsDomain A] [CharZero A]
+    (D : Derivation k A A) (hD : IsLocallyNilpotent D) {a d u : A}
+    (ha : a ≠ 0) (hu : u ≠ 0)
+    (hminus : a * u - d ≠ 0) (hplus : a * u + d ≠ 0)
+    (hv : D (a ^ 2 * u ^ 2 - d ^ 2) = 0) :
+    D a = 0 ∧ D d = 0 ∧ D u = 0 := by
+…</pre><p class="refs">Mentions: <a href="FactorialClosure.lean.html#L22">OAI.StableCoordinate.IsLocallyNilpotent</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

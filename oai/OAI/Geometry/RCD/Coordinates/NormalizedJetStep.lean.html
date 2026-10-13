@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/NormalizedJetStep.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/NormalizedJetStep.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>NormalizedJetStep.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>NormalizedJetStep.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/NormalizedJetStep.lean#L1">source</a></p><div class="doc"><h3>The normalized coordinate update</h3><p>The update is <code>h + (Dh)⁻ᵀ v</code>. Inverse-transpose bounds, the bilinear
+product estimate, and scalar dyadic contraction control iterated
+Fréchet derivatives with one positive parameter for every order.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.RegularPointCoordinates.clm_apply_factorialMajorant_bound_at</code> <small>line 28</small><div class="doc"><p>The factorial product bound also holds for smoothness only at the
+base point.  Each finite order uses a common open neighborhood.</p></div><pre>theorem clm_apply_factorialMajorant_bound_at
+    {f : X → F →L[ℝ] G} {g : X → F} {x : X}
+    {B C D : ℝ} {m : ℕ} (hB : 0 &lt; B) (hC : 0 ≤ C) (hD : 0 ≤ D)
+    (hf : ContDiffAt ℝ m f x) (hg : ContDiffAt ℝ m g x)
+    (hfbound : ∀ i, i ≤ m → ‖iteratedFDeriv ℝ i f x‖ ≤
+      C * factorialMajorant i * jetCoefficientScale B i)
+    (hgbound : ∀ i, i ≤ m → ‖iteratedFDeriv ℝ i g x‖ ≤
+      D * factorialMajorant i * jetCoefficientScale B i) :
+    ‖iteratedFDeriv ℝ m (fun y =&gt; f y (g y)) x‖ ≤
+      (10 * C * D) * factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L56><b>theorem</b> <code>OAI.RegularPointCoordinates.contDiffAt_inverseTranspose_field</code> <small>line 56</small><div class="doc"><p>Smoothness of the inverse-transpose field is automatic at each
+point at which the Jacobian is invertible.</p></div><pre>theorem contDiffAt_inverseTranspose_field
+    {J : X → E →L[ℝ] E} {x : X} {m : ℕ}
+    (hJ : ContDiffAt ℝ m J x) (hunit : IsUnit (J x)) :
+    ContDiffAt ℝ m (fun y =&gt; operatorInverseTranspose (J y)) x := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a></p></li><li id=L68><b>theorem</b> <code>OAI.RegularPointCoordinates.jacobian_jet_bound_of_source_jet_bound</code> <small>line 68</small><div class="doc"><p>The source jet bound supplies precisely the Jacobian weight used by
+the inverse-majorant theorem, with no enlargement of the base.</p></div><pre>theorem jacobian_jet_bound_of_source_jet_bound
+    {h : E → E} {x : E} {B : ℝ}
+    (hbound : ∀ m, 2 ≤ m → ‖iteratedFDeriv ℝ m h x‖ ≤
+      B ^ (m - 1) * (m.factorial : ℝ) ^ 3)
+    {m : ℕ} (hm : 0 &lt; m) :
+    ‖iteratedFDeriv ℝ m (fderiv ℝ h) x‖ ≤
+      factorialMajorant m * jetCoefficientScale B m := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L87><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_normalized_jet_step_of_jacobian_bounds</code> <small>line 87</small><div class="doc"><p>With explicit Jacobian jets, the actual inverse-transpose update
+preserves every normalized jet of order at least two.</p></div><pre>theorem exists_normalized_jet_step_of_jacobian_bounds
+    {A B Cv : ℝ} (hA : 1 ≤ A) (hB : 0 &lt; B) (hCv : 0 ≤ Cv) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧
+      ∀ (h : E → E) (J : E → E →L[ℝ] E) (v : E → E) (x : E),
+      (∀ m : ℕ, ContDiffAt ℝ m h x) →
+      (∀ m : ℕ, ContDiffAt ℝ m J x) →
+      (∀ m : ℕ, ContDiffAt ℝ m v x) → IsUnit (J x) →
+      ‖Ring.inverse (J x)‖ ≤ Real.sqrt A →
+      (∀ m, 2 ≤ m → ‖iteratedFDeriv ℝ m h x‖ ≤
+        B ^ (m - 1) * (m.factorial : ℝ) ^ 3) →
+      (∀ m, 0 &lt; m → ‖iteratedFDeriv ℝ m J x‖ ≤
+        factorialMajorant m * jetCoefficientScale B m) →
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L140><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_normalized_jet_step</code> <small>line 140</small><div class="doc"><p>The normalized coordinate update with the genuine derivative field.
+There is one positive <code>epsilon</code> for all orders, all maps, and all base
+points satisfying the stated source and correction jet bounds.</p></div><pre>theorem exists_normalized_jet_step
+    {A B Cv : ℝ} (hA : 1 ≤ A) (hB : 0 &lt; B) (hCv : 0 ≤ Cv) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧
+      ∀ (h v : E → E) (x : E),
+      (∀ m : ℕ, ContDiffAt ℝ m h x) →
+      (∀ m : ℕ, ContDiffAt ℝ m v x) → IsUnit (fderiv ℝ h x) →
+      ‖Ring.inverse (fderiv ℝ h x)‖ ≤ Real.sqrt A →
+      (∀ m, 2 ≤ m → ‖iteratedFDeriv ℝ m h x‖ ≤
+        B ^ (m - 1) * (m.factorial : ℝ) ^ 3) →
+      (∀ m, ‖iteratedFDeriv ℝ m v x‖ ≤
+        epsilon * Cv * factorialMajorant m * jetCoefficientScale B m) →
+      ∀ m, 2 ≤ m →
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L167><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_jet_finite_uniform_bound</code> <small>line 167</small><div class="doc"><p>The universal inverse constant also controls every finite prefix.
+Zero extension beyond the requested order supplies an admissible full
+recurrence; it does not assume any derivative bound at higher orders.</p></div><pre>theorem inverse_jet_finite_uniform_bound {A : ℝ} (hA : 1 ≤ A) :
+    ∃ C : ℝ, Real.sqrt A ≤ C ∧ 2 * A ≤ C ∧
+      ∀ (B : ℝ), 0 &lt; B → ∀ (N : ℕ) (j k : ℕ → ℝ),
+      (∀ q ≤ N, 0 ≤ j q) → (∀ q ≤ N, 0 ≤ k q) → k 0 ≤ Real.sqrt A →
+      (∀ q, 0 &lt; q → q ≤ N → j q ≤ factorialMajorant q * jetCoefficientScale B q) →
+      (∀ q, 0 &lt; q → q ≤ N → k q ≤ Real.sqrt A *
+        ∑ i ∈ Finset.Icc 1 q, (q.choose i : ℝ) * j i * k (q - i)) →
+      ∀ q ≤ N, k q ≤ C * factorialMajorant q * jetCoefficientScale B q := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li><li id=L221><b>theorem</b> <code>OAI.RegularPointCoordinates.inverseTranspose_iteratedFDeriv_finite_uniform_bound</code> <small>line 221</small><div class="doc"><p>Actual inverse-transpose derivatives through a finite order use only
+Jacobian derivatives through that same order.  The constant does not
+depend on the finite cutoff.</p></div><pre>theorem inverseTranspose_iteratedFDeriv_finite_uniform_bound {A : ℝ} (hA : 1 ≤ A) :
+    ∃ C : ℝ, Real.sqrt A ≤ C ∧ 2 * A ≤ C ∧
+      ∀ (B : ℝ), 0 &lt; B → ∀ (N : ℕ) (J : E → E →L[ℝ] E) (x : E),
+      ContDiffAt ℝ N J x → IsUnit (J x) → ‖Ring.inverse (J x)‖ ≤ Real.sqrt A →
+      (∀ q, 0 &lt; q → q ≤ N → ‖iteratedFDeriv ℝ q J x‖ ≤
+        factorialMajorant q * jetCoefficientScale B q) →
+      ∀ q ≤ N, ‖iteratedFDeriv ℝ q (fun y =&gt; operatorInverseTranspose (J y)) x‖ ≤
+        C * factorialMajorant q * jetCoefficientScale B q := by
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a>, <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a></p></li><li id=L251><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_normalized_jet_step_finite</code> <small>line 251</small><div class="doc"><p>Finite-order form of the genuine coordinate update.  To preserve
+order <code>m</code>, only source jets through <code>m + 1</code> and correction jets through
+<code>m</code> are needed.  The positive parameter is independent of <code>m</code>.</p></div><pre>theorem exists_normalized_jet_step_finite
+    {A B Cv : ℝ} (hA : 1 ≤ A) (hB : 0 &lt; B) (hCv : 0 ≤ Cv) :
+    ∃ epsilon : ℝ, 0 &lt; epsilon ∧
+      ∀ (m : ℕ), 2 ≤ m → ∀ (h v : E → E) (x : E),
+      ContDiffAt ℝ (m + 1) h x → ContDiffAt ℝ m v x →
+      IsUnit (fderiv ℝ h x) → ‖Ring.inverse (fderiv ℝ h x)‖ ≤ Real.sqrt A →
+      (∀ q, 2 ≤ q → q ≤ m + 1 → ‖iteratedFDeriv ℝ q h x‖ ≤
+        B ^ (q - 1) * (q.factorial : ℝ) ^ 3) →
+      (∀ q, q ≤ m → ‖iteratedFDeriv ℝ q v x‖ ≤
+        epsilon * Cv * factorialMajorant q * jetCoefficientScale B q) →
+      (2 / (2 : ℝ) ^ m) *
+        ‖iteratedFDeriv ℝ m (fun y =&gt; h y +
+…</pre><p class="refs">Mentions: <a href="FactorialMajorant.lean.html#L24">OAI.RegularPointCoordinates.factorialMajorant</a>, <a href="InverseJetBounds.lean.html#L157">OAI.RegularPointCoordinates.jetCoefficientScale</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

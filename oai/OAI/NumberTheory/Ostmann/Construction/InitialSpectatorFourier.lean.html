@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Construction/InitialSpectatorFourier.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Construction/InitialSpectatorFourier.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Construction</a> / <span>InitialSpectatorFourier.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Construction</a>/<span>InitialSpectatorFourier.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Construction/InitialSpectatorFourier.lean#L1">source</a></p><div class="doc"><h3>Exact spectator cofactors in the original Fourier coefficient</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Ostmann.movingRegularTransform_sum</code> <small>line 11</small><div class="doc"><p>A sum-indexed transform splits without any coprimality assumption.</p></div><pre>theorem movingRegularTransform_sum {I J : Type*} [Fintype I] [Fintype J]
+    (p : I ⊕ J → ℕ) [∀ i, NeZero (p i)] (g : ∀ i, ZMod (p i) → ℂ)
+    (D : ℕ) (s : ℤ) :
+    movingRegularTransform p g D s =
+      movingRegularTransform (fun i =&gt; p (.inl i)) (fun i =&gt; g (.inl i))
+        (D * ∏ j, p (.inr j)) s *
+      movingRegularTransform (fun j =&gt; p (.inr j)) (fun j =&gt; g (.inr j))
+        (D * ∏ i, p (.inl i)) s := by
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/MovingRegularTransfer.lean.html#L55">OAI.Ostmann.movingRegularTransform</a></p></li><li id=L40><b>theorem</b> <code>OAI.Ostmann.primeTupleFourierCoefficient_split</code> <small>line 40</small><div class="doc"><p>Reindexing a full original tuple separates exactly the fixed spectators
+from the retained primes, including both original CRT cofactors.</p></div><pre>theorem primeTupleFourierCoefficient_split {I J : Type*} [Fintype I] [Fintype J]
+    {n : ℕ} (e : I ⊕ J ≃ Fin n) (P : Finset ℕ) [∀ p : P, NeZero (p : ℕ)]
+    (F : Fin n → (p : P) → ZMod (p : ℕ) → ℂ)
+    (ψ : 𝓢(ℝ, ℂ)) (X : ℝ) (V : ℕ) (x : Fin n → P) :
+    primeTupleFourierCoefficient P F ψ X V x =
+      ∑ v ∈ transferFrequencyRange V,
+        normalizedFourierProfile (fun t =&gt; 𝓕 ψ t) v ((∏ i, (x i : ℕ)) / X) *
+          (movingRegularTransform (fun i =&gt; (x (e (.inl i)) : ℕ))
+            (fun i =&gt; densityFourier (F (e (.inl i)) (x (e (.inl i)))))
+            (∏ j, (x (e (.inr j)) : ℕ)) v *
+          movingRegularTransform (fun j =&gt; (x (e (.inr j)) : ℕ))
+            (fun j =&gt; densityFourier (F (e (.inr j)) (x (e (.inr j)))))
+…</pre><p class="refs">Mentions: <a href="RegularInitialAmplitude.lean.html#L12">OAI.Ostmann.primeTupleFourierCoefficient</a>, <a href="TransferFrequencyRange.lean.html#L18">OAI.Ostmann.transferFrequencyRange</a>, <a href="../Characters/NormalizedFourierProfile.lean.html#L37">OAI.Ostmann.normalizedFourierProfile</a>, <a href="../Arithmetic/MovingRegularTransfer.lean.html#L55">OAI.Ostmann.movingRegularTransform</a>, <a href="../ZeroDensity/DensityFourier.lean.html#L15">OAI.Ostmann.densityFourier</a></p></li><li id=L61><b>theorem</b> <code>OAI.Ostmann.movingTaggedTransform_spectator_split</code> <small>line 61</small><div class="doc"><p>A regular spectator block factors from the tagged giant/regular block.</p></div><pre>theorem movingTaggedTransform_spectator_split {I J : Type*} [Fintype I] [Fintype J]
+    (q : I → ℕ) (p : J → ℕ) (hq : ∀ i, q i ≠ 0) (hp : ∀ j, p j ≠ 0)
+    (tag : J → Bool) (g h : ∀ q : ℕ, ZMod q → ℂ) (fav : ℕ → Bool) (D : ℕ) (s : ℤ) :
+    movingTaggedTransform (Sum.elim q p) (Sum.elim (fun _ =&gt; false) tag) g h fav D s =
+      (∏ i, g (q i) ((s : ZMod (q i)) * ((D * (∏ j, p j) * tupleCofactor q i : ℕ) : ZMod (q i))⁻¹)) *
+        movingTaggedTransform p tag g h fav (D * ∏ i, q i) s := by
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/MovingTransferTransform.lean.html#L13">OAI.Ostmann.movingTaggedTransform</a>, <a href="../Characters/TupleCRTFourier.lean.html#L12">OAI.Ostmann.tupleCofactor</a></p></li><li id=L86><b>def</b> <code>OAI.Ostmann.initialSpectatorCofactor</code> <small>line 86</small><div class="doc"><p>The fixed spectator units are their true cofactors in the spectator list.</p></div><pre>noncomputable def initialSpectatorCofactor {I : Type*} [Fintype I]
+    (q : I → ℕ) (hc : Pairwise (fun i j =&gt; (q i).Coprime (q j))) (i : I) :
+    (ZMod (q i))ˣ :=
+…</pre></li><li id=L91><b>theorem</b> <code>OAI.Ostmann.initialSpectatorCofactor_val</code> <small>line 91</small></li><li id=L97><b>theorem</b> <code>OAI.Ostmann.initial_spectator_transform</code> <small>line 97</small><div class="doc"><p>This is precisely the spectator leaf used throughout the moving recursion.</p></div><pre>theorem initial_spectator_transform {I : Type*} [Fintype I]
+    (q : I → ℕ) [∀ i, Fact (q i).Prime]
+    (hc : Pairwise (fun i j =&gt; (q i).Coprime (q j)))
+    (g : ∀ i, ZMod (q i) → ℂ) (M : ℕ) (s : ℤ) :
+    movingRegularTransform q g M s =
+      ∏ i, spectatorHistoryLeaf (fun _ : Unit =&gt; M) (g i)
+        (initialSpectatorCofactor q hc i) () s := by
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/MovingRegularTransfer.lean.html#L55">OAI.Ostmann.movingRegularTransform</a>, <a href="../Arithmetic/ArithmeticSpectatorHistory.lean.html#L18">OAI.Ostmann.spectatorHistoryLeaf</a>, <a href="InitialSpectatorFourier.lean.html#L86">OAI.Ostmann.initialSpectatorCofactor</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

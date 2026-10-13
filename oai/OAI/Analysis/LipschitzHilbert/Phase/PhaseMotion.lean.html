@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/PhaseMotion.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/PhaseMotion.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>PhaseMotion.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>PhaseMotion.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/PhaseMotion.lean#L1">source</a></p><div class="doc"><h3>Motion of diagonal Fourier predictions</h3><p>Bounded frequencies give explicit Lipschitz bounds for the actual characters
+and Hilbert-valued phase sums. Together with logarithmic energy control these
+give the multiplicative cell-supremum bound required by §9.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.LipschitzHilbert.character_motion</code> <small>line 27</small></li><li id=L40><b>theorem</b> <code>OAI.LipschitzHilbert.diagonalModulation_motion</code> <small>line 40</small></li><li id=L66><b>theorem</b> <code>OAI.LipschitzHilbert.diagonalFourierSum_motion</code> <small>line 66</small><div class="doc"><p>Uniform frequency control bounds the motion by the total coefficient norm.</p></div><pre>theorem diagonalFourierSum_motion (frequency : ι → κ → ℝ)
+    (a : ι → EuclideanSpace ℂ κ) {L : ℝ} (hL : 0 ≤ L)
+    (hfrequency : ∀ i j, |frequency i j| ≤ L) (s t : ℝ) :
+    ‖diagonalFourierSum frequency a t - diagonalFourierSum frequency a s‖ ≤
+      L * (∑ i, ‖a i‖) * |t - s| := by
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.LipschitzHilbert.diagonal_prediction_log_motion</code> <small>line 80</small><div class="doc"><p>The fixed positive denominator disappears from logarithmic motion.</p></div><pre>theorem diagonal_prediction_log_motion (frequency : ι → κ → ℝ)
+    (a : ι → EuclideanSpace ℂ κ) {L p denominator : ℝ}
+    (hL : 0 ≤ L) (hp : 1 ≤ p) (hd : 0 &lt; denominator)
+    (hfrequency : ∀ i j, |frequency i j| ≤ L) (s t : ℝ) :
+    |Real.log (energyRatio p denominator (diagonalFourierSum frequency a t)) -
+      Real.log (energyRatio p denominator (diagonalFourierSum frequency a s))| ≤
+        p * L * (∑ i, ‖a i‖) * |t - s| := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/LogEnergy.lean.html#L59">OAI.LipschitzHilbert.energyRatio</a></p></li><li id=L97><b>theorem</b> <code>OAI.LipschitzHilbert.diagonal_prediction_cell_sup</code> <small>line 97</small><div class="doc"><p>The actual Fourier prediction, maximized on a cell of bounded diameter,
+differs from its value by the stated exponential factor.</p></div><pre>theorem diagonal_prediction_cell_sup (frequency : ι → κ → ℝ)
+    (a : ι → EuclideanSpace ℂ κ) (I : Set ℝ) {s L p denominator H : ℝ}
+    (hs : s ∈ I) (hL : 0 ≤ L) (hp : 1 ≤ p) (hd : 0 &lt; denominator)
+    (hfrequency : ∀ i j, |frequency i j| ≤ L)
+    (hdiameter : ∀ t ∈ I, |t - s| ≤ H) :
+    energyRatio p denominator (diagonalFourierSum frequency a s) ≤
+      predictionCellSup (fun t =&gt; energyRatio p denominator (diagonalFourierSum frequency a t)) I ∧
+    predictionCellSup (fun t =&gt; energyRatio p denominator (diagonalFourierSum frequency a t)) I ≤
+      Real.exp (p * L * (∑ i, ‖a i‖) * H) *
+        energyRatio p denominator (diagonalFourierSum frequency a s) := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/LogEnergy.lean.html#L59">OAI.LipschitzHilbert.energyRatio</a>, <a href="PredictionNormalization.lean.html#L62">OAI.LipschitzHilbert.predictionCellSup</a></p></li><li id=L114><b>theorem</b> <code>OAI.LipschitzHilbert.fixed_path_diagonal_log_motion</code> <small>line 114</small><div class="doc"><p>Removing the path carrier leaves a fixed vector. Its size does not enter
+logarithmic motion; only the off-path Fourier coefficients contribute.</p></div><pre>theorem fixed_path_diagonal_log_motion (frequency : ι → κ → ℝ)
+    (a : ι → EuclideanSpace ℂ κ) (Y : EuclideanSpace ℂ κ)
+    {L p denominator : ℝ} (hL : 0 ≤ L) (hp : 1 ≤ p) (hd : 0 &lt; denominator)
+    (hfrequency : ∀ i j, |frequency i j| ≤ L) (s t : ℝ) :
+    |Real.log (energyRatio p denominator (Y + diagonalFourierSum frequency a t)) -
+      Real.log (energyRatio p denominator (Y + diagonalFourierSum frequency a s))| ≤
+        p * L * (∑ i, ‖a i‖) * |t - s| := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/LogEnergy.lean.html#L59">OAI.LipschitzHilbert.energyRatio</a></p></li><li id=L132><b>theorem</b> <code>OAI.LipschitzHilbert.fixed_path_diagonal_cell_sup</code> <small>line 132</small><div class="doc"><p>The source's small-drop form of step supremum control: when the off-path
+coefficient mass is at most <code>K*u</code>, the exponent retains the factor <code>u</code>.</p></div><pre>theorem fixed_path_diagonal_cell_sup (frequency : ι → κ → ℝ)
+    (a : ι → EuclideanSpace ℂ κ) (Y : EuclideanSpace ℂ κ) (I : Set ℝ)
+    {s L p denominator H K u : ℝ} (hs : s ∈ I)
+    (hL : 0 ≤ L) (hp : 1 ≤ p) (hd : 0 &lt; denominator) (hH : 0 ≤ H)
+    (hfrequency : ∀ i j, |frequency i j| ≤ L)
+    (hdiameter : ∀ t ∈ I, |t - s| ≤ H) (hmass : ∑ i, ‖a i‖ ≤ K * u) :
+    energyRatio p denominator (Y + diagonalFourierSum frequency a s) ≤
+      predictionCellSup (fun t =&gt; energyRatio p denominator (Y + diagonalFourierSum frequency a t)) I ∧
+    predictionCellSup (fun t =&gt; energyRatio p denominator (Y + diagonalFourierSum frequency a t)) I ≤
+      Real.exp ((p * L * K * H) * u) *
+        energyRatio p denominator (Y + diagonalFourierSum frequency a s) := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/LogEnergy.lean.html#L59">OAI.LipschitzHilbert.energyRatio</a>, <a href="PredictionNormalization.lean.html#L62">OAI.LipschitzHilbert.predictionCellSup</a></p></li><li id=L157><b>theorem</b> <code>OAI.LipschitzHilbert.blend_log_contraction</code> <small>line 157</small><div class="doc"><p>Blending a positive prediction with one contracts its logarithmic
+oscillation. This proves the blend step without differentiating the ratio.</p></div><pre>theorem blend_log_contraction {θ x y : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1)
+    (hx : 0 &lt; x) (hy : 0 &lt; y) :
+    |Real.log ((1 - θ) * x + θ) - Real.log ((1 - θ) * y + θ)| ≤
+      |Real.log x - Real.log y| := by
+…</pre></li><li id=L196><b>theorem</b> <code>OAI.LipschitzHilbert.fixed_path_blended_cell_sup</code> <small>line 196</small><div class="doc"><p>The source's final blended prediction obeys the same relative-drop
+cell supremum bound as its unblended model.</p></div><pre>theorem fixed_path_blended_cell_sup (frequency : ι → κ → ℝ)
+    (a : ι → EuclideanSpace ℂ κ) (Y : EuclideanSpace ℂ κ) (I : Set ℝ)
+    {s L p denominator H K u θ : ℝ} (hs : s ∈ I)
+    (hL : 0 ≤ L) (hp : 1 ≤ p) (hd : 0 &lt; denominator) (hH : 0 ≤ H)
+    (hθ0 : 0 ≤ θ) (hθ1 : θ ≤ 1)
+    (hfrequency : ∀ i j, |frequency i j| ≤ L)
+    (hdiameter : ∀ t ∈ I, |t - s| ≤ H) (hmass : ∑ i, ‖a i‖ ≤ K * u) :
+    let B := fun t =&gt; (1 - θ) * energyRatio p denominator (Y + diagonalFourierSum frequency a t) + θ
+…</pre><p class="refs">Mentions: <a href="../Estimates/LogEnergy.lean.html#L59">OAI.LipschitzHilbert.energyRatio</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

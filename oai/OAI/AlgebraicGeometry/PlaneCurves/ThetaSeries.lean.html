@@ -1,0 +1,190 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/ThetaSeries.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/ThetaSeries.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>ThetaSeries.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>ThetaSeries.lean</span></code></h1><p class="muted">37 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/ThetaSeries.lean#L1">source</a></p><div class="doc"><h3>Theta series, normal convergence, and derivatives</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.Nagata.W22.iteratedDeriv_scalar_exp</code> <small>line 28</small><div class="doc"><p>The formal frequency factor is the actual iterated complex derivative.</p></div><pre>theorem iteratedDeriv_scalar_exp (A B x : ℂ) (c : ℕ) :
+    iteratedDeriv c (fun y : ℂ =&gt; A * Complex.exp (B * y)) x =
+      B ^ c * (A * Complex.exp (B * x)) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.Nagata.W22.differentiableOn_iteratedDeriv</code> <small>line 43</small><div class="doc"><p>Iterating holomorphic differentiation stays holomorphic on the open domain.</p></div><pre>theorem differentiableOn_iteratedDeriv {f : ℂ → ℂ} {U : Set ℂ}
+    (hf : DifferentiableOn ℂ f U) (hU : IsOpen U) (c : ℕ) :
+    DifferentiableOn ℂ (iteratedDeriv c f) U := by
+…</pre></li><li id=L52><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_iteratedDeriv</code> <small>line 52</small><div class="doc"><p>All fixed derivatives of holomorphic functions converge locally uniformly
+whenever the original functions converge locally uniformly.</p></div><pre>theorem tendstoLocallyUniformlyOn_iteratedDeriv
+    {α : Type*} {l : Filter α} {F : α → ℂ → ℂ} {f : ℂ → ℂ} {U : Set ℂ}
+    (h : TendstoLocallyUniformlyOn F f l U)
+    (hF : ∀ᶠ a in l, DifferentiableOn ℂ (F a) U) (hU : IsOpen U) (c : ℕ) :
+    TendstoLocallyUniformlyOn (fun a =&gt; iteratedDeriv c (F a)) (iteratedDeriv c f) l U := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.Nagata.W22.summable_weighted_half</code> <small>line 65</small><div class="doc"><p>The polynomially weighted geometric majorant in the theta estimate is summable.</p></div><pre>theorem summable_weighted_half (c : ℕ) :
+    Summable (fun t : ℕ =&gt; ((t + 1 : ℕ) : ℝ) ^ c * (1 / 2 : ℝ) ^ t) := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.Nagata.W22.weighted_term_le</code> <small>line 76</small><div class="doc"><p>Uniform linear-in-<code>z</code> domination, for any nonnegative weight sequence.</p></div><pre>theorem weighted_term_le {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    {z : ℝ} (hz : 0 ≤ z) (hzhalf : z ≤ 1 / 2) (t : ℕ) :
+    w t * z ^ (t + 1) ≤ z * (w t * (1 / 2 : ℝ) ^ t) := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.Nagata.W22.summable_weighted_tail</code> <small>line 86</small><div class="doc"><p>A summable geometric majorant proves summability of every dominated tail.</p></div><pre>theorem summable_weighted_tail {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    {z : ℝ} (hz : 0 ≤ z) (hzhalf : z ≤ 1 / 2) :
+    Summable (fun t =&gt; w t * z ^ (t + 1)) := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.Nagata.W22.weighted_tail_le</code> <small>line 95</small><div class="doc"><p>The entire tail is bounded by a fixed finite constant times <code>z</code>.</p></div><pre>theorem weighted_tail_le {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    {z : ℝ} (hz : 0 ≤ z) (hzhalf : z ≤ 1 / 2) :
+    (∑&#x27; t, w t * z ^ (t + 1)) ≤
+      z * (∑&#x27; t, w t * (1 / 2 : ℝ) ^ t) := by
+…</pre></li><li id=L108><b>theorem</b> <code>OAI.Nagata.W22.tendsto_weighted_tail_zero</code> <small>line 108</small><div class="doc"><p>The theta-tail comparison tends to zero for any parameter approaching zero
+within the interval <code>[0,1/2]</code>. No interchange of an unbounded series is assumed.</p></div><pre>theorem tendsto_weighted_tail_zero {α : Type*} {l : Filter α} {z : α → ℝ}
+    {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    (hz : Tendsto z l (𝓝 0))
+    (hzrange : ∀ᶠ a in l, 0 ≤ z a ∧ z a ≤ 1 / 2) :
+    Tendsto (fun a =&gt; ∑&#x27; t, w t * z a ^ (t + 1)) l (𝓝 0) := by
+…</pre></li><li id=L120><b>theorem</b> <code>OAI.Nagata.W22.tendsto_polynomial_tail_zero</code> <small>line 120</small><div class="doc"><p>Polynomial weights specialize the preceding estimate to the theta derivative tail.</p></div><pre>theorem tendsto_polynomial_tail_zero {α : Type*} {l : Filter α} {z : α → ℝ}
+    (c : ℕ) (hz : Tendsto z l (𝓝 0))
+    (hzrange : ∀ᶠ a in l, 0 ≤ z a ∧ z a ≤ 1 / 2) :
+    Tendsto (fun a =&gt; ∑&#x27; t : ℕ, ((t + 1 : ℕ) : ℝ) ^ c * z a ^ (t + 1))
+      l (𝓝 0) :=
+…</pre></li><li id=L129><b>theorem</b> <code>OAI.Nagata.W22.affine_weight_le</code> <small>line 129</small><div class="doc"><p>The actual affine polynomial weight of the derivative estimate is dominated
+by a constant times <code>(t+1)^c</code>.</p></div><pre>theorem affine_weight_le {A n : ℝ} (hA : 0 ≤ A) (hn : 0 ≤ n)
+    (c t : ℕ) :
+    (A + n * ((t + 1 : ℕ) : ℝ)) ^ c ≤
+      (A + n) ^ c * ((t + 1 : ℕ) : ℝ) ^ c := by
+…</pre></li><li id=L139><b>theorem</b> <code>OAI.Nagata.W22.summable_affine_weighted_half</code> <small>line 139</small><div class="doc"><p>Summability of the exact derivative majorant displayed in the manuscript.</p></div><pre>theorem summable_affine_weighted_half {A n : ℝ} (hA : 0 ≤ A) (hn : 0 ≤ n)
+    (c : ℕ) :
+    Summable (fun t : ℕ =&gt; (A + n * ((t + 1 : ℕ) : ℝ)) ^ c * (1 / 2 : ℝ) ^ t) := by
+…</pre></li><li id=L153><b>theorem</b> <code>OAI.Nagata.W22.tendsto_affine_weighted_tail_zero</code> <small>line 153</small><div class="doc"><p>Vanishing of the exact polynomially weighted series used to bound every fixed
+order derivative of the normalized theta series.</p></div><pre>theorem tendsto_affine_weighted_tail_zero {α : Type*} {l : Filter α} {z : α → ℝ}
+    {A n : ℝ} (hA : 0 ≤ A) (hn : 0 ≤ n) (c : ℕ)
+    (hz : Tendsto z l (𝓝 0))
+    (hzrange : ∀ᶠ a in l, 0 ≤ z a ∧ z a ≤ 1 / 2) :
+    Tendsto (fun a =&gt; ∑&#x27; t : ℕ,
+      (A + n * ((t + 1 : ℕ) : ℝ)) ^ c * z a ^ (t + 1)) l (𝓝 0) :=
+…</pre></li><li id=L163><b>theorem</b> <code>OAI.Nagata.W22.summable_of_weighted_bound</code> <small>line 163</small><div class="doc"><p>A norm bound by a summable weighted geometric sequence gives summability.</p></div><pre>theorem summable_of_weighted_bound {E : Type*} [NormedAddCommGroup E] [CompleteSpace E]
+    {f : ℕ → E} {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    {C z : ℝ} (hz : 0 ≤ z) (hzhalf : z ≤ 1 / 2)
+    (hf : ∀ t, ‖f t‖ ≤ C * (w t * z ^ (t + 1))) : Summable f := by
+…</pre></li><li id=L171><b>theorem</b> <code>OAI.Nagata.W22.norm_tsum_le_weighted_bound</code> <small>line 171</small><div class="doc"><p>Uniform scalar majorants also bound the norm of the whole series.</p></div><pre>theorem norm_tsum_le_weighted_bound {E : Type*} [NormedAddCommGroup E] [CompleteSpace E]
+    {f : ℕ → E} {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    {C z : ℝ} (hz : 0 ≤ z) (hzhalf : z ≤ 1 / 2)
+    (hf : ∀ t, ‖f t‖ ≤ C * (w t * z ^ (t + 1))) :
+    ‖∑&#x27; t, f t‖ ≤ C * (∑&#x27; t, w t * z ^ (t + 1)) := by
+…</pre></li><li id=L186><b>theorem</b> <code>OAI.Nagata.W22.tsum_int_eq_center_add_tails</code> <small>line 186</small><div class="doc"><p>A bilateral summable sequence is its central term plus its two positive tails.</p></div><pre>theorem tsum_int_eq_center_add_tails {E : Type*} [NormedAddCommGroup E]
+    {f : ℤ → E}
+    (hp : Summable (fun t : ℕ =&gt; f (t + 1)))
+    (hm : Summable (fun t : ℕ =&gt; f (-(t + 1)))) :
+    (∑&#x27; p : ℤ, f p) = f 0 +
+      (∑&#x27; t : ℕ, f (t + 1)) + (∑&#x27; t : ℕ, f (-(t + 1))) := by
+…</pre></li><li id=L197><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_tsum_zero_of_weighted_bound</code> <small>line 197</small><div class="doc"><p>Uniform domination by vanishing weighted tails implies uniform convergence to zero.</p></div><pre>theorem tendstoUniformlyOn_tsum_zero_of_weighted_bound
+    {α β E : Type*} [NormedAddCommGroup E] [CompleteSpace E]
+    {l : Filter α} {s : Set β} {f : α → ℕ → β → E} {z : α → ℝ}
+    {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    (C : ℝ) (hz : Tendsto z l (𝓝 0))
+    (hrange : ∀ᶠ a in l, 0 ≤ z a ∧ z a ≤ 1 / 2)
+    (hbound : ∀ᶠ a in l, ∀ t x, x ∈ s →
+      ‖f a t x‖ ≤ C * (w t * z a ^ (t + 1))) :
+    TendstoUniformlyOn (fun a x =&gt; ∑&#x27; t, f a t x) (fun _ =&gt; 0) l s := by
+…</pre></li><li id=L216><b>theorem</b> <code>OAI.Nagata.W22.norm_tsum_int_sub_center_le_weighted_bound</code> <small>line 216</small></li><li id=L239><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_tsum_int_center_of_weighted_bound</code> <small>line 239</small><div class="doc"><p>A bilateral series with a fixed central term and uniformly vanishing positive
+and negative tails converges uniformly to that central term.</p></div><pre>theorem tendstoUniformlyOn_tsum_int_center_of_weighted_bound
+    {α β E : Type*} [NormedAddCommGroup E] [CompleteSpace E]
+    {l : Filter α} {s : Set β} {f : α → ℤ → β → E} {g : β → E} {z : α → ℝ}
+    {w : ℕ → ℝ} (hw : ∀ t, 0 ≤ w t)
+    (hs : Summable (fun t =&gt; w t * (1 / 2 : ℝ) ^ t))
+    (C : ℝ) (hz : Tendsto z l (𝓝 0))
+    (hrange : ∀ᶠ a in l, 0 ≤ z a ∧ z a ≤ 1 / 2)
+    (hcenter : ∀ a x, f a 0 x = g x)
+    (hpos : ∀ᶠ a in l, ∀ t : ℕ, ∀ x ∈ s,
+      ‖f a (t + 1) x‖ ≤ C * (w t * z a ^ (t + 1)))
+    (hneg : ∀ᶠ a in l, ∀ t : ℕ, ∀ x ∈ s,
+      ‖f a (-(t + 1)) x‖ ≤ C * (w t * z a ^ (t + 1))) :
+…</pre></li><li id=L270><b>def</b> <code>OAI.Nagata.W22.thetaDiskMajorant</code> <small>line 270</small><div class="doc"><p>An explicit summable majorant for all integer indices on a fixed disk.</p></div><pre>def thetaDiskMajorant (n K R z : ℝ) (c : ℕ) (p : ℤ) : ℝ :=
+…</pre></li><li id=L272><b>theorem</b> <code>OAI.Nagata.W22.summable_thetaDiskMajorant</code> <small>line 272</small></li><li id=L296><b>def</b> <code>OAI.Nagata.W22.normalizedThetaSeries</code> <small>line 296</small><div class="doc"><p>Exactly the bilateral exponential series of equation <code>eq:normalized-theta</code>.</p></div><pre>def normalizedThetaSeries (n a K : ℝ) (ε : ℂ) (τ : ℝ) (x : ℂ) : ℂ :=
+…</pre></li><li id=L301><b>def</b> <code>OAI.Nagata.W22.normalizedThetaDerivativeSeries</code> <small>line 301</small><div class="doc"><p>Sum of the explicit derivative summands. Identification with the derivative
+of <code>normalizedThetaSeries</code> is recorded separately.</p></div><pre>def normalizedThetaDerivativeSeries (n a K : ℝ) (ε : ℂ) (τ : ℝ)
+    (c : ℕ) (x : ℂ) : ℂ :=
+…</pre></li><li id=L305><b>theorem</b> <code>OAI.Nagata.W22.normalizedThetaDerivativeSeries_zero</code> <small>line 305</small></li><li id=L311><b>theorem</b> <code>OAI.Nagata.W22.theta_geometric_parameter_tendsto_zero</code> <small>line 311</small><div class="doc"><p>The concrete geometric parameter used in the compact-disk estimate vanishes.</p></div><pre>theorem theta_geometric_parameter_tendsto_zero
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a R : ℝ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hτ : Tendsto τ l (𝓝 0)) :
+    Tendsto (fun j =&gt; Real.exp (n * R) * τ j ^ thetaMargin n a) l (𝓝 0) := by
+…</pre></li><li id=L322><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_normalizedThetaDerivativeSeries</code> <small>line 322</small><div class="doc"><p>Every fixed formal derivative series converges uniformly on every disk to the
+corresponding exponential derivative. Bounds and summability are discharged.</p></div><pre>theorem tendstoUniformlyOn_normalizedThetaDerivativeSeries
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K R : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1) (hR : 0 ≤ R)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (c : ℕ) :
+    TendstoUniformlyOn (fun j =&gt; normalizedThetaDerivativeSeries n a K ε (τ j) c)
+      (fun x =&gt; (K : ℂ) ^ c * Complex.exp ((K : ℂ) * x)) l
+      {x : ℂ | ‖x‖ ≤ R} := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L301">OAI.Nagata.W22.normalizedThetaDerivativeSeries</a></p></li><li id=L355><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_normalizedThetaSeries</code> <small>line 355</small><div class="doc"><p>The normalized theta series itself degenerates uniformly on compact disks.</p></div><pre>theorem tendstoUniformlyOn_normalizedThetaSeries
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K R : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1) (hR : 0 ≤ R)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    TendstoUniformlyOn (fun j =&gt; normalizedThetaSeries n a K ε (τ j))
+      (fun x =&gt; Complex.exp ((K : ℂ) * x)) l {x : ℂ | ‖x‖ ≤ R} := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li><li id=L367><b>theorem</b> <code>OAI.Nagata.W22.tendstoLocallyUniformlyOn_normalizedThetaSeries</code> <small>line 367</small><div class="doc"><p>Compact-uniform degeneration on the entire complex logarithmic coordinate plane.</p></div><pre>theorem tendstoLocallyUniformlyOn_normalizedThetaSeries
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    TendstoLocallyUniformlyOn (fun j =&gt; normalizedThetaSeries n a K ε (τ j))
+      (fun x =&gt; Complex.exp ((K : ℂ) * x)) l Set.univ := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li><li id=L387><b>theorem</b> <code>OAI.Nagata.W22.hasDerivAt_normalizedThetaDerivativeTerm</code> <small>line 387</small><div class="doc"><p>The candidate frequency factor is exactly the actual complex derivative.</p></div><pre>theorem hasDerivAt_normalizedThetaDerivativeTerm
+    (n a K : ℝ) (ε : ℂ) (τ : ℝ) (c : ℕ) (p : ℤ) (x : ℂ) :
+    HasDerivAt (normalizedThetaDerivativeTerm n a K ε τ c p)
+      (normalizedThetaDerivativeTerm n a K ε τ (c + 1) p x) x := by
+…</pre></li><li id=L400><b>theorem</b> <code>OAI.Nagata.W22.iteratedDeriv_normalizedThetaTerm</code> <small>line 400</small><div class="doc"><p>Every frequency factor is the genuine iterated derivative of the summand.</p></div><pre>theorem iteratedDeriv_normalizedThetaTerm
+    (n a K : ℝ) (ε : ℂ) (τ : ℝ) (c : ℕ) (p : ℤ) (x : ℂ) :
+    iteratedDeriv c (normalizedThetaTerm n a K ε τ p) x =
+      normalizedThetaDerivativeTerm n a K ε τ c p x := by
+…</pre></li><li id=L421><b>theorem</b> <code>OAI.Nagata.W22.deriv_normalizedThetaDerivativeSeries</code> <small>line 421</small><div class="doc"><p>Termwise differentiation is legitimate on a disk where the geometric bound
+is at most one half. No differentiation rule is assumed for the series.</p></div><pre>theorem deriv_normalizedThetaDerivativeSeries
+    {n a K τ R : ℝ} {ε x : ℂ}
+    (hn : 0 ≤ n) (hτ : 0 &lt; τ) (hτone : τ ≤ 1) (hε : ‖ε‖ = 1)
+    (hR : 0 ≤ R) (hzhalf : Real.exp (n * R) * τ ^ thetaMargin n a ≤ 1 / 2)
+    (hx : ‖x‖ &lt; R) (c : ℕ) :
+    deriv (normalizedThetaDerivativeSeries n a K ε τ c) x =
+      normalizedThetaDerivativeSeries n a K ε τ (c + 1) x := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L301">OAI.Nagata.W22.normalizedThetaDerivativeSeries</a></p></li><li id=L446><b>theorem</b> <code>OAI.Nagata.W22.iteratedDeriv_normalizedThetaSeries</code> <small>line 446</small><div class="doc"><p>The entire derivative series is the iterated derivative of the genuine theta
+series throughout the interior of the same disk.</p></div><pre>theorem iteratedDeriv_normalizedThetaSeries
+    {n a K τ R : ℝ} {ε x : ℂ}
+    (hn : 0 ≤ n) (hτ : 0 &lt; τ) (hτone : τ ≤ 1) (hε : ‖ε‖ = 1)
+    (hR : 0 ≤ R) (hzhalf : Real.exp (n * R) * τ ^ thetaMargin n a ≤ 1 / 2)
+    (hx : ‖x‖ &lt; R) (c : ℕ) :
+    iteratedDeriv c (normalizedThetaSeries n a K ε τ) x =
+      normalizedThetaDerivativeSeries n a K ε τ c x := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a>, <a href="ThetaSeries.lean.html#L301">OAI.Nagata.W22.normalizedThetaDerivativeSeries</a></p></li><li id=L467><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_iteratedDeriv_normalizedThetaSeries</code> <small>line 467</small><div class="doc"><p>All actual complex derivatives of the normalized theta series converge
+uniformly on every fixed compact disk. The auxiliary disk bound is discharged
+by choosing the larger radius <code>R+1</code> and taking <code>τ</code> sufficiently small.</p></div><pre>theorem tendstoUniformlyOn_iteratedDeriv_normalizedThetaSeries
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K R : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1) (hR : 0 ≤ R)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (c : ℕ) :
+    TendstoUniformlyOn (fun j =&gt; iteratedDeriv c (normalizedThetaSeries n a K ε (τ j)))
+      (fun x =&gt; (K : ℂ) ^ c * Complex.exp ((K : ℂ) * x)) l
+      {x : ℂ | ‖x‖ ≤ R} := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li><li id=L485><b>theorem</b> <code>OAI.Nagata.W22.tendsto_iteratedDeriv_normalizedThetaSeries_zero</code> <small>line 485</small><div class="doc"><p>The precise limiting x-jet entry needed in the finite matrix.</p></div><pre>theorem tendsto_iteratedDeriv_normalizedThetaSeries_zero
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) (c : ℕ) :
+    Tendsto (fun j =&gt; iteratedDeriv c (normalizedThetaSeries n a K ε (τ j)) 0)
+      l (𝓝 ((K : ℂ) ^ c)) := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li><li id=L505><b>theorem</b> <code>OAI.Nagata.W22.summable_normalizedThetaTerm_norm_on_disk</code> <small>line 505</small><div class="doc"><p>Pointwise absolute summability with the same concrete disk majorant.</p></div><pre>theorem summable_normalizedThetaTerm_norm_on_disk
+    {n a K τ R : ℝ} {ε x : ℂ}
+    (hn : 0 ≤ n) (hτ : 0 &lt; τ) (hτone : τ ≤ 1) (hε : ‖ε‖ = 1)
+    (hR : 0 ≤ R) (hzhalf : Real.exp (n * R) * τ ^ thetaMargin n a ≤ 1 / 2)
+    (hx : ‖x‖ ≤ R) :
+    Summable (fun p : ℤ =&gt; ‖normalizedThetaTerm n a K ε τ p x‖) := by
+…</pre></li><li id=L518><b>theorem</b> <code>OAI.Nagata.W22.hasSum_normalizedThetaTerm_on_disk</code> <small>line 518</small><div class="doc"><p>The actual bilateral series has the stated sum at every point of the disk.</p></div><pre>theorem hasSum_normalizedThetaTerm_on_disk
+    {n a K τ R : ℝ} {ε x : ℂ}
+    (hn : 0 ≤ n) (hτ : 0 &lt; τ) (hτone : τ ≤ 1) (hε : ‖ε‖ = 1)
+    (hR : 0 ≤ R) (hzhalf : Real.exp (n * R) * τ ^ thetaMargin n a ≤ 1 / 2)
+    (hx : ‖x‖ ≤ R) :
+    HasSum (fun p : ℤ =&gt; normalizedThetaTerm n a K ε τ p x)
+      (normalizedThetaSeries n a K ε τ x) :=
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li><li id=L528><b>theorem</b> <code>OAI.Nagata.W22.tendstoUniformlyOn_normalizedThetaSeries_partialSums</code> <small>line 528</small><div class="doc"><p>Uniform finite-sum convergence of the literal two-sided series on a disk.</p></div><pre>theorem tendstoUniformlyOn_normalizedThetaSeries_partialSums
+    {n a K τ R : ℝ} {ε : ℂ}
+    (hn : 0 ≤ n) (hτ : 0 &lt; τ) (hτone : τ ≤ 1) (hε : ‖ε‖ = 1)
+    (hR : 0 ≤ R) (hzhalf : Real.exp (n * R) * τ ^ thetaMargin n a ≤ 1 / 2) :
+    TendstoUniformlyOn
+      (fun S : Finset ℤ =&gt; fun x =&gt; ∑ p ∈ S, normalizedThetaTerm n a K ε τ p x)
+      (normalizedThetaSeries n a K ε τ) atTop {x : ℂ | ‖x‖ ≤ R} := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li><li id=L543><b>theorem</b> <code>OAI.Nagata.W22.eventually_normalizedThetaSeries_partialSums</code> <small>line 543</small><div class="doc"><p>On any fixed disk the literal finite-sum convergence applies for all
+sufficiently small positive values of the degeneration parameter.</p></div><pre>theorem eventually_normalizedThetaSeries_partialSums
+    {α : Type*} {l : Filter α} {τ : α → ℝ} {n a K R : ℝ} {ε : ℂ}
+    (ha : 0 &lt; a) (han : a &lt; n) (hε : ‖ε‖ = 1) (hR : 0 ≤ R)
+    (hτ : Tendsto τ l (𝓝 0)) (hτpos : ∀ᶠ j in l, 0 &lt; τ j) :
+    ∀ᶠ j in l, TendstoUniformlyOn
+      (fun S : Finset ℤ =&gt; fun x =&gt; ∑ p ∈ S, normalizedThetaTerm n a K ε (τ j) p x)
+      (normalizedThetaSeries n a K ε (τ j)) atTop {x : ℂ | ‖x‖ ≤ R} := by
+…</pre><p class="refs">Mentions: <a href="ThetaSeries.lean.html#L296">OAI.Nagata.W22.normalizedThetaSeries</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

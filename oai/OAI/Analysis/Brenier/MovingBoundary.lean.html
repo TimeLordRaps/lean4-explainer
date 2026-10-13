@@ -1,0 +1,93 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/MovingBoundary.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/MovingBoundary.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>MovingBoundary.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>MovingBoundary.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/MovingBoundary.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Problem358.MovingBoundary.hasDerivAt_integral_movingEndpoint</code> <small>line 16</small><div class="doc"><p>A moving integration endpoint in a product-space strip differentiates to the
+integral on its boundary slice. Only almost-everywhere slice continuity is needed.</p></div><pre>theorem hasDerivAt_integral_movingEndpoint
+    {f : ℝ → X → ℝ} {c : ℝ} {bound : X → ℝ}
+    (hf : StronglyMeasurable (Function.uncurry f))
+    (hbound : ∀ᶠ t in 𝓝 c, ∀ᵐ x ∂μ, ‖f t x‖ ≤ bound x)
+    (hbound_int : Integrable bound μ)
+    (hcont : ∀ᵐ x ∂μ, ContinuousAt (fun t =&gt; f t x) c)
+    (hint : ∀ᶠ t in 𝓝 c,
+      Integrable (Function.uncurry f) ((volume.restrict (uIoc c t)).prod μ)) :
+    HasDerivAt (fun t =&gt; ∫ x, (∫ s in c..t, f s x) ∂μ)
+      (∫ x, f c x ∂μ) c := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Problem358.MovingBoundary.hasDerivAt_integral_movingEndpoint_of_bound</code> <small>line 42</small><div class="doc"><p>Global domination in the transverse variable supplies all local strip
+integrability requirements of the moving-endpoint formula.</p></div><pre>theorem hasDerivAt_integral_movingEndpoint_of_bound
+    {f : ℝ → X → ℝ} {c : ℝ} {bound : X → ℝ}
+    (hf : StronglyMeasurable (Function.uncurry f))
+    (hbound : ∀ᵐ x ∂μ, ∀ t, ‖f t x‖ ≤ bound x)
+    (hbound_int : Integrable bound μ)
+    (hcont : ∀ᵐ x ∂μ, ContinuousAt (fun t =&gt; f t x) c) :
+    HasDerivAt (fun t =&gt; ∫ x, (∫ s in c..t, f s x) ∂μ)
+      (∫ x, f c x ∂μ) c := by
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.Problem358.MovingBoundary.hasDerivAt_integral_movingBoundary</code> <small>line 64</small><div class="doc"><p>The velocity may vary across the transverse slice. This is the local
+moving-face formula after straightening a hyperplane and rescaling its normal.</p></div><pre>theorem hasDerivAt_integral_movingBoundary
+    {f : ℝ → X → ℝ} {v : X → ℝ} {c : ℝ} {bound : X → ℝ}
+    (hf : StronglyMeasurable (Function.uncurry f)) (hv : Measurable v)
+    (hbound : ∀ᵐ x ∂μ, ∀ t, ‖f t x‖ ≤ bound x)
+    (hweighted : Integrable (fun x =&gt; |v x| * bound x) μ)
+    (hcont : ∀ᵐ x ∂μ, ContinuousAt (fun t =&gt; f t x) c) :
+    HasDerivAt (fun t =&gt; ∫ x, (∫ s in c..(c + t * v x), f s x) ∂μ)
+      (∫ x, v x * f c x ∂μ) 0 := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.Problem358.MovingBoundary.hasDerivAt_integral_movingAffineFace</code> <small>line 105</small><div class="doc"><p>Normal coefficients may also move: solving an affine moving-face equation
+introduces the scalar factor <code>t / (n + t * k)</code>. Its derivative is harmless when
+<code>n ≠ 0</code>, as required for a genuine initial face normal.</p></div><pre>theorem hasDerivAt_integral_movingAffineFace
+    {f : ℝ → X → ℝ} {v : X → ℝ} {c n k : ℝ} {bound : X → ℝ}
+    (hn : n ≠ 0) (hf : StronglyMeasurable (Function.uncurry f)) (hv : Measurable v)
+    (hbound : ∀ᵐ x ∂μ, ∀ t, ‖f t x‖ ≤ bound x)
+    (hweighted : Integrable (fun x =&gt; |v x| * bound x) μ)
+    (hcont : ∀ᵐ x ∂μ, ContinuousAt (fun t =&gt; f t x) c) :
+    HasDerivAt (fun t =&gt; ∫ x,
+      (∫ s in c..(c + (t / (n + t * k)) * v x), f s x) ∂μ)
+      ((∫ x, v x * f c x ∂μ) / n) 0 := by
+…</pre></li><li id=L140><b>theorem</b> <code>OAI.Problem358.MovingBoundary.integral_subgraph_eq_iterated</code> <small>line 140</small><div class="doc"><p>Fubini for a measurable subgraph, with the normal coordinate integrated first.</p></div><pre>theorem integral_subgraph_eq_iterated
+    {f : ℝ → X → ℝ} {q : X → ℝ}
+    (hf : Integrable (Function.uncurry f) (volume.prod μ)) (hq : Measurable q) :
+    (∫ p in {p : ℝ × X | p.1 ≤ q p.2}, f p.1 p.2 ∂volume.prod μ) =
+      ∫ x, (∫ s in Iic (q x), f s x) ∂μ := by
+…</pre></li><li id=L159><b>theorem</b> <code>OAI.Problem358.MovingBoundary.integrable_integral_subgraph</code> <small>line 159</small><div class="doc"><p>The inner subgraph integral is integrable in the transverse coordinate.</p></div><pre>theorem integrable_integral_subgraph
+    {f : ℝ → X → ℝ} {q : X → ℝ}
+    (hf : Integrable (Function.uncurry f) (volume.prod μ)) (hq : Measurable q) :
+    Integrable (fun x =&gt; ∫ s in Iic (q x), f s x) μ := by
+…</pre></li><li id=L172><b>theorem</b> <code>OAI.Problem358.MovingBoundary.integral_subgraph_sub</code> <small>line 172</small><div class="doc"><p>The difference of two subgraph integrals is exactly their oriented strip integral.</p></div><pre>theorem integral_subgraph_sub
+    {f : ℝ → X → ℝ} {q₀ q₁ : X → ℝ}
+    (hf : Integrable (Function.uncurry f) (volume.prod μ))
+    (hq₀ : Measurable q₀) (hq₁ : Measurable q₁) :
+    (∫ p in {p : ℝ × X | p.1 ≤ q₁ p.2}, f p.1 p.2 ∂volume.prod μ) -
+        (∫ p in {p : ℝ × X | p.1 ≤ q₀ p.2}, f p.1 p.2 ∂volume.prod μ) =
+      ∫ x, (∫ s in q₀ x..q₁ x, f s x) ∂μ := by
+…</pre></li><li id=L188><b>theorem</b> <code>OAI.Problem358.MovingBoundary.norm_integral_subgraph_sub_le</code> <small>line 188</small><div class="doc"><p>An oriented moving strip has the expected absolute integral bound.
+This estimate needs no boundary continuity and supplies local Lipschitz control.</p></div><pre>theorem norm_integral_subgraph_sub_le
+    {f : ℝ → X → ℝ} {q₀ q₁ bound : X → ℝ}
+    (hf : Integrable (Function.uncurry f) (volume.prod μ))
+    (hq₀ : Measurable q₀) (hq₁ : Measurable q₁)
+    (hbound : ∀ᵐ x ∂μ, ∀ s, ‖f s x‖ ≤ bound x)
+    (hint : Integrable (fun x =&gt; bound x * |q₁ x - q₀ x|) μ) :
+    ‖(∫ p in {p : ℝ × X | p.1 ≤ q₁ p.2}, f p.1 p.2 ∂volume.prod μ) -
+        (∫ p in {p : ℝ × X | p.1 ≤ q₀ p.2}, f p.1 p.2 ∂volume.prod μ)‖ ≤
+      ∫ x, bound x * |q₁ x - q₀ x| ∂μ := by
+…</pre></li><li id=L205><b>theorem</b> <code>OAI.Problem358.MovingBoundary.lipschitzOnWith_integral_subgraph</code> <small>line 205</small><div class="doc"><p>Lipschitz motion of the threshold gives Lipschitz motion of the subgraph
+integral. The transverse speed is allowed to vary and is integrated against the
+density bound, so this applies to affine moving-face charts on compact sources.</p></div><pre>theorem lipschitzOnWith_integral_subgraph
+    {A : Type*} [PseudoMetricSpace A] {S : Set A} {C : ℝ≥0}
+    {f : ℝ → X → ℝ} {q : A → X → ℝ} {bound speed : X → ℝ}
+    (hf : Integrable (Function.uncurry f) (volume.prod μ))
+    (hq : ∀ a ∈ S, Measurable (q a))
+    (hbound : ∀ᵐ x ∂μ, ∀ s, ‖f s x‖ ≤ bound x)
+    (hweighted : Integrable (fun x =&gt; bound x * speed x) μ)
+    (hcost : (∫ x, bound x * speed x ∂μ) ≤ C)
+    (hmotion : ∀ a ∈ S, ∀ b ∈ S, ∀ᵐ x ∂μ,
+      |q a x - q b x| ≤ speed x * dist a b) :
+    LipschitzOnWith C (fun a =&gt; ∫ p in {p : ℝ × X | p.1 ≤ q a p.2},
+      f p.1 p.2 ∂volume.prod μ) S := by
+…</pre></li><li id=L237><b>theorem</b> <code>OAI.Problem358.MovingBoundary.hasDerivAt_subgraph_movingAffineFace</code> <small>line 237</small><div class="doc"><p>A genuine moving-halfspace integral differentiates to its boundary integral.
+The global integrability assumption is automatic for bounded compactly supported
+cell densities, while continuity is only required almost everywhere on the initial face.</p></div><pre>theorem hasDerivAt_subgraph_movingAffineFace
+    {f : ℝ → X → ℝ} {v : X → ℝ} {c n k : ℝ} {bound : X → ℝ}
+    (hn : n ≠ 0) (hf : StronglyMeasurable (Function.uncurry f))
+    (hfi : Integrable (Function.uncurry f) (volume.prod μ)) (hv : Measurable v)
+    (hbound : ∀ᵐ x ∂μ, ∀ t, ‖f t x‖ ≤ bound x)
+    (hweighted : Integrable (fun x =&gt; |v x| * bound x) μ)
+    (hcont : ∀ᵐ x ∂μ, ContinuousAt (fun t =&gt; f t x) c) :
+    HasDerivAt (fun t =&gt; ∫ p in {p : ℝ × X | p.1 ≤ c +
+        (t / (n + t * k)) * v p.2}, f p.1 p.2 ∂volume.prod μ)
+      ((∫ x, v x * f c x ∂μ) / n) 0 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

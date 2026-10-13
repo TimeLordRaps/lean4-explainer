@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/Hyperbolic/Spheres.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/Hyperbolic/Spheres.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">GroupTheory</a> / <a href="index.html">Hyperbolic</a> / <span>Spheres.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">GroupTheory</a>/<a href="index.html">Hyperbolic</a>/<span>Spheres.lean</span></code></h1><p class="muted">20 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/Hyperbolic/Spheres.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>structure</b> <code>OAI.Release075.TriangleSphere</code> <small>line 10</small><div class="doc"><p>A finite labelled spherical map, possibly with several connected components.
+All faces are triangles; there is no distinguished outer face.</p></div><pre>structure TriangleSphere {E V : Type} (flip : E → E) (color : E → V)
+    (face : E → E → E → Prop) where
+…</pre></li><li id=L32><b>structure</b> <code>OAI.Release075.TriangleSphere.Dipole</code> <small>line 32</small></li><li id=L41><b>theorem</b> <code>OAI.Release075.TriangleSphere.reverse_not_sameCycle</code> <small>line 41</small></li><li id=L64><b>theorem</b> <code>OAI.Release075.TriangleSphere.dipole_of_link_backtrack</code> <small>line 64</small><div class="doc"><p>Internal reversal of a link walk creates a cancellable pair, when the face
+labels are determined by two consecutive sides.</p></div><pre>theorem dipole_of_link_backtrack
+    (hf : ∀ a b c, face a b c → color a ≠ color b ∧ color b ≠ color c ∧ color c ≠ color a)
+    (hflip : ∀ e, flip (flip e) = e)
+    (hmirror : ∀ a b c, face a b c → face (flip a) (flip c) (flip b))
+    (hunique : ∀ a b c c&#x27;, face a b c → face a b c&#x27; → c = c&#x27;)
+    (x : D.Dart)
+    (hback : D.label x = D.label ((D.reverse*D.next) ((D.reverse*D.next) x))) :
+    Nonempty D.Dipole := by
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.Release075.TriangleSphere.noDipole_link_reduced</code> <small>line 107</small></li><li id=L119><b>abbrev</b> <code>OAI.Release075.TriangleSphere.vertexPerm</code> <small>line 119</small></li><li id=L121><b>def</b> <code>OAI.Release075.TriangleSphere.paint</code> <small>line 121</small></li><li id=L125><b>theorem</b> <code>OAI.Release075.TriangleSphere.paint_cl</code> <small>line 125</small></li><li id=L128><b>def</b> <code>OAI.Release075.TriangleSphere.vertexAngle</code> <small>line 128</small></li><li id=L131><b>theorem</b> <code>OAI.Release075.TriangleSphere.sum_angles</code> <small>line 131</small></li><li id=L167><b>theorem</b> <code>OAI.Release075.TriangleSphere.local_angle_lower</code> <small>line 167</small></li><li id=L204><b>theorem</b> <code>OAI.Release075.TriangleSphere.empty_of_angles</code> <small>line 204</small><div class="doc"><p>Angular Gauss--Bonnet on a closed genus-zero map forbids a nonempty reduced
+sphere. This is a statement about actual finite permutation maps, not an
+asphericity or torsion-freeness assumption.</p></div><pre>theorem empty_of_angles (q : V ≃ Fin 3)
+    (hf : ∀ a b c, face a b c → color a ≠ color b ∧ color b ≠ color c ∧ color c ≠ color a)
+    (hmin : ∀ v, 10 ≤ D.vertexAngle q v) : IsEmpty D.Dart := by
+…</pre></li><li id=L236><b>theorem</b> <code>OAI.Release075.MarkedLineData.sphere_empty_of_noDipole</code> <small>line 236</small><div class="doc"><p>Every nonempty spherical map over the actual presentation has a dipole.</p></div><pre>theorem sphere_empty_of_noDipole
+    (D : TriangleSphere (d.presentation hr).flipEdge (d.presentation hr).edgeTarget
+      (d.presentation hr).TriangleFace) (hD : IsEmpty D.Dipole) : IsEmpty D.Dart := by
+…</pre><p class="refs">Mentions: <a href="Spheres.lean.html#L10">OAI.Release075.TriangleSphere</a></p></li><li id=L269><b>def</b> <code>OAI.Release075.TriangleSphere.cornerSum</code> <small>line 269</small><div class="doc"><p>Evaluate once at every oriented corner. For cyclic face values this is three
+times the ordinary integral face chain; no unproved chain-complex property is used.</p></div><pre>def cornerSum (D : TriangleSphere flip color face) (F : E → E → E → M) : M :=
+…</pre><p class="refs">Mentions: <a href="Spheres.lean.html#L10">OAI.Release075.TriangleSphere</a></p></li><li id=L274><b>theorem</b> <code>OAI.Release075.TriangleSphere.Dipole.delete</code> <small>line 274</small><div class="doc"><p>Remove an actual dipole, preserving every additive cyclic antisymmetric
+face evaluation.</p></div><pre>theorem Dipole.delete {D : TriangleSphere flip color face} (P : D.Dipole)
+    (F : E → E → E → M)
+    (hrot : ∀ a b c, face a b c → F b c a = F a b c)
+    (hmir : ∀ a b c, face a b c → F (flip a) (flip c) (flip b) = -F a b c) :
+    ∃ D&#x27; : TriangleSphere flip color face,
+      Fintype.card D&#x27;.Dart &lt; Fintype.card D.Dart ∧ D&#x27;.cornerSum F = D.cornerSum F := by
+…</pre><p class="refs">Mentions: <a href="Spheres.lean.html#L10">OAI.Release075.TriangleSphere</a></p></li><li id=L360><b>theorem</b> <code>OAI.Release075.TriangleSphere.cornerSum_eq_zero</code> <small>line 360</small><div class="doc"><p>Diagrammatic reducibility annihilates integral spherical face chains.</p></div><pre>theorem cornerSum_eq_zero
+    (hempty : ∀ D : TriangleSphere flip color face, IsEmpty D.Dipole → IsEmpty D.Dart)
+    (F : E → E → E → M)
+    (hrot : ∀ a b c, face a b c → F b c a = F a b c)
+    (hmir : ∀ a b c, face a b c → F (flip a) (flip c) (flip b) = -F a b c)
+    (D : TriangleSphere flip color face) : D.cornerSum F = 0 := by
+…</pre><p class="refs">Mentions: <a href="Spheres.lean.html#L10">OAI.Release075.TriangleSphere</a></p></li><li id=L383><b>def</b> <code>OAI.Release075.TriangleSphere.forgetLift</code> <small>line 383</small></li><li id=L398><b>def</b> <code>OAI.Release075.TriangleSphere.Dipole.lift</code> <small>line 398</small><div class="doc"><p>Matching opposite face labels at a shared lifted edge forces matching group
+coordinates on the other two edges. Thus reduction cannot hide a downstairs dipole.</p></div><pre>def Dipole.lift {D : TriangleSphere d.liftedFlip d.liftedTarget d.LiftedFace}
+    (P : D.forgetLift.Dipole) : D.Dipole := by
+…</pre><p class="refs">Mentions: <a href="Spheres.lean.html#L10">OAI.Release075.TriangleSphere</a></p></li><li id=L432><b>theorem</b> <code>OAI.Release075.TriangleSphere.noDipole_forgetLift</code> <small>line 432</small></li><li id=L440><b>theorem</b> <code>OAI.Release075.MarkedLineData.lifted_sphere_empty_of_noDipole</code> <small>line 440</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

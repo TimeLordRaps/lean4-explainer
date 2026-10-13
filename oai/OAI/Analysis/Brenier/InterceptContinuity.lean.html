@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/InterceptContinuity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/InterceptContinuity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>InterceptContinuity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>InterceptContinuity.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/InterceptContinuity.lean#L1">source</a></p><div class="doc"><p>Compactness and uniqueness imply continuous dependence of minimizers.
+No differentiability or inverse-function theorem is used.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.Problem358.CompactArgmin.tendsto_of_unique_minimizer</code> <small>line 18</small><div class="doc"><p>A compactly constrained family of minimizers converges to the unique minimizer
+of the limiting continuous objective. The feasible set may be noncompact.</p></div><pre>theorem tendsto_of_unique_minimizer {l : Filter I} {p : I → P} {p₀ : P}
+    {c : I → C} {c₀ : C} {S K : Set C} {F : P × C → ℝ}
+    (hK : IsCompact K) (hS : IsClosed S) (hF : Continuous F)
+    (hp : Tendsto p l (𝓝 p₀)) (hbounded : ∀ᶠ i in l, c i ∈ K)
+    (hfeasible : ∀ᶠ i in l, c i ∈ S)
+    (hmin : ∀ᶠ i in l, ∀ z ∈ S, F (p i, c i) ≤ F (p i, z))
+    (hunique : ∀ z ∈ S, IsMinOn (fun w =&gt; F (p₀, w)) S z → z = c₀) :
+    Tendsto c l (𝓝 c₀) := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.Problem358.CompactArgmin.continuousAt_unique_minimizer</code> <small>line 41</small><div class="doc"><p>Local compact bounds and uniqueness give continuity of an arbitrary selected minimizer.</p></div><pre>theorem continuousAt_unique_minimizer {c : P → C} {p : P}
+    {S K : Set C} {F : P × C → ℝ}
+    (hK : IsCompact K) (hS : IsClosed S) (hF : Continuous F)
+    (hbounded : ∀ᶠ q in 𝓝 p, c q ∈ K)
+    (hfeasible : ∀ᶠ q in 𝓝 p, c q ∈ S)
+    (hmin : ∀ᶠ q in 𝓝 p, ∀ z ∈ S, F (q, c q) ≤ F (q, z))
+    (hunique : ∀ z ∈ S, IsMinOn (fun w =&gt; F (p, w)) S z → z = c p) :
+    ContinuousAt c p :=
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.Problem358.MaxPotential.continuous_joint_potential</code> <small>line 64</small><div class="doc"><p>Finite affine maxima depend jointly continuously on sites, intercepts, and source points.</p></div><pre>theorem continuous_joint_potential {d : ℕ} :
+    Continuous (fun p : ((ι → E d) × (ι → ℝ)) × E d =&gt;
+      potential p.1.1 p.1.2 p.2) := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L77><b>theorem</b> <code>OAI.Problem358.MaxPotential.continuous_uniform_integral_potential</code> <small>line 77</small><div class="doc"><p>The integrated finite affine objective is jointly continuous in all sites and intercepts.</p></div><pre>theorem continuous_uniform_integral_potential {d : ℕ} {K : Set (E d)}
+    (hK : IsCompact K) (hne : (interior K).Nonempty) :
+    Continuous (fun p : (ι → E d) × (ι → ℝ) =&gt;
+      ∫ x, potential p.1 p.2 x ∂uniformMeasure K) := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L102><b>theorem</b> <code>OAI.Problem358.MaxPotential.continuousAt_uniform_intercept_selection</code> <small>line 102</small><div class="doc"><p>Any normalized minimizing intercept selection depends continuously on the sites
+at every injective configuration. This needs neither moving-cell derivatives nor IFT.</p></div><pre>theorem continuousAt_uniform_intercept_selection {d : ℕ} {K : Set (E d)}
+    (hK : IsCompact K) (hconv : Convex ℝ K) (hne : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (c : (ι → E d) → ι → ℝ)
+    (hc0 : ∀ y, ∑ i, m i * c y i = 0)
+    (hcmin : ∀ y (a : ι → ℝ), (∑ i, m i * a i) = 0 →
+      (∫ x, potential y (c y) x ∂uniformMeasure K) ≤ ∫ x, potential y a x ∂uniformMeasure K)
+    (y : ι → E d) (hy : Function.Injective y) : ContinuousAt c y := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L134><b>theorem</b> <code>OAI.Problem358.MaxPotential.exists_continuous_uniform_intercept_selection</code> <small>line 134</small><div class="doc"><p>A globally defined normalized minimizer selection exists, and is continuous
+on the open set of pairwise distinct sites.</p></div><pre>theorem exists_continuous_uniform_intercept_selection {d : ℕ} {K : Set (E d)}
+    (hK : IsCompact K) (hconv : Convex ℝ K) (hne : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1) :
+    ∃ c : (ι → E d) → ι → ℝ,
+      (∀ y, ∑ i, m i * c y i = 0) ∧
+      (∀ y (a : ι → ℝ), (∑ i, m i * a i) = 0 →
+        (∫ x, potential y (c y) x ∂uniformMeasure K) ≤ ∫ x, potential y a x ∂uniformMeasure K) ∧
+      ContinuousOn c {y | Function.Injective y} := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a></p></li><li id=L172><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.isOpen_injective_sites</code> <small>line 172</small><div class="doc"><p>Distinct finite site configurations form an open subset of the ambient coordinate space.</p></div><pre>theorem isOpen_injective_sites : IsOpen {y : ι → E d | Function.Injective y} := by
+…</pre></li><li id=L196><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.intercepts_minimize</code> <small>line 196</small><div class="doc"><p>The actual prescribed intercepts minimize the integrated affine potential.</p></div><pre>theorem intercepts_minimize {K : Set (E d)}
+    (hK : IsCompact K) (hconv : Convex ℝ K) (hne : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (y : ι → E d) (hy : Function.Injective y) (a : ι → ℝ)
+    (ha : ∑ i, m i * a i = 0) :
+    (∫ x, MaxPotential.potential y (intercepts hK hconv hne m hm hsum y) x
+      ∂uniformMeasure K) ≤ ∫ x, MaxPotential.potential y a x ∂uniformMeasure K := by
+…</pre><p class="refs">Mentions: <a href="Potential.lean.html#L15">OAI.Problem358.MaxPotential.potential</a>, <a href="FixedMass.lean.html#L78">OAI.Problem358.FixedMassIntercepts.intercepts</a></p></li><li id=L220><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.continuousAt_intercepts_coe</code> <small>line 220</small><div class="doc"><p>Canonical closed-cell intercepts are continuous at every distinct-site configuration.
+This compactness argument is independent of the moving-boundary C1 theorem.</p></div><pre>theorem continuousAt_intercepts_coe {K : Set (E d)}
+    (hK : IsCompact K) (hconv : Convex ℝ K) (hne : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (y : ι → E d) (hy : Function.Injective y) :
+    ContinuousAt (fun z =&gt; (intercepts hK hconv hne m hm hsum z : ι → ℝ)) y := by
+…</pre><p class="refs">Mentions: <a href="FixedMass.lean.html#L78">OAI.Problem358.FixedMassIntercepts.intercepts</a></p></li><li id=L241><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.intercepts_eq_zero_of_not_injective</code> <small>line 241</small><div class="doc"><p>On repeated-site configurations the chosen extension is exactly zero.</p></div><pre>theorem intercepts_eq_zero_of_not_injective {K : Set (E d)}
+    (hK : IsCompact K) (hconv : Convex ℝ K) (hne : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (y : ι → E d) (hy : ¬Function.Injective y) :
+    intercepts hK hconv hne m hm hsum y = 0 := by
+…</pre><p class="refs">Mentions: <a href="FixedMass.lean.html#L78">OAI.Problem358.FixedMassIntercepts.intercepts</a></p></li><li id=L250><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.measurable_intercepts_coe</code> <small>line 250</small><div class="doc"><p>The actual normalized intercept choice is globally Borel measurable, including
+at repeated-site configurations, where its value was explicitly set to zero.</p></div><pre>theorem measurable_intercepts_coe {K : Set (E d)}
+    (hK : IsCompact K) (hconv : Convex ℝ K) (hne : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1) :
+    Measurable (fun y =&gt; (intercepts hK hconv hne m hm hsum y : ι → ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="FixedMass.lean.html#L78">OAI.Problem358.FixedMassIntercepts.intercepts</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

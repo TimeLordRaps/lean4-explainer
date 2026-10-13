@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/LowSpaceSubsetSum/Search/BudgetedJoinOne.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/LowSpaceSubsetSum/Search/BudgetedJoinOne.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">LowSpaceSubsetSum</a> / <a href="index.html">Search</a> / <span>BudgetedJoinOne.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">LowSpaceSubsetSum</a>/<a href="index.html">Search</a>/<span>BudgetedJoinOne.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/LowSpaceSubsetSum/Search/BudgetedJoinOne.lean#L1">source</a></p><div class="doc"><h3>Prepaid buffered replay and suffix restoration</h3><p>The fixed overhead and snapshot allowance are reserved before their operations.
+The suffix receives only the allowance left by the completed buffer replay.
+No branch tests the cost of an operation after executing it.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute</code> <small>line 19</small></li><li id=L45><b>theorem</b> <code>OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute_value</code> <small>line 45</small></li><li id=L99><b>theorem</b> <code>OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute_work</code> <small>line 99</small><div class="doc"><p>Every outcome, including either failed guard, stays within the allowance
+plus its final failed comparison.</p></div><pre>theorem execute_work (read : σ → Option (α × σ) × ℕ) (key : α → ℤ × ℕ) (K : ℤ)
+    (report : α → τ → (τ × Bool) × ℕ) (clone : σ → σ × ℕ)
+    (R L C charge copyCharge : ℕ) (hr : ∀ s, (read s).2 ≤ R)
+    (hk : ∀ x, (key x).2 ≤ L) (hc : ∀ x a, (report x a).2 ≤ C)
+    (hcharge : max R 4 + L + C + 8 ≤ charge) (hcopy : ∀ s, (clone s).2 ≤ copyCharge)
+    (buffer : Array α) (saved : σ) (long : Bool) (fuel : ℕ) (a : τ) (budget : ℕ) :
+    (execute charge copyCharge read key K report clone buffer saved long fuel a budget).2 ≤
+      budget + 1 := by
+…</pre><p class="refs">Mentions: <a href="BudgetedJoinOne.lean.html#L19">OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute</a></p></li><li id=L144><b>theorem</b> <code>OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute_spent</code> <small>line 144</small><div class="doc"><p>Successful nested calls leave the claimed allowance unspent.</p></div><pre>theorem execute_spent (read : σ → Option (α × σ) × ℕ) (key : α → ℤ × ℕ) (K : ℤ)
+    (report : α → τ → (τ × Bool) × ℕ) (clone : σ → σ × ℕ)
+    (R L C charge copyCharge : ℕ) (hr : ∀ s, (read s).2 ≤ R)
+    (hk : ∀ x, (key x).2 ≤ L) (hc : ∀ x a, (report x a).2 ≤ C)
+    (hcharge : max R 4 + L + C + 8 ≤ charge) (hcopy : ∀ s, (clone s).2 ≤ copyCharge)
+    (buffer : Array α) (saved : σ) (long : Bool) (fuel : ℕ) (a : τ) (budget : ℕ)
+    (out : TieReplay.Result σ τ) (remaining : ℕ)
+    (h : (execute charge copyCharge read key K report clone buffer saved long fuel a budget).1 =
+      some (out, remaining)) :
+    (execute charge copyCharge read key K report clone buffer saved long fuel a budget).2 ≤
+      budget - remaining := by
+…</pre><p class="refs">Mentions: <a href="../Streams/TieReplay.lean.html#L21">OAI.LowSpaceSubsetSum.TieReplay.Result</a>, <a href="BudgetedJoinOne.lean.html#L19">OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute</a></p></li><li id=L209><b>theorem</b> <code>OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute_complete</code> <small>line 209</small><div class="doc"><p>Completion is governed by performed queries and actual restores, not
+by multiplying the two advertised stream fuel bounds.</p></div><pre>theorem execute_complete (charge copyCharge : ℕ) (read : σ → Option (α × σ) × ℕ)
+    (key : α → ℤ × ℕ) (K : ℤ) (report : α → τ → (τ × Bool) × ℕ)
+    (clone : σ → σ × ℕ) (buffer : Array α) (saved : σ) (long : Bool)
+    (fuel : ℕ) (a : τ) (budget : ℕ)
+    (hbudget : charge * ((CountedJoinOne.run read key K report clone buffer saved long fuel a).1.queries + 2) +
+      (if long then copyCharge else 0) + 6 ≤ budget) :
+    ∃ remaining, (execute charge copyCharge read key K report clone buffer saved long fuel a budget).1 =
+      some ((CountedJoinOne.run read key K report clone buffer saved long fuel a).1, remaining) := by
+…</pre><p class="refs">Mentions: <a href="../Streams/CountedJoinOne.lean.html#L18">OAI.LowSpaceSubsetSum.CountedJoinOne.run</a>, <a href="BudgetedJoinOne.lean.html#L19">OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute</a></p></li><li id=L272><b>theorem</b> <code>OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute_remaining</code> <small>line 272</small><div class="doc"><p>At most one charge per query, two terminal charges, and one snapshot
+allowance are discarded by a completed inner replay.</p></div><pre>theorem execute_remaining (charge copyCharge : ℕ) (read : σ → Option (α × σ) × ℕ)
+    (key : α → ℤ × ℕ) (K : ℤ) (report : α → τ → (τ × Bool) × ℕ)
+    (clone : σ → σ × ℕ) (buffer : Array α) (saved : σ) (long : Bool)
+    (fuel : ℕ) (a : τ) (budget : ℕ) (out : TieReplay.Result σ τ) (remaining : ℕ)
+    (h : (execute charge copyCharge read key K report clone buffer saved long fuel a budget).1 =
+      some (out, remaining)) :
+    budget ≤ remaining + charge * (out.queries + 2) + (if long then copyCharge else 0) + 6 := by
+…</pre><p class="refs">Mentions: <a href="../Streams/TieReplay.lean.html#L21">OAI.LowSpaceSubsetSum.TieReplay.Result</a>, <a href="BudgetedJoinOne.lean.html#L19">OAI.LowSpaceSubsetSum.BudgetedJoinOne.execute</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

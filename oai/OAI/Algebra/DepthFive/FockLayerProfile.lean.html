@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/FockLayerProfile.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/FockLayerProfile.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>FockLayerProfile.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>FockLayerProfile.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/FockLayerProfile.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.Problem335.FockLayerProfile.currySigned</code> <small>line 16</small><div class="doc"><p>Read a signed exponent by its layer and matrix-entry coordinates.</p></div><pre>def currySigned : ((Fin n × ι × ι) →₀ ℤ) →+ (Fin n → ι × ι → ℤ) where
+…</pre></li><li id=L21><b>lemma</b> <code>OAI.Problem335.FockLayerProfile.currySigned_injective</code> <small>line 21</small></li><li id=L26><b>lemma</b> <code>OAI.Problem335.FockLayerProfile.currySigned_signedOccupation</code> <small>line 26</small></li><li id=L31><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.pathAmplitude_eq_layered</code> <small>line 31</small><div class="doc"><p>The list-path coefficient is exactly the coefficient of its layer profile.</p></div><pre>theorem pathAmplitude_eq_layered (side : Fin n → Bool)
+    (p : List (Fin n × ι × ι)) (hp : p.map Prod.fst = List.finRange n)
+    (d : (Fin n × ι × ι) →₀ ℕ) :
+    (p.map (occupationAmplitude (fun e =&gt; side e.1) d)).prod =
+      LayeredFourPath.amplitude side (fun t x =&gt; d (t, x)) (edgeProfile p hp) := by
+…</pre><p class="refs">Mentions: <a href="FockPaths.lean.html#L22">OAI.Problem335.occupationAmplitude</a>, <a href="LayeredFourPath.lean.html#L21">OAI.Problem335.LayeredFourPath.amplitude</a>, <a href="PathInjectivity.lean.html#L171">OAI.Problem335.edgeProfile</a></p></li><li id=L40><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.occupationShift_eq_layered</code> <small>line 40</small><div class="doc"><p>Signed list shifts and signed layer-profile shifts have identical coordinates.</p></div><pre>theorem occupationShift_eq_layered [DecidableEq ι] (side : Fin n → Bool)
+    (p : List (Fin n × ι × ι)) (hp : p.map Prod.fst = List.finRange n) :
+    currySigned (occupationShift (fun e =&gt; side e.1) p) =
+      LayeredFourPath.signedShift side (edgeProfile p hp) := by
+…</pre><p class="refs">Mentions: <a href="FockLayerProfile.lean.html#L16">OAI.Problem335.FockLayerProfile.currySigned</a>, <a href="FockPaths.lean.html#L130">OAI.Problem335.occupationShift</a>, <a href="LayeredFourPath.lean.html#L16">OAI.Problem335.LayeredFourPath.signedShift</a>, <a href="PathInjectivity.lean.html#L171">OAI.Problem335.edgeProfile</a></p></li><li id=L54><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.zeroExtend_eq_layered</code> <small>line 54</small><div class="doc"><p>Changing from finitely supported signed occupations to layer coordinates
+preserves zero extension, including arguments outside the finite source.</p></div><pre>theorem zeroExtend_eq_layered {I : Type*}
+    (d : I → (Fin n × ι × ι) →₀ ℕ) (hd : Function.Injective d)
+    (w : I → ℝ) (x : (Fin n × ι × ι) →₀ ℤ) :
+    Function.extend (fun i =&gt; Problem335.signedOccupation (d i)) w (fun _ =&gt; 0) x =
+      Function.extend (fun i =&gt; LayeredFourPath.signedOccupation (fun t y =&gt; d i (t, y)))
+        w (fun _ =&gt; 0) (currySigned x) := by
+…</pre><p class="refs">Mentions: <a href="FockPaths.lean.html#L109">OAI.Problem335.signedOccupation</a>, <a href="LayeredFourPath.lean.html#L12">OAI.Problem335.LayeredFourPath.signedOccupation</a>, <a href="FockLayerProfile.lean.html#L16">OAI.Problem335.FockLayerProfile.currySigned</a></p></li><li id=L75><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.zeroExtended_pathAmplitude_four_le_local_product</code> <small>line 75</small><div class="doc"><p>The exact list-path four-amplitude summand is bounded by the local table
+of its layer profiles. No closure assumption for the shifted source is needed.</p></div><pre>theorem zeroExtended_pathAmplitude_four_le_local_product
+    {I : Type*} [DecidableEq ι] (side : Fin n → Bool)
+    (d : I → (Fin n × ι × ι) →₀ ℕ) (hd : Function.Injective d) (i : I)
+    (p q r s : List (Fin n × ι × ι))
+    (hp : p.map Prod.fst = List.finRange n)
+    (hq : q.map Prod.fst = List.finRange n)
+    (hr : r.map Prod.fst = List.finRange n)
+    (hs : s.map Prod.fst = List.finRange n)
+    (hmatch : occupationShift (fun e =&gt; side e.1) p - occupationShift (fun e =&gt; side e.1) q =
+      occupationShift (fun e =&gt; side e.1) r - occupationShift (fun e =&gt; side e.1) s) :
+    (p.map (occupationAmplitude (fun e =&gt; side e.1) (d i))).prod *
+      Function.extend (fun k =&gt; Problem335.signedOccupation (d k))
+…</pre><p class="refs">Mentions: <a href="FockPaths.lean.html#L130">OAI.Problem335.occupationShift</a>, <a href="FockPaths.lean.html#L22">OAI.Problem335.occupationAmplitude</a>, <a href="FockPaths.lean.html#L109">OAI.Problem335.signedOccupation</a></p></li><li id=L114><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.edgeProfile_ofFn</code> <small>line 114</small><div class="doc"><p>Profile reconstruction simplifies on an explicitly layer-indexed edge list.</p></div><pre>@[simp] theorem edgeProfile_ofFn (f : Fin n → ι × ι)
+    (h : (List.ofFn (fun t =&gt; (t, f t))).map Prod.fst = List.finRange n) :
+    edgeProfile (List.ofFn (fun t =&gt; (t, f t))) h = f := by
+…</pre><p class="refs">Mentions: <a href="PathInjectivity.lean.html#L171">OAI.Problem335.edgeProfile</a></p></li><li id=L121><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.edgeProfile_immInternalPathEdges</code> <small>line 121</small><div class="doc"><p>Reindexing an IMM path by its internal vertices also reindexes its layer profile.</p></div><pre>@[simp] theorem edgeProfile_immInternalPathEdges (d : ℕ) (p : Fin d → Fin (d + 1))
+    (h : (immInternalPathEdges d p).map Prod.fst = List.finRange (d + 1)) :
+    edgeProfile (immInternalPathEdges d p) h =
+      fun t =&gt; (Fin.cons (α := fun _ =&gt; Fin (d + 1)) 0 p t,
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L120">OAI.Problem335.immInternalPathEdges</a>, <a href="PathInjectivity.lean.html#L171">OAI.Problem335.edgeProfile</a></p></li><li id=L129><b>def</b> <code>OAI.Problem335.FockLayerProfile.immProfile</code> <small>line 129</small><div class="doc"><p>The canonical layer profile of a list-indexed IMM path.</p></div><pre>def immProfile (n : ℕ) (hn : 0 &lt; n) (p : Fin (immPaths n hn).length) :
+    Fin n → Fin n × Fin n :=
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a></p></li><li id=L134><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.immPathAmplitude_eq_layered</code> <small>line 134</small></li><li id=L142><b>theorem</b> <code>OAI.Problem335.FockLayerProfile.imm_zeroExtended_amplitude_four_le_local_product</code> <small>line 142</small><div class="doc"><p>The actual IMM list-path summand, with the second source zero-extended,
+is bounded by its layerwise occupation table.</p></div><pre>theorem imm_zeroExtended_amplitude_four_le_local_product
+    {I : Type*} (n : ℕ) (hn : 0 &lt; n) (side : Fin n → Bool)
+    (d : I → (Fin n × Fin n × Fin n) →₀ ℕ) (hd : Function.Injective d) (i : I)
+    (p q r s : Fin (immPaths n hn).length)
+    (hmatch : occupationShift (fun e =&gt; side e.1) ((immPaths n hn).get p) -
+        occupationShift (fun e =&gt; side e.1) ((immPaths n hn).get q) =
+      occupationShift (fun e =&gt; side e.1) ((immPaths n hn).get r) -
+        occupationShift (fun e =&gt; side e.1) ((immPaths n hn).get s)) :
+    immPathAmplitude n hn (fun e =&gt; side e.1) (d i) p *
+      Function.extend (fun k =&gt; Problem335.signedOccupation (d k))
+        (fun k =&gt; immPathAmplitude n hn (fun e =&gt; side e.1) (d k) q) (fun _ =&gt; 0)
+        (Problem335.signedOccupation (d i) +
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="FockPaths.lean.html#L130">OAI.Problem335.occupationShift</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a>, <a href="FockPaths.lean.html#L109">OAI.Problem335.signedOccupation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

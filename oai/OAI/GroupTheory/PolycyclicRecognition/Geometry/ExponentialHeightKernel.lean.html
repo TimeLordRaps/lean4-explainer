@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/ExponentialHeightKernel.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/ExponentialHeightKernel.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>ExponentialHeightKernel.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>ExponentialHeightKernel.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/ExponentialHeightKernel.lean#L1">source</a></p><div class="doc"><h3>The group height kernel from exponential coordinates</h3><p>A representation strictly upper triangular on the canonical Lie kernel is
+unipotent on the group height kernel. Thus the already proved chain-packing
+theorem applies without a separate group-kernel hypothesis.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>theorem</b> <code>OAI.PolycyclicRecognition.integrated_height_surjective</code> <small>line 31</small></li><li id=L41><b>theorem</b> <code>OAI.PolycyclicRecognition.integrated_height_isQuotientMap</code> <small>line 41</small><div class="doc"><p>In global exponential coordinates the height map is a quotient map.
+This uses only the finite-dimensional open mapping theorem, so no separate
+openness hypothesis on the integrated homomorphism is needed.</p></div><pre>theorem integrated_height_isQuotientMap
+    [TopologicalSpace L] [IsTopologicalAddGroup L] [ContinuousSMul ℝ L]
+    [T2Space L] [FiniteDimensional ℝ L] [TopologicalSpace G]
+    (e : L ≃ₜ G) (he : ∀ x, Exp x = e x) :
+    Topology.IsQuotientMap (fun g =&gt; (π g).toAdd) := by
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.PolycyclicRecognition.unipotent_height_kernel_of_exponential_representation</code> <small>line 60</small></li><li id=L78><b>theorem</b> <code>OAI.PolycyclicRecognition.polynomialBoundedChainPacking_of_exponential_representation</code> <small>line 78</small><div class="doc"><p>Polynomial chain packing for the integrated canonical height follows
+from a compatible triangular representation and its Lie-kernel strictness.</p></div><pre>theorem polynomialBoundedChainPacking_of_exponential_representation
+    [MetricSpace G] [IsIsometricSMul G G] [ProperSpace G] [DecidableEq G]
+    (hExp : Function.Surjective Exp) {m : ℕ} [NeZero m]
+    (ρ : G →* positiveTriangular m) (j : L →ₗ[ℝ] Matrix (Fin m) (Fin m) ℝ)
+    (hρExp : ∀ x, matrix (ρ (Exp x)) = NormedSpace.exp (j x))
+    (hstrict : ∀ x ∈ T.kernelIdeal, StrictUpper (j x))
+    (hquot : Topology.IsQuotientMap (fun g =&gt; (π g).toAdd))
+    (hρ : Topology.IsInducing (fun g =&gt; matrix (ρ g))) :
+    PolynomialBoundedChainPacking (fun g =&gt; (π g).toAdd) := by
+…</pre><p class="refs">Mentions: <a href="TriangularMatrixHeight.lean.html#L32">OAI.PolycyclicRecognition.positiveTriangular</a>, <a href="../Algebra/UnipotentProducts.lean.html#L19">OAI.PolycyclicRecognition.StrictUpper</a>, <a href="../Analysis/BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li><li id=L94><b>theorem</b> <code>OAI.PolycyclicRecognition.polynomialBoundedChainPacking_of_exponential_chart</code> <small>line 94</small><div class="doc"><p>The exponential-coordinate version of the packing bridge has no assumed
+topological quotient property and no assumed group-kernel unipotence.</p></div><pre>theorem polynomialBoundedChainPacking_of_exponential_chart
+    [TopologicalSpace L] [IsTopologicalAddGroup L] [ContinuousSMul ℝ L]
+    [T2Space L] [FiniteDimensional ℝ L]
+    [MetricSpace G] [IsIsometricSMul G G] [ProperSpace G] [DecidableEq G]
+    (e : L ≃ₜ G) (he : ∀ x, Exp x = e x) {m : ℕ} [NeZero m]
+    (ρ : G →* positiveTriangular m) (j : L →ₗ[ℝ] Matrix (Fin m) (Fin m) ℝ)
+    (hρExp : ∀ x, matrix (ρ (Exp x)) = NormedSpace.exp (j x))
+    (hstrict : ∀ x ∈ T.kernelIdeal, StrictUpper (j x))
+    (hρ : Topology.IsInducing (fun g =&gt; matrix (ρ g))) :
+    PolynomialBoundedChainPacking (fun g =&gt; (π g).toAdd) := by
+…</pre><p class="refs">Mentions: <a href="TriangularMatrixHeight.lean.html#L32">OAI.PolycyclicRecognition.positiveTriangular</a>, <a href="../Algebra/UnipotentProducts.lean.html#L19">OAI.PolycyclicRecognition.StrictUpper</a>, <a href="../Analysis/BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

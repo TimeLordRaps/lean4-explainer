@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Geometry/RegularRootInvariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Geometry/RegularRootInvariance.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Geometry</a> / <span>RegularRootInvariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Geometry</a>/<span>RegularRootInvariance.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Geometry/RegularRootInvariance.lean#L1">source</a></p><div class="doc"><h3>Root invariance from the finite regular entropy tests</h3><p>The prime-degree application needs balance and one positive coefficient.
+The symmetry argument below uses only the explicit regular test weights,
+not an entropy formula at arbitrary or singular weights.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>lemma</b> <code>OAI.DukePrimeDegree.canonical_atomless_of_pos</code> <small>line 26</small></li><li id=L35><b>lemma</b> <code>OAI.DukePrimeDegree.canonical_two_step</code> <small>line 35</small></li><li id=L53><b>theorem</b> <code>OAI.DukePrimeDegree.canonical_root_invariant_of_balance</code> <small>line 53</small><div class="doc"><p>Actual root invariance follows from coefficient balance, using the
+proved commutator and isolated-root shearing alternatives.</p></div><pre>theorem canonical_root_invariant_of_balance (hd : 2 &lt; d+1)
+    (hbalance : ∀ i, ∑ j, canonicalRootCoefficient d μ i j =
+      ∑ j, canonicalRootCoefficient d μ j i)
+    {i j : Fin (d+1)} (hij : i ≠ j)
+    (hpos : 0 &lt; canonicalRootCoefficient d μ i j) :
+    ∀ t : ℝ, μ.map (fun x =&gt; rightAction x
+      (Matrix.SpecialLinearGroup.transvection hij t)) = μ := by
+…</pre><p class="refs">Mentions: <a href="CanonicalRootBasic.lean.html#L20">OAI.DukePrimeDegree.canonicalRootCoefficient</a></p></li><li id=L102><b>theorem</b> <code>OAI.DukePrimeDegree.canonical_root_invariant_of_regular_tests</code> <small>line 102</small><div class="doc"><p>Only the finite family of regular entropy identities is needed to
+turn any positive actual coefficient into ambient root invariance.</p></div><pre>theorem canonical_root_invariant_of_regular_tests (hd : 2 &lt; d+1)
+    (htests : ∀ a : Option (Fin (d+1)),
+      measureEntropy μ (fun x =&gt; rightAction x
+        (diagonalOneParameter (regularEntropyTest d a) (regularEntropyTest_sum d a) 1)) =
+          ENNReal.ofReal (rootEntropyForm (canonicalRootCoefficient d μ) (regularEntropyTest d a)) ∧
+      measureEntropy μ (fun x =&gt; rightAction x
+        (diagonalOneParameter (regularEntropyTest d a) (regularEntropyTest_sum d a) (-1))) =
+          ENNReal.ofReal (rootEntropyForm (canonicalRootCoefficient d μ)
+            (fun i =&gt; -regularEntropyTest d a i)))
+    {i j : Fin (d+1)} (hij : i ≠ j) (hpos : 0 &lt; canonicalRootCoefficient d μ i j) :
+    ∀ t : ℝ, μ.map (fun x =&gt; rightAction x
+      (Matrix.SpecialLinearGroup.transvection hij t)) = μ := by
+…</pre><p class="refs">Mentions: <a href="../Entropy/RegularEntropyTests.lean.html#L23">OAI.DukePrimeDegree.regularEntropyTest</a>, <a href="../Entropy/RegularEntropyTests.lean.html#L32">OAI.DukePrimeDegree.regularEntropyTest_sum</a>, <a href="../Entropy/EntropyBalance.lean.html#L22">OAI.DukePrimeDegree.rootEntropyForm</a>, <a href="CanonicalRootBasic.lean.html#L20">OAI.DukePrimeDegree.canonicalRootCoefficient</a></p></li><li id=L122><b>theorem</b> <code>OAI.DukePrimeDegree.exists_invariant_root_of_regular_tests</code> <small>line 122</small><div class="doc"><p>Positive entropy for the original regular diagonal map supplies an
+actual invariant root subgroup once the finite regular test identities
+have been identified. No formula at singular weights is used.</p></div><pre>theorem exists_invariant_root_of_regular_tests (hd : 2 &lt; d+1)
+    (hpos : 0 &lt; measureEntropy μ (fun x =&gt; rightAction x
+      (diagonalOneParameter (regularDiagonalWeights d) (regularDiagonalWeights_sum d) 1)))
+    (htests : ∀ a : Option (Fin (d+1)),
+      measureEntropy μ (fun x =&gt; rightAction x
+        (diagonalOneParameter (regularEntropyTest d a) (regularEntropyTest_sum d a) 1)) =
+          ENNReal.ofReal (rootEntropyForm (canonicalRootCoefficient d μ) (regularEntropyTest d a)) ∧
+      measureEntropy μ (fun x =&gt; rightAction x
+        (diagonalOneParameter (regularEntropyTest d a) (regularEntropyTest_sum d a) (-1))) =
+          ENNReal.ofReal (rootEntropyForm (canonicalRootCoefficient d μ)
+            (fun i =&gt; -regularEntropyTest d a i))) :
+    ∃ (i j : Fin (d+1)) (hij : i ≠ j), ∀ t : ℝ, μ.map (fun x =&gt; rightAction x
+…</pre><p class="refs">Mentions: <a href="../Entropy/RegularEntropyTests.lean.html#L23">OAI.DukePrimeDegree.regularEntropyTest</a>, <a href="../Entropy/RegularEntropyTests.lean.html#L32">OAI.DukePrimeDegree.regularEntropyTest_sum</a>, <a href="../Entropy/EntropyBalance.lean.html#L22">OAI.DukePrimeDegree.rootEntropyForm</a>, <a href="CanonicalRootBasic.lean.html#L20">OAI.DukePrimeDegree.canonicalRootCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

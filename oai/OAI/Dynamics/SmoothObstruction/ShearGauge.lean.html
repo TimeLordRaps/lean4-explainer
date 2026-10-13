@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/ShearGauge.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/ShearGauge.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>ShearGauge.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>ShearGauge.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/ShearGauge.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.SmoothObstruction.FiniteShears.forward</code> <small>line 16</small><div class="doc"><p>The finite forward Green solution; no division by a spectral gap.</p></div><pre>noncomputable def forward (q : ℝ) (f : ℕ → ℝ) (t : ℕ) : ℝ :=
+…</pre></li><li id=L19><b>lemma</b> <code>OAI.SmoothObstruction.FiniteShears.forward_zero</code> <small>line 19</small></li><li id=L22><b>lemma</b> <code>OAI.SmoothObstruction.FiniteShears.forward_succ</code> <small>line 22</small></li><li id=L33><b>lemma</b> <code>OAI.SmoothObstruction.FiniteShears.forward_bound</code> <small>line 33</small></li><li id=L47><b>def</b> <code>OAI.SmoothObstruction.FiniteShears.backward</code> <small>line 47</small><div class="doc"><p>A terminal-value Green solution with coefficients at most one when q≥1.</p></div><pre>noncomputable def backward (N : ℕ) (q : ℝ) (f : ℕ → ℝ) (t : ℕ) : ℝ :=
+…</pre></li><li id=L50><b>lemma</b> <code>OAI.SmoothObstruction.FiniteShears.backward_terminal</code> <small>line 50</small></li><li id=L53><b>lemma</b> <code>OAI.SmoothObstruction.FiniteShears.backward_succ</code> <small>line 53</small></li><li id=L63><b>lemma</b> <code>OAI.SmoothObstruction.FiniteShears.backward_bound</code> <small>line 63</small></li><li id=L85><b>theorem</b> <code>OAI.SmoothObstruction.FiniteShears.exists_bounded_recurrence</code> <small>line 85</small><div class="doc"><p>The scalar input needed by every elementary shear in the finite
+triangular cocycle reduction. This includes q=1; it never divides by q−1.</p></div><pre>theorem exists_bounded_recurrence (N : ℕ) {q M : ℝ} (hq : 0 &lt; q) (hM : 0 ≤ M)
+    (f : ℕ → ℝ) (hf : ∀ t &lt; N, |f t| ≤ M) :
+    ∃ u : ℕ → ℝ, (∀ t &lt; N, u (t + 1) = q * u t + f t) ∧
+      (∀ t ≤ N, |u t| ≤ N * M) := by
+…</pre></li><li id=L105><b>def</b> <code>OAI.SmoothObstruction.TriangularGauge.rowReplace</code> <small>line 105</small><div class="doc"><p>Replace one row, retaining the other rows.</p></div><pre>def rowReplace (U : Matrix (Fin d) (Fin d) ℝ) (i : Fin d) (v : Fin d → ℝ) :
+    Matrix (Fin d) (Fin d) ℝ := fun k j =&gt; if k = i then v j else U k j</pre></li><li id=L108><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.mul_rowReplace_same</code> <small>line 108</small></li><li id=L123><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.mul_rowReplace_later</code> <small>line 123</small></li><li id=L134><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.forcing_zero</code> <small>line 134</small></li><li id=L143><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.forcing_bound</code> <small>line 143</small></li><li id=L163><b>theorem</b> <code>OAI.SmoothObstruction.TriangularGauge.exists_diagonal_gauge</code> <small>line 163</small><div class="doc"><p>A full finite-time unitriangular diagonalizing gauge. In contrast to
+infinite-time reducibility, this assertion needs no separation of rates.
+All losses are fixed-degree polynomials in the length and entry bound.</p></div><pre>theorem exists_diagonal_gauge (N : ℕ) (A : ℕ → Matrix (Fin d) (Fin d) ℝ)
+    (a : Fin d → ℝ) {H : ℝ} (hH : 1 ≤ H)
+    (ha : ∀ j, 0 &lt; a j) (hai : ∀ j, |(a j)⁻¹| ≤ H)
+    (htri : ∀ t &lt; N, (A t).IsUpperTriangular)
+    (hdiag : ∀ t &lt; N, ∀ j, A t j j = a j)
+    (hbound : ∀ t &lt; N, ∀ i j, |A t i j| ≤ H) :
+    ∃ U : ℕ → Matrix (Fin d) (Fin d) ℝ,
+      (∀ t, (U t).IsUpperTriangular ∧ ∀ j, U t j j = 1) ∧
+      (∀ t ≤ N, ∀ i j, |U t i j| ≤ (1 + N * d * H ^ 2) ^ d) ∧
+      (∀ t &lt; N, A t * U t = U (t + 1) * Matrix.diagonal a) := by
+…</pre></li><li id=L292><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.abs_det_le_entry_bound</code> <small>line 292</small><div class="doc"><p>A deliberately coarse finite-dimensional determinant estimate.</p></div><pre>lemma abs_det_le_entry_bound (A : Matrix (Fin d) (Fin d) ℝ) {B : ℝ}
+    (hA : ∀ i j, |A i j| ≤ B) :
+    |A.det| ≤ (Nat.factorial d : ℝ) * B ^ d := by
+…</pre></li><li id=L313><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.unitriangular_det</code> <small>line 313</small></li><li id=L318><b>lemma</b> <code>OAI.SmoothObstruction.TriangularGauge.unitriangular_inverse_bound</code> <small>line 318</small></li><li id=L336><b>theorem</b> <code>OAI.SmoothObstruction.TriangularGauge.exists_diagonal_gauge_invertible</code> <small>line 336</small><div class="doc"><p>The gauge can be chosen with a polynomially bounded genuine inverse.</p></div><pre>theorem exists_diagonal_gauge_invertible (N : ℕ)
+    (A : ℕ → Matrix (Fin d) (Fin d) ℝ) (a : Fin d → ℝ)
+    {H : ℝ} (hH : 1 ≤ H) (ha : ∀ j, 0 &lt; a j)
+    (hai : ∀ j, |(a j)⁻¹| ≤ H)
+    (htri : ∀ t &lt; N, (A t).IsUpperTriangular)
+    (hdiag : ∀ t &lt; N, ∀ j, A t j j = a j)
+    (hbound : ∀ t &lt; N, ∀ i j, |A t i j| ≤ H) :
+    ∃ U : ℕ → Matrix (Fin d) (Fin d) ℝ,
+      (∀ t, U t * (U t)⁻¹ = 1 ∧ (U t)⁻¹ * U t = 1) ∧
+      (∀ t ≤ N, ∀ i j, |U t i j| ≤ (1 + N * d * H ^ 2) ^ d) ∧
+      (∀ t ≤ N, ∀ i j, |(U t)⁻¹ i j| ≤
+        (Nat.factorial d : ℝ) * ((1 + N * d * H ^ 2) ^ d) ^ d) ∧
+…</pre></li><li id=L368><b>def</b> <code>OAI.SmoothObstruction.NormalizedGauge.error</code> <small>line 368</small></li><li id=L372><b>lemma</b> <code>OAI.SmoothObstruction.NormalizedGauge.error_succ</code> <small>line 372</small></li><li id=L378><b>def</b> <code>OAI.SmoothObstruction.NormalizedGauge.normalized</code> <small>line 378</small></li><li id=L382><b>lemma</b> <code>OAI.SmoothObstruction.NormalizedGauge.normalized_tri</code> <small>line 382</small></li><li id=L388><b>lemma</b> <code>OAI.SmoothObstruction.NormalizedGauge.normalized_diag</code> <small>line 388</small></li><li id=L397><b>lemma</b> <code>OAI.SmoothObstruction.NormalizedGauge.normalized_bound</code> <small>line 397</small></li><li id=L416><b>theorem</b> <code>OAI.SmoothObstruction.NormalizedGauge.exists_normalized_gauge</code> <small>line 416</small><div class="doc"><p>Diagonal chord normalization followed by a finite bounded shear gauge.</p></div><pre>theorem exists_normalized_gauge (N : ℕ) (A : ℕ → Matrix (Fin d) (Fin d) ℝ)
+    (lam : Fin d → ℝ) {R E : ℝ} (hR : 0 ≤ R) (hE : 0 ≤ E)
+    (htri : ∀ t &lt; N, (A t).IsUpperTriangular)
+    (hpos : ∀ t &lt; N, ∀ j, 0 &lt; A t j j)
+    (hA : ∀ t &lt; N, ∀ i j, |A t i j| ≤ Real.exp R)
+    (hlam : ∀ j, |lam j| ≤ R)
+    (he : ∀ t ≤ N, ∀ j, |error A lam t j| ≤ E) :
+    ∃ C V : ℕ → Matrix (Fin d) (Fin d) ℝ,
+      (∀ t, C t * V t = 1 ∧ V t * C t = 1) ∧
+      (∀ t ≤ N, ∀ i j, |C t i j| ≤ Real.exp E *
+        (1 + N * d * (Real.exp (R + 2 * E)) ^ 2) ^ d) ∧
+      (∀ t ≤ N, ∀ i j, |V t i j| ≤ (Nat.factorial d : ℝ) *
+…</pre><p class="refs">Mentions: <a href="ShearGauge.lean.html#L368">OAI.SmoothObstruction.NormalizedGauge.error</a></p></li><li id=L489><b>lemma</b> <code>OAI.SmoothObstruction.NormalizedGauge.gauge_polynomial_le_exp</code> <small>line 489</small></li><li id=L523><b>theorem</b> <code>OAI.SmoothObstruction.NormalizedGauge.exists_exponential_gauge</code> <small>line 523</small><div class="doc"><p>Uniform exponential estimates with a constant depending only on d and R.
+This is the finite gauge estimate <code>eq:finite-gauge</code> before conversion of the
+entry norm to the Euclidean operator norm.</p></div><pre>theorem exists_exponential_gauge (d : ℕ) (R : ℝ) (hR : 0 ≤ R) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (N : ℕ) (E : ℝ) (A : ℕ → Matrix (Fin d) (Fin d) ℝ)
+      (lam : Fin d → ℝ), 1 ≤ E → Real.log (N + 1) ≤ E →
+      (∀ t &lt; N, (A t).IsUpperTriangular) →
+      (∀ t &lt; N, ∀ j, 0 &lt; A t j j) →
+      (∀ t &lt; N, ∀ i j, |A t i j| ≤ Real.exp R) →
+      (∀ j, |lam j| ≤ R) →
+      (∀ t ≤ N, ∀ j, |error A lam t j| ≤ E) →
+      ∃ U V : ℕ → Matrix (Fin d) (Fin d) ℝ,
+        (∀ t, U t * V t = 1 ∧ V t * U t = 1) ∧
+        (∀ t ≤ N, ∀ i j, |U t i j| ≤ Real.exp (C * E)) ∧
+        (∀ t ≤ N, ∀ i j, |V t i j| ≤ Real.exp (C * E)) ∧
+…</pre><p class="refs">Mentions: <a href="ShearGauge.lean.html#L368">OAI.SmoothObstruction.NormalizedGauge.error</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

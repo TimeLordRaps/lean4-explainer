@@ -1,0 +1,1 @@
+window.l4shard("hu", [["Imo1970P6.hull_case",25,96],["Imo2013P2.exists_hull_edge",107,585],["Imo2017P3.hunterPos",116,78],["Usa2014P6.hundred_clog_le",284,257],["Usa2014P6.two_hundred_mul_succ_le_pow",284,248]]);

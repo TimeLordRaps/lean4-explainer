@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Geometry/SmallImageSemicircle.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Geometry/SmallImageSemicircle.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Geometry</a> / <span>SmallImageSemicircle.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Geometry</a>/<span>SmallImageSemicircle.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Geometry/SmallImageSemicircle.lean#L1">source</a></p><div class="doc"><p>Angular Sobolev estimates for the small-image semicircle lemma
+<code>es:good-semicircle</code>. In particular, the absolute continuity used below is
+proved for the actual clipped conformal logarithm.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>lemma</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.integral_abs_le_angular_energy</code> <small>line 17</small></li><li id=L33><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.angular_oscillation_bound</code> <small>line 33</small><div class="doc"><p>A section which is absolutely continuous on compact subintervals has
+oscillation controlled by its full angular derivative energy.</p></div><pre>theorem angular_oscillation_bound {f : ℝ → ℝ} {x y : ℝ}
+    (hx : x ∈ Ioo 0 Real.pi) (hy : y ∈ Ioo 0 Real.pi)
+    (hf : AbsolutelyContinuousOnInterval f x y)
+    (hderiv : MemLp (deriv f) 2 (volume.restrict (Ioo 0 Real.pi))) :
+    |f y - f x| ≤ Real.sqrt Real.pi *
+      Real.sqrt (∫ θ in Ioo 0 Real.pi, (deriv f θ) ^ 2) := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.anchored_angular_bound</code> <small>line 56</small></li><li id=L66><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.anchored_angular_bound_of_energy</code> <small>line 66</small><div class="doc"><p>The exact angular constant in the manuscript.</p></div><pre>theorem anchored_angular_bound_of_energy {f : ℝ → ℝ} {θ₀ H : ℝ}
+    (hH : 0 ≤ H) (hθ₀ : θ₀ ∈ Ioo 0 Real.pi) (hzero : f θ₀ = 0)
+    (hac : ∀ θ ∈ Ioo 0 Real.pi, AbsolutelyContinuousOnInterval f θ₀ θ)
+    (hderiv : MemLp (deriv f) 2 (volume.restrict (Ioo 0 Real.pi)))
+    (henergy : (∫ φ in Ioo 0 Real.pi, (deriv f φ) ^ 2) ≤ 2 * Real.pi * H) :
+    ∀ θ ∈ Ioo 0 Real.pi, f θ ≤ Real.pi * Real.sqrt (2 * H) := by
+…</pre></li><li id=L85><b>def</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.stripPoint</code> <small>line 85</small></li><li id=L87><b>lemma</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.stripPoint_mem</code> <small>line 87</small></li><li id=L95><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.conformal_section_absolutelyContinuous</code> <small>line 95</small><div class="doc"><p>Compact angular sections of the actual conformal logarithm are
+absolutely continuous. The omitted point removes the logarithmic singularity.</p></div><pre>theorem conformal_section_absolutelyContinuous
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    {a : ℂ} (ha : ∀ z, 0 &lt; z.im → F z ≠ a)
+    {r : ℝ} (hr : 0 &lt; r) (H v : ℝ) {x y : ℝ}
+    (hx : x ∈ Ioo 0 Real.pi) (hy : y ∈ Ioo 0 Real.pi) :
+    AbsolutelyContinuousOnInterval
+      (fun θ =&gt; conformalStripLog F a r H (stripPoint v θ)) x y := by
+…</pre><p class="refs">Mentions: <a href="../DyadicStrips.lean.html#L488">OAI.SLEExactGauge.conformalStripLog</a>, <a href="SmallImageSemicircle.lean.html#L85">OAI.SLEExactGauge.SmallImageSemicircle.stripPoint</a></p></li><li id=L121><b>lemma</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.angular_deriv_le_gradient</code> <small>line 121</small></li><li id=L135><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.exists_section_of_strip_energy</code> <small>line 135</small><div class="doc"><p>A unit logarithmic slab contains a section whose full angular energy
+is at most the total strip energy. Differentiability is required only almost
+everywhere, as supplied by the locally Lipschitz conformal logarithm.</p></div><pre>theorem exists_section_of_strip_energy
+    (u : ℂ → ℝ) (q : ℝ)
+    (hg : MemLp (gradient u) 2
+      (volume.restrict {z : ℂ | 0 &lt; z.im ∧ z.im &lt; Real.pi}))
+    (hd : ∀ᵐ z ∂volume, z ∈ {z : ℂ | 0 &lt; z.im ∧ z.im &lt; Real.pi} →
+      DifferentiableAt ℝ u z) :
+    ∃ v ∈ Ioo q (q + 1),
+      MemLp (deriv (fun θ =&gt; u (stripPoint v θ))) 2 (volume.restrict (Ioo 0 Real.pi)) ∧
+      (∫ θ in Ioo 0 Real.pi, (deriv (fun t =&gt; u (stripPoint v t)) θ) ^ 2) ≤
+        ∫ z in {z : ℂ | 0 &lt; z.im ∧ z.im &lt; Real.pi}, ‖gradient u z‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="SmallImageSemicircle.lean.html#L85">OAI.SLEExactGauge.SmallImageSemicircle.stripPoint</a></p></li><li id=L223><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.access_segment_section_anchor</code> <small>line 223</small><div class="doc"><p>The guide crosses every smaller semicircle, supplying the anchor required
+by the angular Sobolev estimate.</p></div><pre>theorem access_segment_section_anchor
+    {F : ℂ → ℂ} {a : ℂ} {r t₀ : ℝ} {β : ℝ → ℂ}
+    (ht₀ : 0 &lt; t₀) (hβ : ContinuousOn β (Icc 0 t₀)) (hβ₀ : β 0 = 0)
+    (hβH : ∀ t ∈ Ioc 0 t₀, 0 &lt; (β t).im)
+    (hsmall : ∀ t ∈ Ioc 0 t₀, ‖F (β t) - a‖ ≤ r)
+    {v : ℝ} (hv : v &lt; Real.log ‖β t₀‖) :
+    ∃ θ ∈ Ioo 0 Real.pi, ‖F (Complex.exp (stripPoint v θ)) - a‖ ≤ r := by
+…</pre><p class="refs">Mentions: <a href="SmallImageSemicircle.lean.html#L85">OAI.SLEExactGauge.SmallImageSemicircle.stripPoint</a></p></li><li id=L260><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.exists_small_image_semicircle_of_anchors</code> <small>line 260</small><div class="doc"><p>The exact semicircle estimate before writing the base radius as
+<code>r * exp (-A)</code>. The section anchor is a direct consequence of an access guide,
+as proved above.</p></div><pre>theorem exists_small_image_semicircle_of_anchors
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {r A q : ℝ}
+    (hr : 0 &lt; r) (hA : 2 * Real.pi ^ 2 &lt; A)
+    (hanchor : ∀ v ∈ Ioo q (q + 1),
+      ∃ θ ∈ Ioo 0 Real.pi, ‖F (Complex.exp (stripPoint v θ)) - a‖ ≤ r) :
+    ∃ B ∈ Ioo (Real.exp q) (Real.exp (q + 1)),
+      ∀ θ ∈ Ioo 0 Real.pi,
+        ‖F ((B : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)) - a‖ ≤
+          r * Real.exp (Real.pi * Real.sqrt (2 * A)) := by
+…</pre><p class="refs">Mentions: <a href="SmallImageSemicircle.lean.html#L85">OAI.SLEExactGauge.SmallImageSemicircle.stripPoint</a></p></li><li id=L318><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.exists_small_image_semicircle</code> <small>line 318</small><div class="doc"><p><code>es:good-semicircle</code>, with the initial short guide segment appearing
+explicitly. This proves the manuscript's bound in every unit logarithmic slab
+below the segment's terminal radius.</p></div><pre>theorem exists_small_image_semicircle
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {r A q t₀ : ℝ} {β : ℝ → ℂ}
+    (hr : 0 &lt; r) (hA : 2 * Real.pi ^ 2 &lt; A)
+    (ht₀ : 0 &lt; t₀) (hβ : ContinuousOn β (Icc 0 t₀)) (hβ₀ : β 0 = 0)
+    (hβH : ∀ t ∈ Ioc 0 t₀, 0 &lt; (β t).im)
+    (hsmall : ∀ t ∈ Ioc 0 t₀, ‖F (β t) - a‖ ≤ r * Real.exp (-A))
+    (hq : q + 1 ≤ Real.log ‖β t₀‖) :
+    ∃ B ∈ Ioo (Real.exp q) (Real.exp (q + 1)),
+      ∀ θ ∈ Ioo 0 Real.pi,
+        ‖F ((B : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)) - a‖ ≤
+…</pre></li><li id=L339><b>lemma</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.semicircle_exponential_lt_quarter</code> <small>line 339</small><div class="doc"><p>The numerical choice used after the semicircle and sector estimates.</p></div><pre>lemma semicircle_exponential_lt_quarter {A : ℝ} (hA : 64 ≤ A) :
+    Real.exp (-A + Real.pi * Real.sqrt (2 * A) + 6) &lt; 1 / 4 := by
+…</pre></li><li id=L362><b>theorem</b> <code>OAI.SLEExactGauge.SmallImageSemicircle.exists_arbitrarily_small_image_semicircle</code> <small>line 362</small><div class="doc"><p>The guide supplies small-image semicircles at arbitrarily small radii.
+The image estimate is uniform in the chosen radius.</p></div><pre>theorem exists_arbitrarily_small_image_semicircle
+    {F : ℂ → ℂ} (hF : DifferentiableOn ℂ F {z | 0 &lt; z.im})
+    (hi : InjOn F {z | 0 &lt; z.im}) {a : ℂ}
+    (ha : ∀ z, 0 &lt; z.im → F z ≠ a) {r A t₀ : ℝ} {β : ℝ → ℂ}
+    (hr : 0 &lt; r) (hA : 2 * Real.pi ^ 2 &lt; A)
+    (ht₀ : 0 &lt; t₀) (hβ : ContinuousOn β (Icc 0 t₀)) (hβ₀ : β 0 = 0)
+    (hβH : ∀ t ∈ Ioc 0 t₀, 0 &lt; (β t).im)
+    (hsmall : ∀ t ∈ Ioc 0 t₀, ‖F (β t) - a‖ ≤ r * Real.exp (-A)) :
+    ∀ δ : ℝ, 0 &lt; δ → ∃ B ∈ Ioo 0 δ, ∀ θ ∈ Ioo 0 Real.pi,
+      ‖F ((B : ℂ) * Complex.exp ((θ : ℂ) * Complex.I)) - a‖ ≤
+        r * Real.exp (-A + Real.pi * Real.sqrt (2 * A)) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

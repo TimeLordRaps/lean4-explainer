@@ -1,0 +1,1 @@
+window.l4shard("bc", [["OAI.ElasticityRegularity.bcf_derivative",4689,816],["OAI.ElasticityRegularity.bcf_joint_smooth",4689,948],["OAI.ElasticityRegularity.bcf_spatial_derivative",4689,890],["OAI.PlaneFiveColor.InvariantMean.periodBCF",13554,646],["OAI.PolycyclicRecognition.finite_associative_bch",14667,40]]);

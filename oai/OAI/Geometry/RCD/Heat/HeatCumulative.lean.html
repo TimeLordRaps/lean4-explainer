@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Heat/HeatCumulative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Heat/HeatCumulative.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Heat</a> / <span>HeatCumulative.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Heat</a>/<span>HeatCumulative.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Heat/HeatCumulative.lean#L1">source</a></p><div class="doc"><h3>Accumulating heat decrements in changing inverse metrics</h3><p>All forms act on one fixed real inner product space. The hypotheses are local
+heat envelopes, small one-step decrements, and slow metric growth. In particular,
+neither the weighted total nor the cumulative comparison is an input.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.RegularPointCoordinates.positive_form_add_le_two</code> <small>line 23</small><div class="doc"><p>The quadratic-form version of the two-term Young inequality.</p></div><pre>theorem positive_form_add_le_two {D : E →L[ℝ] E} (hD : D.IsPositive) (x y : E) :
+    ⟪x + y, D (x + y)⟫_ℝ ≤ 2 * ⟪x, D x⟫_ℝ + 2 * ⟪y, D y⟫_ℝ := by
+…</pre></li><li id=L31><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_vector_telescopes</code> <small>line 31</small><div class="doc"><p>Inverse vectors telescope over every finite interval.</p></div><pre>theorem inverse_vector_telescopes (Q : ℕ → E ≃L[ℝ] E) (xi : E)
+    {j i : ℕ} (hji : j ≤ i) :
+    (Q i).symm xi - (Q j).symm xi =
+      ∑ l ∈ Finset.Ico j i,
+        (((Q (l + 1)).symm : E →L[ℝ] E) - ((Q l).symm : E →L[ℝ] E)) xi := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_vector_interval_energy</code> <small>line 45</small><div class="doc"><p>Slow growth transports the energy of inverse increments to an earlier
+metric. The resulting lag factor is precisely the one used in the heat kernel
+convolution.</p></div><pre>theorem inverse_vector_interval_energy (Q : ℕ → E ≃L[ℝ] E)
+    (hQ : ∀ i, (Q i : E →L[ℝ] E).IsPositive)
+    (hdec : ∀ i, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)).IsPositive)
+    (hsmall : ∀ i v, ⟪v, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)) v⟫_ℝ ≤
+      (1 / 2 : ℝ) * ⟪v, Q i v⟫_ℝ)
+    {G g : ℝ} (hG : 0 ≤ G) (hg : 1 ≤ g)
+    (hgrowth : ∀ j l, j ≤ l → ∀ v, ⟪v, Q j v⟫_ℝ ≤ G * g ^ (l - j) * ⟪v, Q l v⟫_ℝ)
+    (xi : E) {j i : ℕ} (hji : j ≤ i) :
+    ⟪(Q i).symm xi - (Q j).symm xi,
+      Q j ((Q i).symm xi - (Q j).symm xi)⟫_ℝ ≤
+      G * (i - j : ℕ) * g ^ (i - j) *
+        ∑ l ∈ Finset.Ico j i,
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.RegularPointCoordinates.moving_form_convolution_le</code> <small>line 86</small><div class="doc"><p>Summing a moving-vector convolution introduces only the ordinary
+geometric constant and the second lag moment.</p></div><pre>theorem moving_form_convolution_le (Q N : ℕ → E →L[ℝ] E)
+    (hN : ∀ i, (N i).IsPositive) (a : ℕ → E) (b : ℕ → ℝ)
+    (hb : ∀ i, 0 ≤ b i) {epsilon beta G g : ℝ}
+    (hepsilon : 0 ≤ epsilon) (hbeta : 0 ≤ beta) (hbeta1 : beta &lt; 1)
+    (hG : 0 ≤ G) (hg : 0 ≤ g) (hbetag : beta * g &lt; 1)
+    (hsmall : ∀ i v, ⟪v, N i v⟫_ℝ ≤ epsilon * ⟪v, Q i v⟫_ℝ)
+    (hinterval : ∀ j i, j ≤ i →
+      ⟪a i - a j, Q j (a i - a j)⟫_ℝ ≤
+        G * (i - j : ℕ) * g ^ (i - j) * ∑ l ∈ Finset.Ico j i, b l)
+    (k : ℕ) :
+    (∑ i ∈ Finset.range k, ∑ j ∈ Finset.range (i + 1),
+      beta ^ (i - j) * ⟪a i, N j (a i)⟫_ℝ) ≤
+…</pre></li><li id=L146><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_background_sum_le</code> <small>line 146</small><div class="doc"><p>A geometric background contribution remains bounded after applying
+inverse metrics whose squared norms have slower exponential growth.</p></div><pre>theorem inverse_background_sum_le (a : ℕ → E) (xi : E)
+    {beta g K : ℝ} (hbeta : 0 ≤ beta) (hg : 0 ≤ g) (hK : 0 ≤ K)
+    (hbg : beta * g &lt; 1)
+    (ha : ∀ i, ‖a i‖ ^ 2 ≤ K * g ^ i * ‖xi‖ ^ 2) (k : ℕ) :
+    (∑ i ∈ Finset.range k, beta ^ i * ‖a i‖ ^ 2) ≤
+      K * (1 - beta * g)⁻¹ * ‖xi‖ ^ 2 := by
+…</pre></li><li id=L169><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_energy_telescopes</code> <small>line 169</small><div class="doc"><p>Exact scalar telescope of the inverse increments.</p></div><pre>theorem inverse_energy_telescopes (Q : ℕ → E ≃L[ℝ] E) (xi : E) (k : ℕ) :
+    (∑ i ∈ Finset.range k,
+      ⟪xi, (((Q (i + 1)).symm : E →L[ℝ] E) - ((Q i).symm : E →L[ℝ] E)) xi⟫_ℝ) =
+      ⟪xi, (Q k).symm xi⟫_ℝ - ⟪xi, (Q 0).symm xi⟫_ℝ := by
+…</pre></li><li id=L178><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_heat_envelope_sum_le</code> <small>line 178</small><div class="doc"><p>The heat envelope implies a weighted total estimate at the moving
+inverse vectors. This is proved before using either cumulative comparison.</p></div><pre>theorem inverse_heat_envelope_sum_le (Q : ℕ → E ≃L[ℝ] E)
+    (N F : ℕ → E →L[ℝ] E)
+    (hQ : ∀ i, (Q i : E →L[ℝ] E).IsPositive)
+    (hN : ∀ i, (N i).IsPositive)
+    (hdec : ∀ i, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)).IsPositive)
+    (hsmall : ∀ i v, ⟪v, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)) v⟫_ℝ ≤
+      (1 / 2 : ℝ) * ⟪v, Q i v⟫_ℝ)
+    {epsilon beta G g g₀ K : ℝ}
+    (hepsilon : 0 ≤ epsilon) (hbeta : 0 ≤ beta) (hbeta1 : beta &lt; 1)
+    (hG : 0 ≤ G) (hg : 1 ≤ g) (hbg : beta * g &lt; 1)
+    (hg₀ : 0 ≤ g₀) (hK : 0 ≤ K) (hbg₀ : beta * g₀ &lt; 1)
+    (hgrowth : ∀ j i, j ≤ i → ∀ v,
+…</pre></li><li id=L224><b>theorem</b> <code>OAI.RegularPointCoordinates.inverse_heat_cumulative_comparison</code> <small>line 224</small><div class="doc"><p>The actual central cumulative comparison and weighted heat total follow
+from the two heat decrement inequalities. The smallness condition absorbs the
+moving-normalization error; it does not assume a cumulative conclusion.</p></div><pre>theorem inverse_heat_cumulative_comparison (Q : ℕ → E ≃L[ℝ] E)
+    (N F : ℕ → E →L[ℝ] E)
+    (hQ : ∀ i, (Q i : E →L[ℝ] E).IsPositive)
+    (hN : ∀ i, (N i).IsPositive)
+    (hdec : ∀ i, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)).IsPositive)
+    (hsmall : ∀ i v, ⟪v, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)) v⟫_ℝ ≤
+      (1 / 2 : ℝ) * ⟪v, Q i v⟫_ℝ)
+    {epsilon beta G g g₀ K C K₀ : ℝ}
+    (hepsilon : 0 ≤ epsilon) (hbeta : 0 ≤ beta) (hbeta1 : beta &lt; 1)
+    (hG : 0 ≤ G) (hg : 1 ≤ g) (hbg : beta * g &lt; 1)
+    (hg₀ : 0 ≤ g₀) (hK : 0 ≤ K) (hbg₀ : beta * g₀ &lt; 1)
+    (hC : 0 ≤ C) (hK₀ : 0 ≤ K₀)
+…</pre></li><li id=L331><b>theorem</b> <code>OAI.RegularPointCoordinates.enlarged_mass_inverse_sum_le</code> <small>line 331</small><div class="doc"><p>The lower heat decrement controls all finite families of enlarged mass
+forms, with the cardinal bound as the only dependence on the family.</p></div><pre>theorem enlarged_mass_inverse_sum_le {ι : Type*}
+    (Q : ℕ → E ≃L[ℝ] E) (M : ℕ → ι → E →L[ℝ] E) (s : ℕ → Finset ι)
+    (hQ : ∀ i, (Q i : E →L[ℝ] E).IsPositive)
+    (hdec : ∀ i, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)).IsPositive)
+    (hsmall : ∀ i v, ⟪v, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)) v⟫_ℝ ≤
+      (1 / 2 : ℝ) * ⟪v, Q i v⟫_ℝ)
+    {C : ℝ} (hC : 0 ≤ C) (J : ℕ) (hcard : ∀ i, (s i).card ≤ J)
+    (hmass : ∀ i y, y ∈ s i → ∀ v, ⟪v, M i y v⟫_ℝ ≤
+      C * ⟪v, ((Q i : E →L[ℝ] E) - (Q (i + 1) : E →L[ℝ] E)) v⟫_ℝ)
+    (xi : E) (k : ℕ) :
+    (∑ i ∈ Finset.range k, ∑ y ∈ s i, ⟪(Q i).symm xi, M i y ((Q i).symm xi)⟫_ℝ) ≤
+      (J : ℝ) * C * ⟪xi, (Q k).symm xi⟫_ℝ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

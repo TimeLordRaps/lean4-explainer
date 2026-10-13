@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/BulkDistinctnessRemoval.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/BulkDistinctnessRemoval.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>BulkDistinctnessRemoval.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>BulkDistinctnessRemoval.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/BulkDistinctnessRemoval.lean#L1">source</a></p><div class="doc"><h3>Removing bulk-prime collisions under the original independent priors</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Ostmann.productPrior_pair_collision_le</code> <small>line 13</small></li><li id=L36><b>theorem</b> <code>OAI.Ostmann.productPrior_noninjective_le</code> <small>line 36</small><div class="doc"><p>Ordered pairs suffice; the harmless square count avoids selecting an
+ordering of the actual bulk positions.</p></div><pre>theorem productPrior_noninjective_le {A : Type*} [Fintype A] {n : ℕ}
+    (μ : Fin n → A → ℝ) (hμ : ∀ i a, 0 ≤ μ i a)
+    (hmass : ∀ i, ∑ a, μ i a = 1) (α : ℝ) (hα : 0 ≤ α)
+    (hmax : ∀ i a, μ i a ≤ α) :
+    (∑ x : Fin n → A, productPrior μ x * if Function.Injective x then (0 : ℝ) else 1) ≤
+      (n : ℝ) ^ 2 * α := by
+…</pre><p class="refs">Mentions: <a href="../Construction/FiniteProductPrior.lean.html#L14">OAI.Ostmann.productPrior</a></p></li><li id=L76><b>theorem</b> <code>OAI.Ostmann.bulk_distinctness_removal</code> <small>line 76</small><div class="doc"><p>Removing the distinctness gate costs its original collision probability,
+even when the complex integrand includes all the retained arithmetic factors.</p></div><pre>theorem bulk_distinctness_removal {A : Type*} [Fintype A] {n : ℕ}
+    (μ : Fin n → A → ℝ) (hμ : ∀ i a, 0 ≤ μ i a)
+    (hmass : ∀ i, ∑ a, μ i a = 1) (α : ℝ) (hα : 0 ≤ α)
+    (hmax : ∀ i a, μ i a ≤ α) (F : (Fin n → A) → ℂ)
+    (B : ℝ) (hB : 0 ≤ B) (hF : ∀ x, ‖F x‖ ≤ B) :
+    ‖(∑ x : Fin n → A, (productPrior μ x : ℂ) *
+        (if Function.Injective x then F x else 0)) -
+      ∑ x : Fin n → A, (productPrior μ x : ℂ) * F x‖ ≤ B * (n : ℝ) ^ 2 * α := by
+…</pre><p class="refs">Mentions: <a href="../Construction/FiniteProductPrior.lean.html#L14">OAI.Ostmann.productPrior</a></p></li><li id=L105><b>theorem</b> <code>OAI.Ostmann.original_bulk_distinctness_removal</code> <small>line 105</small><div class="doc"><p>The collision estimate for the literal bulk harmonic cells. The ambient
+prime set may also contain all nonbulk roles; the lower endpoint is needed
+only on the support of each bulk prior.</p></div><pre>theorem original_bulk_distinctness_removal {n : ℕ}
+    (P : Finset ℕ) (Q : Fin n → Finset ℕ) (hQP : ∀ i, Q i ⊆ P)
+    (hQ : ∀ i, (∑ p ∈ Q i, (p : ℝ)⁻¹) ≠ 0)
+    (H T : ℝ) (hmass : ∀ i, (∑ p ∈ Q i, (p : ℝ)⁻¹)⁻¹ ≤ Real.exp H)
+    (hlow : ∀ i p, p ∈ Q i → Real.exp T ≤ (p : ℝ))
+    (F : (Fin n → P) → ℂ) (B : ℝ) (hB : 0 ≤ B) (hF : ∀ x, ‖F x‖ ≤ B) :
+    ‖(∑ x : Fin n → P, (productPrior (fun i =&gt; primeSubsetPrior P (Q i)) x : ℂ) *
+        (if Function.Injective x then F x else 0)) -
+      ∑ x : Fin n → P, (productPrior (fun i =&gt; primeSubsetPrior P (Q i)) x : ℂ) * F x‖ ≤
+      B * (n : ℝ) ^ 2 * Real.exp (H - T) := by
+…</pre><p class="refs">Mentions: <a href="../Construction/FiniteProductPrior.lean.html#L14">OAI.Ostmann.productPrior</a>, <a href="../Construction/HarmonicWordPriors.lean.html#L11">OAI.Ostmann.primeSubsetPrior</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

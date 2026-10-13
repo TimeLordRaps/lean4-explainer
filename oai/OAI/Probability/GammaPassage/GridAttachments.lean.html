@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/GridAttachments.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/GridAttachments.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>GridAttachments.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>GridAttachments.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/GridAttachments.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>def</b> <code>OAI.GammaFPP.Grid.verticalExponent</code> <small>line 11</small></li><li id=L12><b>def</b> <code>OAI.GammaFPP.Grid.attachmentAllowance</code> <small>line 12</small></li><li id=L14><b>lemma</b> <code>OAI.GammaFPP.Grid.verticalExponent_pos</code> <small>line 14</small></li><li id=L23><b>lemma</b> <code>OAI.GammaFPP.Grid.attachmentAllowance_ge_fifty</code> <small>line 23</small><div class="doc"><p>The attachment allowance dominates the geometric bound of fifty.</p></div><pre>lemma attachmentAllowance_ge_fifty {shape rate K : ℝ}
+    (hs : 0 &lt; shape) (hr : 0 &lt; rate) (hK : 100 ≤ K) :
+    50 ≤ attachmentAllowance shape rate K := by
+…</pre><p class="refs">Mentions: <a href="GridAttachments.lean.html#L12">OAI.GammaFPP.Grid.attachmentAllowance</a></p></li><li id=L34><b>theorem</b> <code>OAI.GammaFPP.Grid.vertical_edgeSet_tail</code> <small>line 34</small><div class="doc"><p>Exponential cost tail for an edge set of cardinality at most <code>50*L</code>.</p></div><pre>theorem vertical_edgeSet_tail (h : GammaEnvironment shape rate P τ)
+    (hs : 0 &lt; shape) (hr : 0 &lt; rate) (S : Finset Edge) (L : ℝ)
+    (hcard : (S.card : ℝ) ≤ 50 * L) :
+    P.real {ω | 100 * shape / rate * L &lt; edgeSum S τ ω} ≤
+      Real.exp (-verticalExponent shape * L) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="FiniteMoments.lean.html#L18">OAI.GammaFPP.edgeSum</a>, <a href="GridAttachments.lean.html#L11">OAI.GammaFPP.Grid.verticalExponent</a></p></li><li id=L77><b>def</b> <code>OAI.GammaFPP.Grid.binGood</code> <small>line 77</small><div class="doc"><p>Finite-bin event with crossing trials and two whole attachment edge sets.</p></div><pre>def binGood {ι : Type*} (trials : Finset ι) (A : ι → Set (Edge → ℝ))
+    (S₁ S₂ : Finset Edge) (shape rate L : ℝ) : Set (Edge → ℝ) :=
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.GammaFPP.Grid.bin_failure_bound</code> <small>line 84</small><div class="doc"><p>Failure bound from disjoint crossing trials and Gamma attachment tails.</p></div><pre>theorem bin_failure_bound (h : GammaEnvironment shape rate P τ)
+    (hs : 0 &lt; shape) (hr : 0 &lt; rate) {ι : Type*}
+    (trials : Finset ι) (A : ι → Set (Edge → ℝ)) (supports : ι → Finset Edge)
+    (hA : ∀ i ∈ trials, MeasurableSet (A i))
+    (hdep : ∀ i ∈ trials, DependsOnEdges (A i) (supports i))
+    (hdis : Set.Pairwise (↑trials : Set ι) (fun i j =&gt; Disjoint (supports i) (supports j)))
+    (q : ℝ) (hq : ∀ i ∈ trials, q ≤ P.real {ω | (fun e =&gt; τ e ω) ∈ A i})
+    (S₁ S₂ : Finset Edge) (L : ℝ)
+    (hc₁ : (S₁.card : ℝ) ≤ 50 * L) (hc₂ : (S₂.card : ℝ) ≤ 50 * L) :
+    P.real {ω | (fun e =&gt; τ e ω) ∉ binGood trials A S₁ S₂ shape rate L} ≤
+      (1-q)^trials.card + 2 * Real.exp (-verticalExponent shape * L) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="GridIndependence.lean.html#L10">OAI.GammaFPP.Grid.DependsOnEdges</a>, <a href="GridAttachments.lean.html#L77">OAI.GammaFPP.Grid.binGood</a>, <a href="GridAttachments.lean.html#L11">OAI.GammaFPP.Grid.verticalExponent</a></p></li><li id=L122><b>lemma</b> <code>OAI.GammaFPP.Grid.combined_cost</code> <small>line 122</small><div class="doc"><p>Combined crossing and attachment cost bound.</p></div><pre>lemma combined_cost {shape rate K m l L a b c : ℝ}
+    (ha : a ≤ m*l+K*L) (hb : b ≤ 100*shape/rate*L)
+    (hc : c ≤ 100*shape/rate*L) :
+    a+b+c ≤ m*l+attachmentAllowance shape rate K*L := by
+…</pre><p class="refs">Mentions: <a href="GridAttachments.lean.html#L12">OAI.GammaFPP.Grid.attachmentAllowance</a></p></li><li id=L134><b>theorem</b> <code>OAI.GammaFPP.Grid.transverse_interval_tail</code> <small>line 134</small><div class="doc"><p>Column interval used for vertical attachments.</p></div><pre>theorem transverse_interval_tail (henv : GammaEnvironment shape rate P τ)
+    (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (b : ℝ) (X h w : ℤ) (j : ℕ) (hj : 1 ≤ j) (hw : 1 ≤ w) :
+    P.real {ω | 100*shape/rate*(j : ℝ)^2*w &lt;
+      edgeSum (transverseIntervalEdges b X (gridIntervalLower h w)
+        (gridIntervalUpper j h w)) τ ω} ≤
+      Real.exp (-verticalExponent shape*(j : ℝ)^2*w) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="FiniteMoments.lean.html#L18">OAI.GammaFPP.edgeSum</a>, <a href="GridGeometry.lean.html#L19">OAI.GammaFPP.Grid.transverseIntervalEdges</a>, <a href="GridGeometry.lean.html#L36">OAI.GammaFPP.Grid.gridIntervalLower</a>, <a href="GridGeometry.lean.html#L37">OAI.GammaFPP.Grid.gridIntervalUpper</a>, <a href="GridAttachments.lean.html#L11">OAI.GammaFPP.Grid.verticalExponent</a></p></li><li id=L148><b>theorem</b> <code>OAI.GammaFPP.Grid.source_bin_failure_bound</code> <small>line 148</small><div class="doc"><p>Failure bound for <code>j²</code> separated translated trials and the left and right
+vertical attachment intervals.</p></div><pre>theorem source_bin_failure_bound (henv : GammaEnvironment shape rate P τ)
+    (hs : 0 &lt; shape) (hr : 0 &lt; rate) (b : ℝ) (X h w l : ℤ)
+    (j : ℕ) (hj : 1 ≤ j) (hw : 1 ≤ w)
+    (A : Fin (j^2) → Set (Edge → ℝ)) (supports : Fin (j^2) → Finset Edge)
+    (hA : ∀ i, MeasurableSet (A i))
+    (hdep : ∀ i, DependsOnEdges (A i) (supports i))
+    (hdis : Pairwise (fun i k =&gt; Disjoint (supports i) (supports k)))
+    (q : ℝ) (hq : ∀ i, q ≤ P.real {ω | (fun e =&gt; τ e ω) ∈ A i}) :
+    P.real {ω | (fun e =&gt; τ e ω) ∉ binGood Finset.univ A
+      (transverseIntervalEdges b X (gridIntervalLower h w) (gridIntervalUpper j h w))
+      (transverseIntervalEdges b (X+l) (gridIntervalLower h w) (gridIntervalUpper j h w))
+      shape rate ((j : ℝ)^2*w)} ≤
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="GridIndependence.lean.html#L10">OAI.GammaFPP.Grid.DependsOnEdges</a>, <a href="GridAttachments.lean.html#L77">OAI.GammaFPP.Grid.binGood</a>, <a href="GridGeometry.lean.html#L19">OAI.GammaFPP.Grid.transverseIntervalEdges</a>, <a href="GridGeometry.lean.html#L36">OAI.GammaFPP.Grid.gridIntervalLower</a>, <a href="GridGeometry.lean.html#L37">OAI.GammaFPP.Grid.gridIntervalUpper</a></p></li><li id=L173><b>theorem</b> <code>OAI.GammaFPP.Grid.finite_bins_failure_bound</code> <small>line 173</small><div class="doc"><p>Simultaneous finite-bin event, with failure controlled without independence
+between bins. Only independence of each bin's separated crossing trials is used.</p></div><pre>theorem finite_bins_failure_bound (henv : GammaEnvironment shape rate P τ)
+    (hs : 0 &lt; shape) (hr : 0 &lt; rate) {κ : Type*} (bins : Finset κ)
+    (j : ℕ) (L : ℝ) (q : ℝ)
+    (A : κ → Fin (j^2) → Set (Edge → ℝ))
+    (supports : κ → Fin (j^2) → Finset Edge) (S₁ S₂ : κ → Finset Edge)
+    (hA : ∀ k ∈ bins, ∀ i, MeasurableSet (A k i))
+    (hdep : ∀ k ∈ bins, ∀ i, DependsOnEdges (A k i) (supports k i))
+    (hdis : ∀ k ∈ bins, Pairwise (fun i t =&gt; Disjoint (supports k i) (supports k t)))
+    (hq : ∀ k ∈ bins, ∀ i, q ≤ P.real {ω | (fun e =&gt; τ e ω) ∈ A k i})
+    (hc₁ : ∀ k ∈ bins, ((S₁ k).card : ℝ) ≤ 50*L)
+    (hc₂ : ∀ k ∈ bins, ((S₂ k).card : ℝ) ≤ 50*L) :
+    P.real (⋃ k ∈ bins, {ω | (fun e =&gt; τ e ω) ∉
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="GridIndependence.lean.html#L10">OAI.GammaFPP.Grid.DependsOnEdges</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

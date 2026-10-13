@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/BoundaryMatching.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/BoundaryMatching.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>BoundaryMatching.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>BoundaryMatching.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/BoundaryMatching.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.SmoothObstruction.ShortBin.Gauge.evolution</code> <small>line 21</small></li><li id=L23><b>def</b> <code>OAI.SmoothObstruction.ShortBin.Gauge.splitting</code> <small>line 23</small></li><li id=L26><b>lemma</b> <code>OAI.SmoothObstruction.ShortBin.Gauge.space_eq_range</code> <small>line 26</small></li><li id=L33><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.gauge_matching</code> <small>line 33</small><div class="doc"><p>The orthogonal common-bin space comparisons construct the middle
+matching equivalence for two genuine gauges with a possibly positive slow
+threshold. Complementarity is proved, not assumed for the moving spaces.</p></div><pre>theorem gauge_matching (A₀ A Z : Gauge d n K) (S₀ S T : Finset (Fin d))
+    {ε : ℝ} (hε : 0≤ε) (hεhalf : ε≤1/2)
+    (hdS : S₀.card=S.card) (hdT : S₀ᶜ.card=T.card)
+    (hcS : ‖(A₀.space S₀).starProjection-(A.space S).starProjection‖≤ε)
+    (hcT : ‖(A₀.space S₀ᶜ).starProjection-(Z.space T).starProjection‖≤ε)
+    (hsmall : Real.exp (2*K)*(2*ε)≤1/2) :
+    ∃ L : (((A.splitting S).slow 0).range×((Z.splitting T).slow 0).range) ≃L[ℝ]
+      EuclideanSpace ℝ (Fin d),
+      (∀ x,L x=(x.1:EuclideanSpace ℝ (Fin d))-(x.2:EuclideanSpace ℝ (Fin d))) ∧
+      ‖L.symm.toContinuousLinearMap‖≤2*Real.exp (2*K) := by
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L770">OAI.SmoothObstruction.ShortBin.Gauge</a></p></li><li id=L75><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.uniform_genuine_single_gauges</code> <small>line 75</small><div class="doc"><p>A one-sided family of actual gauges can be carried to reference charts
+using only the short orbit interval. This is also applicable at a long-window
+endpoint, without demanding good data beyond that endpoint.</p></div><pre>theorem uniform_genuine_single_gauges (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r C₁ D : ℝ,0&lt;r ∧ 1≤C₁ ∧ 1≤D ∧
+      ∀ (c : M → ι) (J : Type*) (x : J → M) (e : J) (cR : ℕ → ι)
+        (N : ℕ) (B h : ℝ) (A : J → ShortBin.Gauge d N B),
+        (∀ y,y∈K (c y)) →
+        (∀ i,∀ t&lt;N,(Matrix.toEuclideanCLM (n:=Fin d) (𝕜:=ℝ)).symm
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L770">OAI.SmoothObstruction.ShortBin.Gauge</a></p></li><li id=L139><b>def</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge.endpointBackward</code> <small>line 139</small><div class="doc"><p>The past short segment of the true forward gauge, centered at its long
+endpoint. Rates are merely negated; the original starting threshold remains
+available, and no new stationary witness is chosen.</p></div><pre>noncomputable def BilateralGauge.endpointBackward (S : Diffeomorph I I M M ∞)
+    (a : ι → M) (c : M → ι) {n N : ℕ} {B R : ℝ} {x : M}
+    (A : BilateralGauge I S a c n B R x) : ShortBin.Gauge d N B where
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a>, <a href="Charts.lean.html#L770">OAI.SmoothObstruction.ShortBin.Gauge</a></p></li><li id=L151><b>lemma</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge.endpointBackward_step</code> <small>line 151</small></li><li id=L180><b>def</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge.symm</code> <small>line 180</small><div class="doc"><p>Reverse the two-sided gauge without changing any coordinate basis.</p></div><pre>def BilateralGauge.symm (S : Diffeomorph I I M M ∞) (a : ι → M) (c : M → ι)
+    {n : ℕ} {B R : ℝ} {x : M} (A : BilateralGauge I S a c n B R x) :
+    BilateralGauge I S.symm a c n B R x where
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a></p></li><li id=L204><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.uniform_endpoint_fast_comparison</code> <small>line 204</small><div class="doc"><p>Quantitative endpoint comparison at a FIXED starting threshold, for all
+actual witnesses reaching one endpoint bin. Only the past short segment is
+used at the forward endpoint. The displayed basis identities attach the
+comparison to the actual long-window spaces.</p></div><pre>theorem uniform_endpoint_fast_comparison (hclosed : IsClosed (range I))
+    (S : Diffeomorph I I M M ∞) (a : ι → M) (K : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hKU : ∀ i,K i⊆(chartAt H (a i)).source) :
+    ∃ r C₁ D : ℝ,0&lt;r ∧ 1≤C₁ ∧ 1≤D ∧
+      ∀ (c : M → ι) (J : Type*) (x : J → M) (e : J) (cR : ℕ → ι)
+        (n N : ℕ) (B R h γ g : ℝ) (T : J → Finset (Fin d))
+        (A : ∀ i,BilateralGauge I S a c n B R (x i)),
+        (∀ y,y∈K (c y)) → N≤n →
+        (∀ t≤N,S.symm^[t] (S^[n] (x e))∈K (cR t)) →
+        (∀ i,I.IsInteriorPoint (S^[n] (x i))) →
+        (∀ i,S^[n] (x i)∈(chartAt H (a (cR 0))).source) →
+        (∀ i,‖(extChartAt I (a (cR 0))) (S^[n] (x i))-
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L303">OAI.SmoothObstruction.ManifoldCoordinates.BilateralGauge</a></p></li><li id=L271><b>def</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.initialSpace</code> <small>line 271</small></li><li id=L272><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.slow_initial</code> <small>line 272</small></li><li id=L280><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.Terminal.trajectory_initial</code> <small>line 280</small></li><li id=L288><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.Terminal.trajectory_zero</code> <small>line 288</small></li><li id=L301><b>def</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.correction</code> <small>line 301</small></li><li id=L306><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.correction_apply</code> <small>line 306</small></li><li id=L310><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.correction_norm</code> <small>line 310</small></li><li id=L331><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.solve</code> <small>line 331</small><div class="doc"><p>The exact two half-orbit boundary problem. The only matching input is
+complementarity of the unperturbed initial spaces. The small graph terms
+are inverted by a proved Neumann construction, not by assuming invertibility.</p></div><pre>theorem solve (L : (B₁.initialSpace × B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E))
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖ &lt; 1)
+    (f₁ f₂ : ℕ → E) (h₁ : H) (h₂ : G) (m : E) :
+    ∃ v₁ v₂ : ℕ → E,
+      (∀ t&lt;n₁,v₁ (t+1)=A₁.map (t+1) t (v₁ t)+f₁ t) ∧
+      (∀ t&lt;n₂,v₂ (t+1)=A₂.map (t+1) t (v₂ t)+f₂ t) ∧
+      C₁.P (v₁ n₁)=h₁ ∧ C₂.P (v₂ n₂)=h₂ ∧ v₁ 0-v₂ 0=m ∧
+      ∀ w₁ w₂ : ℕ → E,
+        (∀ t&lt;n₁,w₁ (t+1)=A₁.map (t+1) t (w₁ t)+f₁ t) →
+        (∀ t&lt;n₂,w₂ (t+1)=A₂.map (t+1) t (w₂ t)+f₂ t) →
+        C₁.P (w₁ n₁)=h₁ → C₂.P (w₂ n₂)=h₂ → w₁ 0-w₂ 0=m →
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a></p></li><li id=L395><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Evolution.forward_bound</code> <small>line 395</small></li><li id=L422><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Evolution.backward_bound</code> <small>line 422</small></li><li id=L455><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.Terminal.trajectory_bound</code> <small>line 455</small><div class="doc"><p>A uniform half-orbit estimate. A polynomial factor in n is harmless
+under the source's log(n+1)≤bn floor, but is explicitly retained here.</p></div><pre>lemma trajectory_bound (f : ℕ → E) (a : E) (h : H) {G F : ℝ}
+    (hG : 1≤G) (hF : 0≤F) (ha : B.slow 0 a=a)
+    (hs : ∀ s u,s≤u → u≤n → ‖(A.map u s).comp (B.slow s)‖ ≤ G)
+    (hb : ∀ s u,s≤u → u≤n → ‖(A.map s u).comp (B.fast u)‖ ≤ G)
+    (hJ : ‖C.J‖ ≤ G) (hP : ‖C.P‖ ≤ G)
+    (hf : ∀ j&lt;n,‖f j‖ ≤ F) (hh : ‖h‖ ≤ F) {t : ℕ} (ht : t≤n) :
+    ‖C.trajectory f a h t‖ ≤ (G+G^4)*‖a‖+(2*G+G^4)*(n:ℝ)*F+G^2*F := by
+…</pre></li><li id=L496><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.solution_bound</code> <small>line 496</small><div class="doc"><p>A quantitative bound for every genuine two-half boundary solution.
+The explicit polynomial is retained; the source's logarithmic time floor
+later absorbs it into the subexponential factor.</p></div><pre>theorem solution_bound (L : (B₁.initialSpace × B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E)) {U K F : ℝ}
+    (hU : 1≤U) (hK : ‖L.symm.toContinuousLinearMap‖≤K) (hF : 0≤F)
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖≤1/2)
+    (hs₁ : ∀ s u,s≤u → u≤n₁ → ‖(A₁.map u s).comp (B₁.slow s)‖≤U)
+    (hb₁ : ∀ s u,s≤u → u≤n₁ → ‖(A₁.map s u).comp (B₁.fast u)‖≤U)
+    (hs₂ : ∀ s u,s≤u → u≤n₂ → ‖(A₂.map u s).comp (B₂.slow s)‖≤U)
+    (hb₂ : ∀ s u,s≤u → u≤n₂ → ‖(A₂.map s u).comp (B₂.fast u)‖≤U)
+    (hJ₁ : ‖C₁.J‖≤U) (hP₁ : ‖C₁.P‖≤U)
+    (hJ₂ : ‖C₂.J‖≤U) (hP₂ : ‖C₂.P‖≤U)
+    (f₁ f₂ w₁ w₂ : ℕ → E) (h₁ : H) (h₂ : G) (m : E)
+    (hf₁ : ∀ j&lt;n₁,‖f₁ j‖≤F) (hf₂ : ∀ j&lt;n₂,‖f₂ j‖≤F)
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a></p></li><li id=L596><b>abbrev</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.Paths</code> <small>line 596</small></li><li id=L597><b>abbrev</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.Data</code> <small>line 597</small></li><li id=L602><b>def</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.boundaryLinear</code> <small>line 602</small><div class="doc"><p>The actual finite-array boundary operator consists of both recurrence
+residuals, the middle matching equation, and the two terminal projections.</p></div><pre>noncomputable def boundaryLinear : Paths E n₁ n₂ →ₗ[ℝ] Data E H G n₁ n₂ where
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L596">OAI.SmoothObstruction.FiniteGreen.Matching.Paths</a>, <a href="BoundaryMatching.lean.html#L597">OAI.SmoothObstruction.FiniteGreen.Matching.Data</a></p></li><li id=L623><b>def</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.boundary</code> <small>line 623</small></li><li id=L626><b>def</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.extend</code> <small>line 626</small></li><li id=L630><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.extend_apply</code> <small>line 630</small></li><li id=L636><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.boundary_bijective</code> <small>line 636</small><div class="doc"><p>Finite-dimensional invertibility is a consequence of the Green formulas
+and the genuinely small terminal graph correction. No linear inverse is
+postulated.</p></div><pre>theorem boundary_bijective (L : (B₁.initialSpace × B₂.initialSpace) ≃L[ℝ] E)
+    (hL : ∀ x,L x=(x.1:E)-(x.2:E))
+    (hsmall : ‖L.symm.toContinuousLinearMap.comp (correction C₁ C₂)‖ &lt; 1) :
+    Function.Bijective (boundary C₁ C₂) := by
+…</pre><p class="refs">Mentions: <a href="BoundaryMatching.lean.html#L301">OAI.SmoothObstruction.FiniteGreen.Matching.correction</a>, <a href="BoundaryMatching.lean.html#L623">OAI.SmoothObstruction.FiniteGreen.Matching.boundary</a></p></li><li id=L701><b>def</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.boundaryEquiv</code> <small>line 701</small></li><li id=L719><b>theorem</b> <code>OAI.SmoothObstruction.FiniteGreen.Matching.boundary_inverse_norm</code> <small>line 719</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

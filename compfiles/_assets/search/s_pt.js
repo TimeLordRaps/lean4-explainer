@@ -1,0 +1,1 @@
+window.l4shard("pt", [["Imo2006P5.Polynomial.isPeriodicPt_eval_two",92,74],["Imo2013P2.bluePts",107,1001],["Imo2013P2.pt",107,955],["Imo2013P2.redPts",107,997],["Imo2014P6.Line.interPt",110,57],["Imo2014P6.assocB_mem_bluePts",110,1844],["Imo2014P6.bluePts",110,1810],["Imo2014P6.turn_at_blue_pt",110,1234],["Imo2014P6.two_mul_card_bluePts",110,1814],["Imo2017P3.Pt",116,55]]);

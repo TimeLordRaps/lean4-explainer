@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/FiniteExposureAverage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/FiniteExposureAverage.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>FiniteExposureAverage.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>FiniteExposureAverage.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/FiniteExposureAverage.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>theorem</b> <code>OAI.Problem337.expect_pi_partition</code> <small>line 9</small><div class="doc"><p>Uniform averaging over labelled samples factors over any partition of the labels.</p></div><pre>theorem expect_pi_partition {ι A M : Type*} [Fintype ι] [DecidableEq ι] [Fintype A]
+    [AddCommMonoid M] [Module ℚ≥0 M] (p : ι → Prop) [DecidablePred p]
+    (F : (ι → A) → M) :
+    (𝔼 f : ι → A, F f) =
+      𝔼 a : {i // p i} → A, 𝔼 b : {i // ¬p i} → A,
+        F (fun i =&gt; if h : p i then a ⟨i,h⟩ else b ⟨i,h⟩) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L25><b>theorem</b> <code>OAI.Problem337.normalized_sum_pi_partition</code> <small>line 25</small><div class="doc"><p>The same partition identity in explicit normalized-sum form.</p></div><pre>theorem normalized_sum_pi_partition {ι A : Type*} [Fintype ι] [DecidableEq ι] [Fintype A]
+    (p : ι → Prop) [DecidablePred p] (F : (ι → A) → ℂ) :
+    (∑ f : ι → A, F f) / Fintype.card (ι → A) =
+      (∑ a : {i // p i} → A,
+        (∑ b : {i // ¬p i} → A,
+          F (fun i =&gt; if h : p i then a ⟨i,h⟩ else b ⟨i,h⟩)) /
+            Fintype.card ({i // ¬p i} → A)) / Fintype.card ({i // p i} → A) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L35><b>lemma</b> <code>OAI.Problem337.expect_finset_indicator</code> <small>line 35</small><div class="doc"><p>Average over a finite probability space of an indicator is its relative cardinality.</p></div><pre>lemma expect_finset_indicator {Ω : Type*} [Fintype Ω] [DecidableEq Ω] (B : Finset Ω) :
+    (𝔼 x : Ω, if x ∈ B then (1 : ℝ) else 0) =
+      (B.card : ℝ) / Fintype.card Ω := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.Problem337.conditional_average_norm_bound</code> <small>line 45</small><div class="doc"><p>Exposing some variables costs only the proportion of exceptional exposures.
+The inner finite type can itself be a product of independent fresh sample blocks.</p></div><pre>theorem conditional_average_norm_bound {Ω A : Type*} [Fintype Ω] [Fintype A]
+    [Nonempty Ω] [Nonempty A] (F : Ω → A → ℂ) (B : Finset Ω) (δ : ℝ)
+    (hδ : 0 ≤ δ) (hunit : ∀ ω a, ‖F ω a‖ ≤ 1)
+    (hgood : ∀ ω, ω ∉ B → ‖𝔼 a : A, F ω a‖ ≤ δ) :
+    ‖𝔼 ω : Ω, 𝔼 a : A, F ω a‖ ≤ (B.card : ℝ) / Fintype.card Ω + δ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L69><b>theorem</b> <code>OAI.Problem337.expect_equiv_prod</code> <small>line 69</small><div class="doc"><p>A finite reindexing into exposed and fresh coordinates gives exact Fubini averaging.</p></div><pre>theorem expect_equiv_prod {Ω E A M : Type*} [Fintype Ω] [Fintype E] [Fintype A]
+    [AddCommMonoid M] [Module ℚ≥0 M] (e : Ω ≃ E × A) (F : Ω → M) :
+    (𝔼 ω : Ω, F ω) = 𝔼 x : E, 𝔼 a : A, F (e.symm (x,a)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L79><b>theorem</b> <code>OAI.Problem337.exposure_average_norm_bound</code> <small>line 79</small><div class="doc"><p>The conditional estimate transported back to the original labelled sample space.</p></div><pre>theorem exposure_average_norm_bound {Ω E A : Type*}
+    [Fintype Ω] [Fintype E] [Fintype A] [Nonempty E] [Nonempty A]
+    (e : Ω ≃ E × A) (F : Ω → ℂ) (B : Finset E) (δ : ℝ)
+    (hδ : 0 ≤ δ) (hunit : ∀ ω, ‖F ω‖ ≤ 1)
+    (hgood : ∀ x, x ∉ B → ‖𝔼 a : A, F (e.symm (x,a))‖ ≤ δ) :
+    ‖𝔼 ω : Ω, F ω‖ ≤ (B.card : ℝ) / Fintype.card E + δ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L90><b>theorem</b> <code>OAI.Problem337.conditional_average_phase_bound</code> <small>line 90</small><div class="doc"><p>Multipliers fixed by the exposure and of norm at most one do not spoil cancellation.</p></div><pre>theorem conditional_average_phase_bound {Ω A : Type*} [Fintype Ω] [Fintype A]
+    [Nonempty Ω] [Nonempty A] (F : Ω → A → ℂ) (phase : Ω → ℂ)
+    (B : Finset Ω) (δ : ℝ) (hδ : 0 ≤ δ)
+    (hphase : ∀ ω, ‖phase ω‖ ≤ 1) (hunit : ∀ ω a, ‖F ω a‖ ≤ 1)
+    (hgood : ∀ ω, ω ∉ B → ‖𝔼 a : A, F ω a‖ ≤ δ) :
+    ‖𝔼 ω : Ω, 𝔼 a : A, phase ω * F ω a‖ ≤
+      (B.card : ℝ) / Fintype.card Ω + δ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L106><b>theorem</b> <code>OAI.Problem337.expect_restrict_coordinates</code> <small>line 106</small><div class="doc"><p>Uniform samples on coordinates not inspected by the function can be discarded.</p></div><pre>theorem expect_restrict_coordinates {ι A M : Type*}
+    [Fintype ι] [DecidableEq ι] [Fintype A] [Nonempty A]
+    [AddCommMonoid M] [Module ℚ≥0 M] (p : ι → Prop) [DecidablePred p]
+    (F : ({i // p i} → A) → M) :
+    (𝔼 f : ι → A, F (fun i =&gt; f i)) = 𝔼 a : {i // p i} → A, F a := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L115><b>theorem</b> <code>OAI.Problem337.expect_injective_coordinates</code> <small>line 115</small><div class="doc"><p>Sampling any injectively selected labels gives the same uniform product law.</p></div><pre>theorem expect_injective_coordinates {ι κ A M : Type*}
+    [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    [Fintype A] [Nonempty A] [AddCommMonoid M] [Module ℚ≥0 M]
+    (e : κ ↪ ι) (F : (κ → A) → M) :
+    (𝔼 f : ι → A, F (fun k =&gt; f (e k))) = 𝔼 a : κ → A, F a := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a></p></li><li id=L134><b>theorem</b> <code>OAI.Problem337.injective_coordinate_event_fraction</code> <small>line 134</small><div class="doc"><p>The normalized count of a coordinate event is unaffected by unused independent labels.</p></div><pre>theorem injective_coordinate_event_fraction {ι κ A : Type*}
+    [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    [Fintype A] [Nonempty A] (e : κ ↪ ι) (R : (κ → A) → Prop) [DecidablePred R] :
+    ((Finset.univ.filter (fun f : ι → A =&gt; R (fun k =&gt; f (e k)))).card : ℝ) /
+        Fintype.card (ι → A) =
+      ((Finset.univ.filter R).card : ℝ) / Fintype.card (κ → A) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

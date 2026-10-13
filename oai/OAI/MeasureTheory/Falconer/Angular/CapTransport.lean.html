@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/Falconer/Angular/CapTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/Falconer/Angular/CapTransport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MeasureTheory</a> / <a href="../index.html">Falconer</a> / <a href="index.html">Angular</a> / <span>CapTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MeasureTheory</a>/<a href="../index.html">Falconer</a>/<a href="index.html">Angular</a>/<span>CapTransport.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/Falconer/Angular/CapTransport.lean#L1">source</a></p><div class="doc"><h3>Transport of cap bounds from auxiliary projections</h3><p>The fixed factor in the cap radius can be absorbed in an arbitrarily small
+power of the resolution. The center of an original cap need not be in the
+domain where normalized projection is Lipschitz; we choose an actual
+source direction in a nonempty cap, and double its radius before projecting.
+This is the lifting step of <code>prep:integer-caps</code>.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Falconer.radial_ne_diagonal</code> <small>line 21</small></li><li id=L29><b>theorem</b> <code>OAI.Falconer.projected_radial_identity</code> <small>line 29</small></li><li id=L35><b>theorem</b> <code>OAI.Falconer.projected_radial_norm</code> <small>line 35</small></li><li id=L43><b>theorem</b> <code>OAI.Falconer.projected_radial_cap</code> <small>line 43</small><div class="doc"><p>Every actual direction in an original radius-<code>u</code> cap maps into a radius
+<code>max 1 (4/c) * u</code> cap about any chosen actual direction in the first cap.</p></div><pre>theorem projected_radial_cap {d k : ℕ} (P : Space d →L[ℝ] Space k)
+    {x y y₀ w : Space d} {c u : ℝ} (hc : 0 &lt; c) (hP : ‖P‖ ≤ 1)
+    (hy : c ≤ ‖P (radialDirection x y)‖)
+    (hy₀ : c ≤ ‖P (radialDirection x y₀)‖)
+    (hcap : dist (radialDirection x y) w &lt; u)
+    (hcap₀ : dist (radialDirection x y₀) w &lt; u) :
+    dist (radialDirection (P x) (P y)) (radialDirection (P x) (P y₀)) &lt;
+      max 1 (4 / c) * u := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="../Estimates/Availability.lean.html#L24">OAI.Falconer.radialDirection</a></p></li><li id=L68><b>theorem</b> <code>OAI.Falconer.eventually_radius_factor_absorbed</code> <small>line 68</small><div class="doc"><p>A fixed radius enlargement is absorbed into the permitted scale loss.</p></div><pre>theorem eventually_radius_factor_absorbed {K q a : ℝ} (ha : 0 &lt; a) :
+    ∀ᶠ N : ℕ in atTop, K ^ q ≤ ((2 : ℝ) ^ N) ^ a := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.Falconer.enlarged_cap_scalar</code> <small>line 74</small></li><li id=L86><b>theorem</b> <code>OAI.Falconer.projected_fiber_cap_bound</code> <small>line 86</small><div class="doc"><p>A cap estimate for the projected source law bounds a fiber of the
+original law. Source labels remain distinct even when their images coincide.</p></div><pre>theorem projected_fiber_cap_bound {d k : ℕ} (P : Space d →L[ℝ] Space k)
+    (ν : ProbabilityMeasure (Space d)) (H : Set (Space d)) (J : Set (Space k))
+    (x : Space d) {R c e a q : ℝ}
+    (hR : 1 ≤ R) (hc : 0 &lt; c) (hP : ‖P‖ ≤ 1) (he : 0 ≤ e) (hq : 0 ≤ q)
+    (hconstant : (max 1 (4 / c)) ^ q ≤ R ^ a)
+    (himage : ∀ y ∈ H, P y ∈ J)
+    (hlower : ∀ y ∈ H, c ≤ ‖P (radialDirection x y)‖)
+    (hcap : ∀ w : Space k, ‖w‖ = 1 → ∀ u : ℝ, R⁻¹ ≤ u → u ≤ 1 →
+      ((ν.map P : ProbabilityMeasure (Space k)) : Measure (Space k))
+        {y | y ∈ J ∧ dist (radialDirection (P x) y) w &lt; u} ≤
+          ENNReal.ofReal (R ^ e * u ^ q)) :
+    ∀ w : Space d, ‖w‖ = 1 → ∀ u : ℝ, R⁻¹ ≤ u → u ≤ 1 →
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="../Estimates/Availability.lean.html#L24">OAI.Falconer.radialDirection</a></p></li><li id=L130><b>theorem</b> <code>OAI.Falconer.map_mem_support</code> <small>line 130</small></li><li id=L141><b>theorem</b> <code>OAI.Falconer.RadialCapBound.pullback</code> <small>line 141</small><div class="doc"><p>Pull back both cap estimates through a fixed auxiliary projection.</p></div><pre>theorem RadialCapBound.pullback {d k N : ℕ} (P : Space d →L[ℝ] Space k)
+    (μ ν : ProbabilityMeasure (Space d))
+    {G : Set (Space d × Space d)} {G&#x27; : Set (Space k × Space k)} {c e a q : ℝ}
+    (hc : 0 &lt; c) (hP : ‖P‖ ≤ 1) (he : 0 ≤ e) (hq : 0 ≤ q)
+    (hconstant : (max 1 (4 / c)) ^ q ≤ ((2 : ℝ) ^ N) ^ a)
+    (hG : G ⊆ Prod.map P P ⁻¹&#x27; G&#x27;)
+    (hlower : ∀ z ∈ G, c ≤ ‖P (radialDirection z.1 z.2)‖ ∧
+      c ≤ ‖P (radialDirection z.2 z.1)‖)
+    (hcap : RadialCapBound (μ.map P) (ν.map P) G&#x27; N e q) :
+    RadialCapBound μ ν G N (e + a) q := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="../Estimates/Availability.lean.html#L24">OAI.Falconer.radialDirection</a>, <a href="../Estimates/Availability.lean.html#L28">OAI.Falconer.RadialCapBound</a></p></li><li id=L167><b>theorem</b> <code>OAI.Falconer.CapAvailable.pullback</code> <small>line 167</small><div class="doc"><p>Auxiliary projected cap estimates lift to the original pair law.
+The deletion is the preimage of the projected bad set intersected with the
+original pair filter; its mass is bounded by the projected product mass.</p></div><pre>theorem CapAvailable.pullback {d k : ℕ} (P : Space d →L[ℝ] Space k)
+    (μ ν : ProbabilityMeasure (Space d))
+    {Γ : ℕ → Set (Space d × Space d)} {Γ&#x27; : ℕ → Set (Space k × Space k)} {c q : ℝ}
+    (hc : 0 &lt; c) (hP : ‖P‖ ≤ 1) (hq : 0 ≤ q)
+    (hΓ : ∀ N, MeasurableSet (Γ N))
+    (hΓsub : ∀ N, Γ N ⊆ Prod.map P P ⁻¹&#x27; Γ&#x27; N)
+    (hlower : ∀ N, ∀ z ∈ Γ N, c ≤ ‖P (radialDirection z.1 z.2)‖ ∧
+      c ≤ ‖P (radialDirection z.2 z.1)‖)
+    (hcap : CapAvailable (μ.map P) (ν.map P) Γ&#x27; q) :
+    CapAvailable μ ν Γ q := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="../Estimates/Availability.lean.html#L24">OAI.Falconer.radialDirection</a>, <a href="../Estimates/Availability.lean.html#L41">OAI.Falconer.CapAvailable</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

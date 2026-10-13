@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Transport/IntegerFutureSquare.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Transport/IntegerFutureSquare.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Transport</a> / <span>IntegerFutureSquare.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Transport</a>/<span>IntegerFutureSquare.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Transport/IntegerFutureSquare.lean#L1">source</a></p><div class="doc"><h3>The integer transport recursion's future square identity</h3><p>The three new--new removal entries partition by the same resulting pair.
+Their coefficients give an exact nonnegative square, without a signature
+assumption on the weighted future form.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.sum_range_shift</code> <small>line 17</small></li><li id=L30><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.sum_range_truncate</code> <small>line 30</small></li><li id=L43><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.sum_middle_shift</code> <small>line 43</small></li><li id=L57><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_aa</code> <small>line 57</small></li><li id=L66><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_bb</code> <small>line 66</small></li><li id=L78><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_ab</code> <small>line 78</small></li><li id=L93><b>theorem</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_new_square</code> <small>line 93</small><div class="doc"><p>The exact new--new part of the future correction: two diagonal
+removals and the mixed removal of the same integer pair form a square.</p></div><pre>theorem future_new_square
+    (F : ((I ⊕ Bool) → ℕ) → ℝ) (z : I → ℕ) (n : ℕ) (g : ℕ → ℝ) :
+    (∑ j ∈ Finset.range (n+3),
+      (pairMatrix F (n+2) z j (.inr false) (.inr false) * g j ^ 2 -
+      2 * pairMatrix F (n+2) z j (.inr false) (.inr true) * g j * g (j+1) +
+      pairMatrix F (n+2) z j (.inr true) (.inr true) * g (j+1) ^ 2)) =
+      ∑ k ∈ Finset.range (n+1), F (profile z k (n-k)) * (g (k+2)-g (k+1)) ^ 2 := by
+…</pre></li><li id=L140><b>theorem</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_new_nonnegative</code> <small>line 140</small><div class="doc"><p>Every kernel entry has the same complete configuration; positivity
+alone makes the future correction nonnegative.</p></div><pre>theorem future_new_nonnegative
+    (F : ((I ⊕ Bool) → ℕ) → ℝ) (z : I → ℕ) (n : ℕ) (g : ℕ → ℝ)
+    (hF : ∀ p, 0 ≤ F p) :
+    0 ≤ ∑ j ∈ Finset.range (n+3),
+      (pairMatrix F (n+2) z j (.inr false) (.inr false) * g j ^ 2 -
+      2 * pairMatrix F (n+2) z j (.inr false) (.inr true) * g j * g (j+1) +
+      pairMatrix F (n+2) z j (.inr true) (.inr true) * g (j+1) ^ 2) := by
+…</pre></li><li id=L153><b>theorem</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_mixed_cancel</code> <small>line 153</small><div class="doc"><p>The two mixed old--new sums telescope, including both invalid
+endpoint removals.</p></div><pre>theorem future_mixed_cancel
+    (F : ((I ⊕ Bool) → ℕ) → ℝ) (z : I → ℕ) (M : ℕ)
+    (h : I → ℝ) (g : ℕ → ℝ) :
+    (∑ j ∈ Finset.range (M+1),
+      ((pairMatrix F M z j).toBilin&#x27; (old h) (Pi.single (.inr false) 1) * g j -
+      (pairMatrix F M z j).toBilin&#x27; (old h) (Pi.single (.inr true) 1) * g (j+1))) = 0 := by
+…</pre></li><li id=L171><b>theorem</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_old_sum</code> <small>line 171</small><div class="doc"><p>Old--old entries partition the parent's balanced marginal exactly.</p></div><pre>theorem future_old_sum
+    (F : ((I ⊕ Bool) → ℕ) → ℝ) (z : I → ℕ) (M : ℕ) (h : I → ℝ) :
+    (∑ j ∈ Finset.range (M+1), (pairMatrix F M z j).toBilin&#x27; (old h) (old h)) =
+      (integerRemovalMatrix (marginal F M) z).toBilin&#x27; h h := by
+…</pre></li><li id=L179><b>def</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.extendCoefficients</code> <small>line 179</small></li><li id=L184><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.extendCoefficients_inl</code> <small>line 184</small></li><li id=L189><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.extendCoefficients_a</code> <small>line 189</small></li><li id=L194><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.extendCoefficients_b</code> <small>line 194</small></li><li id=L198><b>lemma</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.extended_quadratic</code> <small>line 198</small></li><li id=L219><b>theorem</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_square_identity</code> <small>line 219</small><div class="doc"><p>Equation future-square of the first manuscript for actual integer
+removal matrices. The parent is the balanced raw marginal.</p></div><pre>theorem future_square_identity
+    (F : ((I ⊕ Bool) → ℕ) → ℝ) (z : I → ℕ) (n : ℕ)
+    (h : I → ℝ) (g : ℕ → ℝ) :
+    (∑ j ∈ Finset.range (n+3),
+      (pairMatrix F (n+2) z j).toBilin&#x27;
+        (extendCoefficients h (g j) (g (j+1))) (extendCoefficients h (g j) (g (j+1)))) -
+      (integerRemovalMatrix (marginal F (n+2)) z).toBilin&#x27; h h =
+    ∑ k ∈ Finset.range (n+1), F (profile z k (n-k)) * (g (k+2)-g (k+1))^2 := by
+…</pre><p class="refs">Mentions: <a href="IntegerFutureSquare.lean.html#L179">OAI.ContingencyTables.IntegerWeightedTransport.extendCoefficients</a></p></li><li id=L236><b>theorem</b> <code>OAI.ContingencyTables.IntegerWeightedTransport.future_form_monotone</code> <small>line 236</small><div class="doc"><p>Processing an ordinary integer pair can only increase a future form.
+No signature assertion about the weighted future kernel is required.</p></div><pre>theorem future_form_monotone
+    (F : ((I ⊕ Bool) → ℕ) → ℝ) (z : I → ℕ) (n : ℕ)
+    (h : I → ℝ) (g : ℕ → ℝ) (hF : ∀ p, 0 ≤ F p) :
+    (integerRemovalMatrix (marginal F (n+2)) z).toBilin&#x27; h h ≤
+      ∑ j ∈ Finset.range (n+3), (pairMatrix F (n+2) z j).toBilin&#x27;
+        (extendCoefficients h (g j) (g (j+1))) (extendCoefficients h (g j) (g (j+1))) := by
+…</pre><p class="refs">Mentions: <a href="IntegerFutureSquare.lean.html#L179">OAI.ContingencyTables.IntegerWeightedTransport.extendCoefficients</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,129 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/Gluing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/Gluing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>Gluing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>Gluing.lean</span></code></h1><p class="muted">25 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/Gluing.lean#L1">source</a></p><div class="doc"><h3>Holomorphic local division and gluing on multiplier quotient bundles</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.Nagata.LocalDivision.exists_analytic_quotient_at_simple_zero</code> <small>line 27</small><div class="doc"><p>Dividing by a power of a function with a simple zero produces an analytic
+germ precisely when the numerator has sufficient vanishing. This constructs
+the germ, rather than assuming a global quotient exists.</p></div><pre>theorem exists_analytic_quotient_at_simple_zero {f P : ℂ → ℂ} {z₀ : ℂ}
+    (hf : AnalyticAt ℂ f z₀) (hP : AnalyticAt ℂ P z₀)
+    (hP0 : P z₀ = 0) (hP&#x27; : deriv P z₀ ≠ 0) (k : ℕ)
+    (horder : (k : ℕ∞) ≤ analyticOrderAt f z₀) :
+    ∃ g : ℂ → ℂ, AnalyticAt ℂ g z₀ ∧
+      ∀ᶠ z in 𝓝 z₀, f z = P z ^ k * g z := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.Nagata.LocalDivision.analytic_quotient_at_nonzero</code> <small>line 45</small><div class="doc"><p>Away from the zero divisor, the usual pointwise quotient is analytic.</p></div><pre>theorem analytic_quotient_at_nonzero {f P : ℂ → ℂ} {z₀ : ℂ}
+    (hf : AnalyticAt ℂ f z₀) (hP : AnalyticAt ℂ P z₀)
+    (hP0 : P z₀ ≠ 0) (k : ℕ) :
+    AnalyticAt ℂ (fun z =&gt; f z / P z ^ k) z₀ :=
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.Nagata.LocalDivision.exists_analytic_quotient</code> <small>line 53</small><div class="doc"><p>One uniform local-division statement handles both marked points and their
+complement. The derivative condition is needed only at a zero of P.</p></div><pre>theorem exists_analytic_quotient {f P : ℂ → ℂ} {z₀ : ℂ}
+    (hf : AnalyticAt ℂ f z₀) (hP : AnalyticAt ℂ P z₀) (k : ℕ)
+    (hzero : P z₀ = 0 → deriv P z₀ ≠ 0 ∧
+      (k : ℕ∞) ≤ analyticOrderAt f z₀) :
+    ∃ g : ℂ → ℂ, AnalyticAt ℂ g z₀ ∧
+      ∀ᶠ z in 𝓝 z₀, f z = P z ^ k * g z := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.Nagata.LocalDivision.analytic_quotient_germ_unique</code> <small>line 79</small><div class="doc"><p>Local quotient germs are unique wherever the denominator is not the zero germ.</p></div><pre>theorem analytic_quotient_germ_unique {f P g h : ℂ → ℂ} {z₀ : ℂ} (k : ℕ)
+    (hP : AnalyticAt ℂ P z₀) (hPfin : analyticOrderAt P z₀ ≠ ⊤)
+    (hg : AnalyticAt ℂ g z₀) (hh : AnalyticAt ℂ h z₀)
+    (hfg : ∀ᶠ z in 𝓝 z₀, f z = P z ^ k * g z)
+    (hfh : ∀ᶠ z in 𝓝 z₀, f z = P z ^ k * h z) :
+    g =ᶠ[𝓝 z₀] h := by
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.Nagata.LocalDivision.continuous_eq_at_of_eq_off_divisor</code> <small>line 96</small><div class="doc"><p>A continuous identity known off a nonzero analytic divisor extends across
+its zero set. This is used to recover multiplier transition identities after gluing.</p></div><pre>theorem continuous_eq_at_of_eq_off_divisor {P g h : ℂ → ℂ} {U : Set ℂ} {z₀ : ℂ}
+    (hU : IsOpen U) (hz₀ : z₀ ∈ U) (hP : AnalyticAt ℂ P z₀)
+    (hPfin : analyticOrderAt P z₀ ≠ ⊤) (hg : ContinuousAt g z₀)
+    (hh : ContinuousAt h z₀)
+    (heq : ∀ z ∈ U, P z ≠ 0 → g z = h z) : g z₀ = h z₀ := by
+…</pre></li><li id=L114><b>theorem</b> <code>OAI.Nagata.LocalDivision.multiply_power_injective_on</code> <small>line 114</small><div class="doc"><p>Multiplication by P^k is injective on continuous functions on U when P
+has no zero germ. This is the noncancellation needed for the positive-index blocks.</p></div><pre>theorem multiply_power_injective_on {P f g : ℂ → ℂ} {U : Set ℂ}
+    (hU : IsOpen U) (k : ℕ) (hP : AnalyticOnNhd ℂ P U)
+    (hPfin : ∀ z ∈ U, analyticOrderAt P z ≠ ⊤)
+    (hf : ∀ z ∈ U, ContinuousAt f z) (hg : ∀ z ∈ U, ContinuousAt g z)
+    (hmul : ∀ z ∈ U, P z ^ k * f z = P z ^ k * g z) :
+    Set.EqOn f g U := by
+…</pre></li><li id=L128><b>theorem</b> <code>OAI.Nagata.LocalDivision.multiply_power_nonzero</code> <small>line 128</small><div class="doc"><p>Consequently an actual nonzero coefficient does not vanish identically when
+multiplied by a marked-product power.</p></div><pre>theorem multiply_power_nonzero {P f : ℂ → ℂ} {U : Set ℂ}
+    (hU : IsOpen U) (k : ℕ) (hP : AnalyticOnNhd ℂ P U)
+    (hPfin : ∀ z ∈ U, analyticOrderAt P z ≠ ⊤)
+    (hf : ∀ z ∈ U, ContinuousAt f z) (hne : ∃ z ∈ U, f z ≠ 0) :
+    ∃ z ∈ U, P z ^ k * f z ≠ 0 := by
+…</pre></li><li id=L147><b>theorem</b> <code>OAI.Nagata.LocalDivision.glue_analytic_quotients</code> <small>line 147</small><div class="doc"><p>Compatible local quotient germs glue to a genuine global analytic function
+on any open domain. Uniqueness was proved above by ordinary analytic cancellation.</p></div><pre>theorem glue_analytic_quotients {f P : ℂ → ℂ} {U : Set ℂ} (hU : IsOpen U)
+    (k : ℕ) (hP : AnalyticOnNhd ℂ P U)
+    (hPfin : ∀ z ∈ U, analyticOrderAt P z ≠ ⊤)
+    (hlocal : ∀ z ∈ U, ∃ g : ℂ → ℂ, AnalyticAt ℂ g z ∧
+      ∀ᶠ w in 𝓝 z, f w = P w ^ k * g w) :
+    ∃ G : ℂ → ℂ, AnalyticOnNhd ℂ G U ∧
+      (∀ z ∈ U, f z = P z ^ k * G z) ∧ (∀ z ∉ U, G z = 0) := by
+…</pre></li><li id=L174><b>theorem</b> <code>OAI.Nagata.LocalDivision.exists_global_analytic_quotient</code> <small>line 174</small><div class="doc"><p>Global extension across the simple-zero divisor of P. The only vanishing
+hypothesis is the actual numerator order at the zeros, not a pre-existing quotient.</p></div><pre>theorem exists_global_analytic_quotient {f P : ℂ → ℂ} {U : Set ℂ}
+    (hU : IsOpen U) (hf : AnalyticOnNhd ℂ f U) (hP : AnalyticOnNhd ℂ P U)
+    (k : ℕ) (hzero : ∀ z ∈ U, P z = 0 → deriv P z ≠ 0 ∧
+      (k : ℕ∞) ≤ analyticOrderAt f z) :
+    ∃ G : ℂ → ℂ, AnalyticOnNhd ℂ G U ∧
+      (∀ z ∈ U, f z = P z ^ k * G z) ∧ (∀ z ∉ U, G z = 0) := by
+…</pre></li><li id=L191><b>theorem</b> <code>OAI.Nagata.LocalDivision.quotient_nonzero_of_nonzero</code> <small>line 191</small><div class="doc"><p>A nonzero original coefficient stays nonzero after the constructed division.</p></div><pre>theorem quotient_nonzero_of_nonzero {f P G : ℂ → ℂ} {U : Set ℂ} (k : ℕ)
+    (hfactor : ∀ z ∈ U, f z = P z ^ k * G z)
+    (hf : ∃ z ∈ U, f z ≠ 0) : ∃ z ∈ U, G z ≠ 0 := by
+…</pre></li><li id=L210><b>def</b> <code>OAI.Nagata.CoefficientSpaces.sectionCoverMap</code> <small>line 210</small><div class="doc"><p>Literal multiplication by a section on the genuine line-bundle cover.</p></div><pre>def sectionCoverMap {τ δ : ℂˣ} {s : ℤ}
+    (P : Nagata.W08.automorphicSections (τ : ℂ) s (δ : ℂ))
+    (p : MultiplicativeLineCover ℂ) : MultiplicativeLineCover ℂ :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L216><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.sectionCoverMap_step</code> <small>line 216</small><div class="doc"><p>Tensor multiplication commutes with the actual period generator.</p></div><pre>theorem sectionCoverMap_step (τ γ δ : ℂˣ) (n s : ℤ)
+    (P : Nagata.W08.automorphicSections (τ : ℂ) s (δ : ℂ))
+    (p : MultiplicativeLineCover ℂ) :
+    sectionCoverMap P (multiplierStep τ γ n p) =
+      multiplierStep τ (γ * δ) (n + s) (sectionCoverMap P p) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="Gluing.lean.html#L210">OAI.Nagata.CoefficientSpaces.sectionCoverMap</a></p></li><li id=L231><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.sectionCoverMap_iterate</code> <small>line 231</small><div class="doc"><p>Equivariance holds for every integer period, including inverse transitions.</p></div><pre>theorem sectionCoverMap_iterate (τ γ δ : ℂˣ) (n s k : ℤ)
+    (P : Nagata.W08.automorphicSections (τ : ℂ) s (δ : ℂ))
+    (p : MultiplicativeLineCover ℂ) :
+    sectionCoverMap P (multiplierIterate τ γ n k p) =
+      multiplierIterate τ (γ * δ) (n + s) k (sectionCoverMap P p) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="Gluing.lean.html#L210">OAI.Nagata.CoefficientSpaces.sectionCoverMap</a></p></li><li id=L257><b>def</b> <code>OAI.Nagata.CoefficientSpaces.sectionQuotientMap</code> <small>line 257</small><div class="doc"><p>The actual globally defined map between the two multiplier quotients.</p></div><pre>def sectionQuotientMap (τ γ δ : ℂˣ) (n s : ℤ)
+    (P : Nagata.W08.automorphicSections (τ : ℂ) s (δ : ℂ)) :
+    MultiplierQuotient τ γ n → MultiplierQuotient τ (γ * δ) (n + s) :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L267><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.sectionQuotientMap_mk</code> <small>line 267</small><div class="doc"><p>Evaluation on any genuine lifted fibre is multiplication by the section value.</p></div><pre>theorem sectionQuotientMap_mk (τ γ δ : ℂˣ) (n s : ℤ)
+    (P : Nagata.W08.automorphicSections (τ : ℂ) s (δ : ℂ))
+    (z : ℂˣ) (t : ℂ) :
+    sectionQuotientMap τ γ δ n s P (Quotient.mk _ (z, t)) =
+      Quotient.mk _ (z, P.val z * t) := rfl
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="Gluing.lean.html#L257">OAI.Nagata.CoefficientSpaces.sectionQuotientMap</a></p></li><li id=L283><b>def</b> <code>OAI.Nagata.FiberCoordinateChange.fibreChart</code> <small>line 283</small><div class="doc"><p>Actual fibre substitution w=P(z)*v over an open base where P is nonzero.</p></div><pre>noncomputable def fibreChart (P : ℂ → ℂ) (U : Set ℂ) (hU : IsOpen U)
+    (hP : AnalyticOnNhd ℂ P U) (hne : ∀ z ∈ U, P z ≠ 0) :
+    OpenPartialHomeomorph (ℂ × ℂ) (ℂ × ℂ) where
+…</pre></li><li id=L315><b>theorem</b> <code>OAI.Nagata.FiberCoordinateChange.fibreChart_analyticAt</code> <small>line 315</small><div class="doc"><p>Analyticity of the actual forward fibre coordinate map.</p></div><pre>theorem fibreChart_analyticAt (P : ℂ → ℂ) (U : Set ℂ) (hU : IsOpen U)
+    (hP : AnalyticOnNhd ℂ P U) (hne : ∀ z ∈ U, P z ≠ 0)
+    (x : ℂ × ℂ) (hx : x.1 ∈ U) :
+    AnalyticAt ℂ (fibreChart P U hU hP hne) x := by
+…</pre><p class="refs">Mentions: <a href="Gluing.lean.html#L283">OAI.Nagata.FiberCoordinateChange.fibreChart</a></p></li><li id=L324><b>theorem</b> <code>OAI.Nagata.FiberCoordinateChange.fibreChart_symm_analyticAt</code> <small>line 324</small><div class="doc"><p>Analyticity of the actual inverse fibre coordinate map.</p></div><pre>theorem fibreChart_symm_analyticAt (P : ℂ → ℂ) (U : Set ℂ) (hU : IsOpen U)
+    (hP : AnalyticOnNhd ℂ P U) (hne : ∀ z ∈ U, P z ≠ 0)
+    (x : ℂ × ℂ) (hx : x.1 ∈ U) :
+    AnalyticAt ℂ (fibreChart P U hU hP hne).symm x := by
+…</pre><p class="refs">Mentions: <a href="Gluing.lean.html#L283">OAI.Nagata.FiberCoordinateChange.fibreChart</a></p></li><li id=L334><b>theorem</b> <code>OAI.Nagata.FiberCoordinateChange.order_preserved_by_fibre_substitution</code> <small>line 334</small><div class="doc"><p>Exactly the multiplicity-preserving transformation in <code>necessary-W</code>:
+substitute w=P*v and divide the value frame by P^m.</p></div><pre>theorem order_preserved_by_fibre_substitution
+    (P : ℂ → ℂ) (U : Set ℂ) (hU : IsOpen U)
+    (hP : AnalyticOnNhd ℂ P U) (hne : ∀ z ∈ U, P z ≠ 0)
+    (F : (ℂ × ℂ) → ℂ) (x : ℂ × ℂ) (hx : x.1 ∈ U) (m : ℕ) :
+    HasAnalyticOrderAtLeast (𝕜 := ℂ)
+…</pre></li><li id=L363><b>theorem</b> <code>OAI.Nagata.LocalDivision.quotient_transition_off_zero</code> <small>line 363</small><div class="doc"><p>Cancellation derives the quotient transition wherever the denominator is nonzero.</p></div><pre>theorem quotient_transition_off_zero {T : ℂ → ℂ} {f P G A B : ℂ → ℂ}
+    (k : ℕ) (z : ℂ) (hP : P z ≠ 0) (hB : B z ≠ 0)
+    (hfz : f z = P z ^ k * G z) (hfT : f (T z) = P (T z) ^ k * G (T z))
+    (htf : f (T z) = A z * f z) (htP : P (T z) = B z * P z) :
+    G (T z) = (A z / B z ^ k) * G z := by
+…</pre></li><li id=L384><b>theorem</b> <code>OAI.Nagata.LocalDivision.quotient_transition_global</code> <small>line 384</small><div class="doc"><p>The actual quotient transition extends over all zeros by continuity and
+isolated zeros. This closes the local-to-global transition step.</p></div><pre>theorem quotient_transition_global {T : ℂ → ℂ} {f P G A B : ℂ → ℂ}
+    {U : Set ℂ} (hU : IsOpen U) (k : ℕ)
+    (hP : AnalyticOnNhd ℂ P U) (hPfin : ∀ z ∈ U, analyticOrderAt P z ≠ ⊤)
+    (hTU : Set.MapsTo T U U) (hB : ∀ z ∈ U, B z ≠ 0)
+    (hfactor : ∀ z ∈ U, f z = P z ^ k * G z)
+    (htf : ∀ z ∈ U, f (T z) = A z * f z)
+    (htP : ∀ z ∈ U, P (T z) = B z * P z)
+    (hleft : ∀ z ∈ U, ContinuousAt (fun w =&gt; G (T w)) z)
+    (hright : ∀ z ∈ U, ContinuousAt (fun w =&gt; (A w / B w ^ k) * G w) z) :
+    ∀ z ∈ U, G (T z) = (A z / B z ^ k) * G z := by
+…</pre></li><li id=L410><b>def</b> <code>OAI.Nagata.CoefficientSpaces.multiplySection</code> <small>line 410</small><div class="doc"><p>The literal multiplication map restricted to actual automorphic sections.</p></div><pre>noncomputable def multiplySection (τ γ : ℂ) (n : ℤ) (P : ℂ → ℂ) (k : ℕ) :
+    Nagata.W08.automorphicSections τ n γ →ₗ[ℂ] (ℂ → ℂ) :=
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L417><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.multiplySection_injective</code> <small>line 417</small><div class="doc"><p>No nonzero source section is lost in the positive-index coefficient image.
+The omitted point contributes no fake section because both representatives are
+normalized to zero there.</p></div><pre>theorem multiplySection_injective (τ γ : ℂ) (n : ℤ) (P : ℂ → ℂ) (k : ℕ)
+    (hP : AnalyticOnNhd ℂ P {z | z ≠ 0})
+    (hPfin : ∀ z ≠ 0, analyticOrderAt P z ≠ ⊤) :
+    Function.Injective (multiplySection τ γ n P k) := by
+…</pre><p class="refs">Mentions: <a href="Gluing.lean.html#L410">OAI.Nagata.CoefficientSpaces.multiplySection</a></p></li><li id=L441><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.quotient_multiplier_identity</code> <small>line 441</small><div class="doc"><p>The exact degree and multiplier of a quotient coefficient.</p></div><pre>theorem quotient_multiplier_identity {γ δ z : ℂ} (hδ : δ ≠ 0) (hz : z ≠ 0)
+    (n s : ℤ) (k : ℕ) :
+    (γ * z ^ (-n)) / (δ * z ^ (-s)) ^ k =
+      (γ / δ ^ k) * z ^ (-(n - (k : ℤ) * s)) := by
+…</pre></li><li id=L449><b>theorem</b> <code>OAI.Nagata.CoefficientSpaces.exists_automorphic_quotient</code> <small>line 449</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

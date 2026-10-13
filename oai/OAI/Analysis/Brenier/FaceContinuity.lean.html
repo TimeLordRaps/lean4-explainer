@@ -1,0 +1,105 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/FaceContinuity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/FaceContinuity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>FaceContinuity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>FaceContinuity.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/FaceContinuity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem358.MovingCellTrace.tendsto_positive_cell_face_integral</code> <small>line 15</small><div class="doc"><p>Weighted face coefficients vary continuously for positive affine cells,
+expressed in any nearby-plane chart preserving a fixed transverse projection.
+The compact source supplies domination; positivity supplies all surface nullity.</p></div><pre>theorem tendsto_positive_cell_face_integral
+    {d : ℕ} {ι α : Type*} [Fintype ι] {l : Filter α} [l.IsCountablyGenerated]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d} (hz : z ∈ interior K)
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (μ : Measure ((ℝ ∙ (y i - y j))ᗮ)) [μ.IsAddHaarMeasure]
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {P : E d → (ℝ ∙ (y i - y j))ᗮ} (hP : Continuous P)
+    {chart : α → ((ℝ ∙ (y i - y j))ᗮ) → E d}
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L71><b>def</b> <code>OAI.Problem358.AffinePlaneGraph.unitNormal</code> <small>line 71</small><div class="doc"><p>Unit transverse vector of a nonzero reference normal.</p></div><pre>def unitNormal (n : E d) : E d := ‖n‖⁻¹ • n</pre></li><li id=L73><b>lemma</b> <code>OAI.Problem358.AffinePlaneGraph.inner_unitNormal</code> <small>line 73</small></li><li id=L79><b>def</b> <code>OAI.Problem358.AffinePlaneGraph.tangentProjection</code> <small>line 79</small><div class="doc"><p>Fixed tangential coordinates relative to a chosen point of the reference plane.</p></div><pre>def tangentProjection (n z : E d) : E d → (ℝ ∙ n)ᗮ :=
+…</pre></li><li id=L82><b>lemma</b> <code>OAI.Problem358.AffinePlaneGraph.continuous_tangentProjection</code> <small>line 82</small></li><li id=L86><b>lemma</b> <code>OAI.Problem358.AffinePlaneGraph.tangentProjection_add</code> <small>line 86</small></li><li id=L98><b>def</b> <code>OAI.Problem358.AffinePlaneGraph.interfaceGraph</code> <small>line 98</small><div class="doc"><p>Reference-normal graph coordinates for a varying selected interface.</p></div><pre>def interfaceGraph (n₀ z : E d) (a : ι → E d) (b : ι → ℝ) (i j : ι) :
+    (ℝ ∙ n₀)ᗮ → E d :=
+…</pre></li><li id=L104><b>def</b> <code>OAI.Problem358.AffinePlaneGraph.faceCoefficient</code> <small>line 104</small><div class="doc"><p>A transverse face coefficient; the fixed-plane measure and transverse
+normal factor together are the disintegration coefficient in cell derivatives.</p></div><pre>def faceCoefficient (K : Set (E d)) (n₀ z : E d) (J : Finset ι)
+    (i j : ι) (w : E d → ℝ) (p : (ι → E d) × (ι → ℝ)) : ℝ :=
+…</pre></li><li id=L116><b>theorem</b> <code>OAI.Problem358.AffinePlaneGraph.tendsto_faceCoefficient</code> <small>line 116</small><div class="doc"><p>Continuity of actual weighted positive-cell face coefficients, with the
+nearby charts, compact domination, and surface nullity all furnished internally.
+Only the reference configuration needs positive cells.</p></div><pre>theorem tendsto_faceCoefficient
+    {α : Type*} {l : Filter α} [l.IsCountablyGenerated]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d} (hz : z ∈ interior K)
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {w : E d → ℝ} (hw : Continuous w)
+    {a : α → ι → E d} {b : α → ι → ℝ}
+    (ha : ∀ k, Tendsto (fun q =&gt; a q k) l (𝓝 (y k)))
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L169><b>theorem</b> <code>OAI.Problem358.AffinePlaneGraph.continuousAt_faceCoefficient</code> <small>line 169</small><div class="doc"><p>Local continuity on the full joint site/intercept parameter space.</p></div><pre>theorem continuousAt_faceCoefficient
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d} (hz : z ∈ interior K)
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {w : E d → ℝ} (hw : Continuous w) :
+    ContinuousAt (faceCoefficient K (y i - y j) z J i j w) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="FaceContinuity.lean.html#L104">OAI.Problem358.AffinePlaneGraph.faceCoefficient</a></p></li><li id=L196><b>theorem</b> <code>OAI.Problem358.MovingCellTrace.tendsto_positive_cell_face_integral_of_tie</code> <small>line 196</small><div class="doc"><p>Weighted face coefficients vary continuously for positive affine cells,
+expressed in any nearby-plane chart preserving a fixed transverse projection.
+The compact source supplies domination; positivity supplies all surface nullity.</p></div><pre>theorem tendsto_positive_cell_face_integral_of_tie
+    {d : ℕ} {ι α : Type*} [Fintype ι] {l : Filter α} [l.IsCountablyGenerated]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d}
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (μ : Measure ((ℝ ∙ (y i - y j))ᗮ)) [μ.IsAddHaarMeasure]
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {P : E d → (ℝ ∙ (y i - y j))ᗮ} (hP : Continuous P)
+    {chart : α → ((ℝ ∙ (y i - y j))ᗮ) → E d}
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L247><b>theorem</b> <code>OAI.Problem358.AffinePlaneGraph.tendsto_faceCoefficient_of_tie</code> <small>line 247</small><div class="doc"><p>Continuity of actual weighted positive-cell face coefficients, with the
+nearby charts, compact domination, and surface nullity all furnished internally.
+Only the reference configuration needs positive cells.</p></div><pre>theorem tendsto_faceCoefficient_of_tie
+    {α : Type*} {l : Filter α} [l.IsCountablyGenerated]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d}
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {w : E d → ℝ} (hw : Continuous w)
+    {a : α → ι → E d} {b : α → ι → ℝ}
+    (ha : ∀ k, Tendsto (fun q =&gt; a q k) l (𝓝 (y k)))
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L300><b>theorem</b> <code>OAI.Problem358.AffinePlaneGraph.continuousAt_faceCoefficient_of_tie</code> <small>line 300</small><div class="doc"><p>Local continuity on the full joint site/intercept parameter space.</p></div><pre>theorem continuousAt_faceCoefficient_of_tie
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d}
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {w : E d → ℝ} (hw : Continuous w) :
+    ContinuousAt (faceCoefficient K (y i - y j) z J i j w) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="FaceContinuity.lean.html#L104">OAI.Problem358.AffinePlaneGraph.faceCoefficient</a></p></li><li id=L329><b>def</b> <code>OAI.Problem358.AffinePlaneGraph.intrinsicCutCoefficient</code> <small>line 329</small><div class="doc"><p>The normalized intrinsic integral over an interface with additional affine
+cuts. Unlike the local <code>faceCoefficient</code>, this definition uses no reference
+normal or basepoint.</p></div><pre>def intrinsicCutCoefficient (K : Set (E d)) (J : Finset ι) (i j : ι)
+    (w : E d → ℝ) (p : (ι → E d) × (ι → ℝ)) : ℝ :=
+…</pre></li><li id=L338><b>theorem</b> <code>OAI.Problem358.AffinePlaneGraph.faceCoefficient_eq_intrinsicCutCoefficient</code> <small>line 338</small><div class="doc"><p>The fixed transverse coefficient equals the intrinsic coefficient throughout
+the neighborhood where the transverse orientation stays positive.</p></div><pre>theorem faceCoefficient_eq_intrinsicCutCoefficient
+    {K : Set (E d)} (hK : MeasurableSet K) (n₀ z : E d) (hn₀ : n₀ ≠ 0)
+    (J : Finset ι) (i j : ι) (w : E d → ℝ) (hw : Measurable w)
+    (p : (ι → E d) × (ι → ℝ))
+    (htrans : 0 &lt; ⟪p.1 i - p.1 j, unitNormal n₀⟫) :
+    faceCoefficient K n₀ z J i j w p = intrinsicCutCoefficient K J i j w p := by
+…</pre><p class="refs">Mentions: <a href="FaceContinuity.lean.html#L71">OAI.Problem358.AffinePlaneGraph.unitNormal</a>, <a href="FaceContinuity.lean.html#L104">OAI.Problem358.AffinePlaneGraph.faceCoefficient</a>, <a href="FaceContinuity.lean.html#L329">OAI.Problem358.AffinePlaneGraph.intrinsicCutCoefficient</a></p></li><li id=L376><b>theorem</b> <code>OAI.Problem358.AffinePlaneGraph.continuousAt_intrinsicCutCoefficient</code> <small>line 376</small><div class="doc"><p>Actual intrinsic face coefficients are continuous in all sites and
+intercepts at each positive-cell configuration. No choice of a moving frame,
+Jacobian, exceptional set, or local derivative field is left as a hypothesis.</p></div><pre>theorem continuousAt_intrinsicCutCoefficient [Fintype ι]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j)
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    {w : E d → ℝ} (hw : Continuous w) :
+    ContinuousAt (intrinsicCutCoefficient K J i j w) (y, c) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="FaceContinuity.lean.html#L329">OAI.Problem358.AffinePlaneGraph.intrinsicCutCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

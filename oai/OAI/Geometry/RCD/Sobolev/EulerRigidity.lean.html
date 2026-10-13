@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Sobolev/EulerRigidity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Sobolev/EulerRigidity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Sobolev</a> / <span>EulerRigidity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Sobolev</a>/<span>EulerRigidity.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Sobolev/EulerRigidity.lean#L1">source</a></p><div class="doc"><h3>Rigidity of the Euler equation on a ball</h3><p>The Euclidean limit in the sharp projection argument satisfies an Euler
+equation with affine forcing.  Two derivatives suffice to force the limit
+to be affine; harmonic analyticity is not needed for this step.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.RegularPointCoordinates.eq_zero_of_continuousAt_eq_on_Ioo</code> <small>line 23</small><div class="doc"><p>A continuous function constant immediately to the right has the same
+value at the endpoint.</p></div><pre>theorem eq_zero_of_continuousAt_eq_on_Ioo {g : ℝ → ℝ} {c R : ℝ}
+    (hR : 0 &lt; R) (hg : ContinuousAt g 0)
+    (heq : ∀ t ∈ Ioo 0 R, g t = c) : g 0 = c := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_euler_derivative</code> <small>line 33</small><div class="doc"><p>Differentiating the scalar Euler equation cancels the first derivatives.</p></div><pre>theorem scalar_euler_derivative {f f&#x27; f&#x27;&#x27; : ℝ → ℝ} {ell k R t : ℝ}
+    (ht : t ∈ Ioo (-R) R)
+    (hf : HasDerivAt f (f&#x27; t) t) (hf&#x27; : HasDerivAt f&#x27; (f&#x27;&#x27; t) t)
+    (heuler : ∀ s ∈ Ioo (-R) R, s * f&#x27; s = f s + ell * s + k) :
+    t * f&#x27;&#x27; t = ell := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.RegularPointCoordinates.scalar_euler_ray_affine</code> <small>line 50</small><div class="doc"><p>A twice differentiable scalar ray satisfying the affine-forced Euler
+equation has zero linear forcing and the affine value at time one.</p></div><pre>theorem scalar_euler_ray_affine {f f&#x27; f&#x27;&#x27; : ℝ → ℝ} {ell k R : ℝ}
+    (hR : 1 &lt; R)
+    (hf : ∀ t ∈ Ioo (-R) R, HasDerivAt f (f&#x27; t) t)
+    (hf&#x27; : ∀ t ∈ Ioo (-R) R, HasDerivAt f&#x27; (f&#x27;&#x27; t) t)
+    (heuler : ∀ t ∈ Ioo (-R) R, t * f&#x27; t = f t + ell * t + k) :
+    ell = 0 ∧ k = -f 0 ∧ f 1 = f 0 + f&#x27; 0 := by
+…</pre></li><li id=L104><b>theorem</b> <code>OAI.RegularPointCoordinates.euler_linear_forcing_eq_zero</code> <small>line 104</small><div class="doc"><p>At the origin, differentiating the Euler equation forces its linear
+forcing to vanish.  The derivative of the radial factor cancels <code>Dw 0</code>.</p></div><pre>theorem euler_linear_forcing_eq_zero {w : E → ℝ}
+    {Dw : E → E →L[ℝ] ℝ} {DDw : E →L[ℝ] (E →L[ℝ] ℝ)}
+    {ell : E →L[ℝ] ℝ} {k R : ℝ} (hR : 0 &lt; R)
+    (hw : HasFDerivAt w (Dw 0) 0) (hDw : HasFDerivAt Dw DDw 0)
+    (heuler : ∀ x ∈ Metric.ball 0 R, Dw x x = w x + ell x + k) :
+    ell = 0 := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.RegularPointCoordinates.euler_rigidity_of_hasFDerivAt</code> <small>line 124</small><div class="doc"><p>The affine conclusion on a ball, with the two derivative fields
+explicit.  No continuity of the second derivative is required.</p></div><pre>theorem euler_rigidity_of_hasFDerivAt {w : E → ℝ}
+    {Dw : E → E →L[ℝ] ℝ} {DDw : E → E →L[ℝ] (E →L[ℝ] ℝ)}
+    {ell : E →L[ℝ] ℝ} {k R : ℝ} (hR : 0 &lt; R)
+    (hw : ∀ x ∈ Metric.ball 0 R, HasFDerivAt w (Dw x) x)
+    (hDw : ∀ x ∈ Metric.ball 0 R, HasFDerivAt Dw (DDw x) x)
+    (heuler : ∀ x ∈ Metric.ball 0 R, Dw x x = w x + ell x + k) :
+    ell = 0 ∧ k = -w 0 ∧ ∀ x ∈ Metric.ball 0 R, w x = w 0 + Dw 0 x := by
+…</pre></li><li id=L170><b>theorem</b> <code>OAI.RegularPointCoordinates.euler_rigidity_of_contDiffOn</code> <small>line 170</small><div class="doc"><p><code>C²</code> version of the Euler rigidity theorem used for the smooth
+Euclidean limit in <code>pi:limiting-euler-equation</code>.</p></div><pre>theorem euler_rigidity_of_contDiffOn {w : E → ℝ} {ell : E →L[ℝ] ℝ} {k R : ℝ}
+    (hR : 0 &lt; R) (hw : ContDiffOn ℝ 2 w (Metric.ball 0 R))
+    (heuler : ∀ x ∈ Metric.ball 0 R,
+      fderiv ℝ w x x = w x + ell x + k) :
+    ell = 0 ∧ k = -w 0 ∧
+      ∀ x ∈ Metric.ball 0 R, w x = w 0 + fderiv ℝ w 0 x := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

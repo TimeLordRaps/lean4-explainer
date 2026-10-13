@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/ReachableTuplePaths.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/ReachableTuplePaths.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>ReachableTuplePaths.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>ReachableTuplePaths.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/ReachableTuplePaths.lean#L1">source</a></p><div class="doc"><h3>Transfer paths of the retained successful states to their image tuples</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.PolycyclicRecognition.reachable_image_tuple_paths</code> <small>line 20</small><div class="doc"><p>Successful parameters may be correlated. Only their actual reachable
+states and paths are used when constructing all image-tuple transitions.</p></div><pre>theorem reachable_image_tuple_paths
+    {h : ℕ} (ι : N →* G) (f : G → G) {Λ : ℝ≥0} (hf : LipschitzWith Λ f)
+    (π : G →* Multiplicative W) (x d : G) (initial : N)
+    (S : Set (Fin h → N)) (P : T → Prop) (boundary : T → ℕ → N)
+    (hzero : ∀ t, P t → boundary t 0 = initial)
+    (hreach : ∀ v ∈ S, ∃ t, P t ∧ ∀ i : Fin h, boundary t (i.val + 1) = v i)
+    (E : Fin h → Set W) (r L κ B D : ℝ)
+    (hpaths : ∀ t, P t → ∀ j : Fin h,
+      ∃ γ : Path (x * ι (boundary t j.val) * d) (x * ι (boundary t (j.val + 1)) * d),
+        PathMetricBound γ L κ ∧
+        (∀ u, ∃ w ∈ E j, ‖(π (f (γ u))).toAdd -
+          (π (f (x * ι (boundary t j.val) * d))).toAdd - r • w‖ ≤ B) ∧
+…</pre><p class="refs">Mentions: <a href="CoarsePathConcatenation.lean.html#L19">OAI.PolycyclicRecognition.PathMetricBound</a></p></li><li id=L66><b>theorem</b> <code>OAI.PolycyclicRecognition.source_bundle_image_tuple_paths</code> <small>line 66</small><div class="doc"><p>Apply the transfer directly to the source-state coordinates produced
+by the coupled Haar image theorem. No independent choice of increments
+or of their conjugated images is made.</p></div><pre>theorem source_bundle_image_tuple_paths
+    {h : ℕ} (ι : N →* G) (f : G → G) {Λ : ℝ≥0} (hf : LipschitzWith Λ f)
+    (π : G →* Multiplicative W) (x d : G) (initial : N)
+    (S : Set (Fin h → N)) (P : T → Prop) (products : T → Fin h → N)
+    (φ : Fin h → N ≃* N) (ψ : Fin h → N ≃ᵐ N) (hψ : ∀ i z, ψ i z = φ i z)
+    (hreach : ∀ v ∈ S, ∃ t, P t ∧ v = sourceBundleStateEquiv h initial ψ (products t))
+    (E : Fin h → Set W) (r L κ B D : ℝ)
+    (hpaths : ∀ t, P t → ∀ j : Fin h,
+      ∃ γ : Path (x * ι (sourceBundleBoundary initial φ (products t) j.val) * d)
+          (x * ι (sourceBundleBoundary initial φ (products t) (j.val + 1)) * d),
+        PathMetricBound γ L κ ∧
+        (∀ u, ∃ w ∈ E j, ‖(π (f (γ u))).toAdd -
+…</pre><p class="refs">Mentions: <a href="../Algebra/SourceBundleStates.lean.html#L15">OAI.PolycyclicRecognition.sourceBundleStateEquiv</a>, <a href="SourceBundleBlockPaths.lean.html#L37">OAI.PolycyclicRecognition.sourceBundleBoundary</a>, <a href="CoarsePathConcatenation.lean.html#L19">OAI.PolycyclicRecognition.PathMetricBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

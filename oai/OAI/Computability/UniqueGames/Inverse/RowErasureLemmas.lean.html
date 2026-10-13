@@ -1,0 +1,106 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Inverse/RowErasureLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Inverse/RowErasureLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Inverse</a> / <span>RowErasureLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Inverse</a>/<span>RowErasureLemmas.lean</span></code></h1><p class="muted">53 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Inverse/RowErasureLemmas.lean#L1">source</a></p><div class="doc"><p>The row-erasure union bound is eventually strictly below one. The number of
+descriptions grows exponentially in <code>m</code>, while the tail exponent grows as
+<code>2 ^ ((ell-r)*(m-r))</code>. The only asymptotic input is the standard proved limit
+that a fixed polynomial divided by <code>2^n</code> tends to zero.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.indicator</code> <small>line 22</small></li><li id=L26><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.indicator_true</code> <small>line 26</small></li><li id=L27><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.indicator_false</code> <small>line 27</small></li><li id=L29><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.indicator_nonneg</code> <small>line 29</small></li><li id=L34><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.indicator_le_one</code> <small>line 34</small></li><li id=L39><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass</code> <small>line 39</small></li><li id=L42><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass_nonneg</code> <small>line 42</small></li><li id=L46><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass_le_one</code> <small>line 46</small></li><li id=L51><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.replaceOn</code> <small>line 51</small><div class="doc"><p>One independent replacement value per matrix entry, not per row fiber.</p></div><pre>def replaceOn {X Y : Type*} (B : X → Prop) (f replacement : X → Y) : X → Y := by
+…</pre></li><li id=L55><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.replaceOn_of_not_mem</code> <small>line 55</small></li><li id=L60><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.replaceOn_of_mem</code> <small>line 60</small></li><li id=L65><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.equalityAcceptance</code> <small>line 65</small></li><li id=L72><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.acceptance_le_modified_add_two_mass</code> <small>line 72</small><div class="doc"><p>Deterministic acceptance loss under editing a set of entries. Both endpoint
+marginals must equal the matrix-uniform law; no independence of endpoints is
+required. This applies to every choice of replacement values.</p></div><pre>theorem acceptance_le_modified_add_two_mass
+    {X Y E : Type*} [Fintype X] [Fintype E]
+    (left right : E → X) (B : X → Prop) (f g : X → Y)
+    (unchanged : ∀ x, ¬ B x → f x = g x)
+    (left_uniform : uniformMass (fun e =&gt; B (left e)) = uniformMass B)
+    (right_uniform : uniformMass (fun e =&gt; B (right e)) = uniformMass B) :
+    equalityAcceptance left right f ≤
+      equalityAcceptance left right g + 2 * uniformMass B := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L39">OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass</a>, <a href="RowErasureLemmas.lean.html#L65">OAI.UniqueGamesTheorem.Inverse.RowErasure.equalityAcceptance</a></p></li><li id=L107><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.acceptance_ge_original_sub_two_mass</code> <small>line 107</small></li><li id=L122><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.goodUnion</code> <small>line 122</small><div class="doc"><p>A matrix belongs to the erased union exactly when at least one row map
+provides good advice there.</p></div><pre>def goodUnion {A X : Type*} (good : A → X → Prop) (x : X) : Prop :=
+…</pre></li><li id=L126><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.adviceMass</code> <small>line 126</small><div class="doc"><p>Sample a uniform matrix, then an independent uniform row map.</p></div><pre>def adviceMass {A X : Type*} [Fintype A] [Fintype X]
+    (good : A → X → Prop) : ℝ :=
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.adviceMass_nonneg</code> <small>line 130</small></li><li id=L136><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.union_mass_le_card_mul_adviceMass</code> <small>line 136</small><div class="doc"><p>Each matrix in the union has at least one successful row-map atom. No
+disjointness between good fibers is needed.</p></div><pre>theorem union_mass_le_card_mul_adviceMass
+    {A X : Type*} [Fintype A] [Fintype X] (good : A → X → Prop) :
+    uniformMass (goodUnion good) ≤ (Fintype.card A : ℝ) * adviceMass good := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L39">OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass</a>, <a href="RowErasureLemmas.lean.html#L122">OAI.UniqueGamesTheorem.Inverse.RowErasure.goodUnion</a>, <a href="RowErasureLemmas.lean.html#L126">OAI.UniqueGamesTheorem.Inverse.RowErasure.adviceMass</a></p></li><li id=L155><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.adviceMass_ge_union_div_card</code> <small>line 155</small></li><li id=L163><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.adviceMass_ge_of_union_mass</code> <small>line 163</small></li><li id=L192><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.eventually_log_unionBound_neg</code> <small>line 192</small><div class="doc"><p>Logarithm of the finite union-bound estimate, for every sufficiently large
+column dimension. Neither the threshold nor the proof depends on a parity
+condition on the column dimension.</p></div><pre>theorem eventually_log_unionBound_neg (α : ℝ) (hα : 0 &lt; α)
+    (ell r : ℕ) (hr : r &lt; ell) :
+    ∀ᶠ m : ℕ in atTop,
+      (((2 * r + 1) * (ell + m) : ℕ) : ℝ) * Real.log 2 -
+        α ^ 2 * (2 : ℝ) ^ ((ell - r) * (m - r)) / 32 &lt; 0 := by
+…</pre></li><li id=L247><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.eventually_unionBound_lt_one</code> <small>line 247</small><div class="doc"><p>The exact description-count times tail estimate needed for simultaneous
+row erasure is strictly below one in all sufficiently large dimensions.</p></div><pre>theorem eventually_unionBound_lt_one (α : ℝ) (hα : 0 &lt; α)
+    (ell r : ℕ) (hr : r &lt; ell) :
+    ∀ᶠ m : ℕ in atTop,
+      (2 : ℝ) ^ ((2 * r + 1) * (ell + m)) *
+        Real.exp (-(α ^ 2) * (2 : ℝ) ^ ((ell - r) * (m - r)) / 32) &lt; 1 := by
+…</pre></li><li id=L266><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.exists_unionBound_threshold</code> <small>line 266</small><div class="doc"><p>A threshold usable by dimension-selection arguments, with enough columns
+to accommodate all <code>r</code> prescribed column constraints.</p></div><pre>theorem exists_unionBound_threshold (α : ℝ) (hα : 0 &lt; α)
+    (ell r : ℕ) (hr : r &lt; ell) :
+    ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → r ≤ m ∧
+      (2 : ℝ) ^ ((2 * r + 1) * (ell + m)) *
+        Real.exp (-(α ^ 2) * (2 : ℝ) ^ ((ell - r) * (m - r)) / 32) &lt; 1 := by
+…</pre></li><li id=L295><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.direction</code> <small>line 295</small><div class="doc"><p>The linear part of the affine parametrization.</p></div><pre>def direction (A : K →ₗ[R] L) (Q : Submodule R E)
+    (N : (E ⧸ Q) →ₗ[R] A.ker) : E →ₗ[R] K :=
+…</pre></li><li id=L299><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.direction_apply</code> <small>line 299</small></li><li id=L305><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.exists_direction_of_row_and_column</code> <small>line 305</small><div class="doc"><p>Quotient descent of a linear map which vanishes on the column span and
+takes values in the common row kernel.</p></div><pre>theorem exists_direction_of_row_and_column (A : K →ₗ[R] L)
+    (Q : Submodule R E) (B : E →ₗ[R] K)
+    (hQ : Q ≤ B.ker) (hA : LinearMap.range B ≤ A.ker) :
+    ∃ N : (E ⧸ Q) →ₗ[R] A.ker, direction A Q N = B := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L295">OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.direction</a></p></li><li id=L321><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.direction_injective</code> <small>line 321</small></li><li id=L331><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.AffineSlice</code> <small>line 331</small><div class="doc"><p>The concrete affine slice around any one point satisfying its equations.</p></div><pre>def AffineSlice (A : K →ₗ[R] L) (Q : Submodule R E) (M₀ : E →ₗ[R] K) :=
+…</pre></li><li id=L334><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.ofQuotient</code> <small>line 334</small></li><li id=L346><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.ofQuotient_val</code> <small>line 346</small></li><li id=L350><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.ofQuotient_bijective</code> <small>line 350</small></li><li id=L374><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.equiv</code> <small>line 374</small><div class="doc"><p>Uniform free quotient maps parametrize exactly the original affine slice.</p></div><pre>def equiv (A : K →ₗ[R] L) (Q : Submodule R E) (M₀ : E →ₗ[R] K) :
+    ((E ⧸ Q) →ₗ[R] A.ker) ≃ AffineSlice A Q M₀ :=
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L331">OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.AffineSlice</a></p></li><li id=L378><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.equiv_apply</code> <small>line 378</small></li><li id=L383><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.equiv_affine_target</code> <small>line 383</small><div class="doc"><p>The base point contributes an affine offset; it is not discarded.</p></div><pre>theorem equiv_affine_target (A : K →ₗ[R] L) (Q : Submodule R E)
+    (M₀ : E →ₗ[R] K) (N : (E ⧸ Q) →ₗ[R] A.ker) (z : E) (u : K) :
+    (equiv A Q M₀ N).val z + u =
+      (N (Q.mkQ z) : K) + (M₀ z + u) := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L374">OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.equiv</a></p></li><li id=L391><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.expect_equiv</code> <small>line 391</small><div class="doc"><p>Exact uniform-law transport through the affine parametrization.</p></div><pre>theorem expect_equiv (A : K →ₗ[R] L) (Q : Submodule R E) (M₀ : E →ₗ[R] K)
+    [Fintype ((E ⧸ Q) →ₗ[R] A.ker)] [Fintype (AffineSlice A Q M₀)]
+    (f : AffineSlice A Q M₀ → ℝ) :
+    Finset.univ.expect (fun N =&gt; f (equiv A Q M₀ N)) = Finset.univ.expect f := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L331">OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.AffineSlice</a>, <a href="RowErasureLemmas.lean.html#L374">OAI.UniqueGamesTheorem.Inverse.RowErasureSliceQuotient.equiv</a></p></li><li id=L414><b>structure</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily</code> <small>line 414</small><div class="doc"><p>Each description includes its row map, row value, column equations and
+affine target. <code>points_row</code> is the necessary relationship to actual row advice.</p></div><pre>structure SliceFamily (X Y A S D : Type*) where
+…</pre></li><li id=L422><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.agreement</code> <small>line 422</small></li><li id=L425><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.GoodAdvice</code> <small>line 425</small></li><li id=L430><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.goodAt</code> <small>line 430</small></li><li id=L434><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.erasedUnion</code> <small>line 434</small></li><li id=L440><b>def</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.randomizedAgreement</code> <small>line 440</small><div class="doc"><p>Only randomized entries count; an unchanged entry contributes zero, even
+when its old label already matches the target.</p></div><pre>def SliceFamily.randomizedAgreement (F : SliceFamily X Y A S D)
+    (B : X → Prop) (replacement : X → Y) (d : D) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L414">OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily</a></p></li><li id=L444><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.mem_erasedUnion_of_good_row</code> <small>line 444</small></li><li id=L453><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.original_agreement_lt_of_not_good</code> <small>line 453</small></li><li id=L461><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.modified_agreement_le_original_add_randomized</code> <small>line 461</small></li><li id=L483><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.modified_agreement_eq_randomized_of_good</code> <small>line 483</small></li><li id=L499><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.modified_agreement_lt</code> <small>line 499</small><div class="doc"><p>If the random replacement bound holds, <em>every</em> permitted nonempty slice
+has modified agreement strictly below α. The proof splits on goodness of the
+whole row fiber, not on goodness of the individual column slice.</p></div><pre>theorem SliceFamily.modified_agreement_lt
+    (F : SliceFamily X Y A S D) (f replacement : X → Y)
+    (α : ℝ) (hα : 0 &lt; α)
+    (randomized_small : ∀ d, (F.points d).Nonempty →
+      F.randomizedAgreement (F.erasedUnion f α) replacement d &lt; α / 4)
+    (d : D) (hne : (F.points d).Nonempty) :
+    F.agreement (replaceOn (F.erasedUnion f α) f replacement) d &lt; α := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L414">OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily</a>, <a href="RowErasureLemmas.lean.html#L51">OAI.UniqueGamesTheorem.Inverse.RowErasure.replaceOn</a></p></li><li id=L520><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.union_mass_ge_of_inverse_and_erasure</code> <small>line 520</small><div class="doc"><p>Conditional erasure contradiction. The two deep inputs remain explicit:
+the inverse theorem for arbitrary (possibly unfolded) functions, and existence
+of a replacement table uniformly small on every slice/target description.</p></div><pre>theorem SliceFamily.union_mass_ge_of_inverse_and_erasure
+    {E : Type*} [Fintype X] [Fintype E]
+    (F : SliceFamily X Y A S D) (left right : E → X)
+    (f : X → Y) (η α : ℝ) (hη : 0 &lt; η) (hα : 0 &lt; α)
+    (acceptance_large : 4 * η ≤ equalityAcceptance left right f)
+    (left_uniform : ∀ B : X → Prop,
+      uniformMass (fun e =&gt; B (left e)) = uniformMass B)
+    (right_uniform : ∀ B : X → Prop,
+      uniformMass (fun e =&gt; B (right e)) = uniformMass B)
+    (inverse : ∀ g : X → Y, η ≤ equalityAcceptance left right g →
+      ∃ d, (F.points d).Nonempty ∧ α ≤ F.agreement g d)
+    (erasure : ∃ replacement : X → Y, ∀ d, (F.points d).Nonempty →
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L414">OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily</a>, <a href="RowErasureLemmas.lean.html#L65">OAI.UniqueGamesTheorem.Inverse.RowErasure.equalityAcceptance</a>, <a href="RowErasureLemmas.lean.html#L39">OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass</a></p></li><li id=L559><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass_exists_le_sum</code> <small>line 559</small></li><li id=L576><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.exists_avoiding_of_sum_bad_lt_one</code> <small>line 576</small></li><li id=L592><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.exists_avoiding_of_card_mul_bound_lt_one</code> <small>line 592</small></li><li id=L606><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily.exists_erasure_of_probability_bound</code> <small>line 606</small><div class="doc"><p>The union-bound step for actual replacement tables. Nonempty slice
+descriptions with randomized agreement at least α/4 are the bad events.</p></div><pre>theorem SliceFamily.exists_erasure_of_probability_bound
+    {X Y A S D : Type*} [Fintype X] [Fintype Y] [Nonempty Y] [Fintype D]
+    (F : SliceFamily X Y A S D) (B : X → Prop) (α ρ : ℝ)
+    (hprob : ∀ d, uniformMass (fun replacement : X → Y =&gt;
+      (F.points d).Nonempty ∧ α / 4 ≤ F.randomizedAgreement B replacement d) ≤ ρ)
+    (hsmall : (Fintype.card D : ℝ) * ρ &lt; 1) :
+    ∃ replacement : X → Y, ∀ d, (F.points d).Nonempty →
+      F.randomizedAgreement B replacement d &lt; α / 4 := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L414">OAI.UniqueGamesTheorem.Inverse.RowErasure.SliceFamily</a>, <a href="RowErasureLemmas.lean.html#L39">OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass</a></p></li><li id=L623><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.advice_average_ge</code> <small>line 623</small><div class="doc"><p>Average the fixed-context advice bound over the spectral good contexts.
+Both samples remain explicit: the context, then the row map and matrix.</p></div><pre>theorem advice_average_ge
+    {Q A X : Type*} [Fintype Q] [Fintype A] [Nonempty A] [Fintype X]
+    (goodContext : Q → Prop) (good : Q → A → X → Prop)
+    (β η : ℝ) (hη : 0 ≤ η)
+    (hcontext : β ≤ uniformMass goodContext)
+    (hlocal : ∀ q, goodContext q → η ≤ uniformMass (goodUnion (good q))) :
+    β * (η / (Fintype.card A : ℝ)) ≤
+      Finset.univ.expect (fun q =&gt; adviceMass (good q)) := by
+…</pre><p class="refs">Mentions: <a href="RowErasureLemmas.lean.html#L39">OAI.UniqueGamesTheorem.Inverse.RowErasure.uniformMass</a>, <a href="RowErasureLemmas.lean.html#L122">OAI.UniqueGamesTheorem.Inverse.RowErasure.goodUnion</a>, <a href="RowErasureLemmas.lean.html#L126">OAI.UniqueGamesTheorem.Inverse.RowErasure.adviceMass</a></p></li><li id=L644><b>theorem</b> <code>OAI.UniqueGamesTheorem.Inverse.RowErasure.advice_average_ge_ten_eta_sq_div_card</code> <small>line 644</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

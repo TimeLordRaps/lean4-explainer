@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/FreeProjectionMoments.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/FreeProjectionMoments.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>FreeProjectionMoments.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>FreeProjectionMoments.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/FreeProjectionMoments.lean#L1">source</a></p><div class="doc"><h3>Two free-projection moments for scalar recovery</h3><p>Only the degree-two and alternating degree-four centered moments are
+used. The identities below are proved from these explicit algebraic
+hypotheses; no free-probability theorem is assumed here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>structure</b> <code>OAI.KadisonKastler.CenteredProjectionMoments</code> <small>line 22</small><div class="doc"><p>The two centered mixed moments needed for the compressed projection.</p></div><pre>structure CenteredProjectionMoments (τ : FaithfulTracialState B) (p e : B)
+    (t η : ℝ) : Prop where
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a></p></li><li id=L28><b>theorem</b> <code>OAI.KadisonKastler.centered_projection_square</code> <small>line 28</small></li><li id=L35><b>theorem</b> <code>OAI.KadisonKastler.expand_centered_sandwich</code> <small>line 35</small></li><li id=L42><b>theorem</b> <code>OAI.KadisonKastler.trace_sandwich_square</code> <small>line 42</small></li><li id=L56><b>theorem</b> <code>OAI.KadisonKastler.CenteredProjectionMoments.trace_compression</code> <small>line 56</small><div class="doc"><p>The first mixed moment makes the trace of a compression the product
+of the projection traces.</p></div><pre>theorem CenteredProjectionMoments.trace_compression
+    {τ : FaithfulTracialState B} {p e : B} {t η : ℝ}
+    (h : CenteredProjectionMoments τ p e t η)
+    (he : e * e = e) (hpτ : τ.toLinearMap p = (t : ℂ))
+    (heτ : τ.toLinearMap e = (η : ℂ)) :
+    τ.toLinearMap (e * p * e) = ((t * η : ℝ) : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="FreeProjectionMoments.lean.html#L22">OAI.KadisonKastler.CenteredProjectionMoments</a></p></li><li id=L74><b>theorem</b> <code>OAI.KadisonKastler.CenteredProjectionMoments.trace_centered_compression</code> <small>line 74</small><div class="doc"><p>The alternating fourth moment determines the centered compressed
+second moment before any normalization by the corner trace.</p></div><pre>theorem CenteredProjectionMoments.trace_centered_compression
+    {τ : FaithfulTracialState B} {p e : B} {t η : ℝ}
+    (h : CenteredProjectionMoments τ p e t η)
+    (hp : p * p = p) (hpτ : τ.toLinearMap p = (t : ℂ))
+    (heτ : τ.toLinearMap e = (η : ℂ)) :
+    τ.toLinearMap ((p - (t : ℂ) • 1) * e * (p - (t : ℂ) • 1) * e) =
+      (η : ℂ) ^ 2 * ((t : ℂ) - (t : ℂ) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="FreeProjectionMoments.lean.html#L22">OAI.KadisonKastler.CenteredProjectionMoments</a></p></li><li id=L105><b>theorem</b> <code>OAI.KadisonKastler.CenteredProjectionMoments.trace_scaled_compression</code> <small>line 105</small><div class="doc"><p>The normalized positive compression has the same trace as <code>e</code>.</p></div><pre>theorem CenteredProjectionMoments.trace_scaled_compression
+    {τ : FaithfulTracialState B} {p e : B} {n : ℕ} {η : ℝ}
+    (hn : 0 &lt; n) (he : IsStarProjection e)
+    (hpτ : τ.toLinearMap p = (((n : ℝ)⁻¹ : ℝ) : ℂ))
+    (heτ : τ.toLinearMap e = (η : ℂ))
+    (h : CenteredProjectionMoments τ p e (n : ℝ)⁻¹ η) :
+    τ.toLinearMap ((n : ℂ) • (e * p * e)) = (η : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="FreeProjectionMoments.lean.html#L22">OAI.KadisonKastler.CenteredProjectionMoments</a></p></li><li id=L120><b>theorem</b> <code>OAI.KadisonKastler.CenteredProjectionMoments.trace_scaled_compression_sub_sq</code> <small>line 120</small><div class="doc"><p>With trace <code>1/n</code>, the scaled compression has the exact variance
+<code>(n-1)η²</code>. This is the scalar identity used in the recovery estimate.</p></div><pre>theorem CenteredProjectionMoments.trace_scaled_compression_sub_sq
+    {τ : FaithfulTracialState B} {p e : B} {n : ℕ} {η : ℝ}
+    (hn : 0 &lt; n) (hp : IsStarProjection p) (he : IsStarProjection e)
+    (hpτ : τ.toLinearMap p = (((n : ℝ)⁻¹ : ℝ) : ℂ))
+    (heτ : τ.toLinearMap e = (η : ℂ))
+    (h : CenteredProjectionMoments τ p e (n : ℝ)⁻¹ η) :
+    τ.toLinearMap (((n : ℂ) • (e * p * e) - e) ^ 2) =
+      (((n : ℝ) - 1) * η ^ 2 : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="FreeProjectionMoments.lean.html#L22">OAI.KadisonKastler.CenteredProjectionMoments</a></p></li><li id=L146><b>theorem</b> <code>OAI.KadisonKastler.CenteredProjectionMoments.traceTwoNorm_scaled_compression_sub_sq</code> <small>line 146</small><div class="doc"><p>The preceding complex identity is the square of the tracial
+two-norm, because the scaled compression is selfadjoint.</p></div><pre>theorem CenteredProjectionMoments.traceTwoNorm_scaled_compression_sub_sq
+    {τ : FaithfulTracialState B} {p e : B} {n : ℕ} {η : ℝ}
+    (hn : 0 &lt; n) (hp : IsStarProjection p) (he : IsStarProjection e)
+    (hpτ : τ.toLinearMap p = (((n : ℝ)⁻¹ : ℝ) : ℂ))
+    (heτ : τ.toLinearMap e = (η : ℂ))
+    (h : CenteredProjectionMoments τ p e (n : ℝ)⁻¹ η) :
+    traceTwoNorm τ ((n : ℂ) • (e * p * e) - e) ^ 2 =
+      ((n : ℝ) - 1) * η ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="PublishedFock.lean.html#L32">OAI.KadisonKastler.FaithfulTracialState</a>, <a href="FreeProjectionMoments.lean.html#L22">OAI.KadisonKastler.CenteredProjectionMoments</a>, <a href="BoundedSequence.lean.html#L69">OAI.KadisonKastler.traceTwoNorm</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/DensityAssembly.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/DensityAssembly.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>DensityAssembly.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>DensityAssembly.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/DensityAssembly.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.Problem337.densityDivisorCount</code> <small>line 17</small><div class="doc"><p>The truncated divisor count appearing in the shifted moment hypothesis.</p></div><pre>def densityDivisorCount (X : ℝ) (N : ℕ) : ℝ :=
+…</pre></li><li id=L23><b>structure</b> <code>OAI.Problem337.DensityBadFamily</code> <small>line 23</small><div class="doc"><p>Explicit finite arithmetic data consumed by the density descent.
+No residue-distribution or divisor-moment estimate is asserted by this structure:
+these are the <code>many_residues</code> and <code>moment_bound</code> fields that must be supplied.</p></div><pre>structure DensityBadFamily (S m ρ r c : ℝ) (d : ℕ) where
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.Problem337.card_le_cutoff</code> <small>line 54</small></li><li id=L62><b>theorem</b> <code>OAI.Problem337.DensityBadFamily.recurrence</code> <small>line 62</small><div class="doc"><p>Pair counting and the actual shifted divisor moment give the normalized
+nonlinear recurrence, including inherited bad numerators and list multiplicity.</p></div><pre>theorem DensityBadFamily.recurrence
+    {S m ρ r c : ℝ} {d : ℕ} (F : DensityBadFamily S m ρ r c d)
+    (hρ0 : 0 &lt; ρ) (hρ1 : ρ ≤ 1) (hr : 1 &lt; r)
+    (j : ℕ) (hj : j &lt; d) :
+    ((F.bad j).card : ℝ) / F.cutoff j ≤ Real.exp (-c * m) +
+      Real.exp (2 * S ^ (1 / 4 : ℝ)) *
+        (((F.bad (j + 1)).card : ℝ) / F.cutoff (j + 1)) ^ (1 - 1 / r) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L23">OAI.Problem337.DensityBadFamily</a></p></li><li id=L103><b>theorem</b> <code>OAI.Problem337.eventually_density_bad_card_le_eighth</code> <small>line 103</small><div class="doc"><p>The full counting/analytic density conclusion, conditional on explicit
+residue and shifted-divisor-moment data, uniformly in all finite families.</p></div><pre>theorem eventually_density_bad_card_le_eighth
+    (c K r : ℝ) (hc : 0 &lt; c) (hK : 0 ≤ K) (hr : 2 ≤ r) (hKr : 8 * K ≤ r) :
+    ∀ᶠ S : ℝ in atTop, ∀ (m ρ : ℝ) (d : ℕ) (F : DensityBadFamily S m ρ r c d),
+      S / (2 * Real.log S) ≤ m → (d : ℝ) ≤ K * Real.log S →
+      0 &lt; ρ → ρ ≤ 1 → ((F.bad 0).card : ℝ) ≤ F.cutoff 0 / 8 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L23">OAI.Problem337.DensityBadFamily</a></p></li><li id=L130><b>structure</b> <code>OAI.Problem337.DensityResidueFamily</code> <small>line 130</small><div class="doc"><p>Raw residue data before the good sets are constructed. The terminal
+expansions, small-residue supply and shifted divisor moments are explicit
+inputs; all finite propagation is proved below.</p></div><pre>structure DensityResidueFamily (S m ρ r c : ℝ) (d : ℕ) where
+…</pre></li><li id=L170><b>def</b> <code>OAI.Problem337.DensityResidueFamily.GoodSets</code> <small>line 170</small><div class="doc"><p>The exact recursive good-set specification needed for both effects of the
+construction: closure counts bad residues, and decomposition propagates lists.</p></div><pre>def DensityResidueFamily.GoodSets
+    {S m ρ r c : ℝ} {d : ℕ} (F : DensityResidueFamily S m ρ r c d)
+    (G : ℕ → Finset ℕ) : Prop :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L130">OAI.Problem337.DensityResidueFamily</a></p></li><li id=L182><b>def</b> <code>OAI.Problem337.DensityResidueFamily.toBadFamily</code> <small>line 182</small><div class="doc"><p>Every small successful index for a bad numerator lands at a bad numerator
+at the next level. In particular a zero residue cannot remain bad.</p></div><pre>def DensityResidueFamily.toBadFamily
+    {S m ρ r c : ℝ} {d : ℕ} (F : DensityResidueFamily S m ρ r c d)
+    (G : ℕ → Finset ℕ) (hG : F.GoodSets G) : DensityBadFamily S m ρ r c d := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L130">OAI.Problem337.DensityResidueFamily</a>, <a href="DensityAssembly.lean.html#L23">OAI.Problem337.DensityBadFamily</a></p></li><li id=L238><b>theorem</b> <code>OAI.Problem337.DensityResidueFamily.good_expansions</code> <small>line 238</small><div class="doc"><p>The same good-set specification supplies genuine unit-fraction lists;
+this is not an additional expansion hypothesis at intermediate levels.</p></div><pre>theorem DensityResidueFamily.good_expansions
+    {S m ρ r c : ℝ} {d : ℕ} (F : DensityResidueFamily S m ρ r c d)
+    (G : ℕ → Finset ℕ) (hG : F.GoodSets G) :
+    ∀ j ≤ d, ∀ u ∈ G j,
+      Descent.UnitListAtMost ((u : ℚ) / (F.denominator * F.factor j : ℕ))
+        (F.baseLength + (d - j)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L130">OAI.Problem337.DensityResidueFamily</a>, <a href="BackwardExpansions.lean.html#L10">OAI.Problem337.Descent.UnitListAtMost</a></p></li><li id=L258><b>theorem</b> <code>OAI.Problem337.eventually_residue_family_dense</code> <small>line 258</small><div class="doc"><p>Complete finite/analytic density construction from raw residue and moment
+supply. The intermediate good sets and their expansions are constructed here.</p></div><pre>theorem eventually_residue_family_dense
+    (c K r : ℝ) (hc : 0 &lt; c) (hK : 0 ≤ K) (hr : 2 ≤ r) (hKr : 8 * K ≤ r) :
+    ∀ᶠ S : ℝ in atTop, ∀ (m ρ : ℝ) (d : ℕ) (F : DensityResidueFamily S m ρ r c d),
+      S / (2 * Real.log S) ≤ m → (d : ℝ) ≤ K * Real.log S →
+      0 &lt; ρ → ρ ≤ 1 →
+      ∃ G : Finset ℕ, G ⊆ Finset.Icc 1 ⌊F.cutoff 0⌋₊ ∧
+        ((Finset.Icc 1 ⌊F.cutoff 0⌋₊ \ G).card : ℝ) ≤ F.cutoff 0 / 8 ∧
+        ∀ u ∈ G, Descent.UnitListAtMost
+          ((u : ℚ) / (F.denominator * F.factor 0 : ℕ)) (F.baseLength + d) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L130">OAI.Problem337.DensityResidueFamily</a>, <a href="BackwardExpansions.lean.html#L10">OAI.Problem337.Descent.UnitListAtMost</a></p></li><li id=L278><b>theorem</b> <code>OAI.Problem337.Descent.UnitListAtMost.to_density_list_two</code> <small>line 278</small><div class="doc"><p>Conversion to the list interface used by the elementary dense-family
+reduction, retaining the same length bound.</p></div><pre>theorem Descent.UnitListAtMost.to_density_list_two {x : ℚ} {B : ℕ}
+    (H : Descent.UnitListAtMost x B) (hx : x &lt; 1) :
+    ∃ l : List ℕ, (∀ n ∈ l, 2 ≤ n) ∧ l.length ≤ B ∧
+      (l.map (fun n : ℕ =&gt; (1 : ℚ) / (n : ℚ))).sum = x := by
+…</pre><p class="refs">Mentions: <a href="BackwardExpansions.lean.html#L10">OAI.Problem337.Descent.UnitListAtMost</a></p></li><li id=L292><b>theorem</b> <code>OAI.Problem337.eventually_residue_family_dense_lists</code> <small>line 292</small><div class="doc"><p>A directly consumable list version of the density proposition. The only
+additional hypotheses are the supplied terminal-length budget and the fact
+that all represented fractions lie below one.</p></div><pre>theorem eventually_residue_family_dense_lists
+    (c K r : ℝ) (hc : 0 &lt; c) (hK : 0 ≤ K) (hr : 2 ≤ r) (hKr : 8 * K ≤ r) :
+    ∀ᶠ S : ℝ in atTop, ∀ (m ρ L : ℝ) (d : ℕ) (F : DensityResidueFamily S m ρ r c d),
+      S / (2 * Real.log S) ≤ m → (d : ℝ) ≤ K * Real.log S →
+      0 &lt; ρ → ρ ≤ 1 →
+      ((F.baseLength + d : ℕ) : ℝ) ≤ L * Real.log S →
+      F.cutoff 0 &lt; ((F.denominator * F.factor 0 : ℕ) : ℝ) →
+      ∃ G : Finset ℕ,
+        ((Finset.Icc 1 ⌊F.cutoff 0⌋₊ \ G).card : ℝ) ≤ F.cutoff 0 / 8 ∧
+        ∀ u ∈ G, ∃ ds : List ℕ,
+          (∀ n ∈ ds, 2 ≤ n) ∧ (ds.length : ℝ) ≤ L * Real.log S ∧
+          (ds.map (fun n : ℕ =&gt; (1 : ℚ) / (n : ℚ))).sum =
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L32">OAI.Problem337.F</a>, <a href="DensityAssembly.lean.html#L130">OAI.Problem337.DensityResidueFamily</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

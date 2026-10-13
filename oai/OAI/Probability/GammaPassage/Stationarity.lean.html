@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/Stationarity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/Stationarity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>Stationarity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>Stationarity.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/Stationarity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.GammaFPP.IidEnvironment.translate</code> <small>line 14</small><div class="doc"><p>Deterministic lattice translation preserves an iid environment.</p></div><pre>theorem IidEnvironment.translate (h : IidEnvironment ν P τ) (a : Vertex) :
+    IidEnvironment ν P (fun e =&gt; τ (shiftEdge a e)) where
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L71">OAI.GammaFPP.IidEnvironment</a></p></li><li id=L22><b>theorem</b> <code>OAI.GammaFPP.IidEnvironment.jointLaw</code> <small>line 22</small><div class="doc"><p>The complete configuration has the product law.</p></div><pre>theorem IidEnvironment.jointLaw (h : IidEnvironment ν P τ) :
+    Measure.map (fun ω e =&gt; τ e ω) P = iidProductLaw ν := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L71">OAI.GammaFPP.IidEnvironment</a>, <a href="Environment.lean.html#L23">OAI.GammaFPP.iidProductLaw</a></p></li><li id=L28><b>theorem</b> <code>OAI.GammaFPP.IidEnvironment.translated_event_probability</code> <small>line 28</small><div class="doc"><p>Every measurable configuration observable has translation-invariant law.</p></div><pre>theorem IidEnvironment.translated_event_probability
+    (h : IidEnvironment ν P τ) (a : Vertex)
+    (A : Set (Edge → ℝ)) (hA : MeasurableSet A) :
+    P {ω | (fun e =&gt; τ (shiftEdge a e) ω) ∈ A} =
+      P {ω | (fun e =&gt; τ e ω) ∈ A} := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L71">OAI.GammaFPP.IidEnvironment</a></p></li><li id=L40><b>theorem</b> <code>OAI.GammaFPP.IidEnvironment.integral_configuration</code> <small>line 40</small><div class="doc"><p>Integral transport to the common product law.</p></div><pre>theorem IidEnvironment.integral_configuration (h : IidEnvironment ν P τ)
+    (f : (Edge → ℝ) → ℝ) (hf : Measurable f) :
+    (∫ ω, f (fun e =&gt; τ e ω) ∂P) = ∫ w, f w ∂iidProductLaw ν := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L71">OAI.GammaFPP.IidEnvironment</a>, <a href="Environment.lean.html#L23">OAI.GammaFPP.iidProductLaw</a></p></li><li id=L48><b>theorem</b> <code>OAI.GammaFPP.IidEnvironment.integral_passageTime_translate</code> <small>line 48</small><div class="doc"><p>Translated passage times have equal expectations.</p></div><pre>theorem IidEnvironment.integral_passageTime_translate
+    (h : IidEnvironment ν P τ) (a p q : Vertex) :
+    (∫ ω, passageTime (fun e =&gt; τ e ω) (a + p) (a + q) ∂P) =
+      ∫ ω, passageTime (fun e =&gt; τ e ω) p q ∂P := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L71">OAI.GammaFPP.IidEnvironment</a></p></li><li id=L66><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.integral_passageTime_nonneg</code> <small>line 66</small><div class="doc"><p>The expected passage time is nonnegative.</p></div><pre>theorem GammaEnvironment.integral_passageTime_nonneg
+    (h : GammaEnvironment shape rate P τ) (p q : Vertex) :
+    0 ≤ ∫ ω, passageTime (fun e =&gt; τ e ω) p q ∂P := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li><li id=L74><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.integral_passageTime_le_path_length</code> <small>line 74</small><div class="doc"><p>A deterministic path bounds the expected passage time, counting every traversal.</p></div><pre>theorem GammaEnvironment.integral_passageTime_le_path_length
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (p q : Vertex) (ds : List Step) (hend : p + displacement ds = q) :
+    (∫ ω, passageTime (fun e =&gt; τ e ω) p q ∂P) ≤
+      (ds.length : ℝ) * (shape / rate) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li><li id=L87><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.finite_expected_passage</code> <small>line 87</small><div class="doc"><p>There is a finite upper bound for the expected passage time.</p></div><pre>theorem GammaEnvironment.finite_expected_passage
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (p q : Vertex) :
+    Integrable (fun ω =&gt; passageTime (fun e =&gt; τ e ω) p q) P ∧
+      ∃ L : ℕ, 0 ≤ (∫ ω, passageTime (fun e =&gt; τ e ω) p q ∂P) ∧
+        (∫ ω, passageTime (fun e =&gt; τ e ω) p q ∂P) ≤ (L : ℝ) * (shape / rate) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li><li id=L99><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.mean_passageTime_subadditive</code> <small>line 99</small><div class="doc"><p>Stationarity and the passage-time triangle inequality give subadditivity in expectation.</p></div><pre>theorem GammaEnvironment.mean_passageTime_subadditive
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (x y : Vertex) :
+    (∫ ω, passageTime (fun e =&gt; τ e ω) 0 (x + y) ∂P) ≤
+      (∫ ω, passageTime (fun e =&gt; τ e ω) 0 x ∂P) +
+      (∫ ω, passageTime (fun e =&gt; τ e ω) 0 y ∂P) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a></p></li><li id=L119><b>def</b> <code>OAI.GammaFPP.meanPassageSequence</code> <small>line 119</small><div class="doc"><p>Mean passage time along an integer lattice direction, indexed by natural steps.</p></div><pre>noncomputable def meanPassageSequence (P : Measure Ω) (τ : Edge → Ω → ℝ)
+    (z : Vertex) (n : ℕ) : ℝ :=
+…</pre></li><li id=L123><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.meanPassageSequence_nonneg</code> <small>line 123</small></li><li id=L129><b>theorem</b> <code>OAI.GammaFPP.GammaEnvironment.meanPassageSequence_subadditive</code> <small>line 129</small><div class="doc"><p>Subadditivity includes the zero direction and zero indices.</p></div><pre>theorem GammaEnvironment.meanPassageSequence_subadditive
+    (h : GammaEnvironment shape rate P τ) (hs : 0 &lt; shape) (hr : 0 &lt; rate)
+    (z : Vertex) (m n : ℕ) :
+    meanPassageSequence P τ z (m + n) ≤
+      meanPassageSequence P τ z m + meanPassageSequence P τ z n := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="Stationarity.lean.html#L119">OAI.GammaFPP.meanPassageSequence</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

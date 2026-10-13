@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Entropy/Tag.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Entropy/Tag.lean.html"><link rel="stylesheet" href="../../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../../index.html">All corpora</a> | <a href="../../../../../index.html">Index</a> | <a href="../../../../../glossary.html">Glossary</a> | <a href="../../../../../find.html">Find</a> | <a href="../../../../../implications.html">Implications</a> | <a href="../../../../../annotate.html">Explanation guide</a> | <a href="../../../../../learning-path.html">Learning path</a> | <a href="../../../../../trust.html">Trust</a> | <a href="../../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../../index.html">Corpus home</a> / <a href="../../../../index.html">OAI</a> / <a href="../../../index.html">LinearAlgebra</a> / <a href="../../index.html">MatrixMultiplication</a> / <a href="../index.html">AuxiliarySeparation</a> / <a href="index.html">Entropy</a> / <span>Tag.lean</span></nav></header><h1 class="path-title"><code><a href="../../../../index.html">OAI</a>/<a href="../../../index.html">LinearAlgebra</a>/<a href="../../index.html">MatrixMultiplication</a>/<a href="../index.html">AuxiliarySeparation</a>/<a href="index.html">Entropy</a>/<span>Tag.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Entropy/Tag.lean#L1">source</a></p><div class="doc"><h3>The entropy limit for matched types</h3><p>The finite hypothesis in this file is an inequality at every integral type.
+The conclusion follows by first repeating a fixed type, and then approximating
+an arbitrary probability law by rational laws. No entropy inequality is
+included in the finite hypothesis.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution</code> <small>line 28</small><div class="doc"><p>The character contribution of all words of one prescribed type.</p></div><pre>def typeContribution (values : A → ℝ) (p : ℝ) (counts : A → ℕ) (t : ℕ) : ℝ :=
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution_pos</code> <small>line 32</small></li><li id=L40><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.log_typeContribution</code> <small>line 40</small></li><li id=L54><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution_rate</code> <small>line 54</small><div class="doc"><p>Repeating one exact type has its Shannon entropy growth rate.</p></div><pre>theorem typeContribution_rate (values : A → ℝ) (p : ℝ) (counts : A → ℕ)
+    (hvalues : ∀ a, 0 &lt; values a) (hD : 0 &lt; ∑ a, counts a) :
+    Tendsto
+      (fun t : ℕ =&gt; Real.log (typeContribution values p counts t) /
+        ((t : ℝ) * (∑ a, counts a : ℕ))) atTop
+      (𝓝 (p * finiteEntropy (fun a =&gt; (counts a : ℝ) / (∑ a, counts a : ℕ)) +
+        ∑ a, ((counts a : ℝ) / (∑ a, counts a : ℕ)) * Real.log (values a))) := by
+…</pre><p class="refs">Mentions: <a href="Tag.lean.html#L28">OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution</a></p></li><li id=L76><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.log_type_bound</code> <small>line 76</small><div class="doc"><p>A finite bound on each repetition of a fixed type implies its logarithmic
+entropy bound; the fixed loss <code>C</code> disappears in the limit.</p></div><pre>theorem log_type_bound (values : A → ℝ) (p source C : ℝ) (counts : A → ℕ)
+    (hvalues : ∀ a, 0 &lt; values a) (hsource : 0 &lt; source) (hC : 0 &lt; C)
+    (hD : 0 &lt; ∑ a, counts a)
+    (hfinite : ∀ t : ℕ, 0 &lt; t →
+      typeContribution values p counts t ≤ C * source ^ (t * ∑ a, counts a)) :
+    p * finiteEntropy (fun a =&gt; (counts a : ℝ) / (∑ a, counts a : ℕ)) +
+      ∑ a, ((counts a : ℝ) / (∑ a, counts a : ℕ)) * Real.log (values a) ≤
+        Real.log source := by
+…</pre><p class="refs">Mentions: <a href="Tag.lean.html#L28">OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution</a></p></li><li id=L93><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.rational_log_tag_of_finite_type_bounds</code> <small>line 93</small><div class="doc"><p>Rational laws can be represented by one exact integral type.</p></div><pre>theorem rational_log_tag_of_finite_type_bounds
+    (q : RationalLaw A) (values : A → ℝ) (p source C : ℝ)
+    (hvalues : ∀ a, 0 &lt; values a) (hsource : 0 &lt; source) (hC : 0 &lt; C)
+    (hfinite : ∀ counts : A → ℕ, 0 &lt; ∑ a, counts a → ∀ t : ℕ, 0 &lt; t →
+      typeContribution values p counts t ≤ C * source ^ (t * ∑ a, counts a)) :
+    p * finiteEntropy q.toFiniteLaw.mass +
+      ∑ a, q.toFiniteLaw.mass a * Real.log (values a) ≤ Real.log source := by
+…</pre><p class="refs">Mentions: <a href="Tag.lean.html#L28">OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution</a></p></li><li id=L107><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.log_tag_of_finite_type_bounds</code> <small>line 107</small><div class="doc"><p>Integral type bounds imply the tag inequality on the whole finite
+probability simplex, including laws with zero coordinates.</p></div><pre>theorem log_tag_of_finite_type_bounds
+    (q : FiniteLaw A) (values : A → ℝ) (p source C : ℝ)
+    (hvalues : ∀ a, 0 &lt; values a) (hsource : 0 &lt; source) (hC : 0 &lt; C)
+    (hfinite : ∀ counts : A → ℕ, 0 &lt; ∑ a, counts a → ∀ t : ℕ, 0 &lt; t →
+      typeContribution values p counts t ≤ C * source ^ (t * ∑ a, counts a)) :
+    p * finiteEntropy q.mass +
+      ∑ a, q.mass a * Real.log (values a) ≤ Real.log source := by
+…</pre><p class="refs">Mentions: <a href="Tag.lean.html#L28">OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution</a></p></li><li id=L125><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.tag_of_finite_type_bounds</code> <small>line 125</small><div class="doc"><p>Exponentiating gives the entropy-weighted geometric-mean form.</p></div><pre>theorem tag_of_finite_type_bounds
+    (q : FiniteLaw A) (values : A → ℝ) (p source C : ℝ)
+    (hvalues : ∀ a, 0 &lt; values a) (hsource : 0 &lt; source) (hC : 0 &lt; C)
+    (hfinite : ∀ counts : A → ℕ, 0 &lt; ∑ a, counts a → ∀ t : ℕ, 0 &lt; t →
+      typeContribution values p counts t ≤ C * source ^ (t * ∑ a, counts a)) :
+    Real.exp (p * finiteEntropy q.mass) * ∏ a, values a ^ q.mass a ≤ source := by
+…</pre><p class="refs">Mentions: <a href="Tag.lean.html#L28">OAI.MatrixMultiplication.AuxiliarySeparation.typeContribution</a></p></li><li id=L141><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.log_tag_of_integral_bounds</code> <small>line 141</small><div class="doc"><p>It suffices to prove one finite inequality for every integral type.</p></div><pre>theorem log_tag_of_integral_bounds
+    (q : FiniteLaw A) (values : A → ℝ) (p source C : ℝ)
+    (hvalues : ∀ a, 0 &lt; values a) (hsource : 0 &lt; source) (hC : 0 &lt; C)
+    (hfinite : ∀ counts : A → ℕ, 0 &lt; ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p * ∏ a, values a ^ counts a ≤
+        C * source ^ (∑ a, counts a)) :
+    p * finiteEntropy q.mass +
+      ∑ a, q.mass a * Real.log (values a) ≤ Real.log source := by
+…</pre></li><li id=L159><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.tag_of_integral_bounds</code> <small>line 159</small><div class="doc"><p>The geometric-mean formulation from finite inequalities for integral types.</p></div><pre>theorem tag_of_integral_bounds
+    (q : FiniteLaw A) (values : A → ℝ) (p source C : ℝ)
+    (hvalues : ∀ a, 0 &lt; values a) (hsource : 0 &lt; source) (hC : 0 &lt; C)
+    (hfinite : ∀ counts : A → ℕ, 0 &lt; ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p * ∏ a, values a ^ counts a ≤
+        C * source ^ (∑ a, counts a)) :
+    Real.exp (p * finiteEntropy q.mass) * ∏ a, values a ^ q.mass a ≤ source := by
+…</pre></li><li id=L185><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.Character.log_tag_of_integral_type_comparison</code> <small>line 185</small><div class="doc"><p>For a character, nonzero tensors supply all positivity needed by the
+entropy limit. The only quantitative premise is the finite integral-type
+comparison with the paper's fixed loss five.</p></div><pre>theorem log_tag_of_integral_type_comparison (χ : Character)
+    (q : FiniteLaw I) (T : Tensor ℂ X Y Z)
+    (B : ∀ a, Tensor ℂ (BX a) (BY a) (BZ a)) (p : ℝ)
+    (hT : T ≠ 0) (hB : ∀ a, B a ≠ 0)
+    (hfinite : ∀ counts : I → ℕ, 0 &lt; ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p *
+          ∏ a, χ.value (B a) ^ counts a ≤
+        5 * χ.value T ^ (∑ a, counts a)) :
+    p * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value T) :=
+…</pre><p class="refs">Mentions: <a href="../Character/Basic.lean.html#L35">OAI.MatrixMultiplication.AuxiliarySeparation.Character</a></p></li><li id=L201><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.Character.tag_of_integral_type_comparison</code> <small>line 201</small><div class="doc"><p>The entropy-weighted tag bound, once the finite matched-type tensor
+comparison has been established.</p></div><pre>theorem tag_of_integral_type_comparison (χ : Character)
+    (q : FiniteLaw I) (T : Tensor ℂ X Y Z)
+    (B : ∀ a, Tensor ℂ (BX a) (BY a) (BZ a)) (p : ℝ)
+    (hT : T ≠ 0) (hB : ∀ a, B a ≠ 0)
+    (hfinite : ∀ counts : I → ℕ, 0 &lt; ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p *
+          ∏ a, χ.value (B a) ^ counts a ≤
+        5 * χ.value T ^ (∑ a, counts a)) :
+    Real.exp (p * finiteEntropy q.mass) * ∏ a, χ.value (B a) ^ q.mass a ≤
+      χ.value T :=
+…</pre><p class="refs">Mentions: <a href="../Character/Basic.lean.html#L35">OAI.MatrixMultiplication.AuxiliarySeparation.Character</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../../_assets/site.js"></script><script src="../../../../../_assets/lean2tex.js" defer></script><script src="../../../../../_assets/reader.js" defer></script></body></html>

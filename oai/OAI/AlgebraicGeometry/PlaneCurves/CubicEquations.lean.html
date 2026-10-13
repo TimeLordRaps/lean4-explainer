@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/CubicEquations.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/CubicEquations.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>CubicEquations.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>CubicEquations.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/CubicEquations.lean#L1">source</a></p><div class="doc"><h3>Degree, prime divisors, and universality of cubic equations; Regularity of the image of the cubic embedding</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Nagata.W03.polynomial_not_isUnit_of_eval_zero</code> <small>line 20</small><div class="doc"><p>Vanishing at one actual vector makes a polynomial a nonunit.</p></div><pre>theorem polynomial_not_isUnit_of_eval_zero
+    (L : MvPolynomial (Fin 3) ℂ) (v : Fin 3 → ℂ)
+    (hv : MvPolynomial.eval v L = 0) : ¬ IsUnit L := by
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.Nagata.W03.prime_relation_divisor_mem</code> <small>line 27</small><div class="doc"><p>A nonunit divisor of a prime relation vanishes on the whole parameter domain.</p></div><pre>theorem prime_relation_divisor_mem
+    (s : Fin 3 → ℂ → ℂ) (G L : MvPolynomial (Fin 3) ℂ)
+    (hG : Prime G) (hrel : G ∈ polynomialRelationIdeal s)
+    (hL : ¬ IsUnit L) (hdiv : L ∣ G) : L ∈ polynomialRelationIdeal s := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.Nagata.W03.prime_relation_not_dvd_of_zero_and_nonzero</code> <small>line 38</small><div class="doc"><p>A prime relation cannot be divisible by a polynomial which has one zero
+but also has a witnessed nonzero value on the parameterized image.</p></div><pre>theorem prime_relation_not_dvd_of_zero_and_nonzero
+    (s : Fin 3 → ℂ → ℂ) (G L : MvPolynomial (Fin 3) ℂ)
+    (hG : Prime G) (hrel : G ∈ polynomialRelationIdeal s)
+    (v : Fin 3 → ℂ) (hv : MvPolynomial.eval v L = 0)
+    (hw : ∃ z : ℂ, z ≠ 0 ∧ MvPolynomial.eval (fun i =&gt; s i z) L ≠ 0) :
+    ¬ L ∣ G := by
+…</pre></li><li id=L63><b>theorem</b> <code>OAI.Nagata.W03.actual_prime_relation_threePointLine</code> <small>line 63</small><div class="doc"><p>Every prescribed image point lies on a three-point line that cannot divide
+a prime equation of the actual section map.</p></div><pre>theorem actual_prime_relation_threePointLine {τ : ℝ}
+    (hτ : 0 &lt; τ) (hτone : τ &lt; 1) {γ : ℂ} (hγ : γ ≠ 0)
+    (G : MvPolynomial (Fin 3) ℂ) (hG : Prime G)
+    (hhom : G.IsHomogeneous G.totalDegree)
+    (hrel : G ∈ polynomialRelationIdeal
+      (fun i =&gt; (actualCubicBasis hτ hτone hγ i).val))
+    (q : TorusPoint (cubicPeriod hτ)) :
+    ∃ (L : MvPolynomial (Fin 3) ℂ) (p : Fin 3 → PlanePoint),
+      L ≠ 0 ∧ L.IsHomogeneous 1 ∧ Function.Injective p ∧
+      p 0 = actualCubicMap hτ hτone hγ q ∧
+      (∀ i, MvPolynomial.eval (p i).rep L = 0) ∧
+      (∀ i, MvPolynomial.eval (p i).rep G = 0) ∧ ¬ L ∣ G := by
+…</pre></li><li id=L100><b>theorem</b> <code>OAI.Nagata.W03.actual_prime_relation_totalDegree_eq_three</code> <small>line 100</small><div class="doc"><p>A prime homogeneous equation of the actual complete section map, with
+total degree at most three, has total degree exactly three.</p></div><pre>theorem actual_prime_relation_totalDegree_eq_three {τ : ℝ}
+    (hτ : 0 &lt; τ) (hτone : τ &lt; 1) {γ : ℂ} (hγ : γ ≠ 0)
+    (G : MvPolynomial (Fin 3) ℂ) (hG : Prime G)
+    (hhom : G.IsHomogeneous G.totalDegree) (hle : G.totalDegree ≤ 3)
+    (hrel : G ∈ polynomialRelationIdeal
+      (fun i =&gt; (actualCubicBasis hτ hτone hγ i).val)) :
+    G.totalDegree = 3 := by
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.Nagata.W03.exists_actual_prime_cubic_generator</code> <small>line 117</small><div class="doc"><p>The pointwise ideal of all polynomial relations of the actual section map
+is generated by a genuine prime homogeneous cubic of exact total degree three.</p></div><pre>theorem exists_actual_prime_cubic_generator {τ : ℝ}
+    (hτ : 0 &lt; τ) (hτone : τ &lt; 1) {γ : ℂ} (hγ : γ ≠ 0) :
+    ∃ G : MvPolynomial (Fin 3) ℂ,
+      Prime G ∧ G.IsHomogeneous 3 ∧ G.totalDegree = 3 ∧
+      polynomialRelationIdeal
+        (fun i =&gt; (actualCubicBasis hτ hτone hγ i).val) = Ideal.span {G} ∧
+      (∀ z : ℂ, z ≠ 0 →
+        MvPolynomial.eval (cubicEvaluationVector (actualCubicBasis hτ hτone hγ) z) G = 0) ∧
+      (∀ P : MvPolynomial (Fin 3) ℂ, ¬ G ∣ P →
+        ∃ z : ℂ, z ≠ 0 ∧
+          MvPolynomial.eval (cubicEvaluationVector (actualCubicBasis hτ hτone hγ) z) P ≠ 0) := by
+…</pre></li><li id=L211><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.lineNormalPolynomial_coeff_eq_map</code> <small>line 211</small><div class="doc"><p>Coefficientwise component restriction agrees with the finite normal sum
+when the actual polynomial has no terms above floor(d/3).</p></div><pre>theorem lineNormalPolynomial_coeff_eq_map
+    (F : Polynomial (MvPolynomial (Fin 3) ℂ)) (d i : ℕ)
+    (hbound : ∀ j, d / 3 &lt; j → F.coeff j = 0) :
+    lineNormalPolynomial F.coeff d i = F.map (lineRestriction (i : ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="LowDegree.lean.html#L27">OAI.Nagata.W03.LowDegree.lineNormalPolynomial</a></p></li><li id=L226><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.cubic_universalSupport_degree_gt</code> <small>line 226</small><div class="doc"><p>For every r≥10, genuine universal equal-multiplicity plane systems have
+degree strictly greater than 3m. Both d&lt;3m and d=3m are excluded. No positivity
+assumption on d is needed for this stronger statement.</p></div><pre>theorem cubic_universalSupport_degree_gt (r d m : ℕ) (hr : 10 ≤ r) (hm : 0 &lt; m)
+    (hU : Nagata.W13.UniversalSupport r d (fun _ =&gt; m)) : 3 * m &lt; d := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L260><b>theorem</b> <code>OAI.Nagata.W03.LowDegree.cubic_low_degree</code> <small>line 260</small><div class="doc"><p>The exact positive-degree manuscript formulation.</p></div><pre>theorem cubic_low_degree (r d m : ℕ) (hr : 10 ≤ r) (_hd : 0 &lt; d) (hm : 0 &lt; m)
+    (hU : Nagata.W13.UniversalSupport r d (fun _ =&gt; m)) : 3 * m &lt; d :=
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

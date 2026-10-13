@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/TwoWayAutomata/Retained.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/TwoWayAutomata/Retained.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">TwoWayAutomata</a> / <span>Retained.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">TwoWayAutomata</a>/<span>Retained.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/TwoWayAutomata/Retained.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>theorem</b> <code>OAI.TwoWayComplementation.exists_hub_families</code> <small>line 10</small><div class="doc"><p>Select the two 64-point families and a distinct hub.</p></div><pre>theorem exists_hub_families {H : Type*} [Finite H] (hh : 129 ≤ Nat.card H) :
+    ∃ u v : Fin 64 ↪ H, ∃ z : H,
+      (∀ i j, u i ≠ v j) ∧ (∀ i, u i ≠ z) ∧ (∀ j, v j ≠ z) := by
+…</pre></li><li id=L40><b>theorem</b> <code>OAI.TwoWayComplementation.retained_pair_set</code> <small>line 40</small><div class="doc"><p>Retaining a new pair and all external points removes exactly 127 points.</p></div><pre>theorem retained_pair_set {H : Type*} [Finite H] (U V : Set H)
+    (hU : U.ncard = 64) (hV : V.ncard = 64) (hUV : Disjoint U V)
+    (z x y : H) (hzU : z ∉ U) (hzV : z ∉ V) (hx : x ∈ U) (hy : y ∈ V) :
+    ∃ F : Set H, Nat.card F = Nat.card H - 127 ∧ x ∈ F ∧ y ∈ F ∧ z ∉ F ∧
+      (∀ a ∈ U, a ∈ F → a = x) ∧ (∀ b ∈ V, b ∈ F → b = y) := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.TwoWayComplementation.mem_restricted_sandwich</code> <small>line 79</small><div class="doc"><p>Identity sandwiches restrict exactly the two endpoints.</p></div><pre>theorem mem_restricted_sandwich {H : Type*} (F : Set H) (R : SetRel H H) (a b : H) :
+    (a, b) ∈ restrictedIdentity F ○ R ○ restrictedIdentity F ↔
+      a ∈ F ∧ b ∈ F ∧ (a, b) ∈ R := by
+…</pre><p class="refs">Mentions: <a href="RelationMonoid.lean.html#L10">OAI.TwoWayComplementation.restrictedIdentity</a></p></li><li id=L86><b>theorem</b> <code>OAI.TwoWayComplementation.retained_relation_identity</code> <small>line 86</small><div class="doc"><p>Before its turn, the selected pair is absent from the retained restriction.</p></div><pre>theorem retained_relation_identity {H : Type*} (U V F : Set H) (z x y : H)
+    (hz : z ∉ F) (hx : ∀ a ∈ U, a ∈ F → a = x) (hy : ∀ b ∈ V, b ∈ F → b = y)
+    (E : SetRel H H) (hE : E ⊆ U ×ˢ V) (hnew : (x, y) ∉ E) :
+    restrictedIdentity F ○ (restrictedIdentity {a | a ≠ z} ∪ E) ○ restrictedIdentity F =
+      restrictedIdentity F := by
+…</pre><p class="refs">Mentions: <a href="RelationMonoid.lean.html#L10">OAI.TwoWayComplementation.restrictedIdentity</a></p></li><li id=L101><b>theorem</b> <code>OAI.TwoWayComplementation.retained_relation_pair</code> <small>line 101</small><div class="doc"><p>At its turn, restriction adds precisely the selected pair to the retained identity.</p></div><pre>theorem retained_relation_pair {H : Type*} (P : SetRel H H) (F : Set H)
+    (hP : restrictedIdentity F ○ P ○ restrictedIdentity F = restrictedIdentity F)
+    (x y : H) (hx : x ∈ F) (hy : y ∈ F) :
+    restrictedIdentity F ○ (P ∪ {(x, y)}) ○ restrictedIdentity F =
+      restrictedIdentity F ∪ {(x, y)} := by
+…</pre><p class="refs">Mentions: <a href="RelationMonoid.lean.html#L10">OAI.TwoWayComplementation.restrictedIdentity</a></p></li><li id=L114><b>theorem</b> <code>OAI.TwoWayComplementation.lossBound_step</code> <small>line 114</small><div class="doc"><p>The target doubles whenever the induction removes 127 points.</p></div><pre>theorem lossBound_step {h : ℕ} (hh : 129 ≤ h) : lossBound h = 2 * lossBound (h - 127) := by
+…</pre><p class="refs">Mentions: <a href="Amplification.lean.html#L10">OAI.TwoWayComplementation.lossBound</a></p></li><li id=L119><b>theorem</b> <code>OAI.TwoWayComplementation.amplification_arithmetic</code> <small>line 119</small><div class="doc"><p>The numerical conclusion of summing the 4096 inductive lower bounds.</p></div><pre>theorem amplification_arithmetic {h c : ℕ} (hh : 129 ≤ h) (δ : Fin 4096 → ℕ)
+    (htotal : ∑ j, δ j ≤ 1024 * c)
+    (hstep : ∀ j, lossBound (h - 127) ≤ 2 * δ j) : lossBound h ≤ c := by
+…</pre><p class="refs">Mentions: <a href="Amplification.lean.html#L10">OAI.TwoWayComplementation.lossBound</a></p></li><li id=L130><b>theorem</b> <code>OAI.TwoWayComplementation.single_edge_base</code> <small>line 130</small><div class="doc"><p>The base case detects the off-diagonal pair using rectangle coverage and order reversal.</p></div><pre>theorem single_edge_base {A H : Type*} [Monoid A] {m : ℕ}
+    (ι : A →ₙ* Diagram m) (φ : A →* RelationMonoid H)
+    (hreverse : ∀ a b, (ι a, ι b) ∈ Diagram.inclusion m → (φ b).toRel ⊆ (φ a).toRel)
+    (a : A) (x y : H) (hxy : x ≠ y)
+    (himage : (φ a).toRel = SetRel.id ∪ {(x, y)}) (hh : Nat.card H ≤ 128) :
+    lossBound (Nat.card H) ≤ ((ι 1).missing (ι a)).ncard := by
+…</pre><p class="refs">Mentions: <a href="Diagram.lean.html#L11">OAI.TwoWayComplementation.Diagram</a>, <a href="RelationMonoid.lean.html#L87">OAI.TwoWayComplementation.RelationMonoid</a>, <a href="Diagram.lean.html#L34">OAI.TwoWayComplementation.Diagram.inclusion</a>, <a href="Amplification.lean.html#L10">OAI.TwoWayComplementation.lossBound</a></p></li><li id=L150><b>theorem</b> <code>OAI.TwoWayComplementation.sandwich_power_absorption</code> <small>line 150</small><div class="doc"><p>Every positive power of a sandwich is absorbed by its idempotent outer factor.</p></div><pre>theorem sandwich_power_absorption {A : Type*} [Monoid A] (b a : A)
+    (hb : IsIdempotentElem b) (k : ℕ) :
+    b * (b * a * b) ^ (k + 1) = (b * a * b) ^ (k + 1) ∧
+      (b * a * b) ^ (k + 1) * b = (b * a * b) ^ (k + 1) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

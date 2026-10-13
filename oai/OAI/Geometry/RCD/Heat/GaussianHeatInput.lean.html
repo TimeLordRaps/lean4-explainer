@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Heat/GaussianHeatInput.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Heat/GaussianHeatInput.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Heat</a> / <span>GaussianHeatInput.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Heat</a>/<span>GaussianHeatInput.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Heat/GaussianHeatInput.lean#L1">source</a></p><div class="doc"><h3>The quantitative published heat-kernel input</h3><p>Jiang--Li--Zhang (2016), Theorem 1.2, gives these two Gaussian
+bounds on <code>RCD*(K,N)</code> spaces for <code>K &lt; 0</code>. We use only <code>0 &lt; ε &lt; 1</code>
+and finite-dimensional noncollapsed spaces.
+Source: <a href="https://arxiv.org/pdf/1407.5289v2">https://arxiv.org/pdf/1407.5289v2</a> .</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>def</b> <code>OAI.RegularPointCoordinates.HasGaussianHeatBounds</code> <small>line 27</small><div class="doc"><p>The pair of Gaussian bounds, with the measure at the kernel's second
+argument and the exact <code>4 ± ε</code> denominators.</p></div><pre>def HasGaussianHeatBounds : Prop :=
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.RegularPointCoordinates.gaussian_lower_on_set</code> <small>line 37</small><div class="doc"><p>A Gaussian lower bound becomes uniform on any testing set where the
+distance and local ball volumes have the stated uniform bounds.</p></div><pre>theorem gaussian_lower_on_set {s : Set X} {t ε C₁ C₂ A V : ℝ}
+    (ht : 0 &lt; t) (hε : ε &lt; 1) (hC : 0 &lt; C₁)
+    (x : X)
+    (hlower : ∀ y ∈ s,
+      (C₁ * μ.real (Metric.ball y (Real.sqrt t)))⁻¹ *
+        Real.exp (-(dist x y) ^ 2 / ((4 - ε) * t) - C₂ * t) ≤ p t x y)
+    (hvolume : ∀ y ∈ s, 0 &lt; μ.real (Metric.ball y (Real.sqrt t)) ∧
+      μ.real (Metric.ball y (Real.sqrt t)) ≤ V)
+    (hdist : ∀ y ∈ s, (dist x y) ^ 2 ≤ A * t) :
+    ∀ y ∈ s, (C₁ * V)⁻¹ * Real.exp (-A / (4 - ε) - C₂ * t) ≤ p t x y := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.RegularPointCoordinates.HasGaussianHeatBounds.exists_heatGram_lower_mean</code> <small>line 72</small><div class="doc"><p>The cited Gaussian estimate supplies the lower comparison for the
+actual cutoff heat Gram on any fixed ball satisfying volume bounds.
+The positive constant is chosen before the coefficient vector.</p></div><pre>theorem HasGaussianHeatBounds.exists_heatGram_lower_mean
+    (hg : HasGaussianHeatBounds μ p) (hp : IsContinuousHeatKernel μ hQ p)
+    {χ : X → ℝ} (hχ : Continuous χ) (hsχ : HasCompactSupport χ)
+    (U : E →L[ℝ] SobolevSpace μ hQ) (s : Set X) (hs : MeasurableSet s)
+    (hμ : 0 &lt; μ.real s) (hχpos : ∀ y, 0 ≤ χ y) (hχone : ∀ y ∈ s, χ y = 1)
+    {t : ℝ} (ht : 0 &lt; t) (x : X) {V A lambda : ℝ} (hV : 0 &lt; V)
+    (hlambda : 0 ≤ lambda)
+    (hvolume : ∀ y ∈ s, 0 &lt; μ.real (Metric.ball y (Real.sqrt t)) ∧
+      μ.real (Metric.ball y (Real.sqrt t)) ≤ V)
+    (hdist : ∀ y ∈ s, (dist x y) ^ 2 ≤ A * t) :
+    ∃ c : ℝ, 0 &lt; c ∧ ∀ v : E,
+      c * ⟪v, sobolevMeanGram μ hQ U s hs v⟫_ℝ ≤
+…</pre><p class="refs">Mentions: <a href="GaussianHeatInput.lean.html#L27">OAI.RegularPointCoordinates.HasGaussianHeatBounds</a>, <a href="ActualHeatGrams.lean.html#L33">OAI.RegularPointCoordinates.IsContinuousHeatKernel</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L120">OAI.RegularPointCoordinates.sobolevMeanGram</a></p></li><li id=L100><b>theorem</b> <code>OAI.RegularPointCoordinates.HasGaussianHeatBounds.exists_heatGram_mass_lower</code> <small>line 100</small><div class="doc"><p>One Gaussian constant controls both actual Gram energy and the full
+local mass measure. This is the common lower bound used when heat decrements
+are compared to normalized ball masses.</p></div><pre>theorem HasGaussianHeatBounds.exists_heatGram_mass_lower
+    [FiniteDimensional ℝ E]
+    (hg : HasGaussianHeatBounds μ p) (hp : IsContinuousHeatKernel μ hQ p)
+    {χ : X → ℝ} (hχ : Continuous χ) (hsχ : HasCompactSupport χ)
+    (U : E →L[ℝ] SobolevSpace μ hQ) (M : PositiveBilinearMeasure X E)
+    (s : Set X) (hs : MeasurableSet s) (hμ : 0 &lt; μ.real s)
+    (hχpos : ∀ y, 0 ≤ χ y) (hχone : ∀ y ∈ s, χ y = 1)
+    {t : ℝ} (ht : 0 &lt; t) (x : X) {V A lambda : ℝ} (hV : 0 &lt; V)
+    (hlambda : 0 ≤ lambda)
+    (hvolume : ∀ y ∈ s, 0 &lt; μ.real (Metric.ball y (Real.sqrt t)) ∧
+      μ.real (Metric.ball y (Real.sqrt t)) ≤ V)
+    (hdist : ∀ y ∈ s, (dist x y) ^ 2 ≤ A * t) :
+…</pre><p class="refs">Mentions: <a href="GaussianHeatInput.lean.html#L27">OAI.RegularPointCoordinates.HasGaussianHeatBounds</a>, <a href="ActualHeatGrams.lean.html#L33">OAI.RegularPointCoordinates.IsContinuousHeatKernel</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("sl", [["Arxiv.«0805.3777».cprank_le_of_three_slices",20,249],["Green5.green_5.variants.gowers_sl_two",1002,90],["Green5.green_5.variants.sl_two",1002,80],["Matrix.GeneralLinearGroup.IsSlowlyIncreasing",54,296]]);

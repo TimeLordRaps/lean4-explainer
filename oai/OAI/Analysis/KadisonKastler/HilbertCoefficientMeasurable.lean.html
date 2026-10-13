@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/HilbertCoefficientMeasurable.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/HilbertCoefficientMeasurable.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>HilbertCoefficientMeasurable.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>HilbertCoefficientMeasurable.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/HilbertCoefficientMeasurable.lean#L1">source</a></p><div class="doc"><h3>Measurability from countably many Hilbert coefficients</h3><p>The coefficients against a countable dense family give a continuous
+injection into a countable product of copies of <code>ℂ</code>. Lusin–Souslin makes
+this map a measurable embedding. Thus measurability of the coefficients
+implies strong measurability, without assuming a Pettis theorem.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.KadisonKastler.aestronglyMeasurable_of_dense_inner</code> <small>line 28</small><div class="doc"><p>Countably many dense coefficient tests determine a measurable vector field.</p></div><pre>theorem aestronglyMeasurable_of_dense_inner [Countable ι]
+    (v : ι → H) (hv : DenseRange v) (f : D → H)
+    (hf : ∀ i, AEStronglyMeasurable (fun x =&gt; inner ℂ (v i) (f x)) μ) :
+    AEStronglyMeasurable f μ := by
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.KadisonKastler.aestronglyMeasurable_of_countable_dense_inner</code> <small>line 44</small><div class="doc"><p>The same criterion stated using a countable dense subset.</p></div><pre>theorem aestronglyMeasurable_of_countable_dense_inner
+    (s : Set H) (hs : s.Countable) (hd : Dense s) (f : D → H)
+    (hf : ∀ η ∈ s, AEStronglyMeasurable (fun x =&gt; inner ℂ η (f x)) μ) :
+    AEStronglyMeasurable f μ := by
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.KadisonKastler.aestronglyMeasurable_of_inner</code> <small>line 60</small><div class="doc"><p>In a separable Hilbert space, measurable scalar coefficients imply
+strong measurability of the vector field.</p></div><pre>theorem aestronglyMeasurable_of_inner (f : D → H)
+    (hf : ∀ η : H, AEStronglyMeasurable (fun x =&gt; inner ℂ η (f x)) μ) :
+    AEStronglyMeasurable f μ := by
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.KadisonKastler.operator_adjoint_eval_aestronglyMeasurable</code> <small>line 68</small><div class="doc"><p>Once a field has measurable evaluations, its adjoint does too.
+This uses the scalar adjoint identity and the preceding coefficient test.</p></div><pre>theorem operator_adjoint_eval_aestronglyMeasurable
+    (T : D → H →L[ℂ] H)
+    (hT : ∀ ξ, AEStronglyMeasurable (fun x =&gt; T x ξ) μ) (η : H) :
+    AEStronglyMeasurable (fun x =&gt; star (T x) η) μ := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.KadisonKastler.operator_eval_aestronglyMeasurable_of_dense_coefficients</code> <small>line 79</small><div class="doc"><p>Testing both variables only on a countable dense family suffices to
+make every evaluation of an operator field strongly measurable.</p></div><pre>theorem operator_eval_aestronglyMeasurable_of_dense_coefficients [Countable ι]
+    (v : ι → H) (hv : DenseRange v) (T : D → H →L[ℂ] H)
+    (hT : ∀ i j, AEStronglyMeasurable (fun x =&gt; inner ℂ (v i) (T x (v j))) μ)
+    (ξ : H) : AEStronglyMeasurable (fun x =&gt; T x ξ) μ := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.KadisonKastler.operator_field_aestronglyMeasurable_of_dense_coefficients</code> <small>line 95</small><div class="doc"><p>The two sets of measurable evaluations needed for the weak operator
+field C-star algebra follow from the same countable coefficient data.</p></div><pre>theorem operator_field_aestronglyMeasurable_of_dense_coefficients [Countable ι]
+    (v : ι → H) (hv : DenseRange v) (T : D → H →L[ℂ] H)
+    (hT : ∀ i j, AEStronglyMeasurable (fun x =&gt; inner ℂ (v i) (T x (v j))) μ) :
+    ∀ ξ, AEStronglyMeasurable (fun x =&gt; T x ξ) μ ∧
+      AEStronglyMeasurable (fun x =&gt; star (T x) ξ) μ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/ShortScales.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/ShortScales.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>ShortScales.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>ShortScales.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/ShortScales.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>lemma</b> <code>OAI.SmoothObstruction.ScaleHierarchy.lower_bound</code> <small>line 12</small></li><li id=L23><b>lemma</b> <code>OAI.SmoothObstruction.ScaleHierarchy.square_dominates</code> <small>line 23</small></li><li id=L33><b>lemma</b> <code>OAI.SmoothObstruction.ScaleHierarchy.ratio_tendsto_zero</code> <small>line 33</small></li><li id=L44><b>theorem</b> <code>OAI.SmoothObstruction.ScaleHierarchy.polynomial_decay</code> <small>line 44</small><div class="doc"><p>General separated-power budget. The floor and the original time scale are
+unchanged; every fixed polynomial cost and exponential <code>b^q n</code> cost is absorbed.</p></div><pre>theorem polynomial_decay {ι : Type*} {l : Filter ι} {b n : ι → ℝ}
+    {p q c C : ℝ} (hp : 0 ≤ p) (hp1 : p ≤ 1) (hqp : p &lt; q) (hc : 0 &lt; c)
+    (hbpos : ∀ᶠ k in l, 0 &lt; b k) (hb : Tendsto b l (𝓝 0))
+    (hn : Tendsto n l atTop)
+    (hfloor : ∀ᶠ k in l, n k ^ (-1 / 10 : ℝ) ≤ b k) (m : ℕ) :
+    Tendsto (fun k =&gt; n k ^ m * Real.exp (C * b k ^ q * n k - c * b k ^ p * n k))
+      l (𝓝 0) := by
+…</pre></li><li id=L83><b>lemma</b> <code>OAI.SmoothObstruction.ShortBin.bvp_nonneg</code> <small>line 83</small></li><li id=L88><b>lemma</b> <code>OAI.SmoothObstruction.ShortBin.bvp_cost</code> <small>line 88</small></li><li id=L146><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.bvp_decay</code> <small>line 146</small><div class="doc"><p>Explicit BVP cost is absorbed by the prescribed spatial exponent.</p></div><pre>theorem bvp_decay {ι : Type*} {l : Filter ι} {b : ι → ℝ} {n : ι → ℕ}
+    {K a : ι → ℝ} {p q c D : ℝ}
+    (hp : 0≤p) (hp1 : p≤1) (hpq : p&lt;q) (hc : 0&lt;c)
+    (hbpos : ∀ᶠ k in l,0&lt;b k) (hb : Tendsto b l (𝓝 0))
+    (hn : Tendsto (fun k =&gt; (n k:ℝ)) l atTop)
+    (hfloor : ∀ᶠ k in l,(n k:ℝ)^(-1/10:ℝ)≤b k)
+    (hK : ∀ᶠ k in l,0≤K k ∧ K k≤D*b k^q*n k)
+    (ha : ∀ᶠ k in l,0≤a k ∧ a k≤D*b k^q) :
+    Tendsto (fun k =&gt; bvpInverseBound (K k) (a k) (n k)*
+      Real.exp (-c*b k^p*n k)) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="ManifoldMatching.lean.html#L334">OAI.SmoothObstruction.ShortBin.bvpInverseBound</a></p></li><li id=L178><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.bvp_spatial_budgets</code> <small>line 178</small><div class="doc"><p>Both nonlinear-contraction budgets hold at the original scales, with
+no rescaling of <code>r</code>, <code>δ</code> or the horizon.</p></div><pre>theorem bvp_spatial_budgets {ι : Type*} {l : Filter ι} {b : ι → ℝ} {n : ι → ℕ}
+    {K a : ι → ℝ} {D C : ℝ}
+    (hbpos : ∀ᶠ k in l,0&lt;b k) (hb : Tendsto b l (𝓝 0))
+    (hn : Tendsto (fun k =&gt; (n k:ℝ)) l atTop)
+    (hfloor : ∀ᶠ k in l,(n k:ℝ)^(-1/10:ℝ)≤b k)
+    (hK : ∀ᶠ k in l,0≤K k ∧ K k≤D*b k^(1/2:ℝ)*n k)
+    (ha : ∀ᶠ k in l,0≤a k ∧ a k≤D*b k^(1/2:ℝ)) :
+    ∀ᶠ k in l,
+      bvpInverseBound (K k) (a k) (n k)*C*Real.exp (-(3/2:ℝ)*b k^(1/8:ℝ)*n k)≤1/4 ∧
+      bvpInverseBound (K k) (a k) (n k)*C*Real.exp (-2*b k^(1/8:ℝ)*n k)≤
+        Real.exp (-(3/2:ℝ)*b k^(1/8:ℝ)*n k)/4 := by
+…</pre><p class="refs">Mentions: <a href="ManifoldMatching.lean.html#L334">OAI.SmoothObstruction.ShortBin.bvpInverseBound</a></p></li><li id=L216><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.bvp_power_decay</code> <small>line 216</small><div class="doc"><p>Polynomial powers of the actual BVP inverse cost remain absorbable.</p></div><pre>theorem bvp_power_decay {ι : Type*} {l : Filter ι} {b : ι → ℝ} {n : ι → ℕ}
+    {K a : ι → ℝ} {p q c D J : ℝ}
+    (hp : 0≤p) (hp1 : p≤1) (hpq : p&lt;q) (hc : 0&lt;c)
+    (hbpos : ∀ᶠ k in l,0&lt;b k) (hb : Tendsto b l (𝓝 0))
+    (hn : Tendsto (fun k =&gt; (n k:ℝ)) l atTop)
+    (hfloor : ∀ᶠ k in l,(n k:ℝ)^(-1/10:ℝ)≤b k)
+    (hK : ∀ᶠ k in l,0≤K k ∧ K k≤D*b k^q*n k)
+    (ha : ∀ᶠ k in l,0≤a k ∧ a k≤D*b k^q) (m : ℕ) :
+    Tendsto (fun k =&gt; (bvpInverseBound (K k) (a k) (n k))^m *
+      Real.exp (J*b k^q*n k-c*b k^p*n k)) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="ManifoldMatching.lean.html#L334">OAI.SmoothObstruction.ShortBin.bvpInverseBound</a></p></li><li id=L245><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.spatial_switch_limits</code> <small>line 245</small><div class="doc"><p>The sharp join radius and ideal-cell exchange error at the literal source
+spatial scales. The error is measured after applying the inverse product basis.</p></div><pre>theorem spatial_switch_limits {ι : Type*} {l : Filter ι} {b : ι → ℝ} {n : ι → ℕ}
+    {ε : ι → ℝ} (hbpos : ∀ᶠ k in l,0&lt;b k) (hb : Tendsto b l (𝓝 0))
+    (hn : Tendsto (fun k =&gt; (n k:ℝ)) l atTop)
+    (hfloor : ∀ᶠ k in l,(n k:ℝ)^(-1/10:ℝ)≤b k)
+    (hε : ∀ᶠ k in l,0≤ε k ∧ ε k≤Real.exp (-b k^(3/4:ℝ)*n k))
+    (Dg A C₀ : ℝ) (hDg : 0≤Dg) (hA : 0≤A) :
+    let B (k : ι) := Dg*(b k*n k)
+…</pre></li><li id=L344><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.spatial_ready</code> <small>line 344</small><div class="doc"><p>Scalar hypotheses of the genuine switch, at the unchanged source scales.
+Both grid widths are fixed multiples of the original h0 and r.</p></div><pre>theorem spatial_ready {ι : Type*} {l : Filter ι} {b : ι → ℝ} {n : ι → ℕ}
+    (hbpos : ∀ᶠ k in l,0&lt;b k) (hb : Tendsto b l (𝓝 0))
+    (hn : Tendsto (fun k =&gt; (n k:ℝ)) l atTop)
+    (hfloor : ∀ᶠ k in l,(n k:ℝ)^(-1/10:ℝ)≤b k)
+    (Dg A C₀ C₁ Cg K₀F K₀B r₀ rg σ r₁ rμ Ac Ap : ℝ)
+    (hDg : 0≤Dg) (hA : 0≤A) (hC₀ : 1≤C₀)
+    (hr₀ : 0&lt;r₀) (hrg : 0&lt;rg) (hσ : 0&lt;σ) (hr₁ : 0&lt;r₁) (hrμ : 0&lt;rμ)
+    (hAc : 0&lt;Ac) (hAp : 0&lt;Ap) :
+    let B (k : ι) := Dg*(b k*n k)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

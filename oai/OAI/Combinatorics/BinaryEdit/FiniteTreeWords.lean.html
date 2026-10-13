@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/FiniteTreeWords.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/FiniteTreeWords.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>FiniteTreeWords.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>FiniteTreeWords.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/FiniteTreeWords.lean#L1">source</a></p><div class="doc"><h3>Recursive row words for the finite tree</h3><p>The recursion in equation (finite-word) uses an additive state group,
+node shifts and leaf symbols. It is instantiated with the product of
+cyclic groups in the manuscript.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord</code> <small>line 20</small><div class="doc"><p>A row is the ordered concatenation of the <code>m</code> child words.  At a leaf the
+word consists of its single tagged state symbol.</p></div><pre>def nodeWord {m : ℕ} (T : ℕ) (leaf : List (Fin m) → A → Γ)
+    (u : List (Fin m) → A) : ℕ → List (Fin m) → A → List Γ
+  | 0, p, x =&gt; [leaf p x]
+  | h + 1, p, x =&gt; (List.range T).flatMap fun a =&gt;
+      (List.finRange m).flatMap fun i =&gt; nodeWord T leaf u h (p ++ [i]) (x + a • u p)
+
+/-- All node words at a given height have exactly the manuscript&#x27;s length. -/</pre></li><li id=L27><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord_length</code> <small>line 27</small><div class="doc"><p>All node words at a given height have exactly the manuscript's length.</p></div><pre>@[simp] theorem nodeWord_length {m : ℕ} (T : ℕ)
+    (leaf : List (Fin m) → A → Γ) (u : List (Fin m) → A)
+    (h : ℕ) (p : List (Fin m)) (x : A) :
+    (nodeWord T leaf u h p x).length = (m * T) ^ h := by
+…</pre><p class="refs">Mentions: <a href="FiniteTreeWords.lean.html#L20">OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord</a></p></li><li id=L38><b>def</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.nodeRow</code> <small>line 38</small><div class="doc"><p>One row at a node of height <code>h+1</code>.</p></div><pre>def nodeRow {m : ℕ} (T : ℕ) (leaf : List (Fin m) → A → Γ)
+    (u : List (Fin m) → A) (h : ℕ) (p : List (Fin m)) (x : A) : List Γ :=
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.nodeRow_length</code> <small>line 42</small></li><li id=L49><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord_translate</code> <small>line 49</small><div class="doc"><p>Translating by the cheap vector advances the row parameter.</p></div><pre>theorem nodeWord_translate {m : ℕ} (T : ℕ)
+    (leaf : List (Fin m) → A → Γ) (u : List (Fin m) → A)
+    (h : ℕ) (p : List (Fin m)) (x : A) (s : ℕ) :
+    nodeWord T leaf u (h + 1) p (x + s • u p) =
+      (List.range T).flatMap fun a =&gt; nodeRow T leaf u h p (x + (s + a) • u p) := by
+…</pre><p class="refs">Mentions: <a href="FiniteTreeWords.lean.html#L20">OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord</a>, <a href="FiniteTreeWords.lean.html#L38">OAI.TreeEdit.BinaryLower.FiniteTree.nodeRow</a></p></li><li id=L59><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord_invariant</code> <small>line 59</small><div class="doc"><p>A translation invisible at every descendant leaf is invisible in the
+complete recursive word. The hypothesis is required for all states, permitting
+all ancestor offsets without adding any invariance assumption on the shifts.</p></div><pre>theorem nodeWord_invariant {m : ℕ} (T : ℕ)
+    (leaf : List (Fin m) → A → Γ) (u : List (Fin m) → A)
+    (h : ℕ) (p : List (Fin m)) (z : A)
+    (hinv : ∀ q : List (Fin m), q.length = h → ∀ x : A,
+      leaf (p ++ q) (x + z) = leaf (p ++ q) x) (x : A) :
+    nodeWord T leaf u h p (x + z) = nodeWord T leaf u h p x := by
+…</pre><p class="refs">Mentions: <a href="FiniteTreeWords.lean.html#L20">OAI.TreeEdit.BinaryLower.FiniteTree.nodeWord</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

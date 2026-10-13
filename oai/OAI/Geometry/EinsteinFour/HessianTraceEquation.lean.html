@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/EinsteinFour/HessianTraceEquation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/EinsteinFour/HessianTraceEquation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">EinsteinFour</a> / <span>HessianTraceEquation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">EinsteinFour</a>/<span>HessianTraceEquation.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/EinsteinFour/HessianTraceEquation.lean#L1">source</a></p><div class="doc"><p>Derive the Weyl Hessian trace from Bianchi and the curvature commutator.
+This removes a separate tensor Laplacian premise from the local weighted
+square. All contractions use the same concrete quaternion coordinates.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.PositiveEinsteinFour.HighestHessian.rotation_innerSlice_component</code> <small>line 18</small></li><li id=L25><b>theorem</b> <code>OAI.PositiveEinsteinFour.HighestHessian.coupling_innerSlice_component</code> <small>line 25</small></li><li id=L37><b>theorem</b> <code>OAI.PositiveEinsteinFour.HighestHessian.symmetric_bianchi_trace_zero</code> <small>line 37</small><div class="doc"><p>A derivative-symmetric Bianchi Hessian has zero trace.</p></div><pre>theorem symmetric_bianchi_trace_zero (X : Hessian)
+    (hderiv : ∀ i j, X i j = X j i)
+    (hs : ∀ i j, symmetric (X i j))
+    (hb : ∀ i r, divergence X i r = 0) : hessianTrace X = 0 := by
+…</pre><p class="refs">Mentions: <a href="HighestCoordinates.lean.html#L279">OAI.PositiveEinsteinFour.HighestHessian.divergence</a></p></li><li id=L71><b>theorem</b> <code>OAI.PositiveEinsteinFour.HighestHessian.trace_eq_of_bianchi_commutator</code> <small>line 71</small><div class="doc"><p>The normalized Weyl trace equation is a consequence of the local
+curvature commutator and differential Bianchi identity.</p></div><pre>theorem trace_eq_of_bianchi_commutator (X : Hessian) (t : Fin 3 → ℝ)
+    (ht : ∑ s, t s = 0)
+    (hm : ∀ i j, symmetric (X i j) ∧ traceFree (X i j))
+    (hb : ∀ i r, divergence X i r = 0)
+    (hc : ∀ i j a b, X i j a b - X j i a b =
+      (1 / 2) * ∑ s, (1 + t s) * quaternionMatrix s i j *
+        matrixAction s (Matrix.diagonal t) a b) :
+    hessianTrace X = diagonalLaplacianBlock t := by
+…</pre><p class="refs">Mentions: <a href="HighestCoordinates.lean.html#L279">OAI.PositiveEinsteinFour.HighestHessian.divergence</a></p></li><li id=L107><b>theorem</b> <code>OAI.PositiveEinsteinFour.HighestHessian.local_weighted_hessian_square_of_bianchi_commutator</code> <small>line 107</small><div class="doc"><p>The local weighted square needs no independent Laplacian equation.</p></div><pre>theorem local_weighted_hessian_square_of_bianchi_commutator
+    (X : Hessian) (t u : Fin 3 → ℝ) (a : Vec) (Z : Tensor)
+    (ht : ∑ s, t s = 0)
+    (hmatrix : ∀ i j, symmetric (X i j) ∧ traceFree (X i j))
+    (hbianchi : ∀ i r, divergence X i r = 0)
+    (hcomm : ∀ i j b c, X i j b c - X j i b c =
+      (1 / 2) * ∑ s, (1 + t s) * quaternionMatrix s i j *
+        matrixAction s (Matrix.diagonal t) b c)
+    (x y m : ℝ) (hm : 0 &lt; m)
+    (htx : ∀ s, -x ≤ t s) (huy : ∀ s, -y ≤ u s) (hxy : x + y ≤ 2) :
+    0 ≤ (m / 6) * curvaturePairing t u (hessianRemainder X t) (hessianRemainder X t) +
+      curvaturePairing t u (hessianRemainder X t) (weightTensor a Z) / 6 +
+…</pre><p class="refs">Mentions: <a href="HighestCoordinates.lean.html#L279">OAI.PositiveEinsteinFour.HighestHessian.divergence</a>, <a href="HighestSquare.lean.html#L55">OAI.PositiveEinsteinFour.HighestHessian.curvaturePairing</a>, <a href="WeightedHessian.lean.html#L16">OAI.PositiveEinsteinFour.HighestHessian.hessianRemainder</a>, <a href="HighestProjection.lean.html#L166">OAI.PositiveEinsteinFour.HighestHessian.weightTensor</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

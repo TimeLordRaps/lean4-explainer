@@ -1,0 +1,1 @@
+window.l4shard("dw", [["OAI.PowerSaving.Skies.dwarf",15259,115],["OAI.Thomason.Construction.FiniteReflectionInput.finite_dwyer_attachment_comparison",18583,104],["OAI.Thomason.Construction.NormalizedSimplexIdentities.finite_dwyer_attachment_comparison",18618,497]]);

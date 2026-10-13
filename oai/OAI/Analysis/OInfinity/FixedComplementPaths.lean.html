@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/FixedComplementPaths.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/FixedComplementPaths.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>FixedComplementPaths.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>FixedComplementPaths.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/FixedComplementPaths.lean#L1">source</a></p><div class="doc"><h3>Constant-complement paths for the concrete common-corner comparison</h3><p>The path of the relative binary comparison stays in its actual corner.
+Combining it with fixed-support shrink paths gives a unitary path with the
+prescribed complementary isometry at every time. Its initial value is
+displayed literally; no connectedness of that initial value is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_relative_binary_power_path</code> <small>line 22</small><div class="doc"><p>Keep the path inside the common corner rather than forgetting its
+relative identity component when passing to the ambient algebra.</p></div><pre>lemma exists_relative_binary_power_path
+    (q : E) (hq : star q = q) (hqq : q * q = q) (hq0 : q ≠ 0)
+    (a b : Fin 2 → E)
+    (ha : ∀ i j, star (a i) * a j = if i = j then q else 0)
+    (hb : ∀ i j, star (b i) * b j = if i = j then q else 0)
+    (has : (∑ i, a i * star (a i)) = q)
+    (hbs : (∑ i, b i * star (b i)) = q)
+    (hab : bergRowsCommute a b) (m : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ V : unitInterval → unitary E, Continuous V ∧ V 0 = 1 ∧
+      (∀ t, (V t : E) * (1 - q) = 1 - q ∧ (1 - q) * (V t : E) = 1 - q) ∧
+      ∀ i ≤ m, ‖(V 1 : E) * (a 0 ^ i * a 1) * star (V 1 : E) -
+        (b 0 ^ i * b 1)‖ &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a></p></li><li id=L77><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_commonCorner_fixedComplement_path</code> <small>line 77</small><div class="doc"><p>Constant initial/final projections and a corner-preserving comparison
+give an actual continuous family of the prescribed complementary extensions.</p></div><pre>lemma exists_commonCorner_fixedComplement_path
+    (q p R w z : E) (hq : star q = q) (hp : star p = p)
+    (hw : star w * w = 1) (hww : w * star w = 1 - q)
+    (hz : star z * z = 1) (hzz : z * star z = 1 - p)
+    (c d : unitInterval → E) (hc : Continuous c) (hd : Continuous d)
+    (hcg : ∀ t, star (c t) * c t = q)
+    (hcr : ∀ t, c t * star (c t) = R)
+    (hcq : ∀ t, c t * q = c t)
+    (hdg : ∀ t, star (d t) * d t = p)
+    (hdr : ∀ t, d t * star (d t) = R)
+    (hdp : ∀ t, d t * p = d t)
+    (V : unitInterval → unitary E) (hV : Continuous V) (hV0 : V 0 = 1)
+…</pre></li><li id=L122><b>lemma</b> <code>OAI.WeakPureInfiniteness.fixedComplement_path_product</code> <small>line 122</small><div class="doc"><p>Two such paths with the same complementary action cancel that action
+exactly. Connectedness reduces to their literal initial product.</p></div><pre>lemma fixedComplement_path_product
+    (U V : unitInterval → unitary E) (hU : Continuous U) (hV : Continuous V)
+    (w z : E) (hUw : ∀ t, (U t : E) * w = z) (hVw : ∀ t, (V t : E) * w = z) :
+    Continuous (fun t =&gt; star (V t) * U t) ∧
+      (∀ t, ((star (V t) * U t : unitary E) : E) * w = w) ∧
+      Joined (star (V 0) * U 0) (star (V 1) * U 1) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/PlaneEnvelopes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/PlaneEnvelopes.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>PlaneEnvelopes.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>PlaneEnvelopes.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/PlaneEnvelopes.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem358.MovingHyperplaneChart.chart</code> <small>line 14</small><div class="doc"><p>Projection onto an affine hyperplane along a fixed transverse direction.</p></div><pre>def chart (v n : V) (c : ℝ) (z : V) : V :=
+…</pre></li><li id=L18><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.chart_mem</code> <small>line 18</small><div class="doc"><p>The chart takes values in its target plane whenever the direction is transverse.</p></div><pre>theorem chart_mem (v n : V) (c : ℝ) (z : V) (h : inner ℝ v n ≠ 0) :
+    inner ℝ (chart v n c z) n + c = 0 := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L25><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.chart_eq_self</code> <small>line 25</small><div class="doc"><p>A point already on the target plane is fixed.</p></div><pre>theorem chart_eq_self {v n z : V} {c : ℝ} (hz : inner ℝ z n + c = 0) :
+    chart v n c z = z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L30><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.chart_add_smul</code> <small>line 30</small><div class="doc"><p>Projection is invariant under translation parallel to its direction.</p></div><pre>theorem chart_add_smul (v n : V) (c a : ℝ) (z : V) (h : inner ℝ v n ≠ 0) :
+    chart v n c (z + a • v) = chart v n c z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L41><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.chart_chart</code> <small>line 41</small><div class="doc"><p>Two successive charts with the same transverse direction collapse to the last one.</p></div><pre>theorem chart_chart (v n₁ n₂ : V) (c₁ c₂ : ℝ) (z : V)
+    (h₂ : inner ℝ v n₂ ≠ 0) :
+    chart v n₂ c₂ (chart v n₁ c₁ z) = chart v n₂ c₂ z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L49><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.inverse_chart</code> <small>line 49</small><div class="doc"><p>A reverse chart recovers every point of the original plane.</p></div><pre>theorem inverse_chart {v n₀ n z : V} {c₀ c : ℝ}
+    (h₀ : inner ℝ v n₀ ≠ 0) (hz : inner ℝ z n₀ + c₀ = 0) :
+    chart v n₀ c₀ (chart v n c z) = z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L56><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.chart_injOn</code> <small>line 56</small><div class="doc"><p>Restricting the chart to a plane transverse to its direction is injective.</p></div><pre>theorem chart_injOn {v n₀ n : V} {c₀ c : ℝ} (h₀ : inner ℝ v n₀ ≠ 0) :
+    Set.InjOn (chart v n c) {z | inner ℝ z n₀ + c₀ = 0} := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L63><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.chart_bijOn</code> <small>line 63</small><div class="doc"><p>The chart maps one transverse plane onto the other.</p></div><pre>theorem chart_bijOn {v n₀ n : V} {c₀ c : ℝ}
+    (h₀ : inner ℝ v n₀ ≠ 0) (h : inner ℝ v n ≠ 0) :
+    Set.BijOn (chart v n c) {z | inner ℝ z n₀ + c₀ = 0}
+      {z | inner ℝ z n + c = 0} := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L73><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.continuous_chart</code> <small>line 73</small><div class="doc"><p>For fixed plane parameters the chart is a continuous affine map.</p></div><pre>theorem continuous_chart (v n : V) (c : ℝ) : Continuous (chart v n c) := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L78><b>def</b> <code>OAI.Problem358.MovingHyperplaneChart.planeHomeomorph</code> <small>line 78</small><div class="doc"><p>The geometric identification of any two planes transverse to the same direction.</p></div><pre>def planeHomeomorph (v n₀ n : V) (c₀ c : ℝ)
+    (h₀ : inner ℝ v n₀ ≠ 0) (h : inner ℝ v n ≠ 0) :
+    {z : V // inner ℝ z n₀ + c₀ = 0} ≃ₜ {z : V // inner ℝ z n + c = 0} where
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.continuousAt_chart_joint</code> <small>line 89</small><div class="doc"><p>Joint continuity in the varying plane and the original point.</p></div><pre>theorem continuousAt_chart_joint (v : V) {p : (V × ℝ) × V}
+    (h : inner ℝ v p.1.1 ≠ 0) :
+    ContinuousAt (fun q : (V × ℝ) × V =&gt; chart v q.1.1 q.1.2 q.2) p := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L96><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.norm_chart_sub_le</code> <small>line 96</small><div class="doc"><p>A uniform quantitative estimate for the moving chart on a bounded part of the old plane.</p></div><pre>theorem norm_chart_sub_le {v n₀ n z : V} {c₀ c R : ℝ}
+    (hz : inner ℝ z n₀ + c₀ = 0) (hR : ‖z‖ ≤ R) :
+    ‖chart v n c z - z‖ ≤
+      ((R * ‖n - n₀‖ + |c - c₀|) / |inner ℝ v n|) * ‖v‖ := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L120><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.tendstoUniformlyOn_chart</code> <small>line 120</small><div class="doc"><p>Nearby affine planes converge uniformly on every bounded part of the original plane.</p></div><pre>theorem tendstoUniformlyOn_chart {v n₀ : V} {c₀ R : ℝ} {S : Set V}
+    (h₀ : inner ℝ v n₀ ≠ 0)
+    (hplane : ∀ z ∈ S, inner ℝ z n₀ + c₀ = 0)
+    (hR : ∀ z ∈ S, ‖z‖ ≤ R) :
+    TendstoUniformlyOn (fun p : V × ℝ =&gt; chart v p.1 p.2) id (𝓝 (n₀, c₀)) S := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L144><b>theorem</b> <code>OAI.Problem358.MovingHyperplaneChart.tendstoUniformlyOn_chart_of_isCompact</code> <small>line 144</small><div class="doc"><p>Compact parts of the original plane satisfy the uniform convergence statement.</p></div><pre>theorem tendstoUniformlyOn_chart_of_isCompact {v n₀ : V} {c₀ : ℝ} {S : Set V}
+    (h₀ : inner ℝ v n₀ ≠ 0) (hS : IsCompact S)
+    (hplane : ∀ z ∈ S, inner ℝ z n₀ + c₀ = 0) :
+    TendstoUniformlyOn (fun p : V × ℝ =&gt; chart v p.1 p.2) id (𝓝 (n₀, c₀)) S := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L14">OAI.Problem358.MovingHyperplaneChart.chart</a></p></li><li id=L166><b>theorem</b> <code>OAI.Problem358.TangentEnvelope.norm_tangent_le_two_radius</code> <small>line 166</small><div class="doc"><p>Orthogonal projection bounds the tangent coordinate independently of the
+normal displacement used to straighten a moving face.</p></div><pre>theorem norm_tangent_le_two_radius {u z w : V} {t R : ℝ}
+    (horth : ⟪w, u⟫ = 0) (hz : ‖z‖ ≤ R)
+    (hx : ‖z + w + t • u‖ ≤ R) : ‖w‖ ≤ 2 * R := by
+…</pre></li><li id=L181><b>theorem</b> <code>OAI.Problem358.TangentEnvelope.tangent_mem_closedBall_of_mem</code> <small>line 181</small><div class="doc"><p>A body inside a radius-R ball pulls back to a fixed radius-2R support in
+tangent coordinates, uniformly for every normal displacement.</p></div><pre>theorem tangent_mem_closedBall_of_mem {u z : V} {K : Set V} {R t : ℝ}
+    (hK : ∀ x ∈ K, ‖x‖ ≤ R) (hz : z ∈ K)
+    (w : (ℝ ∙ u)ᗮ) (hx : z + (w : V) + t • u ∈ K) :
+    w ∈ closedBall (0 : (ℝ ∙ u)ᗮ) (2 * R) := by
+…</pre></li><li id=L192><b>theorem</b> <code>OAI.Problem358.TangentEnvelope.norm_body_indicator_le_tangent_envelope</code> <small>line 192</small><div class="doc"><p>A bounded test function restricted to the source body has one compact
+surface envelope valid for all moving-strip normal coordinates.</p></div><pre>theorem norm_body_indicator_le_tangent_envelope {F : Type*}
+    [NormedAddCommGroup F] {u z : V} {K : Set V} {R B t : ℝ}
+    (hK : ∀ x ∈ K, ‖x‖ ≤ R) (hz : z ∈ K) (hB : 0 ≤ B)
+    {f : V → F} (hf : ∀ x ∈ K, ‖f x‖ ≤ B) (w : (ℝ ∙ u)ᗮ) :
+    ‖K.indicator f (z + (w : V) + t • u)‖ ≤
+      (closedBall (0 : (ℝ ∙ u)ᗮ) (2 * R)).indicator (fun _ =&gt; B) w := by
+…</pre></li><li id=L208><b>theorem</b> <code>OAI.Problem358.TangentEnvelope.integrable_tangent_polynomial_envelope</code> <small>line 208</small><div class="doc"><p>Polynomially growing speeds times a compact tangent cutoff are integrable.
+This supplies the domination required by moving-boundary differentiation.</p></div><pre>theorem integrable_tangent_polynomial_envelope [FiniteDimensional ℝ V]
+    [MeasurableSpace V] [BorelSpace V] (u : V)
+    (μ : Measure ((ℝ ∙ u)ᗮ)) [μ.IsAddHaarMeasure]
+    (R A B : ℝ) (n : ℕ) :
+    Integrable ((closedBall (0 : (ℝ ∙ u)ᗮ) R).indicator
+      (fun w =&gt; (A + B * ‖w‖) ^ n)) μ := by
+…</pre></li><li id=L233><b>abbrev</b> <code>OAI.Problem358.MovingPlaneEnvelope.Plane</code> <small>line 233</small><div class="doc"><p>The fixed reference plane, with its induced topology and measurable structure.</p></div><pre>abbrev Plane (n₀ : V) (c₀ : ℝ) := {z : V // inner ℝ z n₀ + c₀ = 0}</pre></li><li id=L236><b>def</b> <code>OAI.Problem358.MovingPlaneEnvelope.projection</code> <small>line 236</small><div class="doc"><p>Projection back to the fixed reference plane along the common transverse direction.</p></div><pre>def projection (v n₀ : V) (c₀ : ℝ) (h₀ : inner ℝ v n₀ ≠ 0) (z : V) : Plane n₀ c₀ :=
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L233">OAI.Problem358.MovingPlaneEnvelope.Plane</a></p></li><li id=L239><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.continuous_projection</code> <small>line 239</small></li><li id=L244><b>def</b> <code>OAI.Problem358.MovingPlaneEnvelope.envelope</code> <small>line 244</small><div class="doc"><p>A compact set produces one compact envelope on the reference plane.</p></div><pre>def envelope (v n₀ : V) (c₀ : ℝ) (h₀ : inner ℝ v n₀ ≠ 0) (K : Set V) :
+    Set (Plane n₀ c₀) := projection v n₀ c₀ h₀ &#x27;&#x27; K</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L233">OAI.Problem358.MovingPlaneEnvelope.Plane</a>, <a href="PlaneEnvelopes.lean.html#L236">OAI.Problem358.MovingPlaneEnvelope.projection</a></p></li><li id=L247><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.isCompact_envelope</code> <small>line 247</small></li><li id=L253><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.chart_preimage_subset_envelope</code> <small>line 253</small><div class="doc"><p>Every moving-plane pullback of K is contained in the same compact envelope.
+No bound on the moving normal or intercept, nor moving transversality, is needed.</p></div><pre>theorem chart_preimage_subset_envelope {v n₀ : V} {c₀ : ℝ}
+    (h₀ : inner ℝ v n₀ ≠ 0) (K : Set V) (n : V) (c : ℝ) :
+    {z : Plane n₀ c₀ | chart v n c z.val ∈ K} ⊆ envelope v n₀ c₀ h₀ K := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L233">OAI.Problem358.MovingPlaneEnvelope.Plane</a>, <a href="PlaneEnvelopes.lean.html#L244">OAI.Problem358.MovingPlaneEnvelope.envelope</a></p></li><li id=L263><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.norm_indicator_chart_le</code> <small>line 263</small><div class="doc"><p>A bounded integrand cut off on K has a parameter-independent indicator bound
+when pulled back by any moving-plane chart.</p></div><pre>theorem norm_indicator_chart_le {W : Type*} [NormedAddCommGroup W]
+    {v n₀ : V} {c₀ : ℝ} (h₀ : inner ℝ v n₀ ≠ 0)
+    {K : Set V} {g : V → W} {C : ℝ} (hC : 0 ≤ C)
+    (hg : ∀ x ∈ K, ‖g x‖ ≤ C) (n : V) (c : ℝ) (z : Plane n₀ c₀) :
+    ‖K.indicator g (chart v n c z.val)‖ ≤
+      (envelope v n₀ c₀ h₀ K).indicator (fun _ =&gt; C) z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L233">OAI.Problem358.MovingPlaneEnvelope.Plane</a>, <a href="PlaneEnvelopes.lean.html#L244">OAI.Problem358.MovingPlaneEnvelope.envelope</a></p></li><li id=L277><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.norm_smul_indicator_chart_le</code> <small>line 277</small><div class="doc"><p>Extra cell-cut factors bounded by one do not change the common envelope.</p></div><pre>theorem norm_smul_indicator_chart_le {W : Type*} [NormedAddCommGroup W]
+    [NormedSpace ℝ W] {v n₀ : V} {c₀ : ℝ} (h₀ : inner ℝ v n₀ ≠ 0)
+    {K : Set V} {g : V → W} {C : ℝ} (hC : 0 ≤ C)
+    (hg : ∀ x ∈ K, ‖g x‖ ≤ C) (n : V) (c : ℝ) (z : Plane n₀ c₀)
+    (a : ℝ) (ha : |a| ≤ 1) :
+    ‖a • K.indicator g (chart v n c z.val)‖ ≤
+      (envelope v n₀ c₀ h₀ K).indicator (fun _ =&gt; C) z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L233">OAI.Problem358.MovingPlaneEnvelope.Plane</a>, <a href="PlaneEnvelopes.lean.html#L244">OAI.Problem358.MovingPlaneEnvelope.envelope</a></p></li><li id=L293><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.integrable_envelope_bound</code> <small>line 293</small><div class="doc"><p>Local finiteness on the reference plane makes the fixed compact envelope integrable.</p></div><pre>theorem integrable_envelope_bound {K : Set V} (hK : IsCompact K) (C : ℝ) :
+    Integrable ((envelope v n₀ c₀ h₀ K).indicator (fun _ =&gt; C)) μ := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L244">OAI.Problem358.MovingPlaneEnvelope.envelope</a></p></li><li id=L301><b>theorem</b> <code>OAI.Problem358.MovingPlaneEnvelope.exists_integrable_chart_majorant</code> <small>line 301</small><div class="doc"><p>Continuous tests on a compact body admit one integrable majorant for every
+moving chart and every additional scalar cut factor of absolute value at most one.</p></div><pre>theorem exists_integrable_chart_majorant {W : Type*} [NormedAddCommGroup W]
+    [NormedSpace ℝ W] {K : Set V} (hK : IsCompact K) {g : V → W}
+    (hg : ContinuousOn g K) :
+    ∃ B : Plane n₀ c₀ → ℝ, Integrable B μ ∧ (∀ z, 0 ≤ B z) ∧
+      ∀ (n : V) (c : ℝ) (z : Plane n₀ c₀) (a : ℝ), |a| ≤ 1 →
+        ‖a • K.indicator g (chart v n c z.val)‖ ≤ B z := by
+…</pre><p class="refs">Mentions: <a href="PlaneEnvelopes.lean.html#L233">OAI.Problem358.MovingPlaneEnvelope.Plane</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

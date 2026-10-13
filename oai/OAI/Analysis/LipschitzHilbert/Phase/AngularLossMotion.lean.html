@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/AngularLossMotion.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/AngularLossMotion.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>AngularLossMotion.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>AngularLossMotion.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/AngularLossMotion.lean#L1">source</a></p><div class="doc"><p>Relative motion of nonnegative logarithmic losses. Both the submass
+and its complement are actual positive sums. Vanishing complements give
+identically zero loss and need no logarithmic positivity assumption.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.LipschitzHilbert.log_one_add_scaled_le</code> <small>line 16</small><div class="doc"><p>Concavity of the logarithm controls multiplicative changes in its
+nonnegative argument, uniformly even at argument zero.</p></div><pre>theorem log_one_add_scaled_le {c q : ℝ} (hc : 1 ≤ c) (hq : 0 ≤ q) :
+    Real.log (1+c*q) ≤ c*Real.log (1+q) := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.LipschitzHilbert.positive_le_exp_mul_of_log_motion</code> <small>line 33</small></li><li id=L43><b>theorem</b> <code>OAI.LipschitzHilbert.positive_complement_loss_motion</code> <small>line 43</small><div class="doc"><p>The loss log((a+b)/a) varies relatively with the positive submass and
+complement, instead of paying a constant independent of that loss.</p></div><pre>theorem positive_complement_loss_motion {a b a&#x27; b&#x27; delta : ℝ}
+    (ha : 0 &lt; a) (hb : 0 &lt; b) (ha&#x27; : 0 &lt; a&#x27;) (hb&#x27; : 0 &lt; b&#x27;)
+    (hdelta : 0 ≤ delta)
+    (hA : |Real.log a&#x27;-Real.log a| ≤ delta)
+    (hB : |Real.log b&#x27;-Real.log b| ≤ delta) :
+    |Real.log ((a&#x27;+b&#x27;)/a&#x27;)-Real.log ((a+b)/a)| ≤
+      (Real.exp (2*delta)-1)*Real.log ((a+b)/a) := by
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.LipschitzHilbert.finite_submass_loss_motion</code> <small>line 81</small><div class="doc"><p>A finite submass and its actual set complement give relative loss
+motion. Empty complements are handled exactly, as zero loss.</p></div><pre>theorem finite_submass_loss_motion {ι : Type*} [DecidableEq ι] (C A : Finset ι) (hsub : A ⊆ C)
+    (hA : A.Nonempty) (w0 w1 : ι → ℝ)
+    (hw0 : ∀ t ∈ C, 0 &lt; w0 t) (hw1 : ∀ t ∈ C, 0 &lt; w1 t)
+    {delta : ℝ} (hdelta : 0 ≤ delta)
+    (hmass : |Real.log (∑ t ∈ A, w1 t)-Real.log (∑ t ∈ A, w0 t)| ≤ delta)
+    (hcomplement : (C\A).Nonempty →
+      |Real.log (∑ t ∈ C\A, w1 t)-Real.log (∑ t ∈ C\A, w0 t)| ≤ delta) :
+    |Real.log ((∑ t ∈ C, w1 t)/(∑ t ∈ A, w1 t)) -
+      Real.log ((∑ t ∈ C, w0 t)/(∑ t ∈ A, w0 t))| ≤
+        (Real.exp (2*delta)-1)*Real.log ((∑ t ∈ C, w0 t)/(∑ t ∈ A, w0 t)) := by
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.LipschitzHilbert.relative_loss_factor_le</code> <small>line 111</small><div class="doc"><p>On the small-motion range the relative loss factor is linear in
+that motion, with an absolute constant.</p></div><pre>theorem relative_loss_factor_le {delta : ℝ} (hdelta : 0 ≤ delta) (hsmall : delta ≤ 1/2) :
+    Real.exp (2*delta)-1 ≤ (2*Real.exp 1)*delta := by
+…</pre></li><li id=L130><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.source_relative_loss_motion</code> <small>line 130</small><div class="doc"><p>At the source mesh scale, the child-to-containing-mass loss has a
+relative error of order G^(-1/2), including identically zero losses.</p></div><pre>theorem source_relative_loss_motion {ι : Type*} (g : AngularGrid) (tops : Finset ι)
+    (T : ι → SlopeBox) (w B K D : ℝ) (hw : 0 &lt; w) (hB : 1 ≤ B)
+    (hK : 0 &lt; K) (hD : 0 ≤ D) (hwidth : ∀ t ∈ tops, B^2*w ≤ (T t).width)
+    (base h i : ℕ) (hhi : h ≤ i) (gap : ℝ) (hgap0 : 0 ≤ gap) (hgap : gap ≤ g.width h)
+    (s sR : ℝ) (hs : g.index h s = g.index h sR)
+    (child : ℝ) (hchild : 0 &lt; child) (hblock : g.width h ≤ B*child)
+    (C A : Finset ι) (hsub : A ⊆ C) (hA : A.Nonempty)
+    (hC : C ⊆ g.boundaryTops tops (fun t =&gt; (T t).slope)
+      (fun t =&gt; w/(T t).length) (g.rootWidth/B^2) base i gap s)
+    (a : ℝ) (ha : |a| ≤ w/(child*Real.sqrt (g.branching:ℝ))) (z : ℝ × ℝ) :
+    let loss := fun x =&gt; Real.log ((∑ t ∈ C, (T t).weight K D x)/(∑ t ∈ A, (T t).weight K D x))
+…</pre><p class="refs">Mentions: <a href="AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a>, <a href="../Estimates/TopWeight.lean.html#L17">OAI.LipschitzHilbert.SlopeBox</a>, <a href="AngularGeometry.lean.html#L11">OAI.LipschitzHilbert.AngularGrid.width</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

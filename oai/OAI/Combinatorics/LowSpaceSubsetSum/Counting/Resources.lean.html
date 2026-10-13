@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/LowSpaceSubsetSum/Counting/Resources.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/LowSpaceSubsetSum/Counting/Resources.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">LowSpaceSubsetSum</a> / <a href="index.html">Counting</a> / <span>Resources.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">LowSpaceSubsetSum</a>/<a href="index.html">Counting</a>/<span>Resources.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/LowSpaceSubsetSum/Counting/Resources.lean#L1">source</a></p><div class="doc"><h3>Exact resource exponents</h3><p>Rational arithmetic for <code>res:tuple-exponent</code> and <code>res:exponent-relations</code> in
+<em>A Low-Space Algorithm for Worst-Case Subset Sum</em>. The numerical hypotheses
+relate leaf, dictionary, buffer, and raw-tuple exponential rates.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.LowSpaceSubsetSum.mixerSize</code> <small>line 19</small><div class="doc"><p>The block size is divisible by eight; <code>n</code> counts indices, not input bits.</p></div><pre>def mixerSize (n : ℕ) : ℕ := 8 * (3 * n / 100)</pre></li><li id=L21><b>theorem</b> <code>OAI.LowSpaceSubsetSum.mixerSize_bounds</code> <small>line 21</small></li><li id=L36><b>def</b> <code>OAI.LowSpaceSubsetSum.pairExponent</code> <small>line 36</small><div class="doc"><p>Analysis scale for the number of low-filtered raw child pairs.</p></div><pre>noncomputable def pairExponent (n m h fmax : ℝ) : ℝ :=
+…</pre></li><li id=L40><b>def</b> <code>OAI.LowSpaceSubsetSum.entryExponent</code> <small>line 40</small><div class="doc"><p>Analysis scale for distinct valid parent entries.</p></div><pre>noncomputable def entryExponent (n m hbar d f0 : ℝ) : ℝ :=
+…</pre></li><li id=L44><b>def</b> <code>OAI.LowSpaceSubsetSum.extraPrimeExponent</code> <small>line 44</small><div class="doc"><p>The additional-prime exponent.</p></div><pre>noncomputable def extraPrimeExponent (n m fmax : ℝ) : ℝ :=
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.LowSpaceSubsetSum.regeneration_exponent</code> <small>line 48</small><div class="doc"><p>Regenerating the pair streams preserves the exact half-exponential rate.</p></div><pre>theorem regeneration_exponent (n m h fmax : ℝ)
+    (hm : 0 ≤ m) (hh : h ≤ 4057 / 5000) :
+    extraPrimeExponent n m fmax + pairExponent n m h fmax ≤ n / 2 := by
+…</pre><p class="refs">Mentions: <a href="Resources.lean.html#L44">OAI.LowSpaceSubsetSum.extraPrimeExponent</a>, <a href="Resources.lean.html#L36">OAI.LowSpaceSubsetSum.pairExponent</a></p></li><li id=L55><b>theorem</b> <code>OAI.LowSpaceSubsetSum.matching_exponent</code> <small>line 55</small><div class="doc"><p>The separator occurrence factor also preserves the exact time rate.</p></div><pre>theorem matching_exponent (n m h hbar d f0 : ℝ)
+    (hm : 0 ≤ m) (hh : hbar ≤ h) (hf : f0 ≤ d) :
+    entryExponent n m hbar d f0 + (1 - h) * m ≤ n / 2 := by
+…</pre><p class="refs">Mentions: <a href="Resources.lean.html#L40">OAI.LowSpaceSubsetSum.entryExponent</a></p></li><li id=L62><b>theorem</b> <code>OAI.LowSpaceSubsetSum.bucket_exponent_gap</code> <small>line 62</small><div class="doc"><p>The extra prime has a strict margin over the space-scaled entry count.</p></div><pre>theorem bucket_exponent_gap (n m h hbar d f0 fmax : ℝ)
+    (hn : 10000 ≤ n) (hm : (6 / 25) * n - 8 ≤ m)
+    (hh : h ≤ 4057 / 5000) (hbar_le : hbar ≤ h)
+    (hf0 : f0 ≤ d / 2) (hfmax : fmax ≤ d / 2 + n / 4000) :
+    (3 / 2000) * n ≤
+      extraPrimeExponent n m fmax - (entryExponent n m hbar d f0 - (199 / 1000) * n) := by
+…</pre><p class="refs">Mentions: <a href="Resources.lean.html#L44">OAI.LowSpaceSubsetSum.extraPrimeExponent</a>, <a href="Resources.lean.html#L40">OAI.LowSpaceSubsetSum.entryExponent</a></p></li><li id=L74><b>theorem</b> <code>OAI.LowSpaceSubsetSum.tuple_exponent</code> <small>line 74</small><div class="doc"><p>Raw four-leaf tuple counts fit the exact time exponent after low filtering.</p></div><pre>theorem tuple_exponent (n m h beta f0 fj : ℝ)
+    (hn : 3000 ≤ n) (hm : (6 / 25) * n - 8 ≤ m)
+    (hh : h ≤ 4057 / 5000)
+    (hb : beta ≤ n / 4 + (-3 / 4 + 3 / 2 * h) * m)
+    (hf0 : f0 ≤ (39 / 5000) * n) (hfj : fj ≤ (39 / 5000) * n) :
+    2 * beta - (m / 2 - f0) - (m / 2 - fj) ≤ n / 2 := by
+…</pre></li><li id=L85><b>theorem</b> <code>OAI.LowSpaceSubsetSum.leaf_exponent</code> <small>line 85</small><div class="doc"><p>Every raw leaf is below the buffer and dictionary rates with fixed slack.</p></div><pre>theorem leaf_exponent (n m h beta : ℝ)
+    (hm0 : 0 ≤ m) (hm : m ≤ (6 / 25) * n)
+    (hh : h ≤ 4057 / 5000)
+    (hb : beta ≤ n / 4 + (-3 / 4 + 3 / 2 * h) * m) :
+    beta / 2 ≤ (45263 / 250000) * n := by
+…</pre></li><li id=L94><b>theorem</b> <code>OAI.LowSpaceSubsetSum.polynomial_absorption</code> <small>line 94</small><div class="doc"><p>A fixed polynomial is eventually absorbed by any positive base-two rate.</p></div><pre>theorem polynomial_absorption (k : ℕ) {eps : ℝ} (heps : 0 &lt; eps) :
+    ∀ᶠ n : ℕ in atTop, (n : ℝ) ^ k ≤ (2 : ℝ) ^ (eps * n) := by
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.LowSpaceSubsetSum.polynomial_bit_bound</code> <small>line 106</small><div class="doc"><p>The polynomial-bit promise gives a polynomial bound with no input for <code>c</code>.</p></div><pre>theorem polynomial_bit_bound {n b c : ℕ} (hn : 2 ≤ n) (hc : 0 &lt; c)
+    (hb : b ≤ n ^ c) : n + b + 2 ≤ 3 * n ^ c := by
+…</pre></li><li id=L116><b>theorem</b> <code>OAI.LowSpaceSubsetSum.absorb_space_polynomial</code> <small>line 116</small><div class="doc"><p>The ordinary exponential space corollary, as a numeric bound implication.</p><p>This applies to an actual algorithm only after its intermediate space bound
+has been established; it is not a replacement for that main theorem.</p></div><pre>theorem absorb_space_polynomial {rho : ℝ} (hrho : (199 / 1000 : ℝ) &lt; rho)
+    (c : ℕ) (hc : 0 &lt; c) :
+    ∀ᶠ n : ℕ in atTop, ∀ b : ℕ, b ≤ n ^ c →
+      ((n + b + 2 : ℕ) : ℝ) ^ 15 * (2 : ℝ) ^ ((199 / 1000 : ℝ) * n) ≤
+        (3 : ℝ) ^ 15 * (2 : ℝ) ^ (rho * n) := by
+…</pre></li><li id=L146><b>theorem</b> <code>OAI.LowSpaceSubsetSum.one_fifth_space_polynomial</code> <small>line 146</small><div class="doc"><p>The chosen exponent <code>1/5</code> has the strict margin needed for absorption.</p></div><pre>theorem one_fifth_space_polynomial (c : ℕ) (hc : 0 &lt; c) :
+    ∀ᶠ n : ℕ in atTop, ∀ b : ℕ, b ≤ n ^ c →
+      ((n + b + 2 : ℕ) : ℝ) ^ 15 * (2 : ℝ) ^ ((199 / 1000 : ℝ) * n) ≤
+        (3 : ℝ) ^ 15 * (2 : ℝ) ^ ((1 / 5 : ℝ) * n) :=
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

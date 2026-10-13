@@ -1,0 +1,160 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Decoding/TableKeysLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Decoding/TableKeysLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Decoding</a> / <span>TableKeysLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Decoding</a>/<span>TableKeysLemmas.lean</span></code></h1><p class="muted">73 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Decoding/TableKeysLemmas.lean#L1">source</a></p><div class="doc"><h3>Exact affine-table keys for outer questions</h3><p>The retained data has one entry at every original block position.  A full entry
+contains the equation <em>occurrence ID</em>, a singleton entry contains the actual
+variable ID, and the first component is the entire reduced affine intercept.
+The common coefficient-normalization implementation below is independent of
+every latent-gadget existence or inverse theorem.</p><p>The explicit binary slope cases justify its use for the rank-zero, rank-one,
+and rank-two rule.  In particular, the third-position pullback adds the parity
+intercept twice, so exact sharing preserves the intercept as well as the slopes.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L43><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope</code> <small>line 43</small><div class="doc"><p>The free-coordinate block slope <code>(x,y) ↦ x • a + y • d</code>.</p></div><pre>def slope (a d : R) : (F2 × F2) →ₗ[F2] R :=
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_apply</code> <small>line 48</small></li><li id=L52><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_zero_iff</code> <small>line 52</small></li><li id=L66><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_injective</code> <small>line 66</small><div class="doc"><p>Over the binary field, the remaining case really is a rank-two slope:
+the two-coordinate map is injective, rather than merely syntactically full.</p></div><pre>theorem slope_injective (a d : R) (ha : a ≠ 0) (hd : d ≠ 0) (had : a ≠ d) :
+    Function.Injective (slope a d) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L43">OAI.UniqueGamesTheorem.Decoder.TableKeys.slope</a></p></li><li id=L86><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.freeTriple</code> <small>line 86</small></li><li id=L89><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock</code> <small>line 89</small><div class="doc"><p>A single block's intercept correction and tagged retained record.</p></div><pre>def reduceBlock (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (e : Id) (a d : R) : R × ActualCanonical.Record Name Id R :=
+…</pre></li><li id=L94><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock_zero</code> <small>line 94</small></li><li id=L99><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock_first</code> <small>line 99</small><div class="doc"><p>The first rank-one direction uses the actual first variable.</p></div><pre>theorem reduceBlock_first (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (e : Id) (a : R) (ha : a ≠ 0) :
+    reduceBlock names rhs e a 0 = (0, .single (names e 0) a) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L89">OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock</a></p></li><li id=L105><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock_second</code> <small>line 105</small><div class="doc"><p>The second rank-one direction uses the actual second variable.</p></div><pre>theorem reduceBlock_second (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (e : Id) (d : R) (hd : d ≠ 0) :
+    reduceBlock names rhs e 0 d = (0, .single (names e 1) d) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L89">OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock</a></p></li><li id=L113><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock_third</code> <small>line 113</small><div class="doc"><p>The third rank-one direction uses the actual third bit and adjusts the
+homogeneous intercept by the parity bit times the nonzero slope.</p></div><pre>theorem reduceBlock_third (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (e : Id) (a : R) (ha : a ≠ 0) :
+    reduceBlock names rhs e a a = (rhs e • a, .single (names e 2) a) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L89">OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock</a></p></li><li id=L119><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock_full</code> <small>line 119</small><div class="doc"><p>A genuine rank-two block retains its occurrence ID and both ordered slopes.</p></div><pre>theorem reduceBlock_full (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (e : Id) (a d : R) (ha : a ≠ 0) (hd : d ≠ 0) (had : a ≠ d) :
+    reduceBlock names rhs e a d = (0, .full e (freeTriple a d)) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L89">OAI.UniqueGamesTheorem.Decoder.TableKeys.reduceBlock</a>, <a href="TableKeysLemmas.lean.html#L86">OAI.UniqueGamesTheorem.Decoder.TableKeys.freeTriple</a></p></li><li id=L130><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.third_intercept_cancels</code> <small>line 130</small><div class="doc"><p>Pulling an actual third-bit table back adds <code>b • a</code> to its intercept;
+reducing the rank-one slope adds exactly the same quantity a second time.</p></div><pre>theorem third_intercept_cancels (z a : R) (b : F2) :
+    (z + b • a) + b • a = z := by
+…</pre></li><li id=L134><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.third_key_cancels</code> <small>line 134</small></li><li id=L144><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.full_record_occurrence_injective</code> <small>line 144</small><div class="doc"><p>The reduced representation never merges two distinct occurrence IDs in
+the full-block case.</p></div><pre>theorem full_record_occurrence_injective {e e&#x27; : Id} {a a&#x27; : Fin 3 → R}
+    (h : (ActualCanonical.Record.full e a : ActualCanonical.Record Name Id R) =
+      .full e&#x27; a&#x27;) : e = e&#x27; := by
+…</pre></li><li id=L157><b>abbrev</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.Key</code> <small>line 157</small></li><li id=L159><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.key</code> <small>line 159</small></li><li id=L165><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.key_data_ext_iff</code> <small>line 165</small><div class="doc"><p>Key equality includes the affine intercept and every original position.</p></div><pre>theorem key_data_ext_iff (a b : Key k Name Id R) :
+    a = b ↔ a.1 = b.1 ∧ ∀ j : Fin k, a.2 j = b.2 j := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L157">OAI.UniqueGamesTheorem.Decoder.TableKeys.Key</a></p></li><li id=L173><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.key_shift</code> <small>line 173</small></li><li id=L180><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.key_shift_free</code> <small>line 180</small><div class="doc"><p>Translation of the entire reduced affine table is a free action.</p></div><pre>theorem key_shift_free (occ : Fin k → Id) (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (P : ActualHomogeneous.E k →ₗ[F2] R) (c : R)
+    (h : key occ names rhs (P + ActualHomogeneous.tau.smulRight c) =
+      key occ names rhs P) : c = 0 := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L159">OAI.UniqueGamesTheorem.Decoder.TableKeys.key</a></p></li><li id=L193><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.projected_key_sharing</code> <small>line 193</small><div class="doc"><p>Every displayed singleton is its actual bit, including the affine parity
+intercept in position three.  Hidden occurrence IDs are forgotten precisely
+at singleton positions and retained at full positions.</p></div><pre>theorem projected_key_sharing
+    (J : Finset (Fin k)) (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (occ occ&#x27; : Fin k → Id) (slot slot&#x27; : Fin k → PartnerProjection.Slot)
+    (Y : RawPartnerTarget.RawPoint J →ₗ[F2] R)
+    (h : RawPrivateTable.displayed J names occ slot =
+      RawPrivateTable.displayed J names occ&#x27; slot&#x27;) :
+    key occ names rhs (Y.comp (RawPrivateTable.projection J rhs occ slot)) =
+      key occ&#x27; names rhs (Y.comp (RawPrivateTable.projection J rhs occ&#x27; slot&#x27;)) :=
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L159">OAI.UniqueGamesTheorem.Decoder.TableKeys.key</a></p></li><li id=L205><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.projectedKey</code> <small>line 205</small><div class="doc"><p>The reduced table attached to visible data is independent of the compatible
+full question used to realize it.  This is equality of the entire key.</p></div><pre>noncomputable def projectedKey (J : Finset (Fin k)) (names : Id → Fin 3 → Name) (rhs : Id → F2)
+    (Q : RawPrivateTable.SupportedV J names) (Y : RawPartnerTarget.RawPoint J →ₗ[F2] R) :
+    Key k Name Id R :=
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L157">OAI.UniqueGamesTheorem.Decoder.TableKeys.Key</a></p></li><li id=L212><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.projectedKey_pullback</code> <small>line 212</small></li><li id=L239><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.visibleTau</code> <small>line 239</small><div class="doc"><p>Read the shared homogeneous coordinate in the visible coordinate system.</p></div><pre>def visibleTau (J : Finset (Fin k)) : RawPartnerTarget.RawPoint J →ₗ[F2] F2 :=
+…</pre></li><li id=L244><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.projection_surjective</code> <small>line 244</small><div class="doc"><p>Every visible valid answer extends to an answer of each compatible full
+question.  This proves surjectivity of the actual affine-coordinate projection.</p></div><pre>theorem projection_surjective (J : Finset (Fin k)) (rhs : Id → F2)
+    (occ : Fin k → Id) (slot : Fin k → PartnerProjection.Slot) :
+    Function.Surjective (RawPrivateTable.projection J rhs occ slot) := by
+…</pre></li><li id=L252><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.projection_preserves_homogeneous</code> <small>line 252</small></li><li id=L261><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.visible_table_unique</code> <small>line 261</small><div class="doc"><p>Equality after pullback is equality of the entire visible linear extension,
+so no affine intercept or hidden coefficient can be lost by sharing.</p></div><pre>theorem visible_table_unique (J : Finset (Fin k)) (rhs : Id → F2)
+    (occ : Fin k → Id) (slot : Fin k → PartnerProjection.Slot)
+    (Y Z : RawPartnerTarget.RawPoint J →ₗ[F2] R)
+    (h : Y.comp (RawPrivateTable.projection J rhs occ slot) =
+      Z.comp (RawPrivateTable.projection J rhs occ slot)) : Y = Z := by
+…</pre></li><li id=L271><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.pullback_shift</code> <small>line 271</small></li><li id=L287><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.projectedKey_shift</code> <small>line 287</small><div class="doc"><p>Constant translation commutes with exact sharing at the level of whole
+reduced keys, including the removed alphabet component of the intercept.</p></div><pre>theorem projectedKey_shift (J : Finset (Fin k)) (names : Id → Fin 3 → Name)
+    (rhs : Id → F2) (Q : RawPrivateTable.SupportedV J names)
+    (Y : RawPartnerTarget.RawPoint J →ₗ[F2] R) (c : R) :
+    projectedKey J names rhs Q (Y + (visibleTau J).smulRight c) =
+      ((projectedKey J names rhs Q Y).1 + c, (projectedKey J names rhs Q Y).2) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L205">OAI.UniqueGamesTheorem.Decoder.TableKeys.projectedKey</a>, <a href="TableKeysLemmas.lean.html#L239">OAI.UniqueGamesTheorem.Decoder.TableKeys.visibleTau</a></p></li><li id=L326><b>structure</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.FullAdvice</code> <small>line 326</small><div class="doc"><p>The first prover's entire information; no singleton-choice or private
+matrix field is present.</p></div><pre>structure FullAdvice where
+…</pre></li><li id=L333><b>structure</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.Draw</code> <small>line 333</small><div class="doc"><p>The actual draw before forgetting the hidden projection and private map.</p></div><pre>structure Draw where
+…</pre></li><li id=L347><b>structure</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.ProjectedAdvice</code> <small>line 347</small><div class="doc"><p>The second prover sees actual equation/variable tags, retaining ordered
+block positions but omitting every hidden singleton occurrence ID.</p></div><pre>structure ProjectedAdvice (J : Finset (Fin k)) where
+…</pre></li><li id=L355><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.projection</code> <small>line 355</small></li><li id=L359><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.leftObservation</code> <small>line 359</small></li><li id=L365><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.rightObservation</code> <small>line 365</small></li><li id=L375><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.paddedMatrix</code> <small>line 375</small><div class="doc"><p>The same full sampled table used in the unconditional variation comparison.
+Its projection choices have not been supplied as extra compared coordinates.</p></div><pre>def paddedMatrix (d : Draw k Id K W R) : ActualHomogeneous.E k →ₗ[F2] K :=
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L333">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.Draw</a></p></li><li id=L378><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.paddedComplement</code> <small>line 378</small></li><li id=L381><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.left_rows_eq</code> <small>line 381</small></li><li id=L384><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.left_rows_attainable</code> <small>line 384</small></li><li id=L389><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.right_rows_attainable</code> <small>line 389</small></li><li id=L396><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.changeHidden</code> <small>line 396</small><div class="doc"><p>Replace the entire hidden matrix once, consistently across all overlapping
+column events; the row advice remains fixed.</p></div><pre>def changeHidden (d : Draw k Id K W R)
+    (N : RawPartnerTarget.RawPoint d.singletons →ₗ[F2] d.rowMap.ker) : Draw k Id K W R :=
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L333">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.Draw</a></p></li><li id=L400><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.leftObservation_changeHidden</code> <small>line 400</small></li><li id=L405><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.rightObservation_changeHidden</code> <small>line 405</small></li><li id=L412><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.selectedWitness_changeHidden</code> <small>line 412</small><div class="doc"><p>A selected affine witness is fixed by the first player's observation,
+before any hidden matrix on its row fiber is sampled.</p></div><pre>theorem selectedWitness_changeHidden {Witness : Type*}
+    (choose : FullAdvice k Id K W R → Witness) (d : Draw k Id K W R)
+    (N : RawPartnerTarget.RawPoint d.singletons →ₗ[F2] d.rowMap.ker) :
+    choose (leftObservation rhs (changeHidden d N)) = choose (leftObservation rhs d) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L326">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.FullAdvice</a>, <a href="TableKeysLemmas.lean.html#L333">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.Draw</a>, <a href="TableKeysLemmas.lean.html#L359">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.leftObservation</a>, <a href="TableKeysLemmas.lean.html#L396">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.changeHidden</a></p></li><li id=L419><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.projection_actual_answer</code> <small>line 419</small><div class="doc"><p>Every projected answer keeps the actual homogeneous bit.</p></div><pre>theorem projection_actual_answer (d : Draw k Id K W R)
+    (z : ActualHomogeneous.E k) (hz : ActualHomogeneous.tau z = 1) :
+    TableKeys.visibleTau d.singletons (projection rhs d z) = 1 := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L333">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.Draw</a>, <a href="TableKeysLemmas.lean.html#L239">OAI.UniqueGamesTheorem.Decoder.TableKeys.visibleTau</a>, <a href="TableKeysLemmas.lean.html#L355">OAI.UniqueGamesTheorem.Decoder.AdviceExperiment.projection</a></p></li><li id=L439><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_rank_zero</code> <small>line 439</small></li><li id=L444><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_rank_first</code> <small>line 444</small></li><li id=L458><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_rank_second</code> <small>line 458</small></li><li id=L472><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_rank_third</code> <small>line 472</small></li><li id=L487><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_rank_two</code> <small>line 487</small></li><li id=L494><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeys.slope_rank_one_iff</code> <small>line 494</small><div class="doc"><p>These cases exhaust all slopes; no unexamined binary rank-one direction
+can accidentally be retained as a full equation block.</p></div><pre>theorem slope_rank_one_iff (a d : R) :
+    Module.finrank F2 (slope a d).range = 1 ↔
+      (a ≠ 0 ∧ d = 0) ∨ (a = 0 ∧ d ≠ 0) ∨ (a = d ∧ a ≠ 0) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L43">OAI.UniqueGamesTheorem.Decoder.TableKeys.slope</a></p></li><li id=L539><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.extendedLabel</code> <small>line 539</small></li><li id=L543><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.extendedLabel_actual</code> <small>line 543</small></li><li id=L550><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.restoredData</code> <small>line 550</small><div class="doc"><p>Restore the full affine intercept after labeling the orbit body.</p></div><pre>def restoredData (can : Q → Ambient s d × T)
+    (label : ActualOrbit.Vertex can → Alphabet s) (D : Ambient s d × T) : Alphabet s :=
+…</pre></li><li id=L554><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.restoredData_actual</code> <small>line 554</small></li><li id=L561><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.restoredData_shift</code> <small>line 561</small></li><li id=L570><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.keyAnswer</code> <small>line 570</small><div class="doc"><p>The actual verifier labeling, viewed as a function of exact affine keys.</p></div><pre>def keyAnswer (S : Source) (k s d : Nat)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2^s))
+    (D : TableKeys.Key k (Fin S.variables) (Fin S.occurrences) (Ambient s d)) : Alphabet s :=
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="TableKeysLemmas.lean.html#L157">OAI.UniqueGamesTheorem.Decoder.TableKeys.Key</a></p></li><li id=L576><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.keyAnswer_actual</code> <small>line 576</small></li><li id=L583><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.keyAnswer_shift</code> <small>line 583</small></li><li id=L590><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer</code> <small>line 590</small></li><li id=L600><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer_pullback</code> <small>line 600</small><div class="doc"><p>No extra consistency predicate: projected answers equal full-query answers
+for every table and every compatible hidden extension.</p></div><pre>theorem projectedAnswer_pullback (S : Source) (k s d : Nat)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2^s))
+    (J : Finset (Fin k)) (occ : Fin k → Fin S.occurrences)
+    (slot : Fin k → PartnerProjection.Slot)
+    (Y : RawPartnerTarget.RawPoint J →ₗ[F2] Ambient s d) :
+    projectedAnswer S k s d labeling J
+        (RawPrivateTable.supported J (ActualGame.names S) occ slot) Y =
+      TableKeysGame.unfolded S k s d labeling
+        (occ, Y.comp (RawPrivateTable.projection J (ActualGame.rhs S) occ slot)) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="TableKeysLemmas.lean.html#L590">OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer</a>, <a href="TableKeysGame.lean.html#L84">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.unfolded</a></p></li><li id=L616><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer_fold</code> <small>line 616</small><div class="doc"><p>The visible table has the exact same affine folding law, with its genuine
+homogeneous coordinate rather than an assumed or reconstructed first bit.</p></div><pre>theorem projectedAnswer_fold (S : Source) (k s d : Nat)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2^s))
+    (J : Finset (Fin k)) (O : RawPrivateTable.SupportedV J (ActualGame.names S))
+    (Y : RawPartnerTarget.RawPoint J →ₗ[F2] Ambient s d) (c : Alphabet s) :
+    projectedAnswer S k s d labeling J O
+        (Y + (TableKeys.visibleTau J).smulRight (c, (0 : Vector d))) =
+      projectedAnswer S k s d labeling J O Y + c := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="TableKeysLemmas.lean.html#L590">OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer</a>, <a href="TableKeysLemmas.lean.html#L239">OAI.UniqueGamesTheorem.Decoder.TableKeys.visibleTau</a></p></li><li id=L654><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.assemble_prod_shift</code> <small>line 654</small></li><li id=L671><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.rowAnswer</code> <small>line 671</small><div class="doc"><p>The right player's actual private table, formed from visible row advice.</p></div><pre>def rowAnswer (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2^s))
+    (J : Finset (Fin k))
+    (Q : RawPrivateTable.SupportedV J (ActualGame.names S))
+    (A : Alphabet s →ₗ[F2] R)
+    (rows : AdviceFibers.ObservedRow (E := RawPartnerTarget.RawPoint J) A)
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li><li id=L683><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.rowAnswer_fold</code> <small>line 683</small><div class="doc"><p>Folding on the hidden kernel is a consequence of the exact key action.</p></div><pre>theorem rowAnswer_fold (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2^s))
+    (J : Finset (Fin k)) (Q : RawPrivateTable.SupportedV J (ActualGame.names S))
+    (A : Alphabet s →ₗ[F2] R)
+    (rows : AdviceFibers.ObservedRow (E := RawPartnerTarget.RawPoint J) A)
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li><li id=L697><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.rowAnswer_actual</code> <small>line 697</small><div class="doc"><p>At the actual hidden matrix this row table is exactly the projected table
+used by the verifier, with the same complement and the same complete key.</p></div><pre>theorem rowAnswer_actual (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2^s))
+    (J : Finset (Fin k)) (Q : RawPrivateTable.SupportedV J (ActualGame.names S))
+    (A : Alphabet s →ₗ[F2] R)
+    (M : RawPartnerTarget.RawPoint J →ₗ[F2] Alphabet s)
+    (T : RawPartnerTarget.RawPoint J →ₗ[F2] Vector d) :
+    rowAnswer S labeling J Q A (AdviceFibers.observe A M) T
+        (AdviceFibers.hiddenCoordinate A M) =
+      TableKeysRestoration.projectedAnswer S k s d labeling J Q (M.prod T) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="TableKeysLemmas.lean.html#L671">OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.rowAnswer</a>, <a href="AdviceFibersLemmas.lean.html#L130">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.observe</a>, <a href="AdviceFibersLemmas.lean.html#L140">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.hiddenCoordinate</a>, <a href="TableKeysLemmas.lean.html#L590">OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer</a></p></li><li id=L714><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.targetIntercept</code> <small>line 714</small><div class="doc"><p>This intercept is determined once the visible base and affine witness are
+fixed; it is not silently erased when decoding from a row fiber.</p></div><pre>def targetIntercept (J : Finset (Fin k)) (A : Alphabet s →ₗ[F2] R)
+    (rows : AdviceFibers.ObservedRow (E := RawPartnerTarget.RawPoint J) A)
+…</pre><p class="refs">Mentions: <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li><li id=L719><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysPrivateRow.affine_target_on_row</code> <small>line 719</small></li><li id=L767><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TransferredDecoding.indicator_congr</code> <small>line 767</small><div class="doc"><p>Equality indicators depend on their propositions, not on the chosen
+computable or classical decision procedures. Both deciders are explicit.</p></div><pre>theorem indicator_congr (P Q : Prop) (dP : Decidable P) (dQ : Decidable Q)
+    (h : P ↔ Q) : @ite ℝ P dP 1 0 = @ite ℝ Q dQ 1 0 := by
+…</pre></li><li id=L779><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TransferredDecoding.privateOrigin</code> <small>line 779</small><div class="doc"><p>The slice origin, expressed relative to the fixed visible row base.</p></div><pre>def privateOrigin (A : K →ₗ[F2] R) (rows : AdviceFibers.ObservedRow (E := E) A)
+…</pre><p class="refs">Mentions: <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li><li id=L785><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TransferredDecoding.assemble_privateOrigin</code> <small>line 785</small><div class="doc"><p>Rebase the complete quotient parametrization without changing its matrices.</p></div><pre>theorem assemble_privateOrigin (A : K →ₗ[F2] R)
+    (rows : AdviceFibers.ObservedRow (E := E) A)
+…</pre><p class="refs">Mentions: <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li><li id=L808><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TransferredDecoding.visibleFallback</code> <small>line 808</small><div class="doc"><p>A default actual projected answer depends only on the displayed positions.</p></div><pre>def visibleFallback (J : Finset (Fin k)) : ActualAnswer (TableKeys.visibleTau J) :=
+…</pre><p class="refs">Mentions: <a href="TableKeysLemmas.lean.html#L239">OAI.UniqueGamesTheorem.Decoder.TableKeys.visibleTau</a></p></li><li id=L813><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TransferredDecoding.actual_slice_agreement_eq_private</code> <small>line 813</small><div class="doc"><p>Exact transport from the actual conditional matrix slice to the private
+Fourier coordinates.  <code>targetIntercept</code> uses the visible base, not <code>Mstar</code>.</p></div><pre>theorem actual_slice_agreement_eq_private (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (J : Finset (Fin k)) (O : RawPrivateTable.SupportedV J (ActualGame.names S))
+    (A : Alphabet s →ₗ[F2] R)
+    (rows : AdviceFibers.ObservedRow (E := RawPartnerTarget.RawPoint J) A)
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li><li id=L850><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TransferredDecoding.actual_transferred_decoding</code> <small>line 850</small><div class="doc"><p>Private policies for an actual restored labeling satisfy the conditional
+decoding bound on every transferred good slice.  Folding and first-bit
+preservation come from their concrete constructions, not additional premises.</p></div><pre>theorem actual_transferred_decoding (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (J : Finset (Fin k)) (occ : Fin k → Fin S.occurrences)
+    (slot : Fin k → PartnerProjection.Slot)
+    (A : Alphabet s →ₗ[F2] R)
+    (rows : AdviceFibers.ObservedRow (E := RawPartnerTarget.RawPoint J) A)
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="AdviceFibersLemmas.lean.html#L127">OAI.UniqueGamesTheorem.Decoder.AdviceFibers.ObservedRow</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

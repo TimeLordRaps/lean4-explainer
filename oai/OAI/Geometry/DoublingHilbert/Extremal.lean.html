@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/DoublingHilbert/Extremal.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/DoublingHilbert/Extremal.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">DoublingHilbert</a> / <span>Extremal.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">DoublingHilbert</a>/<span>Extremal.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/DoublingHilbert/Extremal.lean#L1">source</a></p><div class="doc"><p>Compact lexicographic extrema and quantitative second-moment estimates.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.DoublingHilbert.near_lexicographic_maximum</code> <small>line 12</small><div class="doc"><p>Near a compact lexicographic maximum, the second coordinate has a uniform upper bound.</p></div><pre>theorem near_lexicographic_maximum
+    {K : Set (ℝ × ℝ)} (hK : IsCompact K) {A B : ℝ}
+    (hfirst : ∀ p ∈ K, p.1 ≤ A)
+    (hsecond : ∀ p ∈ K, p.1 = A → p.2 ≤ B)
+    {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ ∀ p ∈ K, A - δ &lt; p.1 → p.2 ≤ B + ε := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.DoublingHilbert.exists_lexicographic_maximum</code> <small>line 43</small><div class="doc"><p>A nonempty compact set has a lexicographic maximum.</p></div><pre>theorem exists_lexicographic_maximum {K : Set (ℝ × ℝ)}
+    (hK : IsCompact K) (hne : K.Nonempty) :
+    ∃ A B : ℝ, (A, B) ∈ K ∧
+      (∀ p ∈ K, p.1 ≤ A) ∧ (∀ p ∈ K, p.1 = A → p.2 ≤ B) := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.DoublingHilbert.lexicographic_affine_barrier</code> <small>line 59</small><div class="doc"><p>An affine barrier bounds the second coordinate in terms of the first-coordinate deficit.</p></div><pre>theorem lexicographic_affine_barrier
+    {K : Set (ℝ × ℝ)} (hK : IsCompact K) {A B M : ℝ}
+    (hfirst : ∀ p ∈ K, p.1 ≤ A)
+    (hsecond : ∀ p ∈ K, p.1 = A → p.2 ≤ B)
+    (hbound : ∀ p ∈ K, p.2 ≤ M) (hB : 0 ≤ B) (hM : 0 ≤ M)
+    {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ p ∈ K, p.2 ≤ B + ε + C * (A - p.1) := by
+…</pre></li><li id=L88><b>theorem</b> <code>OAI.DoublingHilbert.integral_variance_identity</code> <small>line 88</small><div class="doc"><p>The variance identity over an arbitrary probability space.</p></div><pre>theorem integral_variance_identity {G : X → E} (hG : Integrable G μ)
+    (hG2 : Integrable (fun x =&gt; ‖G x‖ ^ 2) μ) (a : E) :
+    (∫ x, ‖G x - a‖ ^ 2 ∂μ) = (∫ x, ‖G x‖ ^ 2 ∂μ) - ‖a‖ ^ 2 -
+      2 * inner ℝ a ((∫ x, G x ∂μ) - a) := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.DoublingHilbert.integrable_norm_sub_sq</code> <small>line 105</small></li><li id=L112><b>theorem</b> <code>OAI.DoublingHilbert.variance_le_of_moments</code> <small>line 112</small><div class="doc"><p>Small moment error and an upper second moment force small mean-square variation.</p></div><pre>theorem variance_le_of_moments {G : X → E} (hG : Integrable G μ)
+    (hG2 : Integrable (fun x =&gt; ‖G x‖ ^ 2) μ) (a : E) {M : ℝ}
+    (hM : (∫ x, ‖G x‖ ^ 2 ∂μ) ≤ M) :
+    (∫ x, ‖G x - a‖ ^ 2 ∂μ) ≤ M - ‖a‖ ^ 2 +
+      2 * ‖a‖ * ‖(∫ x, G x ∂μ) - a‖ := by
+…</pre></li><li id=L123><b>theorem</b> <code>OAI.DoublingHilbert.mean_deficit_le</code> <small>line 123</small><div class="doc"><p>Discarding the nonnegative variance bounds the second-moment deficit.</p></div><pre>theorem mean_deficit_le {G : X → E} (hG : Integrable G μ)
+    (hG2 : Integrable (fun x =&gt; ‖G x‖ ^ 2) μ) (a : E) (A : ℝ) :
+    A - (∫ x, ‖G x‖ ^ 2 ∂μ) ≤ A - ‖a‖ ^ 2 +
+      2 * ‖a‖ * ‖(∫ x, G x ∂μ) - a‖ := by
+…</pre></li><li id=L134><b>theorem</b> <code>OAI.DoublingHilbert.integral_second_le_barrier</code> <small>line 134</small><div class="doc"><p>Integrated affine barrier; unlike a limsup statement, this keeps all quantitative data.</p></div><pre>theorem integral_second_le_barrier {K : Set (ℝ × ℝ)} {s t : X → ℝ}
+    (hs : Integrable s μ) (ht : Integrable t μ)
+    (hvalues : ∀ᵐ x ∂μ, (s x, t x) ∈ K) {A B ε C : ℝ}
+    (hbarrier : ∀ p ∈ K, p.2 ≤ B + ε + C * (A - p.1)) :
+    (∫ x, t x ∂μ) ≤ B + ε + C * (A - ∫ x, s x ∂μ) := by
+…</pre></li><li id=L148><b>theorem</b> <code>OAI.DoublingHilbert.vertical_variance_bound</code> <small>line 148</small><div class="doc"><p>The hard lexicographic energy step, before substituting the geometric moment bounds.</p></div><pre>theorem vertical_variance_bound
+    {G H : X → E} (hG : Integrable G μ) (hG2 : Integrable (fun x =&gt; ‖G x‖ ^ 2) μ)
+    (hH : Integrable H μ) (hH2 : Integrable (fun x =&gt; ‖H x‖ ^ 2) μ)
+    {K : Set (ℝ × ℝ)} (hvalues : ∀ᵐ x ∂μ, (‖G x‖ ^ 2, ‖H x‖ ^ 2) ∈ K)
+    {A B ε C D : ℝ} (hC : 0 ≤ C)
+    (hbarrier : ∀ p ∈ K, p.2 ≤ B + ε + C * (A - p.1))
+    (u v : E) (hu : ‖u‖ ≤ D) (hv : ‖v‖ ≤ D) :
+    (∫ x, ‖H x - v‖ ^ 2 ∂μ) ≤ B - ‖v‖ ^ 2 + ε +
+      C * (A - ‖u‖ ^ 2 + 2 * D * ‖(∫ x, G x ∂μ) - u‖) +
+      2 * D * ‖(∫ x, H x ∂μ) - v‖ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

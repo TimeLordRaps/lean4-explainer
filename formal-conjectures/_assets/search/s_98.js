@@ -1,0 +1,1 @@
+window.l4shard("98", [["Erdos98.erdos_98",906,70],["Erdos98.erdos_98.variants.upper_bound",906,80],["Erdos98.h",906,60],["Erdos982.erdos_982",907,37],["Erdos985.erdos_985",908,34],["Erdos985.erdos_985.variants.two_three_five_primitive_root",908,45],["Erdos987.A",909,58]]);

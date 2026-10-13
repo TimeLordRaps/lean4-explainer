@@ -1,0 +1,80 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/UniversalReduction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/UniversalReduction.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>UniversalReduction.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>UniversalReduction.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/UniversalReduction.lean#L1">source</a></p><div class="doc"><h3>Permutation, universal support, and simultaneous multiplicity reduction</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.Nagata.W13.permutation_sum_independent</code> <small>line 23</small><div class="doc"><p>Permutation symmetrization gives the same multiplicity at every position.</p></div><pre>theorem permutation_sum_independent {α : Type*} [Fintype α] [DecidableEq α]
+    (m : α → ℕ) (i j : α) :
+    (∑ σ : Equiv.Perm α, m (σ i)) = ∑ σ : Equiv.Perm α, m (σ j) := by
+…</pre></li><li id=L31><b>theorem</b> <code>OAI.Nagata.W13.card_mul_permutation_sum</code> <small>line 31</small><div class="doc"><p>The double sum counts each permutation's total multiplicity once.</p></div><pre>theorem card_mul_permutation_sum {α : Type*} [Fintype α] [DecidableEq α]
+    (m : α → ℕ) (i : α) :
+    Fintype.card α * (∑ σ : Equiv.Perm α, m (σ i)) =
+      (Fintype.card α).factorial * ∑ j, m j := by
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.Nagata.W13.permutation_sum_multiplicity</code> <small>line 49</small><div class="doc"><p>Each original multiplicity occurs <code>(r-1)!</code> times at each position.</p></div><pre>theorem permutation_sum_multiplicity {r : ℕ} (hr : 0 &lt; r)
+    (m : Fin r → ℕ) (i : Fin r) :
+    (∑ σ : Equiv.Perm (Fin r), m (σ i)) =
+      (r - 1).factorial * ∑ j, m j := by
+…</pre></li><li id=L61><b>theorem</b> <code>OAI.Nagata.W13.permutation_product_ne_zero</code> <small>line 61</small><div class="doc"><p>The product of the chosen nonzero forms remains nonzero in a domain.</p></div><pre>theorem permutation_product_ne_zero {α R : Type*} [Fintype α] [DecidableEq α]
+    [CommMonoidWithZero R] [Nontrivial R] [NoZeroDivisors R]
+    (f : Equiv.Perm α → R) (hf : ∀ σ, f σ ≠ 0) :
+    (∏ σ, f σ) ≠ 0 := by
+…</pre></li><li id=L85><b>def</b> <code>OAI.Nagata.W13.UniversalSupport</code> <small>line 85</small><div class="doc"><p>Every ordered distinct tuple supports a nonzero equation with the given
+multiplicity vector. This is a definition of the intermediate universal system,
+not an assumption about which such systems exist.</p></div><pre>def UniversalSupport (r d : ℕ) (m : Fin r → ℕ) : Prop :=
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.Nagata.W13.multiplicityAtLeast_prod</code> <small>line 92</small><div class="doc"><p>Finite products add the chart ideal-power multiplicity lower bounds.</p></div><pre>theorem multiplicityAtLeast_prod {ι : Type*} (s : Finset ι)
+    (p : PlanePoint) (m : ι → ℕ) (F : ι → MvPolynomial (Fin 3) ℂ)
+    (h : ∀ i ∈ s, multiplicityAtLeast (F i) p (m i)) :
+    multiplicityAtLeast (∏ i ∈ s, F i) p (∑ i ∈ s, m i) := by
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.Nagata.W13.universalSupport_permute</code> <small>line 106</small><div class="doc"><p>Reordering a configuration reorders the prescribed multiplicities.</p></div><pre>theorem universalSupport_permute {r d : ℕ} {m : Fin r → ℕ}
+    (h : UniversalSupport r d m) (σ : Equiv.Perm (Fin r)) :
+    UniversalSupport r d (fun i =&gt; m (σ i)) := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L120><b>theorem</b> <code>OAI.Nagata.W13.universalSupport_symmetrize</code> <small>line 120</small><div class="doc"><p>Universal support of an arbitrary multiplicity vector gives universal
+support of the constant vector <code>(r-1)! * sum m</code>, at degree <code>r! * d</code>.
+This includes unequal and zero entries in <code>m</code> and all nonzero homogeneous forms,
+including reducible and nonreduced equations.</p></div><pre>theorem universalSupport_symmetrize {r d : ℕ} (hr : 0 &lt; r)
+    {m : Fin r → ℕ} (h : UniversalSupport r d m) :
+    UniversalSupport r (r.factorial * d)
+      (fun _ =&gt; (r - 1).factorial * ∑ i, m i) := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L149><b>theorem</b> <code>OAI.Nagata.W13.universalSupport_pow</code> <small>line 149</small><div class="doc"><p>Raising each actual equation to a power scales its degree and every
+multiplicity lower bound, so universal systems are closed under common multiples.</p></div><pre>theorem universalSupport_pow {r d : ℕ} {m : Fin r → ℕ}
+    (h : UniversalSupport r d m) (N : ℕ) :
+    UniversalSupport r (d * N) (fun i =&gt; m i * N) := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L170><b>def</b> <code>OAI.Nagata.W13.supportLocus</code> <small>line 170</small><div class="doc"><p>The actual homogeneous-polynomial incidence condition at a configuration.</p></div><pre>def supportLocus (r : ℕ) (i : Workers.W25.IncidenceIndex r) :
+    Set (OrderedDistinctPoints r) :=
+…</pre><p class="refs">Mentions: <a href="Avoidance.lean.html#L21">OAI.Nagata.Workers.W25.IncidenceIndex</a></p></li><li id=L178><b>def</b> <code>OAI.Nagata.W13.supportExceptionalUnion</code> <small>line 178</small><div class="doc"><p>One exceptional union indexed by all positive degrees and all nonnegative
+multiplicity vectors, retaining exactly the proper support loci.</p></div><pre>def supportExceptionalUnion (r : ℕ) : Set (OrderedDistinctPoints r) :=
+…</pre></li><li id=L183><b>theorem</b> <code>OAI.Nagata.W13.properSupportFamily_countable</code> <small>line 183</small><div class="doc"><p>The proper support loci form a countable family covering all positive
+integer degrees and all nonnegative multiplicity vectors simultaneously.</p></div><pre>theorem properSupportFamily_countable (r : ℕ) :
+    {S : Set (OrderedDistinctPoints r) |
+      ∃ i : Workers.W25.IncidenceIndex r,
+        supportLocus r i ≠ Set.univ ∧ S = supportLocus r i}.Countable :=
+…</pre><p class="refs">Mentions: <a href="Avoidance.lean.html#L21">OAI.Nagata.Workers.W25.IncidenceIndex</a>, <a href="UniversalReduction.lean.html#L170">OAI.Nagata.W13.supportLocus</a></p></li><li id=L191><b>theorem</b> <code>OAI.Nagata.W13.universalSupport_of_avoids</code> <small>line 191</small><div class="doc"><p>Outside the one exceptional union, every supported multiplicity system
+is universal on the whole genuine configuration space.</p></div><pre>theorem universalSupport_of_avoids {r d : ℕ} (hd : 0 &lt; d)
+    {m : Fin r → ℕ} {p : OrderedDistinctPoints r}
+    (hp : p ∉ supportExceptionalUnion r)
+    (hF : ∃ F : MvPolynomial (Fin 3) ℂ,
+      F ≠ 0 ∧ F.IsHomogeneous d ∧
+        ∀ i, multiplicityAtLeast F (p.val i) (m i)) :
+    UniversalSupport r d m := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L178">OAI.Nagata.W13.supportExceptionalUnion</a>, <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L210><b>theorem</b> <code>OAI.Nagata.W13.universalEqualSupport_of_violation</code> <small>line 210</small><div class="doc"><p>A violating equation outside the single exceptional union produces
+positive integers <code>D,M</code> with <code>D/M ≤ sqrt r</code> and universal equal-multiplicity
+support. Topological closedness and nonemptiness of avoidance remain separate;
+there is no assumption about normal bundles or interpolation in this reduction.</p></div><pre>theorem universalEqualSupport_of_violation {r d : ℕ} (hr : 0 &lt; r) (hd : 0 &lt; d)
+    {m : Fin r → ℕ} {p : OrderedDistinctPoints r}
+    (hp : p ∉ supportExceptionalUnion r)
+    (hF : ∃ F : MvPolynomial (Fin 3) ℂ,
+      F ≠ 0 ∧ F.IsHomogeneous d ∧
+        ∀ i, multiplicityAtLeast F (p.val i) (m i))
+    (hbad : (d : ℝ) * Real.sqrt r ≤ ∑ i, (m i : ℝ)) :
+    ∃ D M : ℕ, 0 &lt; D ∧ 0 &lt; M ∧ (D : ℝ) / M ≤ Real.sqrt r ∧
+      UniversalSupport r D (fun _ =&gt; M) := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L178">OAI.Nagata.W13.supportExceptionalUnion</a>, <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a></p></li><li id=L244><b>theorem</b> <code>OAI.Nagata.W13.source_universal_reduction_of_incidence_closed</code> <small>line 244</small><div class="doc"><p>The source reduction, conditional only on projective closedness of actual
+support loci. The same exceptional sequence handles every positive degree and
+all nonnegative unequal multiplicity vectors simultaneously.</p></div><pre>theorem source_universal_reduction_of_incidence_closed
+    (r : ℕ) (hr : 10 ≤ r)
+    (hclosed : ∀ i : Workers.W25.IncidenceIndex r,
+      IsConfigurationZariskiClosed (supportLocus r i)) :
+    ∃ E : ℕ → Set (OrderedDistinctPoints r),
+      (∀ n, IsConfigurationZariskiClosed (E n) ∧ E n ≠ Set.univ) ∧
+      (∃ p : OrderedDistinctPoints r, ∀ n, p ∉ E n) ∧
+      ∀ p : OrderedDistinctPoints r, (∀ n, p ∉ E n) →
+        ∀ (d : ℕ), 1 ≤ d →
+        ∀ F : MvPolynomial (Fin 3) ℂ, F ≠ 0 → F.IsHomogeneous d →
+        ∀ m : Fin r → ℕ,
+          (∀ i, multiplicityAtLeast F (p.val i) (m i)) →
+…</pre><p class="refs">Mentions: <a href="Avoidance.lean.html#L21">OAI.Nagata.Workers.W25.IncidenceIndex</a>, <a href="UniversalReduction.lean.html#L170">OAI.Nagata.W13.supportLocus</a></p></li><li id=L267><b>theorem</b> <code>OAI.Nagata.W13.strict_bound_of_incidence_closed_and_no_universal</code> <small>line 267</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

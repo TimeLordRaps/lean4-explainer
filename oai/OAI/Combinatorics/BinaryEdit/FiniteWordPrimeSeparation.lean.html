@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/FiniteWordPrimeSeparation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/FiniteWordPrimeSeparation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>FiniteWordPrimeSeparation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>FiniteWordPrimeSeparation.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/FiniteWordPrimeSeparation.lean#L1">source</a></p><div class="doc"><h3>Prime separation for finite-tree words</h3><p>Prime-divisor counting controls the exceptions in the separation induction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.wordPeriod_append_child</code> <small>line 17</small><div class="doc"><p>Appending a child multiplies the actual word period by that child's prime.</p></div><pre>theorem wordPeriod_append_child {m k : ℕ}
+    (primes : Fin k → Fin m → ℕ) (i₀ i : Fin m) (p : List (Fin m))
+    (hp : p.length &lt; k) :
+    wordPeriod primes i₀ (p ++ [i]) =
+      wordPeriod primes i₀ p * primes ⟨p.length, hp⟩ i := by
+…</pre><p class="refs">Mentions: <a href="FiniteTreeInstantiation.lean.html#L78">OAI.TreeEdit.BinaryLower.FiniteTree.wordPeriod</a></p></li><li id=L27><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.wordPeriod_coprime_level</code> <small>line 27</small><div class="doc"><p>Prefix/current-level coprimality transported to the actual word period.</p></div><pre>theorem wordPeriod_coprime_level {m k : ℕ}
+    (primes : Fin k → Fin m → ℕ) (i₀ : Fin m) (p : List (Fin m))
+    (hp : p.length &lt; k)
+    (hinj : Function.Injective (fun z : Fin k × Fin m =&gt; primes z.1 z.2))
+    (hprime : ∀ q i, Nat.Prime (primes q i)) (hodd : ∀ q i, primes q i ≠ 2) :
+    Nat.Coprime (wordPeriod primes i₀ p)
+      (FiniteVectors.levelProduct primes ⟨p.length, hp⟩) :=
+…</pre><p class="refs">Mentions: <a href="FiniteTreeInstantiation.lean.html#L78">OAI.TreeEdit.BinaryLower.FiniteTree.wordPeriod</a>, <a href="FiniteVectors.lean.html#L24">OAI.TreeEdit.BinaryLower.FiniteVectors.levelProduct</a></p></li><li id=L40><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.FiniteTree.finiteWord_half_children</code> <small>line 40</small><div class="doc"><p>At least half the actual children have a nonzero relative row shift.
+All prefixes, all legal row pairs (including equal rows), and every nonzero
+parent-period residue are included. No upper bound on primes is needed.</p></div><pre>theorem finiteWord_half_children {k : ℕ} (hk : 2 ≤ k)
+    (primes : Fin k → Fin (20 * k) → ℕ) (i₀ : Fin (20 * k))
+    (p : List (Fin (20 * k))) (hp : p.length &lt; k)
+    (hinj : Function.Injective
+      (fun z : Fin k × Fin (20 * k) =&gt; primes z.1 z.2))
+    (hprime : ∀ q i, Nat.Prime (primes q i))
+    (hlarge : ∀ q i, k ^ 4 ≤ primes q i)
+    (a b : Fin (k ^ (20 * k))) (t : ℤ)
+    (ht : ¬ (wordPeriod primes i₀ p : ℤ) ∣ t) :
+    20 * k ≤ 2 * (Finset.univ.filter fun i : Fin (20 * k) =&gt;
+      ¬ (wordPeriod primes i₀ (p ++ [i]) : ℤ) ∣
+        (b : ℤ) - (a : ℤ) +
+…</pre><p class="refs">Mentions: <a href="FiniteTreeInstantiation.lean.html#L78">OAI.TreeEdit.BinaryLower.FiniteTree.wordPeriod</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/BodyExtension.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/BodyExtension.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>BodyExtension.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>BodyExtension.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/BodyExtension.lean#L1">source</a></p><div class="doc"><p>The anchor/body extension step for arbitrary repairs.
+The finite-order gluing lemma is independent of the host construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.Problem348.appendTwo</code> <small>line 17</small><div class="doc"><p>Append two values to a function on a finite initial segment.</p></div><pre>def appendTwo {α : Type uAlpha} {k : ℕ} (f : Fin k → α) (a b : α) :
+    Fin (k + 2) → α := fun i =&gt;
+…</pre></li><li id=L21><b>theorem</b> <code>OAI.Problem348.appendTwo_initial</code> <small>line 21</small></li><li id=L26><b>theorem</b> <code>OAI.Problem348.appendTwo_first</code> <small>line 26</small></li><li id=L31><b>theorem</b> <code>OAI.Problem348.appendTwo_second</code> <small>line 31</small></li><li id=L36><b>theorem</b> <code>OAI.Problem348.strictMono_appendTwo</code> <small>line 36</small></li><li id=L54><b>def</b> <code>OAI.Problem348.appendTwoIncreasing</code> <small>line 54</small><div class="doc"><p>The increasing map obtained by appending two positions after an anchor.</p></div><pre>def appendTwoIncreasing {k n : ℕ} (r : IncreasingMap k n)
+    (a b : Fin n) (ha : ∀ i, r.val i &lt; a) (hab : a &lt; b) :
+    IncreasingMap (k + 2) n :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L11">OAI.Problem348.IncreasingMap</a></p></li><li id=L60><b>theorem</b> <code>OAI.Problem348.appendTwo_matches_fixedH</code> <small>line 60</small><div class="doc"><p>An anchor and the four body entries reproduce every entry of the fixed pattern.</p></div><pre>theorem appendTwo_matches_fixedH {n : ℕ} (B : BinaryMatrix n)
+    (r c : IncreasingMap 64 n) (r₀ r₁ c₀ c₁ : Fin n)
+    (hanchor : ∀ u v, B (r.val u) (c.val v) = anchor64 u v)
+    (hrow₀ : ∀ v, B r₀ (c.val v) = decide (v.val = 0))
+    (hrow₁ : ∀ v, B r₁ (c.val v) = decide (v.val = 1))
+    (hcol₀ : ∀ u, B (r.val u) c₀ = decide (u.val = 0))
+    (hcol₁ : ∀ u, B (r.val u) c₁ = decide (u.val = 1))
+    (h₀₀ : B r₀ c₀ = true) (h₀₁ : B r₀ c₁ = false)
+    (h₁₀ : B r₁ c₀ = true) (h₁₁ : B r₁ c₁ = true) :
+    ∀ i j : Fin 66,
+      B (appendTwo r.val r₀ r₁ i) (appendTwo c.val c₀ c₁ j) = fixedH i j := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L9">OAI.Problem348.BinaryMatrix</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L11">OAI.Problem348.IncreasingMap</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="BodyExtension.lean.html#L17">OAI.Problem348.appendTwo</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L39">OAI.Problem348.fixedH</a></p></li><li id=L90><b>theorem</b> <code>OAI.Problem348.not_HFree_of_anchor_body</code> <small>line 90</small><div class="doc"><p>The exact anchor-extension bridge needed by arbitrary-repair propagation.</p></div><pre>theorem not_HFree_of_anchor_body {n : ℕ} (B : BinaryMatrix n)
+    (r c : IncreasingMap 64 n) (r₀ r₁ c₀ c₁ : Fin n)
+    (hr : ∀ i, r.val i &lt; r₀) (hr₀₁ : r₀ &lt; r₁)
+    (hc : ∀ j, c.val j &lt; c₀) (hc₀₁ : c₀ &lt; c₁)
+    (hanchor : ∀ u v, B (r.val u) (c.val v) = anchor64 u v)
+    (hrow₀ : ∀ v, B r₀ (c.val v) = decide (v.val = 0))
+    (hrow₁ : ∀ v, B r₁ (c.val v) = decide (v.val = 1))
+    (hcol₀ : ∀ u, B (r.val u) c₀ = decide (u.val = 0))
+    (hcol₁ : ∀ u, B (r.val u) c₁ = decide (u.val = 1))
+    (h₀₀ : B r₀ c₀ = true) (h₀₁ : B r₀ c₁ = false)
+    (h₁₀ : B r₁ c₀ = true) (h₁₁ : B r₁ c₁ = true) :
+    ¬ HFree fixedH B := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L9">OAI.Problem348.BinaryMatrix</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L11">OAI.Problem348.IncreasingMap</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L22">OAI.Problem348.HFree</a>, <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L39">OAI.Problem348.fixedH</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

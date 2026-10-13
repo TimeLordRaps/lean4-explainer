@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/WordPrefixRealization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/WordPrefixRealization.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>WordPrefixRealization.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>WordPrefixRealization.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/WordPrefixRealization.lean#L1">source</a></p><div class="doc"><p>The fixed alternating prefixes in propagation are isometries on the
+appropriate reduced-word subspace. This follows by iterating the two
+one-letter Fock creation formulas. Their global operator bounds follow from
+the algebraic symmetry and normalized corner-unitary relations.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>structure</b> <code>OAI.KadisonSimilarity.AlternatingCreationCoordinates</code> <small>line 24</small><div class="doc"><p>The two elementary creation formulas for reduced words starting in the
+opposite free factor. The tensor maps are the usual isometric inclusions of
+reduced-word summands, and the specified letters have Hilbert norm one.</p></div><pre>structure AlternatingCreationCoordinates (EA ED : Type*)
+    [NormedAddCommGroup EA] [InnerProductSpace ℂ EA]
+    [NormedAddCommGroup ED] [InnerProductSpace ℂ ED]
+    (S : H →L[ℂ] H) (X : ℕ → H →L[ℂ] H) (DLead : Submodule ℂ H) where
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.KadisonSimilarity.AlternatingCreationCoordinates.actionA_isometry</code> <small>line 46</small><div class="doc"><p>The first elementary creation step has norm one and the expected range.</p></div><pre>theorem actionA_isometry (y : H) (hy : y ∈ DLead) :
+    S y ∈ C.ALead ∧ ‖S y‖ = ‖y‖ := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.KadisonSimilarity.AlternatingCreationCoordinates.actionD_isometry</code> <small>line 57</small><div class="doc"><p>The second elementary creation step has norm one and returns to the
+subspace of words starting in the other free factor.</p></div><pre>theorem actionD_isometry (n : ℕ) (y : H) (hy : y ∈ C.ALead) :
+    X n y ∈ DLead ∧ ‖X n y‖ = ‖y‖ := by
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.KadisonSimilarity.AlternatingCreationCoordinates.prefix_isometry</code> <small>line 68</small><div class="doc"><p>Iterating the elementary formulas proves the fixed alternating-prefix
+isometry; no bound on a complete prefix is assumed.</p></div><pre>theorem prefix_isometry (m n : ℕ) (y : H) (hy : y ∈ DLead) :
+    ((S * X n) ^ m * S) y ∈ C.ALead ∧
+      ‖((S * X n) ^ m * S) y‖ = ‖y‖ := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.KadisonSimilarity.norm_unitary_le_one</code> <small>line 89</small><div class="doc"><p>A unitary has norm at most one, including in the zero C-star algebra.</p></div><pre>theorem norm_unitary_le_one (u : unitary P) : ‖(u : P)‖ ≤ 1 := by
+…</pre></li><li id=L97><b>theorem</b> <code>OAI.KadisonSimilarity.norm_haarCornerLetter_le</code> <small>line 97</small><div class="doc"><p>The algebra norm of every corner Haar letter is bounded uniformly in its
+frequency, using only its normalization and corner unitarity.</p></div><pre>theorem norm_haarCornerLetter_le {q : P} {hq : IsStarProjection q}
+    (z : unitary (CStarCorner q hq)) (a : ℝ) (n : ℕ) :
+    ‖haarCornerLetter z a n‖ ≤ (Real.sqrt a)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a>, <a href="HaarCornerLetters.lean.html#L57">OAI.KadisonSimilarity.haarCornerLetter</a></p></li><li id=L111><b>theorem</b> <code>OAI.KadisonSimilarity.norm_symmetry_le_one</code> <small>line 111</small><div class="doc"><p>A selfadjoint involution is contractive without a nontriviality
+assumption on its C-star algebra.</p></div><pre>theorem norm_symmetry_le_one (s : P) (hstar : star s = s) (hsq : s * s = 1) :
+    ‖s‖ ≤ 1 :=
+…</pre></li><li id=L134><b>def</b> <code>OAI.KadisonSimilarity.tracialWordPrefix</code> <small>line 134</small><div class="doc"><p>The degree-<code>m + 1</code> alternating algebra prefix.</p></div><pre>def tracialWordPrefix (m n : ℕ) : P :=
+…</pre></li><li id=L140><b>theorem</b> <code>OAI.KadisonSimilarity.tracialWordPrefix_isometry</code> <small>line 140</small><div class="doc"><p>The left multiplier of the actual algebra prefix is isometric on the
+nonvacuum head subspace, by the elementary Fock creation identities.</p></div><pre>theorem tracialWordPrefix_isometry
+    (C : AlternatingCreationCoordinates EA ED (G.left s)
+      (fun n =&gt; G.left (ι (haarCornerLetter z a n))) W.vacuumᗮ)
+    (m n : ℕ) (y : H) (hy : y ∈ W.vacuumᗮ) :
+    ‖G.left (tracialWordPrefix (ι := ι) z a s m n) y‖ = ‖y‖ := by
+…</pre><p class="refs">Mentions: <a href="WordPrefixRealization.lean.html#L24">OAI.KadisonSimilarity.AlternatingCreationCoordinates</a>, <a href="HaarCornerLetters.lean.html#L57">OAI.KadisonSimilarity.haarCornerLetter</a>, <a href="WordPrefixRealization.lean.html#L134">OAI.KadisonSimilarity.tracialWordPrefix</a></p></li><li id=L150><b>theorem</b> <code>OAI.KadisonSimilarity.norm_tracialWordPrefix_le</code> <small>line 150</small><div class="doc"><p>The complete prefix has a uniform bound for each fixed degree. Only the
+algebraic unitary relations enter this global estimate.</p></div><pre>theorem norm_tracialWordPrefix_le (hstar : star s = s) (hsq : s * s = 1)
+    (m n : ℕ) :
+    ‖G.left (tracialWordPrefix (ι := ι) z a s m n)‖ ≤ ((Real.sqrt a)⁻¹) ^ m := by
+…</pre><p class="refs">Mentions: <a href="WordPrefixRealization.lean.html#L134">OAI.KadisonSimilarity.tracialWordPrefix</a></p></li><li id=L181><b>def</b> <code>OAI.KadisonSimilarity.tracialRepeatedWordRealizationOfCreation</code> <small>line 181</small><div class="doc"><p>Construct the propagation realization from elementary reduced-word
+creation and multiplication. Both complete-prefix fields are conclusions.</p></div><pre>def tracialRepeatedWordRealizationOfCreation
+    (hstar : star s = s) (hsq : s * s = 1)
+    (C : AlternatingCreationCoordinates EA ED (G.left s)
+      (fun n =&gt; G.left (ι (haarCornerLetter z a n))) W.vacuumᗮ)
+    (m : ℕ) (Y : H →L[ℂ] H) (B₀ : B →L[ℂ] B) (Bₖ : V →L[ℂ] V)
+    (repeatVector : B →ₗᵢ[ℂ] V) (word : ℕ → V →ₗᵢ[ℂ] H)
+    (small : B →L[ℂ] H)
+    (hsmall : ∀ v, ‖small v‖ = Real.sqrt a * ‖v‖)
+    (hzero : ∀ v, Y (small v) = small (B₀ v))
+    (hlevel : ∀ n v, Y (word n (repeatVector v)) = word n (Bₖ (repeatVector v)))
+    (hsupport : ∀ v, G.left (ι q) (small v) = small v)
+    (hword : ∀ n v, word n (repeatVector v) =
+…</pre><p class="refs">Mentions: <a href="WordPrefixRealization.lean.html#L24">OAI.KadisonSimilarity.AlternatingCreationCoordinates</a>, <a href="HaarCornerLetters.lean.html#L57">OAI.KadisonSimilarity.haarCornerLetter</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

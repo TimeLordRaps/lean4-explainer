@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/PatchCover.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/PatchCover.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>PatchCover.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>PatchCover.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/PatchCover.lean#L1">source</a></p><div class="doc"><h3>Finite patch nets and volume bounds for their active multiplicity</h3><p>The net is chosen by maximal cardinality inside a totally bounded domain.
+The active cardinality estimate is proved by disjoint half-radius balls;
+the distance of active centers from the testing point is kept explicit.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>theorem</b> <code>OAI.RegularPointCoordinates.packingNumber_ne_top_of_totallyBounded</code> <small>line 28</small><div class="doc"><p>Total boundedness makes every positive-radius packing number finite.</p></div><pre>theorem packingNumber_ne_top_of_totallyBounded {A : Set X} (hA : TotallyBounded A)
+    {r : ℝ≥0} (hr : r ≠ 0) : Metric.packingNumber r A ≠ ⊤ := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.RegularPointCoordinates.finite_maximalSeparatedSet</code> <small>line 41</small><div class="doc"><p>The standard maximal separated set is finite even in the fallback case.</p></div><pre>theorem finite_maximalSeparatedSet (r : ℝ≥0) (A : Set X) :
+    (Metric.maximalSeparatedSet r A).Finite := by
+…</pre></li><li id=L49><b>def</b> <code>OAI.RegularPointCoordinates.maximalPatchNet</code> <small>line 49</small><div class="doc"><p>A concrete finite maximal-cardinality net.</p></div><pre>def maximalPatchNet (r : ℝ≥0) (A : Set X) : Finset X :=
+…</pre></li><li id=L52><b>theorem</b> <code>OAI.RegularPointCoordinates.coe_maximalPatchNet</code> <small>line 52</small></li><li id=L56><b>theorem</b> <code>OAI.RegularPointCoordinates.maximalPatchNet_subset</code> <small>line 56</small></li><li id=L61><b>theorem</b> <code>OAI.RegularPointCoordinates.maximalPatchNet_separated</code> <small>line 61</small></li><li id=L71><b>theorem</b> <code>OAI.RegularPointCoordinates.maximalPatchNet_covers</code> <small>line 71</small></li><li id=L87><b>theorem</b> <code>OAI.RegularPointCoordinates.maximalPatchNet_card_maximal</code> <small>line 87</small><div class="doc"><p>Maximality is by cardinality, and therefore also rules out adding any
+new separated point from the original domain.</p></div><pre>theorem maximalPatchNet_card_maximal {r : ℝ≥0} {A : Set X}
+    (hr : r ≠ 0) (hA : TotallyBounded A) (s : Finset X)
+    (hsub : (s : Set X) ⊆ A) (hsep : Metric.IsSeparated r (s : Set X)) :
+    s.card ≤ (maximalPatchNet r A).card := by
+…</pre><p class="refs">Mentions: <a href="PatchCover.lean.html#L49">OAI.RegularPointCoordinates.maximalPatchNet</a></p></li><li id=L98><b>theorem</b> <code>OAI.RegularPointCoordinates.maximalPatchNet_covers_bounded</code> <small>line 98</small><div class="doc"><p>In a proper metric space every bounded domain admits the finite net,
+even when the domain is not closed.</p></div><pre>theorem maximalPatchNet_covers_bounded [ProperSpace X] {r : ℝ≥0} {A : Set X}
+    (hr : r ≠ 0) (hA : Bornology.IsBounded A) :
+    ∀ x ∈ A, ∃ y ∈ maximalPatchNet r A, dist x y ≤ r :=
+…</pre><p class="refs">Mentions: <a href="PatchCover.lean.html#L49">OAI.RegularPointCoordinates.maximalPatchNet</a></p></li><li id=L104><b>theorem</b> <code>OAI.RegularPointCoordinates.separated_half_balls_disjoint</code> <small>line 104</small><div class="doc"><p>Half-radius balls around separated centers are pairwise disjoint.</p></div><pre>theorem separated_half_balls_disjoint (s : Finset X) {r : ℝ}
+    (hsep : (s : Set X).Pairwise (fun x y =&gt; r ≤ dist x y)) :
+    Set.PairwiseDisjoint (s : Set X) (fun y =&gt; Metric.ball y (r / 2)) := by
+…</pre></li><li id=L118><b>theorem</b> <code>OAI.RegularPointCoordinates.separated_card_mul_volume_le</code> <small>line 118</small><div class="doc"><p>The disjoint-ball packing estimate, with no volume comparison hidden in
+the statement. Finite measure is only required for the containing ball.</p></div><pre>theorem separated_card_mul_volume_le (μ : Measure X) (s : Finset X) (x : X)
+    {r R v : ℝ}
+    (hsep : (s : Set X).Pairwise (fun y z =&gt; r ≤ dist y z))
+    (hnear : ∀ y ∈ s, dist y x ≤ R)
+    (hlower : ∀ y ∈ s, v ≤ μ.real (Metric.ball y (r / 2)))
+    (hfinite : μ (Metric.ball x (R + r / 2)) ≠ ∞) :
+    (s.card : ℝ) * v ≤ μ.real (Metric.ball x (R + r / 2)) := by
+…</pre></li><li id=L142><b>theorem</b> <code>OAI.RegularPointCoordinates.separated_card_le_of_euclidean_volume</code> <small>line 142</small><div class="doc"><p>Two-sided Euclidean volume bounds yield a radius-independent real
+cardinality bound for centers within <code>C₀ * r</code> of the testing point.</p></div><pre>theorem separated_card_le_of_euclidean_volume (μ : Measure X) (s : Finset X) (x : X)
+    (n : ℕ) {r C₀ a b : ℝ} (hr : 0 &lt; r) (ha : 0 &lt; a)
+    (hsep : (s : Set X).Pairwise (fun y z =&gt; r ≤ dist y z))
+    (hnear : ∀ y ∈ s, dist y x ≤ C₀ * r)
+    (hlower : ∀ y ∈ s, a * (r / 2) ^ n ≤ μ.real (Metric.ball y (r / 2)))
+    (hupper : μ.real (Metric.ball x (C₀ * r + r / 2)) ≤ b * (C₀ * r + r / 2) ^ n)
+    (hfinite : μ (Metric.ball x (C₀ * r + r / 2)) ≠ ∞) :
+    (s.card : ℝ) ≤ b / a * (2 * C₀ + 1) ^ n := by
+…</pre></li><li id=L163><b>theorem</b> <code>OAI.RegularPointCoordinates.separated_card_le_ceil_of_euclidean_volume</code> <small>line 163</small><div class="doc"><p>An integer uniform multiplicity constant extracted from the volume
+ratio. No cardinal bound is supplied as a premise.</p></div><pre>theorem separated_card_le_ceil_of_euclidean_volume (μ : Measure X) (s : Finset X) (x : X)
+    (n : ℕ) {r C₀ a b : ℝ} (hr : 0 &lt; r) (ha : 0 &lt; a)
+    (hsep : (s : Set X).Pairwise (fun y z =&gt; r ≤ dist y z))
+    (hnear : ∀ y ∈ s, dist y x ≤ C₀ * r)
+    (hlower : ∀ y ∈ s, a * (r / 2) ^ n ≤ μ.real (Metric.ball y (r / 2)))
+    (hupper : μ.real (Metric.ball x (C₀ * r + r / 2)) ≤ b * (C₀ * r + r / 2) ^ n)
+    (hfinite : μ (Metric.ball x (C₀ * r + r / 2)) ≠ ∞) :
+    s.card ≤ ⌈b / a * (2 * C₀ + 1) ^ n⌉₊ := by
+…</pre></li><li id=L176><b>theorem</b> <code>OAI.RegularPointCoordinates.active_maximalPatchNet_card_le</code> <small>line 176</small><div class="doc"><p>The active subfamily of a net satisfies the same uniform cardinal
+bound whenever active centers lie within <code>C₀ * r</code> of the point.</p></div><pre>theorem active_maximalPatchNet_card_le (μ : Measure X) (A : Set X)
+    (r : ℝ≥0) (x : X) (active : X → Prop) [DecidablePred active] (n : ℕ)
+    (hr : 0 &lt; r) {C₀ a b : ℝ} (ha : 0 &lt; a)
+    (hnear : ∀ y ∈ maximalPatchNet r A, active y → dist y x ≤ C₀ * r)
+    (hlower : ∀ y ∈ maximalPatchNet r A, active y →
+      a * ((r : ℝ) / 2) ^ n ≤ μ.real (Metric.ball y (r / 2)))
+    (hupper : μ.real (Metric.ball x (C₀ * r + r / 2)) ≤ b * (C₀ * r + r / 2) ^ n)
+    (hfinite : μ (Metric.ball x (C₀ * r + r / 2)) ≠ ∞) :
+    ((maximalPatchNet r A).filter active).card ≤ ⌈b / a * (2 * C₀ + 1) ^ n⌉₊ := by
+…</pre><p class="refs">Mentions: <a href="PatchCover.lean.html#L49">OAI.RegularPointCoordinates.maximalPatchNet</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

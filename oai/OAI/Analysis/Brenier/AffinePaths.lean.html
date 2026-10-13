@@ -1,0 +1,143 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/AffinePaths.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/AffinePaths.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>AffinePaths.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>AffinePaths.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/AffinePaths.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.Problem358.finite_affine_path_L2_bound</code> <small>line 17</small><div class="doc"><p>Quantitative time stability for a genuine finite affine maximum with fixed cell
+masses.  Null ties, time regularity, square integrability, and the fundamental theorem
+are derived from the stated coefficient data rather than assumed for the potential.</p></div><pre>theorem finite_affine_path_L2_bound
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (K : Set (E d)) [IsFiniteMeasure (uniformMeasure K)]
+    (y v : ι → ℝ → E d) (c r : ι → ℝ → ℝ)
+    (active : ℝ × E d → ι) (m : ι → ℝ)
+    {a b w κ : ℝ} {R A B : ℝ≥0}
+    (hab : a &lt; b) (hw : 0 ≤ w) (hκ : 0 ≤ κ)
+    (hxR : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (hy : ∀ i, Measurable (y i)) (hc : ∀ i, Measurable (c i))
+    (hv : ∀ i, Measurable (v i)) (hr : ∀ i, Measurable (r i))
+    (hactiveMeas : Measurable active)
+…</pre></li><li id=L126><b>theorem</b> <code>OAI.Problem358.FiniteAffine.abs_potential_sub_le_coefficients</code> <small>line 126</small><div class="doc"><p>Uniform comparison of finite affine maxima, without any uniqueness of
+active indices or separation of the sites.</p></div><pre>theorem abs_potential_sub_le_coefficients (y z : I → F) (c b : I → ℝ)
+    {R : ℝ} (hR : 0 ≤ R) {x : F} (hx : ‖x‖ ≤ R) :
+    |potential y c x - potential z b x| ≤
+      R * ∑ i, ‖y i - z i‖ + ∑ i, |c i - b i| := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L168><b>theorem</b> <code>OAI.Problem358.FiniteAffine.tendsto_integral_potential_sub_sq</code> <small>line 168</small><div class="doc"><p>Coefficient convergence gives scalar L² convergence on every finite
+bounded source.  Arbitrary filters are allowed, including both endpoint
+filters; repeated limiting sites cause no issue.</p></div><pre>theorem tendsto_integral_potential_sub_sq
+    {A : Type*} {l : Filter A} {y : A → I → F} {c : A → I → ℝ}
+    {z : I → F} {b : I → ℝ} {R : ℝ} (hR : 0 ≤ R)
+    (hx : ∀ᵐ x ∂μ, ‖x‖ ≤ R)
+    (hy : ∀ i, Tendsto (fun t =&gt; y t i) l (𝓝 (z i)))
+    (hc : ∀ i, Tendsto (fun t =&gt; c t i) l (𝓝 (b i))) :
+    Tendsto (fun t =&gt; ∫ x, (potential (y t) (c t) x - potential z b x) ^ 2 ∂μ)
+      l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L202><b>theorem</b> <code>OAI.Problem358.FiniteAffine.tendsto_sqrt_integral_potential_sub_sq</code> <small>line 202</small><div class="doc"><p>Norm-form endpoint convergence of the finite affine potentials.</p></div><pre>theorem tendsto_sqrt_integral_potential_sub_sq
+    {A : Type*} {l : Filter A} {y : A → I → F} {c : A → I → ℝ}
+    {z : I → F} {b : I → ℝ} {R : ℝ} (hR : 0 ≤ R)
+    (hx : ∀ᵐ x ∂μ, ‖x‖ ≤ R)
+    (hy : ∀ i, Tendsto (fun t =&gt; y t i) l (𝓝 (z i)))
+    (hc : ∀ i, Tendsto (fun t =&gt; c t i) l (𝓝 (b i))) :
+    Tendsto (fun t =&gt; Real.sqrt
+      (∫ x, (potential (y t) (c t) x - potential z b x) ^ 2 ∂μ)) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L215><b>theorem</b> <code>OAI.Problem358.FiniteAffine.sqrt_integral_sub_sq_eq_dist</code> <small>line 215</small><div class="doc"><p>The scalar square-root energy is the genuine L² metric.</p></div><pre>theorem sqrt_integral_sub_sq_eq_dist {f g : F → ℝ}
+    (hf : MemLp f 2 μ) (hg : MemLp g 2 μ) :
+    Real.sqrt (∫ x, (f x - g x) ^ 2 ∂μ) =
+      dist (hf.toLp f) (hg.toLp g) := by
+…</pre></li><li id=L226><b>theorem</b> <code>OAI.Problem358.FiniteAffine.tendsto_sqrt_integral_pair_sub_sq</code> <small>line 226</small><div class="doc"><p>L² convergence of both endpoints preserves their scalar L² distance.</p></div><pre>theorem tendsto_sqrt_integral_pair_sub_sq
+    {A : Type*} {l : Filter A} {u v : A → F → ℝ} {u₀ v₀ : F → ℝ}
+    (hu : ∀ t, MemLp (u t) 2 μ) (hv : ∀ t, MemLp (v t) 2 μ)
+    (hu₀ : MemLp u₀ 2 μ) (hv₀ : MemLp v₀ 2 μ)
+    (hul : Tendsto (fun t =&gt; Real.sqrt (∫ x, (u t x - u₀ x) ^ 2 ∂μ)) l (𝓝 0))
+    (hvl : Tendsto (fun t =&gt; Real.sqrt (∫ x, (v t x - v₀ x) ^ 2 ∂μ)) l (𝓝 0)) :
+    Tendsto (fun t =&gt; Real.sqrt (∫ x, (u t x - v t x) ^ 2 ∂μ))
+      l (𝓝 (Real.sqrt (∫ x, (u₀ x - v₀ x) ^ 2 ∂μ))) := by
+…</pre></li><li id=L245><b>theorem</b> <code>OAI.Problem358.FiniteAffine.memLp_potential_of_ae_norm_le</code> <small>line 245</small><div class="doc"><p>Finite affine potentials are in L² on every finite bounded source.</p></div><pre>theorem memLp_potential_of_ae_norm_le (y : I → F) (c : I → ℝ)
+    {R : ℝ} (hR : 0 ≤ R) (hx : ∀ᵐ x ∂μ, ‖x‖ ≤ R) :
+    MemLp (potential y c) 2 μ := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L256><b>theorem</b> <code>OAI.Problem358.FiniteAffine.tendsto_sqrt_integral_potential_pair_sub_sq</code> <small>line 256</small><div class="doc"><p>Endpoint coefficients alone suffice for continuity of the distance
+between two finite affine potentials.</p></div><pre>theorem tendsto_sqrt_integral_potential_pair_sub_sq
+    {A : Type*} {l : Filter A}
+    {y z : A → I → F} {c b : A → I → ℝ}
+    {y₀ z₀ : I → F} {c₀ b₀ : I → ℝ} {R : ℝ} (hR : 0 ≤ R)
+    (hx : ∀ᵐ x ∂μ, ‖x‖ ≤ R)
+    (hy : ∀ i, Tendsto (fun t =&gt; y t i) l (𝓝 (y₀ i)))
+    (hc : ∀ i, Tendsto (fun t =&gt; c t i) l (𝓝 (c₀ i)))
+    (hz : ∀ i, Tendsto (fun t =&gt; z t i) l (𝓝 (z₀ i)))
+    (hb : ∀ i, Tendsto (fun t =&gt; b t i) l (𝓝 (b₀ i))) :
+    Tendsto (fun t =&gt; Real.sqrt
+      (∫ x, (potential (y t) (c t) x - potential (z t) (b t) x) ^ 2 ∂μ))
+      l (𝓝 (Real.sqrt (∫ x, (potential y₀ c₀ x - potential z₀ b₀ x) ^ 2 ∂μ))) := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L290><b>theorem</b> <code>OAI.Problem358.exists_uniform_norm_bound_of_weighted_energy</code> <small>line 290</small><div class="doc"><p>Positive finite weights turn a uniform weighted square bound into a uniform
+coordinate norm bound. The bound is used only for local time regularity; it does
+not enter the final potential stability constant.</p></div><pre>theorem exists_uniform_norm_bound_of_weighted_energy
+    {ι P F : Type*} [Fintype ι] [NormedAddCommGroup F]
+    (m : ι → ℝ) (f : ι → P → F) (S : Set P) {C : ℝ}
+    (hm : ∀ i, 0 &lt; m i)
+    (henergy : ∀ q ∈ S, (∑ i, m i * ‖f i q‖ ^ 2) ≤ C) :
+    ∃ A : ℝ≥0, ∀ i q, q ∈ S → ‖f i q‖ ≤ A := by
+…</pre></li><li id=L316><b>theorem</b> <code>OAI.Problem358.ParameterizedArgmax.exists_joint_measurable_affine_argmax_with_masses_on</code> <small>line 316</small><div class="doc"><p>On a specified parameter set, pointwise prescribed-mass witnesses suffice for
+one globally measurable affine maximizing selector. No separation or mass
+condition is imposed outside that set.</p></div><pre>theorem ParameterizedArgmax.exists_joint_measurable_affine_argmax_with_masses_on
+    {P ι : Type*} [MeasurableSpace P] [MeasurableSpace ι]
+    [Fintype ι] [Nonempty ι] {d : ℕ} (K : Set (E d)) (S : Set P)
+    (y : P → ι → E d) (c m : P → ι → ℝ)
+    (hy : ∀ i, Measurable (fun p =&gt; y p i))
+    (hc : ∀ i, Measurable (fun p =&gt; c p i))
+    (hinj : ∀ p ∈ S, Function.Injective (y p))
+    (hex : ∀ p ∈ S, ∃ k : E d → ι,
+      (∀ᵐ x ∂uniformMeasure K, ∀ i,
+        ⟪x, y p i⟫_ℝ + c p i ≤ ⟪x, y p (k x)⟫_ℝ + c p (k x)) ∧
+      ∀ i, (uniformMeasure K).real {x | k x = i} = m p i) :
+    ∃ k : P × E d → ι, Measurable k ∧
+…</pre></li><li id=L356><b>theorem</b> <code>OAI.Problem358.finite_affine_path_L2_bound_of_positive_cell_masses</code> <small>line 356</small><div class="doc"><p>Interior finite-potential stability directly from positive fixed masses and
+weighted energies. Joint selection and auxiliary coordinate derivative bounds
+are consequences, not extra hypotheses. In particular, sites may collide outside
+the integration interval.</p></div><pre>theorem finite_affine_path_L2_bound_of_positive_cell_masses
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (K : Set (E d)) [IsFiniteMeasure (uniformMeasure K)]
+    (y v : ι → ℝ → E d) (c r : ι → ℝ → ℝ) (m : ι → ℝ)
+    {a b w κ : ℝ} {R : ℝ≥0}
+    (hab : a &lt; b) (hw : 0 ≤ w) (hκ : 0 ≤ κ)
+    (hm : ∀ i, 0 &lt; m i)
+    (hxR : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (hy : ∀ i, Measurable (y i)) (hc : ∀ i, Measurable (c i))
+    (hv : ∀ i, Measurable (v i)) (hr : ∀ i, Measurable (r i))
+    (hdy : ∀ i q, q ∈ Icc a b → HasDerivAt (y i) (v i q) q)
+…</pre></li><li id=L413><b>theorem</b> <code>OAI.Problem358.finite_affine_path_endpoint_bound</code> <small>line 413</small><div class="doc"><p>An interior time estimate for finite affine potentials passes to both
+endpoints using only continuity of the coefficients.  Sites may collide at
+either endpoint.</p></div><pre>theorem finite_affine_path_endpoint_bound
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    (K : Set (E d)) [IsFiniteMeasure (uniformMeasure K)]
+    (y : ι → ℝ → E d) (c : ι → ℝ → ℝ) {R L : ℝ}
+    (hR : 0 ≤ R) (hL : 0 ≤ L)
+    (hxR : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (hy : ∀ i, Continuous (y i)) (hc : ∀ i, Continuous (c i))
+    (hinterior : ∀ a b : ℝ, 0 &lt; a → a &lt; b → b &lt; 1 →
+      Real.sqrt (∫ x,
+        (FiniteAffine.potential (fun i =&gt; y i b) (fun i =&gt; c i b) x -
+         FiniteAffine.potential (fun i =&gt; y i a) (fun i =&gt; c i a) x) ^ 2
+        ∂uniformMeasure K) ≤ L * (b - a)) :
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L448><b>theorem</b> <code>OAI.Problem358.finite_affine_path_endpoint_integral_bound</code> <small>line 448</small><div class="doc"><p>Squared form of the endpoint bound for use in gradient interpolation.</p></div><pre>theorem finite_affine_path_endpoint_integral_bound
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    (K : Set (E d)) [IsFiniteMeasure (uniformMeasure K)]
+    (y : ι → ℝ → E d) (c : ι → ℝ → ℝ) {R L : ℝ}
+    (hR : 0 ≤ R) (hL : 0 ≤ L)
+    (hxR : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (hy : ∀ i, Continuous (y i)) (hc : ∀ i, Continuous (c i))
+    (hinterior : ∀ a b : ℝ, 0 &lt; a → a &lt; b → b &lt; 1 →
+      Real.sqrt (∫ x,
+        (FiniteAffine.potential (fun i =&gt; y i b) (fun i =&gt; c i b) x -
+         FiniteAffine.potential (fun i =&gt; y i a) (fun i =&gt; c i a) x) ^ 2
+        ∂uniformMeasure K) ≤ L * (b - a)) :
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L470><b>theorem</b> <code>OAI.Problem358.finite_affine_C1_path_endpoint_L2_bound</code> <small>line 470</small><div class="doc"><p>A finite C¹ fixed-mass path on the open time interval has the full
+endpoint estimate. Derivatives need neither exist nor stay bounded near
+endpoints; continuity of the endpoint coefficients is sufficient.</p></div><pre>theorem finite_affine_C1_path_endpoint_L2_bound
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    (K : Set (E d)) [IsFiniteMeasure (uniformMeasure K)]
+    (y v : ι → ℝ → E d) (c r : ι → ℝ → ℝ)
+    (active : ℝ × E d → ι) (m : ι → ℝ)
+    {w κ : ℝ} {R : ℝ≥0} (hw : 0 ≤ w) (hκ : 0 ≤ κ)
+    (hxR : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (hy : ∀ i, Continuous (y i)) (hc : ∀ i, Continuous (c i))
+    (hv : ∀ i, ContinuousOn (v i) (Ioo 0 1))
+    (hr : ∀ i, ContinuousOn (r i) (Ioo 0 1))
+    (hactiveMeas : Measurable active)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

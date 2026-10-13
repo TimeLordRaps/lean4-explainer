@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/InverseTransferIdentity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/InverseTransferIdentity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>InverseTransferIdentity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>InverseTransferIdentity.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/InverseTransferIdentity.lean#L1">source</a></p><div class="doc"><h3>The actual inverse-coefficient transfer</h3><p>The inverse transfer is the negative inverse linear map applied to the
+whole-fiber average. Its cocycle identity holds almost everywhere for each
+fixed group element, exactly as required for an L² cocycle.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>def</b> <code>OAI.PolycyclicRecognition.inverseTheta</code> <small>line 26</small><div class="doc"><p>The inverse-section transfer with its required inverse linear coefficient.</p></div><pre>def inverseTheta (β : Measure G) (A : W ≃L[ℝ] W)
+    (π l : G →* Multiplicative W) (φ : NormalizedPair G Λ → W)
+    (p : NormalizedPair G Λ) : W := -A.symm (inverseAveragedTransfer β π l φ p)
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="CouplingTransfer.lean.html#L104">OAI.PolycyclicRecognition.inverseAveragedTransfer</a></p></li><li id=L32><b>theorem</b> <code>OAI.PolycyclicRecognition.inverseTheta_memLp</code> <small>line 32</small><div class="doc"><p>The constructed inverse transfer belongs to the actual L² space.</p></div><pre>theorem inverseTheta_memLp
+    (m : Measure G) [IsFiniteMeasureOnCompacts m]
+    (μ ν : Measure (NormalizedPair G Λ)) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
+    (hprod : inversePairCoupling m μ = ν.prod m)
+    (A : W ≃L[ℝ] W) (π l : G →* Multiplicative W)
+    (hπ : Continuous fun g =&gt; (π g).toAdd) (hl : Continuous fun g =&gt; (l g).toAdd)
+    {φ : NormalizedPair G Λ → W} (hφ : MemLp φ 2 μ)
+    {B : Set G} (hB : IsCompact B) (hB0 : m B ≠ 0) :
+    MemLp (inverseTheta (normalizedRestriction m B) A π l φ) 2 ν :=
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="PairCoupling.lean.html#L117">OAI.PolycyclicRecognition.inversePairCoupling</a>, <a href="InverseTransferIdentity.lean.html#L26">OAI.PolycyclicRecognition.inverseTheta</a>, <a href="FiberAverageL2.lean.html#L27">OAI.PolycyclicRecognition.normalizedRestriction</a></p></li><li id=L46><b>theorem</b> <code>OAI.PolycyclicRecognition.inverseTheta_identity_ae</code> <small>line 46</small><div class="doc"><p>The inverse transfer identity is derived on almost every fiber, with no
+assertion of a simultaneous exceptional set for all group elements.</p></div><pre>theorem inverseTheta_identity_ae
+    (m : Measure G) [IsFiniteMeasureOnCompacts m]
+    (μ ν : Measure (NormalizedPair G Λ)) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
+    [SMulInvariantMeasure G (NormalizedPair G Λ) ν]
+    (hprod : inversePairCoupling m μ = ν.prod m)
+    (A : W ≃L[ℝ] W) (π l : G →* Multiplicative W)
+    (hπ : Continuous fun g =&gt; (π g).toAdd) (hl : Continuous fun g =&gt; (l g).toAdd)
+    (hlA : ∀ g, (l g).toAdd = A (π g).toAdd)
+    {φ : NormalizedPair G Λ → W} (hφ : MemLp φ 2 μ)
+    {B : Set G} (hB : IsCompact B) (hB0 : m B ≠ 0) (y : G) :
+    ∀ᵐ p ∂ν, pairHeight π y p +
+      inverseTheta (normalizedRestriction m B) A π l φ (normalizedTranslate y p) -
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="PairCoupling.lean.html#L117">OAI.PolycyclicRecognition.inversePairCoupling</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L26">OAI.PolycyclicRecognition.pairHeight</a>, <a href="InverseTransferIdentity.lean.html#L26">OAI.PolycyclicRecognition.inverseTheta</a>, <a href="FiberAverageL2.lean.html#L27">OAI.PolycyclicRecognition.normalizedRestriction</a>, <a href="PairAction.lean.html#L83">OAI.PolycyclicRecognition.normalizedTranslate</a></p></li><li id=L73><b>def</b> <code>OAI.PolycyclicRecognition.inverseCocycleError</code> <small>line 73</small><div class="doc"><p>The actual inverse-height cocycle after adding the inverse transfer.</p></div><pre>def inverseCocycleError (β : Measure G) (A : W ≃L[ℝ] W)
+    (π l : G →* Multiplicative W) (φ : NormalizedPair G Λ → W)
+    (y : G) (p : NormalizedPair G Λ) : W :=
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a></p></li><li id=L81><b>theorem</b> <code>OAI.PolycyclicRecognition.inverseCocycleError_lintegral_le</code> <small>line 81</small><div class="doc"><p>Squared inverse-cocycle errors have at most the squared operator norm
+loss when compared with the averaged fiber error.</p></div><pre>theorem inverseCocycleError_lintegral_le
+    (m : Measure G) [IsFiniteMeasureOnCompacts m]
+    (μ ν : Measure (NormalizedPair G Λ)) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
+    [SMulInvariantMeasure G (NormalizedPair G Λ) ν]
+    (hprod : inversePairCoupling m μ = ν.prod m)
+    (A : W ≃L[ℝ] W) (π l : G →* Multiplicative W)
+    (hπ : Continuous fun g =&gt; (π g).toAdd) (hl : Continuous fun g =&gt; (l g).toAdd)
+    (hlA : ∀ g, (l g).toAdd = A (π g).toAdd)
+    {φ : NormalizedPair G Λ → W} (hφ : MemLp φ 2 μ)
+    {B : Set G} (hB : IsCompact B) (hB0 : m B ≠ 0) (y : G) :
+    (∫⁻ p, ‖inverseCocycleError (normalizedRestriction m B) A π l φ y p‖ₑ ^ 2 ∂ν) ≤
+      ENNReal.ofReal ‖A.symm.toContinuousLinearMap‖ ^ 2 *
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="PairCoupling.lean.html#L117">OAI.PolycyclicRecognition.inversePairCoupling</a>, <a href="InverseTransferIdentity.lean.html#L73">OAI.PolycyclicRecognition.inverseCocycleError</a>, <a href="FiberAverageL2.lean.html#L27">OAI.PolycyclicRecognition.normalizedRestriction</a></p></li><li id=L122><b>theorem</b> <code>OAI.PolycyclicRecognition.inverseCocycleError_tendsto_uniform</code> <small>line 122</small><div class="doc"><p>Compact-uniform vanishing of averaged fiber errors gives the same
+vanishing for the actual inverse-coefficient cocycle.</p></div><pre>theorem inverseCocycleError_tendsto_uniform
+    (m : Measure G) [IsFiniteMeasureOnCompacts m]
+    (μ ν : Measure (NormalizedPair G Λ)) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
+    [SMulInvariantMeasure G (NormalizedPair G Λ) ν]
+    (hprod : inversePairCoupling m μ = ν.prod m)
+    (A : W ≃L[ℝ] W) (π l : G →* Multiplicative W)
+    (hπ : Continuous fun g =&gt; (π g).toAdd) (hl : Continuous fun g =&gt; (l g).toAdd)
+    (hlA : ∀ g, (l g).toAdd = A (π g).toAdd)
+    (φ : ℕ → NormalizedPair G Λ → W) (hφ : ∀ n, MemLp (φ n) 2 μ)
+    {B Q : Set G} (hB : IsCompact B) (hB0 : m B ≠ 0)
+    (hR : Filter.Tendsto (fun n =&gt; ⨆ y ∈ Q,
+      ∫⁻ p, ‖inverseAverageError (normalizedRestriction m B) π l (φ n) y p‖ₑ ^ 2 ∂ν)
+…</pre><p class="refs">Mentions: <a href="../Analysis/CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="PairCoupling.lean.html#L117">OAI.PolycyclicRecognition.inversePairCoupling</a>, <a href="CouplingTransfer.lean.html#L109">OAI.PolycyclicRecognition.inverseAverageError</a>, <a href="FiberAverageL2.lean.html#L27">OAI.PolycyclicRecognition.normalizedRestriction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

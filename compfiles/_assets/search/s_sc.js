@@ -1,0 +1,1 @@
+window.l4shard("sc", [["Imo1964P2.schur",17,31],["Imo1983P6.cauchy_schwarz_equals",42,34],["Usa2000P3.score",231,52],["Usa2006P3.schur",252,226],["Usa2010P6.score",268,52],["Usa2010P6.upper_loopScore",268,668]]);

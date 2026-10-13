@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Quantiles.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Quantiles.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Quantiles.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Quantiles.lean</span></code></h1><p class="muted">44 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Quantiles.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.Problem358.unique_monotone_inverse_lt_iff</code> <small>line 16</small><div class="doc"><p>Comparison with the unique inverse point of a monotone real function.</p></div><pre>lemma unique_monotone_inverse_lt_iff {F : ℝ → ℝ} (hF : Monotone F)
+    {t x : ℝ} (hx : F x = t) (huniq : ∀ y, F y = t → y = x) (q : ℝ) :
+    x &lt; q ↔ t &lt; F q := by
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.Problem358.exists_measurable_monotone_inverse</code> <small>line 36</small><div class="doc"><p>Parameter-dependent monotone inverses are measurable whenever their CDF
+sections and selected levels are measurable. Unique fibers remove any need
+for a measurable-choice theorem.</p></div><pre>theorem exists_measurable_monotone_inverse
+    {A : Type*} [MeasurableSpace A] (F : A → ℝ → ℝ) (t : A → ℝ)
+    (hmono : ∀ a, Monotone (F a))
+    (hsection : ∀ q : ℝ, Measurable (fun a =&gt; F a q))
+    (ht : Measurable t) (hex : ∀ a, ∃! x : ℝ, F a x = t a) :
+    ∃ Q : A → ℝ, Measurable Q ∧ ∀ a, F a (Q a) = t a := by
+…</pre></li><li id=L55><b>lemma</b> <code>OAI.Problem358.inverse_points_strictMono</code> <small>line 55</small><div class="doc"><p>Inverse points of a monotone function are necessarily ordered with their
+levels, even if the original function has flat regions away from those fibers.</p></div><pre>lemma inverse_points_strictMono {F : ℝ → ℝ} (hF : Monotone F)
+    {S : Set ℝ} {Q : S → ℝ} (hQ : ∀ t, F (Q t) = (t : ℝ)) :
+    StrictMono Q := by
+…</pre></li><li id=L67><b>lemma</b> <code>OAI.Problem358.exists_unique_monotone_inverse_of_interval</code> <small>line 67</small><div class="doc"><p>A continuous strictly increasing interval reaches each intermediate level
+at a unique point, provided the ambient extension remains monotone.</p></div><pre>lemma exists_unique_monotone_inverse_of_interval {F : ℝ → ℝ} {a b t : ℝ}
+    (hab : a ≤ b) (hcont : ContinuousOn F (Icc a b)) (hmono : Monotone F)
+    (hstrict : StrictMonoOn F (Icc a b)) (ht : t ∈ Ioo (F a) (F b)) :
+    ∃! x : ℝ, F x = t := by
+…</pre></li><li id=L89><b>lemma</b> <code>OAI.Problem358.continuousAt_monotone_inverse</code> <small>line 89</small><div class="doc"><p>A local inverse of a monotone real function is continuous at every level
+whose fiber is a singleton. No differentiability or strict global monotonicity
+is required.</p></div><pre>lemma continuousAt_monotone_inverse {F Q : ℝ → ℝ} {t : ℝ}
+    (hmono : Monotone F) (hlocal : ∀ᶠ s in 𝓝 t, F (Q s) = s)
+    (huniq : ∀ x, F x = t → x = Q t) : ContinuousAt Q t := by
+…</pre></li><li id=L115><b>lemma</b> <code>OAI.Problem358.hasDerivAt_monotone_inverse</code> <small>line 115</small><div class="doc"><p>The reciprocal-density derivative formula for a local monotone inverse.</p></div><pre>lemma hasDerivAt_monotone_inverse {F Q : ℝ → ℝ} {t c : ℝ}
+    (hmono : Monotone F) (hlocal : ∀ᶠ s in 𝓝 t, F (Q s) = s)
+    (huniq : ∀ x, F x = t → x = Q t)
+    (hderiv : HasDerivAt F c (Q t)) (hc : c ≠ 0) :
+    HasDerivAt Q c⁻¹ t := by
+…</pre></li><li id=L123><b>lemma</b> <code>OAI.Problem358.unique_monotone_inverse_le_iff</code> <small>line 123</small></li><li id=L136><b>lemma</b> <code>OAI.Problem358.volume_Iic_inter_unitInterval</code> <small>line 136</small></li><li id=L156><b>theorem</b> <code>OAI.Problem358.map_inverse_cdf_eq</code> <small>line 156</small><div class="doc"><p>A measurable inverse of a probability CDF transports unit-interval
+Lebesgue measure to the probability law. This is the one-dimensional law
+identity used in triangular quantile constructions.</p></div><pre>theorem map_inverse_cdf_eq (μ : Measure ℝ) [IsProbabilityMeasure μ]
+    {Q : ℝ → ℝ} (hQ : Measurable Q)
+    (hsolve : ∀ t ∈ Ioo (0 : ℝ) 1, ProbabilityTheory.cdf μ (Q t) = t)
+    (huniq : ∀ t ∈ Ioo (0 : ℝ) 1, ∀ x,
+      ProbabilityTheory.cdf μ x = t → x = Q t) :
+    Measure.map Q (volume.restrict (Ioo (0 : ℝ) 1)) = μ := by
+…</pre></li><li id=L185><b>theorem</b> <code>OAI.Problem358.exists_measurable_cdf_transport</code> <small>line 185</small><div class="doc"><p>A probability law with unique inverse CDF points at every level in <code>(0,1)</code>
+has a measurable quantile transport, continuous at every such level.</p></div><pre>theorem exists_measurable_cdf_transport (μ : Measure ℝ) [IsProbabilityMeasure μ]
+    (hex : ∀ t ∈ Ioo (0 : ℝ) 1, ∃! x : ℝ, ProbabilityTheory.cdf μ x = t) :
+    ∃ Q : ℝ → ℝ, Measurable Q ∧
+      Measure.map Q (volume.restrict (Ioo (0 : ℝ) 1)) = μ ∧
+      (∀ t ∈ Ioo (0 : ℝ) 1, ProbabilityTheory.cdf μ (Q t) = t) ∧
+      ∀ t ∈ Ioo (0 : ℝ) 1, ContinuousAt Q t := by
+…</pre></li><li id=L217><b>theorem</b> <code>OAI.Problem358.exists_measurable_cdf_family_transport</code> <small>line 217</small><div class="doc"><p>Jointly measurable quantiles for a family of one-dimensional probability
+laws. Only measurability of each CDF section is needed in the parameter.</p></div><pre>theorem exists_measurable_cdf_family_transport
+    {A : Type*} [MeasurableSpace A] (κ : A → Measure ℝ)
+    [∀ a, IsProbabilityMeasure (κ a)]
+    (hsection : ∀ q : ℝ, Measurable (fun a =&gt; ProbabilityTheory.cdf (κ a) q))
+    (hex : ∀ a t, t ∈ Ioo (0 : ℝ) 1 → ∃! x : ℝ, ProbabilityTheory.cdf (κ a) x = t) :
+    ∃ Q : A × ℝ → ℝ, Measurable Q ∧
+      (∀ a, Measure.map (fun t =&gt; Q (a, t)) (volume.restrict (Ioo (0 : ℝ) 1)) = κ a) ∧
+      (∀ a t, t ∈ Ioo (0 : ℝ) 1 → ProbabilityTheory.cdf (κ a) (Q (a, t)) = t) ∧
+      ∀ a t, t ∈ Ioo (0 : ℝ) 1 → ContinuousAt (fun s =&gt; Q (a, s)) t := by
+…</pre></li><li id=L260><b>lemma</b> <code>OAI.Problem358.measurable_cdf_kernel_section</code> <small>line 260</small><div class="doc"><p>CDF sections of a real-valued Markov kernel are measurable.</p></div><pre>lemma measurable_cdf_kernel_section {A : Type*} [MeasurableSpace A]
+    (κ : ProbabilityTheory.Kernel A ℝ) [ProbabilityTheory.IsMarkovKernel κ] (q : ℝ) :
+    Measurable (fun a =&gt; ProbabilityTheory.cdf (κ a) q) := by
+…</pre></li><li id=L268><b>theorem</b> <code>OAI.Problem358.exists_measurable_cdf_kernel_transport</code> <small>line 268</small><div class="doc"><p>Kernel specialization: unique interior CDF fibers suffice for a jointly
+measurable sampler with the exact conditional law and continuous fibers.</p></div><pre>theorem exists_measurable_cdf_kernel_transport
+    {A : Type*} [MeasurableSpace A] (κ : ProbabilityTheory.Kernel A ℝ)
+    [ProbabilityTheory.IsMarkovKernel κ]
+    (hex : ∀ a t, t ∈ Ioo (0 : ℝ) 1 → ∃! x : ℝ, ProbabilityTheory.cdf (κ a) x = t) :
+    ∃ Q : A × ℝ → ℝ, Measurable Q ∧
+      (∀ a, Measure.map (fun t =&gt; Q (a, t)) (volume.restrict (Ioo (0 : ℝ) 1)) = κ a) ∧
+      (∀ a t, t ∈ Ioo (0 : ℝ) 1 → ProbabilityTheory.cdf (κ a) (Q (a, t)) = t) ∧
+      ∀ a t, t ∈ Ioo (0 : ℝ) 1 → ContinuousAt (fun s =&gt; Q (a, s)) t :=
+…</pre></li><li id=L299><b>def</b> <code>OAI.Problem358.KernelQuantile.quantile</code> <small>line 299</small><div class="doc"><p>Ordered generalized inverse of the kernel's conditional distribution function.</p></div><pre>def quantile (κ : Kernel X I) (a : X) (t : I) : I :=
+…</pre></li><li id=L302><b>lemma</b> <code>OAI.Problem358.KernelQuantile.measurable_quantile</code> <small>line 302</small></li><li id=L331><b>lemma</b> <code>OAI.Problem358.KernelQuantile.monotone_quantile</code> <small>line 331</small></li><li id=L339><b>lemma</b> <code>OAI.Problem358.KernelQuantile.quantile_le_iff</code> <small>line 339</small><div class="doc"><p>The defining order equivalence, including the endpoints of the parameter interval.</p></div><pre>lemma quantile_le_iff (κ : Kernel X I) [IsMarkovKernel κ] (a : X) (ξ x : I) :
+    quantile κ a ξ ≤ x ↔ (ξ : ℝ) ≤ (κ a).real (Icc 0 x) := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L299">OAI.Problem358.KernelQuantile.quantile</a></p></li><li id=L369><b>lemma</b> <code>OAI.Problem358.KernelQuantile.map_quantile</code> <small>line 369</small></li><li id=L382><b>theorem</b> <code>OAI.Problem358.KernelQuantile.exists_monotone_unitInterval_sampler</code> <small>line 382</small><div class="doc"><p>Every unit-interval probability kernel has a jointly measurable monotone sampler.</p></div><pre>theorem exists_monotone_unitInterval_sampler (κ : Kernel X I) [IsMarkovKernel κ] :
+    ∃ (f : X → I → I), Measurable (uncurry f) ∧ (∀ a, Monotone (f a)) ∧
+      ∀ a, volume.map (f a) = κ a :=
+…</pre></li><li id=L388><b>lemma</b> <code>OAI.Problem358.KernelQuantile.quantile_eq_of_cdf_eq</code> <small>line 388</small><div class="doc"><p>At a strictly increasing conditional CDF, the quantile is its ordinary inverse.</p></div><pre>lemma quantile_eq_of_cdf_eq (κ : Kernel X I) [IsMarkovKernel κ]
+    (a : X) (hstrict : StrictMono (fun x : I =&gt; (κ a).real (Icc 0 x)))
+    {t x : I} (hx : (κ a).real (Icc 0 x) = (t : ℝ)) :
+    quantile κ a t = x := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L299">OAI.Problem358.KernelQuantile.quantile</a></p></li><li id=L398><b>lemma</b> <code>OAI.Problem358.KernelQuantile.quantile_cdf</code> <small>line 398</small></li><li id=L404><b>def</b> <code>OAI.Problem358.KernelQuantile.toUnit</code> <small>line 404</small><div class="doc"><p>Clamp affine coordinates into the unit interval.</p></div><pre>def toUnit (l u x : ℝ) : I :=
+…</pre></li><li id=L408><b>def</b> <code>OAI.Problem358.KernelQuantile.fromUnit</code> <small>line 408</small><div class="doc"><p>Undo affine unit-interval coordinates.</p></div><pre>def fromUnit (l u : ℝ) (t : I) : ℝ := l + (u - l) * (t : ℝ)</pre></li><li id=L410><b>lemma</b> <code>OAI.Problem358.KernelQuantile.continuous_toUnit</code> <small>line 410</small></li><li id=L413><b>lemma</b> <code>OAI.Problem358.KernelQuantile.continuous_fromUnit</code> <small>line 413</small></li><li id=L417><b>lemma</b> <code>OAI.Problem358.KernelQuantile.monotone_fromUnit</code> <small>line 417</small></li><li id=L423><b>lemma</b> <code>OAI.Problem358.KernelQuantile.fromUnit_toUnit</code> <small>line 423</small></li><li id=L437><b>theorem</b> <code>OAI.Problem358.KernelQuantile.exists_monotone_real_sampler</code> <small>line 437</small><div class="doc"><p>Ordered conditional sampling is available uniformly for any kernel supported in a
+fixed nondegenerate bounded real interval.</p></div><pre>theorem exists_monotone_real_sampler (κ : Kernel X ℝ) [IsMarkovKernel κ]
+    (l u : ℝ) (hlu : l &lt; u)
+    (hsupp : ∀ a, ∀ᵐ x ∂κ a, x ∈ Icc l u) :
+    ∃ f : X → I → ℝ, Measurable (uncurry f) ∧ (∀ a, Monotone (f a)) ∧
+      (∀ a, volume.map (f a) = κ a) ∧ (∀ a t, f a t ∈ Icc l u) := by
+…</pre></li><li id=L470><b>theorem</b> <code>OAI.Problem358.KernelQuantile.exists_monotone_density_sampler</code> <small>line 470</small><div class="doc"><p>A jointly measurable family of normalized bounded densities admits ordered conditional
+samples. This is the law-producing part of the triangular quantile construction.</p></div><pre>theorem exists_monotone_density_sampler
+    (p : X → ℝ → ℝ≥0∞) (hp : Measurable (uncurry p))
+    (hnorm : ∀ a, ∫⁻ x, p a x = 1) (l u : ℝ) (hlu : l &lt; u)
+    (hsupp : ∀ a x, x ∉ Icc l u → p a x = 0) :
+    ∃ f : X → I → ℝ, Measurable (uncurry f) ∧ (∀ a, Monotone (f a)) ∧
+      (∀ a, volume.map (f a) = volume.withDensity (p a)) ∧
+      (∀ a t, f a t ∈ Icc l u) := by
+…</pre></li><li id=L496><b>lemma</b> <code>OAI.Problem358.KernelQuantile.cdf_quantile</code> <small>line 496</small><div class="doc"><p>For a continuous strictly increasing CDF with no endpoint atom, sampling inverts
+that CDF in both directions.</p></div><pre>lemma cdf_quantile (κ : Kernel X I) [IsMarkovKernel κ]
+    (a : X) (hstrict : StrictMono (fun x : I =&gt; (κ a).real (Icc 0 x)))
+    (hcont : Continuous (fun x : I =&gt; (κ a).real (Icc 0 x)))
+    (hzero : (κ a).real (Icc 0 (0 : I)) = 0) (t : I) :
+    (κ a).real (Icc 0 (quantile κ a t)) = (t : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L299">OAI.Problem358.KernelQuantile.quantile</a></p></li><li id=L513><b>lemma</b> <code>OAI.Problem358.KernelQuantile.strictMono_quantile</code> <small>line 513</small></li><li id=L535><b>def</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF</code> <small>line 535</small><div class="doc"><p>The cumulative integral is clamped to its genuine support interval.</p></div><pre>def clippedCDF (D : PositiveIntervalDensity) (x : ℝ) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="DensityCDF.lean.html#L11">OAI.Problem358.PositiveIntervalDensity</a></p></li><li id=L538><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF_of_mem</code> <small>line 538</small></li><li id=L542><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF_of_le_lower</code> <small>line 542</small></li><li id=L547><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF_of_upper_le</code> <small>line 547</small></li><li id=L552><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF_monotone</code> <small>line 552</small></li><li id=L559><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF_eq_ite</code> <small>line 559</small></li><li id=L568><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.existsUnique_clippedCDF_eq</code> <small>line 568</small></li><li id=L587><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.measurable_clippedCDF_section</code> <small>line 587</small></li><li id=L600><b>theorem</b> <code>OAI.Problem358.PositiveIntervalDensity.exists_measurable_quantile_family</code> <small>line 600</small><div class="doc"><p>A family of positive interval densities admits a jointly measurable family
+of exact quantile samplers. Endpoints and cumulative-integral sections must be
+measurable in the parameter; no parameter differentiability is required.</p></div><pre>theorem exists_measurable_quantile_family {A : Type*} [MeasurableSpace A]
+    (D : A → PositiveIntervalDensity)
+    (hlower : Measurable (fun a =&gt; (D a).lower))
+    (hupper : Measurable (fun a =&gt; (D a).upper))
+    (hcdf : ∀ q : ℝ, Measurable (fun a =&gt; (D a).cdf q)) :
+    ∃ Q : A × ℝ → ℝ, Measurable Q ∧
+      (∀ a t, t ∈ Ioo (0 : ℝ) 1 → Q (a, t) = (D a).quantileReal t) ∧
+      (∀ a, Measure.map (fun t =&gt; Q (a, t)) (volume.restrict (Ioo (0 : ℝ) 1)) =
+        (D a).densityMeasure) ∧
+      ∀ a t, t ∈ Ioo (0 : ℝ) 1 →
+        HasDerivAt (fun s =&gt; Q (a, s)) ((D a).density (Q (a, t)))⁻¹ t := by
+…</pre><p class="refs">Mentions: <a href="DensityCDF.lean.html#L11">OAI.Problem358.PositiveIntervalDensity</a>, <a href="DensityCDF.lean.html#L26">OAI.Problem358.PositiveIntervalDensity.cdf</a>, <a href="DensityCDF.lean.html#L111">OAI.Problem358.PositiveIntervalDensity.quantileReal</a>, <a href="DensityCDF.lean.html#L160">OAI.Problem358.PositiveIntervalDensity.densityMeasure</a></p></li><li id=L652><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.clippedCDF_mem_unitInterval</code> <small>line 652</small></li><li id=L659><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.cdf_densityMeasure_eq_clippedCDF</code> <small>line 659</small><div class="doc"><p>The clamped primitive is the actual probability CDF of the density law.</p></div><pre>lemma cdf_densityMeasure_eq_clippedCDF (D : PositiveIntervalDensity) (x : ℝ) :
+    ProbabilityTheory.cdf D.densityMeasure x = D.clippedCDF x := by
+…</pre><p class="refs">Mentions: <a href="DensityCDF.lean.html#L11">OAI.Problem358.PositiveIntervalDensity</a></p></li><li id=L689><b>lemma</b> <code>OAI.Problem358.PositiveIntervalDensity.existsUnique_probability_cdf_eq</code> <small>line 689</small></li><li id=L697><b>theorem</b> <code>OAI.Problem358.PositiveIntervalDensity.exists_measurable_density_kernel_quantiles</code> <small>line 697</small><div class="doc"><p>A measurable kernel of positive interval-density laws has jointly
+measurable quantiles with exact conditional laws and inverse-density derivatives.
+No measurability of chosen support endpoints is separately required.</p></div><pre>theorem exists_measurable_density_kernel_quantiles {A : Type*} [MeasurableSpace A]
+    (D : A → PositiveIntervalDensity) (κ : ProbabilityTheory.Kernel A ℝ)
+    [ProbabilityTheory.IsMarkovKernel κ]
+    (hκ : ∀ a, κ a = (D a).densityMeasure) :
+    ∃ Q : A × ℝ → ℝ, Measurable Q ∧
+      (∀ a, Measure.map (fun t =&gt; Q (a, t)) (volume.restrict (Ioo (0 : ℝ) 1)) = κ a) ∧
+      (∀ a t, t ∈ Ioo (0 : ℝ) 1 → Q (a, t) = (D a).quantileReal t) ∧
+      ∀ a t, t ∈ Ioo (0 : ℝ) 1 →
+        HasDerivAt (fun s =&gt; Q (a, s)) ((D a).density (Q (a, t)))⁻¹ t := by
+…</pre><p class="refs">Mentions: <a href="DensityCDF.lean.html#L11">OAI.Problem358.PositiveIntervalDensity</a>, <a href="DensityCDF.lean.html#L160">OAI.Problem358.PositiveIntervalDensity.densityMeasure</a>, <a href="DensityCDF.lean.html#L111">OAI.Problem358.PositiveIntervalDensity.quantileReal</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Decoding/SelectedFiberLaw.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Decoding/SelectedFiberLaw.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Decoding</a> / <span>SelectedFiberLaw.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Decoding</a>/<span>SelectedFiberLaw.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Decoding/SelectedFiberLaw.lean#L1">source</a></p><div class="doc"><h3>Actual conditional selected-fiber agreement</h3><p>The selected event is the full-table event used by the total-variation
+comparison. On a positive complete-data fiber it becomes the uniform actual
+affine row/column slice. The selector is fixed by the left observation; the
+extra complete data and a supporting matrix occur only in this analysis.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L34><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.univ_congr</code> <small>line 34</small><div class="doc"><p>The universe finset is independent of the chosen finite enumeration.
+The instances are explicit so elaboration need not unfold either enumeration.</p></div><pre>private theorem univ_congr {X : Type*} (i j : Fintype X) :
+    @Finset.univ X i = @Finset.univ X j := by
+…</pre></li><li id=L41><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumLeft</code> <small>line 41</small></li><li id=L44><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumMatrix</code> <small>line 44</small></li><li id=L47><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumProjection</code> <small>line 47</small></li><li id=L50><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumLeft_eq</code> <small>line 50</small></li><li id=L56><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumMatrix_rows</code> <small>line 56</small></li><li id=L60><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumMatrix_rowAdvice</code> <small>line 60</small></li><li id=L73><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.slice_assemble_iff</code> <small>line 73</small><div class="doc"><p>Every event membership uses the same selected normalized witness on the
+entire complete-data fiber.</p></div><pre>theorem slice_assemble_iff (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (N : AdviceLaw.PrivateMap data) :
+    slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true ↔
+      mapEquiv k s ((datumMatrix S data N).comp (datumProjection S data)) ∈
+        (normalizedDescription S labeling α hα hsmall (datumLeft S data) hgood).toSlice.points := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="SelectedFiberLaw.lean.html#L41">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L883">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.PrivateMap</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L911">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeAssemble</a>, <a href="SelectedFiberLaw.lean.html#L44">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumMatrix</a>, <a href="SelectedFiberLaw.lean.html#L47">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumProjection</a></p></li><li id=L92><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.target_assemble_iff</code> <small>line 92</small><div class="doc"><p>On the selected event, the actual full-table target-hit predicate equals
+projected affine equality with the very same normalized coefficient/intercept.</p></div><pre>theorem target_assemble_iff (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (N : AdviceLaw.PrivateMap data)
+    (hN : slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true) :
+    targetHit S k s d r labeling α (AdviceLaw.completeAssemble data N) = true ↔
+      TableKeysRestoration.projectedAnswer S k s d labeling (PaddedLaw.choiceMask data.2.1)
+        (RawPrivateTable.supported (PaddedLaw.choiceMask data.2.1) (ActualGame.names S)
+          data.1.1 (PaddedLaw.choiceSlots data.2.1)) ((datumMatrix S data N).prod data.2.2.1) =
+        datumMatrix S data N (datumProjection S data
+          (normalizedResponse S labeling α hα hsmall (datumLeft S data) hgood).coefficient) +
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="SelectedFiberLaw.lean.html#L41">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L883">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.PrivateMap</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L911">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeAssemble</a>, <a href="TableKeysLemmas.lean.html#L590">OAI.UniqueGamesTheorem.Decoder.TableKeysRestoration.projectedAnswer</a>, <a href="PaddedLaw.lean.html#L530">OAI.UniqueGamesTheorem.Decoder.PaddedLaw.choiceMask</a>, <a href="PaddedLaw.lean.html#L537">OAI.UniqueGamesTheorem.Decoder.PaddedLaw.choiceSlots</a>, <a href="SelectedFiberLaw.lean.html#L44">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumMatrix</a>, <a href="SelectedFiberLaw.lean.html#L47">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumProjection</a></p></li><li id=L128><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.exists_selected_private</code> <small>line 128</small><div class="doc"><p>Positive mass supplies a supporting private coordinate in the selected
+fiber; neither a hidden matrix nor good advice is an additional premise.</p></div><pre>theorem exists_selected_private (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α β : ℝ) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1) (data : Datum S k s d r)
+    (positive : 0 &lt; (law S k s d r β hβ hβ&#x27;).probability
+      (VisibleTransfer.fiberEvent AdviceLaw.completeObserve data (slice S k s d r labeling α))) :
+    ∃ N : AdviceLaw.PrivateMap data,
+      slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransferLemmas.lean.html#L21">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberEvent</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L908">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeObserve</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L883">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.PrivateMap</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L911">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeAssemble</a></p></li><li id=L154><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.good_of_selected_private</code> <small>line 154</small></li><li id=L168><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.selectedPrivateEquiv</code> <small>line 168</small><div class="doc"><p>The actual selected private coordinates are in bijection with the complete
+projected affine slice. The supporting point is used only to state its column
+equations; the canonical visible base still defines the private coordinates.</p></div><pre>def selectedPrivateEquiv (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (Nstar : AdviceLaw.PrivateMap data)
+    (hstar : slice S k s d r labeling α (AdviceLaw.completeAssemble data Nstar) = true) :
+    {N : AdviceLaw.PrivateMap data //
+      slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true} ≃
+      RowErasureSliceQuotient.AffineSlice data.1.2
+        ((normalizedResponse S labeling α hα hsmall (datumLeft S data) hgood).columns.map
+          (datumProjection S data)) (datumMatrix S data Nstar) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="SelectedFiberLaw.lean.html#L41">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L883">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.PrivateMap</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L911">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeAssemble</a>, <a href="SelectedFiberLaw.lean.html#L47">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumProjection</a>, <a href="SelectedFiberLaw.lean.html#L44">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumMatrix</a></p></li><li id=L216><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.selectedPrivateEquiv_val</code> <small>line 216</small></li><li id=L227><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.conditional_eq_transferred</code> <small>line 227</small><div class="doc"><p>Exact conditional target probability, with no assumed uniformity premise.</p></div><pre>theorem conditional_eq_transferred (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (β : ℝ) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (Nstar : AdviceLaw.PrivateMap data)
+    (hstar : slice S k s d r labeling α (AdviceLaw.completeAssemble data Nstar) = true)
+    (positive : 0 &lt; (law S k s d r β hβ hβ&#x27;).probability
+      (VisibleTransfer.fiberEvent AdviceLaw.completeObserve data (slice S k s d r labeling α))) :
+    ((law S k s d r β hβ hβ&#x27;).condition
+      (VisibleTransfer.fiberEvent AdviceLaw.completeObserve data (slice S k s d r labeling α))
+        positive).probability (targetHit S k s d r labeling α) =
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="SelectedFiberLaw.lean.html#L41">OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L883">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.PrivateMap</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L911">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeAssemble</a>, <a href="VisibleTransferLemmas.lean.html#L21">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.fiberEvent</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L908">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeObserve</a></p></li><li id=L300><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.SelectedFiberLaw.visibleWitness_decoding</code> <small>line 300</small><div class="doc"><p>Every complete visible datum selected by the actual witness event pays the
+private-decoding success constant. Good advice and a nonempty transferred
+slice follow from positivity and are not additional hypotheses.</p></div><pre>theorem visibleWitness_decoding (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (β : ℝ) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1) (data : Datum S k s d r)
+    (hvisible : VisibleTransfer.visibleWitness (law S k s d r β hβ hβ&#x27;)
+      AdviceLaw.completeObserve (slice S k s d r labeling α)
+      (targetHit S k s d r labeling α) (α / 4) data = true) :
+    (α / 8) ^ 2 / (2 : ℝ) ^ (s * r) / (2 : ℝ) ^ r ≤
+      ActualConditionalLaw.datumAgreement S labeling (goodPredicate S labeling α hα hsmall) data := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransferLemmas.lean.html#L62">OAI.UniqueGamesTheorem.Decoder.VisibleTransfer.visibleWitness</a>, <a href="ActualAdviceStochasticBridgeLemmas.lean.html#L908">OAI.UniqueGamesTheorem.Decoder.AdviceLaw.completeObserve</a>, <a href="ActualAdviceUpperLemmas.lean.html#L416">OAI.UniqueGamesTheorem.Decoder.ActualConditionalLaw.datumAgreement</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

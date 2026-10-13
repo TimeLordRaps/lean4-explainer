@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceResidualGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceResidualGeometry.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceResidualGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceResidualGeometry.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceResidualGeometry.lean#L1">source</a></p><div class="doc"><p>The fixed residual packet collection uses only endpoints at which
+the reference top is still eligible. Its packets are shorter than that
+top and lie in the reference angular cone. These are the geometric
+hypotheses of the existing reference-line variation estimate.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.not_eligible_above_lastEligible</code> <small>line 16</small></li><li id=L26><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.lastEligible_antitone_precision_global</code> <small>line 26</small><div class="doc"><p>The definition with natural subtraction stays monotone even at
+empty scales that were already ineligible at level zero.</p></div><pre>theorem lastEligible_antitone_precision_global (g : AngularGrid) (cutoff p q : ℝ)
+    (hp : 0 &lt; p) (hq : 0 &lt; q) (hpq : p ≤ q) :
+    g.lastEligible cutoff q hq ≤ g.lastEligible cutoff p hp := by
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L37><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.source_length_stopping_antitone</code> <small>line 37</small></li><li id=L48><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.source_length_residual_variation</code> <small>line 48</small><div class="doc"><p>The precise source stopping map may replace the abstract antitone
+map in the already proved cubic-variation bridge.</p></div><pre>theorem source_length_residual_variation {σ E : Type*} [NormedAddCommGroup E]
+    {N : ℕ} (g : AngularGrid) (cutoff : ℝ) {w : ℝ} (hw : 0 &lt; w)
+    (length : Fin N → ℝ) (hlen : ∀ j, 0 &lt; length j) (horder : Antitone length)
+    (Q : Finset σ) (lengthIndex : σ → Fin N) (value : σ → E) (H : ℕ) :
+    let stop := fun j =&gt; g.lastEligible cutoff (w/length j) (div_pos hw (hlen j))
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L61><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.residual_packet_length_and_cone</code> <small>line 61</small><div class="doc"><p>A shorter stopping time means a strictly shorter physical packet
+than any reference length still eligible at the block endpoint.</p></div><pre>theorem residual_packet_length_and_cone (g : AngularGrid)
+    {w B packetLength referenceLength C packetSlope assignedSlope referenceSlope : ℝ}
+    (hw : 0 &lt; w) (hB : 0 &lt; B) (hp : 0 &lt; packetLength) (hR : 0 &lt; referenceLength)
+    (hzero : g.eligible (g.rootWidth/B^2) (w/packetLength) 0)
+    {upper : ℕ}
+    (hstop : g.lastEligible (g.rootWidth/B^2) (w/packetLength) (div_pos hw hp) &lt; upper)
+    (hreference : g.eligible (g.rootWidth/B^2) (w/referenceLength) upper)
+    (hcell : g.index upper assignedSlope = g.index upper referenceSlope)
+    (hangle : |packetSlope-assignedSlope| ≤ C*(w/packetLength)) :
+    packetLength &lt; referenceLength ∧
+      |packetSlope-referenceSlope| ≤ (C+B^2)*(w/packetLength) := by
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L99><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.fixedPathResidualPackets_geometry</code> <small>line 99</small><div class="doc"><p>Membership in the actual fixed residual collection supplies the
+child-cell condition and the strictly later eligible endpoint.</p></div><pre>theorem fixedPathResidualPackets_geometry {ι σ : Type*} (g : AngularGrid)
+    (tops : Finset ι) (slope precision : ι → ℝ) (packets : Finset σ)
+    (assigned : σ → ι) (length angle : σ → ℝ) (hlen : ∀ q, 0 &lt; length q)
+    {w B referenceLength C : ℝ} (hw : 0 &lt; w) (hB : 0 &lt; B) (hR : 0 &lt; referenceLength)
+    (level : ℕ → ℕ) (count : ℕ) (pathTop : ι)
+    (hprecision : precision pathTop = w/referenceLength)
+    (hreference : ∀ j &lt; count, g.eligible (g.rootWidth/B^2) (precision pathTop) (level (j+1)))
+    (hzero : ∀ q ∈ packets, g.eligible (g.rootWidth/B^2) (w/length q) 0)
+    (hangle : ∀ q ∈ packets, |angle q-slope (assigned q)| ≤ C*(w/length q))
+    {q : σ}
+    (hq : q ∈ g.fixedPathResidualPackets tops slope precision (g.rootWidth/B^2)
+      packets assigned (fun q =&gt; g.lastEligible (g.rootWidth/B^2) (w/length q)
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L124><b>theorem</b> <code>OAI.LipschitzHilbert.AngularGrid.shifted_residual_collection_geometry</code> <small>line 124</small><div class="doc"><p>The source uses all and only blocks preceding its first ineligible
+endpoint. Thus the residual family is fixed before mass stopping or
+evaluation of any spatial point.</p></div><pre>theorem shifted_residual_collection_geometry {ι σ : Type*} {K : ℕ}
+    (g : AngularGrid) (tops : Finset ι) (slope precision : ι → ℝ)
+    (packets : Finset σ) (assigned : σ → ι) (length angle : σ → ℝ)
+    (hlen : ∀ q, 0 &lt; length q)
+    {w B referenceLength C : ℝ} (hw : 0 &lt; w) (hB : 0 &lt; B) (hR : 0 &lt; referenceLength)
+    (hK : 0 &lt; K) (shift : Fin K) (pathTop : ι)
+    (hprecision : precision pathTop = w/referenceLength)
+    (hzero : ∀ q ∈ packets, g.eligible (g.rootWidth/B^2) (w/length q) 0)
+    (hangle : ∀ q ∈ packets, |angle q-slope (assigned q)| ≤ C*(w/length q)) :
+    let terminal := g.firstIneligibleShiftedBlock (g.rootWidth/B^2) (w/referenceLength)
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

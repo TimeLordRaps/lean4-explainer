@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/MatrixGraphMomentBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/MatrixGraphMomentBounds.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>MatrixGraphMomentBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>MatrixGraphMomentBounds.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/MatrixGraphMomentBounds.lean#L1">source</a></p><div class="doc"><h3>Finite matrix samples with bounded graph cost</h3><p>The matrix-stage centralizer identities preserve the two second moments
+and the diagonal fourth moments. Relative irreducibility supplies the
+mixed-moment limits. Thus the bound of ten is attained by an actual
+finite stage and a finite independent sample family.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.KadisonKastler.expect_comp_equiv</code> <small>line 23</small></li><li id=L27><b>theorem</b> <code>OAI.KadisonKastler.expect_pair_comp_equiv</code> <small>line 27</small></li><li id=L35><b>theorem</b> <code>OAI.KadisonKastler.firstMoment_comp_equiv</code> <small>line 35</small></li><li id=L41><b>theorem</b> <code>OAI.KadisonKastler.thirdMoment_comp_equiv</code> <small>line 41</small></li><li id=L48><b>theorem</b> <code>OAI.KadisonKastler.star_matrixOrbitSample</code> <small>line 48</small><div class="doc"><p>Taking adjoints exchanges the two independent matrix samples.</p></div><pre>theorem star_matrixOrbitSample {d : ℕ}
+    (E : Generator.MatrixUnitSystem (Fin d) (H →L[ℂ] H))
+    (x : H →L[ℂ] H) (g : MatrixOrbitIndex d) :
+    star (matrixOrbitSample E x g) = matrixOrbitSample E (star x) g.swap := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="MatrixOrbitSampleLaw.lean.html#L24">OAI.KadisonKastler.MatrixOrbitIndex</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a></p></li><li id=L55><b>theorem</b> <code>OAI.KadisonKastler.state_conj</code> <small>line 55</small><p class="refs">Distinct definitions of this name: <a href="MatrixOrbitSampleLaw.lean.html#L48">OAI/Analysis/KadisonKastler/MatrixOrbitSampleLaw.lean:48</a> (different statement). Qualify references as OAI.KadisonKastler.state_conj@path.</p></li><li id=L73><b>theorem</b> <code>OAI.KadisonKastler.matrixOrbit_right_second</code> <small>line 73</small><div class="doc"><p>Every actual matrix sample has the original right second moment.</p></div><pre>theorem matrixOrbit_right_second (M : VonNeumannAlgebra H) (Ω : H) {d : ℕ}
+    (E : Generator.MatrixUnitSystem (Fin d) (H →L[ℂ] H))
+    (hEM : E.algebra ≤ M.toStarSubalgebra)
+    (hc : ∀ a ∈ E.algebra, ∀ z ∈ M,
+      inner ℂ Ω ((a * z) Ω) = inner ℂ Ω ((z * a) Ω))
+    (x : H →L[ℂ] H) (hx : x ∈ M) (g : MatrixOrbitIndex d) :
+    realVectorState Ω (star (matrixOrbitSample E x g) * matrixOrbitSample E x g) =
+      ‖x Ω‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="MatrixOrbitSampleLaw.lean.html#L24">OAI.KadisonKastler.MatrixOrbitIndex</a>, <a href="VectorStateFourthMoment.lean.html#L25">OAI.KadisonKastler.realVectorState</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a></p></li><li id=L86><b>theorem</b> <code>OAI.KadisonKastler.matrixOrbit_left_second</code> <small>line 86</small><div class="doc"><p>The left second moment is preserved as well.</p></div><pre>theorem matrixOrbit_left_second (M : VonNeumannAlgebra H) (Ω : H) {d : ℕ}
+    (E : Generator.MatrixUnitSystem (Fin d) (H →L[ℂ] H))
+    (hEM : E.algebra ≤ M.toStarSubalgebra)
+    (hc : ∀ a ∈ E.algebra, ∀ z ∈ M,
+      inner ℂ Ω ((a * z) Ω) = inner ℂ Ω ((z * a) Ω))
+    (x : H →L[ℂ] H) (hx : x ∈ M) (g : MatrixOrbitIndex d) :
+    realVectorState Ω (matrixOrbitSample E x g * star (matrixOrbitSample E x g)) =
+      ‖star x Ω‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="../FactorGeneration/MatrixUnits.lean.html#L18">OAI.Generator.MatrixUnitSystem</a>, <a href="MatrixOrbitSampleLaw.lean.html#L24">OAI.KadisonKastler.MatrixOrbitIndex</a>, <a href="VectorStateFourthMoment.lean.html#L25">OAI.KadisonKastler.realVectorState</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a></p></li><li id=L98><b>theorem</b> <code>OAI.KadisonKastler.left_positive_state</code> <small>line 98</small></li><li id=L118><b>theorem</b> <code>OAI.KadisonKastler.matrixOrbit_firstMoment_tendsto</code> <small>line 118</small><div class="doc"><p>The first actual sample pairing converges to the square of its
+right second moment.</p></div><pre>theorem matrixOrbit_firstMoment_tendsto :
+    Tendsto (fun j =&gt; orbitFirstPairMoment Ω (matrixOrbitSample (E j) x)) atTop
+      (𝓝 ((‖x Ω‖ ^ 2) ^ 2)) := by
+…</pre><p class="refs">Mentions: <a href="GraphMomentBounds.lean.html#L98">OAI.KadisonKastler.orbitFirstPairMoment</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a></p></li><li id=L133><b>theorem</b> <code>OAI.KadisonKastler.matrixOrbit_thirdMoment_tendsto</code> <small>line 133</small><div class="doc"><p>The positive mixed pairing converges to the product of the right
+and left second moments.</p></div><pre>theorem matrixOrbit_thirdMoment_tendsto :
+    Tendsto (fun j =&gt; orbitThirdPairMoment Ω (matrixOrbitSample (E j) x)) atTop
+      (𝓝 (‖x Ω‖ ^ 2 * ‖star x Ω‖ ^ 2)) := by
+…</pre><p class="refs">Mentions: <a href="GraphMomentBounds.lean.html#L101">OAI.KadisonKastler.orbitThirdPairMoment</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a></p></li><li id=L148><b>theorem</b> <code>OAI.KadisonKastler.matrixOrbit_graphPairing_tendsto</code> <small>line 148</small><div class="doc"><p>The full off-diagonal cost has its required actual scalar limit.</p></div><pre>theorem matrixOrbit_graphPairing_tendsto (k : ℝ) :
+    Tendsto (fun j =&gt;
+      orbitFirstPairMoment Ω (matrixOrbitSample (E j) x) +
+      2 * orbitThirdPairMoment Ω (matrixOrbitSample (E j) x) +
+      k * (orbitFirstPairMoment Ω (fun g =&gt; star (matrixOrbitSample (E j) x g)) +
+        2 * orbitThirdPairMoment Ω (fun g =&gt; star (matrixOrbitSample (E j) x g)))) atTop
+      (𝓝 ((‖x Ω‖ ^ 2) ^ 2 + k * (‖star x Ω‖ ^ 2) ^ 2 +
+        2 * (k + 1) * ‖x Ω‖ ^ 2 * ‖star x Ω‖ ^ 2)) := by
+…</pre><p class="refs">Mentions: <a href="GraphMomentBounds.lean.html#L98">OAI.KadisonKastler.orbitFirstPairMoment</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a>, <a href="GraphMomentBounds.lean.html#L101">OAI.KadisonKastler.orbitThirdPairMoment</a></p></li><li id=L182><b>theorem</b> <code>OAI.KadisonKastler.exists_matrixOrbit_graphCost_le_ten</code> <small>line 182</small><div class="doc"><p>There is a genuine finite matrix stage and a positive sample size
+whose independently sampled signed graph cost is at most ten.</p></div><pre>theorem exists_matrixOrbit_graphCost_le_ten {k : ℝ} (hk : 1 ≤ k)
+    (hxnorm : ‖x Ω‖ ^ 2 + k * ‖star x Ω‖ ^ 2 = 1) :
+    ∃ j m, 1 ≤ m ∧
+      (𝔼 ω : Fin m → MatrixOrbitIndex (d j), 𝔼 ε : Fin m → Bool,
+        graphMomentCost Ω k
+          (normalizedFiniteSignSum (fun i =&gt; matrixOrbitSample (E j) x (ω i)) ε)) ≤ 10 := by
+…</pre><p class="refs">Mentions: <a href="MatrixOrbitSampleLaw.lean.html#L24">OAI.KadisonKastler.MatrixOrbitIndex</a>, <a href="GraphMomentBounds.lean.html#L29">OAI.KadisonKastler.graphMomentCost</a>, <a href="FiniteSignFourthMoment.lean.html#L254">OAI.KadisonKastler.normalizedFiniteSignSum</a>, <a href="MatrixOrbitSampleLaw.lean.html#L27">OAI.KadisonKastler.matrixOrbitSample</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/SeparableQuotients/PathStabilization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/SeparableQuotients/PathStabilization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">SeparableQuotients</a> / <span>PathStabilization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">SeparableQuotients</a>/<span>PathStabilization.lean</span></code></h1><p class="muted">26 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/SeparableQuotients/PathStabilization.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>lemma</b> <code>OAI.SeparableQuotient.DiscreteDiagonal.exists_stabilizing_subsequence</code> <small>line 13</small><div class="doc"><p>Countably many yes/no tests can be made eventually constant by one
+subsequence. The index set is arbitrary countable, not just natural numbers.</p></div><pre>lemma exists_stabilizing_subsequence {ι : Type*} [Countable ι] (p : ℕ → ι → Prop) :
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ i, ∃ b : Prop,
+      ∀ᶠ n in atTop, p (φ n) i ↔ b := by
+…</pre></li><li id=L35><b>lemma</b> <code>OAI.SeparableQuotient.IncreasingLists.positions_stabilize</code> <small>line 35</small><div class="doc"><p>Pointwise stabilization of membership in increasing finite lists, with an
+infinite limiting set, stabilizes every list position.</p></div><pre>lemma positions_stabilize (len : ℕ → ℕ) (v : ℕ → ℕ → ℕ)
+    (hv : ∀ n, StrictMono (fun i : Fin (len n) =&gt; v n i)) (W : Set ℕ)
+    (hW : W.Infinite)
+    (hmem : ∀ w, ∀ᶠ n in atTop, (∃ i &lt; len n, v n i = w) ↔ w ∈ W) :
+    ∀ i, ∀ᶠ n in atTop, i &lt; len n ∧ v n i = Nat.nth (· ∈ W) i := by
+…</pre></li><li id=L72><b>lemma</b> <code>OAI.SeparableQuotient.IncreasingLists.infinite_of_windows</code> <small>line 72</small><div class="doc"><p>Bounded windows of arbitrarily high eventual hits force the limiting
+membership set to be infinite. The upper window endpoints are essential.</p></div><pre>lemma infinite_of_windows (len : ℕ → ℕ) (v : ℕ → ℕ → ℕ) (W : Set ℕ)
+    (hmem : ∀ w, ∀ᶠ n in atTop, (∃ i &lt; len n, v n i = w) ↔ w ∈ W)
+    (hwin : ∀ B, ∃ T, ∀ᶠ n in atTop, ∃ i &lt; len n, B &lt; v n i ∧ v n i ≤ T) :
+    W.Infinite := by
+…</pre></li><li id=L92><b>lemma</b> <code>OAI.SeparableQuotient.Norming.PrefixValid.support_subset_closure</code> <small>line 92</small></li><li id=L99><b>lemma</b> <code>OAI.SeparableQuotient.Norming.PrefixValid.piece_support_subset_closure</code> <small>line 99</small></li><li id=L106><b>lemma</b> <code>OAI.SeparableQuotient.Norming.PrefixValid.piece_eq_of_code_anchor</code> <small>line 106</small><div class="doc"><p>A retained coordinate in a later piece anchors the compressed code in the
+actual ordinal labels. This is the finite-prefix version of path rigidity.</p></div><pre>lemma PrefixValid.piece_eq_of_code_anchor {P Q : RawPath} {len len&#x27; i j n : ℕ}
+    (hP : PrefixValid P len) (hQ : PrefixValid Q len&#x27;)
+    (hn : n &lt; len) (hn&#x27; : n &lt; len&#x27;) (hij : i &lt; j) (hjn : j ≤ n)
+    (hc : P.code n = Q.code n) (a : Γ)
+    (ha : a ∈ (P.piece j).support) (ha&#x27; : a ∈ Q.closure n) :
+    P.piece i = Q.piece i := by
+…</pre><p class="refs">Mentions: <a href="NormingFamilies.lean.html#L74">OAI.SeparableQuotient.Norming.PrefixValid</a>, <a href="NormingFamilies.lean.html#L10">OAI.SeparableQuotient.Norming.Γ</a></p></li><li id=L125><b>lemma</b> <code>OAI.SeparableQuotient.Norming.finite_paths_stabilize</code> <small>line 125</small><div class="doc"><p>Fixed successor weights and arbitrarily late retained coordinates force
+stabilization of the entire <em>uncropped</em> data, not just coordinatewise limits.</p></div><pre>lemma finite_paths_stabilize {f : Family} (P : ℕ → FinitePath f)
+    (hlen : ∀ i, ∀ᶠ n in atTop, i &lt; (P n).length)
+    (hw : ∀ i, ∃ w, ∀ᶠ n in atTop, (P n).raw.weight i = w)
+    (ha : ∀ i, ∃ j &gt; i, ∃ a : Γ,
+      ∀ᶠ n in atTop, a ∈ ((P n).raw.piece j).support) :
+    ∀ i, ∃ d : Array × ℕ × ℕ, ∀ᶠ n in atTop,
+      (P n).raw.piece i = d.1 ∧ (P n).raw.weight i = d.2.1 ∧
+        (P n).raw.metadata i = d.2.2 := by
+…</pre><p class="refs">Mentions: <a href="NormingFamilies.lean.html#L13">OAI.SeparableQuotient.Norming.Family</a>, <a href="NormingFamilies.lean.html#L97">OAI.SeparableQuotient.Norming.FinitePath</a>, <a href="NormingFamilies.lean.html#L10">OAI.SeparableQuotient.Norming.Γ</a>, <a href="NormingFamilies.lean.html#L11">OAI.SeparableQuotient.Norming.Array</a></p></li><li id=L149><b>lemma</b> <code>OAI.SeparableQuotient.Norming.raw_support_eq_of_prefix</code> <small>line 149</small></li><li id=L157><b>lemma</b> <code>OAI.SeparableQuotient.Norming.raw_code_eq_of_prefix</code> <small>line 157</small></li><li id=L174><b>lemma</b> <code>OAI.SeparableQuotient.Norming.infinite_path_of_stabilized</code> <small>line 174</small><div class="doc"><p>Assemble the pointwise stabilized raw data into an actual infinite path.
+Type-I membership is witnessed by original finite-path pieces, never by an
+assumption that a limit belongs to the norming set.</p></div><pre>lemma infinite_path_of_stabilized {f : Family} (P : ℕ → FinitePath f)
+    (hmem : ∀ n i j, ((P n).piece i).child j ∈ f.norming)
+    (hlen : ∀ i, ∀ᶠ n in atTop, i &lt; (P n).length)
+    (hstable : ∀ i, ∃ d : Array × ℕ × ℕ, ∀ᶠ n in atTop,
+      (P n).raw.piece i = d.1 ∧ (P n).raw.weight i = d.2.1 ∧
+        (P n).raw.metadata i = d.2.2) :
+    ∃ Q : InfinitePath f, ∀ i, ∀ᶠ n in atTop,
+      (P n).raw.piece i = Q.raw.piece i ∧
+      (P n).raw.weight i = Q.raw.weight i ∧
+      (P n).raw.metadata i = Q.raw.metadata i := by
+…</pre><p class="refs">Mentions: <a href="NormingFamilies.lean.html#L13">OAI.SeparableQuotient.Norming.Family</a>, <a href="NormingFamilies.lean.html#L97">OAI.SeparableQuotient.Norming.FinitePath</a>, <a href="NormingFamilies.lean.html#L11">OAI.SeparableQuotient.Norming.Array</a>, <a href="PathLimits.lean.html#L101">OAI.SeparableQuotient.Norming.InfinitePath</a></p></li><li id=L247><b>lemma</b> <code>OAI.SeparableQuotient.Norming.infinite_path_of_fixed_chain</code> <small>line 247</small></li><li id=L265><b>lemma</b> <code>OAI.SeparableQuotient.Norming.PrefixValid.index_le_weight</code> <small>line 265</small></li><li id=L278><b>lemma</b> <code>OAI.SeparableQuotient.Norming.path_of_recurrent_windows</code> <small>line 278</small><div class="doc"><p>A compactness statement sufficient for the four-hits contradiction. Unlike
+weak-star compactness alone, it recovers one actual infinite coded path. Every
+high window has a finite upper endpoint and a finite possible coordinate set.</p></div><pre>lemma path_of_recurrent_windows {f : Family} (P : ℕ → FinitePath f)
+    (hmem : ∀ n i j, ((P n).piece i).child j ∈ f.norming)
+    (hwin : ∀ B : ℕ, ∃ T : ℕ, ∃ s : Finset Γ, ∀ᶠ n in atTop,
+      ∃ i &lt; (P n).length, B &lt; (P n).raw.weight i ∧ (P n).raw.weight i ≤ T ∧
+        ∃ a ∈ s, a ∈ ((P n).raw.piece i).support) :
+    ∃ (φ : ℕ → ℕ) (Q : InfinitePath f), StrictMono φ ∧ ∀ i, ∀ᶠ n in atTop,
+      i &lt; (P (φ n)).length ∧ (P (φ n)).raw.piece i = Q.raw.piece i ∧
+      (P (φ n)).raw.weight i = Q.raw.weight i ∧
+      (P (φ n)).raw.metadata i = Q.raw.metadata i := by
+…</pre><p class="refs">Mentions: <a href="NormingFamilies.lean.html#L13">OAI.SeparableQuotient.Norming.Family</a>, <a href="NormingFamilies.lean.html#L97">OAI.SeparableQuotient.Norming.FinitePath</a>, <a href="NormingFamilies.lean.html#L10">OAI.SeparableQuotient.Norming.Γ</a>, <a href="PathLimits.lean.html#L101">OAI.SeparableQuotient.Norming.InfinitePath</a></p></li><li id=L339><b>lemma</b> <code>OAI.SeparableQuotient.Norming.Family.m_mono</code> <small>line 339</small></li><li id=L342><b>lemma</b> <code>OAI.SeparableQuotient.Norming.FinitePath.at_piece</code> <small>line 342</small></li><li id=L358><b>lemma</b> <code>OAI.SeparableQuotient.Norming.FinitePath.coefficient_le</code> <small>line 358</small></li><li id=L366><b>def</b> <code>OAI.SeparableQuotient.Norming.InfinitePath.coordinateValue</code> <small>line 366</small><div class="doc"><p>Coordinate value of the bounded infinite path functional.</p></div><pre>def InfinitePath.coordinateValue {f : Family} (P : InfinitePath f) (a : Γ) : ℚ :=
+…</pre><p class="refs">Mentions: <a href="NormingFamilies.lean.html#L13">OAI.SeparableQuotient.Norming.Family</a>, <a href="PathLimits.lean.html#L101">OAI.SeparableQuotient.Norming.InfinitePath</a>, <a href="NormingFamilies.lean.html#L10">OAI.SeparableQuotient.Norming.Γ</a></p></li><li id=L369><b>lemma</b> <code>OAI.SeparableQuotient.Norming.InfinitePath.prefix_coordinateValue</code> <small>line 369</small></li><li id=L373><b>lemma</b> <code>OAI.SeparableQuotient.Norming.InfinitePath.coordinateValue_at_hit</code> <small>line 373</small></li><li id=L379><b>lemma</b> <code>OAI.SeparableQuotient.Norming.InfinitePath.coordinateValue_zero</code> <small>line 379</small></li><li id=L388><b>lemma</b> <code>OAI.SeparableQuotient.Norming.stabilized_coordinate_tendsto</code> <small>line 388</small><div class="doc"><p>Stabilization is on exact actual uncropped pieces. Any extra pieces escape
+in weight, and their coordinate coefficients tend to zero.</p></div><pre>lemma stabilized_coordinate_tendsto {f : Family} (P : ℕ → FinitePath f)
+    (hm : ∀ n i j, ((P n).piece i).child j ∈ f.norming) (Q : InfinitePath f)
+    (hst : ∀ i, ∀ᶠ n in atTop, i &lt; (P n).length ∧
+      (P n).raw.piece i = Q.raw.piece i ∧ (P n).raw.weight i = Q.raw.weight i)
+    (a : Γ) : Tendsto (fun n =&gt; ((P n).value a : ℝ)) atTop (𝓝 (Q.coordinateValue a : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="NormingFamilies.lean.html#L13">OAI.SeparableQuotient.Norming.Family</a>, <a href="NormingFamilies.lean.html#L97">OAI.SeparableQuotient.Norming.FinitePath</a>, <a href="PathLimits.lean.html#L101">OAI.SeparableQuotient.Norming.InfinitePath</a>, <a href="NormingFamilies.lean.html#L10">OAI.SeparableQuotient.Norming.Γ</a></p></li><li id=L439><b>lemma</b> <code>OAI.SeparableQuotient.ActualSpace.pathFunctional_finite</code> <small>line 439</small></li><li id=L449><b>lemma</b> <code>OAI.SeparableQuotient.ActualSpace.finitePath_mem_full</code> <small>line 449</small></li><li id=L455><b>def</b> <code>OAI.SeparableQuotient.ActualSpace.finitePathFunctional</code> <small>line 455</small></li><li id=L459><b>lemma</b> <code>OAI.SeparableQuotient.ActualSpace.norm_finitePathFunctional_le</code> <small>line 459</small></li><li id=L463><b>lemma</b> <code>OAI.SeparableQuotient.ActualSpace.stabilized_path_tendsto</code> <small>line 463</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

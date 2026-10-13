@@ -1,0 +1,108 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/CutVariation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/CutVariation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>CutVariation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>CutVariation.lean</span></code></h1><p class="muted">24 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/CutVariation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem358.hasDerivAt_integral_cut_difference_of_chart</code> <small>line 15</small><div class="doc"><p>Transport the moving-halfspace derivative through a measure-preserving
+coordinate chart. The affine geometry enters only through the exact threshold
+identity, while the derivative and all integration steps are proved here.</p></div><pre>theorem hasDerivAt_integral_cut_difference_of_chart
+    {X V : Type*} [MeasurableSpace X] [MeasurableSpace V]
+    {μ : Measure X} [SFinite μ] {ρ : Measure V}
+    {chart : X × ℝ → V} (hchart : MeasurePreserving chart (μ.prod volume) ρ)
+    {f ell : ℝ → V → ℝ} {speed : ℝ → X → ℝ} {A B slope trace : X → ℝ}
+    {s : Set ℝ} (hs : s ∈ nhds 0)
+    (hf : ∀ h, Measurable (f h)) (hell : ∀ h, Measurable (ell h))
+    (hspeed : ∀ h, Measurable (speed h))
+    (hlevel : ∀ h ∈ s, ∀ p : X × ℝ,
+      0 ≤ ell h (chart p) ↔ -(h * speed h p.1) ≤ p.2)
+    (hspeedlim : ∀ᵐ x ∂μ, Tendsto (fun h =&gt; speed h x) (nhds 0) (nhds (slope x)))
+    (hlim : ∀ᵐ x ∂μ, ∀ u : ℝ,
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.prod_range_sub_prod_range</code> <small>line 75</small><div class="doc"><p>Exact finite telescoping formula, changing the factors one at a time.</p></div><pre>theorem prod_range_sub_prod_range {R : Type*} [CommRing R]
+    (a b : ℕ → R) (n : ℕ) :
+    (∏ i ∈ Finset.range n, a i) - (∏ i ∈ Finset.range n, b i) =
+      ∑ i ∈ Finset.range n,
+        (a i - b i) * (∏ j ∈ Finset.range i, a j) *
+          ∏ j ∈ Finset.Ico (i + 1) n, b j := by
+…</pre></li><li id=L102><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.indicator_finite_intersection</code> <small>line 102</small><div class="doc"><p>The indicator of a finite intersection factors into the individual indicators.</p></div><pre>theorem indicator_finite_intersection {X : Type*} (A : ℕ → Set X) (n : ℕ) (x : X) :
+    ({x | ∀ i &lt; n, x ∈ A i}.indicator (fun _ =&gt; (1 : ℝ))) x =
+      ∏ i ∈ Finset.range n, (A i).indicator (fun _ =&gt; (1 : ℝ)) x := by
+…</pre></li><li id=L120><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.indicator_intersection_sub</code> <small>line 120</small><div class="doc"><p>Each term changes one cut; all other cuts appear only as bounded indicator factors.</p></div><pre>theorem indicator_intersection_sub {X : Type*} (A B : ℕ → Set X) (n : ℕ) (x : X) :
+    ({x | ∀ i &lt; n, x ∈ A i}.indicator (fun _ =&gt; (1 : ℝ))) x -
+      ({x | ∀ i &lt; n, x ∈ B i}.indicator (fun _ =&gt; (1 : ℝ))) x =
+    ∑ i ∈ Finset.range n,
+      ((A i).indicator (fun _ =&gt; (1 : ℝ)) x - (B i).indicator (fun _ =&gt; (1 : ℝ)) x) *
+        (∏ j ∈ Finset.range i, (A j).indicator (fun _ =&gt; (1 : ℝ)) x) *
+        ∏ j ∈ Finset.Ico (i + 1) n, (B j).indicator (fun _ =&gt; (1 : ℝ)) x := by
+…</pre></li><li id=L131><b>def</b> <code>OAI.Problem358.FiniteIntersectionVariation.cutTerm</code> <small>line 131</small><div class="doc"><p>Signed contribution from changing one cut in the finite intersection.</p></div><pre>def cutTerm {X : Type*} (A B : ℕ → Set X) (n i : ℕ) (x : X) : ℝ :=
+…</pre></li><li id=L136><b>lemma</b> <code>OAI.Problem358.FiniteIntersectionVariation.norm_indicator_one_le</code> <small>line 136</small></li><li id=L141><b>lemma</b> <code>OAI.Problem358.FiniteIntersectionVariation.norm_cutTerm_le</code> <small>line 141</small></li><li id=L163><b>lemma</b> <code>OAI.Problem358.FiniteIntersectionVariation.measurable_cutTerm</code> <small>line 163</small></li><li id=L174><b>lemma</b> <code>OAI.Problem358.FiniteIntersectionVariation.integrable_cutTerm_mul</code> <small>line 174</small></li><li id=L182><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.integral_indicator_intersection_sub</code> <small>line 182</small><div class="doc"><p>Weighted integral form of finite-intersection telescoping.</p></div><pre>theorem integral_indicator_intersection_sub (A B : ℕ → Set X) (n : ℕ)
+    (hA : ∀ j, MeasurableSet (A j)) (hB : ∀ j, MeasurableSet (B j))
+    {w : X → ℝ} (hw : Integrable w μ) :
+    (∫ x, (({x | ∀ i &lt; n, x ∈ A i}.indicator (fun _ =&gt; (1 : ℝ))) x -
+        ({x | ∀ i &lt; n, x ∈ B i}.indicator (fun _ =&gt; (1 : ℝ))) x) * w x ∂μ) =
+      ∑ i ∈ Finset.range n, ∫ x, cutTerm A B n i x * w x ∂μ := by
+…</pre><p class="refs">Mentions: <a href="CutVariation.lean.html#L131">OAI.Problem358.FiniteIntersectionVariation.cutTerm</a></p></li><li id=L197><b>lemma</b> <code>OAI.Problem358.FiniteIntersectionVariation.measurableSet_finiteIntersection</code> <small>line 197</small></li><li id=L207><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.integral_intersection_sub_integral_intersection</code> <small>line 207</small><div class="doc"><p>Difference of weighted intersection integrals is the sum of independent cut variations.</p></div><pre>theorem integral_intersection_sub_integral_intersection (A B : ℕ → Set X) (n : ℕ)
+    (hA : ∀ j, MeasurableSet (A j)) (hB : ∀ j, MeasurableSet (B j))
+    {w : X → ℝ} (hw : Integrable w μ) :
+    (∫ x in {x | ∀ i &lt; n, x ∈ A i}, w x ∂μ) -
+      (∫ x in {x | ∀ i &lt; n, x ∈ B i}, w x ∂μ) =
+      ∑ i ∈ Finset.range n, ∫ x, cutTerm A B n i x * w x ∂μ := by
+…</pre><p class="refs">Mentions: <a href="CutVariation.lean.html#L131">OAI.Problem358.FiniteIntersectionVariation.cutTerm</a></p></li><li id=L229><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.hasDerivAt_intersection_integral</code> <small>line 229</small><div class="doc"><p>Reassemble derivatives of signed single-cut contributions into the derivative of a cell integral.</p></div><pre>theorem hasDerivAt_intersection_integral (A : ℝ → ℕ → Set X) (n : ℕ)
+    (hA : ∀ t i, MeasurableSet (A t i)) {w : X → ℝ} (hw : Integrable w μ)
+    (d : ℕ → ℝ)
+    (hd : ∀ i &lt; n, HasDerivAt
+      (fun t : ℝ =&gt; ∫ x, cutTerm (A t) (A 0) n i x * w x ∂μ) (d i) 0) :
+    HasDerivAt (fun t : ℝ =&gt; ∫ x in {x | ∀ i &lt; n, x ∈ A t i}, w x ∂μ)
+      (∑ i ∈ Finset.range n, d i) 0 := by
+…</pre><p class="refs">Mentions: <a href="CutVariation.lean.html#L131">OAI.Problem358.FiniteIntersectionVariation.cutTerm</a></p></li><li id=L251><b>lemma</b> <code>OAI.Problem358.FiniteIntersectionVariation.integrable_cutTerm_smul</code> <small>line 251</small></li><li id=L259><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.integral_intersection_sub_integral_intersection_vector</code> <small>line 259</small><div class="doc"><p>Vector-valued version, in particular applicable to unnormalized cell moments.</p></div><pre>theorem integral_intersection_sub_integral_intersection_vector
+    (A B : ℕ → Set X) (n : ℕ)
+    (hA : ∀ j, MeasurableSet (A j)) (hB : ∀ j, MeasurableSet (B j))
+    {w : X → V} (hw : Integrable w μ) :
+    (∫ x in {x | ∀ i &lt; n, x ∈ A i}, w x ∂μ) -
+      (∫ x in {x | ∀ i &lt; n, x ∈ B i}, w x ∂μ) =
+      ∑ i ∈ Finset.range n, ∫ x, cutTerm A B n i x • w x ∂μ := by
+…</pre><p class="refs">Mentions: <a href="CutVariation.lean.html#L131">OAI.Problem358.FiniteIntersectionVariation.cutTerm</a></p></li><li id=L288><b>theorem</b> <code>OAI.Problem358.FiniteIntersectionVariation.hasDerivAt_intersection_integral_vector</code> <small>line 288</small><div class="doc"><p>Reassemble single-cut derivatives for vector-valued integrals, including cell moments.</p></div><pre>theorem hasDerivAt_intersection_integral_vector (A : ℝ → ℕ → Set X) (n : ℕ)
+    (hA : ∀ t i, MeasurableSet (A t i)) {w : X → V} (hw : Integrable w μ)
+    (d : ℕ → V)
+    (hd : ∀ i &lt; n, HasDerivAt
+      (fun t : ℝ =&gt; ∫ x, cutTerm (A t) (A 0) n i x • w x ∂μ) (d i) 0) :
+    HasDerivAt (fun t : ℝ =&gt; ∫ x in {x | ∀ i &lt; n, x ∈ A t i}, w x ∂μ)
+      (∑ i ∈ Finset.range n, d i) 0 := by
+…</pre><p class="refs">Mentions: <a href="CutVariation.lean.html#L131">OAI.Problem358.FiniteIntersectionVariation.cutTerm</a></p></li><li id=L322><b>theorem</b> <code>OAI.Problem358.norm_indicator_iInter_sub_le_sum</code> <small>line 322</small><div class="doc"><p>Changing membership in a finite intersection requires changing membership
+in at least one cut. This weighted pointwise form also applies to signed moments.</p></div><pre>theorem norm_indicator_iInter_sub_le_sum
+    {ι X F : Type*} [Fintype ι] [NormedAddCommGroup F]
+    (A B : ι → Set X) (f : X → F) (x : X) :
+    ‖(⋂ i, A i).indicator f x - (⋂ i, B i).indicator f x‖ ≤
+      ∑ i, ‖(A i).indicator f x - (B i).indicator f x‖ := by
+…</pre></li><li id=L356><b>theorem</b> <code>OAI.Problem358.norm_integral_iInter_sub_le_sum</code> <small>line 356</small><div class="doc"><p>The total variation of a finite-cut weighted integral is bounded by the
+sum of the individual weighted cut variations.</p></div><pre>theorem norm_integral_iInter_sub_le_sum
+    {ι X : Type*} [Fintype ι] [MeasurableSpace X] {μ : Measure X}
+    {A B : ι → Set X} {f : X → ℝ}
+    (hA : ∀ i, MeasurableSet (A i)) (hB : ∀ i, MeasurableSet (B i))
+    (hf : Integrable f μ) :
+    ‖(∫ x in ⋂ i, A i, f x ∂μ) - (∫ x in ⋂ i, B i, f x ∂μ)‖ ≤
+      ∑ i, ∫ x, ‖(A i).indicator f x - (B i).indicator f x‖ ∂μ := by
+…</pre></li><li id=L383><b>theorem</b> <code>OAI.Problem358.lipschitzOnWith_integral_iInter_of_cutL1</code> <small>line 383</small><div class="doc"><p>Finite intersections preserve quantitative Lipschitz control when each cut
+is controlled in weighted <code>L¹</code>. No differentiation or nonnegative density premise
+is assumed, so both cell mass and cell moments fit this interface.</p></div><pre>theorem lipschitzOnWith_integral_iInter_of_cutL1
+    {ι X A : Type*} [Fintype ι] [MeasurableSpace X] [PseudoMetricSpace A]
+    {μ : Measure X} {S : Set A} {cuts : A → ι → Set X} {f : X → ℝ}
+    (C : ι → ℝ≥0) (hf : Integrable f μ)
+    (hcuts : ∀ a ∈ S, ∀ i, MeasurableSet (cuts a i))
+    (hcut : ∀ a ∈ S, ∀ b ∈ S, ∀ i,
+      (∫ x, ‖(cuts a i).indicator f x - (cuts b i).indicator f x‖ ∂μ) ≤
+        C i * dist a b) :
+    LipschitzOnWith (∑ i, C i)
+      (fun a =&gt; ∫ x in ⋂ i, cuts a i, f x ∂μ) S := by
+…</pre></li><li id=L416><b>def</b> <code>OAI.Problem358.FiniteCellVariation.remainingIndicator</code> <small>line 416</small><div class="doc"><p>The unchanged factors in the one-cut-at-a-time expansion of a cell.</p></div><pre>def remainingIndicator {V : Type*} (ell : ℝ → ℕ → V → ℝ)
+    (n i : ℕ) (h : ℝ) (v : V) : ℝ :=
+…</pre></li><li id=L421><b>lemma</b> <code>OAI.Problem358.FiniteCellVariation.norm_remainingIndicator_le</code> <small>line 421</small></li><li id=L435><b>lemma</b> <code>OAI.Problem358.FiniteCellVariation.measurable_remainingIndicator</code> <small>line 435</small></li><li id=L445><b>lemma</b> <code>OAI.Problem358.FiniteCellVariation.integrable_remainingIndicator_mul</code> <small>line 445</small></li><li id=L457><b>theorem</b> <code>OAI.Problem358.FiniteCellVariation.hasDerivAt_cell_integral_of_face_charts</code> <small>line 457</small><div class="doc"><p>Scalar weighted cell differentiation assembled from measure-preserving face
+charts. All ambient integrability and finite-intersection algebra are discharged
+here; the remaining hypotheses are exclusively the local geometry, trace, and
+domination data of the individual faces. The chart spaces may depend on the face.</p></div><pre>theorem hasDerivAt_cell_integral_of_face_charts
+    {V : Type*} [MeasurableSpace V] {ρ : Measure V}
+    {X : ℕ → Type*} [∀ i, MeasurableSpace (X i)]
+    {μ : ∀ i, Measure (X i)} [∀ i, SFinite (μ i)]
+    (ell : ℝ → ℕ → V → ℝ) (n : ℕ)
+    (hell : ∀ h i, Measurable (ell h i))
+    {w : V → ℝ} (hwM : Measurable w) (hw : Integrable w ρ)
+    (chart : ∀ i, X i × ℝ → V)
+    (hchart : ∀ i &lt; n, MeasurePreserving (chart i) ((μ i).prod volume) ρ)
+    (speed : ∀ i, ℝ → X i → ℝ)
+    (A B slope trace : ∀ i, X i → ℝ) (s : ℕ → Set ℝ)
+    (hs : ∀ i &lt; n, s i ∈ nhds 0)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Entropy/SparseObservationEntropy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Entropy/SparseObservationEntropy.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Entropy</a> / <span>SparseObservationEntropy.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Entropy</a>/<span>SparseObservationEntropy.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Entropy/SparseObservationEntropy.lean#L1">source</a></p><div class="doc"><h3>Entropy budgets for observations on sparse sections</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>lemma</b> <code>OAI.DukePrimeDegree.summable_option_of_summable_some</code> <small>line 14</small></li><li id=L24><b>theorem</b> <code>OAI.DukePrimeDegree.sparse_distribution_information_le</code> <small>line 24</small><div class="doc"><p>A row-wise budget controls both the rare-label mass and its entropy.</p></div><pre>theorem sparse_distribution_information_le (K : ℕ → ℕ)
+    (p : Option (Σ n : ℕ, Fin (K n)) → ℝ)
+    (hp : ∀ z, 0 ≤ p z) (hp1 : ∀ z, p z ≤ 1)
+    (hs : Summable p) (hsum : ∑&#x27; z, p z=1)
+    (w : ℕ → ℝ) (hw : ∀ n, 0 ≤ w n) (hws : Summable w)
+    (hsmall : ∀ n (i : Fin (K n)), p (some ⟨n,i⟩) ≤ w n/(K n+1:ℝ))
+    (hinfo : ∀ n (i : Fin (K n)),
+      Real.negMulLog (p (some ⟨n,i⟩)) ≤ w n/(K n+1:ℝ)) :
+    Summable (fun z =&gt; Real.negMulLog (p z)) ∧
+      (∑&#x27; z, Real.negMulLog (p z)) ≤ 2*∑&#x27; n, w n := by
+…</pre></li><li id=L79><b>lemma</b> <code>OAI.DukePrimeDegree.exists_small_mass_information_budget</code> <small>line 79</small></li><li id=L99><b>theorem</b> <code>OAI.DukePrimeDegree.exists_sparse_distribution_budget</code> <small>line 99</small><div class="doc"><p>The finite label cardinalities may grow arbitrarily fast: their
+section masses can be chosen afterwards to absorb their Shannon cost.</p></div><pre>theorem exists_sparse_distribution_budget (K : ℕ → ℕ) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ δ : ℕ → ℝ, (∀ n, 0 &lt; δ n) ∧ Summable δ ∧
+      (∑&#x27; n, δ n) ≤ ε/4 ∧
+      ∀ p : Option (Σ n : ℕ, Fin (K n)) → ℝ,
+        (∀ z, 0 ≤ p z) → (∀ z, p z ≤ 1) → Summable p → (∑&#x27; z, p z)=1 →
+        (∀ n (i : Fin (K n)), p (some ⟨n,i⟩) ≤ δ n) →
+        Summable (fun z =&gt; Real.negMulLog (p z)) ∧
+          (∑&#x27; z, Real.negMulLog (p z)) &lt; ε := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

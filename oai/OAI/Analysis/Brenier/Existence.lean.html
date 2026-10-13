@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Existence.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Existence.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Existence.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Existence.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Existence.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Problem358.exists_unique_optimal_map_uniform_atomic</code> <small>line 21</small><div class="doc"><p>Existence and uniqueness among all quadratic transport plans for an arbitrary
+strictly positive finite atomic target, with the exact uniform source definition.
+The proof constructs the cell masses variationally rather than assuming them.</p></div><pre>theorem exists_unique_optimal_map_uniform_atomic
+    (K : Set (E d)) [IsProbabilityMeasure (uniformMeasure K)]
+    (hK : IsCompact K) (y : ι → E d) (hinj : Function.Injective y)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1) :
+    ∃ T : E d → E d,
+      IsUniqueQuadraticOptimalMap (uniformMeasure K)
+        (∑ i, ENNReal.ofReal (m i) • Measure.dirac (y i)) T := by
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.Problem358.exists_unique_optimal_map_uniform_finite_supported</code> <small>line 44</small><div class="doc"><p>The finite-target existence theorem in a presentation-free form.</p></div><pre>theorem exists_unique_optimal_map_uniform_finite_supported
+    (K : Set (E d)) (hK : IsCompact K) (hinterior : (interior K).Nonempty)
+    (μ : Measure (E d)) [IsProbabilityMeasure μ]
+    {F : Set (E d)} (hF : F.Finite) (hμ : IsSupported μ F) :
+    ∃ T : E d → E d, IsUniqueQuadraticOptimalMap (uniformMeasure K) μ T := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.Problem358.exists_uniform_atomic_map_and_potential</code> <small>line 65</small><div class="doc"><p>Finite-target existence together with a globally convex normalized Lipschitz
+potential and its pointwise supporting-slope inequality.</p></div><pre>theorem exists_uniform_atomic_map_and_potential
+    (K : Set (E d)) [IsProbabilityMeasure (uniformMeasure K)]
+    (hK : IsCompact K) (y : ι → E d) (hinj : Function.Injective y)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (L : NNReal) (hL : ∀ i, ‖y i‖ ≤ L) (x₀ : E d) :
+    ∃ (u : E d → ℝ) (T : E d → E d),
+      IsUniqueQuadraticOptimalMap (uniformMeasure K)
+        (∑ i, ENNReal.ofReal (m i) • Measure.dirac (y i)) T ∧
+      ConvexOn ℝ Set.univ u ∧ LipschitzWith L u ∧ u x₀ = 0 ∧
+      (∀ x, T x ∈ Set.range y) ∧
+      ∀ x z, u x + ⟪T x, z - x⟫ ≤ u z := by
+…</pre></li><li id=L108><b>theorem</b> <code>OAI.Problem358.exists_uniform_finite_map_and_potential</code> <small>line 108</small><div class="doc"><p>Presentation-free finite-source data for compactness/approximation arguments.</p></div><pre>theorem exists_uniform_finite_map_and_potential
+    (K : Set (E d)) (hK : IsCompact K) (hinterior : (interior K).Nonempty)
+    (μ : Measure (E d)) [IsProbabilityMeasure μ]
+    {F Y : Set (E d)} (hF : F.Finite) (hFY : F ⊆ Y) (hμ : IsSupported μ F)
+    (L : NNReal) (hL : ∀ z ∈ Y, ‖z‖ ≤ L) (x₀ : E d) :
+    ∃ (u : E d → ℝ) (T : E d → E d),
+      IsUniqueQuadraticOptimalMap (uniformMeasure K) μ T ∧
+      ConvexOn ℝ Set.univ u ∧ LipschitzWith L u ∧ u x₀ = 0 ∧
+      (∀ x, T x ∈ Y) ∧ ∀ x z, u x + ⟪T x, z - x⟫ ≤ u z := by
+…</pre></li><li id=L143><b>theorem</b> <code>OAI.Problem358.exists_unique_optimal_map_of_approximating_potentials</code> <small>line 143</small><div class="doc"><p>Passing normalized convex supporting potentials and their maps to the limit gives a
+unique optimal map with the prescribed target law. No stability estimate is required here.</p></div><pre>theorem exists_unique_optimal_map_of_approximating_potentials
+    {d : ℕ} {K Y : Set (E d)} {μ : Measure (E d)}
+    [IsFiniteMeasure (uniformMeasure K)] [IsFiniteMeasure μ]
+    (hK : IsCompact K) (hKconv : Convex ℝ K) (hY : IsCompact Y)
+    (hμ : IsSupported μ Y) (x₀ : E d) (hx₀ : x₀ ∈ K)
+    (uₙ : ℕ → E d → ℝ) (Tₙ Qₙ : ℕ → E d → E d) (L : ℝ≥0)
+    (hLip : ∀ n, LipschitzOnWith L (uₙ n) K)
+    (hconv : ∀ n, ConvexOn ℝ K (uₙ n))
+    (hnormal : ∀ n, uₙ n x₀ = 0)
+    (hTmeas : ∀ n, Measurable (Tₙ n)) (hQmeas : ∀ n, Measurable (Qₙ n))
+    (hmem : ∀ n, ∀ᵐ x ∂uniformMeasure K, Tₙ n x ∈ Y)
+    (hs : ∀ n, ∀ᵐ x ∂uniformMeasure K, ∀ z ∈ K,
+…</pre></li><li id=L176><b>theorem</b> <code>OAI.Problem358.exists_unique_optimal_map_of_simpleFunc_potentials</code> <small>line 176</small><div class="doc"><p>Reduction of general optimal-map existence to a uniformly Lipschitz convex-potential
+construction for finite-range quantizations of the target.</p></div><pre>theorem exists_unique_optimal_map_of_simpleFunc_potentials
+    {d : ℕ} {K Y : Set (E d)} {μ : Measure (E d)}
+    [IsFiniteMeasure (uniformMeasure K)] [IsFiniteMeasure μ]
+    (hK : IsCompact K) (hKconv : Convex ℝ K) (hY : IsCompact Y) (hYne : Y.Nonempty)
+    (hμ : IsSupported μ Y) (x₀ : E d) (hx₀ : x₀ ∈ K) (L : ℝ≥0)
+    (hfinite : ∀ q : SimpleFunc (E d) (E d), (∀ x, q x ∈ Y) →
+      ∃ (u : E d → ℝ) (T : E d → E d), LipschitzOnWith L u K ∧
+        ConvexOn ℝ K u ∧ u x₀ = 0 ∧ Measurable T ∧
+        (∀ᵐ x ∂uniformMeasure K, T x ∈ Y) ∧
+        (∀ᵐ x ∂uniformMeasure K, ∀ z ∈ K, u x + inner ℝ (T x) (z - x) ≤ u z) ∧
+        Measure.map T (uniformMeasure K) = Measure.map q μ) :
+    ∃ T : E d → E d, IsUniqueQuadraticOptimalMap (uniformMeasure K) μ T := by
+…</pre></li><li id=L206><b>theorem</b> <code>OAI.Problem358.exists_unique_optimal_map_uniform_compact</code> <small>line 206</small><div class="doc"><p>General Brenier existence and uniqueness among all quadratic transport plans for
+uniform compact convex sources and arbitrary compactly supported probability targets.</p></div><pre>theorem exists_unique_optimal_map_uniform_compact
+    {d : ℕ} {K Y : Set (E d)}
+    (hK : IsCompact K) (hKconv : Convex ℝ K) (hInterior : (interior K).Nonempty)
+    (hY : IsCompact Y) (hYne : Y.Nonempty)
+    (μ : Measure (E d)) [IsProbabilityMeasure μ] (hμ : IsSupported μ Y) :
+    ∃ T : E d → E d, IsUniqueQuadraticOptimalMap (uniformMeasure K) μ T := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

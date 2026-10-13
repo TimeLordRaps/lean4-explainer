@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/BlockRestriction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/BlockRestriction.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>BlockRestriction.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>BlockRestriction.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/BlockRestriction.lean#L1">source</a></p><div class="doc"><p>Restricting increasing common matchings to arbitrary contiguous intervals.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.BlockRestriction.card_le_lcs_slices</code> <small>line 19</small><div class="doc"><p>Restriction to any selected set of matched pairs lying in two specified
+intervals has size at most the LCS of the corresponding list slices.
+The intervals may touch or exceed the list boundary; no artificial positivity
+or nonempty-matching assumption is needed.</p></div><pre>theorem card_le_lcs_slices (x y : List α) {n : ℕ}
+    (u v : Fin n → ℕ) (hu : StrictMono u) (hv : StrictMono v)
+    (hxu : ∀ t, u t &lt; x.length) (hyv : ∀ t, v t &lt; y.length)
+    (heq : ∀ t, x[u t]&#x27;(hxu t) = y[v t]&#x27;(hyv t))
+    (s : Finset (Fin n)) (a b A B : ℕ)
+    (hsu : ∀ t ∈ s, a ≤ u t ∧ u t &lt; a + A)
+    (hsv : ∀ t ∈ s, b ≤ v t ∧ v t &lt; b + B) :
+    s.card ≤ lcs ((x.drop a).take A) ((y.drop b).take B) := by
+…</pre><p class="refs">Mentions: <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a></p></li><li id=L63><b>lemma</b> <code>OAI.TreeEdit.BinaryLower.BlockRestriction.row_bounds</code> <small>line 63</small><div class="doc"><p>The quotient convention in the tagged-row proof identifies a contiguous
+interval of width <code>m * B</code>; the order <code>p / B / m</code> is retained literally.</p></div><pre>lemma row_bounds {p m B r : ℕ} (hm : 0 &lt; m) (hB : 0 &lt; B)
+    (hrow : p / B / m = r) :
+    r * (m * B) ≤ p ∧ p &lt; r * (m * B) + m * B := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.BlockRestriction.card_filter_rows_le_lcs</code> <small>line 74</small><div class="doc"><p>The exact row-pair restriction used in ordered-tag matching arguments.
+No row-boundary alignment of the original matching is assumed.</p></div><pre>theorem card_filter_rows_le_lcs (x y : List α) {n : ℕ}
+    (u v : Fin n → ℕ) (hu : StrictMono u) (hv : StrictMono v)
+    (hxu : ∀ t, u t &lt; x.length) (hyv : ∀ t, v t &lt; y.length)
+    (heq : ∀ t, x[u t]&#x27;(hxu t) = y[v t]&#x27;(hyv t))
+    (m B a b : ℕ) (hm : 0 &lt; m) (hB : 0 &lt; B) :
+    (Finset.univ.filter (fun t =&gt; u t / B / m = a ∧ v t / B / m = b)).card ≤
+      lcs ((x.drop (a * (m * B))).take (m * B))
+        ((y.drop (b * (m * B))).take (m * B)) := by
+…</pre><p class="refs">Mentions: <a href="../TreeEdit/Model.lean.html#L47">OAI.TreeEdit.lcs</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

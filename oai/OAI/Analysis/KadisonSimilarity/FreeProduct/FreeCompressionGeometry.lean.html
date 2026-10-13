@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/FreeCompressionGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/FreeCompressionGeometry.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>FreeCompressionGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>FreeCompressionGeometry.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/FreeCompressionGeometry.lean#L1">source</a></p><div class="doc"><p>The overlap of a small corner with words starting in the other free
+factor. The estimate follows from the displayed tensor geometry.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.KadisonSimilarity.norm_hilbertTensorInsert_le</code> <small>line 18</small></li><li id=L25><b>theorem</b> <code>OAI.KadisonSimilarity.hilbertTensorInsert_adjoint_comp</code> <small>line 25</small><div class="doc"><p>The unit vector insertion is an isometry, expressed by its adjoint.</p></div><pre>theorem hilbertTensorInsert_adjoint_comp (Ω : E) (hΩ : ‖Ω‖ = 1) :
+    (hilbertTensorInsert (H := F) Ω).adjoint.comp (hilbertTensorInsert Ω) =
+…</pre><p class="refs">Mentions: <a href="../Tensor/MultiplicityClassification.lean.html#L26">OAI.KadisonSimilarity.hilbertTensorInsert</a></p></li><li id=L39><b>def</b> <code>OAI.KadisonSimilarity.firstLetterProjection</code> <small>line 39</small><div class="doc"><p>Projection onto the chosen first tensor coordinate and a tail subspace.</p></div><pre>def firstLetterProjection (Ω : E) (Q : F →L[ℂ] F) :
+    HilbertTensor E F →L[ℂ] HilbertTensor E F :=
+…</pre><p class="refs">Mentions: <a href="../Tensor/TensorSlices.lean.html#L35">OAI.KadisonSimilarity.HilbertTensor</a></p></li><li id=L43><b>theorem</b> <code>OAI.KadisonSimilarity.firstLetterProjection_idempotent</code> <small>line 43</small></li><li id=L58><b>theorem</b> <code>OAI.KadisonSimilarity.firstLetterProjection_adjoint</code> <small>line 58</small></li><li id=L66><b>theorem</b> <code>OAI.KadisonSimilarity.norm_corner_firstLetterProjection_le</code> <small>line 66</small><div class="doc"><p>Multiplication in the first factor only sees the small vector <code>eΩ</code> on
+the range of the first-letter projection.</p></div><pre>theorem norm_corner_firstLetterProjection_le
+    (Ω eΩ : E) (hΩ : ‖Ω‖ = 1) (Q : F →L[ℂ] F) (hQ : ‖Q‖ ≤ 1)
+    (e : HilbertTensor E F →L[ℂ] HilbertTensor E F)
+    (hact : ∀ x : F, e (hilbertTensorInsert Ω x) = hilbertTensorInsert eΩ x) :
+    ‖e * firstLetterProjection Ω Q‖ ≤ ‖eΩ‖ := by
+…</pre><p class="refs">Mentions: <a href="../Tensor/TensorSlices.lean.html#L35">OAI.KadisonSimilarity.HilbertTensor</a>, <a href="../Tensor/MultiplicityClassification.lean.html#L26">OAI.KadisonSimilarity.hilbertTensorInsert</a>, <a href="FreeCompressionGeometry.lean.html#L39">OAI.KadisonSimilarity.firstLetterProjection</a></p></li><li id=L91><b>theorem</b> <code>OAI.KadisonSimilarity.norm_corner_overlap_le</code> <small>line 91</small><div class="doc"><p>The tracial vector identity gives the square-root overlap in both orders.</p></div><pre>theorem norm_corner_overlap_le
+    (Ω eΩ : E) (hΩ : ‖Ω‖ = 1) (Q : F →L[ℂ] F)
+    (hQ : Q.adjoint = Q) (hQnorm : ‖Q‖ ≤ 1)
+    (e : HilbertTensor E F →L[ℂ] HilbertTensor E F) (he : e.adjoint = e)
+    (hact : ∀ x : F, e (hilbertTensorInsert Ω x) = hilbertTensorInsert eΩ x)
+    {u : ℝ} (hu : 0 ≤ u) (hsq : ‖eΩ‖ ^ 2 = u) :
+    ‖e * firstLetterProjection Ω Q‖ ≤ Real.sqrt u ∧
+      ‖firstLetterProjection Ω Q * e‖ ≤ Real.sqrt u := by
+…</pre><p class="refs">Mentions: <a href="../Tensor/TensorSlices.lean.html#L35">OAI.KadisonSimilarity.HilbertTensor</a>, <a href="../Tensor/MultiplicityClassification.lean.html#L26">OAI.KadisonSimilarity.hilbertTensorInsert</a>, <a href="FreeCompressionGeometry.lean.html#L39">OAI.KadisonSimilarity.firstLetterProjection</a></p></li><li id=L112><b>theorem</b> <code>OAI.KadisonSimilarity.norm_free_compression_from_tensor_geometry</code> <small>line 112</small><div class="doc"><p>The free-letter three blocks and the first-coordinate geometry give the
+full norm bound for a compressed centered selfadjoint letter.</p></div><pre>theorem norm_free_compression_from_tensor_geometry
+    (Ω eΩ : E) (hΩ : ‖Ω‖ = 1) (Q : F →L[ℂ] F)
+    (hQ : Q.adjoint = Q) (hQsq : Q * Q = Q) (hQnorm : ‖Q‖ ≤ 1)
+    (e T : HilbertTensor E F →L[ℂ] HilbertTensor E F)
+    (he : e.adjoint = e) (hesq : e * e = e)
+    (hact : ∀ x : F, e (hilbertTensorInsert Ω x) = hilbertTensorInsert eΩ x)
+    {u b₂ : ℝ} (hu : 0 ≤ u) (hsq : ‖eΩ‖ ^ 2 = u) (hb₂ : 0 ≤ b₂)
+    (hzero : (1 - firstLetterProjection Ω Q) * T * (1 - firstLetterProjection Ω Q) = 0)
+    (hcreate : ‖firstLetterProjection Ω Q * T * (1 - firstLetterProjection Ω Q)‖ ≤ b₂)
+    (hannihilate : ‖(1 - firstLetterProjection Ω Q) * T * firstLetterProjection Ω Q‖ ≤ b₂) :
+    ‖e * T * e‖ ≤ 2 * Real.sqrt u * b₂ + u * ‖T‖ := by
+…</pre><p class="refs">Mentions: <a href="../Tensor/TensorSlices.lean.html#L35">OAI.KadisonSimilarity.HilbertTensor</a>, <a href="../Tensor/MultiplicityClassification.lean.html#L26">OAI.KadisonSimilarity.hilbertTensorInsert</a>, <a href="FreeCompressionGeometry.lean.html#L39">OAI.KadisonSimilarity.firstLetterProjection</a></p></li><li id=L131><b>theorem</b> <code>OAI.KadisonSimilarity.norm_annihilation_eq_creation</code> <small>line 131</small><div class="doc"><p>For a selfadjoint free letter the annihilation block is adjoint to the
+creation block, so only the latter needs to be estimated.</p></div><pre>theorem norm_annihilation_eq_creation
+    (P T : HilbertTensor E F →L[ℂ] HilbertTensor E F)
+    (hP : P.adjoint = P) (hT : T.adjoint = T) :
+    ‖(1 - P) * T * P‖ = ‖P * T * (1 - P)‖ := by
+…</pre><p class="refs">Mentions: <a href="../Tensor/TensorSlices.lean.html#L35">OAI.KadisonSimilarity.HilbertTensor</a></p></li><li id=L145><b>theorem</b> <code>OAI.KadisonSimilarity.norm_narrow_arc_from_tensor_geometry</code> <small>line 145</small><div class="doc"><p>The narrow arc has an order-<code>u</code> compression solely from the tensor
+geometry, the standard creation block, and its scalar moment bounds.</p></div><pre>theorem norm_narrow_arc_from_tensor_geometry
+    (Ω eΩ : E) (hΩ : ‖Ω‖ = 1) (Q : F →L[ℂ] F)
+    (hQ : Q.adjoint = Q) (hQsq : Q * Q = Q) (hQnorm : ‖Q‖ ≤ 1)
+    (e T : HilbertTensor E F →L[ℂ] HilbertTensor E F)
+    (he : e.adjoint = e) (hesq : e * e = e) (hT : T.adjoint = T)
+    (hact : ∀ x : F, e (hilbertTensorInsert Ω x) = hilbertTensorInsert eΩ x)
+    {u b₂ : ℝ} (hu : 0 ≤ u) (hsq : ‖eΩ‖ ^ 2 = u) (hb₂ : 0 ≤ b₂)
+    (hzero : (1 - firstLetterProjection Ω Q) * T * (1 - firstLetterProjection Ω Q) = 0)
+    (hcreate : ‖firstLetterProjection Ω Q * T * (1 - firstLetterProjection Ω Q)‖ ≤ b₂)
+    (h₂ : b₂ ^ 2 ≤ u) (hnorm : ‖T‖ ≤ 1) :
+    ‖e * T * e‖ ≤ 3 * u := by
+…</pre><p class="refs">Mentions: <a href="../Tensor/TensorSlices.lean.html#L35">OAI.KadisonSimilarity.HilbertTensor</a>, <a href="../Tensor/MultiplicityClassification.lean.html#L26">OAI.KadisonSimilarity.hilbertTensorInsert</a>, <a href="FreeCompressionGeometry.lean.html#L39">OAI.KadisonSimilarity.firstLetterProjection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

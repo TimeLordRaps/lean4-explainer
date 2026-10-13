@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/SignedDisk/DiskMaximalTools1.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/SignedDisk/DiskMaximalTools1.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">SignedDisk</a> / <span>DiskMaximalTools1.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">SignedDisk</a>/<span>DiskMaximalTools1.lean</span></code></h1><p class="muted">23 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/SignedDisk/DiskMaximalTools1.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>lemma</b> <code>OAI.SignedDisk.DiskMaximalTools.maximal_layer_coefficient</code> <small>line 24</small></li><li id=L44><b>theorem</b> <code>OAI.SignedDisk.DiskMaximalTools.strong_rationalMaximal</code> <small>line 44</small><div class="doc"><p>A full strong p estimate from Vitali, truncation and Tonelli. No maximal
+inequality is supplied as an assumption. The real representative is controlled
+even before a separate almost-everywhere finiteness argument.</p></div><pre>theorem strong_rationalMaximal {f : ℂ → ℝ} (hf : Measurable f)
+    (hf0 : ∀ x, 0 ≤ f x) [IsFiniteMeasure (volume.withDensity (fun x =&gt; ENNReal.ofReal (f x)))]
+    {p : ℝ} (hp : 1 &lt; p) :
+    (∫⁻ x, ENNReal.ofReal ((rationalMaximal (volume.withDensity (fun x =&gt; ENNReal.ofReal (f x))) x).toReal^p)) ≤
+      ENNReal.ofReal (50*p*2^(p-1)/(p-1)) * (∫⁻ x, ENNReal.ofReal ((f x)^p)) := by
+…</pre><p class="refs">Mentions: <a href="DiskScales3.lean.html#L247">OAI.SignedDisk.DiskMaximalTools.rationalMaximal</a></p></li><li id=L98><b>lemma</b> <code>OAI.SignedDisk.DiskMaximalTools.disk_average_le_rationalMaximal_exact</code> <small>line 98</small></li><li id=L143><b>theorem</b> <code>OAI.SignedDisk.DiskMaximalTools.all_radii_eq_rational</code> <small>line 143</small><div class="doc"><p>Countability loses neither radii nor high values: the rational expression is
+exactly the centered disk maximal function of the measure.</p></div><pre>theorem all_radii_eq_rational (ν : Measure ℂ) (x : ℂ) :
+    (⨆ (r : ℝ) (_ : 0 &lt; r), ν (ball x r)/volume (ball x r)) = rationalMaximal ν x := by
+…</pre><p class="refs">Mentions: <a href="DiskScales3.lean.html#L247">OAI.SignedDisk.DiskMaximalTools.rationalMaximal</a></p></li><li id=L159><b>lemma</b> <code>OAI.SignedDisk.DiskMaximalTools.rationalMaximal_le_of_density_le</code> <small>line 159</small></li><li id=L185><b>theorem</b> <code>OAI.SignedDisk.ScalarCancellation.positive_residual</code> <small>line 185</small><div class="doc"><p>A nonnegative scalar residual retaining exactly the net mass. Its removal
+has the exact cancellation defect as L1 cost.</p></div><pre>theorem positive_residual {α : Type*} [MeasurableSpace α] {μ : Measure α}
+    {h : α → ℝ} (hh : Integrable h μ) (hc : 0 ≤ ∫ x, h x ∂μ) :
+    ∃ ρ : α → ℝ, Integrable ρ μ ∧ (∀ x, 0 ≤ ρ x) ∧
+      (∀ x, ρ x ≤ max (h x) 0) ∧ (∫ x, ρ x ∂μ) = ∫ x, h x ∂μ ∧
+      (∫ x, |h x-ρ x| ∂μ) = (∫ x, |h x| ∂μ) - ∫ x, h x ∂μ ∧
+      (∀ x, h x = 0 → ρ x = 0) := by
+…</pre></li><li id=L234><b>theorem</b> <code>OAI.SignedDisk.ScalarCancellation.residual_split</code> <small>line 234</small><div class="doc"><p>Every integrable scalar density splits into a constant-sign root and a
+zero-mass error, without replacing the actual terminal density by its mass.</p></div><pre>theorem residual_split {α : Type*} [MeasurableSpace α] {μ : Measure α}
+    {h : α → ℝ} (hh : Integrable h μ) :
+    ∃ ρ β : α → ℝ, Integrable ρ μ ∧ Integrable β μ ∧
+      (∀ x, h x = ρ x+β x) ∧ (∫ x, ρ x ∂μ) = ∫ x, h x ∂μ ∧
+      (∫ x, β x ∂μ) = 0 ∧ (∫ x, |ρ x| ∂μ) = |∫ x, h x ∂μ| ∧
+      (∫ x, |β x| ∂μ) = (∫ x, |h x| ∂μ)-|∫ x, h x ∂μ| ∧
+      ((0 ≤ ∫ x, h x ∂μ) → ∀ x, 0 ≤ ρ x) ∧
+      ((∫ x, h x ∂μ) &lt; 0 → ∀ x, ρ x ≤ 0) ∧
+      (∀ x, h x = 0 → ρ x = 0 ∧ β x = 0) := by
+…</pre></li><li id=L275><b>theorem</b> <code>OAI.SignedDisk.ScalarCancellation.refinement_residual</code> <small>line 275</small><div class="doc"><p>One backward refinement step. The new cancelling piece has cost no larger
+than the scalar norm defect of the children; overlap can only lower this cost.</p></div><pre>theorem refinement_residual {α ι : Type*} [MeasurableSpace α] {μ : Measure α}
+    [Fintype ι] (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (ρ : ι → α → ℝ)
+    (hρ : ∀ i, Integrable (ρ i) μ) :
+    ∃ R β : α → ℝ, Integrable R μ ∧ Integrable β μ ∧
+      (∀ x, (∑ i, w i*ρ i x) = R x+β x) ∧
+      (∫ x, R x ∂μ) = ∑ i, w i*(∫ x, ρ i x ∂μ) ∧
+      (∫ x, β x ∂μ) = 0 ∧
+      (∫ x, |R x| ∂μ) = |∑ i, w i*(∫ x, ρ i x ∂μ)| ∧
+      (∫ x, |β x| ∂μ) ≤
+        (∑ i, w i*(∫ x, |ρ i x| ∂μ))-|∑ i, w i*(∫ x, ρ i x ∂μ)| ∧
+      ((0 ≤ ∑ i, w i*(∫ x, ρ i x ∂μ)) → ∀ x, 0 ≤ R x) ∧
+      (∀ x, (∀ i, w i*ρ i x = 0) → R x = 0 ∧ β x = 0) := by
+…</pre></li><li id=L321><b>def</b> <code>OAI.SignedDisk.ScalarCancellation.root</code> <small>line 321</small><div class="doc"><p>Canonical positive/negative root selected from the proved scalar splitting,
+not an assumed decomposition.</p></div><pre>def root (μ : Measure α) (f : α → ℝ) : α → ℝ := by
+…</pre></li><li id=L325><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.root_spec</code> <small>line 325</small></li><li id=L342><b>def</b> <code>OAI.SignedDisk.ScalarCancellation.refined</code> <small>line 342</small></li><li id=L346><b>def</b> <code>OAI.SignedDisk.ScalarCancellation.roots</code> <small>line 346</small></li><li id=L350><b>def</b> <code>OAI.SignedDisk.ScalarCancellation.errors</code> <small>line 350</small></li><li id=L354><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.refined_integrable</code> <small>line 354</small></li><li id=L361><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.roots_integrable</code> <small>line 361</small></li><li id=L368><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.roots_mass</code> <small>line 368</small></li><li id=L379><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.roots_abs_mass</code> <small>line 379</small></li><li id=L391><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.errors_integrable</code> <small>line 391</small></li><li id=L400><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.errors_zero_mass</code> <small>line 400</small></li><li id=L417><b>theorem</b> <code>OAI.SignedDisk.ScalarCancellation.errors_cost</code> <small>line 417</small><div class="doc"><p>The whole scalar cancellation tree is built by backward splitting. Each
+nonterminal zero-mass piece costs at most its positive refinement norm defect.</p></div><pre>theorem errors_cost (w : ℕ → ι → ι → ℝ) (hw : ∀ k q s, 0 ≤ w k q s)
+    {f : ι → α → ℝ} (hf : ∀ q, Integrable (f q) μ) (k : ℕ) (q : ι) :
+    (∫ x, |errors μ w f (k+1) q x| ∂μ) ≤
+      (∑ s, w k q s*|∫ x, refined w f k s x ∂μ|)-|∫ x, refined w f (k+1) q x ∂μ| := by
+…</pre><p class="refs">Mentions: <a href="DiskMaximalTools1.lean.html#L350">OAI.SignedDisk.ScalarCancellation.errors</a>, <a href="DiskMaximalTools1.lean.html#L342">OAI.SignedDisk.ScalarCancellation.refined</a></p></li><li id=L442><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.errors_terminal_cost</code> <small>line 442</small></li><li id=L447><b>lemma</b> <code>OAI.SignedDisk.ScalarCancellation.error_recurrence</code> <small>line 447</small></li><li id=L455><b>theorem</b> <code>OAI.SignedDisk.ScalarCancellation.roots_errors_support</code> <small>line 455</small><div class="doc"><p>Support nesting is preserved by the new construction, even when child
+scalar masses vanish or overlapping densities cancel each other.</p></div><pre>theorem roots_errors_support (w : ℕ → ι → ι → ℝ) {f : ι → α → ℝ}
+    (hf : ∀ q, Integrable (f q) μ) (S : ℕ → ι → Set α)
+    (hfS : ∀ q x, x ∉ S 0 q → f q x = 0)
+    (hS : ∀ k q s, w k q s ≠ 0 → S k s ⊆ S (k+1) q) :
+    ∀ k q x, x ∉ S k q → roots μ w f k q x = 0 ∧ errors μ w f k q x = 0 := by
+…</pre><p class="refs">Mentions: <a href="DiskMaximalTools1.lean.html#L346">OAI.SignedDisk.ScalarCancellation.roots</a>, <a href="DiskMaximalTools1.lean.html#L350">OAI.SignedDisk.ScalarCancellation.errors</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

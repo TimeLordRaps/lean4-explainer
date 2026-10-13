@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/MatrixRemoval/HostAnchorPinning.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/MatrixRemoval/HostAnchorPinning.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">MatrixRemoval</a> / <span>HostAnchorPinning.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">MatrixRemoval</a>/<span>HostAnchorPinning.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/MatrixRemoval/HostAnchorPinning.lean#L1">source</a></p><div class="doc"><p>Assembly of the exact anchor-majority and concrete-host rigidity steps.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.selected_columns_injective</code> <small>line 14</small><div class="doc"><p>An exact anchor copy is automatically injective on the column axis.</p></div><pre>theorem selected_columns_injective {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j) : Function.Injective c := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li><li id=L23><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.selected_rows_injective</code> <small>line 23</small><div class="doc"><p>An exact anchor copy is automatically injective on the row axis.</p></div><pre>theorem selected_rows_injective {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j) : Function.Injective r := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a></p></li><li id=L31><b>def</b> <code>OAI.Problem348.HostAnchorRigidity.ColumnSparse</code> <small>line 31</small><div class="doc"><p>Variable-column sparseness on a selected prefix.</p></div><pre>def ColumnSparse {h : ℕ} (r c : Fin 64 → Position h) : Prop :=
+…</pre></li><li id=L37><b>def</b> <code>OAI.Problem348.HostAnchorRigidity.RowSparse</code> <small>line 37</small><div class="doc"><p>Variable-row sparseness on a selected prefix.</p></div><pre>def RowSparse {h : ℕ} (r c : Fin 64 → Position h) : Prop :=
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.mode_constant_of_prefix</code> <small>line 43</small><div class="doc"><p>Prefix anchoring plus actual variable sparseness pins all positions to one mode.</p></div><pre>theorem mode_constant_of_prefix {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (hprefix : (∀ i : Fin 64, i.val &lt; 32 → ∃ t, modeLabel (r i) = some t) ∨
+      (∀ j : Fin 64, j.val &lt; 32 → ∃ t, modeLabel (c j) = some t))
+    (hcs : ColumnSparse r c) (hrs : RowSparse r c) :
+    ∃ t : Mode h, (∀ i, modeLabel (r i) = some t) ∧
+      (∀ j, modeLabel (c j) = some t) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="HostAnchorRigidity.lean.html#L147">OAI.Problem348.HostAnchorRigidity.modeLabel</a>, <a href="HostAnchorPinning.lean.html#L31">OAI.Problem348.HostAnchorRigidity.ColumnSparse</a>, <a href="HostAnchorPinning.lean.html#L37">OAI.Problem348.HostAnchorRigidity.RowSparse</a></p></li><li id=L62><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.mode_constant_of_no_shattering</code> <small>line 62</small><div class="doc"><p>No five-column shattering and the anchor-before-nonanchor order give a
+majority; prefix rigidity then yields one common mode.</p></div><pre>theorem mode_constant_of_no_shattering {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (row_initial : ∀ i j, i ≤ j → modeLabel (r j) ≠ none → modeLabel (r i) ≠ none)
+    (col_initial : ∀ i j, i ≤ j → modeLabel (c j) ≠ none → modeLabel (c i) ≠ none)
+    (hnoshatter : ∀ cs : Fin 5 → Position h, Function.Injective cs →
+      (∀ b, modeLabel (cs b) = none) → ∃ w : Fin 5 → Bool,
+        ∀ x, modeLabel x = none → ∃ b, host x (cs b) ≠ w b)
+    (hcs : ColumnSparse r c) (hrs : RowSparse r c) :
+    ∃ t : Mode h, (∀ i, modeLabel (r i) = some t) ∧
+      (∀ j, modeLabel (c j) = some t) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="HostAnchorRigidity.lean.html#L147">OAI.Problem348.HostAnchorRigidity.modeLabel</a>, <a href="HostAnchorPinning.lean.html#L31">OAI.Problem348.HostAnchorRigidity.ColumnSparse</a>, <a href="HostAnchorPinning.lean.html#L37">OAI.Problem348.HostAnchorRigidity.RowSparse</a></p></li><li id=L89><b>def</b> <code>OAI.Problem348.HostAnchorRigidity.GroupsMonotone</code> <small>line 89</small><div class="doc"><p>The within-mode group order enjoyed by an increasingly selected axis.</p></div><pre>def GroupsMonotone {h : ℕ} (r : Fin 64 → Position h) : Prop :=
+…</pre></li><li id=L96><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.representatives_of_mode_constant</code> <small>line 96</small><div class="doc"><p>Once one common mode is known, group uniqueness and the actual group
+order identify its representatives in the exact pattern order.</p></div><pre>theorem representatives_of_mode_constant {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (hrow : GroupsMonotone r) (hcol : GroupsMonotone c)
+    {t : Mode h} (hmr : ∀ i, modeLabel (r i) = some t)
+    (hmc : ∀ j, modeLabel (c j) = some t) :
+    ∃ a b : Fin 64 → Fin (2 ^ h),
+      (∀ i, r i = Sum.inl (t, i, a i)) ∧
+      (∀ j, c j = Sum.inl (t, j, b j)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="HostAnchorPinning.lean.html#L89">OAI.Problem348.HostAnchorRigidity.GroupsMonotone</a>, <a href="HostAnchorRigidity.lean.html#L147">OAI.Problem348.HostAnchorRigidity.modeLabel</a></p></li><li id=L137><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.representatives_of_no_shattering</code> <small>line 137</small><div class="doc"><p>Full anchor representative conclusion assuming initial anchor segments,
+nonshattering, variable sparseness, and within-mode group order.</p></div><pre>theorem representatives_of_no_shattering {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (row_initial : ∀ i j, i ≤ j → modeLabel (r j) ≠ none → modeLabel (r i) ≠ none)
+    (col_initial : ∀ i j, i ≤ j → modeLabel (c j) ≠ none → modeLabel (c i) ≠ none)
+    (hnoshatter : ∀ cs : Fin 5 → Position h, Function.Injective cs →
+      (∀ b, modeLabel (cs b) = none) → ∃ w : Fin 5 → Bool,
+        ∀ x, modeLabel x = none → ∃ b, host x (cs b) ≠ w b)
+    (hcs : ColumnSparse r c) (hrs : RowSparse r c)
+    (hrow : GroupsMonotone r) (hcol : GroupsMonotone c) :
+    ∃ (t : Mode h) (a b : Fin 64 → Fin (2 ^ h)),
+      (∀ i, r i = Sum.inl (t, i, a i)) ∧
+      (∀ j, c j = Sum.inl (t, j, b j)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="HostAnchorRigidity.lean.html#L147">OAI.Problem348.HostAnchorRigidity.modeLabel</a>, <a href="HostAnchorPinning.lean.html#L31">OAI.Problem348.HostAnchorRigidity.ColumnSparse</a>, <a href="HostAnchorPinning.lean.html#L37">OAI.Problem348.HostAnchorRigidity.RowSparse</a>, <a href="HostAnchorPinning.lean.html#L89">OAI.Problem348.HostAnchorRigidity.GroupsMonotone</a></p></li><li id=L156><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.actual_nonshattering</code> <small>line 156</small><div class="doc"><p>The concrete canonical host supplies the missing-word hypothesis,
+without any ordering or injectivity condition on the five columns.</p></div><pre>theorem actual_nonshattering {h : ℕ} (cs : Fin 5 → Position h)
+    (hcs : ∀ b, modeLabel (cs b) = none) :
+    ∃ w : Fin 5 → Bool, ∀ x, modeLabel x = none →
+      ∃ b, host x (cs b) ≠ w b := by
+…</pre><p class="refs">Mentions: <a href="HostAnchorRigidity.lean.html#L147">OAI.Problem348.HostAnchorRigidity.modeLabel</a></p></li><li id=L172><b>theorem</b> <code>OAI.Problem348.HostAnchorRigidity.representatives_of_sparse</code> <small>line 172</small><div class="doc"><p>Concrete-host anchor pinning assuming axis-order and sparse-core
+conditions; nonshattering follows from the host entries.</p></div><pre>theorem representatives_of_sparse {h : ℕ} (r c : Fin 64 → Position h)
+    (hcopy : ∀ i j, host (r i) (c j) = anchor64 i j)
+    (row_initial : ∀ i j, i ≤ j → modeLabel (r j) ≠ none → modeLabel (r i) ≠ none)
+    (col_initial : ∀ i j, i ≤ j → modeLabel (c j) ≠ none → modeLabel (c i) ≠ none)
+    (hcs : ColumnSparse r c) (hrs : RowSparse r c)
+    (hrow : GroupsMonotone r) (hcol : GroupsMonotone c) :
+    ∃ (t : Mode h) (a b : Fin 64 → Fin (2 ^ h)),
+      (∀ i, r i = Sum.inl (t, i, a i)) ∧
+      (∀ j, c j = Sum.inl (t, j, b j)) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/MatrixRemoval.lean.html#L33">OAI.Problem348.anchor64</a>, <a href="HostAnchorRigidity.lean.html#L147">OAI.Problem348.HostAnchorRigidity.modeLabel</a>, <a href="HostAnchorPinning.lean.html#L31">OAI.Problem348.HostAnchorRigidity.ColumnSparse</a>, <a href="HostAnchorPinning.lean.html#L37">OAI.Problem348.HostAnchorRigidity.RowSparse</a>, <a href="HostAnchorPinning.lean.html#L89">OAI.Problem348.HostAnchorRigidity.GroupsMonotone</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

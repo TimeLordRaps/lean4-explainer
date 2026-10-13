@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/EventMass.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/EventMass.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>EventMass.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>EventMass.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/EventMass.lean#L1">source</a></p><div class="doc"><h3>The quantile event has a positive deficit</h3><p>Finite sums implement the event calculation in the proof of
+<code>phase:quantile-gap</code>. The only geometric condition is the explicitly
+proved fact that a resonant completion of the event lies below its
+chosen central interval.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.rectangularEvent</code> <small>line 24</small></li><li id=L27><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.independent_rectangular_event</code> <small>line 27</small></li><li id=L35><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.restricted_marginal_sum_le</code> <small>line 35</small></li><li id=L48><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.projected_rectangular_event_le</code> <small>line 48</small><div class="doc"><p>Forcing the missing coordinate into <code>J</code> bounds the projected event
+by the independent mass of <code>I × K × J</code>.</p></div><pre>theorem projected_rectangular_event_le {frequency : ι → ℝ} {gap : ℝ}
+    (hgap : 0 &lt; gap) (hsep : Separated frequency gap) (x : ι → ℝ)
+    (hx : ∀ i, 0 ≤ x i) (I K L J : Finset ι)
+    (hcompletion : ∀ i ∈ I, ∀ k ∈ K, ∀ l ∈ L, ∀ j,
+      Resonant frequency gap i j k l → j ∈ J) :
+    (∑ q ∈ rectangularEvent I K L, projectedMass frequency gap x q) ≤
+      (∑ i ∈ I, x i) * (∑ k ∈ K, x k) * (∑ j ∈ J, x j) := by
+…</pre><p class="refs">Mentions: <a href="../Phase/PhaseCombinatorics.lean.html#L27">OAI.LipschitzHilbert.PhaseCombinatorics.Separated</a>, <a href="../Phase/PhaseCombinatorics.lean.html#L30">OAI.LipschitzHilbert.PhaseCombinatorics.Resonant</a>, <a href="EventMass.lean.html#L24">OAI.LipschitzHilbert.PhaseCombinatorics.rectangularEvent</a>, <a href="../Fourier/Projection.lean.html#L30">OAI.LipschitzHilbert.PhaseCombinatorics.projectedMass</a></p></li><li id=L92><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.rectangular_event_deficit</code> <small>line 92</small><div class="doc"><p>When <code>J ⊆ L</code>, the independent mass in <code>L \ J</code> is a definite event
+deficit. This is the exact finite form of the manuscript's calculation.</p></div><pre>theorem rectangular_event_deficit {frequency : ι → ℝ} {gap : ℝ}
+    (hgap : 0 &lt; gap) (hsep : Separated frequency gap) (x : ι → ℝ)
+    (hx : ∀ i, 0 ≤ x i) (I K L J : Finset ι) (hJL : J ⊆ L)
+    (hcompletion : ∀ i ∈ I, ∀ k ∈ K, ∀ l ∈ L, ∀ j,
+      Resonant frequency gap i j k l → j ∈ J) :
+    (∑ i ∈ I, x i) * (∑ k ∈ K, x k) * (∑ l ∈ L \ J, x l) ≤
+      ∑ q ∈ rectangularEvent I K L,
+        (independentMass x q - projectedMass frequency gap x q) := by
+…</pre><p class="refs">Mentions: <a href="../Phase/PhaseCombinatorics.lean.html#L27">OAI.LipschitzHilbert.PhaseCombinatorics.Separated</a>, <a href="../Phase/PhaseCombinatorics.lean.html#L30">OAI.LipschitzHilbert.PhaseCombinatorics.Resonant</a>, <a href="EventMass.lean.html#L24">OAI.LipschitzHilbert.PhaseCombinatorics.rectangularEvent</a>, <a href="../Fourier/Projection.lean.html#L34">OAI.LipschitzHilbert.PhaseCombinatorics.independentMass</a>, <a href="../Fourier/Projection.lean.html#L30">OAI.LipschitzHilbert.PhaseCombinatorics.projectedMass</a></p></li><li id=L108><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.threshold_event_completion</code> <small>line 108</small><div class="doc"><p>The source's frequency-threshold event satisfies the preceding completion
+condition. Strict inequality on <code>J</code> leaves both endpoints of <code>[e,h]</code> in <code>L \ J</code>.</p></div><pre>theorem threshold_event_completion {frequency : ι → ℝ} {gap a b e h : ℝ}
+    (hgap : 0 &lt; gap) (hab : gap ≤ b - a) (heh : h - e ≤ (b - a) / 2) :
+    ∀ i ∈ Finset.univ.filter (fun i =&gt; b ≤ frequency i),
+      ∀ k ∈ Finset.univ.filter (fun k =&gt; frequency k ≤ a),
+      ∀ l ∈ Finset.univ.filter (fun l =&gt; frequency l ≤ h), ∀ j,
+        Resonant frequency gap i j k l →
+          j ∈ Finset.univ.filter (fun j =&gt; frequency j &lt; e) := by
+…</pre><p class="refs">Mentions: <a href="../Phase/PhaseCombinatorics.lean.html#L30">OAI.LipschitzHilbert.PhaseCombinatorics.Resonant</a></p></li><li id=L121><b>theorem</b> <code>OAI.LipschitzHilbert.PhaseCombinatorics.quantitative_gap_of_event_mass_bounds</code> <small>line 121</small><div class="doc"><p>The exact quantitative constant obtained from two quarter-tail masses
+and a half of the central mass. Quantile existence supplies these hypotheses.</p></div><pre>theorem quantitative_gap_of_event_mass_bounds {frequency : ι → ℝ} {gap κ : ℝ}
+    (hgap : 0 &lt; gap) (hsep : Separated frequency gap)
+    (hκ : 0 &lt; κ) (hκ1 : κ &lt; 1) (x : ι → ℝ)
+    (hx : ∀ i, 0 ≤ x i) (hsum : ∑ i, x i = 1)
+    (I K L J : Finset ι) (hJL : J ⊆ L)
+    (hcompletion : ∀ i ∈ I, ∀ k ∈ K, ∀ l ∈ L, ∀ j,
+      Resonant frequency gap i j k l → j ∈ J)
+    (hI : κ / 4 ≤ ∑ i ∈ I, x i) (hK : κ / 4 ≤ ∑ k ∈ K, x k)
+    (hcentral : (1 - κ / 2) / 2 ≤ ∑ l ∈ L \ J, x l) :
+    resonanceSum frequency gap x ≤ 1 - κ ^ 4 * (1 - κ / 2) ^ 2 / 4096 := by
+…</pre><p class="refs">Mentions: <a href="../Phase/PhaseCombinatorics.lean.html#L27">OAI.LipschitzHilbert.PhaseCombinatorics.Separated</a>, <a href="../Phase/PhaseCombinatorics.lean.html#L30">OAI.LipschitzHilbert.PhaseCombinatorics.Resonant</a>, <a href="../Phase/PhaseCombinatorics.lean.html#L268">OAI.LipschitzHilbert.PhaseCombinatorics.resonanceSum</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

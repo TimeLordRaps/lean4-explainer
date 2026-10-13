@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/NilpotentSectionRemainder.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/NilpotentSectionRemainder.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>NilpotentSectionRemainder.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>NilpotentSectionRemainder.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/NilpotentSectionRemainder.lean#L1">source</a></p><div class="doc"><h3>Polynomial bounds for the actual ideal section remainder</h3><p>The remainder of an exponential after removing its pure quotient section
+is computed with the finite BCH formula. Its ideal coordinates have a
+polynomial bound in the original logarithm. No box comparison is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.PolycyclicRecognition.exponentialRescaleBasis_zero</code> <small>line 23</small></li><li id=L30><b>theorem</b> <code>OAI.PolycyclicRecognition.quotient_section_coordinate_norm_le</code> <small>line 30</small><div class="doc"><p>Removing all ideal coordinates is a contraction in the adapted norm.</p></div><pre>theorem quotient_section_coordinate_norm_le (v : V) :
+    ‖(basisWithQuotientLifts U.toSubmodule bI bQ lift hlift).equivFun
+      (quotientLinearSection U bQ lift (U.toSubmodule.mkQ v))‖ ≤
+    ‖(basisWithQuotientLifts U.toSubmodule bI bQ lift hlift).equivFun v‖ := by
+…</pre><p class="refs">Mentions: <a href="BasisQuotientLifts.lean.html#L19">OAI.PolycyclicRecognition.basisWithQuotientLifts</a>, <a href="../Analysis/IdealSectionBoxCoordinates.lean.html#L23">OAI.PolycyclicRecognition.quotientLinearSection</a></p></li><li id=L61><b>theorem</b> <code>OAI.PolycyclicRecognition.section_remainder_mem_ideal</code> <small>line 61</small><div class="doc"><p>This is the actual kernel coordinate, not a freely selected small lift.</p></div><pre>theorem section_remainder_mem_ideal (v : V) :
+    finiteDynkinPolynomial coeff
+      ![v, -quotientLinearSection U bQ lift (U.toSubmodule.mkQ v)] ∈ U := by
+…</pre><p class="refs">Mentions: <a href="DynkinWords.lean.html#L39">OAI.PolycyclicRecognition.finiteDynkinPolynomial</a>, <a href="../Analysis/IdealSectionBoxCoordinates.lean.html#L23">OAI.PolycyclicRecognition.quotientLinearSection</a></p></li><li id=L76><b>def</b> <code>OAI.PolycyclicRecognition.sectionDynkinConstant</code> <small>line 76</small><div class="doc"><p>The product constant depends on dimension, nilpotence degree, and a
+uniform bracket bound, rather than on the chosen basis.</p></div><pre>def sectionDynkinConstant (d c : ℕ) (C : ℝ) : ℝ :=
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.PolycyclicRecognition.section_remainder_polynomial_bound</code> <small>line 81</small><div class="doc"><p>The same fixed polynomial controls the ideal remainder of every log.</p></div><pre>theorem section_remainder_polynomial_bound (C : ℝ) (hC : 0 ≤ C)
+    (hbr : ∀ i j k, |(basisWithQuotientLifts U.toSubmodule bI bQ lift hlift).repr
+      ⁅basisWithQuotientLifts U.toSubmodule bI bQ lift hlift i,
+        basisWithQuotientLifts U.toSubmodule bI bQ lift hlift j⁆ k| ≤ C) :
+    ∀ R : ℝ, 0 ≤ R → ∀ v : V,
+      ‖(basisWithQuotientLifts U.toSubmodule bI bQ lift hlift).equivFun v‖ ≤ R →
+      ∃ u : U,
+        ExpN (u : V) = ExpN v *
+          (ExpN (quotientLinearSection U bQ lift (U.toSubmodule.mkQ v)))⁻¹ ∧
+        ‖bI.equivFun u‖ ≤ sectionDynkinConstant (Fintype.card (I ⊕ J)) c C * (1 + R) ^ c := by
+…</pre><p class="refs">Mentions: <a href="BasisQuotientLifts.lean.html#L19">OAI.PolycyclicRecognition.basisWithQuotientLifts</a>, <a href="../Analysis/IdealSectionBoxCoordinates.lean.html#L23">OAI.PolycyclicRecognition.quotientLinearSection</a>, <a href="NilpotentSectionRemainder.lean.html#L76">OAI.PolycyclicRecognition.sectionDynkinConstant</a></p></li><li id=L123><b>theorem</b> <code>OAI.PolycyclicRecognition.section_error_factorization_bound</code> <small>line 123</small><div class="doc"><p>Factor a pure section followed by an arbitrary small logarithmic error.
+Both new coordinates have polynomial bounds, even when the new quotient
+coordinate leaves a subexponential ball.</p></div><pre>theorem section_error_factorization_bound (C : ℝ) (hC : 0 ≤ C)
+    (hbr : ∀ i j k, |(basisWithQuotientLifts U.toSubmodule bI bQ lift hlift).repr
+      ⁅basisWithQuotientLifts U.toSubmodule bI bQ lift hlift i,
+        basisWithQuotientLifts U.toSubmodule bI bQ lift hlift j⁆ k| ≤ C) :
+    ∀ R : ℝ, 0 ≤ R →
+      ∀ (q : V ⧸ U.toSubmodule) (e : V),
+        ‖bQ.equivFun q‖ ≤ R →
+        ‖(basisWithQuotientLifts U.toSubmodule bI bQ lift hlift).equivFun e‖ ≤ R →
+        ∃ (u : U) (q&#x27; : V ⧸ U.toSubmodule),
+          ExpN (quotientLinearSection U bQ lift q) * ExpN e =
+            ExpN (u : V) * ExpN (quotientLinearSection U bQ lift q&#x27;) ∧
+          ‖bI.equivFun u‖ ≤
+…</pre><p class="refs">Mentions: <a href="BasisQuotientLifts.lean.html#L19">OAI.PolycyclicRecognition.basisWithQuotientLifts</a>, <a href="../Analysis/IdealSectionBoxCoordinates.lean.html#L23">OAI.PolycyclicRecognition.quotientLinearSection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

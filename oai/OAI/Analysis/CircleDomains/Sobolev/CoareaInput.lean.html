@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Sobolev/CoareaInput.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Sobolev/CoareaInput.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Sobolev</a> / <span>CoareaInput.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Sobolev</a>/<span>CoareaInput.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Sobolev/CoareaInput.lean#L1">source</a></p><div class="doc"><h3>Scalar coarea and its finite-energy consequences</h3><p>The planar scalar coarea identities specialize
+Federer, <em>Geometric Measure Theory</em>, Springer (1969), §3.2.11 (coarea)
+and §3.2.12 (weighted coarea),
+DOI: 10.1007/978-3-642-62010-2. For a <code>C¹</code> real function on an open
+subset of the Euclidean plane, the integral of the one-dimensional
+Hausdorff measures of its fibers equals the integral of the norm of its
+differential. The locally Lipschitz version follows from the stated
+Lipschitz coarea theorem by a countable relatively compact covering.</p><p><code>PlanarScalarCoarea</code> and <code>WeightedPlanarScalarCoarea</code> express these
+specializations as propositions. They require neither finite energy nor
+topological conclusions. The length function need only be Lebesgue
+measurable; Borel measurability is unnecessary.</p><p>Finite area and finite squared differential imply finite integrated
+length, and integer periodization
+gives finite physical length for almost every circle-valued level.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L36><b>def</b> <code>OAI.CircleDomainRigidity.scalarLevelLength</code> <small>line 36</small></li><li id=L41><b>def</b> <code>OAI.CircleDomainRigidity.ScalarCoareaIdentity</code> <small>line 41</small><div class="doc"><p>Precisely the scalar planar coarea identity, including its required
+Lebesgue measurability assertion.</p></div><pre>def ScalarCoareaIdentity (D : Set ℂ) (f : ℂ → ℝ) : Prop :=
+…</pre></li><li id=L48><b>def</b> <code>OAI.CircleDomainRigidity.PlanarScalarCoarea</code> <small>line 48</small><div class="doc"><p>Federer (1969), §3.2.11, specialized to a real
+<code>C¹</code> function on an open subset of the Euclidean plane.</p></div><pre>def PlanarScalarCoarea : Prop :=
+…</pre></li><li id=L52><b>def</b> <code>OAI.CircleDomainRigidity.weightedScalarLevelLength</code> <small>line 52</small></li><li id=L56><b>def</b> <code>OAI.CircleDomainRigidity.weightedCircleLevelLength</code> <small>line 56</small></li><li id=L62><b>def</b> <code>OAI.CircleDomainRigidity.WeightedScalarCoareaIdentity</code> <small>line 62</small><div class="doc"><p>Precisely the nonnegative weighted scalar coarea formula.</p></div><pre>def WeightedScalarCoareaIdentity (D : Set ℂ) (f : ℂ → ℝ)
+    (q : ℂ → ℝ≥0∞) : Prop :=
+…</pre></li><li id=L72><b>def</b> <code>OAI.CircleDomainRigidity.WeightedPlanarScalarCoarea</code> <small>line 72</small><div class="doc"><p>Federer (1969), §3.2.12, the nonnegative weighted
+coarea formula specialized to a scalar <code>C¹</code> function on a planar open
+set. This is the identity used by <code>eq:weighted-level-bound</code> in §1 of the
+Koebe manuscript.</p></div><pre>def WeightedPlanarScalarCoarea : Prop :=
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.CircleDomainRigidity.WeightedPlanarScalarCoarea.unweighted</code> <small>line 76</small></li><li id=L90><b>theorem</b> <code>OAI.CircleDomainRigidity.measurableSet_scalar_level</code> <small>line 90</small><div class="doc"><p>The scalar fibers are measurable even though the function is only
+assumed continuous on its open domain.</p></div><pre>theorem measurableSet_scalar_level {D : Set ℂ} (hD : IsOpen D)
+    {f : ℂ → ℝ} (hf : ContinuousOn f D) (t : ℝ) :
+    MeasurableSet (D ∩ {z | f z = t}) := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.CircleDomainRigidity.weightedCircleLevelLength_eq_periodized</code> <small>line 105</small><div class="doc"><p>Countable additivity on the disjoint integer lifts is the exact
+weighted circle-fiber identity.</p></div><pre>theorem weightedCircleLevelLength_eq_periodized {D : Set ℂ} (hD : IsOpen D)
+    {f : ℂ → ℝ} (hf : ContinuousOn f D) (q : ℂ → ℝ≥0∞) (t : ℝ) :
+    weightedCircleLevelLength D f q t =
+      periodizedLevelLength (weightedScalarLevelLength D f q) t := by
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L56">OAI.CircleDomainRigidity.weightedCircleLevelLength</a>, <a href="PeriodizedLevels.lean.html#L49">OAI.CircleDomainRigidity.periodizedLevelLength</a>, <a href="CoareaInput.lean.html#L52">OAI.CircleDomainRigidity.weightedScalarLevelLength</a></p></li><li id=L120><b>theorem</b> <code>OAI.CircleDomainRigidity.lintegral_periodizedLevelLength_of_aemeasurable</code> <small>line 120</small></li><li id=L135><b>theorem</b> <code>OAI.CircleDomainRigidity.weighted_circle_coarea</code> <small>line 135</small><div class="doc"><p>The weighted circle-valued coarea formula follows from the real
+one, including the measurability needed for further integration.</p></div><pre>theorem weighted_circle_coarea {D : Set ℂ} (hD : IsOpen D)
+    {f : ℂ → ℝ} (hf : ContinuousOn f D) (q : ℂ → ℝ≥0∞)
+    (hcoarea : WeightedScalarCoareaIdentity D f q) :
+    AEMeasurable (weightedCircleLevelLength D f q)
+        (volume.restrict (Ico (0 : ℝ) 1)) ∧
+      (∫⁻ t in Ico (0 : ℝ) 1, weightedCircleLevelLength D f q t) =
+        ∫⁻ z in D, q z * ENNReal.ofReal ‖fderiv ℝ f z‖ := by
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L62">OAI.CircleDomainRigidity.WeightedScalarCoareaIdentity</a>, <a href="CoareaInput.lean.html#L56">OAI.CircleDomainRigidity.weightedCircleLevelLength</a></p></li><li id=L153><b>theorem</b> <code>OAI.CircleDomainRigidity.lintegral_differentialNorm_le_area_add_energy</code> <small>line 153</small><div class="doc"><p>The elementary finite-measure <code>L² → L¹</code> bound needed for coarea.</p></div><pre>theorem lintegral_differentialNorm_le_area_add_energy (D : Set ℂ) (f : ℂ → ℝ) :
+    (∫⁻ z in D, ENNReal.ofReal ‖fderiv ℝ f z‖) ≤
+      volume D + ∫⁻ z in D, ENNReal.ofReal (‖fderiv ℝ f z‖ ^ 2) := by
+…</pre></li><li id=L171><b>theorem</b> <code>OAI.CircleDomainRigidity.scalar_coarea_integral_lt_top</code> <small>line 171</small></li><li id=L182><b>theorem</b> <code>OAI.CircleDomainRigidity.lintegral_weight_mul_differentialNorm_le_energies</code> <small>line 182</small><div class="doc"><p>Square-integrability of the weight and differential controls their
+product. Only finiteness is needed here, so the elementary quadratic
+bound suffices.</p></div><pre>theorem lintegral_weight_mul_differentialNorm_le_energies
+    (D : Set ℂ) (f q : ℂ → ℝ) (hq : Measurable q) (hq0 : ∀ z, 0 ≤ q z) :
+    (∫⁻ z in D, ENNReal.ofReal (q z) * ENNReal.ofReal ‖fderiv ℝ f z‖) ≤
+      (∫⁻ z in D, ENNReal.ofReal (q z ^ 2)) +
+        ∫⁻ z in D, ENNReal.ofReal (‖fderiv ℝ f z‖ ^ 2) := by
+…</pre></li><li id=L203><b>theorem</b> <code>OAI.CircleDomainRigidity.weighted_circle_coarea_of_finite_energy</code> <small>line 203</small><div class="doc"><p>The weighted scalar coarea input gives the actual weighted circle
+formula and almost-everywhere finite weighted length under the paper's
+two <code>L²</code> assumptions.</p></div><pre>theorem weighted_circle_coarea_of_finite_energy
+    (hcoarea : WeightedPlanarScalarCoarea) {D : Set ℂ} (hD : IsOpen D)
+    {f q : ℂ → ℝ} (hf : ContDiffOn ℝ 1 f D)
+    (hq : Measurable q) (hq0 : ∀ z, 0 ≤ q z)
+    (hq2 : (∫⁻ z in D, ENNReal.ofReal (q z ^ 2)) &lt; ∞)
+    (hf2 : (∫⁻ z in D, ENNReal.ofReal (‖fderiv ℝ f z‖ ^ 2)) &lt; ∞) :
+    AEMeasurable (weightedCircleLevelLength D f (fun z =&gt; ENNReal.ofReal (q z)))
+        (volume.restrict (Ico (0 : ℝ) 1)) ∧
+      (∫⁻ t in Ico (0 : ℝ) 1,
+        weightedCircleLevelLength D f (fun z =&gt; ENNReal.ofReal (q z)) t) =
+        (∫⁻ z in D, ENNReal.ofReal (q z) * ENNReal.ofReal ‖fderiv ℝ f z‖) ∧
+      (∫⁻ t in Ico (0 : ℝ) 1,
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L72">OAI.CircleDomainRigidity.WeightedPlanarScalarCoarea</a>, <a href="CoareaInput.lean.html#L56">OAI.CircleDomainRigidity.weightedCircleLevelLength</a></p></li><li id=L230><b>theorem</b> <code>OAI.CircleDomainRigidity.ae_finite_hausdorffMeasure_scalar_mod_one_levels_of_aemeasurable</code> <small>line 230</small><div class="doc"><p>Periodization remains valid for Lebesgue measurable lengths. The
+exceptional set and each of its integer translates are discarded
+before summing the real-level lengths.</p></div><pre>theorem ae_finite_hausdorffMeasure_scalar_mod_one_levels_of_aemeasurable
+    {Z : Type*} [MetricSpace Z] [MeasurableSpace Z] [BorelSpace Z]
+    (f : Z → ℝ) (D : Set Z) (L : ℝ → ℝ≥0∞) (hL : AEMeasurable L volume)
+    (hfinite : (∫⁻ t, L t) &lt; ∞)
+    (hlength : ∀ t, (μH[1] : Measure Z) (D ∩ {z | f z = t}) ≤ L t) :
+    ∀ᵐ (t : ℝ) ∂volume.restrict (Ico (0 : ℝ) 1),
+      (μH[1] : Measure Z) (D ∩ {z | (f z : UnitAddCircle) = (t : UnitAddCircle)}) &lt; ∞ := by
+…</pre></li><li id=L254><b>theorem</b> <code>OAI.CircleDomainRigidity.ae_finite_planar_mod_one_levels</code> <small>line 254</small><div class="doc"><p>The finite physical length conclusion from the
+coarea identity, finite area, and actual squared differential energy.</p></div><pre>theorem ae_finite_planar_mod_one_levels {D : Set ℂ} {f : ℂ → ℝ}
+    (hcoarea : ScalarCoareaIdentity D f) (harea : volume D &lt; ∞)
+    (henergy : (∫⁻ z in D, ENNReal.ofReal (‖fderiv ℝ f z‖ ^ 2)) &lt; ∞) :
+    ∀ᵐ (t : ℝ) ∂volume.restrict (Ico (0 : ℝ) 1),
+      (μH[1] : Measure ℂ) (D ∩ {z | (f z : UnitAddCircle) = (t : UnitAddCircle)}) &lt; ∞ :=
+…</pre><p class="refs">Mentions: <a href="CoareaInput.lean.html#L41">OAI.CircleDomainRigidity.ScalarCoareaIdentity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

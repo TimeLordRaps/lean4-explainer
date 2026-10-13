@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/PoissonMoments.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/PoissonMoments.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>PoissonMoments.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>PoissonMoments.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/PoissonMoments.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.DilutedSpinGlass.bounded_memLp</code> <small>line 12</small><div class="doc"><p>A bounded measurable score belongs to every finite Lp space.</p></div><pre>theorem bounded_memLp {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    [IsFiniteMeasure μ] {f : Ω → ℝ} {B : ℝ} (hf : Measurable f)
+    (hB : ∀ x, |f x| ≤ B) (p : ℝ≥0∞) : MemLp f p μ := by
+…</pre></li><li id=L19><b>theorem</b> <code>OAI.DilutedSpinGlass.variance_two_copies</code> <small>line 19</small><div class="doc"><p>The exact two-independent-copy identity for variance.</p></div><pre>theorem variance_two_copies {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    [IsProbabilityMeasure μ] {f : Ω → ℝ} (hf : MemLp f 2 μ) :
+    (∫ x, ∫ y, (f x-f y)^2 ∂μ ∂μ) = 2 * variance f μ := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.DilutedSpinGlass.variance_le_oscillation</code> <small>line 50</small><div class="doc"><p>Pairwise oscillation controls root variance without choosing a center.</p></div><pre>theorem variance_le_oscillation {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    [IsProbabilityMeasure μ] {f : Ω → ℝ} {C : ℝ} (hf : MemLp f 2 μ)
+    (hC : ∀ x y, |f x-f y| ≤ C) : variance f μ ≤ C^2/2 := by
+…</pre></li><li id=L78><b>theorem</b> <code>OAI.DilutedSpinGlass.abs_integral_le_bound</code> <small>line 78</small><div class="doc"><p>Uniform bounds survive averaging a physical root coordinate.</p></div><pre>theorem abs_integral_le_bound {f : Ω → ℝ} {B : ℝ} (hB : ∀ x, |f x| ≤ B) :
+    |∫ x, f x ∂μ| ≤ B := by
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.DilutedSpinGlass.variance_prod_decomposition</code> <small>line 84</small><div class="doc"><p>Total variance for a bounded measurable function of two independent root blocks.</p></div><pre>theorem variance_prod_decomposition {f : Ω × Λ → ℝ} {B : ℝ}
+    (hf : Measurable f) (hB : ∀ x, |f x| ≤ B) :
+    variance f (μ.prod ν) =
+      (∫ x, variance (fun y =&gt; f (x,y)) ν ∂μ) +
+        variance (fun x =&gt; ∫ y, f (x,y) ∂ν) μ := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.DilutedSpinGlass.integral_oscillation</code> <small>line 105</small><div class="doc"><p>An independent block average preserves each bounded-difference constant.</p></div><pre>theorem integral_oscillation {f : Ω × Λ → ℝ} {B C : ℝ}
+    (hf : Measurable f) (hB : ∀ z, |f z| ≤ B)
+    (hC : ∀ x x&#x27; y, |f (x,y)-f (x&#x27;,y)| ≤ C) :
+    ∀ x x&#x27;, |(∫ y, f (x,y) ∂ν) - (∫ y, f (x&#x27;,y) ∂ν)| ≤ C := by
+…</pre></li><li id=L123><b>abbrev</b> <code>OAI.DilutedSpinGlass.RootPath</code> <small>line 123</small><div class="doc"><p>A finite independent block sequence, with no finiteness assumption on a block.</p></div><pre>abbrev RootPath (Ω : Type u) : ℕ → Type u
+  | 0 =&gt; PUnit
+  | n+1 =&gt; Ω × RootPath Ω n</pre></li><li id=L127><b>instance</b> <code>OAI.DilutedSpinGlass.rootPathMeasurable</code> <small>line 127</small></li><li id=L134><b>def</b> <code>OAI.DilutedSpinGlass.rootLaw</code> <small>line 134</small></li><li id=L139><b>instance</b> <code>OAI.DilutedSpinGlass.rootLawProbability</code> <small>line 139</small></li><li id=L150><b>def</b> <code>OAI.DilutedSpinGlass.replaceRoot</code> <small>line 150</small></li><li id=L156><b>theorem</b> <code>OAI.DilutedSpinGlass.root_variance_bound</code> <small>line 156</small><div class="doc"><p>Bounded coordinate replacements give a variance bound additive in the
+number of independent root coordinates, not quadratic in that number.</p></div><pre>theorem root_variance_bound {Ω : Type*} [MeasurableSpace Ω] (n : ℕ)
+    (μ : Fin n → Measure Ω) [hμ : ∀ i, IsProbabilityMeasure (μ i)]
+    {F : RootPath Ω n → ℝ} {B : ℝ} (hF : Measurable F) (hB : ∀ x, |F x| ≤ B)
+    (C : Fin n → ℝ)
+    (hC : ∀ (i : Fin n) x y, |F x-F (replaceRoot n x i y)| ≤ C i) :
+    variance F (rootLaw n μ) ≤ ∑ i, (C i)^2/2 := by
+…</pre><p class="refs">Mentions: <a href="PoissonMoments.lean.html#L123">OAI.DilutedSpinGlass.RootPath</a>, <a href="PoissonMoments.lean.html#L150">OAI.DilutedSpinGlass.replaceRoot</a>, <a href="PoissonMoments.lean.html#L134">OAI.DilutedSpinGlass.rootLaw</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

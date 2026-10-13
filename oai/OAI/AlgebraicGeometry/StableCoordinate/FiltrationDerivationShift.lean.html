@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/StableCoordinate/FiltrationDerivationShift.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/StableCoordinate/FiltrationDerivationShift.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">StableCoordinate</a> / <span>FiltrationDerivationShift.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">StableCoordinate</a>/<span>FiltrationDerivationShift.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/StableCoordinate/FiltrationDerivationShift.lean#L1">source</a></p><div class="doc"><h3>Bounded derivation shifts for the integer source filtration</h3><p>This proves the generator-bound step in equation <code>gr:shift</code> of the source.
+It uses the actual five-variable integer filtration, including negative
+indices.  Bounds on derivatives of the five generators imply one common
+bound on the derivative of every filtration piece.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.StableCoordinate.Filtration.image_monomial_mem</code> <small>line 24</small><div class="doc"><p>The image of each monomial lies in its assigned integer filtration layer.</p></div><pre>theorem image_monomial_mem (φ : MvPolynomial (Fin 5) K →ₐ[K] A)
+    (s : Fin 5 →₀ ℕ) (c : K) :
+    φ (monomial s c) ∈ imagePiece φ (monomialWeight s) :=
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li><li id=L30><b>theorem</b> <code>OAI.StableCoordinate.Filtration.monomialWeight_single</code> <small>line 30</small><div class="doc"><p>The weight of a pure power is its exponent times the variable weight.</p></div><pre>theorem monomialWeight_single (i : Fin 5) (n : ℕ) :
+    monomialWeight (Finsupp.single i n) =
+      n • monomialWeight (Finsupp.single i 1) := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li><li id=L36><b>theorem</b> <code>OAI.StableCoordinate.Filtration.derivation_mul_mem_imagePiece</code> <small>line 36</small><div class="doc"><p>The product rule propagates a common filtration shift through multiplication.</p></div><pre>theorem derivation_mul_mem_imagePiece
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (D : Derivation K A A)
+    {a b : A} {d e m : ℤ}
+    (ha : a ∈ imagePiece φ d) (hb : b ∈ imagePiece φ e)
+    (hDa : D a ∈ imagePiece φ (d + m))
+    (hDb : D b ∈ imagePiece φ (e + m)) :
+    D (a * b) ∈ imagePiece φ (d + e + m) := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a></p></li><li id=L51><b>theorem</b> <code>OAI.StableCoordinate.Filtration.derivation_pow_mem_imagePiece</code> <small>line 51</small><div class="doc"><p>The product rule propagates a common filtration shift through every power.</p></div><pre>theorem derivation_pow_mem_imagePiece
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (D : Derivation K A A)
+    {a : A} {d m : ℤ}
+    (ha : a ∈ imagePiece φ d) (hDa : D a ∈ imagePiece φ (d + m))
+    (n : ℕ) : D (a ^ n) ∈ imagePiece φ (n • d + m) := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a></p></li><li id=L65><b>theorem</b> <code>OAI.StableCoordinate.Filtration.derivation_monomial_mem_imagePiece</code> <small>line 65</small><div class="doc"><p>A bound on generator derivatives gives the exact monomial-weight bound.</p></div><pre>theorem derivation_monomial_mem_imagePiece
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (D : Derivation K A A) (m : ℤ)
+    (hD : ∀ i : Fin 5, D (φ (X i)) ∈
+      imagePiece φ (monomialWeight (Finsupp.single i 1) + m))
+    (s : Fin 5 →₀ ℕ) (c : K) :
+    D (φ (monomial s c)) ∈ imagePiece φ (monomialWeight s + m) := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li><li id=L94><b>theorem</b> <code>OAI.StableCoordinate.Filtration.derivation_source_piece_mem_imagePiece</code> <small>line 94</small><div class="doc"><p>Generator bounds extend to every element of a source filtration piece.</p></div><pre>theorem derivation_source_piece_mem_imagePiece
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (D : Derivation K A A) (m : ℤ)
+    (hD : ∀ i : Fin 5, D (φ (X i)) ∈
+      imagePiece φ (monomialWeight (Finsupp.single i 1) + m))
+    {q : MvPolynomial (Fin 5) K} {d : ℤ} (hq : q ∈ piece K d) :
+    D (φ q) ∈ imagePiece φ (d + m) := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a>, <a href="FiltrationSeparation.lean.html#L42">OAI.StableCoordinate.Filtration.piece</a></p></li><li id=L113><b>theorem</b> <code>OAI.StableCoordinate.Filtration.derivation_imagePiece_le</code> <small>line 113</small><div class="doc"><p>The source's bounded-shift assertion, for every integer filtration degree.</p></div><pre>theorem derivation_imagePiece_le
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (D : Derivation K A A) (m : ℤ)
+    (hD : ∀ i : Fin 5, D (φ (X i)) ∈
+      imagePiece φ (monomialWeight (Finsupp.single i 1) + m))
+    (d : ℤ) :
+    imagePiece φ d ≤ (imagePiece φ (d + m)).comap D.toLinearMap := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li><li id=L123><b>theorem</b> <code>OAI.StableCoordinate.Filtration.derivation_eq_zero_of_generator_values</code> <small>line 123</small><div class="doc"><p>A derivation vanishing on all presentation generators is zero.</p></div><pre>theorem derivation_eq_zero_of_generator_values
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (hφ : Function.Surjective φ)
+    (D : Derivation K A A) (hD : ∀ i : Fin 5, D (φ (X i)) = 0) : D = 0 := by
+…</pre></li><li id=L135><b>theorem</b> <code>OAI.StableCoordinate.Filtration.exists_ne_zero_generator_value</code> <small>line 135</small><div class="doc"><p>A nonzero derivation has a nonzero value on a presentation generator.</p></div><pre>theorem exists_ne_zero_generator_value
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (hφ : Function.Surjective φ)
+    (D : Derivation K A A) (hD : D ≠ 0) :
+    ∃ i : Fin 5, D (φ (X i)) ≠ 0 := by
+…</pre></li><li id=L145><b>theorem</b> <code>OAI.StableCoordinate.Filtration.exists_derivation_imagePiece_shift</code> <small>line 145</small><div class="doc"><p>Exhaustiveness and the finite set of presentation generators supply a
+uniform integer shift for every derivation.</p></div><pre>theorem exists_derivation_imagePiece_shift
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (hφ : Function.Surjective φ)
+    (D : Derivation K A A) :
+    ∃ m : ℤ, ∀ d : ℤ,
+      imagePiece φ d ≤ (imagePiece φ (d + m)).comap D.toLinearMap := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a></p></li><li id=L166><b>theorem</b> <code>OAI.StableCoordinate.Filtration.exists_attained_derivation_imagePiece_shift</code> <small>line 166</small><div class="doc"><p>Separation makes the maximal generator shift sharp.  Some nonzero
+generator image lands in degree <code>weight + m</code>, but not the preceding layer.
+This is exactly the nonvanishing criterion for the source's leading derivation.</p></div><pre>theorem exists_attained_derivation_imagePiece_shift
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (hφ : Function.Surjective φ)
+    (hsep : (⨅ d : ℤ, imagePiece φ d) = ⊥)
+    (D : Derivation K A A) (hD : D ≠ 0) :
+    ∃ (m : ℤ) (i : Fin 5),
+      D (φ (X i)) ≠ 0 ∧
+      D (φ (X i)) ∈ imagePiece φ (monomialWeight (Finsupp.single i 1) + m) ∧
+      D (φ (X i)) ∉ imagePiece φ (monomialWeight (Finsupp.single i 1) + m - 1) ∧
+      ∀ d : ℤ, imagePiece φ d ≤ (imagePiece φ (d + m)).comap D.toLinearMap := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li><li id=L213><b>theorem</b> <code>OAI.StableCoordinate.Filtration.exists_attained_derivation_shift_with_initial_generator</code> <small>line 213</small><div class="doc"><p>For the attained maximal shift, both the source generator and its derivative
+have nonzero initial classes.  No separate exact-degree theorem for the source
+generators is needed to obtain this conclusion.</p></div><pre>theorem exists_attained_derivation_shift_with_initial_generator
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (hφ : Function.Surjective φ)
+    (hsep : (⨅ d : ℤ, imagePiece φ d) = ⊥)
+    (D : Derivation K A A) (hD : D ≠ 0) :
+    ∃ (m : ℤ) (i : Fin 5),
+      φ (X i) ∈ imagePiece φ (monomialWeight (Finsupp.single i 1)) ∧
+      φ (X i) ∉ imagePiece φ (monomialWeight (Finsupp.single i 1) - 1) ∧
+      D (φ (X i)) ∈ imagePiece φ (monomialWeight (Finsupp.single i 1) + m) ∧
+      D (φ (X i)) ∉ imagePiece φ (monomialWeight (Finsupp.single i 1) + m - 1) ∧
+      ∀ d : ℤ, imagePiece φ d ≤ (imagePiece φ (d + m)).comap D.toLinearMap := by
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li><li id=L237><b>theorem</b> <code>OAI.StableCoordinate.Filtration.exists_attained_derivation_shift_of_nonunit</code> <small>line 237</small><div class="doc"><p>Specialization of the attained-shift theorem to the noetherian-domain
+source setting, where the image of the negative-weight variable is a nonunit.</p></div><pre>theorem exists_attained_derivation_shift_of_nonunit
+    [IsNoetherianRing A] [IsDomain A]
+    (φ : MvPolynomial (Fin 5) K →ₐ[K] A) (hφ : Function.Surjective φ)
+    (hp : ¬ IsUnit (φ (X 0))) (D : Derivation K A A) (hD : D ≠ 0) :
+    ∃ (m : ℤ) (i : Fin 5),
+      φ (X i) ∈ imagePiece φ (monomialWeight (Finsupp.single i 1)) ∧
+      φ (X i) ∉ imagePiece φ (monomialWeight (Finsupp.single i 1) - 1) ∧
+      D (φ (X i)) ∈ imagePiece φ (monomialWeight (Finsupp.single i 1) + m) ∧
+      D (φ (X i)) ∉ imagePiece φ (monomialWeight (Finsupp.single i 1) + m - 1) ∧
+      ∀ d : ℤ, imagePiece φ d ≤ (imagePiece φ (d + m)).comap D.toLinearMap :=
+…</pre><p class="refs">Mentions: <a href="FiltrationSeparation.lean.html#L155">OAI.StableCoordinate.Filtration.imagePiece</a>, <a href="FiltrationSeparation.lean.html#L25">OAI.StableCoordinate.Filtration.monomialWeight</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

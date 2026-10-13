@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/InterceptEnergy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/InterceptEnergy.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>InterceptEnergy.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>InterceptEnergy.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/InterceptEnergy.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.Problem358.CellGeometry.stationary_face_moment_estimate</code> <small>line 18</small><div class="doc"><p>The stationary moment estimate in the face-coordinate form required by the
+mass-Jacobian argument. The two derivative hypotheses are ordinary derivatives
+of the actual closed-cell integrals, not quantitative inequalities.</p></div><pre>theorem stationary_face_moment_estimate
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (hKi : (interior K).Nonempty) (y : ι → E d) (c q : ι → ℝ)
+    (hy : Function.Injective y) (R : ℝ) (hR : 0 ≤ R)
+    (hbounded : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i)
+    (hmass : ∀ i, (uniformMeasure K).real (closedCell K y c i) = m i)
+    (g : ι → ι → ℝ) (b : ι → ι → E d)
+    (hB : ∀ i, HasDerivAt
+      (fun s : ℝ =&gt; ∫ x in closedCell K y (fun j =&gt; c j + s * q j) i,
+        x ∂uniformMeasure K) (∑ j, (q i - q j) • b i j) 0)
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L53><b>theorem</b> <code>OAI.Problem358.CellGeometry.fixed_mass_intercept_energy_of_convex_midpoint</code> <small>line 53</small><div class="doc"><p>Actual cell derivatives and convex-body midpoint couplings supply the full
+weighted intercept-energy estimate. No moment inequality or inverse-Jacobian
+estimate is assumed: the stationary estimate and connected range argument are
+both invoked internally.</p></div><pre>theorem fixed_mass_intercept_energy_of_convex_midpoint
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (hKi : (interior K).Nonempty) (y : ι → E d) (c : ι → ℝ)
+    (hy : Function.Injective y) (R : ℝ) (hR : 0 ≤ R)
+    (hbounded : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (m r : ι → ℝ) (v : ι → E d) {w : ℝ}
+    (hm : ∀ i, 0 &lt; m i)
+    (hmass : ∀ i, (uniformMeasure K).real (closedCell K y c i) = m i)
+    (g : ι → ι → ℝ) (b : ι → ι → E d)
+    (hg : ∀ i j, g i j = g j i) (hb : ∀ i j, b i j = b j i)
+    (hg0 : ∀ i j, 0 ≤ g i j) (G : SimpleGraph ι)
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L105><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.intercepts_comp_deriv_energy_le_of_convex_midpoint</code> <small>line 105</small><div class="doc"><p>The canonical prescribed-mass intercept path has the required uniform
+weighted derivative energy. All branch existence, uniqueness, differentiability,
+normalization and fixed-mass differentiation are supplied internally. The
+remaining inputs are the actual geometric mass/moment differentials and the
+convex-body midpoint coupling.</p></div><pre>theorem intercepts_comp_deriv_energy_le_of_convex_midpoint
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (hKi : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (Y : ℝ → (ι → E d)) (v : ι → E d) (t : ℝ)
+    (hY : HasDerivAt Y v t) (hy : Function.Injective (Y t))
+    (R : ℝ) (hR : 0 ≤ R) {w : ℝ}
+    (hbounded : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (g : ι → ι → ℝ) (b : ι → ι → E d)
+    (hg : ∀ i j, g i j = g j i) (hb : ∀ i j, b i j = b j i)
+…</pre></li><li id=L173><b>theorem</b> <code>OAI.Problem358.CellGeometry.normalizedMassMap_derivative_apply</code> <small>line 173</small><div class="doc"><p>Any Fréchet derivative of the actual normalized mass map has the canonical
+geometric formula. This follows by uniqueness from the proved line derivative;
+it is independent of how the bounded linear operator was constructed.</p></div><pre>theorem normalizedMassMap_derivative_apply
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (m : ι → ℝ) (y : ι → E d) (c : CellLaplacian.normalizedSpace m)
+    (hy : Function.Injective y) (hpos : ∀ i, ρ (closedCell K y c i) ≠ 0)
+    (A : ((ι → E d) × CellLaplacian.normalizedSpace m) →L[ℝ] (ι → ℝ))
+    (hD : HasFDerivAt (normalizedMassMap K m) A (y, c))
+    (v : ι → E d) (q : CellLaplacian.normalizedSpace m) :
+    A (v, q) = CellLaplacian.apply (PositiveFacet.canonicalFaceWeight K y c) q +
+      CellLaplacian.siteFlux (faceMoment K y c) v := by
+…</pre><p class="refs">Mentions: <a href="Laplacian.lean.html#L275">OAI.Problem358.CellLaplacian.normalizedSpace</a>, <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="FixedMass.lean.html#L116">OAI.Problem358.CellGeometry.normalizedMassMap</a>, <a href="Laplacian.lean.html#L16">OAI.Problem358.CellLaplacian.apply</a>, <a href="CanonicalLaplacian.lean.html#L26">OAI.Problem358.PositiveFacet.canonicalFaceWeight</a>, <a href="CellEnergy.lean.html#L84">OAI.Problem358.CellLaplacian.siteFlux</a>, <a href="CellFaces.lean.html#L50">OAI.Problem358.CellGeometry.faceMoment</a></p></li><li id=L202><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.contDiffAt_intercepts_of_normalizedMassC1</code> <small>line 202</small><div class="doc"><p>Genuine C¹ regularity of the normalized mass map implies C¹ regularity of
+the canonical prescribed-mass choice. The geometric derivative and connected
+Laplacian are identified internally, independently of any operator API.</p></div><pre>theorem contDiffAt_intercepts_of_normalizedMassC1
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (hKi : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (y : ι → E d) (hy : Function.Injective y)
+    (hC1 : ContDiffAt ℝ 1 (CellGeometry.normalizedMassMap K m)
+      (y, intercepts hK hconv hKi m hm hsum y)) :
+    ContDiffAt ℝ 1 (intercepts hK hconv hKi m hm hsum) y := by
+…</pre><p class="refs">Mentions: <a href="FixedMass.lean.html#L116">OAI.Problem358.CellGeometry.normalizedMassMap</a>, <a href="FixedMass.lean.html#L78">OAI.Problem358.FixedMassIntercepts.intercepts</a></p></li><li id=L241><b>theorem</b> <code>OAI.Problem358.FixedMassIntercepts.intercepts_comp_deriv_energy_le_of_massC1_convex_midpoint</code> <small>line 241</small><div class="doc"><p>Pointwise derivative energy for the actual canonical intercepts, with every
+face, graph, mass and moment differential supplied by the geometry. Only C¹
+regularity of the actual normalized mass map and the convex midpoint coupling
+remain as analytic inputs. No operator formula or chosen-branch hypothesis is
+assumed.</p></div><pre>theorem intercepts_comp_deriv_energy_le_of_massC1_convex_midpoint
+    {d : ℕ} {ι : Type*} [Fintype ι] [Nonempty ι]
+    [MeasurableSpace ι] [MeasurableSingletonClass ι]
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (hKi : (interior K).Nonempty)
+    (m : ι → ℝ) (hm : ∀ i, 0 &lt; m i) (hsum : ∑ i, m i = 1)
+    (Y : ℝ → (ι → E d)) (v : ι → E d) (t : ℝ)
+    (hY : HasDerivAt Y v t) (hy : Function.Injective (Y t))
+    (R : ℝ) (hR : 0 ≤ R) {w : ℝ}
+    (hbounded : ∀ᵐ x ∂uniformMeasure K, ‖x‖ ≤ R)
+    (hspeed : (∑ i, m i * ‖v i‖ ^ 2) ≤ w ^ 2)
+    (hC1 : ContDiffAt ℝ 1 (CellGeometry.normalizedMassMap K m)
+…</pre><p class="refs">Mentions: <a href="FixedMass.lean.html#L116">OAI.Problem358.CellGeometry.normalizedMassMap</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

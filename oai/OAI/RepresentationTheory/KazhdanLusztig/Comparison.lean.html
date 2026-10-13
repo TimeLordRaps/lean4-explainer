@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/KazhdanLusztig/Comparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/KazhdanLusztig/Comparison.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">KazhdanLusztig</a> / <span>Comparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">KazhdanLusztig</a>/<span>Comparison.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/KazhdanLusztig/Comparison.lean#L1">source</a></p><div class="doc"><p>Reciprocal low-degree rigidity and positive elementary sheaf-transfer inequalities.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.KLInvariance.Comparison.low_degree_zero_of_eval_reciprocal</code> <small>line 24</small><div class="doc"><p>A polynomial supported strictly below the middle cannot equal its
+reciprocal on an open real interval. This discharges the final rigidity
+step after the source's two comparison inequalities have been combined.</p></div><pre>theorem low_degree_zero_of_eval_reciprocal (p : ℝ[X]) (d : ℕ)
+    (hp : 2 * p.natDegree &lt; d)
+    (h : ∀ q : ℝ, 0 &lt; q → q &lt; 1 → p.eval q = q ^ d * p.eval q⁻¹) : p = 0 := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.KLInvariance.Comparison.eq_of_eval_difference_reciprocal</code> <small>line 50</small><div class="doc"><p>The exact polynomial conclusion from reciprocal difference equality,
+without assuming positivity of KL coefficients.</p></div><pre>theorem eq_of_eval_difference_reciprocal (p p&#x27; : ℤ[X]) (d : ℕ)
+    (hp : 2 * p.natDegree &lt; d) (hp&#x27; : 2 * p&#x27;.natDegree &lt; d)
+    (h : ∀ q : ℝ, 0 &lt; q → q &lt; 1 →
+      p.eval₂ (Int.castRingHom ℝ) q - p&#x27;.eval₂ (Int.castRingHom ℝ) q =
+      q ^ d * (p.eval₂ (Int.castRingHom ℝ) q⁻¹ -
+        p&#x27;.eval₂ (Int.castRingHom ℝ) q⁻¹)) : p = p&#x27; := by
+…</pre></li><li id=L74><b>def</b> <code>OAI.KLInvariance.Comparison.transfer</code> <small>line 74</small><div class="doc"><p>The genuine elementary transfer <code>id + T E_xy</code> from the source's edge
+schedule, expressed on vectors rather than with a choice of enumeration.</p></div><pre>noncomputable def transfer (T : ℝ) (x y : V) (v : V → ℝ) : V → ℝ :=
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.KLInvariance.Comparison.transfer_monotone</code> <small>line 77</small></li><li id=L85><b>theorem</b> <code>OAI.KLInvariance.Comparison.transfer_injective</code> <small>line 85</small></li><li id=L98><b>def</b> <code>OAI.KLInvariance.Comparison.idealState</code> <small>line 98</small></li><li id=L105><b>theorem</b> <code>OAI.KLInvariance.Comparison.state_le_ideal</code> <small>line 105</small><div class="doc"><p>Propagation of the actual Hilbert-series bound through all earlier edges.
+No freeness or positivity of the <em>vectors</em> is needed for this part.</p></div><pre>theorem state_le_ideal (T : ℝ) (hT : 0 ≤ T) (edges : ℕ → V × V)
+    (D : ℕ → V → ℝ) (n : ℕ)
+    (hstep : ∀ k &lt; n, D (k + 1) ≤ transfer T (edges k).1 (edges k).2 (D k)) :
+    D n ≤ idealState T edges (D 0) n := by
+…</pre><p class="refs">Mentions: <a href="Comparison.lean.html#L74">OAI.KLInvariance.Comparison.transfer</a>, <a href="Comparison.lean.html#L98">OAI.KLInvariance.Comparison.idealState</a></p></li><li id=L119><b>theorem</b> <code>OAI.KLInvariance.Comparison.every_step_eq_of_endpoint_eq</code> <small>line 119</small><div class="doc"><p>Endpoint equality forces every edge-image deficit to vanish, including
+those invisible in codimension one. This uses actual inequalities and the
+injectivity of elementary edge transfers; it does not assume image equality.
+It is the no-deficit conclusion of source (6.8).</p></div><pre>theorem every_step_eq_of_endpoint_eq (T : ℝ) (hT : 0 ≤ T)
+    (edges : ℕ → V × V) (D : ℕ → V → ℝ) (n : ℕ)
+    (hedges : ∀ k &lt; n, (edges k).1 ≠ (edges k).2)
+    (hstep : ∀ k &lt; n, D (k + 1) ≤ transfer T (edges k).1 (edges k).2 (D k))
+    (hend : D n = idealState T edges (D 0) n) :
+    ∀ k &lt; n, D (k + 1) = transfer T (edges k).1 (edges k).2 (D k) := by
+…</pre><p class="refs">Mentions: <a href="Comparison.lean.html#L74">OAI.KLInvariance.Comparison.transfer</a>, <a href="Comparison.lean.html#L98">OAI.KLInvariance.Comparison.idealState</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

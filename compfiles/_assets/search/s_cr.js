@@ -1,0 +1,1 @@
+window.l4shard("cr", [["Imo1970P2.pow_cross_lt",23,43],["Imo1970P6.crossing_lemma",25,142],["Imo2014P6.Line.crossT",110,374],["Imo2019P3.exists_adj_crossing",124,352],["Imo2026P5.cross",148,137],["Usa2007P4.cross",257,619],["Usa2007P4.crossAux",257,606],["Usa2007P4.cross_def",257,624],["Usa2007P4.mem_cross_iff",257,642],["Usa2007P4.mem_cross_of_nat",257,654]]);

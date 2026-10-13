@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lean4 Domain Explanation Language (L4DEL) guide — Formal Conjectures</title>
+<meta name="description" content="Explore Formal Conjectures: Lean declarations, pinned source, explanations, and dependencies.">
+<meta property="og:title" content="Lean4 Domain Explanation Language (L4DEL) guide — Formal Conjectures">
+<meta property="og:description" content="Explore Formal Conjectures: Lean declarations, pinned source, explanations, and dependencies.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/formal-conjectures/annotate.html">
+<meta property="og:url" content="https://timelordraps.github.io/lean4-explainer/formal-conjectures/annotate.html">
+<link rel="stylesheet" href="_assets/site.css">
+<link rel="icon" href="_assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-root="">
+<a class="skip-link" href="#content">Skip to content</a>
+<main id="content" tabindex="-1">
+<header class="site-head">
+<nav class="top"><a href="../index.html">All corpora</a> | <a href="index.html">Index</a> | <a href="glossary.html">Glossary</a> | <a href="find.html">Find</a> | <a href="annotate.html">Explanation guide</a> | <a href="learning-path.html">Learning path</a> | <a href="trust.html">Trust</a> | <a href="map.html">Map</a> | <a href="search.html">Search</a></nav>
+</header>
+<h1>Lean4 Domain Explanation Language (L4DEL)</h1>
+<section class="explanation-legend" aria-labelledby="guide-legend-heading"><h2 id="guide-legend-heading">Acronym legend</h2><dl class="acronym-legend"><dt><abbr title="Lean4 Domain Explanation Language">L4DEL</abbr></dt><dd>Lean4 Domain Explanation Language</dd></dl><p>A domain explanation language keeps expert meaning, provenance, definitions, and reading order explicit instead of asking a reader to infer them from jargon.</p></section>
+<p class="muted">lean4-explainer reads Lean4 Domain Explanation Language directives from Lean line comments. An annotation is optional at first. The tool checks every directive it finds, and for each declaration without a valid annotation it prints a template to paste in.</p>
+<h2>Workflow</h2>
+<ol><li>Run <code>lean4-explainer check --lean-root lean</code> to see errors and warnings.</li><li>Run <code>lean4-explainer annotate --lean-root lean --file Demo/Basics.lean</code> to print templates.</li><li>Paste a template directly above its declaration and replace every TODO_ value.</li><li>Run check again. A TODO_ value left behind is a warning, so the build reports it.</li></ol>
+<h2>Directives</h2>
+<ul><li><code>title</code>: a short heading. At most one.</li><li><code>intuition</code>: one plain sentence on why the result holds. At most one.</li><li><code>step</code>: one proof step, in order. Any number.</li><li><code>prereq</code>: comma-separated fully qualified names the proof depends on.</li><li><code>see</code>: comma-separated related declarations.</li><li><code>term</code>: <code>word = definition</code>. Each word is defined once in the project.</li><li><code>acronym</code>: <code>SHORT = expansion</code>. The expansion appears in the legend at the top of every affected file page. Acronym-looking source text without a supplied expansion is labeled as unresolved; the renderer never guesses what an upstream author meant.</li><li><code>source</code>: <code>label = https://URL</code>. Repeat it for independent sources.</li><li><code>quote</code>: <code>source label = exact excerpt</code>. The label must match a source line; the excerpt is rendered as a linked quotation rather than being passed off as the explainer's prose.</li></ul>
+<h2>Sources and attribution</h2>
+<p>Use immutable links where possible: a full-commit repository blob for the exact formal source, a DOI or versioned arXiv record for a paper, or a versioned project blueprint. A citation makes an explanation traceable; it does not by itself certify that the explanation is correct.</p>
+<h2>Rules</h2>
+<p>Only line comments carry directives. A directive attaches to the next declaration. Anonymous declarations cannot carry directives. Keys are case-sensitive. The full grammar is in the module docstring of <code>lean4_explainer_l4del/grammar.py</code>.</p>
+<h2>Same-named declarations</h2>
+<p>Identical copies of a declaration count as one object, so a plain name refers to it. Declarations that share a name but differ in code are distinct definitions. Refer to one as <code>Name@path</code>, for example <code>Demo.value@Var/B.lean</code>.</p>
+<h2>Example</h2>
+<pre>/-- Three items in two boxes put two items in one box. -/
+-- L4DEL: title: Pigeonhole for three items in two boxes
+-- L4DEL: intuition: Three items cannot all sit in different boxes when there are only two boxes.
+-- L4DEL: step: Assume no box holds two items.
+-- L4DEL: step: Then three items need three different boxes, which do not exist.
+-- L4DEL: source: Formal statement = https://example.org/pinned-source#L1
+-- L4DEL: quote: Formal statement = Three items in two boxes put two items in one box.
+-- L4DEL: acronym: DEL = Domain Explanation Language
+-- L4DEL: prereq: Demo.box_count
+-- L4DEL: term: box = a container for one item
+theorem pigeonhole_three_two : ...</pre>
+</main>
+<footer class="site-footer"><a href="https://github.com/google-deepmind/formal-conjectures/tree/1646ca16afd6cc7a693d3bdc9f066c4d3cc01a89">Project source</a> · <a href="https://github.com/TimeLordRaps/lean4-explainer/issues/new?title=Site%20feedback%3A%20">Report a site issue</a></footer>
+<script src="_assets/site.js"></script>
+<script src="_assets/map.js" defer></script>
+<script src="_assets/lean2tex.js" defer></script>
+<script src="_assets/reader.js" defer></script>
+</body>
+</html>

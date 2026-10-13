@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/PairPathMesh.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/PairPathMesh.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>PairPathMesh.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>PairPathMesh.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/PairPathMesh.lean#L1">source</a></p><div class="doc"><h3>Fixed meshes and height control of image paths</h3><p>The mesh depends only on the requested error and the common path-length
+constant, not on the scale or on the endpoint. The actual <code>L²</code> height cocycle
+controls its finitely many samples; the common Lipschitz bounds then control
+every point of the image path.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_fixed_path_mesh</code> <small>line 23</small><div class="doc"><p>A single finite mesh for the unit path interval.</p></div><pre>theorem exists_fixed_path_mesh {δ : ℝ} (hδ : 0 &lt; δ) :
+    ∃ S : Finset (Set.Icc (0 : ℝ) 1),
+      ∀ t, ∃ u ∈ S, dist t u ≤ δ := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.PolycyclicRecognition.image_path_height_control</code> <small>line 41</small><div class="doc"><p>Sampled height control extends to the whole image path, with the precise
+linear loss furnished by the Lipschitz constants and mesh spacing.</p></div><pre>theorem image_path_height_control
+    (p : NormalizedPair G Λ) (π : G →* Multiplicative W) (l : G →* Multiplicative W)
+    {Lπ L r δ η ε : ℝ} (hLπ : 0 ≤ Lπ) (hL : 0 ≤ L) (hr : 0 ≤ r)
+    (hπ : ∀ x y, ‖(π x).toAdd - (π y).toAdd‖ ≤ Lπ * dist x y)
+    (γ : T → G) (hγ : ∀ t u, dist (γ t) (γ u) ≤ L * r * dist t u)
+    (S : Finset T) (hmesh : ∀ t, ∃ u ∈ S, dist t u ≤ δ)
+    (E : Set W)
+    (hheight : ∀ u ∈ S, ∃ w ∈ E, ‖(l (γ u)).toAdd - r • w‖ ≤ ε * r)
+    (herror : ∀ u ∈ S, ‖pairHeight π (γ u) p - (l (γ u)).toAdd‖ ≤ η * r) :
+    ∀ t, ∃ w ∈ E,
+      ‖pairHeight π (γ t) p - r • w‖ ≤ (Lπ * Λ * L * δ + η + ε) * r := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L26">OAI.PolycyclicRecognition.pairHeight</a></p></li><li id=L85><b>theorem</b> <code>OAI.PolycyclicRecognition.eLpNorm_pairHeight_error</code> <small>line 85</small><div class="doc"><p>The norm in the actual Hilbert space equals the <code>L²</code> seminorm of the
+pointwise height error; there is no choice of pointwise representatives here.</p></div><pre>theorem eLpNorm_pairHeight_error
+    (π : G →* Multiplicative W) (hπ : Continuous fun g =&gt; (π g).toAdd)
+    (l : G →* Multiplicative W) (g : G) :
+    eLpNorm (fun p : NormalizedPair G Λ =&gt; pairHeight π g p - (l g).toAdd) 2 μ =
+      ENNReal.ofReal ‖pairHeightL2 μ π hπ g - Lp.const 2 μ (l g).toAdd‖ := by
+…</pre><p class="refs">Mentions: <a href="CompactPairs.lean.html#L106">OAI.PolycyclicRecognition.NormalizedPair</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L26">OAI.PolycyclicRecognition.pairHeight</a>, <a href="../Geometry/PairHeightCocycle.lean.html#L62">OAI.PolycyclicRecognition.pairHeightL2</a></p></li><li id=L98><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_pair_good_on_mesh</code> <small>line 98</small><div class="doc"><p>The fixed finite-mesh selection for the actual normalized maps.</p></div><pre>theorem exists_pair_good_on_mesh
+    {I Y : Type*} [Fintype I] [MeasurableSpace Y]
+    [MeasurableSpace G] [BorelSpace G] [MeasurableSpace W] [BorelSpace W]
+    [SecondCountableTopology W]
+    (ν : Measure Y) [IsProbabilityMeasure ν]
+    (π : G →* Multiplicative W) (hπ : Continuous fun g =&gt; (π g).toAdd)
+    (l : G →* Multiplicative W) (hl : Continuous fun g =&gt; (l g).toAdd)
+    (γ : Y → I → G) (hγ : ∀ i, Measurable (fun y =&gt; γ y i))
+    {a : ℝ} {η t : ℝ≥0∞} (hη : η ≠ 0) (hηtop : η ≠ ∞)
+    (hbound : ∀ i y, ‖pairHeightL2 μ π hπ (γ y i) -
+      Lp.const 2 μ (l (γ y i)).toAdd‖ ≤ a)
+    (hsmall : (Fintype.card I : ℝ≥0∞) * (η⁻¹ ^ 2 * (ENNReal.ofReal a) ^ 2) &lt; t) :
+…</pre><p class="refs">Mentions: <a href="../Geometry/PairHeightCocycle.lean.html#L62">OAI.PolycyclicRecognition.pairHeightL2</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

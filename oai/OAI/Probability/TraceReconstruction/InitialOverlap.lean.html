@@ -1,0 +1,132 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction/InitialOverlap.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction/InitialOverlap.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">TraceReconstruction</a> / <span>InitialOverlap.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">TraceReconstruction</a>/<span>InitialOverlap.lean</span></code></h1><p class="muted">61 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction/InitialOverlap.lean#L1">source</a></p><div class="doc"><h3>InitialOverlap</h3><p>Literal periods, count overlap, initial low/high energies, genuine densities, and centered moment bounds.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.TraceReconstruction.primitive_one_add_score_nonneg</code> <small>line 23</small></li><li id=L30><b>theorem</b> <code>OAI.TraceReconstruction.conditionalPeriodLaw_density</code> <small>line 30</small><div class="doc"><p>Exact conditional law of the genuine periodic primitive observation.</p></div><pre>theorem conditionalPeriodLaw_density {u m l : ℕ} (hl : l ≤ u*m)
+    {q : ℝ} (hq : q ∈ Set.Ioo 0 1) (off : Fin u → Fin m) (x : Fin l → PrimitiveMark) :
+    (conditionalPrimitiveLaw hl q hq (defectTypes (periodSlot off))).mass x =
+      ((primitiveMarkLaw q hq false).product l).mass x *
+        averagedDensity (uniformSubsetLaw l (by simpa using hl))
+          (defectAtRank (Finset.univ.image (periodSlot off))) (primitiveScore q) x := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L299">OAI.TraceReconstruction.PrimitiveMark</a>, <a href="InitialMoments.lean.html#L607">OAI.TraceReconstruction.conditionalPrimitiveLaw</a>, <a href="InitialMoments.lean.html#L670">OAI.TraceReconstruction.defectTypes</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a>, <a href="Model.lean.html#L332">OAI.TraceReconstruction.primitiveMarkLaw</a>, <a href="FiniteLaw.lean.html#L1403">OAI.TraceReconstruction.averagedDensity</a>, <a href="Ranks.lean.html#L65">OAI.TraceReconstruction.uniformSubsetLaw</a>, <a href="Ranks.lean.html#L98">OAI.TraceReconstruction.defectAtRank</a>, <a href="Model.lean.html#L347">OAI.TraceReconstruction.primitiveScore</a></p></li><li id=L42><b>def</b> <code>OAI.TraceReconstruction.primitivePeriodConstant</code> <small>line 42</small><div class="doc"><p>Absolute constant in the conditional second-moment exponent.</p></div><pre>def primitivePeriodConstant : ℝ := 36*rankSchurConstant^2</pre><p class="refs">Mentions: <a href="Ranks.lean.html#L1707">OAI.TraceReconstruction.rankSchurConstant</a></p></li><li id=L44><b>theorem</b> <code>OAI.TraceReconstruction.primitivePeriodConstant_nonneg</code> <small>line 44</small></li><li id=L48><b>theorem</b> <code>OAI.TraceReconstruction.conditionalPeriod_second_moment</code> <small>line 48</small></li><li id=L78><b>theorem</b> <code>OAI.TraceReconstruction.conditionalPeriod_overlap</code> <small>line 78</small><div class="doc"><p>Association converts the two actual conditional period-laws into common
+mass. The two original block totals may differ; only the retained count agrees.</p></div><pre>theorem conditionalPeriod_overlap {u v m l : ℕ}
+    (hl : l ≤ u*m) (hl&#x27; : l ≤ v*m) (hm : 32 ≤ m) (hum : u ≤ m) (hvm : v ≤ m)
+    {q θ θ&#x27; : ℝ} (hq : q ∈ Set.Ioc 0 (1/2:ℝ))
+    (hθ : θ ∈ Set.Icc (1-q^2) (1-q^2/4))
+    (hθ&#x27; : θ&#x27; ∈ Set.Icc (1-q^2) (1-q^2/4))
+    (hmean : ((u*m:ℕ):ℝ)*θ=l) (hmean&#x27; : ((v*m:ℕ):ℝ)*θ&#x27;=l)
+    (hv : 1 ≤ ((u*m:ℕ):ℝ)*θ*(1-θ)) (hv&#x27; : 1 ≤ ((v*m:ℕ):ℝ)*θ&#x27;*(1-θ&#x27;))
+    (off : Fin u → Fin m) (off&#x27; : Fin v → Fin m)
+    (hoff : ∀ j, |((off j).val:ℝ)-(m:ℝ)/2| ≤ 3)
+    (hoff&#x27; : ∀ j, |((off&#x27; j).val:ℝ)-(m:ℝ)/2| ≤ 3)
+    (hdiff : ∀ j k, |((off j).val:ℝ)-(off k).val| ≤ 2)
+    (hdiff&#x27; : ∀ j k, |((off&#x27; j).val:ℝ)-(off&#x27; k).val| ≤ 2) :
+…</pre></li><li id=L154><b>theorem</b> <code>OAI.TraceReconstruction.primitive_count_window</code> <small>line 154</small><div class="doc"><p>The common count window is admissible for every genuine period count in
+the base case. All hypotheses are elementary size/location inequalities.</p></div><pre>theorem primitive_count_window {q θ : ℝ} {m n l : ℕ}
+    (hq : q ∈ Set.Ioc 0 (1/2:ℝ)) (hm : 32 ≤ m)
+    (hscale : 16 ≤ q^3*(m:ℝ))
+    (hnlo : q*(m:ℝ)^2/2 ≤ (n:ℝ)) (hnhi : (n:ℝ) ≤ (m:ℝ)^2)
+    (hmean : (n:ℝ)*θ=l)
+    (hdev : |(l:ℝ)-(n:ℝ)*(1-q^2/2)| ≤ 2*(m:ℝ)) :
+    θ ∈ Set.Icc (1-q^2) (1-q^2/4) ∧
+    1 ≤ (n:ℝ)*θ*(1-θ) ∧
+    Real.sqrt ((n:ℝ)*θ*(1-θ)) ≤ (m:ℝ) ∧
+    ((l:ℝ)-(n:ℝ)*(1-q^2/2))^2 / ((n:ℝ)*(1-q^2/2)*(q^2/2)) ≤ 32/q^3 := by
+…</pre></li><li id=L218><b>theorem</b> <code>OAI.TraceReconstruction.primitive_count_mass_lower</code> <small>line 218</small><div class="doc"><p>Genuine binomial count mass in the window, uniformly in the vanishing
+working deletion rate, with an absolute explicit exponential cost.</p></div><pre>theorem primitive_count_mass_lower {q : ℝ} {m n l : ℕ}
+    (hq : q ∈ Set.Ioc 0 (1/2:ℝ)) (hm : 32 ≤ m)
+    (hscale : 16 ≤ q^3*(m:ℝ))
+    (hnlo : q*(m:ℝ)^2/2 ≤ (n:ℝ)) (hnhi : (n:ℝ) ≤ (m:ℝ)^2)
+    (hdev : |(l:ℝ)-(n:ℝ)*(1-q^2/2)| ≤ 2*(m:ℝ)) :
+    Real.exp (-32/q^3)/(12*(m:ℝ)) ≤ binomialMass n (1-primitiveErasure q) l := by
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L657">OAI.TraceReconstruction.binomialMass</a>, <a href="Model.lean.html#L305">OAI.TraceReconstruction.primitiveErasure</a></p></li><li id=L253><b>def</b> <code>OAI.TraceReconstruction.initialSideCount</code> <small>line 253</small><div class="doc"><p>The actual base count, with no redefinition of the working channel.</p></div><pre>def initialSideCount (q : ℝ) (m : ℕ) : ℕ := ⌊q*(m:ℝ)⌋₊</pre></li><li id=L255><b>theorem</b> <code>OAI.TraceReconstruction.initialSideCount_bounds</code> <small>line 255</small></li><li id=L278><b>def</b> <code>OAI.TraceReconstruction.commonCountIndex</code> <small>line 278</small><div class="doc"><p>An injective enumeration of m common integer counts; no asymptotic
+cardinality argument is left implicit.</p></div><pre>def commonCountIndex {m : ℕ} (k : ℕ) (p : ℝ) (hp : p ∈ Set.Icc 0 1) (j : Fin m) :
+    Fin ((k+1)*m+1) :=
+…</pre></li><li id=L289><b>theorem</b> <code>OAI.TraceReconstruction.commonCountIndex_injective</code> <small>line 289</small></li><li id=L296><b>theorem</b> <code>OAI.TraceReconstruction.commonCountIndex_deviation</code> <small>line 296</small></li><li id=L323><b>theorem</b> <code>OAI.TraceReconstruction.ordinaryRun_replicate</code> <small>line 323</small></li><li id=L331><b>theorem</b> <code>OAI.TraceReconstruction.primitive_period_word</code> <small>line 331</small><div class="doc"><p>Unique primitive parsing identifies the rank model with the literal
+period words in the manuscript, not just a law on unlabeled locations.</p></div><pre>theorem primitive_period_word {m : ℕ} (off : Fin m) :
+    (List.ofFn (fun j : Fin m =&gt; primitiveBlock (decide (j=off)))).flatten =
+      initialPeriod m off.val := by
+…</pre><p class="refs">Mentions: <a href="InitialMoments.lean.html#L402">OAI.TraceReconstruction.primitiveBlock</a>, <a href="Model.lean.html#L414">OAI.TraceReconstruction.initialPeriod</a></p></li><li id=L349><b>theorem</b> <code>OAI.TraceReconstruction.periodSlot_range_iff</code> <small>line 349</small><div class="doc"><p>Membership in the true periodic defect set is exactly the within-period
+slot test, uniformly for all deterministic period types.</p></div><pre>theorem periodSlot_range_iff {u m : ℕ} (off : Fin u → Fin m) (i : Fin u) (j : Fin m) :
+    (⟨i.val*m+j.val,by
+      have hi := Nat.mul_le_mul_right m (Nat.succ_le_of_lt i.isLt)
+…</pre></li><li id=L373><b>theorem</b> <code>OAI.TraceReconstruction.periodic_primitive_word</code> <small>line 373</small><div class="doc"><p>The simulator's actual primitive list is the unpadded source gadget.</p></div><pre>theorem periodic_primitive_word {u m : ℕ} (off : Fin u → Fin m) :
+    (((List.ofFn (defectTypes (periodSlot off))).map primitiveBlock).flatten) =
+      periodString m u off := by
+…</pre><p class="refs">Mentions: <a href="InitialMoments.lean.html#L670">OAI.TraceReconstruction.defectTypes</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a>, <a href="InitialMoments.lean.html#L402">OAI.TraceReconstruction.primitiveBlock</a>, <a href="Model.lean.html#L446">OAI.TraceReconstruction.periodString</a></p></li><li id=L393><b>theorem</b> <code>OAI.TraceReconstruction.periodString_constant</code> <small>line 393</small></li><li id=L405><b>theorem</b> <code>OAI.TraceReconstruction.primitive_count_admissible</code> <small>line 405</small></li><li id=L426><b>def</b> <code>OAI.TraceReconstruction.initialOverlapLower</code> <small>line 426</small><div class="doc"><p>The common-mass constant depends only on the working deletion rate.</p></div><pre>def initialOverlapLower (q : ℝ) : ℝ :=
+…</pre></li><li id=L429><b>theorem</b> <code>OAI.TraceReconstruction.initialOverlapLower_pos</code> <small>line 429</small></li><li id=L433><b>theorem</b> <code>OAI.TraceReconstruction.initialOverlapLower_lt_eighth</code> <small>line 433</small></li><li id=L445><b>theorem</b> <code>OAI.TraceReconstruction.initial_counted_overlap</code> <small>line 445</small><div class="doc"><p>Unconditioned common mass of the two genuine count-and-mark simulators.
+This includes all retained counts, not a conditioned or changed channel.</p></div><pre>theorem initial_counted_overlap {q : ℝ} {m : ℕ}
+    (hq : q ∈ Set.Ioc 0 (1/2:ℝ)) (hm : 32 ≤ m)
+    (hscale : 16 ≤ q^3*(m:ℝ)) (off : Fin m)
+    (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 3) :
+    let k := initialSideCount q m
+…</pre><p class="refs">Mentions: <a href="InitialOverlap.lean.html#L253">OAI.TraceReconstruction.initialSideCount</a></p></li><li id=L552><b>theorem</b> <code>OAI.TraceReconstruction.simulations_overlap_le</code> <small>line 552</small><div class="doc"><p>Data processing for common exact simulators, stated as a common-mass
+inequality and allowing unequal original lengths.</p></div><pre>theorem simulations_overlap_le {α : Type*} [Fintype α] {q : ℝ}
+    (hq : q ∈ Set.Icc 0 1) (P Q : FiniteLaw α) (decode : α → List Bool)
+    (x y : List Bool) (hP : SimulatesTrace q P decode x)
+    (hQ : SimulatesTrace q Q decode y) :
+    P.overlap Q ≤ listTraceOverlap q hq x y := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L179">OAI.TraceReconstruction.SimulatesTrace</a>, <a href="Oracles.lean.html#L1432">OAI.TraceReconstruction.listTraceOverlap</a></p></li><li id=L567><b>theorem</b> <code>OAI.TraceReconstruction.initial_pure_trace_overlap</code> <small>line 567</small><div class="doc"><p>The initial hidden-bit overlap for ordinary complete deletion traces of
+consecutive pure runs. This is the unconditioned original channel.</p></div><pre>theorem initial_pure_trace_overlap {q : ℝ} {m : ℕ}
+    (hq : q ∈ Set.Ioc 0 (1/2:ℝ)) (hm : 32 ≤ m)
+    (hscale : 16 ≤ q^3*(m:ℝ)) (off : Fin m)
+    (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 3) :
+    let k := initialSideCount q m
+…</pre><p class="refs">Mentions: <a href="InitialOverlap.lean.html#L253">OAI.TraceReconstruction.initialSideCount</a></p></li><li id=L598><b>def</b> <code>OAI.TraceReconstruction.oneStepOffset</code> <small>line 598</small><div class="doc"><p>An interior period slot admits the three literal shifts.</p></div><pre>def oneStepOffset {m : ℕ} (off : Fin m)
+    (hi : 1  ≤  off.val ∧ off.val + 1 &lt; m) (a : Fin 3) : Fin m :=
+…</pre></li><li id=L602><b>theorem</b> <code>OAI.TraceReconstruction.oneStepOffset_add_one</code> <small>line 602</small></li><li id=L608><b>theorem</b> <code>OAI.TraceReconstruction.oneStepOffset_distance</code> <small>line 608</small></li><li id=L618><b>theorem</b> <code>OAI.TraceReconstruction.constantPeriod_safe</code> <small>line 618</small></li><li id=L631><b>theorem</b> <code>OAI.TraceReconstruction.shifted_constantPeriod</code> <small>line 631</small></li><li id=L644><b>theorem</b> <code>OAI.TraceReconstruction.signedPeriod_geometry</code> <small>line 644</small><div class="doc"><p>Arbitrary deterministic motif orientations remain genuine one-defect
+periods with the exact geometry used in the high-degree rank bound.</p></div><pre>theorem signedPeriod_geometry {u m : ℕ} (off : Fin m)
+    (hi : 1  ≤  off.val ∧ off.val + 1 &lt; m)
+    (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 2)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L671><b>theorem</b> <code>OAI.TraceReconstruction.primitive_score_evenMoment</code> <small>line 671</small><div class="doc"><p>Every moment of the actual primitive score has the source uniform
+bound.</p></div><pre>theorem primitive_score_evenMoment {q : ℝ} (hq : q∈Set.Ioo 0 1) (k : ℕ) :
+    (primitiveMarkLaw q hq false).expect (fun z =&gt; |primitiveScore q z|^(2*k))  ≤ 
+      (2/q)^(2*k) := by
+…</pre><p class="refs">Mentions: <a href="Model.lean.html#L332">OAI.TraceReconstruction.primitiveMarkLaw</a>, <a href="Model.lean.html#L347">OAI.TraceReconstruction.primitiveScore</a></p></li><li id=L684><b>theorem</b> <code>OAI.TraceReconstruction.initial_moment_of_energy</code> <small>line 684</small><div class="doc"><p>Hypercontractivity now applies directly to the actual signed initial
+density difference under its ordinary-mark reference law.</p></div><pre>theorem initial_moment_of_energy {u m l : ℕ} (hl : l ≤ u*m) (off : Fin m)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L699><b>theorem</b> <code>OAI.TraceReconstruction.degree_square_mixture_le</code> <small>line 699</small><div class="doc"><p>Jensen's inequality on each homogeneous degree.</p></div><pre>theorem degree_square_mixture_le {Ω : Type*} [Fintype Ω] {n : ℕ}
+    (P : FiniteLaw Ω) (A : Ω → (Fin n → Bool) → ℝ) (r : ℕ) :
+    (∑σ : Fin n → Bool, if monomialDegree σ=r then
+      (P.expect (fun ω =&gt; A ω σ))^2 else 0)  ≤ 
+    P.expect (fun ω =&gt; ∑σ : Fin n → Bool,
+      if monomialDegree σ=r then (A ω σ)^2 else 0) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="FiniteLaw.lean.html#L1129">OAI.TraceReconstruction.monomialDegree</a></p></li><li id=L716><b>theorem</b> <code>OAI.TraceReconstruction.degree_square_sub_le</code> <small>line 716</small></li><li id=L725><b>theorem</b> <code>OAI.TraceReconstruction.mixedMotifCoefficient_expect</code> <small>line 725</small></li><li id=L736><b>theorem</b> <code>OAI.TraceReconstruction.mixedMotifCoefficient_empty</code> <small>line 736</small></li><li id=L743><b>theorem</b> <code>OAI.TraceReconstruction.mixedMotif_degree_le</code> <small>line 743</small><div class="doc"><p>Uniform high-degree estimate after the real hidden-anchor mixture.</p></div><pre>theorem mixedMotif_degree_le {u m l r : ℕ} (hl : l ≤ u*m) (hr : 0 &lt; r)
+    (hru : r ≤ u) (hm : 32 ≤ m) (hum : u ≤ m) (off : Fin m)
+    (hi : 1 ≤ off.val ∧ off.val+1 &lt; m) (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 2)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L768><b>theorem</b> <code>OAI.TraceReconstruction.mixedMotif_degree_vanish</code> <small>line 768</small><div class="doc"><p>There are never more selected ranks than actual defect periods, even
+in the hidden-anchor mixture.</p></div><pre>theorem mixedMotif_degree_vanish {u m l r : ℕ} (hl : l ≤ u*m) (hru : u &lt; r) (off : Fin m)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L782><b>theorem</b> <code>OAI.TraceReconstruction.signedMotif_degree_zero</code> <small>line 782</small><div class="doc"><p>The signed difference has no constant term.</p></div><pre>theorem signedMotif_degree_zero {u m l : ℕ} (hl : l ≤ u*m) (off : Fin m)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L793><b>theorem</b> <code>OAI.TraceReconstruction.signedMotif_degree_cancellation</code> <small>line 793</small><div class="doc"><p>Low-degree cancellation is for exactly the coefficients of the
+conditional motif densities, without a rank surrogate at the boundary.</p></div><pre>theorem signedMotif_degree_cancellation {u m l r : ℕ}
+    (hu : 0 &lt; u) (hm : 128 ≤ m) (hr : 0 &lt; r) (hl : l ≤ u*m)
+    (off : Fin m) (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 3)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L824><b>theorem</b> <code>OAI.TraceReconstruction.finite_geometric_tail_le</code> <small>line 824</small><div class="doc"><p>A finite tail is no larger than the full geometric tail.</p></div><pre>theorem finite_geometric_tail_le {a : ℝ} (ha : 0 ≤ a) (ha1 : a &lt; 1) (N R : ℕ) :
+    (∑r ∈ Finset.range N, if R ≤ r then a^r else 0) ≤ a^R/(1-a) := by
+…</pre></li><li id=L849><b>theorem</b> <code>OAI.TraceReconstruction.multilinearEnergy_low_high</code> <small>line 849</small><div class="doc"><p>Splitting the exact homogeneous expansion, not a surrogate polynomial.</p></div><pre>theorem multilinearEnergy_low_high {n R : ℕ} (A : (Fin n → Bool) → ℝ)
+    (w a K : ℝ) (hw : 0 ≤ w) (ha : 0 ≤ a) (ha1 : a &lt; 1) (hK : 0 ≤ K)
+    (L : ℕ → ℝ)
+    (hlow : ∀r &lt; R, (∑σ : Fin n → Bool, if monomialDegree σ=r then A σ^2 else 0) ≤ L r)
+    (hhigh : ∀r, R ≤ r → w^(2*r)*(∑σ : Fin n → Bool,
+      if monomialDegree σ=r then A σ^2 else 0) ≤ K*a^r)
+    (hL : ∀r, 0 ≤ L r) :
+    multilinearEnergy A w ≤ (∑r ∈ Finset.range R, w^(2*r)*L r)+K*a^R/(1-a) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L1129">OAI.TraceReconstruction.monomialDegree</a>, <a href="FiniteLaw.lean.html#L1036">OAI.TraceReconstruction.multilinearEnergy</a></p></li><li id=L885><b>theorem</b> <code>OAI.TraceReconstruction.signedMotif_degree_geometric</code> <small>line 885</small><div class="doc"><p>The signed high-degree bound includes the true anchor mixture.</p></div><pre>theorem signedMotif_degree_geometric {u m l r : ℕ} (hl : l ≤ u*m) (hr : 0 &lt; r)
+    (hm : 32 ≤ m) (hum : u ≤ m) (off : Fin m)
+    (hi : 1 ≤ off.val ∧ off.val+1 &lt; m) (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 2)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L928><b>def</b> <code>OAI.TraceReconstruction.signedInitialDegreeBound</code> <small>line 928</small><div class="doc"><p>Explicit low-degree majorant from the signed finite-difference estimate.</p></div><pre>def signedInitialDegreeBound (u m r s : ℕ) (π : IntSeries) (θ : ℝ) (l : ℕ) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="Binomial.lean.html#L108">OAI.TraceReconstruction.IntSeries</a></p></li><li id=L936><b>theorem</b> <code>OAI.TraceReconstruction.signedInitialDegreeBound_nonneg</code> <small>line 936</small></li><li id=L954><b>theorem</b> <code>OAI.TraceReconstruction.signed_initial_full_energy</code> <small>line 954</small><div class="doc"><p>A fully finite norm estimate for the actual low and high degree pieces.
+Only numerical admissible-count and geometric conditions remain to be chosen.</p></div><pre>theorem signed_initial_full_energy {u m l R : ℕ} (hu : 0 &lt; u) (hm : 128 ≤ m)
+    (hum : u ≤ m) (hR : 0 &lt; R) (hl : l ≤ u*m) (off : Fin m)
+    (hi : 1 ≤ off.val ∧ off.val+1 &lt; m) (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 2)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L1002><b>theorem</b> <code>OAI.TraceReconstruction.primitive_reference_mass_pos</code> <small>line 1002</small></li><li id=L1008><b>theorem</b> <code>OAI.TraceReconstruction.primitive_product_mass_pos</code> <small>line 1008</small></li><li id=L1015><b>def</b> <code>OAI.TraceReconstruction.initialMotifDensity</code> <small>line 1015</small><div class="doc"><p>The density in the actual base experiment, not an independent model.</p></div><pre>def initialMotifDensity {u m l : ℕ} (hl : l ≤ u*m) (off : Fin m)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L1020><b>theorem</b> <code>OAI.TraceReconstruction.initialMotifDensity_nonneg</code> <small>line 1020</small></li><li id=L1029><b>theorem</b> <code>OAI.TraceReconstruction.initialMotifDensity_mean</code> <small>line 1029</small></li><li id=L1037><b>theorem</b> <code>OAI.TraceReconstruction.initialMotifLaw_withDensity</code> <small>line 1037</small></li><li id=L1050><b>theorem</b> <code>OAI.TraceReconstruction.multilinear_sub</code> <small>line 1050</small></li><li id=L1056><b>def</b> <code>OAI.TraceReconstruction.nonconstantCoefficient</code> <small>line 1056</small><div class="doc"><p>The constant-term deletion of a polynomial.</p></div><pre>def nonconstantCoefficient {l : ℕ} (A : (Fin l → Bool) → ℝ) (σ : Fin l → Bool) : ℝ :=
+…</pre></li><li id=L1059><b>theorem</b> <code>OAI.TraceReconstruction.nonconstant_multilinear</code> <small>line 1059</small></li><li id=L1069><b>theorem</b> <code>OAI.TraceReconstruction.nonconstant_degree_zero</code> <small>line 1069</small></li><li id=L1073><b>theorem</b> <code>OAI.TraceReconstruction.nonconstant_degree_pos</code> <small>line 1073</small></li><li id=L1091><b>theorem</b> <code>OAI.TraceReconstruction.mixedMotif_degree_geometric</code> <small>line 1091</small></li><li id=L1121><b>theorem</b> <code>OAI.TraceReconstruction.initial_centered_energy</code> <small>line 1121</small><div class="doc"><p>Clipping input: the actual conditional density is close to one.</p></div><pre>theorem initial_centered_energy {u m l : ℕ} (hl : l ≤ u*m)
+    (hm : 32 ≤ m) (hum : u ≤ m) (off : Fin m)
+    (hi : 1 ≤ off.val ∧ off.val+1 &lt; m) (hoff : |(off.val:ℝ)-(m:ℝ)/2| ≤ 2)
+    (hsafe : SafeTaggedTuple (periodSlot (u:=u) (fun _ =&gt; off)))
+…</pre><p class="refs">Mentions: <a href="Differences.lean.html#L608">OAI.TraceReconstruction.SafeTaggedTuple</a>, <a href="Ranks.lean.html#L763">OAI.TraceReconstruction.periodSlot</a></p></li><li id=L1147><b>theorem</b> <code>OAI.TraceReconstruction.initial_centered_moment</code> <small>line 1147</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/ModelLimit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/ModelLimit.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>ModelLimit.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>ModelLimit.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/ModelLimit.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.isModelShape_of_normalized</code> <small>line 21</small><div class="doc plain">Normalized model limits retain the genuine geometric model conditions.
+The fixed inner balls prevent collapse; the distinguished-fiber outer bound
+controls every cap by the already proved recession/fiber inequalities.</div><pre>theorem LocalDistanceConverges.isModelShape_of_normalized
+    (h : LocalDistanceConverges Cj C) (hj : ∀ j, IsModelShape (Cj j))
+    (hclosed : IsClosed C) (hconvex : Convex ℝ C) (hne : C.Nonempty)
+    {cj : ℕ → Space m} {c : Space m} (hc : Tendsto cj atTop (𝓝 c))
+    {R : ℝ}
+    (hinner : ∀ j, closedBall (cj j) 1 ⊆ modelFiber (Cj j)
+      (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))))
+    (houter : ∀ j, modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))) ⊆ closedBall 0 R) :
+    IsModelShape C := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L93><b>theorem</b> <code>OAI.AffineBernstein.model_base_contraction</code> <small>line 93</small><div class="doc plain">The shrinking factor avoids any positivity assumption on approximating
+base coordinates. It tends to one and contracts each coordinate below one.</div><pre>theorem model_base_contraction (s : Space k) (i : Fin k) :
+    (1 + ‖s - WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))‖)⁻¹ * s i ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L103><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.exists_exact_fiber_approximating</code> <small>line 103</small><div class="doc plain">Exact-fiber approximation in geometry.tex:285–300. The actual contracting
+points are used, not an assumed commutation of slicing with local limits.</div><pre>theorem LocalDistanceConverges.exists_exact_fiber_approximating
+    (h : LocalDistanceConverges Cj C) (hj : ∀ j, IsModelShape (Cj j))
+    {y : Space m} (hy : y ∈ modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ)))) :
+    ∃ yj : ℕ → Space m,
+      (∀ j, yj j ∈ modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ)))) ∧
+      Tendsto yj atTop (𝓝 y) := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L130><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_infDist_fiber_lt_uniform</code> <small>line 130</small><div class="doc plain">Uniform reverse Hausdorff inclusion follows by compactness of the actual
+positive limit fiber and the preceding exact approximations.</div><pre>theorem LocalDistanceConverges.eventually_infDist_fiber_lt_uniform
+    (h : LocalDistanceConverges Cj C) (hj : ∀ j, IsModelShape (Cj j))
+    (hC : IsModelShape C) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∀ᶠ j in atTop, ∀ y ∈ modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))),
+      infDist y (modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ)))) &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L156><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.tendsto_hausdorffDist_fibers</code> <small>line 156</small><div class="doc plain">Exact-fiber Hausdorff convergence with a common outer radius. This is
+stronger than pointwise local convergence but follows from the model recession
+structure; arbitrary slices of arbitrary converging bodies need not converge.</div><pre>theorem LocalDistanceConverges.tendsto_hausdorffDist_fibers
+    (h : LocalDistanceConverges Cj C) (hj : ∀ j, IsModelShape (Cj j))
+    (hC : IsModelShape C) {R : ℝ}
+    (hR : ∀ j, modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))) ⊆ closedBall 0 R) :
+    Tendsto (fun j =&gt; hausdorffDist (modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))))
+      (modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))))) atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L190><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.zero_mem_frontier_fiber_of_asymmetry</code> <small>line 190</small><div class="doc plain">A failure of all growing centering constants forces the origin onto the
+boundary of the limit fiber. No centering stability is assumed.</div><pre>theorem LocalDistanceConverges.zero_mem_frontier_fiber_of_asymmetry
+    (h : LocalDistanceConverges Cj C) (hj : ∀ j, IsModelShape (Cj j))
+    (hC : IsModelShape C) {R : ℝ}
+    (hR : ∀ j, modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))) ⊆ closedBall 0 R)
+    (hfail : ∀ j : ℕ, 1 ≤ j →
+      ¬ -(modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ)))) ⊆
+        (j : ℝ) • modelFiber (Cj j) (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ)))) :
+    (0 : Space m) ∈ frontier (modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ)))) := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a></p></li><li id=L240><b>theorem</b> <code>OAI.AffineBernstein.IsModelShape.support_from_fiber</code> <small>line 240</small><div class="doc plain">A fiber support at zero extends to the whole model by the same actual
+contraction and recession operation used for exact-fiber approximation.</div><pre>theorem IsModelShape.support_from_fiber (hC : IsModelShape C)
+    (ell : Space m →L[ℝ] ℝ)
+    (hell : ∀ y ∈ modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))), 0 ≤ ell y) :
+    ∀ p ∈ C, 0 ≤ ell p.2 := by
+…</pre><p class="refs">Mentions: <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L257><b>theorem</b> <code>OAI.AffineBernstein.IsModelShape.exists_global_support_of_zero_boundary</code> <small>line 257</small><div class="doc plain">The nonzero supporting functional whose new positive coordinate is used
+in the thin-slice blowup. Hahn–Banach is reused from pinned Mathlib.</div><pre>theorem IsModelShape.exists_global_support_of_zero_boundary (hC : IsModelShape C)
+    (hzero : (0 : Space m) ∉ interior (modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1 : ℝ))))) :
+    ∃ ell : Space m →L[ℝ] ℝ, ell ≠ 0 ∧ (∀ p ∈ C, 0 ≤ ell p.2) := by
+…</pre><p class="refs">Mentions: <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Arrays/TensorFiniteWard.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Arrays/TensorFiniteWard.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Arrays</a> / <span>TensorFiniteWard.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Arrays</a>/<span>TensorFiniteWard.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Arrays/TensorFiniteWard.lean#L1">source</a></p><div class="doc"><p>Finite-prior Gaussian insertions in the spectral Haar Ward calculation.
+The covariance correction is derived by Gaussian integration by parts, with
+no assumed Ward identity. Finite spin/leaf restrictions are permitted to
+have zero prior weights.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.InvariantIsing.gaussianWardCorrection</code> <small>line 24</small><div class="doc"><p>The exact correction obtained from inserting the derivative of a
+Gaussian Hamiltonian into a normalized finite Gibbs average. The kernel
+need not be symmetric: its first endpoint is the differentiated one.</p></div><pre>def gaussianWardCorrection (w H O : S → ℝ) (K : S → S → ℝ) : ℝ :=
+…</pre></li><li id=L32><b>lemma</b> <code>OAI.InvariantIsing.gaussian_replica_selected_insertion</code> <small>line 32</small><div class="doc"><p>Insertion in any specified replica, with an arbitrary bounded finite
+replica test. No symmetry or constant-diagonal assumption is used.</p></div><pre>lemma gaussian_replica_selected_insertion {d r : ℕ} {w : S → ℝ}
+    (hw : GibbsReference w) (H : S → ℝ) (A C : S → Fin (d + 1) → ℝ)
+    (l : Fin r) (D : (Fin r → S) → ℝ) :
+    (∫ g, ∑ σ : Fin r → S,
+      D σ * (linearGaussian A g (σ l) * replicaGibbs w H C g σ)
+        ∂Measure.pi (fun _ : Fin (d + 1) =&gt; gaussianReal 0 1)) =
+      ∫ g, ∑ σ : Fin r → S, D σ * (replicaGibbs w H C g σ *
+        ∑ k, (gaussianCross A C (σ l) (σ k) -
+          ∑ z, gaussianGibbs w H C g z * gaussianCross A C (σ l) z))
+        ∂Measure.pi (fun _ : Fin (d + 1) =&gt; gaussianReal 0 1) := by
+…</pre></li><li id=L50><b>lemma</b> <code>OAI.InvariantIsing.integrable_gaussian_gibbs_linear_test</code> <small>line 50</small></li><li id=L63><b>lemma</b> <code>OAI.InvariantIsing.integrable_gaussian_gibbs_linear_product</code> <small>line 63</small></li><li id=L79><b>lemma</b> <code>OAI.InvariantIsing.integrable_gaussian_gibbs_test</code> <small>line 79</small></li><li id=L95><b>lemma</b> <code>OAI.InvariantIsing.gaussian_gibbs_test_insertion</code> <small>line 95</small><div class="doc"><p>The Gibbs insertion in the current replica produces the derivative
+covariance with one subtraction replica.</p></div><pre>lemma gaussian_gibbs_test_insertion {d : ℕ} {w : S → ℝ}
+    (hw : GibbsReference w) (H O : S → ℝ) (A C : S → Fin (d + 1) → ℝ) :
+    (∫ g, gibbsAverage w (fun x =&gt; H x + linearGaussian C g x)
+      (fun x =&gt; O x * linearGaussian A g x)
+      ∂Measure.pi (fun _ : Fin (d + 1) =&gt; gaussianReal 0 1)) =
+      ∫ g, gibbsAverage w (fun x =&gt; H x + linearGaussian C g x)
+        (fun x =&gt; O x * gaussianCross A C x x) -
+        gibbsPairAverage w (fun x =&gt; H x + linearGaussian C g x)
+          (fun x y =&gt; O x * gaussianCross A C x y)
+        ∂Measure.pi (fun _ : Fin (d + 1) =&gt; gaussianReal 0 1) := by
+…</pre><p class="refs">Mentions: <a href="../Core/Ward.lean.html#L25">OAI.InvariantIsing.gibbsAverage</a>, <a href="ReplicaContractions.lean.html#L23">OAI.InvariantIsing.gibbsPairAverage</a></p></li><li id=L142><b>lemma</b> <code>OAI.InvariantIsing.gaussian_gibbs_normalization_insertion</code> <small>line 142</small></li><li id=L215><b>lemma</b> <code>OAI.InvariantIsing.integrable_gaussian_pair_test</code> <small>line 215</small></li><li id=L240><b>lemma</b> <code>OAI.InvariantIsing.integrable_gaussian_triple_test</code> <small>line 240</small></li><li id=L275><b>theorem</b> <code>OAI.InvariantIsing.gaussian_gibbs_covariance_insertion</code> <small>line 275</small><div class="doc"><p>Exact Gaussian covariance-derivative correction for a finite prior.
+The first coefficient map is the Hamiltonian derivative and the second
+is the Gaussian coefficient in the Gibbs exponent.</p></div><pre>theorem gaussian_gibbs_covariance_insertion {d : ℕ} {w : S → ℝ}
+    (hw : GibbsReference w) (H O : S → ℝ) (A C : S → Fin (d + 1) → ℝ) :
+    (∫ g, gibbsAverage w (fun x =&gt; H x + linearGaussian C g x)
+        (fun x =&gt; O x * linearGaussian A g x) -
+      gibbsAverage w (fun x =&gt; H x + linearGaussian C g x) O *
+        gibbsAverage w (fun x =&gt; H x + linearGaussian C g x) (linearGaussian A g)
+      ∂Measure.pi (fun _ : Fin (d + 1) =&gt; gaussianReal 0 1)) =
+      ∫ g, gaussianWardCorrection w (fun x =&gt; H x + linearGaussian C g x) O
+        (gaussianCross A C)
+        ∂Measure.pi (fun _ : Fin (d + 1) =&gt; gaussianReal 0 1) := by
+…</pre><p class="refs">Mentions: <a href="../Core/Ward.lean.html#L25">OAI.InvariantIsing.gibbsAverage</a>, <a href="TensorFiniteWard.lean.html#L24">OAI.InvariantIsing.gaussianWardCorrection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

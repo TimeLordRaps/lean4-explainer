@@ -1,0 +1,177 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Games/BlockRestriction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Games/BlockRestriction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Games</a> / <span>BlockRestriction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Games</a>/<span>BlockRestriction.lean</span></code></h1><p class="muted">83 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Games/BlockRestriction.lean#L1">source</a></p><div class="doc"><h3>Actual child restriction maps</h3><p>A common-parent lift <code>g</code> gives a binary linear map from its logical character
+space into the dual of each quadratic block.  Its kernel is literal character
+annihilation, so the trace calculation and the all-lifts genericity predicate
+apply directly to this map.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.dot_add_first_inline_BlockRestriction</code> <small>line 24</small></li><li id=L30><b>def</b> <code>OAI.MaxCutGames.Quadratic.blockCharacterLinear</code> <small>line 30</small><div class="doc"><p>The actual trace character as a binary linear functional.</p></div><pre>def blockCharacterLinear (g z : Vec F) :
+    (Vec F × Vec F) →ₗ[ZMod 2] ZMod 2 where
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a></p></li><li id=L46><b>def</b> <code>OAI.MaxCutGames.Quadratic.blockRestriction</code> <small>line 46</small><div class="doc"><p>Restriction to one block, linear in the logical character <code>z</code>.</p></div><pre>def blockRestriction (S : Submodule (ZMod 2) (Vec F))
+    (g : S →ₗ[ZMod 2] Vec F) (v : Vec F) :
+    S →ₗ[ZMod 2] ((U v) →ₗ[ZMod 2] ZMod 2) where
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientationVectors.lean.html#L227">OAI.MaxCutGames.Quadratic.U</a></p></li><li id=L67><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.blockRestriction_apply</code> <small>line 67</small></li><li id=L73><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.blockRestriction_eq_zero_iff</code> <small>line 73</small><div class="doc"><p>Equality to zero is exactly annihilation of the underlying block.</p></div><pre>theorem blockRestriction_eq_zero_iff (S : Submodule (ZMod 2) (Vec F))
+    (g : S →ₗ[ZMod 2] Vec F) (v : Vec F) (z : S) :
+    blockRestriction S g v z = 0 ↔ BlockAnnihilates (g z) z v := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="BlockRestriction.lean.html#L46">OAI.MaxCutGames.Quadratic.blockRestriction</a>, <a href="OrientedBlockKernel.lean.html#L385">OAI.MaxCutGames.Quadratic.BlockAnnihilates</a></p></li><li id=L84><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.mem_ker_blockRestriction_iff</code> <small>line 84</small><div class="doc"><p>The exact kernel formula for a nonzero logical character.</p></div><pre>theorem mem_ker_blockRestriction_iff (S : Submodule (ZMod 2) (Vec F))
+    (g : S →ₗ[ZMod 2] Vec F) {v : Vec F} (hv : v ≠ 0)
+    {z : S} (hz : z ≠ 0) :
+    z ∈ (blockRestriction S g v).ker ↔
+      (z : Vec F) ∈ line v ∧
+        dot (g z) z = squareRoot (z.val 0 * z.val 1 * z.val 2) := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="BlockRestriction.lean.html#L46">OAI.MaxCutGames.Quadratic.blockRestriction</a>, <a href="OrientationVectors.lean.html#L156">OAI.MaxCutGames.Quadratic.line</a>, <a href="OrientationVectors.lean.html#L104">OAI.MaxCutGames.Quadratic.dot</a>, <a href="OrientedBlockKernel.lean.html#L113">OAI.MaxCutGames.Quadratic.squareRoot</a></p></li><li id=L95><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.blockRestriction_nonzero_kernel_unique</code> <small>line 95</small><div class="doc"><p>Nonproportionality of a generic space makes every actual block kernel
+contain at most one nonzero character.</p></div><pre>theorem blockRestriction_nonzero_kernel_unique
+    (S : Submodule (ZMod 2) (Vec F)) (g : S →ₗ[ZMod 2] Vec F)
+    {v : Vec F} (hv : v ≠ 0) (hS : IsGeneric S)
+    (z w : S) (hz : z ≠ 0) (hw : w ≠ 0)
+    (hgz : blockRestriction S g v z = 0)
+    (hgw : blockRestriction S g v w = 0) : z = w := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a>, <a href="BlockRestriction.lean.html#L46">OAI.MaxCutGames.Quadratic.blockRestriction</a></p></li><li id=L117><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finrank_ker_blockRestriction_le_one</code> <small>line 117</small><div class="doc"><p>Every actual child restriction map loses at most one binary dimension.</p></div><pre>theorem finrank_ker_blockRestriction_le_one
+    (S : Submodule (ZMod 2) (Vec F)) (g : S →ₗ[ZMod 2] Vec F)
+    {v : Vec F} (hv : v ≠ 0) (hS : IsGeneric S) :
+    Module.finrank (ZMod 2) (blockRestriction S g v).ker ≤ 1 :=
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a>, <a href="BlockRestriction.lean.html#L46">OAI.MaxCutGames.Quadratic.blockRestriction</a></p></li><li id=L124><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finrank_blockRestriction_source_le_range_add_one</code> <small>line 124</small></li><li id=L146><b>def</b> <code>OAI.MaxCutGames.Quadratic.orientedBlockRestriction</code> <small>line 146</small><div class="doc"><p>The actual child restriction after a choice of block orientation.</p></div><pre>def orientedBlockRestriction (S : Submodule (ZMod 2) (Vec F))
+    (g : S →ₗ[ZMod 2] Vec F) (v : Vec F) (J : B ≃ₗ[ZMod 2] U v) :
+    S →ₗ[ZMod 2] (B →ₗ[ZMod 2] ZMod 2) :=
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientationVectors.lean.html#L227">OAI.MaxCutGames.Quadratic.U</a></p></li><li id=L152><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.orientedBlockRestriction_apply</code> <small>line 152</small></li><li id=L158><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.orientedBlockRestriction_eq_zero_iff</code> <small>line 158</small></li><li id=L172><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.ker_orientedBlockRestriction</code> <small>line 172</small><div class="doc"><p>The kernel depends on the field line and common-parent lift, not on <code>J</code>.</p></div><pre>theorem ker_orientedBlockRestriction
+    (S : Submodule (ZMod 2) (Vec F)) (g : S →ₗ[ZMod 2] Vec F)
+    (v : Vec F) (J : B ≃ₗ[ZMod 2] U v) :
+    (orientedBlockRestriction S g v J).ker = (blockRestriction S g v).ker := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientationVectors.lean.html#L227">OAI.MaxCutGames.Quadratic.U</a>, <a href="BlockRestriction.lean.html#L146">OAI.MaxCutGames.Quadratic.orientedBlockRestriction</a>, <a href="BlockRestriction.lean.html#L46">OAI.MaxCutGames.Quadratic.blockRestriction</a></p></li><li id=L180><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.ker_orientedBlockRestriction_independent</code> <small>line 180</small></li><li id=L187><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.mem_ker_orientedBlockRestriction_iff</code> <small>line 187</small></li><li id=L197><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.finrank_ker_orientedBlockRestriction_le_one</code> <small>line 197</small></li><li id=L212><b>abbrev</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</code> <small>line 212</small></li><li id=L215><b>def</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.traceSpace</code> <small>line 215</small><div class="doc"><p>Coordinates of a binary character subspace under the trace pairing.</p></div><pre>def traceSpace (S : Submodule (ZMod 2) (BinaryDual (F := F))) :
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L212">OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</a></p></li><li id=L218><b>def</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.traceSpaceEquiv</code> <small>line 218</small></li><li id=L224><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.traceSpace_finrank</code> <small>line 224</small></li><li id=L229><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.traceSpaceEquiv_apply_val</code> <small>line 229</small></li><li id=L234><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.traceSpaceEquiv_symm_val</code> <small>line 234</small></li><li id=L243><b>def</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.traceLift</code> <small>line 243</small><div class="doc"><p>One binary-linear lift on the trace-coordinate domain, obtained from the
+single common parent map. It is fixed before the outgoing line/orientation.</p></div><pre>def traceLift (S : Submodule (ZMod 2) (BinaryDual (F := F)))
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L212">OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</a></p></li><li id=L248><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.childCharacter_comp_traceSpaceEquiv</code> <small>line 248</small><div class="doc"><p>Equality of actual child maps after a change of logical coordinates.</p></div><pre>theorem childCharacter_comp_traceSpaceEquiv
+    (S : Submodule (ZMod 2) (BinaryDual (F := F)))
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L212">OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</a></p></li><li id=L268><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.childCharacter_range_eq</code> <small>line 268</small><div class="doc"><p>The child logical image is unchanged by the trace-coordinate domain
+isomorphism. This is equality of subspaces, not merely equality of ranks.</p></div><pre>theorem childCharacter_range_eq
+    (S : Submodule (ZMod 2) (BinaryDual (F := F)))
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L212">OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</a></p></li><li id=L279><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.childCharacter_range_eq_dual_pullback</code> <small>line 279</small><div class="doc"><p>Before the orientation is revealed, the un-oriented image is fixed; the
+fresh isomorphism acts only by dual pullback on this fixed image.</p></div><pre>theorem childCharacter_range_eq_dual_pullback
+    (S : Submodule (ZMod 2) (BinaryDual (F := F)))
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L212">OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</a></p></li><li id=L289><b>theorem</b> <code>OAI.MaxCutGames.Gadget.BlockDescent.childCharacter_rank_independent</code> <small>line 289</small><div class="doc"><p>The rank is independent of the fresh orientation.</p></div><pre>theorem childCharacter_rank_independent
+    (S : Submodule (ZMod 2) (BinaryDual (F := F)))
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L212">OAI.MaxCutGames.Gadget.BlockDescent.BinaryDual</a></p></li><li id=L311><b>def</b> <code>OAI.MaxCutGames.Gadget.Descent.commonGamma</code> <small>line 311</small></li><li id=L317><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Descent.commonGamma_spec</code> <small>line 317</small></li><li id=L323><b>def</b> <code>OAI.MaxCutGames.Gadget.Descent.childDomain</code> <small>line 323</small></li><li id=L327><b>def</b> <code>OAI.MaxCutGames.Gadget.Descent.childLift</code> <small>line 327</small></li><li id=L333><b>def</b> <code>OAI.MaxCutGames.Gadget.Descent.childSection</code> <small>line 333</small></li><li id=L340><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Descent.childSection_rightInverse</code> <small>line 340</small></li><li id=L349><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Descent.childLift_spec</code> <small>line 349</small></li><li id=L358><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Descent.child_detection</code> <small>line 358</small></li><li id=L366><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Descent.child_rank_le</code> <small>line 366</small></li><li id=L373><b>def</b> <code>OAI.MaxCutGames.Gadget.Descent.leafRank</code> <small>line 373</small><div class="doc"><p>Terminal logical rank along the actual recursively sampled path. The
+final uniform symbol is ignored by this rank function.</p></div><pre>noncomputable def leafRank
+    (J : I → B →ₗ[k] X × B) (hJ : Function.Surjective (aggregate J)) (Q : X → B) :
+    (n : ℕ) → (S : Submodule k (B →ₗ[k] k)) →
+    Lift (Stage.iterate J hJ Q n) S → (Stage.iterate J hJ Q n).Noise → ℕ
+  | 0, S, _, _ =&gt; Module.finrank k S
+  | n + 1, S, L, t =&gt; leafRank J hJ Q n
+      (childDomain J hJ Q (Stage.iterate J hJ Q n) S L t.1)
+      (childLift J hJ Q (Stage.iterate J hJ Q n) S L t.1) t.2</pre><p class="refs">Mentions: <a href="Concatenation.lean.html#L21">OAI.MaxCutGames.Gadget.aggregate</a>, <a href="Concatenation.lean.html#L401">OAI.MaxCutGames.Gadget.Lift</a>, <a href="Concatenation.lean.html#L201">OAI.MaxCutGames.Gadget.Stage.iterate</a>, <a href="BlockRestriction.lean.html#L323">OAI.MaxCutGames.Gadget.Descent.childDomain</a>, <a href="BlockRestriction.lean.html#L327">OAI.MaxCutGames.Gadget.Descent.childLift</a></p></li><li id=L382><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Descent.leafRank_le</code> <small>line 382</small></li><li id=L410><b>def</b> <code>OAI.MaxCutGames.Quadratic.characterFieldLine</code> <small>line 410</small><div class="doc"><p>A total projective-line map; the default is irrelevant on nonzero characters.</p></div><pre>def characterFieldLine (A₀ : FieldLine F) (z : Vec F) : FieldLine F := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L279">OAI.MaxCutGames.Quadratic.FieldLine</a>, <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a></p></li><li id=L415><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.characterFieldLine_eq_of_mem</code> <small>line 415</small></li><li id=L424><b>def</b> <code>OAI.MaxCutGames.Quadratic.fieldLineRestrictions</code> <small>line 424</small><div class="doc"><p>All maps have the same binary dual codomain, despite their different blocks.</p></div><pre>def fieldLineRestrictions (S : Submodule (ZMod 2) (Vec F))
+    (g : S →ₗ[ZMod 2] Vec F) (J : ∀ A : FieldLine F, BlockOrientation A) :
+    FieldLine F → S →ₗ[ZMod 2] (Vec F →ₗ[ZMod 2] ZMod 2) :=
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientationVectors.lean.html#L279">OAI.MaxCutGames.Quadratic.FieldLine</a>, <a href="OrientationVectors.lean.html#L466">OAI.MaxCutGames.Quadratic.BlockOrientation</a></p></li><li id=L430><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.alignedCharacters_eq_alignmentEvent</code> <small>line 430</small><div class="doc"><p>The alignment event written with the displayed three-coordinate dot product.</p></div><pre>theorem alignedCharacters_eq_alignmentEvent
+    (S : Submodule (ZMod 2) (Vec F)) (g : S →ₗ[ZMod 2] Vec F) :
+    alignedCharacters (fun z : S =&gt;
+      dot (g z) z = squareRoot (z.val 0 * z.val 1 * z.val 2)) =
+      alignmentEvent (fun z : S =&gt; (z : Vec F)) g
+        (fun z : S =&gt; alignmentRightHandSide (z : Vec F)) := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientedBlockKernel.lean.html#L685">OAI.MaxCutGames.Quadratic.alignedCharacters</a>, <a href="OrientationVectors.lean.html#L104">OAI.MaxCutGames.Quadratic.dot</a>, <a href="OrientedBlockKernel.lean.html#L113">OAI.MaxCutGames.Quadratic.squareRoot</a>, <a href="OrientedBlockKernel.lean.html#L546">OAI.MaxCutGames.Quadratic.alignmentEvent</a>, <a href="OrientedBlockKernel.lean.html#L601">OAI.MaxCutGames.Quadratic.alignmentRightHandSide</a></p></li><li id=L443><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.card_loss_fieldLineRestrictions_le</code> <small>line 443</small><div class="doc"><p>The exact line-loss count, valid for every choice of orientations and every
+binary-linear lift, including one chosen adaptively from earlier information.</p></div><pre>theorem card_loss_fieldLineRestrictions_le
+    (S : Submodule (ZMod 2) (Vec F)) (g : S →ₗ[ZMod 2] Vec F)
+    (J : ∀ A : FieldLine F, BlockOrientation A) (hS : IsGeneric S)
+    (A₀ : FieldLine F) :
+    (lossIndices (fieldLineRestrictions S g J)).card ≤
+      3 * Module.finrank (ZMod 2) S := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientationVectors.lean.html#L279">OAI.MaxCutGames.Quadratic.FieldLine</a>, <a href="OrientationVectors.lean.html#L466">OAI.MaxCutGames.Quadratic.BlockOrientation</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a>, <a href="OrientedBlockKernel.lean.html#L681">OAI.MaxCutGames.Quadratic.lossIndices</a>, <a href="BlockRestriction.lean.html#L424">OAI.MaxCutGames.Quadratic.fieldLineRestrictions</a></p></li><li id=L462><b>theorem</b> <code>OAI.MaxCutGames.Quadratic.card_loss_fieldLineRestrictions_le_three_rank</code> <small>line 462</small><div class="doc"><p>The fallback line is only used to totalize the counting map.</p></div><pre>theorem card_loss_fieldLineRestrictions_le_three_rank
+    (S : Submodule (ZMod 2) (Vec F)) (g : S →ₗ[ZMod 2] Vec F)
+    (J : ∀ A : FieldLine F, BlockOrientation A) (hS : IsGeneric S) :
+    (lossIndices (fieldLineRestrictions S g J)).card ≤
+      3 * Module.finrank (ZMod 2) S := by
+…</pre><p class="refs">Mentions: <a href="OrientationVectors.lean.html#L90">OAI.MaxCutGames.Quadratic.Vec</a>, <a href="OrientationVectors.lean.html#L279">OAI.MaxCutGames.Quadratic.FieldLine</a>, <a href="OrientationVectors.lean.html#L466">OAI.MaxCutGames.Quadratic.BlockOrientation</a>, <a href="OrientedBlockKernel.lean.html#L605">OAI.MaxCutGames.Quadratic.IsGeneric</a>, <a href="OrientedBlockKernel.lean.html#L681">OAI.MaxCutGames.Quadratic.lossIndices</a>, <a href="BlockRestriction.lean.html#L424">OAI.MaxCutGames.Quadratic.fieldLineRestrictions</a></p></li><li id=L482><b>def</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic</code> <small>line 482</small><div class="doc"><p>The finite harmonic potential, by its exact rational recurrence.</p></div><pre>def harmonic : ℕ → ℚ
+  | 0 =&gt; 0
+  | r + 1 =&gt; harmonic r + (↑(r + 1))⁻¹</pre></li><li id=L486><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_zero</code> <small>line 486</small></li><li id=L488><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_succ</code> <small>line 488</small></li><li id=L491><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_eq_sum</code> <small>line 491</small></li><li id=L498><b>def</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average</code> <small>line 498</small><div class="doc"><p>Rational expectation under uniform sampling on a finite space.</p></div><pre>def average (f : Ω → ℚ) : ℚ := Finset.univ.expect f</pre></li><li id=L501><b>def</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability</code> <small>line 501</small><div class="doc"><p>Probability of a decidable event in the finite experiment.</p></div><pre>def probability (p : Ω → Prop) [DecidablePred p] : ℚ :=
+…</pre></li><li id=L504><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average_mono</code> <small>line 504</small></li><li id=L508><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average_nonneg</code> <small>line 508</small></li><li id=L512><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average_const</code> <small>line 512</small></li><li id=L516><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average_add</code> <small>line 516</small></li><li id=L520><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average_sub</code> <small>line 520</small></li><li id=L524><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.average_mul_left</code> <small>line 524</small></li><li id=L528><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability_nonneg</code> <small>line 528</small></li><li id=L534><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability_le_one</code> <small>line 534</small></li><li id=L543><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability_mono</code> <small>line 543</small></li><li id=L552><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability_not</code> <small>line 552</small></li><li id=L564><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability_eq_half_of_swap</code> <small>line 564</small><div class="doc"><p>A bijection swapping an event with its complement proves exact half
+probability. At a leaf the bijection is translation by a symbol on which a
+nonzero binary character is one.</p></div><pre>theorem probability_eq_half_of_swap [Nonempty Ω]
+    (p : Ω → Prop) [DecidablePred p] (e : Ω ≃ Ω)
+    (hswap : ∀ ω, p (e ω) ↔ ¬ p ω) : probability p = 1 / 2 := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li><li id=L576><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.binary_character_detection_probability</code> <small>line 576</small><div class="doc"><p>Every nonzero binary additive character detects precisely half of uniform
+symbols. The witness may depend on the previously sampled path.</p></div><pre>theorem binary_character_detection_probability [AddGroup Ω]
+    (χ : Ω →+ ZMod 2) (v : Ω) (hv : χ v ≠ 0) :
+    probability (fun ω =&gt; χ ω ≠ 0) = 1 / 2 := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li><li id=L595><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.binary_family_detection_ge_half</code> <small>line 595</small><div class="doc"><p>A surviving family contains a nonzero character, so its detection event
+contains an event of exact half probability.</p></div><pre>theorem binary_family_detection_ge_half [AddGroup Ω]
+    (detects : Ω → Prop) [DecidablePred detects]
+    (χ : Ω →+ ZMod 2) (v : Ω) (hv : χ v ≠ 0)
+    (hcontains : ∀ ω, χ ω ≠ 0 → detects ω) :
+    (1 / 2 : ℚ) ≤ probability detects := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li><li id=L603><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_nonneg</code> <small>line 603</small></li><li id=L608><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_mono</code> <small>line 608</small></li><li id=L616><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_pos</code> <small>line 616</small></li><li id=L621><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.harmonic_sub_predecessor</code> <small>line 621</small></li><li id=L628><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.generic_drop_identity</code> <small>line 628</small><div class="doc"><p>A generic rank-<code>r</code> space loses either zero or one dimension. Its harmonic
+drop is exactly the loss indicator times <code>1/r</code>.</p></div><pre>theorem generic_drop_identity (r : ℕ) (next : Ω → ℕ) (hr : 0 &lt; r)
+    (hstep : ∀ ω, next ω = r ∨ next ω = r - 1) :
+    average (fun ω =&gt; harmonic r - harmonic (next ω)) =
+      (r : ℚ)⁻¹ * probability (fun ω =&gt; next ω &lt; r) := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a>, <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li><li id=L644><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.generic_expected_drop_le</code> <small>line 644</small><div class="doc"><p>The generic loss probability <code>3rθ</code> becomes the rank-independent harmonic
+loss bound <code>3θ</code>.</p></div><pre>theorem generic_expected_drop_le (r : ℕ) (next : Ω → ℕ) (θ : ℚ)
+    (hr : 0 &lt; r) (hstep : ∀ ω, next ω = r ∨ next ω = r - 1)
+    (hloss : probability (fun ω =&gt; next ω &lt; r) ≤ 3 * r * θ) :
+    average (fun ω =&gt; harmonic r - harmonic (next ω)) ≤ 3 * θ := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a></p></li><li id=L658><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.arbitrary_expected_drop_le</code> <small>line 658</small><div class="doc"><p>Without genericity, charge the entire harmonic potential only on paths
+where some rank is lost.</p></div><pre>theorem arbitrary_expected_drop_le (r : ℕ) (next : Ω → ℕ) (p : ℚ)
+    (hstep : ∀ ω, next ω ≤ r)
+    (hloss : probability (fun ω =&gt; next ω &lt; r) ≤ p) :
+    average (fun ω =&gt; harmonic r - harmonic (next ω)) ≤ harmonic r * p := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a></p></li><li id=L679><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.expected_drop_le_four_theta</code> <small>line 679</small><div class="doc"><p>Averaging a conditional rank-loss estimate uses only a bound on the bad
+space's probability, even when the selected lift depends on that space.</p></div><pre>theorem expected_drop_le_four_theta [Nonempty Ω]
+    (drop : Ω → ℚ) (bad : Ω → Prop) [DecidablePred bad] (C θ ε : ℚ)
+    (hC : 0 ≤ C) (hθ : 0 ≤ θ)
+    (hconditional : ∀ ω, drop ω ≤ 3 * θ + C * θ * if bad ω then 1 else 0)
+    (hbad : probability bad ≤ ε) (hsmall : C * ε ≤ 1) :
+    average drop ≤ 4 * θ := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a></p></li><li id=L696><b>def</b> <code>OAI.MaxCutGames.Gadget.Harmonic.badRankCoefficient</code> <small>line 696</small></li><li id=L698><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.badRankCoefficient_nonneg</code> <small>line 698</small></li><li id=L701><b>def</b> <code>OAI.MaxCutGames.Gadget.Harmonic.depth</code> <small>line 701</small></li><li id=L703><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.depth_budget</code> <small>line 703</small></li><li id=L713><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.expected_total_drop_le</code> <small>line 713</small><div class="doc"><p>Expected harmonic losses telescope. The ranks may be arbitrary functions
+of the full path; this assertion introduces no independence premise.</p></div><pre>theorem expected_total_drop_le [Nonempty Ω] (rank : ℕ → Ω → ℕ)
+    (r₀ s : ℕ) (θ : ℚ) (hinitial : ∀ ω, rank 0 ω = r₀)
+    (hstep : ∀ j &lt; s,
+      average (fun ω =&gt; harmonic (rank j ω) - harmonic (rank (j + 1) ω)) ≤ 4 * θ) :
+    harmonic r₀ - average (fun ω =&gt; harmonic (rank s ω)) ≤ 4 * s * θ := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a></p></li><li id=L736><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.survival_probability_ge_half_of_potential</code> <small>line 736</small><div class="doc"><p>The potential-to-survival step needs only the final finite experiment,
+allowing earlier levels to have different path sample spaces.</p></div><pre>theorem survival_probability_ge_half_of_potential (rank : Ω → ℕ) (r₀ : ℕ)
+    (hr₀ : 0 &lt; r₀) (hterminal : ∀ ω, rank ω ≤ r₀)
+    (hmean : harmonic r₀ / 2 ≤ average (fun ω =&gt; harmonic (rank ω))) :
+    (1 / 2 : ℚ) ≤ probability (fun ω =&gt; 0 &lt; rank ω) := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li><li id=L760><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.survival_probability_ge_half</code> <small>line 760</small><div class="doc"><p>At depth <code>s</code> with <code>4sθ ≤ H(r₀)/2</code>, at least half the paths have nonzero
+terminal rank. The terminal bound follows from rank monotonicity in the actual
+gadget, and is kept explicit here.</p></div><pre>theorem survival_probability_ge_half [Nonempty Ω] (rank : ℕ → Ω → ℕ)
+    (r₀ s : ℕ) (θ : ℚ) (hr₀ : 0 &lt; r₀)
+    (hinitial : ∀ ω, rank 0 ω = r₀)
+    (hterminal : ∀ ω, rank s ω ≤ r₀)
+    (hstep : ∀ j &lt; s,
+      average (fun ω =&gt; harmonic (rank j ω) - harmonic (rank (j + 1) ω)) ≤ 4 * θ)
+    (hdepth : 4 * s * θ ≤ harmonic r₀ / 2) :
+    (1 / 2 : ℚ) ≤ probability (fun ω =&gt; 0 &lt; rank s ω) := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a>, <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li><li id=L776><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.survival_of_adaptive_step_law</code> <small>line 776</small><div class="doc"><p>Direct assembly of the adaptive calculation. <code>conditionalDrop</code> is the
+conditional mean after fixing the history; <code>hmean</code> is the finite averaging
+identity. The only assertion about bad orientations is their probability
+bound, so a future lift is allowed to depend on the incoming orientation.</p></div><pre>theorem survival_of_adaptive_step_law [Nonempty Ω]
+    (rank : ℕ → Ω → ℕ) (bad : ℕ → Ω → Prop)
+    [∀ j, DecidablePred (bad j)] (conditionalDrop : ℕ → Ω → ℚ)
+    (r₀ : ℕ) (θ ε : ℚ) (hr₀ : 0 &lt; r₀) (hθ : 0 &lt; θ)
+    (hinitial : ∀ ω, rank 0 ω = r₀)
+    (hterminal : ∀ ω, rank (depth r₀ θ) ω ≤ r₀)
+    (hmean : ∀ j &lt; depth r₀ θ,
+      average (fun ω =&gt; harmonic (rank j ω) - harmonic (rank (j + 1) ω)) =
+        average (conditionalDrop j))
+    (hconditional : ∀ j &lt; depth r₀ θ, ∀ ω,
+      conditionalDrop j ω ≤ 3 * θ + badRankCoefficient r₀ * θ *
+        if bad j ω then 1 else 0)
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L701">OAI.MaxCutGames.Gadget.Harmonic.depth</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a>, <a href="BlockRestriction.lean.html#L482">OAI.MaxCutGames.Gadget.Harmonic.harmonic</a>, <a href="BlockRestriction.lean.html#L696">OAI.MaxCutGames.Gadget.Harmonic.badRankCoefficient</a></p></li><li id=L802><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.detection_probability_ge_quarter</code> <small>line 802</small><div class="doc"><p>A final independent uniform symbol detects a surviving character with
+probability at least one half. Multiplying this conditional bound by the
+surviving-path probability gives the required quarter.</p></div><pre>theorem detection_probability_ge_quarter [Nonempty Ω]
+    (survives : Ω → Prop) [DecidablePred survives] (conditionalDetection : Ω → ℚ)
+    (hsurvival : (1 / 2 : ℚ) ≤ probability survives)
+    (hnonneg : ∀ ω, 0 ≤ conditionalDetection ω)
+    (hdetect : ∀ ω, survives ω → (1 / 2 : ℚ) ≤ conditionalDetection ω) :
+    (1 / 4 : ℚ) ≤ average conditionalDetection := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a></p></li><li id=L823><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.probability_product</code> <small>line 823</small><div class="doc"><p>Uniform paths and a separately sampled uniform terminal symbol have the
+product law used in the leaf-noise experiment.</p></div><pre>theorem probability_product {Ξ : Type*} [Fintype Ξ]
+    (detects : Ω × Ξ → Prop) [DecidablePred detects] :
+    probability detects = average (fun ω =&gt; probability (fun ξ =&gt; detects (ω, ξ))) := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a>, <a href="BlockRestriction.lean.html#L498">OAI.MaxCutGames.Gadget.Harmonic.average</a></p></li><li id=L831><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.product_detection_probability_ge_quarter</code> <small>line 831</small></li><li id=L846><b>theorem</b> <code>OAI.MaxCutGames.Gadget.Harmonic.binary_product_detection_probability_ge_quarter</code> <small>line 846</small><div class="doc"><p>Terminal family detection with actual binary characters rather than an
+assumed conditional probability bound. A character can be selected separately
+on every surviving path.</p></div><pre>theorem binary_product_detection_probability_ge_quarter [Nonempty Ω]
+    {Ξ : Type*} [Fintype Ξ] [AddGroup Ξ]
+    (survives : Ω → Prop) [DecidablePred survives]
+    (detects : Ω × Ξ → Prop) [DecidablePred detects]
+    (hsurvival : (1 / 2 : ℚ) ≤ probability survives)
+    (hcharacter : ∀ ω, survives ω → ∃ χ : Ξ →+ ZMod 2, ∃ v : Ξ,
+      χ v ≠ 0 ∧ ∀ ξ, χ ξ ≠ 0 → detects (ω, ξ)) :
+    (1 / 4 : ℚ) ≤ probability detects := by
+…</pre><p class="refs">Mentions: <a href="BlockRestriction.lean.html#L501">OAI.MaxCutGames.Gadget.Harmonic.probability</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

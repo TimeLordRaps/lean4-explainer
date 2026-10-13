@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Representation/IntertwinerExtension.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Representation/IntertwinerExtension.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Representation</a> / <span>IntertwinerExtension.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Representation</a>/<span>IntertwinerExtension.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Representation/IntertwinerExtension.lean#L1">source</a></p><div class="doc"><p>Extension by zero along an isometric Hilbert-space embedding. These
+identities transport the central commutant to the common scalar L² model.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.KadisonSimilarity.isometricExtension</code> <small>line 18</small><div class="doc"><p>The actual operator equal to <code>T</code> on the range of <code>J</code> and zero on its
+orthogonal complement.</p></div><pre>def isometricExtension (T : H →L[ℂ] H) : K →L[ℂ] K :=
+…</pre></li><li id=L21><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_on_range</code> <small>line 21</small></li><li id=L28><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_sub</code> <small>line 28</small></li><li id=L35><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_add</code> <small>line 35</small></li><li id=L42><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_mul</code> <small>line 42</small></li><li id=L50><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_star</code> <small>line 50</small></li><li id=L56><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_injective</code> <small>line 56</small></li><li id=L63><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_norm</code> <small>line 63</small></li><li id=L90><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_compression</code> <small>line 90</small><div class="doc"><p>Compressing an operator supported on the isometric range and extending
+it back recovers the original operator.</p></div><pre>theorem isometricExtension_compression
+    (Q : K →L[ℂ] K)
+    (hleft : isometricExtension J 1 * Q = Q)
+    (hright : Q * isometricExtension J 1 = Q) :
+    isometricExtension J
+      ((J.toContinuousLinearMap.adjoint.comp Q).comp J.toContinuousLinearMap) = Q := by
+…</pre><p class="refs">Mentions: <a href="IntertwinerExtension.lean.html#L18">OAI.KadisonSimilarity.isometricExtension</a></p></li><li id=L107><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_commutes</code> <small>line 107</small><div class="doc"><p>Star-compatible intertwining transports commutation to the extension.</p></div><pre>theorem isometricExtension_commutes
+    (S : H →L[ℂ] H) (R : K →L[ℂ] K)
+    (hJ : J.toContinuousLinearMap.comp S = R.comp J.toContinuousLinearMap)
+    (hJstar : J.toContinuousLinearMap.comp (star S) = (star R).comp J.toContinuousLinearMap)
+    (T : H →L[ℂ] H) (hT : T * S = S * T) :
+    isometricExtension J T * R = R * isometricExtension J T := by
+…</pre><p class="refs">Mentions: <a href="IntertwinerExtension.lean.html#L18">OAI.KadisonSimilarity.isometricExtension</a></p></li><li id=L131><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_commutes_representations</code> <small>line 131</small><div class="doc"><p>A star intertwiner transports the whole represented commutant.</p></div><pre>theorem isometricExtension_commutes_representations
+    {A : Type*} [CStarAlgebra A]
+    (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H)) (ρ : A →⋆ₐ[ℂ] (K →L[ℂ] K))
+    (hJ : ∀ a, J.toContinuousLinearMap.comp (σ a) = (ρ a).comp J.toContinuousLinearMap)
+    (T : H →L[ℂ] H) (hT : ∀ a, T * σ a = σ a * T) (a : A) :
+    isometricExtension J T * ρ a = ρ a * isometricExtension J T := by
+…</pre><p class="refs">Mentions: <a href="IntertwinerExtension.lean.html#L18">OAI.KadisonSimilarity.isometricExtension</a></p></li><li id=L142><b>theorem</b> <code>OAI.KadisonSimilarity.isometricExtension_commutes_representations_of_apply</code> <small>line 142</small><div class="doc"><p>Pointwise intertwining is sufficient; form the equality of bounded
+operators before specializing to a concrete L² model.</p></div><pre>theorem isometricExtension_commutes_representations_of_apply
+    {A : Type*} [CStarAlgebra A]
+    (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H)) (ρ : A →⋆ₐ[ℂ] (K →L[ℂ] K))
+    (hJ : ∀ a x, J (σ a x) = ρ a (J x))
+    (T : H →L[ℂ] H) (hT : ∀ a, T * σ a = σ a * T) (a : A) :
+    isometricExtension J T * ρ a = ρ a * isometricExtension J T :=
+…</pre><p class="refs">Mentions: <a href="IntertwinerExtension.lean.html#L18">OAI.KadisonSimilarity.isometricExtension</a></p></li><li id=L153><b>theorem</b> <code>OAI.KadisonSimilarity.isometricCompression_commutes_representations_of_apply</code> <small>line 153</small><div class="doc"><p>Compression through a star intertwiner preserves commutation with the
+represented algebra. No support hypothesis is required.</p></div><pre>theorem isometricCompression_commutes_representations_of_apply
+    {A : Type*} [CStarAlgebra A]
+    (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H)) (ρ : A →⋆ₐ[ℂ] (K →L[ℂ] K))
+    (hJ : ∀ a x, J (σ a x) = ρ a (J x))
+    (Q : K →L[ℂ] K) (hQ : ∀ a, Q * ρ a = ρ a * Q) (a : A) :
+    ((J.toContinuousLinearMap.adjoint.comp Q).comp J.toContinuousLinearMap) * σ a =
+      σ a * ((J.toContinuousLinearMap.adjoint.comp Q).comp J.toContinuousLinearMap) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

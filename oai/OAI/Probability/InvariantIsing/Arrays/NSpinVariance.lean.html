@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Arrays/NSpinVariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Arrays/NSpinVariance.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Arrays</a> / <span>NSpinVariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Arrays</a>/<span>NSpinVariance.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Arrays/NSpinVariance.lean#L1">source</a></p><div class="doc"><p>The Haar contribution to the enriched pressure variance.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>lemma</b> <code>OAI.InvariantIsing.integral_sq_sub_le_of_gaussian_tail</code> <small>line 17</small><div class="doc"><p>Integrating the Gaussian tail of a deviation gives its second moment.
+The proof applies layer cake to the squared deviation, so only the elementary
+exponential integral on the positive half-line is needed.</p></div><pre>lemma integral_sq_sub_le_of_gaussian_tail {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ) (hf : Measurable f)
+    (m C a : ℝ) (hC : 0 ≤ C) (ha : 0 &lt; a)
+    (htail : ∀ r : ℝ, 0 &lt; r →
+      μ.real {ω | r ≤ |f ω - m|} ≤ C * Real.exp (-a * r ^ 2)) :
+    Integrable (fun ω =&gt; (f ω - m) ^ 2) μ ∧
+      (∫ ω, (f ω - m) ^ 2 ∂μ) ≤ C / a := by
+…</pre></li><li id=L57><b>lemma</b> <code>OAI.InvariantIsing.variance_le_of_gaussian_median_tail</code> <small>line 57</small></li><li id=L69><b>theorem</b> <code>OAI.InvariantIsing.haar_enrichedPressure_variance</code> <small>line 69</small><div class="doc"><p>Haar variance of the actual enriched pressure is at most a universal
+constant times the squared spectral bound divided by dimension.</p></div><pre>theorem haar_enrichedPressure_variance (hpub : HaarConcentrationInput) :
+    ∃ C : ℝ, 0 &lt; C ∧
+    ∀ N : ℕ, 3 ≤ N →
+    ∀ μ : Measure (SpecialOrthogonal N),
+      IsProbabilityMeasure μ → μ.IsMulLeftInvariant →
+    ∀ n : ℕ, ∀ b : ℕ → ℝ, ∀ v : ℕ → ℝ≥0, ∀ root : ℝ≥0,
+      IsingPerceptron.CascadeExponents n b →
+    ∀ eig c : Fin N → ℝ, ∀ K : ℝ, 0 &lt; K → (∀ i, |eig i| ≤ K) →
+      variance (fun U : SpecialOrthogonal N =&gt;
+        rotatedEnrichedPressure n b v root eig (specialRotation U) c) μ ≤
+        C * K ^ 2 / N := by
+…</pre><p class="refs">Mentions: <a href="../Haar/PublishedInputs.lean.html#L31">OAI.InvariantIsing.HaarConcentrationInput</a>, <a href="../Haar/PublishedInputs.lean.html#L21">OAI.InvariantIsing.SpecialOrthogonal</a>, <a href="../../IsingPerceptron/MarkedPartitionNumerator.lean.html#L278">OAI.IsingPerceptron.CascadeExponents</a>, <a href="NSpinCascade.lean.html#L124">OAI.InvariantIsing.rotatedEnrichedPressure</a>, <a href="../Haar/MatrixRotation.lean.html#L41">OAI.InvariantIsing.specialRotation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

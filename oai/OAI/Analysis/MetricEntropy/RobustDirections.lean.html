@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MetricEntropy/RobustDirections.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MetricEntropy/RobustDirections.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MetricEntropy</a> / <span>RobustDirections.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MetricEntropy</a>/<span>RobustDirections.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MetricEntropy/RobustDirections.lean#L1">source</a></p><div class="doc"><h3>Actual directions surviving deletion</h3><p>The sample is the full finite product of indexed vectors over <code>ZMod p</code>.
+The actual symmetric-form count and the zero bound for every repeated-index
+tuple feed the disjoint-witness union bound. A finite maximum disjoint family
+then produces the surviving set separately for each nonzero form.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.MetricEntropyDuality.exists_robust_directions_of_budget</code> <small>line 26</small><div class="doc"><p>The actual finite-field direction construction with an explicit deletion
+budget. One sample works for every nonzero form; its surviving subset may
+depend on that form. All ordered tuples, including repetitions, are retained.</p></div><pre>theorem exists_robust_directions_of_budget
+    {p r h u : ℕ} [Fact p.Prime]
+    (hr : 0 &lt; r) (hh : 0 &lt; h) (hu : 0 &lt; u)
+    {θ : ℝ} (hθ : θ &lt; 1)
+    (hdel : (h : ℝ) * (2 * (formDimension r h : ℝ)) ≤ θ * (u : ℝ))
+    (hp_h : h &lt; p) (hp_size : h ^ 2 * u ^ (2 * h) &lt; p) :
+    ∃ t : Fin u → Fin r → ZMod p,
+      ∀ F : SymmetricForm (ZMod p) r h, F ≠ 0 →
+        ∃ T : Finset (Fin u),
+          ((Finset.univ \ T).card : ℝ) ≤ θ * (u : ℝ) ∧ T.Nonempty ∧
+          ∀ a : Fin h → Fin u, (∀ j, a j ∈ T) →
+            SymmetricForm.eval F (fun j =&gt; t (a j)) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="FormDimension.lean.html#L21">OAI.MetricEntropyDuality.formDimension</a>, <a href="SymmetricForms.lean.html#L26">OAI.MetricEntropyDuality.SymmetricForm</a>, <a href="SymmetricForms.lean.html#L33">OAI.MetricEntropyDuality.SymmetricForm.eval</a></p></li><li id=L99><b>theorem</b> <code>OAI.MetricEntropyDuality.exists_robust_directions</code> <small>line 99</small><div class="doc"><p>The ceiling-defined direction count satisfies the
+deletion budget. The field size is chosen after <code>r</code>, <code>h</code>, and <code>θ</code>.</p></div><pre>theorem exists_robust_directions
+    {p r h : ℕ} [Fact p.Prime] (hr : 0 &lt; r) (hh : 0 &lt; h)
+    {θ : ℝ} (hθ0 : 0 &lt; θ) (hθ1 : θ &lt; 1)
+    (hp_h : h &lt; p)
+    (hp_size : h ^ 2 * (directionCount r h θ) ^ (2 * h) &lt; p) :
+    ∃ t : Fin (directionCount r h θ) → Fin r → ZMod p,
+      ∀ F : SymmetricForm (ZMod p) r h, F ≠ 0 →
+        ∃ T : Finset (Fin (directionCount r h θ)),
+          ((Finset.univ \ T).card : ℝ) ≤ θ * (directionCount r h θ : ℝ) ∧
+            T.Nonempty ∧
+          ∀ a : Fin h → Fin (directionCount r h θ), (∀ j, a j ∈ T) →
+            SymmetricForm.eval F (fun j =&gt; t (a j)) ≠ 0 :=
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L32">OAI.MetricEntropyDuality.directionCount</a>, <a href="SymmetricForms.lean.html#L26">OAI.MetricEntropyDuality.SymmetricForm</a>, <a href="SymmetricForms.lean.html#L33">OAI.MetricEntropyDuality.SymmetricForm.eval</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

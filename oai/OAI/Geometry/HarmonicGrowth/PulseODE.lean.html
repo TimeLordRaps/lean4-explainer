@@ -1,0 +1,140 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/HarmonicGrowth/PulseODE.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/HarmonicGrowth/PulseODE.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">HarmonicGrowth</a> / <span>PulseODE.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">HarmonicGrowth</a>/<span>PulseODE.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/HarmonicGrowth/PulseODE.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.slow_residual_identity</code> <small>line 20</small><div class="doc"><p>Exact scalar-baseline cancellation. Keeping v exact removes a term of
+size (a-a_*) times the long pulse duration.</p></div><pre>lemma slow_residual_identity (A₀ p p₀ v θ τ : ℝ) (S Sdot Err : R) :
+    (A₀ • (1:R)+((p₀+2*θ)*τ) • S+Err)-
+      p • (v • (1:R)+τ • S)-(v • (1:R)+τ • S)*(v • (1:R)+τ • S)-
+      ((A₀-p*v-v^2) • (1:R)+(τ^2) • Sdot) =
+      Err+((p₀+2*θ-p-2*v)*τ) • S-(τ^2) • (S*S+Sdot) := by
+…</pre></li><li id=L30><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.slow_residual_jet_identity</code> <small>line 30</small><div class="doc"><p>Exact first parameter derivative of that residual. The scalar baseline and
+p are independent of the CURRENT control parameter.</p></div><pre>lemma slow_residual_jet_identity (p p₀ v θ τ : ℝ) (S Sh Shdot Errh : R) :
+    (((p₀+2*θ)*τ) • Sh+Errh)-p • (τ • Sh)-
+      (τ • Sh)*(v • (1:R)+τ • S)-(v • (1:R)+τ • S)*(τ • Sh)-
+      (τ^2) • Shdot =
+      Errh+((p₀+2*θ-p-2*v)*τ) • Sh-(τ^2) • (Sh*S+S*Sh+Shdot) := by
+…</pre></li><li id=L39><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.slow_residual_bound</code> <small>line 39</small><div class="doc"><p>A uniform slow-pulse residual bound with completely explicit constants.</p></div><pre>lemma slow_residual_bound {Err S Sdot : R} {C δ τ ε : ℝ}
+    (hC : 0 ≤ C) (hδ : 0 ≤ δ) (hτ : 0 ≤ τ)
+    (he : ‖Err‖ ≤ C*(δ*τ+τ^2)) (hε : |ε| ≤ 3*C*δ)
+    (hS : ‖S‖ ≤ C) (hSd : ‖Sdot‖ ≤ C) :
+    ‖Err+(ε*τ) • S-(τ^2) • (S*S+Sdot)‖ ≤
+      (3*C^2+2*C)*(δ*τ+τ^2) := by
+…</pre></li><li id=L60><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.slow_residual_jet_bound</code> <small>line 60</small></li><li id=L100><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.bergerSlowGenerator</code> <small>line 100</small><div class="doc"><p>The source's first-order slow generator, including its precise
+Riccati denominator. The angular infinitesimal is r B Id+D.</p></div><pre>def bergerSlowGenerator (r B β p₀ θ z : ℝ) (D : R) : R :=
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.berger_comparison_residuals</code> <small>line 107</small><div class="doc"><p>Uniform residual AND true parameter-direction residual estimates for the
+exact Berger comparison. The constant is chosen before the scalar history,
+small deviation, duration, pulse position and parameters. All nonlinear
+angular remainders are proved, not hypotheses.</p></div><pre>theorem berger_comparison_residuals (r B β p₀ θ : ℝ) (D : R)
+    {M Z K : ℝ} (hM : 0 ≤ M) (hZ : 0 ≤ Z) (hK : 0 ≤ K)
+    (hc : p₀+2*θ ≠ 0) :
+    ∃ C : ℝ,0 ≤ C ∧ ∀ α p v δ τ z zd zh zhd : ℝ,
+      0 ≤ δ → 0 ≤ τ → |α| ≤ M → |α-β| ≤ δ → |p-p₀| ≤ δ → |v-θ| ≤ K*δ →
+      |z| ≤ Z → |zd| ≤ Z → |zh| ≤ Z → |zhd| ≤ Z →
+      1+τ*z ∈ Set.Icc (1/2:ℝ) (3/2) →
+      let S := bergerSlowGenerator r B β p₀ θ z D
+…</pre><p class="refs">Mentions: <a href="PulseODE.lean.html#L100">OAI.HarmonicCounterexample.LinearODE.bergerSlowGenerator</a></p></li><li id=L197><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.berger_scalar_baseline_close</code> <small>line 197</small><div class="doc"><p>The exact source scalar baseline, forced by B/a(t)^2, deviates from
+its limiting root by O(delta), uniformly in the pulse length.</p></div><pre>theorem berger_scalar_baseline_close {α p : ℝ → ℝ}
+    (hα : Continuous α) (hp : Continuous p)
+    {M Mp B β p₀ θ γ δ T : ℝ}
+    (hM : 0 ≤ M) (hMp : 0 ≤ Mp) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ) (hδ : 0 ≤ δ)
+    (hαn : ∀ t,|α t| ≤ M) (hpn : ∀ t,|p t| ≤ Mp)
+    (hAp : ∀ t,0 ≤ t → 0 ≤ α t*B) (hroot : β*B-p₀*θ-θ^2=0)
+    (hscale : ∀ t ∈ Icc 0 T,|α t-β| ≤ δ)
+    (hpt : ∀ t ∈ Icc 0 T,|p t-p₀| ≤ δ)
+    (hpl : ∀ t ∈ Icc 0 T,γ ≤ p t) :
+    ∀ t ∈ Icc 0 T,|scalarBaseline (fun s =&gt; α s*B) p θ t-θ| ≤
+      ((|B|+|θ|)/γ)*δ := by
+…</pre><p class="refs">Mentions: <a href="ScalarODE.lean.html#L234">OAI.HarmonicCounterexample.LinearODE.scalarBaseline</a></p></li><li id=L231><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_berger_comparison_residuals</code> <small>line 231</small><div class="doc"><p>Model-specific residuals with the actual scalar PB baseline substituted.
+The resulting C is fixed BEFORE all histories, scalar coefficient functions,
+period lengths, pulse positions and control parameters. This is the analytic
+uniformity required for recursive attainment, not a compactness claim about
+an unspecified incoming Riccati matrix.</p></div><pre>theorem actual_berger_comparison_residuals (r B β p₀ θ γ : ℝ) (D : R)
+    {M Z : ℝ} (hM : 0 ≤ M) (hZ : 0 ≤ Z) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hc : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0) :
+    ∃ C : ℝ,0 ≤ C ∧ ∀ (α p : ℝ → ℝ) (Mp δ T τ : ℝ),
+      Continuous α → Continuous p → 0 ≤ Mp → 0 ≤ δ → 0 ≤ τ →
+      (∀ t,|α t| ≤ M) → (∀ t,|p t| ≤ Mp) →
+      (∀ t,0 ≤ t → 0 ≤ α t*B) →
+      (∀ t ∈ Icc 0 T,|α t-β| ≤ δ) →
+      (∀ t ∈ Icc 0 T,|p t-p₀| ≤ δ) →
+      (∀ t ∈ Icc 0 T,γ ≤ p t) →
+      ∀ t ∈ Icc 0 T,∀ z zd zh zhd : ℝ,
+        |z| ≤ Z → |zd| ≤ Z → |zh| ≤ Z → |zhd| ≤ Z →
+…</pre></li><li id=L281><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.bergerComparison_time_deriv</code> <small>line 281</small><div class="doc"><p>The tau-square factor in the source residual is the TRUE time derivative
+of the rescaled comparison, not a syntactically assigned jet.</p></div><pre>lemma bergerComparison_time_deriv (r B β p₀ θ τ : ℝ) (D : R)
+    {v z : ℝ → ℝ} {v&#x27; z&#x27; t : ℝ}
+    (hv : HasDerivAt v v&#x27; t) (hz : HasDerivAt z z&#x27; (τ*t)) :
+    HasDerivAt (fun s =&gt; v s • (1:R)+τ • bergerSlowGenerator r B β p₀ θ (z (τ*s)) D)
+      (v&#x27; • (1:R)+(τ^2) • bergerSlowGenerator r B β p₀ θ z&#x27; D) t := by
+…</pre><p class="refs">Mentions: <a href="PulseODE.lean.html#L100">OAI.HarmonicCounterexample.LinearODE.bergerSlowGenerator</a></p></li><li id=L297><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.bergerComparison_parameter_deriv</code> <small>line 297</small><div class="doc"><p>The comparison's parameter variation is its GENUINE Frechet derivative;
+the exact scalar baseline is independent of the current control parameter.</p></div><pre>lemma bergerComparison_parameter_deriv (r B β p₀ θ τ v : ℝ) (D : R)
+    {z : H → ℝ} {z&#x27; : H →L[ℝ] ℝ} {x : H} (hz : HasFDerivAt z z&#x27; x) :
+    HasFDerivAt (fun y =&gt; v • (1:R)+τ • bergerSlowGenerator r B β p₀ θ (z y) D)
+      (z&#x27;.smulRight (τ • bergerSlowGenerator r B β p₀ θ 1 D)) x := by
+…</pre><p class="refs">Mentions: <a href="PulseODE.lean.html#L100">OAI.HarmonicCounterexample.LinearODE.bergerSlowGenerator</a></p></li><li id=L311><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.bergerAngular_parameter_deriv</code> <small>line 311</small><div class="doc"><p>True directional derivative of the exact Berger angular coefficient,
+including the current scale alpha and slow-pulse factor tau.</p></div><pre>lemma bergerAngular_parameter_deriv (r B α τ : ℝ) (D : R)
+    {z : H → ℝ} {z&#x27; : H →L[ℝ] ℝ} {x : H} (hz : HasFDerivAt z z&#x27; x)
+    (hq : 1+τ*z x ≠ 0) :
+    HasFDerivAt (fun y =&gt; α • PulseTaylor.angular r (B • (1:R)) D (1+τ*z y))
+      (z&#x27;.smulRight ((α*τ) • PulseTaylor.angularD r (B • (1:R)) D (1+τ*z x))) x := by
+…</pre><p class="refs">Mentions: <a href="Taylor.lean.html#L97">OAI.HarmonicCounterexample.PulseTaylor.angular</a>, <a href="Taylor.lean.html#L100">OAI.HarmonicCounterexample.PulseTaylor.angularD</a></p></li><li id=L344><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalar_plus_small_positive</code> <small>line 344</small><div class="doc"><p>Positivity of the comparison follows from a small pulse and the actual
+positive scalar baseline. Symmetry is not used or silently assumed here.</p></div><pre>lemma scalar_plus_small_positive {S : E →L[ℝ] E} {v τ C : ℝ}
+    (hτ : 0 ≤ τ) (hSn : ‖S‖ ≤ C) (hgap : τ*C ≤ v) :
+    ∀ x : E,0 ≤ inner ℝ x ((v • (1:E →L[ℝ] E)+τ • S) x) := by
+…</pre></li><li id=L377><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarBaseline_stronglyMeasurable</code> <small>line 377</small><div class="doc"><p>Global measurability of the genuine quotient holds even at irrelevant
+negative-time zeros. No global nonvanishing hypothesis is needed for FTC.</p></div><pre>lemma scalarBaseline_stronglyMeasurable {A p : ℝ → ℝ}
+    (hA : Continuous A) (hp : Continuous p) {MA Mp : ℝ}
+    (hMA : 0 ≤ MA) (hMp : 0 ≤ Mp) (hAn : ∀ t,|A t| ≤ MA)
+    (hpn : ∀ t,|p t| ≤ Mp) (θ : ℝ) :
+    StronglyMeasurable (scalarBaseline A p θ) := by
+…</pre><p class="refs">Mentions: <a href="ScalarODE.lean.html#L234">OAI.HarmonicCounterexample.LinearODE.scalarBaseline</a></p></li><li id=L394><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.actualBergerComparison</code> <small>line 394</small><div class="doc"><p>The actual comparison used in the slow pulse: the scalar part is built
+from PB flow, not chosen as an unproved solution of a Riccati equation.</p></div><pre>def actualBergerComparison (α p : ℝ → ℝ) (r B β p₀ θ τ : ℝ) (D : R)
+    (z : ℝ → ℝ) (t : ℝ) : R :=
+…</pre></li><li id=L399><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.actualBergerComparison_deriv</code> <small>line 399</small></li><li id=L412><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.actualBergerComparison_initial</code> <small>line 412</small></li><li id=L422><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.actualBergerComparison_parameter_deriv</code> <small>line 422</small><div class="doc"><p>The comparison's parameter jet is actual Frechet differentiation of the
+PB-based expression. The baseline does not depend on the current parameter.</p></div><pre>lemma actualBergerComparison_parameter_deriv (α p : ℝ → ℝ) (r B β p₀ θ τ : ℝ) (D : R)
+    {z : H → ℝ → ℝ} {z&#x27; : H →L[ℝ] ℝ} {x : H} (t : ℝ)
+    (hz : HasFDerivAt (fun y =&gt; z y (τ*t)) z&#x27; x) :
+    HasFDerivAt (fun y =&gt; actualBergerComparison α p r B β p₀ θ τ D (z y) t)
+      (z&#x27;.smulRight (τ • bergerSlowGenerator r B β p₀ θ 1 D)) x :=
+…</pre><p class="refs">Mentions: <a href="PulseODE.lean.html#L394">OAI.HarmonicCounterexample.LinearODE.actualBergerComparison</a>, <a href="PulseODE.lean.html#L100">OAI.HarmonicCounterexample.LinearODE.bergerSlowGenerator</a></p></li><li id=L446><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalar_plus_small_coercive</code> <small>line 446</small></li><li id=L462><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.actualBergerComparison_coercive</code> <small>line 462</small><div class="doc"><p>Uniform positivity of the actual comparison is derived from the actual
+baseline estimate and smallness conditions, not assumed for the Riccati bound.</p></div><pre>lemma actualBergerComparison_coercive {α p : ℝ → ℝ}
+    (hα : Continuous α) (hp : Continuous p) {M Mp B β p₀ θ γ δ T τ r Z : ℝ}
+    (hM : 0 ≤ M) (hMp : 0 ≤ Mp) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ) (hδ : 0 ≤ δ)
+    (hτ : 0 ≤ τ) (hαn : ∀ t,|α t| ≤ M) (hpn : ∀ t,|p t| ≤ Mp)
+    (hAp : ∀ t,0 ≤ t → 0 ≤ α t*B) (hroot : β*B-p₀*θ-θ^2=0)
+    (hscale : ∀ t ∈ Set.Icc 0 T,|α t-β| ≤ δ)
+    (hpt : ∀ t ∈ Set.Icc 0 T,|p t-p₀| ≤ δ)
+    (hpl : ∀ t ∈ Set.Icc 0 T,γ ≤ p t)
+    (D : E →L[ℝ] E) {z : ℝ → ℝ}
+    (hz : ∀ t ∈ Set.Icc 0 T,|z (τ*t)| ≤ Z)
+    (hsmall : ((|B|+|θ|)/γ)*δ+
+      τ*(|β/(p₀+2*θ)| * Z * ‖r • (B • (1:E →L[ℝ] E))+D‖) ≤ θ/2) :
+…</pre></li><li id=L523><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_berger_pulse_integrated</code> <small>line 523</small><div class="doc"><p>Actual Berger pulse, with the nonlinear angular coefficient and exact
+scalar Peano--Baker baseline substituted into the actual center-regular
+Riccati and variational equations. The constant is chosen before all histories,
+start times, durations, scalar backgrounds, and pulse shapes.</p></div><pre>theorem actual_berger_pulse_integrated (basis : OrthonormalBasis ι ℝ E)
+    (r B β p₀ θ γ : ℝ) (D : E →L[ℝ] E) {M Z : ℝ}
+    (hM : 0 ≤ M) (hZ : 0 ≤ Z) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hc : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0) :
+    ∃ C : ℝ,1 ≤ C ∧ ∀ (A : H → ℝ → E →L[ℝ] E) (b : ℝ → ℝ)
+      (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+      (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E) (x h : H)
+      (α p z zd zh zhd : ℝ → ℝ) (Mp MB MA Mb l B₀ a T δ ε : ℝ),
+      Continuous (A x) → Continuous b → Continuous (B&#x27; x) →
+      Continuous (fun t =&gt; A&#x27; x t h) →
+      (∀ t v w,B&#x27; x t v w=(0,A&#x27; x t v*w.1)) →
+      0 ≤ MB → 0 ≤ MA → 0 ≤ Mb →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L736><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_switched_berger_estimates</code> <small>line 736</small><div class="doc"><p>Actual finite switched Berger word: its angular generator can change on
+round gaps. The smooth first-order coefficient and its derivative are supplied
+by the explicit finite pulse family, not by differentiating a discontinuous
+selector. Nonlinear residuals are produced uniformly over the FINITE library.
+The one constant is chosen before every history, selector, shape and duration.</p></div><pre>theorem actual_switched_berger_estimates (basis : OrthonormalBasis ι ℝ E)
+    (r B β p₀ θ γ : ℝ) (D : κ → E →L[ℝ] E) {M Z : ℝ}
+    (hM : 0 ≤ M) (hZ : 0 ≤ Z) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hc : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0) :
+    ∃ C : ℝ,1 ≤ C ∧ ∀ (A : H → ℝ → E →L[ℝ] E) (b : ℝ → ℝ)
+      (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+      (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E) (x h : H)
+      (α p z zd zh zhd : ℝ → ℝ) (d : ℝ → κ)
+      (S Sd Sh Shd : ℝ → E →L[ℝ] E) (Mp MB MA Mb l B₀ a T δ ε : ℝ),
+      Continuous (A x) → Continuous b → Continuous (B&#x27; x) →
+      Continuous (fun t =&gt; A&#x27; x t h) →
+      (∀ t v w,B&#x27; x t v w=(0,A&#x27; x t v*w.1)) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

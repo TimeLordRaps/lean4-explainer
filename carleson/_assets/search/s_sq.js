@@ -1,0 +1,1 @@
+window.l4shard("sq", [["ENNReal.sq_lintegral_mul_le_mul_lintegral_sq",30,93],["L2norm_sq_eq",45,16],["MeasureTheory.BoundedCompactSupport.sq_eLpNorm_le_sums",51,323],["TileStructure.Forest.square_function_count",83,243]]);

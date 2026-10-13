@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MetricEntropy/EntropyBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MetricEntropy/EntropyBounds.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MetricEntropy</a> / <span>EntropyBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MetricEntropy</a>/<span>EntropyBounds.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MetricEntropy/EntropyBounds.lean#L1">source</a></p><div class="doc"><h3>From finite compression counts to entropy bounds</h3><p>The counting premise is the literal finite encoding bound. Its logarithmic
+conversion and the exact symmetric-form dimension ratio give the scalar
+entropy comparison used after the matrix-to-body construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.MetricEntropyDuality.log_count_le_encodingCost</code> <small>line 25</small><div class="doc"><p>Taking logarithms of the literal finite encoding count.</p></div><pre>theorem log_count_le_encodingCost {h u q Q : ℕ} {θ : ℝ}
+    (hu : 0 &lt; u) (hq : 0 &lt; q) (hθ : 0 &lt; θ) (hQ : 0 &lt; Q)
+    (hcount : (Q : ℝ) ≤ (u : ℝ) * (q : ℝ) ^ (h * pivotSlots θ) *
+      (1 + (pivotSlots θ : ℝ) * (2 : ℝ) ^ u / θ) ^
+        (h * pivotSlots θ * 2 ^ u)) :
+    Real.log (Q : ℝ) ≤ (h : ℝ) * (pivotSlots θ : ℝ) * Real.log (q : ℝ) +
+      encodingCost h θ u := by
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L26">OAI.MetricEntropyDuality.pivotSlots</a>, <a href="Parameters.lean.html#L35">OAI.MetricEntropyDuality.encodingCost</a></p></li><li id=L49><b>theorem</b> <code>OAI.MetricEntropyDuality.log_card_le_encodingCost</code> <small>line 49</small><div class="doc"><p>Finite-list version retaining the actual nonempty approximating family.</p></div><pre>theorem log_card_le_encodingCost {α : Type uα} {A : Finset α} {h u q : ℕ} {θ : ℝ}
+    (hu : 0 &lt; u) (hq : 0 &lt; q) (hθ : 0 &lt; θ) (hA : A.Nonempty)
+    (hcount : (A.card : ℝ) ≤ (u : ℝ) * (q : ℝ) ^ (h * pivotSlots θ) *
+      (1 + (pivotSlots θ : ℝ) * (2 : ℝ) ^ u / θ) ^
+        (h * pivotSlots θ * 2 ^ u)) :
+    Real.log (A.card : ℝ) ≤ (h : ℝ) * (pivotSlots θ : ℝ) * Real.log (q : ℝ) +
+      encodingCost h θ u :=
+…</pre><p class="refs">Mentions: <a href="Parameters.lean.html#L26">OAI.MetricEntropyDuality.pivotSlots</a>, <a href="Parameters.lean.html#L35">OAI.MetricEntropyDuality.encodingCost</a></p></li><li id=L59><b>theorem</b> <code>OAI.MetricEntropyDuality.log_square_ratio_le_of_log_bound</code> <small>line 59</small><div class="doc"><p>The algebraic ratio calculation before substituting symmetric dimensions.</p></div><pre>theorem log_square_ratio_le_of_log_bound {Q p D E h s C : ℝ}
+    (hp : 1 &lt; p) (hD : 0 &lt; D)
+    (hQ : Real.log Q ≤ h * s * E * Real.log p + C) :
+    Real.log (Q ^ 2) / (D * Real.log p) ≤
+      2 * h * s * (E / D) + 2 * C / (D * Real.log p) := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.MetricEntropyDuality.form_entropy_ratio_le</code> <small>line 76</small><div class="doc"><p>The exact binomial ratio converts label entropy into the rank term.</p></div><pre>theorem form_entropy_ratio_le {r h s p Q : ℕ} {C : ℝ}
+    (hr : 0 &lt; r) (hh : 0 &lt; h) (hp : 1 &lt; p)
+    (hQ : Real.log (Q : ℝ) ≤ (h : ℝ) * (s : ℝ) *
+      Real.log ((p : ℝ) ^ formDimension r (h - 1)) + C) :
+    Real.log ((Q : ℝ) ^ 2) / Real.log ((p : ℝ) ^ formDimension r h) ≤
+      2 * (h : ℝ) ^ 2 * (s : ℝ) / ((r : ℝ) + h - 1) +
+        2 * C / ((formDimension r h : ℝ) * Real.log (p : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="FormDimension.lean.html#L21">OAI.MetricEntropyDuality.formDimension</a></p></li><li id=L98><b>theorem</b> <code>OAI.MetricEntropyDuality.form_entropy_ratio_le_of_count</code> <small>line 98</small><div class="doc"><p>Specialization using the actual finite positive-list count and the label
+bound <code>q = p ^ D_(h-1)</code>.</p></div><pre>theorem form_entropy_ratio_le_of_count {r h p u Q : ℕ} {θ : ℝ}
+    (hr : 0 &lt; r) (hh : 0 &lt; h) (hp : 1 &lt; p) (hu : 0 &lt; u)
+    (hθ : 0 &lt; θ) (hQ : 0 &lt; Q)
+    (hcount : (Q : ℝ) ≤ (u : ℝ) *
+      ((p ^ formDimension r (h - 1) : ℕ) : ℝ) ^ (h * pivotSlots θ) *
+        (1 + (pivotSlots θ : ℝ) * (2 : ℝ) ^ u / θ) ^
+          (h * pivotSlots θ * 2 ^ u)) :
+    Real.log ((Q : ℝ) ^ 2) / Real.log ((p : ℝ) ^ formDimension r h) ≤
+      2 * (h : ℝ) ^ 2 * (pivotSlots θ : ℝ) / ((r : ℝ) + h - 1) +
+        2 * encodingCost h θ u / ((formDimension r h : ℝ) * Real.log (p : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="FormDimension.lean.html#L21">OAI.MetricEntropyDuality.formDimension</a>, <a href="Parameters.lean.html#L26">OAI.MetricEntropyDuality.pivotSlots</a>, <a href="Parameters.lean.html#L35">OAI.MetricEntropyDuality.encodingCost</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

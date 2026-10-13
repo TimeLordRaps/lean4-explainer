@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Transport/SignedTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Transport/SignedTransport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Transport</a> / <span>SignedTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Transport</a>/<span>SignedTransport.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Transport/SignedTransport.lean#L1">source</a></p><div class="doc"><h3>Signed transport at a leaf and at a paired split</h3><p>The signed-clique inequality, local potential increment and future quadratic
+conservation give the counting paper's fixed-degree transport estimate.
+Positivity of weights at unrelated degrees is unnecessary.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>def</b> <code>OAI.ContingencyTables.SignedTransport.cliqueEnergy</code> <small>line 25</small><div class="doc"><p>The unordered complete exchange energy, expressed as half the ordered
+sum, with the manuscript's minimum-endpoint conductance.</p></div><pre>noncomputable def cliqueEnergy (m W H : I → ℝ) : ℝ :=
+…</pre></li><li id=L30><b>lemma</b> <code>OAI.ContingencyTables.SignedTransport.star_energy_le</code> <small>line 30</small><div class="doc"><p>A star uses each unordered edge once, so its energy is at most the
+complete unordered exchange energy.</p></div><pre>lemma star_energy_le (E : I → I → ℝ)
+    (hE : ∀ i j, 0 ≤ E i j) (hsymm : ∀ i j, E i j = E j i)
+    (hdiag : ∀ i, E i i = 0) (hub : I) :
+    ∑ i, E i hub ≤ (∑ i, ∑ j, E i j) / 2 := by
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.ContingencyTables.SignedTransport.leaf_signed_transport</code> <small>line 49</small><div class="doc"><p>A balanced signed demand on the leaf clique has energy controlled by
+its potential. This proves the squared inequality directly by weighted
+Cauchy--Schwarz and the hub construction.</p></div><pre>theorem leaf_signed_transport [Nonempty I] (m W h H : I → ℝ)
+    (hm : ∀ i, 0 &lt; m i) (hW : ∀ i, 0 &lt; W i)
+    (hbalance : ∑ i, m i * h i = 0) :
+    (∑ i, m i * h i * H i) ^ 2 ≤
+      (∑ i, m i * h i ^ 2 / W i) * cliqueEnergy m W H := by
+…</pre><p class="refs">Mentions: <a href="SignedTransport.lean.html#L25">OAI.ContingencyTables.SignedTransport.cliqueEnergy</a></p></li><li id=L93><b>theorem</b> <code>OAI.ContingencyTables.SignedTransport.split_signed_cost</code> <small>line 93</small><div class="doc"><p>The exact Schur inequality for a paired binary split. The fresh
+coordinates have zero diagonals and positive mixed entry.</p></div><pre>theorem split_signed_cost (B : BilinForm ℝ V)
+    (hsymm : ∀ x y, B x y = B y x) (hsig : OnePositiveDirection B)
+    (h ea eb : V) (u X : ℝ) (hu : 0 &lt; u)
+    (haa : B ea ea = 0) (hbb : B eb eb = 0) (hab : B ea eb = u)
+    (hha : B h ea = -X) (hhb : B h eb = X) :
+    2 * X ^ 2 / u ≤ -B h h := by
+…</pre><p class="refs">Mentions: <a href="QuadraticTransport.lean.html#L32">OAI.ContingencyTables.OnePositiveDirection</a></p></li><li id=L117><b>theorem</b> <code>OAI.ContingencyTables.SignedTransport.future_form_conservation</code> <small>line 117</small><div class="doc"><p>Child coefficients of opposite signs preserve the future quadratic
+form. This is the cancellation that lets each later slot be charged only
+its root defect mass.</p></div><pre>theorem future_form_conservation (Ba Bb : BilinForm ℝ V)
+    (haSymm : ∀ x y, Ba x y = Ba y x) (hbSymm : ∀ x y, Bb x y = Bb y x)
+    (h ea eb : V) (c parent : ℝ)
+    (hold : Ba h h + Bb h h = parent)
+    (hcross : Ba h ea = Bb h eb) (haa : Ba ea ea = 0) (hbb : Bb eb eb = 0) :
+    Ba (h + c • ea) (h + c • ea) + Bb (h - c • eb) (h - c • eb) = parent := by
+…</pre></li><li id=L139><b>theorem</b> <code>OAI.ContingencyTables.SignedTransport.split_potential_increment</code> <small>line 139</small><div class="doc"><p>Splitting old masses and assigning the fresh-hole coefficients gives
+exactly the manuscript's potential increment <code>2 X²/(u Wt)</code>.</p></div><pre>theorem split_potential_increment (sa sb h W : I → ℝ) (u X Wt : ℝ)
+    (hu : u ≠ 0) (hWt : Wt ≠ 0) :
+    ((∑ i, sa i * h i ^ 2 / W i) + u * (-X / u) ^ 2 / Wt) +
+      ((∑ i, sb i * h i ^ 2 / W i) + u * (X / u) ^ 2 / Wt) =
+        (∑ i, (sa i + sb i) * h i ^ 2 / W i) + 2 * X ^ 2 / (u * Wt) := by
+…</pre></li><li id=L149><b>theorem</b> <code>OAI.ContingencyTables.SignedTransport.split_child_balance</code> <small>line 149</small><div class="doc"><p>The new-hole coefficients balance the two child signed demands.</p></div><pre>theorem split_child_balance (sa sb h : I → ℝ) (u : ℝ) (hu : u ≠ 0)
+    (hbalance : ∑ i, (sa i + sb i) * h i = 0) :
+    let X := ∑ i, sa i * h i
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

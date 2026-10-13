@@ -1,0 +1,152 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/CirculantHadamard/BinaryCharacterSum.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/CirculantHadamard/BinaryCharacterSum.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">LinearAlgebra</a> / <a href="index.html">CirculantHadamard</a> / <span>BinaryCharacterSum.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">LinearAlgebra</a>/<a href="index.html">CirculantHadamard</a>/<span>BinaryCharacterSum.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/CirculantHadamard/BinaryCharacterSum.lean#L1">source</a></p><div class="doc"><h3>Finite character sums and the surviving empty subset</h3><p>Translation of a finite group permutes its elements. Consequently a character
+with one value different from <code>1</code> has zero total sum in a domain. In a family
+indexed by subsets, this removes every nonempty subset once its actual
+character has such a witness.</p><p>The unit-denominator formulation takes place in the coefficient ring itself,
+so it can subsequently be mapped to a residue field of characteristic two.
+It does not require a map from a characteristic-zero field to that residue
+field. Nontriviality of the actual subset characters is supplied by their
+primitive primary components, rather than assumed of all characters.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L39><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.character_sum_eq_zero</code> <small>line 39</small><div class="doc"><p>A nontrivial value of a character forces its finite sum to vanish.
+The proof uses the permutation of <code>G</code> given by left translation.</p></div><pre>theorem character_sum_eq_zero [IsDomain R] (χ : G →* R)
+    (hχ : ∃ g : G, χ g ≠ 1) : (∑ g : G, χ g) = 0 := by
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.character_sum_trivial</code> <small>line 48</small><div class="doc"><p>The trivial character sums to the cardinality of the group.</p></div><pre>theorem character_sum_trivial (χ : G →* R) (hχ : ∀ g : G, χ g = 1) :
+    (∑ g : G, χ g) = (Fintype.card G : R) := by
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.JOver_eq_sum_single</code> <small>line 60</small><div class="doc"><p>The coefficientwise all-ones element is literally the sum of the basis
+elements, with coefficient one at each group element.</p></div><pre>theorem JOver_eq_sum_single {G : Type uG} [Fintype G] :
+    (BinaryCoefficients.JOver A : G →₀ A) = ∑ g : G, Finsupp.single g 1 := by
+…</pre><p class="refs">Mentions: <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a></p></li><li id=L68><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.evaluate_J_eq_sum</code> <small>line 68</small><div class="doc"><p>Evaluation of the actual all-ones group-ring element is the complete
+character sum. <code>JOver</code> is not the scalar unit of the group ring.</p></div><pre>theorem evaluate_J_eq_sum (φ : A →+* R)
+    (χ : Multiplicative (ZMod n) →* R) :
+    CyclicRing.evaluate φ χ (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n) =
+      ∑ g : Multiplicative (ZMod n), χ g := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L77><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.evaluate_J_eq_zero</code> <small>line 77</small><div class="doc"><p>A witnessed nontrivial character annihilates the actual group-ring <code>J</code>.</p></div><pre>theorem evaluate_J_eq_zero [IsDomain R] (φ : A →+* R)
+    (χ : Multiplicative (ZMod n) →* R)
+    (hχ : ∃ g : Multiplicative (ZMod n), χ g ≠ 1) :
+    CyclicRing.evaluate φ χ (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n) = 0 := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L85><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.evaluate_J_trivial</code> <small>line 85</small><div class="doc"><p>At the trivial character, the actual group-ring <code>J</code> evaluates to <code>n</code>.</p></div><pre>theorem evaluate_J_trivial (φ : A →+* R) :
+    CyclicRing.evaluate φ (1 : Multiplicative (ZMod n) →* R)
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n) = (n : R) := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L95><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.subset_evaluate_J_mul</code> <small>line 95</small><div class="doc"><p>Collapse written directly with evaluations of the actual group-ring <code>J</code>.
+Only character witnesses for nonempty subsets are used.</p></div><pre>theorem subset_evaluate_J_mul
+    {I : Type uI} {A : Type uA} {R : Type uR} [Fintype I] [DecidableEq I] [CommRing A]
+    [CommRing R] [IsDomain R] {n : ℕ} [NeZero n]
+    (φ : A →+* R) (χ : Finset I → Multiplicative (ZMod n) →* R)
+    (ε d : Finset I → R) (hε : ε ∅ = 1) (htrivial : χ ∅ = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty →
+      ∃ g : Multiplicative (ZMod n), χ S g ≠ 1) :
+    (∑ S : Finset I, ε S * CyclicRing.evaluate φ (χ S)
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n) * d S) =
+      (n : R) * d ∅ := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L123><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.subset_map_evaluate_J_mul</code> <small>line 123</small><div class="doc"><p>First prove the character sum in its domain, then change coefficient
+rings. This does not assume nontriviality of the reduced characters and also
+allows the coefficients <code>d S</code> to lie in a localization of the original ring.</p></div><pre>theorem subset_map_evaluate_J_mul
+    {I : Type uI} {A : Type uA} {R : Type uR} {T : Type uT} [Fintype I] [DecidableEq I] [CommRing A]
+    [CommRing R] [IsDomain R] [CommRing T] {n : ℕ} [NeZero n]
+    (φ : A →+* R) (ψ : R →+* T)
+    (χ : Finset I → Multiplicative (ZMod n) →* R)
+    (ε d : Finset I → T) (hε : ε ∅ = 1) (htrivial : χ ∅ = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty →
+      ∃ g : Multiplicative (ZMod n), χ S g ≠ 1) :
+    (∑ S : Finset I, ε S * ψ (CyclicRing.evaluate φ (χ S)
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n)) * d S) =
+      (n : T) * d ∅ := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L157><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.subset_character_sum_mul</code> <small>line 157</small><div class="doc"><p>Only the empty subset survives. The coefficients <code>d S</code> are arbitrary;
+in particular they may be inverses of specified units.</p></div><pre>theorem subset_character_sum_mul [DecidableEq I]
+    (χ : Finset I → G →* R) (ε d : Finset I → R)
+    (hε : ε ∅ = 1) (htrivial : ∀ g : G, χ ∅ g = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty → ∃ g : G, χ S g ≠ 1) :
+    (∑ S : Finset I, ε S * (∑ g : G, χ S g) * d S) =
+      (Fintype.card G : R) * d ∅ := by
+…</pre></li><li id=L177><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.subset_character_sum_mul_unit_inv</code> <small>line 177</small><div class="doc"><p>Ring-valued version of the quotient by each specified denominator unit.</p></div><pre>theorem subset_character_sum_mul_unit_inv
+    (χ : Finset I → G →* R) (ε : Finset I → R) (c : Finset I → Rˣ)
+    (hε : ε ∅ = 1) (htrivial : ∀ g : G, χ ∅ g = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty → ∃ g : G, χ S g ≠ 1) :
+    (∑ S : Finset I, ε S * (∑ g : G, χ S g) * ↑((c S)⁻¹)) =
+      (Fintype.card G : R) * ↑((c ∅)⁻¹) :=
+…</pre></li><li id=L189><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.subset_character_sum_div</code> <small>line 189</small><div class="doc"><p>In a field, the same collapse is expressed using division. No
+nonvanishing assumption on nonempty-subset denominators is needed.</p></div><pre>theorem subset_character_sum_div
+    {I : Type uI} {G : Type uG} {K : Type uK} [Fintype I] [DecidableEq I] [Group G] [Fintype G] [Field K]
+    (χ : Finset I → G →* K) (ε c : Finset I → K)
+    (hε : ε ∅ = 1) (htrivial : ∀ g : G, χ ∅ g = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty → ∃ g : G, χ S g ≠ 1) :
+    (∑ S : Finset I, ε S * (∑ g : G, χ S g) / c S) =
+      (Fintype.card G : K) / c ∅ := by
+…</pre></li><li id=L205><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.residue_odd_mul_unit_inv_ne_zero</code> <small>line 205</small><div class="doc"><p>An odd cardinal times the inverse of a unit stays nonzero in any
+nontrivial characteristic-two residue ring.</p></div><pre>theorem residue_odd_mul_unit_inv_ne_zero (φ : R →+* k) {n : ℕ}
+    (hn : Odd n) (c : Rˣ) : φ ((n : R) * ↑(c⁻¹)) ≠ 0 := by
+…</pre></li><li id=L213><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.residue_subset_character_sum_ne_zero</code> <small>line 213</small><div class="doc"><p>The weighted sum is nonzero after reduction when the finite group has
+odd order and the empty-subset denominator is the specified unit.</p></div><pre>theorem residue_subset_character_sum_ne_zero
+    {I : Type uI} {G : Type uG} [Fintype I] [DecidableEq I] [Group G] [Fintype G] [IsDomain R]
+    (φ : R →+* k) (χ : Finset I → G →* R)
+    (ε : Finset I → R) (c : Finset I → Rˣ)
+    (hε : ε ∅ = 1) (htrivial : ∀ g : G, χ ∅ g = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty → ∃ g : G, χ S g ≠ 1)
+    (hodd : Odd (Fintype.card G)) :
+    φ (∑ S : Finset I, ε S * (∑ g : G, χ S g) * ↑((c S)⁻¹)) ≠ 0 := by
+…</pre></li><li id=L227><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.residue_subset_evaluate_J_ne_zero</code> <small>line 227</small><div class="doc"><p>The residue of the actual <code>J</code> expression is nonzero. Only the denominator
+at the surviving empty subset needs to be a unit; the other coefficients are
+arbitrary because their character evaluations vanish.</p></div><pre>theorem residue_subset_evaluate_J_ne_zero
+    {I : Type uI} {A : Type uA} [Fintype I] [DecidableEq I] [CommRing A] [IsDomain R]
+    {n : ℕ} [NeZero n] (φ : A →+* R) (residue : R →+* k)
+    (χ : Finset I → Multiplicative (ZMod n) →* R)
+    (ε d : Finset I → R) (c₀ : Rˣ)
+    (hε : ε ∅ = 1) (htrivial : χ ∅ = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty →
+      ∃ g : Multiplicative (ZMod n), χ S g ≠ 1)
+    (hd : d ∅ = ↑(c₀⁻¹)) (hodd : Odd n) :
+    residue (∑ S : Finset I, ε S * CyclicRing.evaluate φ (χ S)
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n) * d S) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L243><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.residue_subset_map_evaluate_J_ne_zero</code> <small>line 243</small><div class="doc"><p>Localization and residue reduction may follow the domain-valued
+character-sum proof. Only the empty-subset coefficient is constrained.</p></div><pre>theorem residue_subset_map_evaluate_J_ne_zero
+    {I : Type uI} {A : Type uA} {B : Type uB} [Fintype I] [DecidableEq I] [CommRing A]
+    [CommRing B] [IsDomain B] {n : ℕ} [NeZero n]
+    (φ : A →+* B) (ψ : B →+* R) (residue : R →+* k)
+    (χ : Finset I → Multiplicative (ZMod n) →* B)
+    (ε d : Finset I → R) (c₀ : Rˣ)
+    (hε : ε ∅ = 1) (htrivial : χ ∅ = 1)
+    (hnonempty : ∀ S : Finset I, S.Nonempty →
+      ∃ g : Multiplicative (ZMod n), χ S g ≠ 1)
+    (hd : d ∅ = ↑(c₀⁻¹)) (hodd : Odd n) :
+    residue (∑ S : Finset I, ε S * ψ (CyclicRing.evaluate φ (χ S)
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver A) : CyclicRing.Elem A n)) * d S) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="CyclicEvaluation.lean.html#L25">OAI.CirculantHadamard.CyclicRing.evaluate</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L266><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.actual_subsetCharacter_nontrivial</code> <small>line 266</small><div class="doc"><p>The witness is the actual CRT generator of a prime in the nonempty
+subset. Its value is the corresponding primitive prime root, hence not one.</p></div><pre>theorem actual_subsetCharacter_nontrivial (u : ℕ) (hu : 0 &lt; u)
+    (S : Finset (PrimeIndex u)) (hS : S.Nonempty) :
+    ∃ g : Multiplicative (ZMod (u ^ 2)), subsetCharacter u hu S g ≠ 1 := by
+…</pre></li><li id=L275><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.actual_subsetEvaluation_J_empty</code> <small>line 275</small><div class="doc"><p>The actual empty-subset evaluation of <code>J</code> is the order <code>u²</code>.</p></div><pre>theorem actual_subsetEvaluation_J_empty :
+    subsetEvaluation u hu ∅
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver GaussianRing) : CyclicRing.Elem GaussianRing (u ^ 2)) =
+      (u ^ 2 : ℕ) := by
+…</pre><p class="refs">Mentions: <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L283><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.actual_subsetEvaluation_J_nonempty</code> <small>line 283</small><div class="doc"><p>Every actual nonempty-subset evaluation of <code>J</code> vanishes. No
+nontrivial-character hypothesis is an input to this theorem.</p></div><pre>theorem actual_subsetEvaluation_J_nonempty
+    (S : Finset (PrimeIndex u)) (hS : S.Nonempty) :
+    subsetEvaluation u hu S
+      (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver GaussianRing) : CyclicRing.Elem GaussianRing (u ^ 2)) = 0 := by
+…</pre><p class="refs">Mentions: <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L292><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.actual_subset_J_sum</code> <small>line 292</small><div class="doc"><p>The actual prime-subset sum, with the literal parity signs. The target
+may be a localization: its coefficients need not belong to the original <code>B</code>.</p></div><pre>theorem actual_subset_J_sum
+    {T : Type uT} [CommRing T] (ψ : B u →+* T)
+    (d : Finset (PrimeIndex u) → T) :
+    (∑ S : Finset (PrimeIndex u), (subsetSign S : T) *
+      ψ (subsetEvaluation u hu S
+        (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver GaussianRing) : CyclicRing.Elem GaussianRing (u ^ 2))) *
+      d S) = ((u ^ 2 : ℕ) : T) * d ∅ := by
+…</pre><p class="refs">Mentions: <a href="AlternatingProducts.lean.html#L29">OAI.CirculantHadamard.subsetSign</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L306><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.actual_subset_J_sum_div</code> <small>line 306</small><div class="doc"><p>In a field the concrete sum is exactly <code>|P| / c_empty</code>, with
+<code>|P| = u²</code>. Values at every nonempty subset were proved zero using its
+actual primitive primary component.</p></div><pre>theorem actual_subset_J_sum_div
+    {K : Type uK} [Field K] (ψ : B u →+* K)
+    (c : Finset (PrimeIndex u) → K) :
+    (∑ S : Finset (PrimeIndex u), (subsetSign S : K) *
+      ψ (subsetEvaluation u hu S
+        (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver GaussianRing) : CyclicRing.Elem GaussianRing (u ^ 2))) /
+      c S) = ((u ^ 2 : ℕ) : K) / c ∅ := by
+…</pre><p class="refs">Mentions: <a href="AlternatingProducts.lean.html#L29">OAI.CirculantHadamard.subsetSign</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li><li id=L318><b>theorem</b> <code>OAI.CirculantHadamard.BinaryCharacterSum.actual_subset_J_residue_ne_zero</code> <small>line 318</small><div class="doc"><p>The concrete prime-character sum has nonzero characteristic-two residue.
+Oddness comes from the actual <code>u</code>; only the surviving denominator must be a
+unit. There is no assumption on reduced-character nontriviality.</p></div><pre>theorem actual_subset_J_residue_ne_zero
+    {T : Type uT} {k : Type uk} [CommRing T] [CommRing k] [Nontrivial k] [CharP k 2]
+    (ψ : B u →+* T) (residue : T →+* k)
+    (d : Finset (PrimeIndex u) → T) (c₀ : Tˣ)
+    (hd : d ∅ = ↑(c₀⁻¹)) (hodd : Odd u) :
+    residue (∑ S : Finset (PrimeIndex u), (subsetSign S : T) *
+      ψ (subsetEvaluation u hu S
+        (AddMonoidAlgebra.ofCoeff (BinaryCoefficients.JOver GaussianRing) : CyclicRing.Elem GaussianRing (u ^ 2))) *
+      d S) ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="AlternatingProducts.lean.html#L29">OAI.CirculantHadamard.subsetSign</a>, <a href="BinaryCoefficients.lean.html#L122">OAI.CirculantHadamard.BinaryCoefficients.JOver</a>, <a href="CyclicRing.lean.html#L18">OAI.CirculantHadamard.CyclicRing.Elem</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

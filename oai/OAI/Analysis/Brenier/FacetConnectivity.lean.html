@@ -1,0 +1,158 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/FacetConnectivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/FacetConnectivity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>FacetConnectivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>FacetConnectivity.lean</span></code></h1><p class="muted">23 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/FacetConnectivity.lean#L1">source</a></p><div class="doc"><p>Connectivity of finite closed covers and active-cell intersection graphs.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Problem358.closedCoverGraph</code> <small>line 15</small><div class="doc"><p>Distinct cover members are adjacent when they meet.</p></div><pre>def closedCoverGraph (s : ι → Set X) : SimpleGraph ι where
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem358.closedCoverGraph_reachable</code> <small>line 26</small><div class="doc"><p>Any two nonempty members of a finite closed cover of a preconnected set
+are joined by a chain of nonempty intersections. Empty cover members are harmless.</p></div><pre>theorem closedCoverGraph_reachable (s : ι → Set X)
+    (hclosed : ∀ i, IsClosed (s i)) (hconn : IsPreconnected (⋃ i, s i))
+    (i j : ι) (hi : (s i).Nonempty) (hj : (s j).Nonempty) :
+    (closedCoverGraph s).Reachable i j := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L15">OAI.Problem358.closedCoverGraph</a></p></li><li id=L62><b>theorem</b> <code>OAI.Problem358.closedCoverGraph_connected</code> <small>line 62</small><div class="doc"><p>A finite closed cover of a preconnected set has connected intersection graph,
+provided every member of the cover is nonempty.</p></div><pre>theorem closedCoverGraph_connected [Nonempty ι] (s : ι → Set X)
+    (hclosed : ∀ i, IsClosed (s i)) (hne : ∀ i, (s i).Nonempty)
+    (hconn : IsPreconnected (⋃ i, s i)) : (closedCoverGraph s).Connected :=
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L15">OAI.Problem358.closedCoverGraph</a></p></li><li id=L70><b>def</b> <code>OAI.Problem358.ClosedCoverConnectivity.maximalCell</code> <small>line 70</small><div class="doc"><p>The closed weak-maximizer cell of a continuous finite family.</p></div><pre>def maximalCell (K : Set X) (f : ι → X → ℝ) (i : ι) : Set X :=
+…</pre></li><li id=L74><b>lemma</b> <code>OAI.Problem358.ClosedCoverConnectivity.maximalCell_isClosed</code> <small>line 74</small></li><li id=L84><b>lemma</b> <code>OAI.Problem358.ClosedCoverConnectivity.iUnion_maximalCell</code> <small>line 84</small></li><li id=L100><b>theorem</b> <code>OAI.Problem358.ClosedCoverConnectivity.maximalCell_graph_connected</code> <small>line 100</small><div class="doc"><p>The nonempty affine-max cells have a connected intersection graph.
+This statement concerns nonempty intersections, not positive-area common facets.</p></div><pre>theorem maximalCell_graph_connected [Nonempty ι] (K : Set X)
+    (hclosed : IsClosed K) (hconnected : IsPreconnected K)
+    (f : ι → X → ℝ) (hf : ∀ i, Continuous (f i))
+    (hactive : ∀ i, (maximalCell K f i).Nonempty) :
+    (closedCoverGraph (maximalCell K f)).Connected := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L70">OAI.Problem358.ClosedCoverConnectivity.maximalCell</a>, <a href="FacetConnectivity.lean.html#L15">OAI.Problem358.closedCoverGraph</a></p></li><li id=L124><b>theorem</b> <code>OAI.Problem358.measure_face_pos_of_strict_tie</code> <small>line 124</small><div class="doc"><p>A persistent tie which strictly dominates every other score is a positive
+measure face whenever the parameter point maps into the interior of the source.
+Only topology and positivity of nonempty open sets are needed.</p></div><pre>theorem measure_face_pos_of_strict_tie
+    {X W ι : Type*} [TopologicalSpace X] [TopologicalSpace W]
+    [MeasurableSpace W] [Finite ι]
+    (μ : Measure W) [Measure.IsOpenPosMeasure μ]
+    (φ : W → X) (hφ : Continuous φ) (score : ι → X → ℝ)
+    (hs : ∀ k, Continuous (score k)) (K : Set X) (z : W) (i j : ι)
+    (hz : φ z ∈ interior K)
+    (htie : ∀ w, score i (φ w) = score j (φ w))
+    (hstrict : ∀ k, k ≠ i → k ≠ j → score k (φ z) &lt; score i (φ z)) :
+    0 &lt; μ {w | φ w ∈ K ∧ score i (φ w) = score j (φ w) ∧
+      ∀ k, score k (φ w) ≤ score i (φ w)} := by
+…</pre></li><li id=L163><b>theorem</b> <code>OAI.Problem358.affine_pair_face_surface_pos</code> <small>line 163</small><div class="doc"><p>A two-site strict tie in the interior has positive surface measure in the
+tangent hyperplane of the two affine scores. No ambient volume assertion is
+made: the measure is intrinsically on the tangent subspace.</p></div><pre>theorem affine_pair_face_surface_pos
+    {V ι : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    [MeasurableSpace V] [BorelSpace V] [Finite ι]
+    (y : ι → V) (c : ι → ℝ) (i j : ι) (x : V) (K : Set V)
+    (μ : Measure ((ℝ ∙ (y i - y j))ᗮ)) [Measure.IsOpenPosMeasure μ]
+    (hx : x ∈ interior K)
+    (htie : ⟪y i, x⟫_ℝ + c i = ⟪y j, x⟫_ℝ + c j)
+    (hstrict : ∀ k, k ≠ i → k ≠ j →
+      ⟪y k, x⟫_ℝ + c k &lt; ⟪y i, x⟫_ℝ + c i) :
+    0 &lt; μ {w | x + (w : V) ∈ K ∧
+      ⟪y i, x + (w : V)⟫_ℝ + c i = ⟪y j, x + (w : V)⟫_ℝ + c j ∧
+      ∀ k, ⟪y k, x + (w : V)⟫_ℝ + c k ≤ ⟪y i, x + (w : V)⟫_ℝ + c i} := by
+…</pre></li><li id=L204><b>def</b> <code>OAI.Problem358.PositiveFacet.strictTieGraph</code> <small>line 204</small><div class="doc"><p>Edges are interior ties with no third maximizing branch. For affine
+families these are precisely the local witnesses of positive-area facets.</p></div><pre>def strictTieGraph (K : Set V) (f : ι → V → ℝ) : SimpleGraph ι where
+…</pre></li><li id=L216><b>theorem</b> <code>OAI.Problem358.PositiveFacet.strictTieGraph_reachable_of_parametric</code> <small>line 216</small><div class="doc"><p>A connected closed parameter domain without triple ties generates a chain
+of strict two-cell interfaces between any two active endpoint labels. Empty
+cells on this particular path do not cause an obstruction.</p></div><pre>theorem strictTieGraph_reachable_of_parametric
+    (K : Set V) (f : ι → V → ℝ) (hf : ∀ i, Continuous (f i))
+    (s : Set W) (hs : IsClosed s) (hconn : IsPreconnected s)
+    (a : W → V) (ha : Continuous a)
+    (hK : ∀ t ∈ s, a t ∈ interior K)
+    (htriple : ∀ t ∈ s, ∀ i j k, i ≠ j → k ≠ i → k ≠ j →
+      f i (a t) = f j (a t) → f i (a t) ≠ f k (a t))
+    (i j : ι) (ti tj : W) (hti : ti ∈ s) (htj : tj ∈ s)
+    (hi : ∀ k, f k (a ti) ≤ f i (a ti))
+    (hj : ∀ k, f k (a tj) ≤ f j (a tj)) :
+    (strictTieGraph K f).Reachable i j := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L204">OAI.Problem358.PositiveFacet.strictTieGraph</a></p></li><li id=L261><b>lemma</b> <code>OAI.Problem358.PositiveFacet.score_difference</code> <small>line 261</small></li><li id=L271><b>theorem</b> <code>OAI.Problem358.PositiveFacet.affine_strictTieGraph_connected</code> <small>line 271</small><div class="doc"><p>Every strictly active affine label is connected to every other by interior
+two-cell ties. The proof chooses an actual generic segment avoiding all triple
+ties, then applies finite closed-cover connectivity along that segment.</p></div><pre>theorem affine_strictTieGraph_connected
+    (μ : Measure E) [IsAddHaarMeasure μ]
+    (K : Set E) (hK : Convex ℝ K) (y : ι → E) (c : ι → ℝ)
+    (hactive : ∀ i, ∃ x ∈ interior K, ∀ j, j ≠ i →
+      TripleCell.score (y j) (c j) x &lt; TripleCell.score (y i) (c i) x) :
+    (strictTieGraph K (fun i =&gt; TripleCell.score (y i) (c i))).Connected := by
+…</pre><p class="refs">Mentions: <a href="AffineTies.lean.html#L269">OAI.Problem358.TripleCell.score</a>, <a href="FacetConnectivity.lean.html#L204">OAI.Problem358.PositiveFacet.strictTieGraph</a></p></li><li id=L379><b>def</b> <code>OAI.Problem358.PositiveFacet.surfaceFace</code> <small>line 379</small><div class="doc"><p>The surface face in a tie hyperplane, translated from an arbitrary point
+of that plane. This is an intrinsic measure domain, not ambient volume.</p></div><pre>def surfaceFace (K : Set E) (y : ι → E) (c : ι → ℝ) (i j : ι) (base : E) :
+    Set ((ℝ ∙ (y i - y j))ᗮ) :=
+…</pre></li><li id=L391><b>theorem</b> <code>OAI.Problem358.PositiveFacet.strictTieGraph_adj_surfaceFace_pos</code> <small>line 391</small><div class="doc"><p>Strict-facet edges have positive surface measure in a parametrization at
+any point of their tie plane. This transfers the local strict-face theorem to
+the fixed bases used when defining geometric graph coefficients.</p></div><pre>theorem strictTieGraph_adj_surfaceFace_pos
+    (K : Set E) (y : ι → E) (c : ι → ℝ) {i j : ι}
+    (hedge : (strictTieGraph K (fun k =&gt; TripleCell.score (y k) (c k))).Adj i j)
+    (base : E)
+    (hbase : TripleCell.score (y i) (c i) base = TripleCell.score (y j) (c j) base)
+    (μ : Measure ((ℝ ∙ (y i - y j))ᗮ)) [IsOpenPosMeasure μ] :
+    0 &lt; μ (surfaceFace K y c i j base) := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L204">OAI.Problem358.PositiveFacet.strictTieGraph</a>, <a href="AffineTies.lean.html#L269">OAI.Problem358.TripleCell.score</a>, <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a></p></li><li id=L425><b>theorem</b> <code>OAI.Problem358.PositiveFacet.exists_connected_positive_surface_graph</code> <small>line 425</small><div class="doc"><p>The geometric strict-facet graph is connected and each of its edges has
+positive intrinsic face measure, uniformly over arbitrary tie-plane bases.
+No quantitative lower bound on individual face areas is needed.</p></div><pre>theorem exists_connected_positive_surface_graph
+    [FiniteDimensional ℝ E] [Nonempty ι]
+    (ρ : Measure E) [IsAddHaarMeasure ρ]
+    (K : Set E) (hK : Convex ℝ K) (y : ι → E) (c : ι → ℝ)
+    (hactive : ∀ i, ∃ x ∈ interior K, ∀ j, j ≠ i →
+      TripleCell.score (y j) (c j) x &lt; TripleCell.score (y i) (c i) x) :
+    ∃ G : SimpleGraph ι, G.Connected ∧ ∀ i j, G.Adj i j →
+      ∀ base : E,
+      TripleCell.score (y i) (c i) base = TripleCell.score (y j) (c j) base →
+      ∀ μ : Measure ((ℝ ∙ (y i - y j))ᗮ), IsOpenPosMeasure μ →
+        0 &lt; μ (surfaceFace K y c i j base) := by
+…</pre><p class="refs">Mentions: <a href="AffineTies.lean.html#L269">OAI.Problem358.TripleCell.score</a>, <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a></p></li><li id=L460><b>theorem</b> <code>OAI.Problem358.PositiveFacet.surfaceFace_eq_preimage_closedCells</code> <small>line 460</small><div class="doc"><p>The intrinsic face domain is exactly the pullback of the intersection of
+the two canonical closed cells.</p></div><pre>theorem surfaceFace_eq_preimage_closedCells
+    (K : Set (E d)) (y : ι → E d) (c : ι → ℝ) (i j : ι) (base : E d) :
+    surfaceFace K y c i j base =
+      (fun w : (ℝ ∙ (y i - y j))ᗮ =&gt; base + (w : E d)) ⁻¹&#x27;
+        (CellGeometry.closedCell K y c i ∩ CellGeometry.closedCell K y c j) := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a>, <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L477><b>theorem</b> <code>OAI.Problem358.PositiveFacet.isCompact_surfaceFace</code> <small>line 477</small><div class="doc"><p>Compact source cells give compact surface domains in every translated
+tangent-plane parametrization.</p></div><pre>theorem isCompact_surfaceFace
+    (K : Set (E d)) (hK : IsCompact K) (y : ι → E d) (c : ι → ℝ)
+    (i j : ι) (base : E d) : IsCompact (surfaceFace K y c i j base) := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a></p></li><li id=L491><b>theorem</b> <code>OAI.Problem358.PositiveFacet.strictTieGraph_adj_surfaceFace_real_pos</code> <small>line 491</small><div class="doc"><p>Positivity remains genuine after <code>ENNReal.toReal</code>: compactness excludes
+an infinite surface measure from being silently converted to zero.</p></div><pre>theorem strictTieGraph_adj_surfaceFace_real_pos
+    (K : Set (E d)) (hK : IsCompact K) (y : ι → E d) (c : ι → ℝ) {i j : ι}
+    (hedge : (strictTieGraph K (fun k =&gt; TripleCell.score (y k) (c k))).Adj i j)
+    (base : E d)
+    (hbase : TripleCell.score (y i) (c i) base = TripleCell.score (y j) (c j) base)
+    (μ : Measure ((ℝ ∙ (y i - y j))ᗮ))
+    [IsOpenPosMeasure μ] [IsFiniteMeasureOnCompacts μ] :
+    0 &lt; (μ (surfaceFace K y c i j base)).toReal := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L204">OAI.Problem358.PositiveFacet.strictTieGraph</a>, <a href="AffineTies.lean.html#L269">OAI.Problem358.TripleCell.score</a>, <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a></p></li><li id=L505><b>theorem</b> <code>OAI.Problem358.PositiveFacet.strictTieGraph_adj_normalized_surface_pos</code> <small>line 505</small><div class="doc"><p>The coefficient used in the cell Laplacian is positive on every strict
+facet edge. Both the source-volume and surface-area <code>toReal</code> conversions are
+justified by compactness.</p></div><pre>theorem strictTieGraph_adj_normalized_surface_pos
+    (K : Set (E d)) (hK : IsCompact K) (hvol : volume K ≠ 0)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y) {i j : ι}
+    (hedge : (strictTieGraph K (fun k =&gt; TripleCell.score (y k) (c k))).Adj i j)
+    (base : E d)
+    (hbase : TripleCell.score (y i) (c i) base = TripleCell.score (y j) (c j) base)
+    (μ : Measure ((ℝ ∙ (y i - y j))ᗮ))
+    [IsOpenPosMeasure μ] [IsFiniteMeasureOnCompacts μ] :
+    0 &lt; (μ (surfaceFace K y c i j base)).toReal /
+      ((volume K).toReal * ‖y i - y j‖) := by
+…</pre><p class="refs">Mentions: <a href="FacetConnectivity.lean.html#L204">OAI.Problem358.PositiveFacet.strictTieGraph</a>, <a href="AffineTies.lean.html#L269">OAI.Problem358.TripleCell.score</a>, <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a></p></li><li id=L522><b>theorem</b> <code>OAI.Problem358.PositiveFacet.strictTieGraph_connected_of_positive_cells</code> <small>line 522</small><div class="doc"><p>No generic-position, no facet positivity, and no strict-activation premise
+is left in this connectivity statement: all are consequences of positive cell
+masses and absolute continuity of the source.</p></div><pre>theorem strictTieGraph_connected_of_positive_cells [Nonempty ι]
+    (ρ : Measure (E d)) (hρ : ρ ≪ volume)
+    (K : Set (E d)) (hK : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ i, ρ (CellGeometry.closedCell K y c i) ≠ 0) :
+    (strictTieGraph K (fun i =&gt; TripleCell.score (y i) (c i))).Connected := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="FacetConnectivity.lean.html#L204">OAI.Problem358.PositiveFacet.strictTieGraph</a>, <a href="AffineTies.lean.html#L269">OAI.Problem358.TripleCell.score</a></p></li><li id=L535><b>theorem</b> <code>OAI.Problem358.PositiveFacet.exists_connected_surface_graph_of_positive_cells</code> <small>line 535</small><div class="doc"><p>The exact positive-surface connectivity conclusion for positive-mass
+convex cells. Surface measures can be independently selected on each tangent
+hyperplane; fixed affine-plane basepoints are explicitly permitted.</p></div><pre>theorem exists_connected_surface_graph_of_positive_cells [Nonempty ι]
+    (ρ : Measure (E d)) (hρ : ρ ≪ volume)
+    (K : Set (E d)) (hK : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ i, ρ (CellGeometry.closedCell K y c i) ≠ 0) :
+    ∃ G : SimpleGraph ι, G.Connected ∧ ∀ i j, G.Adj i j →
+      ∀ base : E d,
+      (⟪base, y i⟫_ℝ + c i = ⟪base, y j⟫_ℝ + c j) →
+      ∀ μ : Measure ((ℝ ∙ (y i - y j))ᗮ), IsOpenPosMeasure μ →
+        0 &lt; μ ((fun w : (ℝ ∙ (y i - y j))ᗮ =&gt; base + (w : E d)) ⁻¹&#x27;
+          (CellGeometry.closedCell K y c i ∩ CellGeometry.closedCell K y c j)) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L554><b>theorem</b> <code>OAI.Problem358.PositiveFacet.exists_connected_normalized_surface_graph</code> <small>line 554</small><div class="doc"><p>The weighted graph needed by the cell-Laplacian range theorem, with
+normalized geometric face coefficients rather than assumed positive weights.</p></div><pre>theorem exists_connected_normalized_surface_graph [Nonempty ι]
+    (ρ : Measure (E d)) (hρ : ρ ≪ volume)
+    (K : Set (E d)) (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ i, ρ (CellGeometry.closedCell K y c i) ≠ 0) :
+    ∃ G : SimpleGraph ι, G.Connected ∧ ∀ i j, G.Adj i j →
+      ∀ base : E d,
+      (⟪base, y i⟫_ℝ + c i = ⟪base, y j⟫_ℝ + c j) →
+      ∀ μ : Measure ((ℝ ∙ (y i - y j))ᗮ),
+        IsOpenPosMeasure μ → IsFiniteMeasureOnCompacts μ →
+        0 &lt; (μ (surfaceFace K y c i j base)).toReal /
+          ((volume K).toReal * ‖y i - y j‖) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="FacetConnectivity.lean.html#L379">OAI.Problem358.PositiveFacet.surfaceFace</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

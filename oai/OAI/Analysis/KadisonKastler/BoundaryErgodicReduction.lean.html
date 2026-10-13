@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/BoundaryErgodicReduction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/BoundaryErgodicReduction.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>BoundaryErgodicReduction.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>BoundaryErgodicReduction.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/BoundaryErgodicReduction.lean#L1">source</a></p><div class="doc"><h3>Removing the boundary variables by double ergodicity</h3><p>The diagonal comparison gives the vector field <code>L* a Ω</code>.  Its covariance
+is derived from the product intertwiner and the tracial right action.
+Double ergodicity is used only for this actual bounded measurable field.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>theorem</b> <code>OAI.KadisonKastler.aestronglyMeasurable_field_apply</code> <small>line 30</small><div class="doc"><p>Strongly measurable evaluations of an operator field can be applied
+to a varying strongly measurable vector. No operator-norm measurability
+of the field is required.</p></div><pre>theorem aestronglyMeasurable_field_apply (T : P → H →L[ℂ] H)
+    (hT : ∀ ξ, AEStronglyMeasurable (fun p =&gt; T p ξ) μ)
+    (v : P → H) (hv : AEStronglyMeasurable v μ) :
+    AEStronglyMeasurable (fun p =&gt; T p (v p)) μ := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.KadisonKastler.boundary_intertwiner_adjoint</code> <small>line 58</small><div class="doc"><p>The operator identity behind the equivariance of <code>L* a Ω</code>.</p></div><pre>theorem boundary_intertwiner_adjoint (L K U V : unitary (H →L[ℂ] H))
+    (h : (L : H →L[ℂ] H) * U = (V : H →L[ℂ] H) * K) :
+    star (L : H →L[ℂ] H) * V = (U : H →L[ℂ] H) * star (K : H →L[ℂ] H) := by
+…</pre></li><li id=L71><b>theorem</b> <code>OAI.KadisonKastler.boundary_comparison_vector_covariance</code> <small>line 71</small><div class="doc"><p>Diagonal covariance follows from the genuine right-action identities.</p></div><pre>theorem boundary_comparison_vector_covariance
+    (L K U W Z R a b : unitary (H →L[ℂ] H)) (Ω : H)
+    (hL : (L : H →L[ℂ] H) * U = ((W : H →L[ℂ] H) * R) * K)
+    (ha : (a : H →L[ℂ] H) = ((W : H →L[ℂ] H) * b) * star (Z : H →L[ℂ] H))
+    (hR : (R : H →L[ℂ] H) * b = (b : H →L[ℂ] H) * R)
+    (hΩ : (R : H →L[ℂ] H) Ω = star (Z : H →L[ℂ] H) Ω) :
+    star (L : H →L[ℂ] H) ((a : H →L[ℂ] H) Ω) =
+      (U : H →L[ℂ] H) (star (K : H →L[ℂ] H) ((b : H →L[ℂ] H) Ω)) := by
+…</pre></li><li id=L92><b>def</b> <code>OAI.KadisonKastler.scalarUnitaryOfNormOne</code> <small>line 92</small><div class="doc"><p>The scalar phase supplied by the invariant vector defines a unitary
+scalar operator.</p></div><pre>def scalarUnitaryOfNormOne (z : ℂ) (hz : ‖z‖ = 1) : unitary (H →L[ℂ] H) :=
+…</pre></li><li id=L103><b>theorem</b> <code>OAI.KadisonKastler.normalized_boundary_unitary_fixes</code> <small>line 103</small><div class="doc"><p>A constant unit vector of the form <code>L* a Ω = z Ω</code> gives the normalized
+unitary <code>z a* L</code> fixing <code>Ω</code>.</p></div><pre>theorem normalized_boundary_unitary_fixes
+    (L a : unitary (H →L[ℂ] H)) (Ω : H) (z : ℂ) (hz : ‖z‖ = 1)
+    (hv : star (L : H →L[ℂ] H) ((a : H →L[ℂ] H) Ω) = z • Ω) :
+    ((scalarUnitaryOfNormOne z hz * star a * L : unitary (H →L[ℂ] H)) :
+      H →L[ℂ] H) Ω = Ω := by
+…</pre><p class="refs">Mentions: <a href="BoundaryErgodicReduction.lean.html#L92">OAI.KadisonKastler.scalarUnitaryOfNormOne</a></p></li><li id=L116><b>theorem</b> <code>OAI.KadisonKastler.normalized_boundary_unitary_distance</code> <small>line 116</small></li><li id=L142><b>theorem</b> <code>OAI.KadisonKastler.normalized_boundary_unitary_image</code> <small>line 142</small><div class="doc"><p>The one-sided product intertwiner gives the precise unitary image of
+each group vector after scalar normalization.</p></div><pre>theorem normalized_boundary_unitary_image
+    (L K a b U W : unitary (H →L[ℂ] H)) (Ω : H) (z : ℂ)
+    (hL : (L : H →L[ℂ] H) * U = (W : H →L[ℂ] H) * K)
+    (hK : star (K : H →L[ℂ] H) ((b : H →L[ℂ] H) Ω) = z • Ω) :
+    (z • (star (a : H →L[ℂ] H) * L)) ((U : H →L[ℂ] H) Ω) =
+      (star (a : H →L[ℂ] H) * W * b) Ω := by
+…</pre></li><li id=L162><b>theorem</b> <code>OAI.KadisonKastler.boundary_unitary_image_distance</code> <small>line 162</small><div class="doc"><p>The image unitaries stay close to the original group elements.</p></div><pre>theorem boundary_unitary_image_distance (a b W U : unitary (H →L[ℂ] H)) :
+    ‖star (a : H →L[ℂ] H) * W * b - U‖ ≤
+      ‖(a : H →L[ℂ] H) - 1‖ + ‖(W : H →L[ℂ] H) - U‖ +
+        ‖(b : H →L[ℂ] H) - 1‖ := by
+…</pre></li><li id=L204><b>theorem</b> <code>OAI.KadisonKastler.exists_boundary_scalar_of_doubleErgodic</code> <small>line 204</small><div class="doc"><p>Applying genuine double ergodicity to the diagonal comparison field
+produces its scalar phase and the quantitative near-one bound.</p></div><pre>theorem exists_boundary_scalar_of_doubleErgodic
+    (α : NonsingularAction G D μ) (herg : UnitaryDoubleErgodic.{uG, uD, uH} α)
+    (σ : G →* unitary (H →L[ℂ] H)) (Ω : H) (hΩ : ‖Ω‖ = 1)
+    (hfixed : ∀ v : H, (∀ g, (σ g : H →L[ℂ] H) v = v) → ∃ z : ℂ, v = z • Ω)
+    (L a : D × D → unitary (H →L[ℂ] H))
+    (hLm : ∀ ξ, AEStronglyMeasurable
+      (fun p =&gt; star (L p : H →L[ℂ] H) ξ) (μ.prod μ))
+    (ham : AEStronglyMeasurable (fun p =&gt; (a p : H →L[ℂ] H) Ω) (μ.prod μ))
+    (hcov : ∀ g, ∀ᵐ p ∂μ.prod μ,
+      star (L (α.diagonal.toPerm g p) : H →L[ℂ] H)
+        ((a (α.diagonal.toPerm g p) : H →L[ℂ] H) Ω) =
+      (σ g : H →L[ℂ] H) (star (L p : H →L[ℂ] H) ((a p : H →L[ℂ] H) Ω)))
+…</pre><p class="refs">Mentions: <a href="NonsingularBoundary.lean.html#L25">OAI.KadisonKastler.NonsingularAction</a></p></li><li id=L249><b>theorem</b> <code>OAI.KadisonKastler.exists_boundary_scalar_from_comparison</code> <small>line 249</small><div class="doc"><p>The field used in double ergodicity is equivariant as a consequence
+of the product intertwiner, diagonal comparison and tracial right action.</p></div><pre>theorem exists_boundary_scalar_from_comparison
+    (α : NonsingularAction G D μ) (herg : UnitaryDoubleErgodic.{uG, uD, uH} α)
+    (σ : G →* unitary (H →L[ℂ] H)) (Ω : H) (hΩ : ‖Ω‖ = 1)
+    (hfixed : ∀ v : H, (∀ g, (σ g : H →L[ℂ] H) v = v) → ∃ z : ℂ, v = z • Ω)
+    (L a : D × D → unitary (H →L[ℂ] H))
+    (W R : G → D → unitary (H →L[ℂ] H))
+    (hLm : ∀ ξ, AEStronglyMeasurable
+      (fun p =&gt; star (L p : H →L[ℂ] H) ξ) (μ.prod μ))
+    (ham : AEStronglyMeasurable (fun p =&gt; (a p : H →L[ℂ] H) Ω) (μ.prod μ))
+    (hL : ∀ g, ∀ᵐ p ∂μ.prod μ,
+      (L p : H →L[ℂ] H) * σ g =
+        ((W g p.1 : H →L[ℂ] H) * R g p.2) * L (α.diagonal.toPerm g⁻¹ p))
+…</pre><p class="refs">Mentions: <a href="NonsingularBoundary.lean.html#L25">OAI.KadisonKastler.NonsingularAction</a></p></li><li id=L293><b>theorem</b> <code>OAI.KadisonKastler.exists_simultaneous_boundary_normalization</code> <small>line 293</small><div class="doc"><p>Choose one pair on which the scalar-vector relation and all group
+intertwiners hold simultaneously, including their separate translates.</p></div><pre>theorem exists_simultaneous_boundary_normalization [Countable G]
+    (α : NonsingularAction G D μ) (Ω : H)
+    (L a : D × D → unitary (H →L[ℂ] H))
+    (U : G → unitary (H →L[ℂ] H)) (W : G → D → unitary (H →L[ℂ] H))
+    (z : ℂ) (hz : ‖z‖ = 1)
+    (hvec : ∀ᵐ p ∂μ.prod μ,
+      star (L p : H →L[ℂ] H) ((a p : H →L[ℂ] H) Ω) = z • Ω)
+    (hL : ∀ g, ∀ᵐ p ∂μ.prod μ,
+      (L p : H →L[ℂ] H) * U g = (W g p.1 : H →L[ℂ] H) *
+        L (α.toPerm g⁻¹ p.1, p.2))
+    {εL εa εW : ℝ} (hznear : ‖z - 1‖ ≤ εL + εa)
+    (hLn : ∀ᵐ p ∂μ.prod μ, ‖(L p : H →L[ℂ] H) - 1‖ ≤ εL)
+…</pre><p class="refs">Mentions: <a href="NonsingularBoundary.lean.html#L25">OAI.KadisonKastler.NonsingularAction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicTopology/IntegralHomology/Product.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicTopology/IntegralHomology/Product.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicTopology</a> / <a href="index.html">IntegralHomology</a> / <span>Product.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicTopology</a>/<a href="index.html">IntegralHomology</a>/<span>Product.lean</span></code></h1><p class="muted">25 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicTopology/IntegralHomology/Product.lean#L1">source</a></p><div class="doc"><p>Product-pair homology, pair homotopies, and diagonal normalization.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.Kaplansky.contractibleProductProjection</code> <small>line 18</small><div class="doc"><p>Projection from a product with an actually contractible base, keeping
+the projection itself as the forward map.</p></div><pre>def contractibleProductProjection [ContractibleSpace B] (V : Type) [TopologicalSpace V] :
+    B × V ≃ₕ V := by
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Kaplansky.contractibleProductProjection_apply</code> <small>line 24</small></li><li id=L29><b>def</b> <code>OAI.Kaplansky.productSubspaceHomeomorph</code> <small>line 29</small><div class="doc"><p>The punctured trivial-bundle subspace really is the product of the
+base and the punctured model.</p></div><pre>def productSubspaceHomeomorph (W : Set V) :
+    ({z : B × V | z.2 ∈ W} : Set (B × V)) ≃ₜ B × W where
+…</pre></li><li id=L40><b>def</b> <code>OAI.Kaplansky.productPairProjection</code> <small>line 40</small></li><li id=L48><b>theorem</b> <code>OAI.Kaplansky.productPairProjection_isIso</code> <small>line 48</small><div class="doc"><p>Genuine relative homology normalization for a trivial bundle over any
+contractible base, with no homology or orientation assumption.</p></div><pre>theorem productPairProjection_isIso [ContractibleSpace B] (W : Set V) (n : ℕ) :
+    IsIso (productPairProjection (B := B) W n) := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a></p></li><li id=L55><b>def</b> <code>OAI.Kaplansky.productPairProjectionIso</code> <small>line 55</small></li><li id=L59><b>theorem</b> <code>OAI.Kaplansky.relativeHomologyHomeomorphIso_trans_hom</code> <small>line 59</small><div class="doc"><p>Composition of homeomorphisms agrees with composition on relative homology.</p></div><pre>theorem relativeHomologyHomeomorphIso_trans_hom
+    {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
+    (e : X ≃ₜ Y) (f : Y ≃ₜ Z) (U : Set X) (V : Set Y) (W : Set Z)
+    (he : ∀ x, x ∈ U ↔ e x ∈ V) (hf : ∀ y, y ∈ V ↔ f y ∈ W) (n : ℕ) :
+    (relativeHomologyHomeomorphIso (e.trans f) U W
+      (fun x =&gt; (he x).trans (hf (e x))) n).hom =
+      (relativeHomologyHomeomorphIso e U V he n).hom ≫
+        (relativeHomologyHomeomorphIso f V W hf n).hom := by
+…</pre><p class="refs">Mentions: <a href="Equivalence.lean.html#L82">OAI.Kaplansky.relativeHomologyHomeomorphIso</a></p></li><li id=L73><b>theorem</b> <code>OAI.Kaplansky.productPairNormalization_restrict</code> <small>line 73</small><div class="doc"><p>Restricting product coordinates commutes with projection to relative fiber homology.</p></div><pre>theorem productPairNormalization_restrict
+    {X Y A B V : Type} [TopologicalSpace X] [TopologicalSpace Y]
+    [TopologicalSpace A] [TopologicalSpace B] [TopologicalSpace V] [Zero V]
+    (U : Set X) (W : Set Y) (i : C(X,Y)) (hi : Set.MapsTo i U W)
+    (e : X ≃ₜ A × V) (f : Y ≃ₜ B × V)
+    (he : ∀ x, x ∈ U ↔ (e x).2 ≠ 0) (hf : ∀ y, y ∈ W ↔ (f y).2 ≠ 0)
+    (hcoords : ∀ x, (f (i x)).2 = (e x).2) (n : ℕ) :
+    relativeHomologyMap (subspaceInclusion U) (subspaceInclusion W)
+        (subspaceMap U W i hi) (TopCat.ofHom i) (subspaceMap_square U W i hi) n ≫
+      ((relativeHomologyHomeomorphIso f W {z | z.2 ≠ 0} hf n).hom ≫
+        productPairProjection (B := B) ({0}ᶜ : Set V) n) =
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L96">OAI.Kaplansky.relativeHomologyMap</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a>, <a href="Relative.lean.html#L191">OAI.Kaplansky.subspaceMap</a>, <a href="Relative.lean.html#L197">OAI.Kaplansky.subspaceMap_square</a>, <a href="Equivalence.lean.html#L82">OAI.Kaplansky.relativeHomologyHomeomorphIso</a>, <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a></p></li><li id=L102><b>def</b> <code>OAI.Kaplansky.productPairFiberMap</code> <small>line 102</small><div class="doc"><p>Inclusion of one genuine fiber of a product pair.</p></div><pre>def productPairFiberMap (b : B) (W : Set V) (n : ℕ) :=
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.Kaplansky.productPairFiberMap_projection</code> <small>line 109</small><div class="doc"><p>The fiber inclusion is split injective over ANY base containing that point.</p></div><pre>theorem productPairFiberMap_projection (b : B) (W : Set V) (n : ℕ) :
+    productPairFiberMap b W n ≫ productPairProjection W n = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L102">OAI.Kaplansky.productPairFiberMap</a>, <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a></p></li><li id=L116><b>theorem</b> <code>OAI.Kaplansky.productPairFiberMap_mono</code> <small>line 116</small></li><li id=L124><b>theorem</b> <code>OAI.Kaplansky.productPairFiberMap_eq_inv</code> <small>line 124</small><div class="doc"><p>Over a contractible base the actual inclusion is the inverse normalization.</p></div><pre>theorem productPairFiberMap_eq_inv [ContractibleSpace B] (b : B) (W : Set V) (n : ℕ) :
+    productPairFiberMap b W n = (productPairProjectionIso (B := B) W n).inv := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L102">OAI.Kaplansky.productPairFiberMap</a>, <a href="Product.lean.html#L55">OAI.Kaplansky.productPairProjectionIso</a></p></li><li id=L131><b>theorem</b> <code>OAI.Kaplansky.productPairFiberMap_eq</code> <small>line 131</small></li><li id=L145><b>theorem</b> <code>OAI.Kaplansky.relativeHomologyMap_homotopy</code> <small>line 145</small><div class="doc"><p>A homotopy that carries the removed subspace into the removed subspace
+at EVERY time gives equal maps on relative singular homology. The proof uses
+the actual cylinder projection and its two equal inverse inclusions.</p></div><pre>theorem relativeHomologyMap_homotopy (U : Set X) (V : Set Y)
+    {f g : C(X,Y)} (hf : Set.MapsTo f U V) (hg : Set.MapsTo g U V)
+    (H : Homotopy f g) (hH : ∀ t : I, ∀ x ∈ U, H (t,x) ∈ V) (n : ℕ) :
+    relativeHomologyMap (subspaceInclusion U) (subspaceInclusion V)
+      (subspaceMap U V f hf) (TopCat.ofHom f) (by rfl) n =
+    relativeHomologyMap (subspaceInclusion U) (subspaceInclusion V)
+      (subspaceMap U V g hg) (TopCat.ofHom g) (by rfl) n := by
+…</pre><p class="refs">Mentions: <a href="Relative.lean.html#L96">OAI.Kaplansky.relativeHomologyMap</a>, <a href="Relative.lean.html#L78">OAI.Kaplansky.subspaceInclusion</a>, <a href="Relative.lean.html#L191">OAI.Kaplansky.subspaceMap</a></p></li><li id=L172><b>theorem</b> <code>OAI.Kaplansky.productPairFiberMap_eq_of_joined</code> <small>line 172</small><div class="doc"><p>Fiber inclusions agree along any actual path in the base.</p></div><pre>theorem productPairFiberMap_eq_of_joined {B V : Type} [TopologicalSpace B]
+    [TopologicalSpace V] {b c : B} (hbc : Joined b c) (W : Set V) (n : ℕ) :
+    productPairFiberMap b W n = productPairFiberMap c W n := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L102">OAI.Kaplansky.productPairFiberMap</a></p></li><li id=L196><b>def</b> <code>OAI.Kaplansky.complexDiagonalMap</code> <small>line 196</small><div class="doc"><p>Complex diagonal coordinate change with every multiplier invertible.</p></div><pre>def complexDiagonalMap (a : ι → ℂˣ) : C((ι → ℂ),(ι → ℂ)) :=
+…</pre></li><li id=L199><b>theorem</b> <code>OAI.Kaplansky.complexDiagonalMap_nonzero</code> <small>line 199</small></li><li id=L209><b>def</b> <code>OAI.Kaplansky.complexDiagonalHomotopy</code> <small>line 209</small><div class="doc"><p>A path through complex units supplies a genuine nonzero-preserving
+homotopy to the identity; no determinant-to-degree assertion is assumed.</p></div><pre>def complexDiagonalHomotopy (a : ι → ℂˣ) :
+    Homotopy (complexDiagonalMap a) (ContinuousMap.id (ι → ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L196">OAI.Kaplansky.complexDiagonalMap</a></p></li><li id=L221><b>theorem</b> <code>OAI.Kaplansky.complexDiagonalHomotopy_nonzero</code> <small>line 221</small></li><li id=L226><b>def</b> <code>OAI.Kaplansky.complexDiagonalRelativeMap</code> <small>line 226</small></li><li id=L234><b>theorem</b> <code>OAI.Kaplansky.complexDiagonalRelativeMap_eq_id</code> <small>line 234</small><div class="doc"><p>Every invertible complex diagonal change acts as the identity on actual
+integral local relative homology, in every degree.</p></div><pre>theorem complexDiagonalRelativeMap_eq_id (a : ι → ℂˣ) (n : ℕ) :
+    complexDiagonalRelativeMap a n = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L226">OAI.Kaplansky.complexDiagonalRelativeMap</a></p></li><li id=L251><b>def</b> <code>OAI.Kaplansky.productPairCoordinateMap</code> <small>line 251</small><div class="doc"><p>A map from a product pair to its fiber pair.</p></div><pre>def productPairCoordinateMap (f : C(B × (ι → ℂ),(ι → ℂ)))
+    (hf : ∀ z, z.2 ≠ 0 → f z ≠ 0) (n : ℕ) :=
+…</pre></li><li id=L260><b>theorem</b> <code>OAI.Kaplansky.productPairCoordinateMap_eq_projection</code> <small>line 260</small><div class="doc"><p>Over an actually contractible base, checking one fiber suffices. An
+invertible complex diagonal change there preserves the full normalization.
+The map away from that fiber may vary arbitrarily and need not be linear.</p></div><pre>theorem productPairCoordinateMap_eq_projection [ContractibleSpace B]
+    (f : C(B × (ι → ℂ),(ι → ℂ))) (hf : ∀ z, z.2 ≠ 0 → f z ≠ 0)
+    (b : B) (a : ι → ℂˣ) (he : ∀ v, f (b,v) = complexDiagonalMap a v) (n : ℕ) :
+    productPairCoordinateMap f hf n =
+      productPairProjection (B := B) ({0}ᶜ : Set (ι → ℂ)) n := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L196">OAI.Kaplansky.complexDiagonalMap</a>, <a href="Product.lean.html#L251">OAI.Kaplansky.productPairCoordinateMap</a>, <a href="Product.lean.html#L40">OAI.Kaplansky.productPairProjection</a></p></li><li id=L280><b>def</b> <code>OAI.Kaplansky.complexLineCoordinateUnit</code> <small>line 280</small><div class="doc"><p>The unit comparing two genuine complex coordinates on a line.</p></div><pre>def complexLineCoordinateUnit {L : Type} [AddCommGroup L] [Module ℂ L]
+    (e f : L ≃ₗ[ℂ] ℂ) : ℂˣ :=
+…</pre></li><li id=L288><b>theorem</b> <code>OAI.Kaplansky.complexLineCoordinate_change</code> <small>line 288</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

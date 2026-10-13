@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Transport/ReflectedSlices.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Transport/ReflectedSlices.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Transport</a> / <span>ReflectedSlices.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Transport</a>/<span>ReflectedSlices.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Transport/ReflectedSlices.lean#L1">source</a></p><div class="doc"><h3>Reflected actual penalties and the complementary factorial lift</h3><p>Reflecting a physical box changes affine offsets and reverses their
+slopes. The root/equality and unary interval factors therefore have the
+same proved scalar signatures. All finite balanced pairs are reflected
+as well, before transferring the resulting addition signature to labels.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>lemma</b> <code>OAI.ContingencyTables.ReflectedSlices.lineTotal_reflect_add</code> <small>line 25</small></li><li id=L36><b>lemma</b> <code>OAI.ContingencyTables.ReflectedSlices.affine_reflect</code> <small>line 36</small></li><li id=L42><b>theorem</b> <code>OAI.ContingencyTables.ReflectedSlices.softenedWeight_reflect</code> <small>line 42</small></li><li id=L63><b>lemma</b> <code>OAI.ContingencyTables.ReflectedSlices.removal_congr_box</code> <small>line 63</small></li><li id=L73><b>theorem</b> <code>OAI.ContingencyTables.ReflectedSlices.reflected_softened_removal</code> <small>line 73</small><div class="doc"><p>The original globally reflected positive weight has its raw removal
+signature throughout the physical box, from explicit reflected factors.</p></div><pre>theorem reflected_softened_removal (line : C → G) (root : G → Bool)
+    (rate offset slope : G → ℝ) (urate ell uslope cap : C → ℝ) (L : ℝ)
+    (hrate : ∀ g, 0 ≤ rate g) (hu : ∀ i, 0 ≤ urate i) (hL : 0 ≤ L)
+    (m z : C → ℕ) (hz : InBox m z) :
+    OnePositiveDirection (integerRemovalMatrix
+      (fun x =&gt; softenedWeight line root rate offset slope urate ell uslope cap L (reflect m x)) z).toBilin&#x27; := by
+…</pre><p class="refs">Mentions: <a href="QuadraticTransport.lean.html#L32">OAI.ContingencyTables.OnePositiveDirection</a></p></li><li id=L89><b>theorem</b> <code>OAI.ContingencyTables.ReflectedSlices.reflected_softened_marginal</code> <small>line 89</small><div class="doc"><p>The companion's actual positive finite marginal has the reflected
+removal signature needed for its two-addition matrix.</p></div><pre>theorem reflected_softened_marginal (Ms : List ℕ) (m : I → ℕ) (R : ℕ)
+    (line : Coordinates I Ms → G) (root : G → Bool) (rate offset slope : G → ℝ)
+    (urate ell uslope cap : Coordinates I Ms → ℝ) (L : ℝ)
+    (hwidth : ∀ M ∈ Ms, 2 ≤ M) (hrate : ∀ g, 0 ≤ rate g)
+    (hu : ∀ i, 0 ≤ urate i) (hL : 0 ≤ L) :
+    RemovalSlice
+      (fun z =&gt; eliminate Ms (softenedWeight line root rate offset slope urate ell uslope cap L)
+        (reflect m z)) m R := by
+…</pre></li><li id=L115><b>theorem</b> <code>OAI.ContingencyTables.ReflectedSlices.reflected_exact_marginal</code> <small>line 115</small><div class="doc"><p>The reflected addition input survives the nonroot-equality limit
+after all balanced large-cell sums, exactly as the removal input does.</p></div><pre>theorem reflected_exact_marginal (Ms : List ℕ) (m : I → ℕ) (R : ℕ)
+    (line : Coordinates I Ms → G) (root : G → Bool) (rate offset slope : G → ℝ)
+    (urate ell uslope cap : Coordinates I Ms → ℝ)
+    (hwidth : ∀ M ∈ Ms, 2 ≤ M) (hrate : ∀ g, 0 ≤ rate g) (hu : ∀ i, 0 ≤ urate i) :
+    RemovalSlice
+      (fun z =&gt; eliminate Ms (exactWeight line root rate offset slope urate ell uslope cap)
+        (reflect m z)) m R := by
+…</pre></li><li id=L138><b>lemma</b> <code>OAI.ContingencyTables.ReflectedSlices.groupCount_complement</code> <small>line 138</small></li><li id=L150><b>theorem</b> <code>OAI.ContingencyTables.ReflectedSlices.secondLift_addition_reflected_slice</code> <small>line 150</small><div class="doc"><p>The actual reflected raw slice proves the addition property of the
+literal complementary-factorial lift in the original coordinates.</p></div><pre>theorem secondLift_addition_reflected_slice (group : A → C) (h : (C → ℕ) → ℝ)
+    (D : ℝ) (R : ℕ) (hR : R ≤ Fintype.card A) (hD : 0 &lt; D) (hh : ∀ z, 0 ≤ h z)
+    (hsig : RemovalSlice (fun z =&gt; h (reflect (groupCount group Set.univ) z))
+      (groupCount group Set.univ) (Fintype.card A-R)) :
+    BinaryContraction.AdditionProperty (secondLift group h D) R := by
+…</pre><p class="refs">Mentions: <a href="../Machines/BinaryContraction.lean.html#L178">OAI.ContingencyTables.BinaryContraction.AdditionProperty</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

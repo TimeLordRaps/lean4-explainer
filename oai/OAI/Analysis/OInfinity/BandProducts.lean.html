@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/BandProducts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/BandProducts.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>BandProducts.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>BandProducts.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/BandProducts.lean#L1">source</a></p><div class="doc"><h3>Exact band products and the actual adjacent-depth corner</h3><p>Products sample their first coefficient at the shifted index. The final
+lemma uses the concrete Cuntz relation at neighboring depths, with its
+inner-letter orthogonality condition. It is local in the tower cell; no
+cyclic boundary cell is silently identified with the next depth.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>lemma</b> <code>OAI.WeakPureInfiniteness.towerBand_star</code> <small>line 22</small></li><li id=L40><b>lemma</b> <code>OAI.WeakPureInfiniteness.towerBand_mul</code> <small>line 40</small><div class="doc"><p>The first coefficient is evaluated at <code>τ i</code>, rather than <code>i</code>.</p></div><pre>lemma towerBand_mul (e : I → E) (σ τ : Equiv.Perm I) (x y : I → E)
+    (hee : ∀ i, e i * e i = e i)
+    (ho : ∀ i j, i ≠ j → e i * e j = 0) :
+    towerBand e σ x * towerBand e τ y =
+      towerBand e (σ * τ) (fun i =&gt; x (τ i) * e (τ i) * y i) := by
+…</pre><p class="refs">Mentions: <a href="BandOperators.lean.html#L69">OAI.WeakPureInfiniteness.towerBand</a></p></li><li id=L67><b>lemma</b> <code>OAI.WeakPureInfiniteness.towerBand_mul_norm_le</code> <small>line 67</small><div class="doc"><p>The product estimate applies to the actual shifted coefficient.</p></div><pre>lemma towerBand_mul_norm_le (e : I → E) (σ τ : Equiv.Perm I) (x y : I → E)
+    (he : ∀ i, IsStarProjection (e i))
+    (ho : ∀ i j, i ≠ j → e i * e j = 0)
+    (M : ℝ) (hM : 0 ≤ M)
+    (hxy : ∀ i, ‖x (τ i) * e (τ i) * y i‖ ≤ M) :
+    ‖towerBand e σ x * towerBand e τ y‖ ≤ M := by
+…</pre><p class="refs">Mentions: <a href="BandOperators.lean.html#L69">OAI.WeakPureInfiniteness.towerBand</a></p></li><li id=L77><b>lemma</b> <code>OAI.WeakPureInfiniteness.towerBand_norm_le_of_sandwich</code> <small>line 77</small><div class="doc"><p>It suffices to bound the actual corner of each coefficient.</p></div><pre>lemma towerBand_norm_le_of_sandwich (e : I → E) (σ : Equiv.Perm I) (x : I → E)
+    (he : ∀ i, IsStarProjection (e i))
+    (ho : ∀ i j, i ≠ j → e i * e j = 0)
+    (M : ℝ) (hM : 0 ≤ M)
+    (hx : ∀ i, ‖e (σ i) * x i * e i‖ ≤ M) :
+    ‖towerBand e σ x‖ ≤ M := by
+…</pre><p class="refs">Mentions: <a href="BandOperators.lean.html#L69">OAI.WeakPureInfiniteness.towerBand</a></p></li><li id=L95><b>lemma</b> <code>OAI.WeakPureInfiniteness.mixed_corner_norm_le</code> <small>line 95</small></li><li id=L116><b>lemma</b> <code>OAI.WeakPureInfiniteness.binaryBand_row_norm</code> <small>line 116</small></li><li id=L128><b>lemma</b> <code>OAI.WeakPureInfiniteness.binaryRowIterate_mixed_corner_bound</code> <small>line 128</small><div class="doc"><p>The overlap of the two actual neighboring-depth bands is small when
+<code>r ≠ l</code>. The depth <code>n+1</code> is literal, including at a tower boundary.</p></div><pre>lemma binaryRowIterate_mixed_corner_bound {N : ℕ} (s : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, IsStarProjection (e j))
+    (η : ℝ) (hη : 0 ≤ η)
+    (hshift : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η)
+    (n : ℕ) (i r l : Fin 2) (hrl : r ≠ l) (j : ZMod N) :
+    ‖star (finiteRowShiftIterate s n (s i * s r)) * e (j + 1) *
+        finiteRowShiftIterate s (n + 1) (s l) * e j‖ ≤
+      (2 * (n : ℝ) + 3) * η := by
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

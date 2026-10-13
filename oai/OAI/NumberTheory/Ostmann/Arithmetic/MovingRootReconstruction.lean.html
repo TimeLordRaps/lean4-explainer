@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/MovingRootReconstruction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/MovingRootReconstruction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>MovingRootReconstruction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>MovingRootReconstruction.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/MovingRootReconstruction.lean#L1">source</a></p><div class="doc"><h3>The integer substitution is the giant in the original node coefficient</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Ostmann.reconstructedPivot_compensation</code> <small>line 13</small><div class="doc"><p>The composite pivot reconstructed by the history system is the
+compensation product times the reconstructed giant.</p></div><pre>theorem reconstructedPivot_compensation (I : Finset ℕ) (N s : ℤ) (U : ℕ)
+    (h : validTransferredPivot I N (s * U)) :
+    reconstructedPivot N s = reconstructedPivot N (s * U) * U := by
+…</pre><p class="refs">Mentions: <a href="../Construction/TransferredPivotSubstitution.lean.html#L19">OAI.Ostmann.validTransferredPivot</a>, <a href="../Construction/TransferredPivotSubstitution.lean.html#L13">OAI.Ostmann.reconstructedPivot</a></p></li><li id=L24><b>theorem</b> <code>OAI.Ostmann.reconstructedGiant_eq_div</code> <small>line 24</small></li><li id=L31><b>theorem</b> <code>OAI.Ostmann.validTransferredGiant_of_composite</code> <small>line 31</small><div class="doc"><p>Conversely the original composite-pivot integrality test gives exactly
+one positive giant in the retained integer range.</p></div><pre>theorem validTransferredGiant_of_composite (I : Finset ℕ)
+    (N s : ℤ) (P U : ℕ) (hs : s ≠ 0) (hP : 0 &lt; P) (hU : 0 &lt; U)
+    (hdiv : U ∣ P) (hI : P / U ∈ I) (hrel : N = s * P) :
+    validTransferredPivot I N (s * U) := by
+…</pre><p class="refs">Mentions: <a href="../Construction/TransferredPivotSubstitution.lean.html#L19">OAI.Ostmann.validTransferredPivot</a></p></li><li id=L50><b>theorem</b> <code>OAI.Ostmann.movingOriginalNode_reconstructed</code> <small>line 50</small><div class="doc"><p>The node's original factor is exactly <code>U φ(log p - G)</code>, where <code>p</code> is
+reconstructed from the same signed quotient as the integer off-diagonal.</p></div><pre>theorem movingOriginalNode_reconstructed {σ : Type*}
+    (value : σ → ℕ) (childBound pivotBound : ℕ → ℕ)
+    (φ : ℝ → ℝ) (G : ℕ → ℝ) (I : Finset ℕ) (hI : ∀ p ∈ I, 0 &lt; p)
+    (x : MovingSlotState σ) (s v w : ℤ)
+    (hU : 0 &lt; x.compensation value)
+    (h : validTransferredPivot I
+      (v * (x.rightProduct value : ℤ) - w * (x.leftProduct value : ℤ))
+      (s * x.compensation value)) :
+    movingSlotCutoff value childBound pivotBound
+      (movingCompensatedExtra value (movingOriginalNode value childBound pivotBound φ G))
+        x s v w =
+      (x.compensation value : ℝ) * φ
+…</pre><p class="refs">Mentions: <a href="MovingSlotSystem.lean.html#L15">OAI.Ostmann.MovingSlotState</a>, <a href="../Construction/TransferredPivotSubstitution.lean.html#L19">OAI.Ostmann.validTransferredPivot</a>, <a href="MovingSlotSystem.lean.html#L56">OAI.Ostmann.movingSlotCutoff</a>, <a href="MovingRecursiveCompensation.lean.html#L11">OAI.Ostmann.movingCompensatedExtra</a>, <a href="MovingOriginalSampleExpansion.lean.html#L17">OAI.Ostmann.movingOriginalNode</a></p></li><li id=L84><b>theorem</b> <code>OAI.Ostmann.movingSampleRootFactor_reconstructed</code> <small>line 84</small><div class="doc"><p>An unconditional node formula in terms of the reconstructed giant.
+All original frequency, range, and coprimality tests remain in the guard.</p></div><pre>theorem movingSampleRootFactor_reconstructed {σ : Type*}
+    (value : σ → ℕ) (childBound pivotBound : ℕ → ℕ)
+    (φ : ℝ → ℝ) (G : ℕ → ℝ) (n : ℕ)
+    (t : FrequencyTree ℤ (n + 1)) (CL CR u : List σ) (XL XR : ℕ) :
+    let x := movingRootState n t CL CR u XL XR
+…</pre><p class="refs">Mentions: <a href="FrequencyTreeSum.lean.html#L14">OAI.Ostmann.FrequencyTree</a>, <a href="MovingSampledRecursion.lean.html#L41">OAI.Ostmann.movingRootState</a></p></li><li id=L152><b>theorem</b> <code>OAI.Ostmann.movingSampleRootFactor_guarded</code> <small>line 152</small><div class="doc"><p>The full current-state support guard commutes with root extraction.
+Its subtree-frequency unit tests are not discarded by the integer change
+of variables.</p></div><pre>theorem movingSampleRootFactor_guarded {σ : Type*}
+    (value : σ → ℕ) (outside : List ℕ) (childBound pivotBound : ℕ → ℕ)
+    (E : MovingSlotState σ → ℤ → ℤ → ℤ → ℝ) (n : ℕ)
+    (t : FrequencyTree ℤ (n + 1)) (CL CR u : List σ) (XL XR : ℕ) :
+    movingSampleRootFactor value childBound pivotBound (movingGuardedExtra value outside E)
+      n t CL CR u XL XR =
+      if movingLocalSupport value outside (movingRootState n t CL CR u XL XR) then
+        movingSampleRootFactor value childBound pivotBound E n t CL CR u XL XR else 0 := by
+…</pre><p class="refs">Mentions: <a href="MovingSlotSystem.lean.html#L15">OAI.Ostmann.MovingSlotState</a>, <a href="FrequencyTreeSum.lean.html#L14">OAI.Ostmann.FrequencyTree</a>, <a href="MovingSampledRecursion.lean.html#L53">OAI.Ostmann.movingSampleRootFactor</a>, <a href="MovingRecursiveSupport.lean.html#L25">OAI.Ostmann.movingGuardedExtra</a>, <a href="MovingRecursiveSupport.lean.html#L16">OAI.Ostmann.movingLocalSupport</a>, <a href="MovingSampledRecursion.lean.html#L41">OAI.Ostmann.movingRootState</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

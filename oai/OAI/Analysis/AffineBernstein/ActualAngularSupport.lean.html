@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/ActualAngularSupport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/ActualAngularSupport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>ActualAngularSupport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>ActualAngularSupport.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/ActualAngularSupport.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.AffineBernstein.homogeneousSupport_cofactor_divergence</code> <small>line 18</small></li><li id=L26><b>theorem</b> <code>OAI.AffineBernstein.gaussPoint_sublevel_equations</code> <small>line 26</small></li><li id=L46><b>theorem</b> <code>OAI.AffineBernstein.support_hessian_pos_of_equations</code> <small>line 46</small><div class="doc plain">Local differential form of strict curvature duality: the Hessian of a
+one-homogeneous support is positive on every nonzero tangent vector.</div><pre>theorem support_hessian_pos_of_equations {H F lam : E → ℝ} {e : E}
+    (hh : ContDiffAt ℝ ∞ H e) (hF : ContDiffAt ℝ ∞ F (gradient H e))
+    (hl : DifferentiableAt ℝ lam e) (hlpos : 0 &lt; lam e)
+    (heq : (fun q =&gt; fderiv ℝ F (gradient H q)) =ᶠ[𝓝 e]
+      (fun q =&gt; lam q • InnerProductSpace.toDual ℝ E q))
+    (hlevel : (fun q =&gt; F (gradient H q)) =ᶠ[𝓝 e] (fun _ =&gt; (0 : ℝ)))
+    (hpos : ∀ z : E, z ≠ 0 → 0 &lt;
+      fderiv ℝ (fderiv ℝ F) (gradient H e) z z)
+    {v : E} (hv : v ≠ 0) (ht : inner ℝ e v = 0) :
+    0 &lt; fderiv ℝ (fderiv ℝ H) e v v := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.AffineBernstein.homogeneousSupport_hessian_pos</code> <small>line 95</small><div class="doc plain">Strict positivity of the actual homogeneous support Hessian on tangent
+vectors. The multiplier is constructed from the actual Gauss point, not given
+as a differential identity hypothesis.</div><pre>theorem homogeneousSupport_hessian_pos {W : Set E} (hW : IsOpen W) {F : E → ℝ}
+    (hcv : ConvexOn ℝ W F) (hF : ContDiffOn ℝ ∞ F W)
+    {x₀ : E} (hx₀ : x₀ ∈ W) (hneg : F x₀ &lt; 0)
+    (hK : IsCompact {y | y ∈ W ∧ F y ≤ 0}) {e : E} (he : e ≠ 0)
+    (hh : ContDiffAt ℝ ∞ (homogeneousSupport {y | y ∈ W ∧ F y ≤ 0}) e)
+    (hpos : ∀ y ∈ W, F y = 0 → ∀ z : E, z ≠ 0 →
+      0 &lt; fderiv ℝ (fderiv ℝ F) y z z)
+    {v : E} (hv : v ≠ 0) (ht : inner ℝ e v = 0) :
+    0 &lt; fderiv ℝ (fderiv ℝ (homogeneousSupport {y | y ∈ W ∧ F y ≤ 0})) e v v := by
+…</pre><p class="refs">Mentions: <a href="GaussCoordinates.lean.html#L17">OAI.AffineBernstein.homogeneousSupport</a></p></li><li id=L156><b>theorem</b> <code>OAI.AffineBernstein.affineEpigraph_radius_positive</code> <small>line 156</small><div class="doc plain">Positive angular radius comes from the actual original graph Hessian,
+after any invertible affine change of coordinates with compact centered fibers.</div><pre>theorem affineEpigraph_radius_positive [FiniteDimensional ℝ E] [Nontrivial E]
+    {n : ℕ} {Ω : Set (Space n)} (hΩ : IsOpen Ω) (hcv : Convex ℝ Ω)
+    {u : Space n → ℝ} (hu : ContDiffOn ℝ ∞ u Ω)
+    (hp : ∀ x ∈ Ω, (hessian u x).PosDef)
+    (a : Space n × ℝ) (L : (S × E) ≃L[ℝ] (Space n × ℝ))
+    {B : Set S} (hB : IsOpen B)
+    (hK : ∀ s ∈ B, IsCompact {y | (s, y) ∈ affineEpigraphPullback Ω u a L})
+    (hzero : ∀ s ∈ B, (0 : E) ∈ interior {y | (s, y) ∈ affineEpigraphPullback Ω u a L})
+    {s : S} (hs : s ∈ B) {e : E} (he : e ≠ 0)
+    {v : E} (hv : v ≠ 0) (ht : inner ℝ e v = 0) :
+    0 &lt; sphereRadius (homogeneousSupport
+      {y | (s,y) ∈ affineEpigraphPullback Ω u a L}) e v v := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L19">OAI.AffineBernstein.hessian</a>, <a href="AffineSupport.lean.html#L137">OAI.AffineBernstein.affineEpigraphPullback</a>, <a href="AngularCalculus.lean.html#L29">OAI.AffineBernstein.sphereRadius</a>, <a href="GaussCoordinates.lean.html#L17">OAI.AffineBernstein.homogeneousSupport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

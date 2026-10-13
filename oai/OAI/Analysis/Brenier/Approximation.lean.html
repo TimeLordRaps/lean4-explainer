@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Approximation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Approximation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Approximation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Approximation.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Approximation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Problem358.le_wasserstein2_add_of_le_rootCost</code> <small>line 16</small><div class="doc"><p>An estimate against every finite-cost coupling descends to the transport infimum.
+The finite-cost witness is essential because the definition sends infinite cost to zero.</p></div><pre>theorem le_wasserstein2_add_of_le_rootCost {d : ℕ} {μ ν : Measure (E d)}
+    {a δ : ℝ}
+    (hfinite : ∃ π : Measure (E d × E d),
+      IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞)
+    (hbound : ∀ π : Measure (E d × E d), IsCoupling μ ν π →
+      quadraticPlanCost π ≠ ∞ →
+        a ≤ Real.sqrt (quadraticPlanCost π).toReal + δ) :
+    a ≤ wasserstein2 μ ν + δ := by
+…</pre></li><li id=L49><b>theorem</b> <code>OAI.Problem358.wasserstein2_map_le</code> <small>line 49</small><div class="doc"><p>Quantizing the two marginals changes their Wasserstein distance by at most
+the two uniform approximation errors. This does not require an optimal coupling.</p></div><pre>theorem wasserstein2_map_le {d : ℕ} {μ ν : Measure (E d)}
+    {Q R : E d → E d} (hQ : Measurable Q) (hR : Measurable R)
+    {ε η : ℝ} (hε : 0 ≤ ε) (hη : 0 ≤ η)
+    (hQerr : ∀ᵐ x ∂μ, ‖Q x - x‖ ≤ ε)
+    (hRerr : ∀ᵐ y ∂ν, ‖R y - y‖ ≤ η)
+    (hfinite : ∃ π : Measure (E d × E d),
+      IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞) :
+    wasserstein2 (Measure.map Q μ) (Measure.map R ν) ≤
+      wasserstein2 μ ν + ε + η := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.Problem358.exists_finiteCost_coupling_of_compact</code> <small>line 67</small><div class="doc"><p>Compactly supported probability marginals admit a finite-cost coupling.</p></div><pre>theorem exists_finiteCost_coupling_of_compact {d : ℕ} {μ ν : Measure (E d)}
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y) :
+    ∃ π : Measure (E d × E d), IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞ := by
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.Problem358.wasserstein2_map_le_of_compact</code> <small>line 77</small><div class="doc"><p>The approximation inequality with the compact-support hypotheses of the challenge.</p></div><pre>theorem wasserstein2_map_le_of_compact {d : ℕ} {μ ν : Measure (E d)}
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    {K Y : Set (E d)} (hK : IsCompact K) (hY : IsCompact Y)
+    (hμ : IsSupported μ K) (hν : IsSupported ν Y)
+    {Q R : E d → E d} (hQ : Measurable Q) (hR : Measurable R)
+    {ε η : ℝ} (hε : 0 ≤ ε) (hη : 0 ≤ η)
+    (hQerr : ∀ᵐ x ∂μ, ‖Q x - x‖ ≤ ε)
+    (hRerr : ∀ᵐ y ∂ν, ‖R y - y‖ ≤ η) :
+    wasserstein2 (Measure.map Q μ) (Measure.map R ν) ≤
+      wasserstein2 μ ν + ε + η :=
+…</pre></li><li id=L102><b>theorem</b> <code>OAI.Problem358.pairwise_cauchy_of_error_rpow_bound</code> <small>line 102</small><div class="doc"><p>A pairwise Hölder bound in errors tending to zero is a Cauchy estimate.</p></div><pre>theorem pairwise_cauchy_of_error_rpow_bound {D : ℕ → ℕ → ℝ}
+    {ε : ℕ → ℝ} {C p : ℝ} (hp : 0 &lt; p)
+    (hε : Tendsto ε atTop (𝓝 0))
+    (hbound : ∀ m n, D m n ≤ C * Real.rpow (ε m + ε n) p) :
+    ∀ δ &gt; 0, ∃ N, ∀ m ≥ N, ∀ n ≥ N, D m n &lt; δ := by
+…</pre></li><li id=L123><b>theorem</b> <code>OAI.Problem358.mapL2Dist_cauchy_of_quantization_stability</code> <small>line 123</small><div class="doc"><p>Finite-target one-third stability makes transport maps to a quantized target Cauchy.
+The stability input here is an explicit hypothesis, not a new assumption on the challenge.</p></div><pre>theorem mapL2Dist_cauchy_of_quantization_stability {d : ℕ}
+    {ρ μ : Measure (E d)} [IsProbabilityMeasure μ]
+    {Y : Set (E d)} (hY : IsCompact Y) (hμ : IsSupported μ Y)
+    {Q T : ℕ → E d → E d} (hQ : ∀ n, Measurable (Q n))
+    {ε : ℕ → ℝ} (hε : ∀ n, 0 ≤ ε n)
+    (hεlim : Tendsto ε atTop (𝓝 0))
+    (hQerr : ∀ n, ∀ᵐ x ∂μ, ‖Q n x - x‖ ≤ ε n)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hstab : ∀ m n, mapL2Dist ρ (T m) (T n) ≤
+      C * Real.rpow (wasserstein2 (Measure.map (Q m) μ) (Measure.map (Q n) μ))
+        (1 / 3 : ℝ)) :
+    ∀ δ &gt; 0, ∃ N, ∀ m ≥ N, ∀ n ≥ N, mapL2Dist ρ (T m) (T n) &lt; δ := by
+…</pre></li><li id=L147><b>theorem</b> <code>OAI.Problem358.exists_limit_of_quantization_stability</code> <small>line 147</small><div class="doc"><p>The Cauchy estimate yields a genuine measurable L² limit of the finite maps.</p></div><pre>theorem exists_limit_of_quantization_stability {d : ℕ}
+    {ρ μ : Measure (E d)} [IsProbabilityMeasure μ]
+    {Y : Set (E d)} (hY : IsCompact Y) (hμ : IsSupported μ Y)
+    {Q T : ℕ → E d → E d} (hQ : ∀ n, Measurable (Q n))
+    (hT : ∀ n, MemLp (T n) 2 ρ)
+    {ε : ℕ → ℝ} (hε : ∀ n, 0 ≤ ε n)
+    (hεlim : Tendsto ε atTop (𝓝 0))
+    (hQerr : ∀ n, ∀ᵐ x ∂μ, ‖Q n x - x‖ ≤ ε n)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hstab : ∀ m n, mapL2Dist ρ (T m) (T n) ≤
+      C * Real.rpow (wasserstein2 (Measure.map (Q m) μ) (Measure.map (Q n) μ))
+        (1 / 3 : ℝ)) :
+…</pre></li><li id=L165><b>theorem</b> <code>OAI.Problem358.exists_target_limit_of_quantization_stability</code> <small>line 165</small><div class="doc"><p>If all finite maps take values in the compact target almost everywhere, so does the limit.</p></div><pre>theorem exists_target_limit_of_quantization_stability {d : ℕ}
+    {ρ μ : Measure (E d)} [IsProbabilityMeasure μ]
+    {Y : Set (E d)} (hY : IsCompact Y) (hμ : IsSupported μ Y)
+    {Q T : ℕ → E d → E d} (hQ : ∀ n, Measurable (Q n))
+    (hT : ∀ n, MemLp (T n) 2 ρ) (hTmem : ∀ n, ∀ᵐ x ∂ρ, T n x ∈ Y)
+    {ε : ℕ → ℝ} (hε : ∀ n, 0 ≤ ε n)
+    (hεlim : Tendsto ε atTop (𝓝 0))
+    (hQerr : ∀ n, ∀ᵐ x ∂μ, ‖Q n x - x‖ ≤ ε n)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hstab : ∀ m n, mapL2Dist ρ (T m) (T n) ≤
+      C * Real.rpow (wasserstein2 (Measure.map (Q m) μ) (Measure.map (Q n) μ))
+        (1 / 3 : ℝ)) :
+…</pre></li><li id=L196><b>theorem</b> <code>OAI.Problem358.ae_tendsto_of_quantization_error</code> <small>line 196</small><div class="doc"><p>Uniformly vanishing almost-everywhere quantization errors give pointwise convergence.</p></div><pre>theorem ae_tendsto_of_quantization_error {d : ℕ} {μ : Measure (E d)}
+    {Q : ℕ → E d → E d} {ε : ℕ → ℝ}
+    (hεlim : Tendsto ε atTop (𝓝 0))
+    (hQerr : ∀ n, ∀ᵐ x ∂μ, ‖Q n x - x‖ ≤ ε n) :
+    ∀ᵐ x ∂μ, Tendsto (fun n =&gt; Q n x) atTop (𝓝 x) := by
+…</pre></li><li id=L208><b>theorem</b> <code>OAI.Problem358.exists_supporting_potential_of_mapL2_limit</code> <small>line 208</small><div class="doc"><p>A strong L² limit of maps with compactly normalized supporting potentials
+still has a Lipschitz supporting potential.</p></div><pre>theorem exists_supporting_potential_of_mapL2_limit {d : ℕ} {K : Set (E d)}
+    (hK : IsCompact K) (x₀ : E d) (hx₀ : x₀ ∈ K)
+    {T : ℕ → E d → E d} {S : E d → E d}
+    (hT : ∀ n, MemLp (T n) 2 (uniformMeasure K))
+    (hS : MemLp S 2 (uniformMeasure K))
+    (hlim : Tendsto (fun n =&gt; mapL2Dist (uniformMeasure K) (T n) S) atTop (𝓝 0))
+    {u : ℕ → E d → ℝ} {L : ℝ≥0}
+    (hLip : ∀ n, LipschitzOnWith L (u n) K)
+    (hconv : ∀ n, ConvexOn ℝ K (u n))
+    (hnormal : ∀ n, u n x₀ = 0)
+    (hsupport : ∀ n, ∀ᵐ x ∂uniformMeasure K,
+      ∀ z ∈ K, u n x + ⟪T n x, z - x⟫ ≤ u n z) :
+…</pre></li><li id=L240><b>theorem</b> <code>OAI.Problem358.exists_uniqueOptimal_limit_of_quantization</code> <small>line 240</small><div class="doc"><p>Conditional arbitrary-target extension: finite-map stability and a fixed Lipschitz
+potential bound produce a unique optimal map to the limiting target. Every finite-map
+input is explicit; this theorem does not assert the missing finite stability estimate.</p></div><pre>theorem exists_uniqueOptimal_limit_of_quantization {d : ℕ}
+    {K Y : Set (E d)} (hK : IsCompact K) (hKconv : Convex ℝ K)
+    (x₀ : E d) (hx₀ : x₀ ∈ K)
+    {μ : Measure (E d)} [IsProbabilityMeasure μ]
+    (hY : IsCompact Y) (hμ : IsSupported μ Y)
+    {Q T : ℕ → E d → E d} (hQ : ∀ n, Measurable (Q n))
+    (hTm : ∀ n, Measurable (T n))
+    (hT : ∀ n, MemLp (T n) 2 (uniformMeasure K))
+    (hTmem : ∀ n, ∀ᵐ x ∂uniformMeasure K, T n x ∈ Y)
+    (hpush : ∀ n, Measure.map (T n) (uniformMeasure K) = Measure.map (Q n) μ)
+    {ε : ℕ → ℝ} (hε : ∀ n, 0 ≤ ε n)
+    (hεlim : Tendsto ε atTop (𝓝 0))
+…</pre></li><li id=L305><b>theorem</b> <code>OAI.Problem358.exists_uniqueOptimal_pair_of_quantized_stability</code> <small>line 305</small><div class="doc"><p>A paired finite-target estimate passes to arbitrary target laws. The only
+quantitative assumption is the bound for the supplied approximating maps; all
+limit maps and their all-plan uniqueness certificates are constructed here.</p></div><pre>theorem exists_uniqueOptimal_pair_of_quantized_stability
+    {d : ℕ} {K Y : Set (E d)}
+    [IsFiniteMeasure (uniformMeasure K)]
+    (hK : IsCompact K) (hKconv : Convex ℝ K) (hY : IsCompact Y)
+    (x₀ : E d) (hx₀ : x₀ ∈ K)
+    {μ ν : Measure (E d)} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    (hμ : IsSupported μ Y) (hν : IsSupported ν Y)
+    (u v : ℕ → E d → ℝ) (T S Q R : ℕ → E d → E d) (L : ℝ≥0)
+    (huLip : ∀ n, LipschitzOnWith L (u n) K)
+    (hvLip : ∀ n, LipschitzOnWith L (v n) K)
+    (huconv : ∀ n, ConvexOn ℝ K (u n))
+    (hvconv : ∀ n, ConvexOn ℝ K (v n))
+…</pre></li><li id=L397><b>theorem</b> <code>OAI.Problem358.one_third_stability_of_finite_targets</code> <small>line 397</small><div class="doc"><p>Finite-target stability is the sole quantitative input needed for the full
+compact-target conclusion. The finite hypothesis only asks for some pair of
+optimal maps; uniqueness transfers its estimate to the constructed potentials.</p></div><pre>theorem one_third_stability_of_finite_targets
+    {d : ℕ} {K Y : Set (E d)}
+    (hK : IsCompact K) (hKconv : Convex ℝ K)
+    (hKint : (interior K).Nonempty) (hY : IsCompact Y) (hYne : Y.Nonempty)
+    {C : ℝ} (hC : 0 ≤ C)
+    (hfinite : ∀ (μ ν : Measure (E d)),
+      IsProbabilityMeasure μ → IsProbabilityMeasure ν →
+      (∃ F : Set (E d), F.Finite ∧ F ⊆ Y ∧ IsSupported μ F) →
+      (∃ G : Set (E d), G.Finite ∧ G ⊆ Y ∧ IsSupported ν G) →
+      ∃ Tμ Tν : E d → E d,
+        IsUniqueQuadraticOptimalMap (uniformMeasure K) μ Tμ ∧
+        IsUniqueQuadraticOptimalMap (uniformMeasure K) ν Tν ∧
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

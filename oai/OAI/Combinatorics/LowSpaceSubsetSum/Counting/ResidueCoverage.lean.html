@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/LowSpaceSubsetSum/Counting/ResidueCoverage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/LowSpaceSubsetSum/Counting/ResidueCoverage.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">LowSpaceSubsetSum</a> / <a href="index.html">Counting</a> / <span>ResidueCoverage.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">LowSpaceSubsetSum</a>/<a href="index.html">Counting</a>/<span>ResidueCoverage.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/LowSpaceSubsetSum/Counting/ResidueCoverage.lean#L1">source</a></p><div class="doc"><h3>Collision energy and occupied residue classes</h3><p>The collision-to-occupancy argument is used in §6 of <em>A Low-Space Algorithm
+for Worst-Case Subset Sum</em>. Its published antecedents are Austrin, Kaski,
+Koivisto and Nederlof, <em>Dense Subset Sum May Be the Hardest</em>, STACS 2016,
+Proposition 3.5, and Nederlof and Węgrzycki, <em>Improving Schroeppel and Shamir's
+Algorithm for Subset Sum via Orthogonal Vectors</em>, arXiv:2010.08576v2,
+Lemma 3.2, especially equation (1) and the following Cauchy–Schwarz argument.</p><p>Those published statements assume exponentially bounded integer weights.
+The finite collision-to-occupancy bound instead takes the collision estimate
+as an explicit hypothesis. The manuscript's prime-factor estimate supplies
+that hypothesis for polynomial-bit inputs.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L32><b>def</b> <code>OAI.LowSpaceSubsetSum.fiberSize</code> <small>line 32</small><div class="doc"><p>The multiplicity of one image value, counting the distinct elements of <code>X</code>.</p></div><pre>def fiberSize (X : Finset α) (f : α → β) (b : β) : ℕ :=
+…</pre></li><li id=L36><b>def</b> <code>OAI.LowSpaceSubsetSum.collisionEnergy</code> <small>line 36</small><div class="doc"><p>The sum of squared residue-class sizes.</p></div><pre>def collisionEnergy (X : Finset α) (f : α → β) : ℕ :=
+…</pre></li><li id=L40><b>def</b> <code>OAI.LowSpaceSubsetSum.collisionPairs</code> <small>line 40</small><div class="doc"><p>Ordered collisions include diagonal pairs.</p></div><pre>def collisionPairs (X : Finset α) (f : α → β) : Finset (α × α) :=
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.LowSpaceSubsetSum.sum_fiberSize</code> <small>line 43</small></li><li id=L49><b>theorem</b> <code>OAI.LowSpaceSubsetSum.card_sq_le_occupied_mul_energy</code> <small>line 49</small><div class="doc"><p>The deterministic Cauchy–Schwarz step: a small collision energy forces
+many distinct occupied residue classes.</p></div><pre>theorem card_sq_le_occupied_mul_energy (X : Finset α) (f : α → β) :
+    X.card ^ 2 ≤ (X.image f).card * collisionEnergy X f := by
+…</pre><p class="refs">Mentions: <a href="ResidueCoverage.lean.html#L36">OAI.LowSpaceSubsetSum.collisionEnergy</a></p></li><li id=L58><b>theorem</b> <code>OAI.LowSpaceSubsetSum.collisionEnergy_eq_card_pairs</code> <small>line 58</small></li><li id=L75><b>theorem</b> <code>OAI.LowSpaceSubsetSum.collisionEnergy_eq_sum_pairs</code> <small>line 75</small></li><li id=L85><b>theorem</b> <code>OAI.LowSpaceSubsetSum.occupied_ge_of_energy_le</code> <small>line 85</small><div class="doc"><p>A pointwise collision-energy bound gives a quantitative occupied-class
+bound. The statement uses real cardinalities to avoid integer rounding.</p></div><pre>theorem occupied_ge_of_energy_le (X : Finset α) (f : α → β)
+    {T : ℝ} (hT : 0 &lt; T) (henergy : (collisionEnergy X f : ℝ) ≤ T) :
+    (X.card : ℝ) ^ 2 / T ≤ (X.image f).card := by
+…</pre><p class="refs">Mentions: <a href="ResidueCoverage.lean.html#L36">OAI.LowSpaceSubsetSum.collisionEnergy</a></p></li><li id=L97><b>def</b> <code>OAI.LowSpaceSubsetSum.PairwiseCollisionBound</code> <small>line 97</small><div class="doc"><p>The smallest probabilistic interface needed from a random modulus:
+every distinct pair has collision probability at most <code>δ</code>. The weights
+<code>prob</code> form a finite probability distribution on <code>seeds</code>.</p></div><pre>def PairwiseCollisionBound (seeds : Finset Ω) (prob : Ω → ℝ)
+    (X : Finset α) (hash : Ω → α → β) (δ : ℝ) : Prop :=
+…</pre></li><li id=L104><b>theorem</b> <code>OAI.LowSpaceSubsetSum.expected_energy_le</code> <small>line 104</small><div class="doc"><p>The published collision-energy calculation, for an arbitrary finite
+sampling law and with its exact collision bound exposed as a hypothesis.</p></div><pre>theorem expected_energy_le (seeds : Finset Ω) (prob : Ω → ℝ)
+    (X : Finset α) (hash : Ω → α → β) {δ : ℝ}
+    (hprob : ∑ ω ∈ seeds, prob ω = 1) (hδ : 0 ≤ δ)
+    (hcollision : PairwiseCollisionBound seeds prob X hash δ) :
+    (∑ ω ∈ seeds, prob ω * (collisionEnergy X (hash ω) : ℝ)) ≤
+      X.card + δ * (X.card : ℝ) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="ResidueCoverage.lean.html#L97">OAI.LowSpaceSubsetSum.PairwiseCollisionBound</a>, <a href="ResidueCoverage.lean.html#L36">OAI.LowSpaceSubsetSum.collisionEnergy</a></p></li><li id=L137><b>theorem</b> <code>OAI.LowSpaceSubsetSum.probability_energy_le</code> <small>line 137</small><div class="doc"><p>A finite-law Markov bound, retaining precisely the good event needed
+for the occupancy argument.</p></div><pre>theorem probability_energy_le (seeds : Finset Ω) (prob : Ω → ℝ)
+    (X : Finset α) (hash : Ω → α → β)
+    (hnonneg : ∀ ω ∈ seeds, 0 ≤ prob ω)
+    (hprob : ∑ ω ∈ seeds, prob ω = 1)
+    {M T : ℝ} (hT : 0 &lt; T)
+    (hmean : (∑ ω ∈ seeds, prob ω * (collisionEnergy X (hash ω) : ℝ)) ≤ M) :
+    1 - M / T ≤
+      ∑ ω ∈ seeds.filter (fun ω =&gt; (collisionEnergy X (hash ω) : ℝ) ≤ T), prob ω := by
+…</pre><p class="refs">Mentions: <a href="ResidueCoverage.lean.html#L36">OAI.LowSpaceSubsetSum.collisionEnergy</a></p></li><li id=L179><b>theorem</b> <code>OAI.LowSpaceSubsetSum.occupied_probability_of_collision_bound</code> <small>line 179</small><div class="doc"><p>Collision bounds imply a lower bound on the probability of many occupied
+classes. This includes the Markov and Cauchy–Schwarz steps, rather than
+assuming the desired occupancy conclusion.</p></div><pre>theorem occupied_probability_of_collision_bound
+    (seeds : Finset Ω) (prob : Ω → ℝ)
+    (X : Finset α) (hash : Ω → α → β)
+    (hnonneg : ∀ ω ∈ seeds, 0 ≤ prob ω)
+    (hprob : ∑ ω ∈ seeds, prob ω = 1)
+    {δ T : ℝ} (hδ : 0 ≤ δ) (hT : 0 &lt; T)
+    (hcollision : PairwiseCollisionBound seeds prob X hash δ) :
+    1 - ((X.card : ℝ) + δ * (X.card : ℝ) ^ 2) / T ≤
+      ∑ ω ∈ seeds.filter
+        (fun ω =&gt; (X.card : ℝ) ^ 2 / T ≤ ((X.image (hash ω)).card : ℝ)), prob ω := by
+…</pre><p class="refs">Mentions: <a href="ResidueCoverage.lean.html#L97">OAI.LowSpaceSubsetSum.PairwiseCollisionBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

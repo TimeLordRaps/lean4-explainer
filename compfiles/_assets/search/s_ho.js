@@ -1,0 +1,1 @@
+window.l4shard("ho", [["Imo2004P3.IsHook",85,49],["Imo2004P3.hole",85,78],["Imo2004P3.hookShapes",85,38],["Imo2004P3.hookShapes_swap",85,205],["Imo2004P3.hook_col3",85,157],["Imo2004P3.hook_row3",85,151],["Imo2022P6.gapOfPair_eq_horiz",134,803],["Usa2004P5.holder_conjugate_3",246,52]]);

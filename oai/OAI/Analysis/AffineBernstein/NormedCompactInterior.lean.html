@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/AffineBernstein/NormedCompactInterior.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/AffineBernstein/NormedCompactInterior.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">AffineBernstein</a> / <span>NormedCompactInterior.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">AffineBernstein</a>/<span>NormedCompactInterior.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/AffineBernstein/NormedCompactInterior.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_normed_compact_subset</code> <small>line 23</small><div class="doc plain">Compact inner containment for the literal (possibly non-Hilbert) ambient
+norm. In particular the product coordinate norm creates no hidden instance.</div><pre>theorem LocalDistanceConverges.eventually_normed_compact_subset
+    {Cj : ℕ → Set E} {C S : Set E} (h : LocalDistanceConverges Cj C)
+    (hclj : ∀ j, IsClosed (Cj j)) (hcvj : ∀ j, Convex ℝ (Cj j))
+    (hnej : ∀ j, (Cj j).Nonempty) (hS : IsCompact S)
+    (hSC : S ⊆ interior C) : ∀ᶠ j in atTop, S ⊆ Cj j := by
+…</pre><p class="refs">Mentions: <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a></p></li><li id=L49><b>lemma</b> <code>OAI.AffineBernstein.IsModelShape.fiber_small_ball</code> <small>line 49</small><div class="doc plain">The lower inclusion in geometry.tex (normalized-fiber-box), with the
+source&#x27;s exact radius a*r. It is a convexity/recession consequence.</div><pre>lemma IsModelShape.fiber_small_ball {k m : ℕ} {C : Set (Space k × Space m)}
+    (hC : IsModelShape C) {r a : ℝ} (ha : 0 &lt; a) (ha1 : a ≤ 1)
+    (hin : closedBall (0 : Space m) r ⊆
+      modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1:ℝ))))
+    {s : Space k} (hs : ∀ i, a ≤ s i) :
+    closedBall (0 : Space m) (a*r) ⊆ modelFiber C s := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L66><b>lemma</b> <code>OAI.AffineBernstein.IsModelShape.normalized_fiber_box</code> <small>line 66</small></li><li id=L80><b>lemma</b> <code>OAI.AffineBernstein.IsModelShape.normalized_fiber_interior</code> <small>line 80</small><div class="doc plain">Strictly smaller transverse balls over a positive box lie in the actual
+ambient interior; this is what local convex-set convergence transfers.</div><pre>lemma IsModelShape.normalized_fiber_interior {k m : ℕ} {C : Set (Space k × Space m)}
+    (hC : IsModelShape C) {r a : ℝ} (hr : 0 &lt; r) (ha : 0 &lt; a) (ha1 : a ≤ 1)
+    (hin : closedBall (0 : Space m) r ⊆
+      modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1:ℝ))))
+    {s : Space k} (hs : ∀ i, a ≤ s i) {y : Space m} (hy : ‖y‖ ≤ a*r/2) :
+    (s,y) ∈ interior C := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li><li id=L109><b>theorem</b> <code>OAI.AffineBernstein.uniform_model_fiber_normalization</code> <small>line 109</small><div class="doc plain">Centering gives the exact normalization constants before the model and
+positive fiber are selected. No compactness modulus or analytic estimate is
+assumed. This is the first part of the manuscript&#x27;s normalized-fibers corollary.</div><pre>theorem uniform_model_fiber_normalization {k m : ℕ} (hm : 1 ≤ m)
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [ProperSpace E]
+    {D : Set E} (hD : IsClosed D) (hneD : D.Nonempty)
+    (hmax : ∀ (d : ℕ), m = d+1 → ∀ C&#x27; : Set (Space (k+1) × Space d),
+      IsModelShape C&#x27; → InAffineLimitFamily D C&#x27; → False) :
+    ∃ c : ℝ, 1 ≤ c ∧ ∀ C : Set (Space k × Space m),
+      IsModelShape C → InAffineLimitFamily D C → ∀ s : Space k, ∀ hs : ∀ i, 0 &lt; s i,
+      ∃ A : Space m ≃L[ℝ] Space m,
+        let C&#x27; := ((positiveBaseEquiv s hs).prodCongr A) &#x27;&#x27; C
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="AffineFamily.lean.html#L129">OAI.AffineBernstein.InAffineLimitFamily</a>, <a href="ModelCentering.lean.html#L345">OAI.AffineBernstein.positiveBaseEquiv</a></p></li><li id=L149><b>theorem</b> <code>OAI.AffineBernstein.LocalDistanceConverges.eventually_normalized_fiber_inner</code> <small>line 149</small><div class="doc plain">The lower-box bound transfers to every approximant simultaneously over
+that box, not separately at each s. The radius is uniform in the model.</div><pre>theorem LocalDistanceConverges.eventually_normalized_fiber_inner
+    {k m : ℕ} {Cj : ℕ → Set (Space k × Space m)} {C : Set (Space k × Space m)}
+    (h : LocalDistanceConverges Cj C) (hC : IsModelShape C)
+    (hclj : ∀ j, IsClosed (Cj j)) (hcvj : ∀ j, Convex ℝ (Cj j))
+    (hnej : ∀ j, (Cj j).Nonempty) {r a b : ℝ}
+    (hr : 0 &lt; r) (ha : 0 &lt; a) (ha1 : a ≤ 1)
+    (hin : closedBall (0 : Space m) r ⊆
+      modelFiber C (WithLp.toLp 2 (fun _ : Fin k =&gt; (1:ℝ)))) :
+    ∀ᶠ j in atTop, ∀ s : Space k, (∀ i, s i ∈ Icc a b) →
+      closedBall (0 : Space m) (a*r/2) ⊆ modelFiber (Cj j) s := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/AffineBernstein.lean.html#L12">OAI.AffineBernstein.Space</a>, <a href="ConvexLocalLimits.lean.html#L17">OAI.AffineBernstein.LocalDistanceConverges</a>, <a href="InteriorLimits.lean.html#L110">OAI.AffineBernstein.IsModelShape</a>, <a href="InteriorLimits.lean.html#L119">OAI.AffineBernstein.modelFiber</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

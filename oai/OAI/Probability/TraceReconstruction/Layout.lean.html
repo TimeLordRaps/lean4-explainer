@@ -1,0 +1,186 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/TraceReconstruction/Layout.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/TraceReconstruction/Layout.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">TraceReconstruction</a> / <span>Layout.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">TraceReconstruction</a>/<span>Layout.lean</span></code></h1><p class="muted">76 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/TraceReconstruction/Layout.lean#L1">source</a></p><div class="doc"><h3>Layout</h3><p>Multiwindow and paired layouts, coordinate simulations, and literal source types and trees.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.TraceReconstruction.framedConcat</code> <small>line 24</small><div class="doc"><p>Literal unmarked concatenation of fixed windows with separately reported
+pure pre/post regions. Counts are in atoms, not surviving trace symbols.</p></div><pre>def framedConcat {α : Type*} (e : α) {k : ℕ}
+    (pre post : Fin k → ℕ) (W : Fin k → List α) : List α :=
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.TraceReconstruction.framedConcat_succ</code> <small>line 29</small></li><li id=L38><b>theorem</b> <code>OAI.TraceReconstruction.framedConcat_eq_of_gaps</code> <small>line 38</small><div class="doc"><p>Only the first, last, and intervening pure lengths are observable in an
+unmarked word. In particular boundaries may jitter across nominal units.</p></div><pre>theorem framedConcat_eq_of_gaps {α : Type*} (e : α) (k : ℕ)
+    (pre post pre&#x27; post&#x27; : Fin (k+1) → ℕ) (W : Fin (k+1) → List α)
+    (u u&#x27; : ℕ) (hfirst : u+pre 0=u&#x27;+pre&#x27; 0)
+    (hgap : ∀i : Fin k, post i.castSucc+pre i.succ=post&#x27; i.castSucc+pre&#x27; i.succ)
+    (hlast : post (Fin.last k)=post&#x27; (Fin.last k)) :
+    List.replicate u e ++ framedConcat e pre post W =
+      List.replicate u&#x27; e ++ framedConcat e pre&#x27; post&#x27; W := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L24">OAI.TraceReconstruction.framedConcat</a></p></li><li id=L71><b>def</b> <code>OAI.TraceReconstruction.framePrefix</code> <small>line 71</small><div class="doc"><p>Number of atoms strictly before the indicated padded unit.</p></div><pre>def framePrefix {k : ℕ} (pre post : Fin k → ℕ) (len : Fin k → ℕ) (i : ℕ) : ℕ :=
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.TraceReconstruction.framePrefix_zero</code> <small>line 74</small></li><li id=L77><b>theorem</b> <code>OAI.TraceReconstruction.framePrefix_step</code> <small>line 77</small></li><li id=L94><b>theorem</b> <code>OAI.TraceReconstruction.framedConcat_eq_of_starts</code> <small>line 94</small><div class="doc"><p>Equal actual starting positions and equal total counts are enough:
+there is no requirement that a part coincide with its nominal unit.</p></div><pre>theorem framedConcat_eq_of_starts {α : Type*} (e : α) (k : ℕ)
+    (pre post pre&#x27; post&#x27; : Fin (k+1) → ℕ) (W : Fin (k+1) → List α)
+    (hstart : ∀i : Fin (k+1),
+      framePrefix pre post (fun j =&gt; (W j).length) i.val+pre i=
+      framePrefix pre&#x27; post&#x27; (fun j =&gt; (W j).length) i.val+pre&#x27; i)
+    (htotal : framePrefix pre post (fun j =&gt; (W j).length) (k+1)=
+      framePrefix pre&#x27; post&#x27; (fun j =&gt; (W j).length) (k+1)) :
+    framedConcat e pre post W=framedConcat e pre&#x27; post&#x27; W := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L71">OAI.TraceReconstruction.framePrefix</a>, <a href="Layout.lean.html#L24">OAI.TraceReconstruction.framedConcat</a></p></li><li id=L125><b>theorem</b> <code>OAI.TraceReconstruction.framePrefix_constant</code> <small>line 125</small></li><li id=L136><b>theorem</b> <code>OAI.TraceReconstruction.flatten_framedConcat</code> <small>line 136</small></li><li id=L151><b>theorem</b> <code>OAI.TraceReconstruction.template_group_windows</code> <small>line 151</small><div class="doc"><p>The deterministic multiwindow identity used by the nested simulator.
+Every motif is covered by its own window. Predetermined pure-region lengths
+may move the boundaries of nominal units; only their exact cumulative counts
+are required. Windows and chunks all remain literal unmarked binary words.</p></div><pre>theorem template_group_windows (k P T a L : ℕ) (sign : Fin L → Bool)
+    (w : Bool → List Bool) (τ : Fin (k+1) → Bool)
+    (t pre post : Fin (k+1) → ℕ)
+    (hleft : ∀u,t u ≤ a) (hfit : ∀u,a+L ≤ t u+T)
+    (hunit : ∀u,t u+T ≤ P)
+    (hstart : ∀u,framePrefix pre post (fun _ =&gt; T) u.val+pre u=u.val*P+t u)
+    (htotal : framePrefix pre post (fun _ =&gt; T) (k+1)=(k+1)*P) :
+    (List.ofFn (fun u =&gt; complementaryWords P a L sign w (τ u))).flatten=
+      (List.ofFn (fun u =&gt; pureAtomRun (w false) (pre u) ++
+        complementaryWords T (a-t u) L sign w (τ u) ++
+        pureAtomRun (w false) (post u))).flatten := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L71">OAI.TraceReconstruction.framePrefix</a>, <a href="Model.lean.html#L531">OAI.TraceReconstruction.complementaryWords</a>, <a href="Patterns.lean.html#L186">OAI.TraceReconstruction.pureAtomRun</a></p></li><li id=L195><b>def</b> <code>OAI.TraceReconstruction.pairedPreCount</code> <small>line 195</small><div class="doc"><p>Counts of literal side chunks, with one deterministic pure filler in
+each region. A bundle can contain any even number of paired chunks.</p></div><pre>def pairedPreCount {N : ℕ} (left : K → Fin N) (filler : Fin N → ℕ)
+    (first : K → ℕ) (u : Fin N) : ℕ :=
+…</pre></li><li id=L199><b>def</b> <code>OAI.TraceReconstruction.pairedPostCount</code> <small>line 199</small></li><li id=L203><b>theorem</b> <code>OAI.TraceReconstruction.pairedPreCount_cast</code> <small>line 203</small></li><li id=L221><b>theorem</b> <code>OAI.TraceReconstruction.pairedPostCount_cast</code> <small>line 221</small></li><li id=L243><b>theorem</b> <code>OAI.TraceReconstruction.fin_prefix_delta</code> <small>line 243</small><div class="doc"><p>Prefix sum of a delta at a prescribed label, with no loss from replacing
+its real finite support by an interval.</p></div><pre>theorem fin_prefix_delta {N : ℕ} (a : Fin N) (i : ℕ) (x : ℤ) :
+    (∑u : Fin N, if u.val &lt; i then (if a=u then x else 0) else 0)=
+      if a.val &lt; i then x else 0 := by
+…</pre></li><li id=L256><b>theorem</b> <code>OAI.TraceReconstruction.pair_activity_identity</code> <small>line 256</small><div class="doc"><p>Exact paired-interval contribution to the position of a window.</p></div><pre>theorem pair_activity_identity {N : ℕ} (l r u : Fin N) (hlr : l.val ≤ r.val) (x : ℤ) :
+    (if l.val &lt; u.val then x else 0)-(if r.val &lt; u.val then x else 0)+
+      (if l=u then x else 0) =
+      if l.val ≤ u.val ∧ u.val ≤ r.val then x else 0 := by
+…</pre></li><li id=L271><b>theorem</b> <code>OAI.TraceReconstruction.pairedLayout_start</code> <small>line 271</small><div class="doc"><p>Cumulative pure chunk counts have exactly the source's localBits-plus-active-
+globalBits jitter. This identity uses the actual chronological pre/post schedule.</p></div><pre>theorem pairedLayout_start {N : ℕ} (left right : K → Fin N)
+    (horder : ∀v,(left v).val ≤ (right v).val)
+    (fpre fpost : Fin N → ℕ) (reserve first : K → ℕ)
+    (hfirst : ∀v,first v ≤ 2*reserve v) (A B T : ℕ)
+    (hpre : ∀u,fpre u+(∑v,if left v=u then reserve v else 0)=A)
+    (hpost : ∀u,fpost u+(∑v,if right v=u then reserve v else 0)=B)
+    (u : Fin N) :
+    ((framePrefix (pairedPreCount left fpre first)
+      (pairedPostCount right fpost reserve first) (fun _ =&gt; T) u.val+
+      pairedPreCount left fpre first u : ℕ):ℤ)=
+      u.val*(A+T+B)+A+
+        ∑v, if (left v).val ≤ u.val ∧ u.val ≤ (right v).val then
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L71">OAI.TraceReconstruction.framePrefix</a>, <a href="Layout.lean.html#L195">OAI.TraceReconstruction.pairedPreCount</a>, <a href="Layout.lean.html#L199">OAI.TraceReconstruction.pairedPostCount</a></p></li><li id=L333><b>theorem</b> <code>OAI.TraceReconstruction.pairedLayout_total</code> <small>line 333</small></li><li id=L357><b>abbrev</b> <code>OAI.TraceReconstruction.SourceBundle</code> <small>line 357</small><div class="doc"><p>One localBits bundle at each child, and one globalBits bundle at each vertex in
+the first quarter, paired with the reflected last-quarter post region.</p></div><pre>abbrev SourceBundle (N : ℕ) := Fin N ⊕ Fin (N/4)</pre></li><li id=L359><b>def</b> <code>OAI.TraceReconstruction.sourceBundleLeft</code> <small>line 359</small></li><li id=L363><b>def</b> <code>OAI.TraceReconstruction.sourceBundleRight</code> <small>line 363</small></li><li id=L367><b>theorem</b> <code>OAI.TraceReconstruction.sourceBundle_order</code> <small>line 367</small></li><li id=L373><b>theorem</b> <code>OAI.TraceReconstruction.sum_injective_delta_le</code> <small>line 373</small></li><li id=L383><b>theorem</b> <code>OAI.TraceReconstruction.sourceBundle_reserve_pre</code> <small>line 383</small></li><li id=L394><b>theorem</b> <code>OAI.TraceReconstruction.sourceBundle_reserve_post</code> <small>line 394</small></li><li id=L412><b>def</b> <code>OAI.TraceReconstruction.sourceBundleCount</code> <small>line 412</small></li><li id=L417><b>theorem</b> <code>OAI.TraceReconstruction.sourceBundleCount_le</code> <small>line 417</small></li><li id=L431><b>theorem</b> <code>OAI.TraceReconstruction.sourceBundle_activity</code> <small>line 431</small><div class="doc"><p>The actual scheduled bits give precisely the arithmetic source displacement
+Y=H+V, including its common-globalBits plateau and outer-quarter behavior.</p></div><pre>theorem sourceBundle_activity (N t h : ℕ)
+    (localBits : Fin N → Fin t → Bool) (globalBits : Fin ((N/4)*t) → Bool) (u : Fin N) :
+    (∑v : SourceBundle N, if (sourceBundleLeft N v).val ≤ u.val ∧
+        u.val ≤ (sourceBundleRight N v).val then
+      (sourceBundleCount N t h localBits globalBits v:ℤ)-(t*h+t/2:ℕ) else 0)=
+      ((∑a : Fin t,(bitIndex (localBits u a):ℤ))-(t/2:ℕ))+
+        scheduledGlobalShift N t globalBits u := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L357">OAI.TraceReconstruction.SourceBundle</a>, <a href="Layout.lean.html#L359">OAI.TraceReconstruction.sourceBundleLeft</a>, <a href="Layout.lean.html#L363">OAI.TraceReconstruction.sourceBundleRight</a>, <a href="Layout.lean.html#L412">OAI.TraceReconstruction.sourceBundleCount</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Shapes.lean.html#L35">OAI.TraceReconstruction.scheduledGlobalShift</a></p></li><li id=L477><b>def</b> <code>OAI.TraceReconstruction.sourceLayoutReserve</code> <small>line 477</small><div class="doc"><p>One-bundle reserved nominal count is integral because the number of
+paired trials is even. The actual filler reserves both local and global
+bundles when both are present in a region.</p></div><pre>def sourceLayoutReserve (t h : ℕ) : ℕ := t*h+t/2</pre></li><li id=L479><b>def</b> <code>OAI.TraceReconstruction.sourcePreFiller</code> <small>line 479</small></li><li id=L482><b>def</b> <code>OAI.TraceReconstruction.sourcePostFiller</code> <small>line 482</small></li><li id=L485><b>def</b> <code>OAI.TraceReconstruction.sourcePreCount</code> <small>line 485</small></li><li id=L490><b>def</b> <code>OAI.TraceReconstruction.sourcePostCount</code> <small>line 490</small></li><li id=L495><b>def</b> <code>OAI.TraceReconstruction.sourceDisplacement</code> <small>line 495</small></li><li id=L499><b>def</b> <code>OAI.TraceReconstruction.sourceWindowStart</code> <small>line 499</small></li><li id=L503><b>theorem</b> <code>OAI.TraceReconstruction.sourcePreFiller_nominal</code> <small>line 503</small></li><li id=L509><b>theorem</b> <code>OAI.TraceReconstruction.sourcePostFiller_nominal</code> <small>line 509</small></li><li id=L515><b>theorem</b> <code>OAI.TraceReconstruction.sourceLayout_exact_start</code> <small>line 515</small></li><li id=L530><b>theorem</b> <code>OAI.TraceReconstruction.sourceLayout_exact_total</code> <small>line 530</small></li><li id=L544><b>theorem</b> <code>OAI.TraceReconstruction.sourceLayout_literal_partition</code> <small>line 544</small><div class="doc"><p>The literal surrogate side chunks, after concatenation, are a correct
+partition of the actual parent word whenever the windows fit. This is
+an equality of unmarked binary strings, not an assumed channel identity.</p></div><pre>theorem sourceLayout_literal_partition (k A T B t h a L : ℕ) (ht : Even t)
+    (hA : 2*sourceLayoutReserve t h ≤ A) (hB : 2*sourceLayoutReserve t h ≤ B)
+    (loc : Fin (k+1) → Fin t → Bool) (glob : Fin (((k+1)/4)*t) → Bool)
+    (sign : Fin L → Bool) (w : Bool → List Bool) (τ : Fin (k+1) → Bool)
+    (hzero : ∀u,0 ≤ (A:ℤ)+sourceDisplacement (k+1) t loc glob u)
+    (hleft : ∀u,sourceWindowStart (k+1) A t loc glob u ≤ a)
+    (hfit : ∀u,a+L ≤ sourceWindowStart (k+1) A t loc glob u+T)
+    (hunit : ∀u,sourceWindowStart (k+1) A t loc glob u+T ≤ A+T+B) :
+    (List.ofFn (fun u =&gt; complementaryWords (A+T+B) a L sign w (τ u))).flatten=
+      (List.ofFn (fun u =&gt; pureAtomRun (w false) (sourcePreCount (k+1) A t h loc glob u) ++
+        complementaryWords T (a-sourceWindowStart (k+1) A t loc glob u) L sign w (τ u) ++
+        pureAtomRun (w false) (sourcePostCount (k+1) B t h loc glob u))).flatten := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L477">OAI.TraceReconstruction.sourceLayoutReserve</a>, <a href="Layout.lean.html#L495">OAI.TraceReconstruction.sourceDisplacement</a>, <a href="Layout.lean.html#L499">OAI.TraceReconstruction.sourceWindowStart</a>, <a href="Model.lean.html#L531">OAI.TraceReconstruction.complementaryWords</a>, <a href="Patterns.lean.html#L186">OAI.TraceReconstruction.pureAtomRun</a>, <a href="Layout.lean.html#L485">OAI.TraceReconstruction.sourcePreCount</a>, <a href="Layout.lean.html#L490">OAI.TraceReconstruction.sourcePostCount</a></p></li><li id=L576><b>theorem</b> <code>OAI.TraceReconstruction.coordinateProduct_approximates</code> <small>line 576</small><div class="doc"><p>Independent emissions at all literal slots accumulate their actual
+approximation errors. The decoders may depend on the fixed slot ID.</p></div><pre>theorem coordinateProduct_approximates {α : Type*} [Fintype α]
+    {n : ℕ} {q : ℝ} (hq : q∈Set.Icc 0 1) (P : Fin n → FiniteLaw α)
+    (f : Fin n → α → List Bool) (w : Fin n → List Bool) (E : Fin n → ℝ)
+    (h : ∀i,ApproximatesTrace q (P i) (f i) (w i) (E i)) :
+    ApproximatesTrace q (FiniteLaw.coordinateProduct P)
+      (fun x =&gt; coordinateWord (fun i =&gt; f i (x i))) (coordinateWord w) (∑i,E i) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L183">OAI.TraceReconstruction.ApproximatesTrace</a>, <a href="FiniteLaw.lean.html#L1379">OAI.TraceReconstruction.FiniteLaw.coordinateProduct</a>, <a href="Oracles.lean.html#L1169">OAI.TraceReconstruction.coordinateWord</a></p></li><li id=L606><b>def</b> <code>OAI.TraceReconstruction.FiniteLaw.indexedProduct</code> <small>line 606</small><div class="doc"><p>Independent emissions indexed by the actual token IDs of the layout.</p></div><pre>def indexedProduct (P : ι → FiniteLaw α) : FiniteLaw (ι → α) where
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a></p></li><li id=L615><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.indexedProduct_expect_equiv</code> <small>line 615</small><div class="doc"><p>Reorder independent emissions by the literal chronological slot order.
+The order is a bijection, so no output is duplicated or silently discarded.</p></div><pre>theorem indexedProduct_expect_equiv (P : ι → FiniteLaw α) (e : κ ≃ ι)
+    (F : (ι → α) → ℝ) :
+    (indexedProduct P).expect F=(indexedProduct (fun j =&gt; P (e j))).expect
+      (fun x =&gt; F (fun i =&gt; x (e.symm i))) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Layout.lean.html#L606">OAI.TraceReconstruction.FiniteLaw.indexedProduct</a>, <a href="FiniteLaw.lean.html#L498">OAI.TraceReconstruction.FiniteLaw.expect</a></p></li><li id=L633><b>theorem</b> <code>OAI.TraceReconstruction.FiniteLaw.indexedProduct_map</code> <small>line 633</small></li><li id=L661><b>theorem</b> <code>OAI.TraceReconstruction.indexedProduct_approximates</code> <small>line 661</small><div class="doc"><p>An arbitrarily indexed actual layout has the same unconditional trace
+guarantee after its fixed, public chronological ordering is applied.</p></div><pre>theorem indexedProduct_approximates {ι α : Type*} [Fintype ι] [Fintype α]
+    {n : ℕ} {q : ℝ} (hq : q∈Set.Icc 0 1) (e : Fin n ≃ ι)
+    (P : ι → FiniteLaw α) (f : ι → α → List Bool) (w : ι → List Bool) (E : ι → ℝ)
+    (h : ∀i,ApproximatesTrace q (P i) (f i) (w i) (E i)) :
+    ApproximatesTrace q (FiniteLaw.indexedProduct P)
+      (fun x =&gt; coordinateWord (fun j =&gt; f (e j) (x (e j))))
+      (coordinateWord (fun j =&gt; w (e j))) (∑i,E i) := by
+…</pre><p class="refs">Mentions: <a href="FiniteLaw.lean.html#L18">OAI.TraceReconstruction.FiniteLaw</a>, <a href="Oracles.lean.html#L183">OAI.TraceReconstruction.ApproximatesTrace</a>, <a href="Layout.lean.html#L606">OAI.TraceReconstruction.FiniteLaw.indexedProduct</a>, <a href="Oracles.lean.html#L1169">OAI.TraceReconstruction.coordinateWord</a></p></li><li id=L689><b>def</b> <code>OAI.TraceReconstruction.boolTypeSign</code> <small>line 689</small><div class="doc"><p>The Boolean representation of the source Prouhet signs; true denotes
+a negative type. No sign convention is changed in passing to literal words.</p></div><pre>def boolTypeSign (b : Bool) : ℝ := if b then -1 else 1</pre></li><li id=L691><b>def</b> <code>OAI.TraceReconstruction.prouhetBool</code> <small>line 691</small></li><li id=L694><b>theorem</b> <code>OAI.TraceReconstruction.boolTypeSign_injective</code> <small>line 694</small></li><li id=L698><b>theorem</b> <code>OAI.TraceReconstruction.boolTypeSign_template</code> <small>line 698</small></li><li id=L715><b>theorem</b> <code>OAI.TraceReconstruction.sourceWindowStart_cast_of_fit</code> <small>line 715</small></li><li id=L726><b>theorem</b> <code>OAI.TraceReconstruction.sourceWindowStart_fit</code> <small>line 726</small><div class="doc"><p>A zero-based centered version of the floor-fit calculation.</p></div><pre>theorem sourceWindowStart_fit (N P T t L : ℕ)
+    (loc : Fin N → Fin t → Bool) (glob : Fin ((N/4)*t) → Bool)
+    (hP : 2*T ≤ P) (hT : 16 ≤ T) (heven : Even T) (hL : 8*L ≤ T)
+    (u : Fin N) (hY : |8*sourceDisplacement N t loc glob u| ≤ (T:ℤ)) :
+    sourceWindowStart N ((P-T)/2) t loc glob u+T ≤ P ∧
+    sourceWindowStart N ((P-T)/2) t loc glob u ≤ P/2 ∧
+    P/2+L ≤ sourceWindowStart N ((P-T)/2) t loc glob u+T :=
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L495">OAI.TraceReconstruction.sourceDisplacement</a>, <a href="Layout.lean.html#L499">OAI.TraceReconstruction.sourceWindowStart</a></p></li><li id=L737><b>theorem</b> <code>OAI.TraceReconstruction.sourceWindowStart_anchor</code> <small>line 737</small><div class="doc"><p>The zero-based centered translated anchor, including both half-trial corrections.</p></div><pre>theorem sourceWindowStart_anchor (N P T t L : ℕ)
+    (loc : Fin N → Fin t → Bool) (glob : Fin ((N/4)*t) → Bool)
+    (hP : 2*T ≤ P) (hT : 16 ≤ T) (heven : Even T) (hL : 8*L ≤ T)
+    (u : Fin N) (hY : |8*sourceDisplacement N t loc glob u| ≤ (T:ℤ)) :
+    ((P/2-sourceWindowStart N ((P-T)/2) t loc glob u:ℕ):ℤ)=
+      (T/2:ℕ)+(t/2:ℕ)-(∑a : Fin t,(bitIndex (loc u a):ℤ))-
+        scheduledGlobalShift N t glob u := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L495">OAI.TraceReconstruction.sourceDisplacement</a>, <a href="Layout.lean.html#L499">OAI.TraceReconstruction.sourceWindowStart</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Shapes.lean.html#L35">OAI.TraceReconstruction.scheduledGlobalShift</a></p></li><li id=L755><b>theorem</b> <code>OAI.TraceReconstruction.sourceWindowStart_oneBased_fit</code> <small>line 755</small><div class="doc"><p>The manuscript numbers motif slots from one. Thus its actual zero-based
+onset is P/2-1, not P/2. The strict margins include this endpoint correction.</p></div><pre>theorem sourceWindowStart_oneBased_fit (N P T t L : ℕ)
+    (loc : Fin N → Fin t → Bool) (glob : Fin ((N/4)*t) → Bool)
+    (hP : 2*T ≤ P) (hT : 16 ≤ T) (heven : Even T) (hL : 8*L ≤ T)
+    (u : Fin N) (hY : |8*sourceDisplacement N t loc glob u| ≤ (T:ℤ)) :
+    sourceWindowStart N ((P-T)/2) t loc glob u+T ≤ P ∧
+    sourceWindowStart N ((P-T)/2) t loc glob u ≤ P/2-1 ∧
+    P/2-1+L ≤ sourceWindowStart N ((P-T)/2) t loc glob u+T := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L495">OAI.TraceReconstruction.sourceDisplacement</a>, <a href="Layout.lean.html#L499">OAI.TraceReconstruction.sourceWindowStart</a></p></li><li id=L769><b>theorem</b> <code>OAI.TraceReconstruction.sourceWindowStart_oneBased_anchor</code> <small>line 769</small><div class="doc"><p>The exact source anchor in zero-based coordinates. The minus one is
+forced by the one-based motif-label convention.</p></div><pre>theorem sourceWindowStart_oneBased_anchor (N P T t L : ℕ)
+    (loc : Fin N → Fin t → Bool) (glob : Fin ((N/4)*t) → Bool)
+    (hP : 2*T ≤ P) (hT : 16 ≤ T) (heven : Even T) (hL : 8*L ≤ T)
+    (u : Fin N) (hY : |8*sourceDisplacement N t loc glob u| ≤ (T:ℤ)) :
+    ((P/2-1-sourceWindowStart N ((P-T)/2) t loc glob u:ℕ):ℤ)=
+      (T/2:ℕ)-1+(t/2:ℕ)-(∑a : Fin t,(bitIndex (loc u a):ℤ))-
+        scheduledGlobalShift N t glob u := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L495">OAI.TraceReconstruction.sourceDisplacement</a>, <a href="Layout.lean.html#L499">OAI.TraceReconstruction.sourceWindowStart</a>, <a href="Patterns.lean.html#L287">OAI.TraceReconstruction.bitIndex</a>, <a href="Shapes.lean.html#L35">OAI.TraceReconstruction.scheduledGlobalShift</a></p></li><li id=L782><b>def</b> <code>OAI.TraceReconstruction.sourceBlockWord</code> <small>line 782</small><div class="doc"><p>The actual recursively substituted source block words. Indices in P
+are shifted down by one, but physical binary strings are unchanged.</p></div><pre>def sourceBlockWord (s : ℕ) (P : ℕ → ℕ) (atom : Bool → List Bool) : ℕ → Bool → List Bool
+  | 0 =&gt; atom
+  | j+1 =&gt; complementaryWords (P j) (P j/2-1) (2^s) (prouhetBool s)
+      (sourceBlockWord s P atom j)</pre><p class="refs">Mentions: <a href="Model.lean.html#L531">OAI.TraceReconstruction.complementaryWords</a>, <a href="Layout.lean.html#L691">OAI.TraceReconstruction.prouhetBool</a></p></li><li id=L787><b>def</b> <code>OAI.TraceReconstruction.sourceBlockLength</code> <small>line 787</small></li><li id=L791><b>theorem</b> <code>OAI.TraceReconstruction.sourceBlockWord_length</code> <small>line 791</small></li><li id=L798><b>theorem</b> <code>OAI.TraceReconstruction.sourceBlockWord_injective</code> <small>line 798</small></li><li id=L820><b>def</b> <code>OAI.TraceReconstruction.integerTemplateType</code> <small>line 820</small><div class="doc"><p>Total Boolean type, also on failed layouts; no conditioning is hidden
+in the definition.</p></div><pre>def integerTemplateType (N s : ℕ) (X : ℤ) (τ : Bool) (u : Fin N) : Bool :=
+…</pre></li><li id=L823><b>theorem</b> <code>OAI.TraceReconstruction.boolTypeSign_integerTemplate</code> <small>line 823</small></li><li id=L829><b>theorem</b> <code>OAI.TraceReconstruction.integerTemplateType_nat</code> <small>line 829</small></li><li id=L837><b>def</b> <code>OAI.TraceReconstruction.sourceScheduledTrials</code> <small>line 837</small><div class="doc"><p>Global trials at a parent use its children's local-trial count. This
+fixes the index shift between source level labels and zero-based arrays.</p></div><pre>def sourceScheduledTrials (T n : ℕ → ℕ) : ℕ → ℕ
+  | 0 =&gt; 0
+  | b+1 =&gt; (T (b+1)/4)*n b</pre></li><li id=L841><b>def</b> <code>OAI.TraceReconstruction.sourceScheduledShift</code> <small>line 841</small></li><li id=L846><b>def</b> <code>OAI.TraceReconstruction.sourceLocalCenter</code> <small>line 846</small></li><li id=L849><b>def</b> <code>OAI.TraceReconstruction.sourceNodeAnchor</code> <small>line 849</small></li><li id=L854><b>def</b> <code>OAI.TraceReconstruction.sourceTreeLeafBool</code> <small>line 854</small><div class="doc"><p>All actual leaf Booleans on the complete deterministic window tree.</p></div><pre>def sourceTreeLeafBool (T n : ℕ → ℕ) (s : ℕ) (center : ℕ → ℤ) :
+    (b : ℕ) → WindowAssignments T n (sourceScheduledTrials T n) Bool b → ℤ → Bool → WindowLeaf T b → Bool
+  | 0, _, _, τ, _ =&gt; τ
+  | b+1, bits, incoming, τ, v =&gt;
+      sourceTreeLeafBool T n s center b (bits.2.2 v.1)
+        (sourceScheduledShift T n b bits.2.1 v.1)
+        (integerTemplateType (T b) s (sourceNodeAnchor T n center b bits incoming) τ v.1) v.2</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="LeafOracle.lean.html#L25">OAI.TraceReconstruction.WindowLeaf</a>, <a href="Layout.lean.html#L841">OAI.TraceReconstruction.sourceScheduledShift</a>, <a href="Layout.lean.html#L820">OAI.TraceReconstruction.integerTemplateType</a>, <a href="Layout.lean.html#L849">OAI.TraceReconstruction.sourceNodeAnchor</a></p></li><li id=L862><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeLeafBool_sign</code> <small>line 862</small></li><li id=L875><b>def</b> <code>OAI.TraceReconstruction.sourceNominalPre</code> <small>line 875</small></li><li id=L876><b>def</b> <code>OAI.TraceReconstruction.sourceNominalPost</code> <small>line 876</small></li><li id=L878><b>theorem</b> <code>OAI.TraceReconstruction.sourceNominal_total</code> <small>line 878</small></li><li id=L884><b>def</b> <code>OAI.TraceReconstruction.sourceCenterWord</code> <small>line 884</small><div class="doc"><p>The actual center before recursively cutting its pure side regions.</p></div><pre>def sourceCenterWord (s : ℕ) (P T n : ℕ → ℕ) (center : ℕ → ℤ) (atom : Bool → List Bool) :
+    (b : ℕ) → WindowAssignments T n (sourceScheduledTrials T n) Bool b → ℤ → Bool → List Bool
+  | 0, _, _, τ =&gt; atom τ
+  | b+1, bits, incoming, τ =&gt; atomString (T b) (sourceBlockWord s P atom b)
+      (integerTemplateType (T b) s (sourceNodeAnchor T n center b bits incoming) τ)
+
+/-- The unconditional literal surrogate partition: local and common-global
+ pairs contribute their real selected pure lengths, on every bit assignment. -/</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Model.lean.html#L482">OAI.TraceReconstruction.atomString</a>, <a href="Layout.lean.html#L782">OAI.TraceReconstruction.sourceBlockWord</a>, <a href="Layout.lean.html#L820">OAI.TraceReconstruction.integerTemplateType</a>, <a href="Layout.lean.html#L849">OAI.TraceReconstruction.sourceNodeAnchor</a></p></li><li id=L892><b>def</b> <code>OAI.TraceReconstruction.sourceTreeWord</code> <small>line 892</small><div class="doc"><p>The unconditional literal surrogate partition: local and common-global
+pairs contribute their real selected pure lengths, on every bit assignment.</p></div><pre>def sourceTreeWord (s : ℕ) (P T n h : ℕ → ℕ) (center : ℕ → ℤ) (atom : Bool → List Bool) :
+    (b : ℕ) → WindowAssignments T n (sourceScheduledTrials T n) Bool b → ℤ → Bool → List Bool
+  | 0, _, _, τ =&gt; atom τ
+  | 1, bits, incoming, τ =&gt; sourceCenterWord s P T n center atom 1 bits incoming τ
+  | b+2, bits, incoming, τ =&gt;
+      let loc := fun u =&gt; (bits.2.2 u).1
+…</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Layout.lean.html#L884">OAI.TraceReconstruction.sourceCenterWord</a></p></li><li id=L910><b>def</b> <code>OAI.TraceReconstruction.SourceTreeFit</code> <small>line 910</small><div class="doc"><p>The actual fit event uses a joint test of all displacements. It does not
+assert independence and will only be charged probabilistically afterwards.</p></div><pre>def SourceTreeFit (T n : ℕ → ℕ) :
+    (b : ℕ) → WindowAssignments T n (sourceScheduledTrials T n) Bool b → Prop
+  | 0, _ =&gt; True
+  | 1, _ =&gt; True
+  | b+2, bits =&gt;
+      (∀u, |8*sourceDisplacement (T (b+1)) (n b) (fun v =&gt; (bits.2.2 v).1) bits.2.1 u| ≤ (T b:ℤ)) ∧
+      ∀u, SourceTreeFit T n (b+1) (bits.2.2 u)
+
+/-- Numerical layout conditions from the source. These contain no word or
+ statistical conclusions, only the genuine integer margins. -/</pre><p class="refs">Mentions: <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Layout.lean.html#L495">OAI.TraceReconstruction.sourceDisplacement</a></p></li><li id=L920><b>structure</b> <code>OAI.TraceReconstruction.SourceLayoutMargins</code> <small>line 920</small><div class="doc"><p>Numerical layout conditions from the source. These contain no word or
+statistical conclusions, only the genuine integer margins.</p></div><pre>structure SourceLayoutMargins (s : ℕ) (P T n h : ℕ → ℕ) (b : ℕ) : Prop where
+…</pre></li><li id=L930><b>theorem</b> <code>OAI.TraceReconstruction.SourceLayoutMargins.restrict</code> <small>line 930</small></li><li id=L944><b>theorem</b> <code>OAI.TraceReconstruction.sourceTreeWord_eq_center</code> <small>line 944</small><div class="doc"><p>Every recursively cut surrogate center is literally the actual center on
+the joint fit event. The source type assignment is retained at all leaves.</p></div><pre>theorem sourceTreeWord_eq_center (s : ℕ) (P T n h : ℕ → ℕ) (center : ℕ → ℤ)
+    (atom : Bool → List Bool) (b : ℕ) (H : SourceLayoutMargins s P T n h b)
+    (hc : ∀j, j+1&lt;b → center j=sourceLocalCenter T n j)
+    (bits : WindowAssignments T n (sourceScheduledTrials T n) Bool b)
+    (incoming : ℤ) (τ : Bool) (hfit : SourceTreeFit T n b bits) :
+    sourceTreeWord s P T n h center atom b bits incoming τ=
+      sourceCenterWord s P T n center atom b bits incoming τ := by
+…</pre><p class="refs">Mentions: <a href="Layout.lean.html#L920">OAI.TraceReconstruction.SourceLayoutMargins</a>, <a href="Layout.lean.html#L846">OAI.TraceReconstruction.sourceLocalCenter</a>, <a href="LeafOracle.lean.html#L785">OAI.TraceReconstruction.WindowAssignments</a>, <a href="Layout.lean.html#L837">OAI.TraceReconstruction.sourceScheduledTrials</a>, <a href="Layout.lean.html#L910">OAI.TraceReconstruction.SourceTreeFit</a>, <a href="Layout.lean.html#L892">OAI.TraceReconstruction.sourceTreeWord</a>, <a href="Layout.lean.html#L884">OAI.TraceReconstruction.sourceCenterWord</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

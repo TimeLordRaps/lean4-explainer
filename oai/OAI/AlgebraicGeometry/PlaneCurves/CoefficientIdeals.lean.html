@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/CoefficientIdeals.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/CoefficientIdeals.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>CoefficientIdeals.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>CoefficientIdeals.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/CoefficientIdeals.lean#L1">source</a></p><div class="doc"><h3>Local coefficient ideals and ideal-power order</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Nagata.W18.coefficient_dvd_of_coordinate_ideal_power</code> <small>line 20</small><div class="doc"><p>Coefficients of a member of <code>(g,W)^m</code> have the expected divisibility.</p></div><pre>theorem coefficient_dvd_of_coordinate_ideal_power {R : Type*} [CommRing R]
+    (g : R) (m : ℕ) (H : Polynomial R)
+    (hH : H ∈ (Ideal.span ({C g, X} : Set (Polynomial R))) ^ m) :
+    ∀ J : ℕ, g ^ (m - J) ∣ H.coeff J := by
+…</pre></li><li id=L72><b>def</b> <code>OAI.Nagata.W18.nestedPointIdeal</code> <small>line 72</small><div class="doc"><p>The actual maximal point ideal in the nested bivariate polynomial ring.</p></div><pre>def nestedPointIdeal {K : Type*} [CommRing K] (a c : K) :
+    Ideal (Polynomial (Polynomial K)) :=
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.Nagata.W18.map_nestedPointIdeal_taylor</code> <small>line 77</small><div class="doc"><p>Translating the outer variable sends <code>(U-a,W-c)</code> to <code>(U-a,W)</code>.</p></div><pre>theorem map_nestedPointIdeal_taylor {K : Type*} [CommRing K] (a c : K) :
+    (nestedPointIdeal a c).map (taylorAlgHom (C c)).toRingHom =
+      Ideal.span ({C (X - C a), X} : Set (Polynomial (Polynomial K))) := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L86><b>theorem</b> <code>OAI.Nagata.W18.top_coefficient_taylor</code> <small>line 86</small><div class="doc"><p>Translation preserves the coefficient at any index at least the degree.</p></div><pre>theorem top_coefficient_taylor {R : Type*} [CommRing R]
+    (H : Polynomial R) (r : R) (J : ℕ) (hJ : H.natDegree ≤ J) :
+    (taylor r H).coeff J = H.coeff J := by
+…</pre></li><li id=L98><b>theorem</b> <code>OAI.Nagata.W18.top_coefficient_base_divisibility</code> <small>line 98</small><div class="doc"><p>Surface order at an arbitrary displacement forces base order <code>m-J</code> of
+the highest possible fiber coefficient.</p></div><pre>theorem top_coefficient_base_divisibility {K : Type*} [CommRing K]
+    (H : Polynomial (Polynomial K)) (a c : K) (m J : ℕ)
+    (hJ : H.natDegree ≤ J) (hH : H ∈ (nestedPointIdeal a c) ^ m) :
+    (X - C a) ^ (m - J) ∣ H.coeff J := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a></p></li><li id=L109><b>def</b> <code>OAI.Nagata.W18.fiberRestriction</code> <small>line 109</small><div class="doc"><p>Restriction to the marked base fiber is coefficientwise evaluation <code>U=a</code>.</p></div><pre>def fiberRestriction {K : Type*} [CommRing K] (a : K) :
+    Polynomial (Polynomial K) →+* Polynomial K :=
+…</pre></li><li id=L114><b>theorem</b> <code>OAI.Nagata.W18.fiberRestriction_coeff</code> <small>line 114</small><div class="doc"><p>Restriction evaluates each base coefficient at the marked point.</p></div><pre>theorem fiberRestriction_coeff {K : Type*} [CommRing K]
+    (H : Polynomial (Polynomial K)) (a : K) (j : ℕ) :
+    (fiberRestriction a H).coeff j = (H.coeff j).eval a :=
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L109">OAI.Nagata.W18.fiberRestriction</a></p></li><li id=L120><b>theorem</b> <code>OAI.Nagata.W18.fiberRestriction_natDegree_le</code> <small>line 120</small><div class="doc"><p>Restriction cannot increase the degree in the fiber variable.</p></div><pre>theorem fiberRestriction_natDegree_le {K : Type*} [CommRing K]
+    (H : Polynomial (Polynomial K)) (a : K) :
+    (fiberRestriction a H).natDegree ≤ H.natDegree :=
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L109">OAI.Nagata.W18.fiberRestriction</a></p></li><li id=L126><b>theorem</b> <code>OAI.Nagata.W18.fiberRestriction_leadingCoeff</code> <small>line 126</small><div class="doc"><p>A surviving top coefficient is the leading coefficient on the fiber.</p></div><pre>theorem fiberRestriction_leadingCoeff {K : Type*} [CommRing K]
+    (H : Polynomial (Polynomial K)) (a : K) (J : ℕ)
+    (hJ : H.natDegree ≤ J) (hne : (H.coeff J).eval a ≠ 0) :
+    (fiberRestriction a H).leadingCoeff = (H.coeff J).eval a := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L109">OAI.Nagata.W18.fiberRestriction</a></p></li><li id=L136><b>theorem</b> <code>OAI.Nagata.W18.map_nestedPointIdeal_fiber</code> <small>line 136</small><div class="doc"><p>The point ideal maps to the principal fiber point ideal <code>(W-c)</code>.</p></div><pre>theorem map_nestedPointIdeal_fiber {K : Type*} [CommRing K] (a c : K) :
+    (nestedPointIdeal a c).map (fiberRestriction a) =
+      Ideal.span ({X - C c} : Set (Polynomial K)) := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a>, <a href="CoefficientIdeals.lean.html#L109">OAI.Nagata.W18.fiberRestriction</a></p></li><li id=L145><b>theorem</b> <code>OAI.Nagata.W18.fiber_power_divides_of_surface_order</code> <small>line 145</small><div class="doc"><p>Surface ideal-power order restricts to fiber root divisibility, including
+when the entire fiber restriction is zero.</p></div><pre>theorem fiber_power_divides_of_surface_order {K : Type*} [CommRing K]
+    (H : Polynomial (Polynomial K)) (a c : K) (m : ℕ)
+    (hH : H ∈ (nestedPointIdeal a c) ^ m) :
+    (X - C c) ^ m ∣ fiberRestriction a H := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a>, <a href="CoefficientIdeals.lean.html#L109">OAI.Nagata.W18.fiberRestriction</a></p></li><li id=L155><b>theorem</b> <code>OAI.Nagata.W18.fiber_rootMultiplicity_ge</code> <small>line 155</small><div class="doc"><p>For nonzero fiber restrictions, the same condition is the actual ordinary
+root-multiplicity lower bound.</p></div><pre>theorem fiber_rootMultiplicity_ge {K : Type*} [CommRing K] [IsDomain K]
+    (H : Polynomial (Polynomial K)) (a c : K) (m : ℕ)
+    (hH : H ∈ (nestedPointIdeal a c) ^ m) (hne : fiberRestriction a H ≠ 0) :
+    m ≤ (fiberRestriction a H).rootMultiplicity c := by
+…</pre><p class="refs">Mentions: <a href="CoefficientIdeals.lean.html#L72">OAI.Nagata.W18.nestedPointIdeal</a>, <a href="CoefficientIdeals.lean.html#L109">OAI.Nagata.W18.fiberRestriction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

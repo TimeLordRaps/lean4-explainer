@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Rigidity/GeometricRigidity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Rigidity/GeometricRigidity.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Rigidity</a> / <span>GeometricRigidity.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Rigidity</a>/<span>GeometricRigidity.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Rigidity/GeometricRigidity.lean#L1">source</a></p><div class="doc"><h3>Rigidity reduction with geometric source-area control</h3><p>Source area and square-summability of the source radii follow from the
+geometry of disjoint source disks. The target area follows from an exterior-area
+bound. Together with the finite-hole flux estimate, these bounds force rigidity
+through the length-area argument.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.CircleDomainRigidity.identity_of_disk_geometry_and_target_flux</code> <small>line 25</small><div class="doc"><p>A principal-normalized conformal map is the identity once the target
+area and flux estimates are established. Source area and square-summable
+source radii follow from disjoint disk geometry.</p></div><pre>theorem identity_of_disk_geometry_and_target_flux {ι : Type*} [Countable ι]
+    {f : ℂ → ℂ} {D : Set ℂ} (centers : ι → ℂ) (r s : ι → ℝ) (R : ℝ)
+    (hD : IsOpen D) (hconn : IsPreconnected D) (hf : DifferentiableOn ℂ f D)
+    (hDinf : IsBounded Dᶜ)
+    (hnorm : Tendsto (fun z : ℂ =&gt; f z - z) (cobounded ℂ) (𝓝 0))
+    (hR : 0 ≤ R) (hr : ∀ j, 0 ≤ r j)
+    (hWne : (D ∩ ball 0 R).Nonempty)
+    (hpair : Pairwise (Disjoint on fun j =&gt; ball (centers j) (r j)))
+    (hdisj : ∀ j, Disjoint D (ball (centers j) (r j)))
+    (hcontain : ∀ j, ball (centers j) (r j) ⊆ ball 0 R)
+    (hi : Integrable (fun z =&gt; ‖deriv f z‖) (volume.restrict (D ∩ ball 0 R)))
+    (hi2 : Integrable (fun z =&gt; ‖deriv f z‖ ^ 2) (volume.restrict (D ∩ ball 0 R)))
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.CircleDomainRigidity.identity_of_disk_geometry_exterior_area_and_flux</code> <small>line 60</small><div class="doc"><p>All area and integrability premises follow from geometric disjointness
+and the exterior omitted-area bound, under the limiting-flux inequality.</p></div><pre>theorem identity_of_disk_geometry_exterior_area_and_flux
+    {ι : Type*} [Countable ι] {f : ℂ → ℂ} {D : Set ℂ}
+    (sourceCenters targetCenters : ι → ℂ) (r s : ι → ℝ) (R : ℝ)
+    (hD : IsOpen D) (hconn : IsPreconnected D) (hf : DifferentiableOn ℂ f D)
+    (hinj : InjOn f D)
+    (hExterior : (closedBall (0 : ℂ) R)ᶜ ⊆ D)
+    (hnorm : Tendsto (fun z : ℂ =&gt; f z - z) (cobounded ℂ) (𝓝 0))
+    (hR : 0 ≤ R) (hr : ∀ j, 0 ≤ r j) (hs : ∀ j, 0 ≤ s j)
+    (hWne : (D ∩ ball 0 R).Nonempty)
+    (hSourcePair : Pairwise (Disjoint on fun j =&gt; ball (sourceCenters j) (r j)))
+    (hSourceDisj : ∀ j, Disjoint D (ball (sourceCenters j) (r j)))
+    (hSourceContain : ∀ j, ball (sourceCenters j) (r j) ⊆ ball 0 R)
+…</pre></li><li id=L94><b>theorem</b> <code>OAI.CircleDomainRigidity.identity_of_disk_geometry_exterior_area_and_finite_flux</code> <small>line 94</small><div class="doc"><p>The finite-hole flux estimates suffice for normalized rigidity. Source
+and target geometry imply the required square-summability, so the remaining
+tail tends to zero without any separate convergence assumption.</p></div><pre>theorem identity_of_disk_geometry_exterior_area_and_finite_flux
+    {ι : Type*} [Countable ι] {f : ℂ → ℂ} {D : Set ℂ}
+    (sourceCenters targetCenters : ι → ℂ) (r s : ι → ℝ) (R : ℝ)
+    (hD : IsOpen D) (hconn : IsPreconnected D) (hf : DifferentiableOn ℂ f D)
+    (hinj : InjOn f D)
+    (hExterior : (closedBall (0 : ℂ) R)ᶜ ⊆ D)
+    (hnorm : Tendsto (fun z : ℂ =&gt; f z - z) (cobounded ℂ) (𝓝 0))
+    (hR : 0 ≤ R) (hr : ∀ j, 0 ≤ r j) (hs : ∀ j, 0 ≤ s j)
+    (hWne : (D ∩ ball 0 R).Nonempty)
+    (hSourcePair : Pairwise (Disjoint on fun j =&gt; ball (sourceCenters j) (r j)))
+    (hSourceDisj : ∀ j, Disjoint D (ball (sourceCenters j) (r j)))
+    (hSourceContain : ∀ j, ball (sourceCenters j) (r j) ⊆ ball 0 R)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/MovingReducedCRT.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/MovingReducedCRT.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>MovingReducedCRT.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>MovingReducedCRT.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/MovingReducedCRT.lean#L1">source</a></p><div class="doc"><h3>The original reduced arithmetic coefficient in the regular-prime CRT split</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Ostmann.crtSplitExternalEquiv_snd</code> <small>line 11</small></li><li id=L24><b>theorem</b> <code>OAI.Ostmann.movingReducedPairResidueCoefficient_modEq</code> <small>line 24</small></li><li id=L47><b>theorem</b> <code>OAI.Ostmann.periodic_coefficient_crt</code> <small>line 47</small><div class="doc"><p>A periodic natural-coordinate coefficient descends to the second CRT
+coordinate without changing its signed value.</p></div><pre>theorem periodic_coefficient_crt (C : ℕ → ℕ → ℂ) (c r : ℕ) [NeZero r] [NeZero (c * r)]
+    (hcop : c.Coprime r)
+    (hC : ∀ a b d e, Nat.ModEq r a d → Nat.ModEq r b e → C a b = C d e)
+    (z : ZMod (c * r) × (ZMod (c * r))ˣ) :
+    C z.1.val (z.2 : ZMod (c * r)).val =
+      C (crtSplitExternalEquiv c r hcop z).2.1.val
+        ((crtSplitExternalEquiv c r hcop z).2.2 : ZMod r).val := by
+…</pre><p class="refs">Mentions: <a href="ArithmeticCRTSeparation.lean.html#L12">OAI.Ostmann.crtSplitExternalEquiv</a></p></li><li id=L61><b>theorem</b> <code>OAI.Ostmann.periodic_coefficient_regular_average</code> <small>line 61</small><div class="doc"><p>Both factors are evaluated at their original natural residue representatives.
+Only periodicity and the proved local transform energy are used in the split.</p></div><pre>theorem periodic_coefficient_regular_average {I : Type*} [Fintype I] [DecidableEq I]
+    (p : I → ℕ) [∀ i, Fact (p i).Prime] [∀ i, NeZero (p i)] [NeZero (∏ i, p i)]
+    (hc : Pairwise (fun i j =&gt; (p i).Coprime (p j)))
+    (r : ℕ) [NeZero r] [NeZero ((∏ i, p i) * r)] (hcop : (∏ i, p i).Coprime r)
+    (active : I → Bool) (s : ℤ) (other : ∀ i, ZMod (p i))
+    (hs : ∀ i, (s : ZMod (p i)) ≠ 0) (ho : ∀ i, other i ≠ 0)
+    (g : ∀ i, ZMod (p i) → ℂ) (hg : ∀ i, g i 0 = 0)
+    (henergy : ∀ i, (∑ x : ZMod (p i), ‖g i x‖ ^ 2) = p i)
+    (C : ℕ → ℕ → ℂ)
+    (hC : ∀ a b d e, Nat.ModEq r a d → Nat.ModEq r b e → C a b = C d e) :
+    (Fintype.card (ZMod ((∏ i, p i) * r) × (ZMod ((∏ i, p i) * r))ˣ) : ℂ)⁻¹ *
+      (∑ z : ZMod ((∏ i, p i) * r) × (ZMod ((∏ i, p i) * r))ˣ, (guardedRegularMultiplier p active s other g z.1.val
+…</pre><p class="refs">Mentions: <a href="../Construction/RegularGiantMultiplier.lean.html#L17">OAI.Ostmann.guardedRegularMultiplier</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

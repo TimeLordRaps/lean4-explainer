@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Metric/ShiftedRadonBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Metric/ShiftedRadonBounds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Metric</a> / <span>ShiftedRadonBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Metric</a>/<span>ShiftedRadonBounds.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Metric/ShiftedRadonBounds.lean#L1">source</a></p><div class="doc"><h3>Integrating shifted density bounds without discarding singular mass</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.RegularPointCoordinates.memLp_two_of_sq_le_shifted_radon</code> <small>line 17</small><div class="doc"><p>A density bound with a constant shift is integrated against the full
+positive measure. Its singular part is retained in the upper bound.</p></div><pre>theorem memLp_two_of_sq_le_shifted_radon (σ : Measure X) [IsFiniteMeasure σ]
+    {S : Set X} [IsFiniteMeasure (μ.restrict S)] {f : X → ℝ}
+    (hf : AEStronglyMeasurable f (μ.restrict S))
+    (c B : ℝ) (hB : 0≤B)
+    (hbound : ∀ᵐ x ∂μ.restrict S, (f x)^2≤B*((σ.rnDeriv μ x).toReal-c)) :
+    MemLp f 2 (μ.restrict S) ∧
+      (∫ x in S, (f x)^2 ∂μ)≤B*(σ.real S-c*μ.real S) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.RegularPointCoordinates.memLp_two_of_shifted_radon_product</code> <small>line 43</small><div class="doc"><p>The mixed estimate permits separate caps on both gradient lengths.</p></div><pre>theorem memLp_two_of_shifted_radon_product (σ : Measure X) [IsFiniteMeasure σ]
+    {S : Set X} [IsFiniteMeasure (μ.restrict S)] {f g h : X → ℝ}
+    (hf : AEStronglyMeasurable f (μ.restrict S)) (c C D : ℝ)
+    (hC : 0≤C) (hD : 0≤D)
+    (hden : ∀ᵐ x ∂μ.restrict S, c≤(σ.rnDeriv μ x).toReal)
+    (hg : ∀ᵐ x ∂μ.restrict S, 0≤g x ∧ g x≤C)
+    (hh : ∀ᵐ x ∂μ.restrict S, 0≤h x ∧ h x≤D)
+    (hbound : ∀ᵐ x ∂μ.restrict S,
+      (f x)^2≤((σ.rnDeriv μ x).toReal-c)*g x*h x) :
+    MemLp f 2 (μ.restrict S) ∧
+      (∫ x in S, (f x)^2 ∂μ)≤(C*D)*(σ.real S-c*μ.real S) := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.RegularPointCoordinates.measure_lower_of_radon_lower</code> <small>line 65</small><div class="doc"><p>A local lower bound for the absolutely continuous density bounds the
+full positive mass on every measurable subset, for either sign of c.</p></div><pre>theorem measure_lower_of_radon_lower (σ : Measure X) [IsFiniteMeasure σ]
+    {Ω : Set X} [IsFiniteMeasure (μ.restrict Ω)]
+    (c : ℝ) (hc : ∀ᵐ x ∂μ.restrict Ω, c≤(σ.rnDeriv μ x).toReal)
+    (s : Set X) (hs : MeasurableSet s) :
+    c*(μ.restrict Ω).real s≤σ.real s := by
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.RegularPointCoordinates.shiftedBochnerLowerBound_of_density</code> <small>line 92</small><div class="doc"><p>The local density consequence of the finite-dimensional inequality
+constructs positivity of the full shifted measure.</p></div><pre>theorem shiftedBochnerLowerBound_of_density (M : PositiveBilinearMeasure X E)
+    {Ω : Set X} [IsFiniteMeasure (μ.restrict Ω)]
+    (ell : E →ₗ[ℝ] ℝ) (n : ℝ)
+    (hd : ∀ v b, ∀ᵐ x ∂μ.restrict Ω,
+      2*b*ell v-n*b^2≤((M.measure v).rnDeriv μ x).toReal) :
+    ShiftedBochnerLowerBound M (μ.restrict Ω) ell n := by
+…</pre><p class="refs">Mentions: <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a>, <a href="../Sobolev/ShiftedBochnerMeasure.lean.html#L28">OAI.RegularPointCoordinates.ShiftedBochnerLowerBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

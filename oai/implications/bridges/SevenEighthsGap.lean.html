@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bridges/SevenEighthsGap.lean — openai/math</title>
+<meta name="description" content="Explore openai/math: Lean declarations, pinned source, explanations, and dependencies.">
+<meta property="og:title" content="bridges/SevenEighthsGap.lean — openai/math">
+<meta property="og:description" content="Explore openai/math: Lean declarations, pinned source, explanations, and dependencies.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/implications/bridges/SevenEighthsGap.lean.html">
+<meta property="og:url" content="https://timelordraps.github.io/lean4-explainer/oai/implications/bridges/SevenEighthsGap.lean.html">
+<link rel="stylesheet" href="../../_assets/site.css">
+<link rel="icon" href="../../_assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#content">Skip to content</a>
+<main id="content" tabindex="-1">
+<header class="site-head">
+<nav class="top"><a href="../../../index.html">All corpora</a> | <a href="../../index.html">Index</a> | <a href="../../glossary.html">Glossary</a> | <a href="../../find.html">Find</a> | <a href="../../implications.html">Implications</a> | <a href="../../annotate.html">Explanation guide</a> | <a href="../../learning-path.html">Learning path</a> | <a href="../../trust.html">Trust</a> | <a href="../../search.html">Search</a></nav>
+</header>
+<h1>bridges/SevenEighthsGap.lean</h1>
+<p>A bridge file for the curated edges below, kept beside the edge file (not in the project's sources). SHA-256 <code>8b56c323c7e21deee5b3fef458c094fa52adb8996f18d0ee24f59dffaee6ffa9</code>. Each edge's card says whether a recorded Lean check of this exact file and contract exists.</p><ul><li><a href="../../implications.html#seven-eighths-gives-an-explicit-real-zero-gap">seven-eighths-gives-an-explicit-real-zero-gap</a></li></ul>
+<pre class="bridge-source"><code><span id="L1">import ComparatorChallenges.DirichletSevenEighths</span><span id="L2">import ComparatorChallenges.SiegelZeros</span><span id="L3"> </span><span id="L4">/-!</span><span id="L5"># Seven-eighths nonvanishing gives an explicit real-zero gap</span><span id="L6"> </span><span id="L7">A bridge for the curated edge `seven-eighths-gives-an-explicit-real-zero-gap` (implications.toml). It is checked</span><span id="L8">against the statements openai/math&#x27;s comparator holds the solutions to (ComparatorChallenges/), which import Mathlib</span><span id="L9">at the commit openai/math pins. The source is a hypothesis: nothing here uses its released proof.</span><span id="L10"> </span><span id="L11">`seven_eighths_gap` is the edge&#x27;s contract: from the source, every real zero `β &lt; 1` of a Dirichlet L-function of</span><span id="L12">modulus `q ≥ 3` satisfies `log 3 / 8 ≤ (1 - β) log q`.</span><span id="L13"> </span><span id="L14">`seven_eighths_gap_gives_absolute_gap` is the relation to the target: the contract gives</span><span id="L15">`OAI.SiegelZeros.WeightedTorusJets.exists_absolute_real_zero_gap`&#x27;s statement, with `c = log 3 / 8`.</span><span id="L16">-/</span><span id="L17"> </span><span id="L18">set_option autoImplicit false</span><span id="L19"> </span><span id="L20">theorem seven_eighths_gap</span><span id="L21">    (source1 : ∀ {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) {s : ℂ},</span><span id="L22">      (7 / 8 : ℝ) &lt; s.re → ¬ (χ = 1 ∧ s = 1) → DirichletCharacter.LFunction χ s ≠ 0) :</span><span id="L23">    ∀ (q : ℕ) [NeZero q] (hq : 3 ≤ q) (χ : DirichletCharacter ℂ q) (β : ℝ) (hβ : β &lt; 1)</span><span id="L24">      (hzero : χ.LFunction (β : ℂ) = 0), Real.log 3 / 8 ≤ (1 - β) * Real.log (q : ℝ) := by</span><span id="L25">  intro q _ hq χ β hβ hzero</span><span id="L26">  -- the zero is at most 7/8: past it, the source says the L-function does not vanish (s = β ≠ 1, so no pole)</span><span id="L27">  have hβ78 : β ≤ 7 / 8 := by</span><span id="L28">    by_contra h</span><span id="L29">    have hre : (7 / 8 : ℝ) &lt; (β : ℂ).re := by simpa using lt_of_not_ge h</span><span id="L30">    have hpole : ¬ (χ = 1 ∧ (β : ℂ) = 1) := by</span><span id="L31">      rintro ⟨-, h1⟩</span><span id="L32">      have : β = 1 := by exact_mod_cast h1</span><span id="L33">      exact absurd this (ne_of_lt hβ)</span><span id="L34">    exact source1 χ hre hpole hzero</span><span id="L35">  have hlog3 : 0 &lt; Real.log 3 := Real.log_pos (by norm_num)</span><span id="L36">  have hlogq : Real.log 3 ≤ Real.log (q : ℝ) := Real.log_le_log (by norm_num) (by exact_mod_cast hq)</span><span id="L37">  nlinarith</span><span id="L38"> </span><span id="L39">theorem seven_eighths_gap_gives_absolute_gap</span><span id="L40">    (contract : ∀ (q : ℕ) [NeZero q] (hq : 3 ≤ q) (χ : DirichletCharacter ℂ q) (β : ℝ) (hβ : β &lt; 1)</span><span id="L41">      (hzero : χ.LFunction (β : ℂ) = 0), Real.log 3 / 8 ≤ (1 - β) * Real.log (q : ℝ)) :</span><span id="L42">    ∃ c : ℝ, 0 &lt; c ∧</span><span id="L43">      ∀ (q : ℕ) [NeZero q], 3 ≤ q →</span><span id="L44">      ∀ χ : DirichletCharacter ℂ q,</span><span id="L45">        χ.IsPrimitive → χ ≠ 1 → (∀ a : ZMod q, (χ a).im = 0) →</span><span id="L46">        ∀ β : ℝ, 0 &lt; β → β &lt; 1 → χ.LFunction (β : ℂ) = 0 →</span><span id="L47">          c ≤ (1 - β) * Real.log (q : ℝ) :=</span><span id="L48">  ⟨Real.log 3 / 8, div_pos (Real.log_pos (by norm_num)) (by norm_num),</span><span id="L49">    fun q _ hq χ _ _ _ β _ hβ hzero =&gt; contract q hq χ β hβ hzero⟩</span></code></pre>
+</main>
+<footer class="site-footer"><a href="https://github.com/openai/math/tree/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb">Project source</a> · <a href="https://github.com/TimeLordRaps/lean4-explainer/issues/new?title=Site%20feedback%3A%20">Report a site issue</a></footer>
+<script src="../../_assets/site.js"></script>
+<script src="../../_assets/lean2tex.js" defer></script>
+<script src="../../_assets/reader.js" defer></script>
+</body>
+</html>

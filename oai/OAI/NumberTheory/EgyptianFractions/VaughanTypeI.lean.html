@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/VaughanTypeI.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/VaughanTypeI.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>VaughanTypeI.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>VaughanTypeI.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/VaughanTypeI.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>lemma</b> <code>OAI.Problem337.Vaughan.sum_Ioc_zero_eq_sum_range_succ</code> <small>line 11</small><div class="doc"><p>Indexing positive initial intervals by a zero-based range.</p></div><pre>lemma sum_Ioc_zero_eq_sum_range_succ {R : Type*} [AddCommMonoid R]
+    (f : ℕ → R) (N : ℕ) :
+    (∑ j ∈ Finset.Ioc 0 N, f j) = ∑ j ∈ Finset.range N, f (j + 1) := by
+…</pre></li><li id=L21><b>theorem</b> <code>OAI.Problem337.Vaughan.log_weighted_sum_norm_le</code> <small>line 21</small><div class="doc"><p>Adding a logarithmic weight costs at most twice the endpoint logarithm.
+The prefix bound remains explicit; no cancellation estimate is assumed silently.</p></div><pre>theorem log_weighted_sum_norm_le (w : ℕ → ℂ) (N : ℕ) (B : ℝ)
+    (hprefix : ∀ k ≤ N, ‖∑ j ∈ Finset.Ioc 0 k, w j‖ ≤ B) :
+    ‖∑ j ∈ Finset.Ioc 0 N, (Real.log j : ℂ) * w j‖ ≤
+      2 * B * Real.log N := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.Problem337.Vaughan.norm_log_bilinear_sum_le</code> <small>line 56</small><div class="doc"><p>Type I logarithmic bilinear estimate for coefficients bounded by one.</p></div><pre>theorem norm_log_bilinear_sum_le (w : ℕ → ℂ) (N A : ℕ) (c B : ℕ → ℝ)
+    (hA : A ≤ N)
+    (hc : ∀ a ∈ Finset.Ioc 0 A, |c a| ≤ 1)
+    (hprefix : ∀ a ∈ Finset.Ioc 0 A, ∀ k ≤ N / a,
+      ‖∑ b ∈ Finset.Ioc 0 k, w (a * b)‖ ≤ B a) :
+    ‖∑ a ∈ Finset.Ioc 0 A, (c a : ℂ) *
+        ∑ b ∈ Finset.Ioc 0 (N / a), (Real.log b : ℂ) * w (a * b)‖ ≤
+      2 * Real.log N * ∑ a ∈ Finset.Ioc 0 A, B a := by
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.Problem337.Vaughan.norm_bilinear_sum_le_log</code> <small>line 92</small><div class="doc"><p>Type I bilinear estimate for coefficients with the logarithmic majorant.</p></div><pre>theorem norm_bilinear_sum_le_log (w : ℕ → ℂ) (N A : ℕ) (c B : ℕ → ℝ)
+    (hA : A ≤ N)
+    (hc : ∀ a ∈ Finset.Ioc 0 A, |c a| ≤ Real.log a)
+    (hinner : ∀ a ∈ Finset.Ioc 0 A,
+      ‖∑ b ∈ Finset.Ioc 0 (N / a), w (a * b)‖ ≤ B a) :
+    ‖∑ a ∈ Finset.Ioc 0 A, (c a : ℂ) *
+        ∑ b ∈ Finset.Ioc 0 (N / a), w (a * b)‖ ≤
+      Real.log N * ∑ a ∈ Finset.Ioc 0 A, B a := by
+…</pre></li><li id=L116><b>theorem</b> <code>OAI.Problem337.Vaughan.first_typeI_sum_bound</code> <small>line 116</small><div class="doc"><p>The first Vaughan Type I term in its finite bilinear form.</p></div><pre>theorem first_typeI_sum_bound (w : ℕ → ℂ) (N U : ℕ) (B : ℕ → ℝ)
+    (hprefix : ∀ a ∈ Finset.Ioc 0 (min U N), ∀ k ≤ N / a,
+      ‖∑ b ∈ Finset.Ioc 0 k, w (a * b)‖ ≤ B a) :
+    ‖∑ a ∈ Finset.Ioc 0 (min U N), ((μ a : ℝ) : ℂ) *
+        ∑ b ∈ Finset.Ioc 0 (N / a), (Real.log b : ℂ) * w (a * b)‖ ≤
+      2 * Real.log N * ∑ a ∈ Finset.Ioc 0 (min U N), B a := by
+…</pre></li><li id=L128><b>theorem</b> <code>OAI.Problem337.Vaughan.second_typeI_sum_bound</code> <small>line 128</small><div class="doc"><p>The second Vaughan Type I term in its finite bilinear form.</p></div><pre>theorem second_typeI_sum_bound (w : ℕ → ℂ) (N U V : ℕ) (B : ℕ → ℝ)
+    (hinner : ∀ a ∈ Finset.Ioc 0 (min (U * V) N),
+      ‖∑ b ∈ Finset.Ioc 0 (N / a), w (a * b)‖ ≤ B a) :
+    ‖∑ a ∈ Finset.Ioc 0 (min (U * V) N), (typeICoefficient U V a : ℂ) *
+        ∑ b ∈ Finset.Ioc 0 (N / a), w (a * b)‖ ≤
+      Real.log N * ∑ a ∈ Finset.Ioc 0 (min (U * V) N), B a := by
+…</pre><p class="refs">Mentions: <a href="VaughanIdentity.lean.html#L117">OAI.Problem337.Vaughan.typeICoefficient</a></p></li><li id=L138><b>theorem</b> <code>OAI.Problem337.Vaughan.first_typeI_bound</code> <small>line 138</small><div class="doc"><p>First Type I estimate directly for the actual Vaughan convolution.</p></div><pre>theorem first_typeI_bound (w : ℕ → ℂ) (N U : ℕ) (B : ℕ → ℝ)
+    (hprefix : ∀ a ∈ Finset.Ioc 0 (min U N), ∀ k ≤ N / a,
+      ‖∑ b ∈ Finset.Ioc 0 k, w (a * b)‖ ≤ B a) :
+    ‖weightedSum (Finset.Ioc 0 N) w
+        (shortPart U (μ : ArithmeticFunction ℝ) * ArithmeticFunction.log)‖ ≤
+      2 * Real.log N * ∑ a ∈ Finset.Ioc 0 (min U N), B a := by
+…</pre><p class="refs">Mentions: <a href="VaughanWeighted.lean.html#L12">OAI.Problem337.Vaughan.weightedSum</a>, <a href="VaughanIdentity.lean.html#L20">OAI.Problem337.Vaughan.shortPart</a></p></li><li id=L148><b>theorem</b> <code>OAI.Problem337.Vaughan.second_typeI_bound</code> <small>line 148</small><div class="doc"><p>Second Type I estimate directly for the actual Vaughan convolution.</p></div><pre>theorem second_typeI_bound (w : ℕ → ℂ) (N U V : ℕ) (B : ℕ → ℝ)
+    (hinner : ∀ a ∈ Finset.Ioc 0 (min (U * V) N),
+      ‖∑ b ∈ Finset.Ioc 0 (N / a), w (a * b)‖ ≤ B a) :
+    ‖weightedSum (Finset.Ioc 0 N) w (typeICoefficient U V * ζ)‖ ≤
+      Real.log N * ∑ a ∈ Finset.Ioc 0 (min (U * V) N), B a := by
+…</pre><p class="refs">Mentions: <a href="VaughanWeighted.lean.html#L12">OAI.Problem337.Vaughan.weightedSum</a>, <a href="VaughanIdentity.lean.html#L117">OAI.Problem337.Vaughan.typeICoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

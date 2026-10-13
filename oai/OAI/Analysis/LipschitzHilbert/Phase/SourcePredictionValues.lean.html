@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/SourcePredictionValues.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/SourcePredictionValues.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>SourcePredictionValues.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>SourcePredictionValues.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/SourcePredictionValues.lean#L1">source</a></p><div class="doc"><p>The source node ratio and its snapshot graph predictor, with the original
+child amplitudes and masses kept explicit.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.LipschitzHilbert.sourcePredictionValue</code> <small>line 17</small><div class="doc"><p>The exact source prediction in mass-normalized child variables.</p></div><pre>def sourcePredictionValue (p μ n : ℝ) (c : ι → ℝ)
+    (A : ι → EuclideanSpace ℂ κ) (lam : ι → ℂ) : ℝ :=
+…</pre></li><li id=L23><b>def</b> <code>OAI.LipschitzHilbert.sourceSnapshotPrediction</code> <small>line 23</small><div class="doc"><p>The same snapshot, with only its prescribed diagonal carriers moving.</p></div><pre>def sourceSnapshotPrediction (p μ n : ℝ) (c : ι → ℝ)
+    (A : ι → EuclideanSpace ℂ κ) (lam : ι → ℂ) (frequency : ι → κ → ℝ) (b : ℝ) : ℝ :=
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.LipschitzHilbert.source_prediction_numerator_identity</code> <small>line 29</small></li><li id=L39><b>theorem</b> <code>OAI.LipschitzHilbert.source_snapshot_graph_identity</code> <small>line 39</small><div class="doc"><p>The graph averaging theorem applies to exactly the source snapshot.</p></div><pre>theorem source_snapshot_graph_identity (p D n : ℝ) (c : ι → ℝ)
+    (A : ι → EuclideanSpace ℂ κ) (lam : ι → ℂ) (frequency : ι → κ → ℝ) (b : ℝ) :
+    sourceSnapshotPrediction p (phaseMu D p) n c A lam frequency b =
+      graphPredictionValue frequency (fun i =&gt; c i/n)
+        (fun i =&gt; (c i)^(phaseMu D p-1) • A i) lam D p b := by
+…</pre><p class="refs">Mentions: <a href="SourcePredictionValues.lean.html#L23">OAI.LipschitzHilbert.sourceSnapshotPrediction</a>, <a href="GraphPredictionFactor.lean.html#L32">OAI.LipschitzHilbert.graphPredictionValue</a></p></li><li id=L50><b>theorem</b> <code>OAI.LipschitzHilbert.source_snapshot_graph_coefficient_sum</code> <small>line 50</small><div class="doc"><p>The coefficient sum used by the line-grid theorem follows from the
+original amplitudes and actual child fractions, including after shrinkage.</p></div><pre>theorem source_snapshot_graph_coefficient_sum {p D n ε C K u : ℝ}
+    (hn : 0 &lt; n) (hε : 0 ≤ ε) (hC : 0 ≤ C) (hK : 0 ≤ K)
+    (hsize : C*n^(phaseMu D p) ≤ K)
+    (c : ι → ℝ) (hc : ∀ i, 0 &lt; c i)
+    (A : ι → EuclideanSpace ℂ κ) (lam : ι → ℂ)
+    (hA : ∀ i, ‖A i‖ ≤ C*c i) (hlam : ∀ i, ‖lam i‖ ≤ 1)
+    (hmass : ∑ i, c i/n ≤ u) :
+    (∑ i, ‖predictionCoefficients (fun i =&gt; c i/n)
+      (fun i =&gt; (c i)^(phaseMu D p-1) • radialShrink (2*ε*c i) (A i)) lam D p i‖) ≤ K*u := by
+…</pre><p class="refs">Mentions: <a href="GraphPredictionFactor.lean.html#L28">OAI.LipschitzHilbert.predictionCoefficients</a>, <a href="../Estimates/RadialShrink.lean.html#L25">OAI.LipschitzHilbert.radialShrink</a></p></li><li id=L74><b>theorem</b> <code>OAI.LipschitzHilbert.source_balanced_values_blend</code> <small>line 74</small><div class="doc"><p>The shrunken source comparison in the value notation used for assembly.</p></div><pre>theorem source_balanced_values_blend
+    {n n&#x27; p μ ε K u C θ : ℝ} (hn : 0 &lt; n) (hn&#x27; : 0 &lt; n&#x27;)
+    (c c&#x27; : ι → ℝ) (hc : ∀ i, 0 &lt; c i) (hc&#x27; : ∀ i, 0 &lt; c&#x27; i)
+    (hp : 1 ≤ p) (hε : 0 ≤ ε) (hK : 0 ≤ K) (hpower : n^μ ≤ K)
+    (hu : 1/2 ≤ u) (hsum : ∑ i, c i/n ≤ 1)
+    (frequency : ι → κ → ℝ) (b : ℝ)
+    (A A&#x27; : ι → EuclideanSpace ℂ κ) (lam lam&#x27; : ι → ℂ)
+    (hlam : ∀ i, ‖lam i‖ ≤ 1)
+    (hscaled : ∀ i,
+      ‖massPowerScale n&#x27; (c&#x27; i) (-(1/p)) (μ-1+1/p) • A&#x27; i-
+        diagonalModulation (frequency i)
+          (massPowerScale n (c i) (-(1/p)) (μ-1+1/p) • A i) b‖ ≤
+…</pre><p class="refs">Mentions: <a href="SourcePredictionMotion.lean.html#L14">OAI.LipschitzHilbert.massPowerScale</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

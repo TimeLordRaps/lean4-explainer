@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/FiniteCoverAssembly.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/FiniteCoverAssembly.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>FiniteCoverAssembly.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>FiniteCoverAssembly.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/FiniteCoverAssembly.lean#L1">source</a></p><div class="doc"><p>Finite selected/missed covers and measurable envelopes for their costs.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.SLEExactGauge.wholeSausageMeasure</code> <small>line 15</small><div class="doc"><p>The one-mesh charge is a measure, so disjoint candidates can be summed.</p></div><pre>def wholeSausageMeasure (κ : ℝ) (γ : ℝ≥0 → ℂ) (v : ℝ) : Measure ℂ :=
+…</pre></li><li id=L18><b>lemma</b> <code>OAI.SLEExactGauge.wholeSausageMeasure_apply</code> <small>line 18</small></li><li id=L25><b>theorem</b> <code>OAI.SLEExactGauge.hausdorff_le_liminf_finite_cover_envelope</code> <small>line 25</small><div class="doc"><p>Pointwise existence of finite covers suffices. Their selection need not be
+measurable when a measurable envelope controls their costs.</p></div><pre>theorem hausdorff_le_liminf_finite_cover_envelope
+    (h : ℝ → ℝ) (E : Set ℂ) (δ : ℕ → ℝ≥0∞)
+    (hδ : Tendsto δ atTop (𝓝 0)) (Z : ℕ → ℝ≥0∞)
+    (hcovers : ∀ n, ∃ (N : ℕ) (U : Fin N → Set ℂ),
+      E ⊆ ⋃ j, U j ∧ (∀ j, ediam (U j) ≤ δ n) ∧
+        ∑ j, extendedGauge h (ediam (U j)) ≤ Z n) :
+    hausdorffGauge h E ≤ liminf Z atTop := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L62">OAI.SLEExactGauge.extendedGauge</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L65">OAI.SLEExactGauge.hausdorffGauge</a></p></li><li id=L38><b>theorem</b> <code>OAI.SLEExactGauge.expected_hausdorff_le_of_finite_cover_envelopes</code> <small>line 38</small><div class="doc"><p>Fatou applied to the cost envelope, rather than to a chosen random cover.</p></div><pre>theorem expected_hausdorff_le_of_finite_cover_envelopes
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (h : ℝ → ℝ) (E : Ω → Set ℂ) (δ : ℕ → ℝ≥0∞)
+    (hδ : Tendsto δ atTop (𝓝 0)) (Z : ℕ → Ω → ℝ≥0∞)
+    (hZ : ∀ n, AEMeasurable (Z n) P)
+    (hcovers : ∀ᵐ ω ∂P, ∀ n, ∃ (N : ℕ) (U : Fin N → Set ℂ),
+      E ω ⊆ ⋃ j, U j ∧ (∀ j, ediam (U j) ≤ δ n) ∧
+        ∑ j, extendedGauge h (ediam (U j)) ≤ Z n ω)
+    (C : ℝ≥0∞) (hcost : liminf (fun n =&gt; ∫⁻ ω, Z n ω ∂P) atTop ≤ C) :
+    (∫⁻ ω, hausdorffGauge h (E ω) ∂P) ≤ C := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L62">OAI.SLEExactGauge.extendedGauge</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L65">OAI.SLEExactGauge.hausdorffGauge</a></p></li><li id=L59><b>theorem</b> <code>OAI.SLEExactGauge.exists_finite_selected_missed_cover</code> <small>line 59</small><div class="doc"><p>Disjoint candidate disks and all missed cells give a genuine finite cover
+with cost paid by one spatial measure and the missed-cell sum.</p></div><pre>theorem exists_finite_selected_missed_cover
+    {ι η : Type*} (I : Finset ι) (M : Finset η)
+    (x : ι → ℂ) (r : ι → ℝ) (Q : η → Set ℂ)
+    (E A : Set ℂ) (ν : Measure ℂ) (h : ℝ → ℝ)
+    (R : ℝ) (hr : ∀ i ∈ I, r i ≤ R) (δ C : ℝ≥0∞)
+    (hA : ∀ i ∈ I, closedBall (x i) (r i) ⊆ A)
+    (hcost : ∀ i ∈ I,
+      extendedGauge h (ediam (closedBall (x i) (4 * r i))) ≤
+        C * ν (closedBall (x i) (r i)))
+    (hdisk : ∀ i ∈ I, ediam (closedBall (x i) (4 * r i)) ≤ δ)
+    (hmiss : ∀ k ∈ M, ediam (Q k) ≤ δ)
+    (hcell : ∀ z ∈ E, (∃ i ∈ I, z ∈ closedBall (x i) (r i)) ∨
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L62">OAI.SLEExactGauge.extendedGauge</a></p></li><li id=L111><b>theorem</b> <code>OAI.SLEExactGauge.expected_hausdorff_le_of_finite_sausage_covers</code> <small>line 111</small><div class="doc"><p>The finite cover can be chosen independently at every sample and scale.
+Only its common sausage charge and missed-cell envelope need measurability.</p></div><pre>theorem expected_hausdorff_le_of_finite_sausage_covers
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) [IsProbabilityMeasure P]
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (γ : Ω → ℝ≥0 → ℂ) (hSLE : IsOrdinaryChordalSLE κ γ P)
+    (h : ℝ → ℝ) (E : Ω → Set ℂ) (δ : ℕ → ℝ≥0∞)
+    (hδ : Tendsto δ atTop (𝓝 0))
+    (v : ℕ → ℝ) (hv : ∀ n, 0 &lt; v n) (R : ℝ) (C : ℝ≥0)
+    (error : ℕ → Ω → ℝ≥0∞) (herr : ∀ n, AEMeasurable (error n) P)
+    (herrlim : Tendsto (fun n =&gt; ∫⁻ ω, error n ω ∂P) atTop (𝓝 0))
+    (hcovers : ∀ᵐ ω ∂P, ∀ n, ∃ (N : ℕ) (U : Fin N → Set ℂ),
+      E ω ⊆ ⋃ j, U j ∧ (∀ j, ediam (U j) ≤ δ n) ∧
+        ∑ j, extendedGauge h (ediam (U j)) ≤
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L44">OAI.SLEExactGauge.IsOrdinaryChordalSLE</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L62">OAI.SLEExactGauge.extendedGauge</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

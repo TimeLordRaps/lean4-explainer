@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourcePhysicalSingleScale.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourcePhysicalSingleScale.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourcePhysicalSingleScale.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourcePhysicalSingleScale.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourcePhysicalSingleScale.lean#L1">source</a></p><div class="doc"><p>A single length of original physical packets has a uniform positive
+summation bound. Selector overlap is counted before convolution. The
+analyzing coefficients remain those of the original profiles, while the
+synthesis profiles may be any profiles with the same seminorm bound.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physicalMultiplierCoefficient_shear</code> <small>line 21</small><div class="doc"><p>The shear changes coordinates, not the original analyzing coefficient.</p></div><pre>theorem physicalMultiplierCoefficient_shear (t : ℝ)
+    (b : ∀ j, P.labels j → κ → ℝ → ℂ)
+    (v : ℝ×ℝ → ℝ) (g : ℝ×ℝ → EuclideanSpace ℂ κ)
+    (j : Fin N) (l : P.labels j) (u : Item j l) :
+    analyzingCoefficient volume (fun _ : Item j l =&gt; P.length j*P.width)
+      (fun u k z =&gt; b j l k (v (slopeShear t z))*P.raw 0 j l u k z.2 z.1)
+      (fun z =&gt; g (slopeShear t z)) u =
+        P.physicalMultiplierCoefficient t b v g j l u := by
+…</pre><p class="refs">Mentions: <a href="../Packets/AnalyzingCoefficients.lean.html#L16">OAI.LipschitzHilbert.analyzingCoefficient</a>, <a href="../Estimates/SlicedIntegral.lean.html#L42">OAI.LipschitzHilbert.slopeShear</a></p></li><li id=L46><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physical_single_scale_coefficients</code> <small>line 46</small><div class="doc"><p>The positive coefficient sum has no factor for the total number of
+labels. Only the selector's local multiplicity enters.</p></div><pre>theorem physical_single_scale_coefficients (horder : 6 ≤ P.order)
+    (j : Fin N) (t d radius M : ℝ) (K H : ℕ)
+    (hd : 0 &lt; d) (hM : 0 ≤ M) (hK : radius ≤ K)
+    (hlocal : SourceSlopeLabels.LocalMultiplicity Finset.univ
+      (fun l : P.labels j =&gt; t+P.rowSlope j l) d H)
+    (b : ∀ j, P.labels j → κ → ℝ → ℂ)
+    (hb : ∀ l k, Measurable (b j l k))
+    (hbM : ∀ l k s, ‖b j l k s‖ ≤ M)
+    (hsupport : ∀ l k s, b j l k s ≠ 0 →
+      |s-(t+P.rowSlope j l)| ≤ radius*d)
+    (v : ℝ×ℝ → ℝ) (hv : Measurable v)
+    (g : ℝ×ℝ → EuclideanSpace ℂ κ) (hg : Measurable g) (hg1 : ∀ z, ‖g z‖ ≤ 1)
+…</pre><p class="refs">Mentions: <a href="SourceSlopeLabels.lean.html#L28">OAI.LipschitzHilbert.SourceSlopeLabels.LocalMultiplicity</a></p></li><li id=L83><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physical_single_scale_raw_synthesis</code> <small>line 83</small><div class="doc"><p>Any selected packets at the given length, with alternate synthesis
+and any of the three covariant jets, obey the same positive bound.</p></div><pre>theorem physical_single_scale_raw_synthesis (horder : 6 ≤ P.order)
+    (i : Fin 3) (j : Fin N) (t d radius M : ℝ) (K H : ℕ)
+    (hd : 0 &lt; d) (hM : 0 ≤ M) (hK : radius ≤ K)
+    (hlocal : SourceSlopeLabels.LocalMultiplicity Finset.univ
+      (fun l : P.labels j =&gt; t+P.rowSlope j l) d H)
+    (b : ∀ j, P.labels j → κ → ℝ → ℂ)
+    (hb : ∀ l k, Measurable (b j l k))
+    (hbM : ∀ l k s, ‖b j l k s‖ ≤ M)
+    (hsupport : ∀ l k s, b j l k s ≠ 0 →
+      |s-(t+P.rowSlope j l)| ≤ radius*d)
+    (v : ℝ×ℝ → ℝ) (hv : Measurable v)
+    (g : ℝ×ℝ → EuclideanSpace ℂ κ) (hg : Measurable g) (hg1 : ∀ z, ‖g z‖ ≤ 1)
+…</pre><p class="refs">Mentions: <a href="SourceSlopeLabels.lean.html#L28">OAI.LipschitzHilbert.SourceSlopeLabels.LocalMultiplicity</a></p></li><li id=L126><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physical_single_scale_cross_packets</code> <small>line 126</small><div class="doc"><p>The same bound in the original physical coordinates, restricted to
+any finite packet set at one length.</p></div><pre>theorem physical_single_scale_cross_packets (horder : 6 ≤ P.order)
+    (i : Fin 3) (j : Fin N) (t d radius M : ℝ) (K H : ℕ)
+    (hd : 0 &lt; d) (hM : 0 ≤ M) (hK : radius ≤ K)
+    (hlocal : SourceSlopeLabels.LocalMultiplicity Finset.univ
+      (fun l : P.labels j =&gt; t+P.rowSlope j l) d H)
+    (b : ∀ j, P.labels j → κ → ℝ → ℂ)
+    (hb : ∀ l k, Measurable (b j l k))
+    (hbM : ∀ l k s, ‖b j l k s‖ ≤ M)
+    (hsupport : ∀ l k s, b j l k s ≠ 0 →
+      |s-(t+P.rowSlope j l)| ≤ radius*d)
+    (v : ℝ×ℝ → ℝ) (hv : Measurable v)
+    (g : ℝ×ℝ → EuclideanSpace ℂ κ) (hg : Measurable g) (hg1 : ∀ z, ‖g z‖ ≤ 1)
+…</pre><p class="refs">Mentions: <a href="SourceSlopeLabels.lean.html#L28">OAI.LipschitzHilbert.SourceSlopeLabels.LocalMultiplicity</a></p></li><li id=L161><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physical_single_scale_masked_packets</code> <small>line 161</small><div class="doc"><p>Multiplying each synthesis packet by its actual top mask does not
+enlarge the single-scale bound.</p></div><pre>theorem physical_single_scale_masked_packets (horder : 6 ≤ P.order)
+    (j : Fin N) (t d radius M : ℝ) (K H : ℕ)
+    (hd : 0 &lt; d) (hM : 0 ≤ M) (hK : radius ≤ K)
+    (hlocal : SourceSlopeLabels.LocalMultiplicity Finset.univ
+      (fun l : P.labels j =&gt; t+P.rowSlope j l) d H)
+    (b : ∀ j, P.labels j → κ → ℝ → ℂ)
+    (hb : ∀ l k, Measurable (b j l k))
+    (hbM : ∀ l k s, ‖b j l k s‖ ≤ M)
+    (hsupport : ∀ l k s, b j l k s ≠ 0 →
+      |s-(t+P.rowSlope j l)| ≤ radius*d)
+    (v : ℝ×ℝ → ℝ) (hv : Measurable v)
+    (g : ℝ×ℝ → EuclideanSpace ℂ κ) (hg : Measurable g) (hg1 : ∀ z, ‖g z‖ ≤ 1)
+…</pre><p class="refs">Mentions: <a href="SourceSlopeLabels.lean.html#L28">OAI.LipschitzHilbert.SourceSlopeLabels.LocalMultiplicity</a></p></li><li id=L195><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.eventually_single_scale_budget</code> <small>line 195</small><div class="doc"><p>The fixed selector constants cost only one additional polynomial
+power, uniformly before choosing the packet family.</p></div><pre>theorem eventually_single_scale_budget (q M : ℝ) (hM : 0 ≤ M) (K H : ℕ) :
+    ∀ᶠ L : ℝ in atTop, ∀ C : ℝ, 0 ≤ C → C ≤ L^q →
+      C*((64*(4*Real.pi)^2)*((C*M*((2*K+1)*H:ℕ))*Real.pi^2)) ≤ L^(2*q+1) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

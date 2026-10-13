@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/MatroidSecretary/Residual/ResidualFamilyContract.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/MatroidSecretary/Residual/ResidualFamilyContract.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">MatroidSecretary</a> / <a href="index.html">Residual</a> / <span>ResidualFamilyContract.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">MatroidSecretary</a>/<a href="index.html">Residual</a>/<span>ResidualFamilyContract.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/MatroidSecretary/Residual/ResidualFamilyContract.lean#L1">source</a></p><div class="doc"><h3>Every witness residual belongs to one family fixed before the focal masks</h3><p>This strengthens the existential residual used in the inherited payoff proof to
+cover every system of witnesses, as required by <code>lem:pattern-family</code> in the pinned
+manuscript. The family is defined from the reference incoming path and lower-group
+competition, not from the focal density, guard, or test bits.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.MatroidProphet.nominalResidualSet_mem_labeledFamily</code> <small>line 22</small><div class="doc"><p>All witness choices with the stated total budget are captured. No canonical
+choice of basis, and no independence of the selected residual, is assumed.</p></div><pre>theorem nominalResidualSet_mem_labeledFamily
+    (M : Matroid α) (hE : M.E = Set.univ) (κ : ℕ) (hκ : 0 &lt; κ)
+    (D C T : ℕ → Set α) (h : ℕ) (U : Finset α)
+    (hDU : D h ⊆ (U : Set α)) (hnonloop : ∀ e ∈ U, e ∉ M.closure ∅)
+    (ε : Fin 2) (W : ParityWindow (activation h) ε → Set α)
+    (hW : ∀ b, W b ⊆ nominalLayerSet M hE κ D C h (U : Set α) ε b)
+    (hsum : (∑ b, (W b).ncard) ≤ U.card / κ) :
+    (Set.toFinite (nominalResidualSet M hE κ D C T h (U : Set α) ε W)).toFinset ∈
+      labeledResidualFamily M U κ (guardedPath M hE κ D C h) (activation h) ε
+        (fun b =&gt; lowerCompetition M hE κ D C T b.val.val h) := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Density/Guarded.lean.html#L44">OAI.MatroidProphet.activation</a>, <a href="../../MatroidProphet/Residual/Statistics.lean.html#L11">OAI.MatroidProphet.nominalLayerSet</a>, <a href="../../MatroidProphet/Residual/LabeledFamily.lean.html#L47">OAI.MatroidProphet.nominalResidualSet</a>, <a href="../../MatroidProphet/Residual/LabeledFamily.lean.html#L22">OAI.MatroidProphet.labeledResidualFamily</a>, <a href="../../MatroidProphet/Density/Guarded.lean.html#L46">OAI.MatroidProphet.guardedPath</a>, <a href="../../MatroidProphet/Reverse/Paths.lean.html#L156">OAI.MatroidProphet.lowerCompetition</a></p></li><li id=L62><b>theorem</b> <code>OAI.MatroidProphet.MainAlgorithm.focalResidualFamily_captures_all</code> <small>line 62</small><div class="doc"><p>Holding the outside coordinates fixed, the same family captures every focal
+mask outcome and every small-budget witness system on that outcome.</p></div><pre>theorem focalResidualFamily_captures_all
+    (M : Matroid (Fin n)) (hE : M.E = Set.univ) (κ : ℕ) (hκ : 0 &lt; κ)
+    (d : MainMasks n) (s : Fin n → Option ℤ) (i : ℤ) (ε : Fin 2)
+    (A B C : Finset (Fin n))
+    (hA : A ⊆ trueGroup M d s i) (hB : B ⊆ trueGroup M d s i)
+    (hC : C ⊆ trueGroup M d s i) (hne : A.Nonempty) :
+    let U := trueGroup M d s i
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L10">OAI.MatroidProphet.MainMasks</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L12">OAI.MatroidProphet.MainAlgorithm.trueGroup</a></p></li><li id=L99><b>theorem</b> <code>OAI.MatroidProphet.MainAlgorithm.uniform_residual_family</code> <small>line 99</small><div class="doc"><p>The complete uniform-family conclusion of <code>lem:pattern-family</code>.
+The existential family precedes all three focal masks, including the test mask.
+The witness hypotheses are weaker than the manuscript's rank-witness conditions:
+only layer membership and the total cardinality budget are needed for capture.</p></div><pre>theorem uniform_residual_family
+    (M : Matroid (Fin n)) (hE : M.E = Set.univ) (κ : ℕ) (hκ : 2 ≤ κ)
+    (d : MainMasks n) (s : Fin n → Option ℤ) (i : ℤ)
+    (hsize : κ ≤ (trueGroup M d s i).card) (ε : Fin 2) :
+    ∃ family : Finset (Finset (Fin n)),
+      (∀ R ∈ family, R ⊆ trueGroup M d s i) ∧
+      (family.card : ℝ) ≤ Real.exp
+        (1000 * Real.log (κ : ℝ) / (κ : ℝ) * (trueGroup M d s i).card) ∧
+      ∀ (A B C : Finset (Fin n)),
+        A ⊆ trueGroup M d s i → B ⊆ trueGroup M d s i →
+        C ⊆ trueGroup M d s i → A.Nonempty →
+        let U := trueGroup M d s i
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L10">OAI.MatroidProphet.MainMasks</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L12">OAI.MatroidProphet.MainAlgorithm.trueGroup</a></p></li><li id=L137><b>theorem</b> <code>OAI.MatroidProphet.MainAlgorithm.focalReference_focalMasks_invariant</code> <small>line 137</small><div class="doc"><p>Replacing focal coordinates does not change the reference masks. This makes
+mask-independence explicit rather than relying only on an existential family.</p></div><pre>theorem focalReference_focalMasks_invariant
+    (M : Matroid (Fin n)) (d : MainMasks n) (s : Fin n → Option ℤ) (i : ℤ)
+    (A B C : Finset (Fin n))
+    (hA : A ⊆ trueGroup M d s i) (hB : B ⊆ trueGroup M d s i)
+    (hC : C ⊆ trueGroup M d s i) :
+    focalReference M (focalMasks d (trueGroup M d s i) A B C) s i =
+      focalReference M d s i := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L10">OAI.MatroidProphet.MainMasks</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L12">OAI.MatroidProphet.MainAlgorithm.trueGroup</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L115">OAI.MatroidProphet.MainAlgorithm.focalReference</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L63">OAI.MatroidProphet.MainAlgorithm.focalMasks</a></p></li><li id=L155><b>theorem</b> <code>OAI.MatroidProphet.MainAlgorithm.focalIndex_focalMasks_invariant</code> <small>line 155</small></li><li id=L166><b>theorem</b> <code>OAI.MatroidProphet.MainAlgorithm.focalResidualFamily_focalMasks_invariant</code> <small>line 166</small><div class="doc"><p>The actual family is unchanged by all focal density, guard, and test bits,
+including outcomes in which the focal group is not listed.</p></div><pre>theorem focalResidualFamily_focalMasks_invariant
+    (M : Matroid (Fin n)) (hE : M.E = Set.univ) (κ : ℕ)
+    (d : MainMasks n) (s : Fin n → Option ℤ) (i : ℤ) (ε : Fin 2)
+    (A B C : Finset (Fin n))
+    (hA : A ⊆ trueGroup M d s i) (hB : B ⊆ trueGroup M d s i)
+    (hC : C ⊆ trueGroup M d s i) :
+    focalResidualFamily M hE κ (focalMasks d (trueGroup M d s i) A B C) s i ε =
+      focalResidualFamily M hE κ d s i ε := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L10">OAI.MatroidProphet.MainMasks</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L12">OAI.MatroidProphet.MainAlgorithm.trueGroup</a>, <a href="../../MatroidProphet/FocalTransfer.lean.html#L24">OAI.MatroidProphet.MainAlgorithm.focalResidualFamily</a>, <a href="../../MatroidProphet/GroupConditioning.lean.html#L63">OAI.MatroidProphet.MainAlgorithm.focalMasks</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

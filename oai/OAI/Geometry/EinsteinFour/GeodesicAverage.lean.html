@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/EinsteinFour/GeodesicAverage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/EinsteinFour/GeodesicAverage.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">EinsteinFour</a> / <span>GeodesicAverage.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">EinsteinFour</a>/<span>GeodesicAverage.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/EinsteinFour/GeodesicAverage.lean#L1">source</a></p><div class="doc"><p>The first-mode averaging estimate in the actual space of square-integrable
+fields. Stationarity is an integral over the space of initial geodesics; no
+pointwise constancy along a geodesic is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.PositiveEinsteinFour.Averages.continuous_toL2_norm_sq</code> <small>line 25</small><div class="doc"><p>The Hilbert norm used for geodesic averaging is exactly the mean square
+of the continuous field, with respect to the chosen finite measure.</p></div><pre>theorem continuous_toL2_norm_sq (f : C(Ω, E)) :
+    ‖ContinuousMap.toLp 2 μ ℝ f‖ ^ 2 = ∫ x, ‖f x‖ ^ 2 ∂μ := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.PositiveEinsteinFour.Averages.continuous_toL2_average_norm_sq</code> <small>line 38</small><div class="doc"><p>Averaging a field first in time and then in space gives the same squared
+norm as the Bochner average in the actual <code>L²</code> space.</p></div><pre>theorem continuous_toL2_average_norm_sq {F : ℝ → C(Ω, E)}
+    (hF : Integrable F sineMeasure) :
+    ‖∫ u, ContinuousMap.toLp 2 μ ℝ (F u) ∂sineMeasure‖ ^ 2 =
+      ∫ x, ‖∫ u, F u x ∂sineMeasure‖ ^ 2 ∂μ := by
+…</pre><p class="refs">Mentions: <a href="SineAverage.lean.html#L79">OAI.PositiveEinsteinFour.Averages.sineMeasure</a></p></li><li id=L53><b>theorem</b> <code>OAI.PositiveEinsteinFour.Averages.geodesic_mean_square_lower</code> <small>line 53</small><div class="doc"><p>The geodesic first-mode bound, obtained from stationarity of mean-square
+curvature and its mean-square derivative bound. The hypotheses are ordinary
+field identities and derivatives; the conclusion is the iterated integral
+needed in the radial determinant comparison.</p></div><pre>theorem geodesic_mean_square_lower {F G : ℝ → C(Ω, E)} {q t : ℝ}
+    (hq : 0 ≤ q)
+    (hderiv : ∀ r, HasDerivAt F (G r) r)
+    (hstationary : ∀ r, (∫ x, ‖F r x‖ ^ 2 ∂μ) = q)
+    (henergy : ∀ r, (∫ x, ‖G r x‖ ^ 2 ∂μ) ≤ (3 / 2) * q) :
+    q * (1 - (t / Real.pi) ^ 2 / 2) ≤
+      ∫ x, ‖∫ u, F (t * u) x ∂sineMeasure‖ ^ 2 ∂μ := by
+…</pre><p class="refs">Mentions: <a href="SineAverage.lean.html#L79">OAI.PositiveEinsteinFour.Averages.sineMeasure</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

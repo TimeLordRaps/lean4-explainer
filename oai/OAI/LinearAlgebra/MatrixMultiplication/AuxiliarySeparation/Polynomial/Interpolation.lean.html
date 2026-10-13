@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Polynomial/Interpolation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Polynomial/Interpolation.lean.html"><link rel="stylesheet" href="../../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../../index.html">All corpora</a> | <a href="../../../../../index.html">Index</a> | <a href="../../../../../glossary.html">Glossary</a> | <a href="../../../../../find.html">Find</a> | <a href="../../../../../implications.html">Implications</a> | <a href="../../../../../annotate.html">Explanation guide</a> | <a href="../../../../../learning-path.html">Learning path</a> | <a href="../../../../../trust.html">Trust</a> | <a href="../../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../../index.html">Corpus home</a> / <a href="../../../../index.html">OAI</a> / <a href="../../../index.html">LinearAlgebra</a> / <a href="../../index.html">MatrixMultiplication</a> / <a href="../index.html">AuxiliarySeparation</a> / <a href="index.html">Polynomial</a> / <span>Interpolation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../../index.html">OAI</a>/<a href="../../../index.html">LinearAlgebra</a>/<a href="../../index.html">MatrixMultiplication</a>/<a href="../index.html">AuxiliarySeparation</a>/<a href="index.html">Polynomial</a>/<span>Interpolation.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/LinearAlgebra/MatrixMultiplication/AuxiliarySeparation/Polynomial/Interpolation.lean#L1">source</a></p><div class="doc"><h3>Exact interpolation away from zero</h3><p>The coefficient-extraction theorem already proved for matrix multiplication is
+used here with the nonzero nodes <code>1, ..., D + 1</code>.  In particular a polynomial
+degeneration can be recovered by a finite sum of its ordinary restrictions at
+nonzero parameters, with the leading power divided out at each parameter.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.interpolationNode</code> <small>line 23</small><div class="doc"><p>An explicit set of <code>D + 1</code> nonzero complex interpolation parameters.</p></div><pre>def interpolationNode (D : ℕ) (i : Fin (D + 1)) : ℂ := (i.val + 1 : ℕ)</pre></li><li id=L25><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.interpolationNode_injective</code> <small>line 25</small></li><li id=L31><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.interpolationNode_ne_zero</code> <small>line 31</small></li><li id=L37><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.constantInterpolationWeight</code> <small>line 37</small><div class="doc"><p>The constant-coefficient functional expressed in the Lagrange basis.</p></div><pre>def constantInterpolationWeight {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (nodes : ι → ℂ) (i : ι) : ℂ :=
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.constant_eq_sum_eval</code> <small>line 42</small><div class="doc"><p>Exact constant recovery; this specializes the existing coefficient theorem.</p></div><pre>theorem constant_eq_sum_eval {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (nodes : ι → ℂ) (hinj : Function.Injective nodes) (p : Polynomial ℂ)
+    (hdegree : p.degree &lt; Fintype.card ι) :
+    p.coeff 0 = ∑ i, constantInterpolationWeight nodes i * p.eval (nodes i) := by
+…</pre><p class="refs">Mentions: <a href="Interpolation.lean.html#L37">OAI.MatrixMultiplication.AuxiliarySeparation.constantInterpolationWeight</a></p></li><li id=L50><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.constant_eq_sum_nonzero_eval</code> <small>line 50</small><div class="doc"><p>A degree-<code>D</code> polynomial is recovered at zero using only nonzero parameters.</p></div><pre>theorem constant_eq_sum_nonzero_eval (D : ℕ) (p : Polynomial ℂ)
+    (hdegree : p.degree ≤ D) :
+    p.coeff 0 = ∑ i, constantInterpolationWeight (interpolationNode D) i *
+      p.eval (interpolationNode D i) := by
+…</pre><p class="refs">Mentions: <a href="Interpolation.lean.html#L37">OAI.MatrixMultiplication.AuxiliarySeparation.constantInterpolationWeight</a>, <a href="Interpolation.lean.html#L23">OAI.MatrixMultiplication.AuxiliarySeparation.interpolationNode</a></p></li><li id=L60><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.leading_eq_sum_normalized_eval</code> <small>line 60</small><div class="doc"><p>Removing a leading power before interpolation only requires evaluations at
+nonzero nodes.  The degree bound is on the normalized polynomial.</p></div><pre>theorem leading_eq_sum_normalized_eval {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (nodes : ι → ℂ) (hinj : Function.Injective nodes)
+    (hnonzero : ∀ i, nodes i ≠ 0) (p q : Polynomial ℂ) (d : ℕ)
+    (hp : p = Polynomial.X ^ d * q) (hdegree : q.degree &lt; Fintype.card ι) :
+    p.coeff d = ∑ i, constantInterpolationWeight nodes i *
+      (nodes i ^ d)⁻¹ * p.eval (nodes i) := by
+…</pre><p class="refs">Mentions: <a href="Interpolation.lean.html#L37">OAI.MatrixMultiplication.AuxiliarySeparation.constantInterpolationWeight</a></p></li><li id=L83><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.leading_eq_sum_nonzero_eval</code> <small>line 83</small><div class="doc"><p>A leading coefficient is a finite linear combination of normalized
+evaluations, assuming all lower coefficients vanish.</p></div><pre>theorem leading_eq_sum_nonzero_eval (D d : ℕ) (p : Polynomial ℂ)
+    (hvanish : ∀ j &lt; d, p.coeff j = 0) (hdegree : p.degree ≤ D) :
+    p.coeff d = ∑ i, constantInterpolationWeight (interpolationNode D) i *
+      (interpolationNode D i ^ d)⁻¹ * p.eval (interpolationNode D i) := by
+…</pre><p class="refs">Mentions: <a href="Interpolation.lean.html#L37">OAI.MatrixMultiplication.AuxiliarySeparation.constantInterpolationWeight</a>, <a href="Interpolation.lean.html#L23">OAI.MatrixMultiplication.AuxiliarySeparation.interpolationNode</a></p></li><li id=L105><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.restrictionDegeneration_eval</code> <small>line 105</small><div class="doc"><p>Evaluating the polynomial restriction evaluates its three local maps.</p></div><pre>theorem restrictionDegeneration_eval
+    (L : Tensor.PolynomialRestrictionDegeneration T U k Lx Ly Lz)
+    (t : ℂ) (x&#x27; : X&#x27;) (y&#x27; : Y&#x27;) (z&#x27; : Z&#x27;) :
+    (L.basePolynomial x&#x27; y&#x27; z&#x27;).eval t =
+      Tensor.restrict (fun a x =&gt; (L.leftMap a x).eval t)
+        (fun b y =&gt; (L.middleMap b y).eval t)
+        (fun c z =&gt; (L.rightMap c z).eval t) T x&#x27; y&#x27; z&#x27; := by
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.restrictionDegeneration_degree</code> <small>line 117</small><div class="doc"><p>The degree of a polynomial restriction is bounded by the sum of the
+degrees of its three local maps.</p></div><pre>theorem restrictionDegeneration_degree
+    (L : Tensor.PolynomialRestrictionDegeneration T U k Lx Ly Lz)
+    (x&#x27; : X&#x27;) (y&#x27; : Y&#x27;) (z&#x27; : Z&#x27;) :
+    (L.basePolynomial x&#x27; y&#x27; z&#x27;).degree ≤ (Lx + Ly + Lz : ℕ) := by
+…</pre></li><li id=L139><b>def</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.restrictionDegeneration_approximation</code> <small>line 139</small><div class="doc"><p>The existing polynomial-approximation API applies to a polynomial
+restriction as soon as the source tensor has a rank bound.</p></div><pre>def restrictionDegeneration_approximation
+    (L : Tensor.PolynomialRestrictionDegeneration T U k Lx Ly Lz)
+    {r : ℕ} (hT : Tensor.RankAtMost T r) :
+    Tensor.PolynomialApproximation U r k (Lx + Ly + Lz) where
+…</pre></li><li id=L151><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.restrictionDegeneration_power_rankAtMost</code> <small>line 151</small><div class="doc"><p>Interpolation after tensor powering has a linear degree overhead, rather
+than raising the single-copy interpolation overhead to the tensor power.</p></div><pre>theorem restrictionDegeneration_power_rankAtMost
+    (L : Tensor.PolynomialRestrictionDegeneration T U k Lx Ly Lz)
+    {r : ℕ} (hT : Tensor.RankAtMost T r) (n : ℕ) :
+    Tensor.RankAtMost (Tensor.power U n) (((Lx + Ly + Lz) * n + 1) * r ^ n) :=
+…</pre></li><li id=L159><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.restrictionDegeneration_recovery</code> <small>line 159</small><div class="doc"><p>A polynomial degeneration yields an exact finite sum of ordinary
+restrictions at nonzero parameters.  There are <code>Lx + Ly + Lz + 1</code> terms.</p></div><pre>theorem restrictionDegeneration_recovery
+    (L : Tensor.PolynomialRestrictionDegeneration T U k Lx Ly Lz)
+    (x&#x27; : X&#x27;) (y&#x27; : Y&#x27;) (z&#x27; : Z&#x27;) :
+    U x&#x27; y&#x27; z&#x27; = ∑ i,
+      constantInterpolationWeight (interpolationNode (Lx + Ly + Lz)) i *
+      (interpolationNode (Lx + Ly + Lz) i ^ k)⁻¹ *
+      Tensor.restrict
+        (fun a x =&gt; (L.leftMap a x).eval (interpolationNode (Lx + Ly + Lz) i))
+        (fun b y =&gt; (L.middleMap b y).eval (interpolationNode (Lx + Ly + Lz) i))
+        (fun c z =&gt; (L.rightMap c z).eval (interpolationNode (Lx + Ly + Lz) i))
+        T x&#x27; y&#x27; z&#x27; := by
+…</pre><p class="refs">Mentions: <a href="Interpolation.lean.html#L37">OAI.MatrixMultiplication.AuxiliarySeparation.constantInterpolationWeight</a>, <a href="Interpolation.lean.html#L23">OAI.MatrixMultiplication.AuxiliarySeparation.interpolationNode</a></p></li><li id=L179><b>theorem</b> <code>OAI.MatrixMultiplication.AuxiliarySeparation.restrictionDegeneration_rankAtMost</code> <small>line 179</small><div class="doc"><p>Finite interpolation converts a polynomial degeneration into an exact
+rank bound with its explicit number of evaluation parameters.</p></div><pre>theorem restrictionDegeneration_rankAtMost
+    (L : Tensor.PolynomialRestrictionDegeneration T U k Lx Ly Lz)
+    {r : ℕ} (hT : Tensor.RankAtMost T r) :
+    Tensor.RankAtMost U ((Lx + Ly + Lz + 1) * r) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../../_assets/site.js"></script><script src="../../../../../_assets/lean2tex.js" defer></script><script src="../../../../../_assets/reader.js" defer></script></body></html>

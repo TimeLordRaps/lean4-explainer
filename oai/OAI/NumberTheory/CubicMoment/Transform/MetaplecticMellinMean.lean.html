@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/CubicMoment/Transform/MetaplecticMellinMean.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/CubicMoment/Transform/MetaplecticMellinMean.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">CubicMoment</a> / <a href="index.html">Transform</a> / <span>MetaplecticMellinMean.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">CubicMoment</a>/<a href="index.html">Transform</a>/<span>MetaplecticMellinMean.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/CubicMoment/Transform/MetaplecticMellinMean.lean#L1">source</a></p><div class="doc"><p>Absolute Fubini for the metaplectic height average. The integrable
+majorant is deduced from the published mean square and the actual smooth
+Mellin transform; no contour identity is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.CubicFirstMoment.integral_height_norm_le</code> <small>line 16</small><div class="doc"><p>A bound for the integral in the finite height variable is enough for
+absolute Fubini and a bound after integrating in the other variable.</p></div><pre>lemma integral_height_norm_le (K : ℝ × ℝ → ℂ) (hK : Continuous K)
+    {a b : ℝ} (hab : a ≤ b) (B : ℝ → ℝ) (hB : Integrable B)
+    (hbound : ∀ v : ℝ, (∫ t in a..b, ‖K (v,t)‖) ≤ B v) :
+    (∫ t in a..b, ‖∫ v : ℝ, K (v,t)‖) ≤ ∫ v : ℝ, B v := by
+…</pre></li><li id=L42><b>lemma</b> <code>OAI.CubicFirstMoment.mellin_linear_weight_integrable</code> <small>line 42</small></li><li id=L59><b>theorem</b> <code>OAI.CubicFirstMoment.metaplectic_mellin_height_mean</code> <small>line 59</small><div class="doc"><p>The actual shifted Mellin integral satisfies the required square-root
+height mean. This step uses only HB's mean square, continuation on the
+integration line, and the decay of the chosen smooth weight.</p></div><pre>theorem metaplectic_mellin_height_mean {F : Eisenstein → ℂ → ℂ}
+    (hF : MetaplecticContinuation F) (hHB : MetaplecticMeanSquare F)
+    {ε : ℝ} (hε : 0 &lt; ε) (hεsmall : ε &lt; 1/12)
+    (W : ℝ → ℂ) (hW : HasCompactSupport W)
+    (hpos : tsupport W ⊆ Ioi 0) (hsm : ContDiff ℝ ∞ W) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ r : Eisenstein, primary r → Squarefree r →
+      ∀ U : ℝ, 0 &lt; U → ∀ T : ℝ, 1 ≤ T →
+      (∫ t in -(2*T)..(2*T), ‖∫ v : ℝ,
+        mellin W ((1/2+ε:ℝ)+(v:ℂ)*Complex.I)*
+          (U:ℂ)^((1/2+ε:ℝ)+(v:ℂ)*Complex.I)*
+          F r ((1/2+ε:ℝ)+((v-t):ℂ)*Complex.I)‖)/T ≤
+        C*U^(1/2+ε)*(norm r)^(1/4+2*ε)*Real.sqrt T := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="MetaplecticHeight.lean.html#L97">OAI.CubicFirstMoment.MetaplecticContinuation</a>, <a href="MetaplecticHeight.lean.html#L106">OAI.CubicFirstMoment.MetaplecticMeanSquare</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L28">OAI.CubicFirstMoment.primary</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a></p></li><li id=L118><b>theorem</b> <code>OAI.CubicFirstMoment.metaplectic_mellin_pole_decay</code> <small>line 118</small><div class="doc"><p>The actual pole contribution has arbitrarily rapid height decay.
+Its level factor is the proved residue bound, with no divisor loss.</p></div><pre>theorem metaplectic_mellin_pole_decay (W : ℝ → ℂ) (hW : HasCompactSupport W)
+    (hpos : tsupport W ⊆ Ioi 0) (hsm : ContDiff ℝ ∞ W) (D : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ r : Eisenstein, primary r → ∀ U : ℝ, 0 &lt; U → ∀ t : ℝ,
+      ‖metaplecticResidue r*(U:ℂ)^((5/6:ℝ)+(t:ℂ)*Complex.I)*
+        mellin W ((5/6:ℝ)+(t:ℂ)*Complex.I)‖ ≤
+          C*U^(5/6:ℝ)*(norm r)^(-1/6:ℝ)/(1+|t|)^D := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L28">OAI.CubicFirstMoment.primary</a>, <a href="MetaplecticHeight.lean.html#L33">OAI.CubicFirstMoment.metaplecticResidue</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L24">OAI.CubicFirstMoment.norm</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

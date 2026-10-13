@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/DilutedSpin/MarkerHistory.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/DilutedSpin/MarkerHistory.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">DilutedSpin</a> / <span>MarkerHistory.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">DilutedSpin</a>/<span>MarkerHistory.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/DilutedSpin/MarkerHistory.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.weightedMatrixHistory_drop_available</code> <small>line 16</small><div class="doc"><p>If every requested new color has a different split from a protected
+marker than every available old leaf, the old choices vanish in the literal
+signed history. Fresh extensions retain this exclusion.</p></div><pre>theorem weightedMatrixHistory_drop_available (T : PrescribedTree n) (q : C → T.Leaf)
+    (V : (R : PrescribedTree n) → (C → R.Leaf) → (Sample Ω R → ℝ) → ℝ)
+    (m : Fin (n+1) → ℝ) (a : C) (cs : List C) (hcs : cs.Nodup) (ha : a ∉ cs)
+    (S : PrescribedTree n) (U : Finset ι) (loc : ι → S.Leaf) (pos : C → S.Leaf)
+    (hsep : ∀ c ∈ cs, ∀ i ∈ U,
+      splitDepth S (loc i) (pos a) ≠ splitDepth T (q c) (q a))
+    (f : Sample Ω S → ℝ) :
+    weightedMatrixHistory T q V m cs S U loc pos f =
+      weightedMatrixHistory T q V m cs S ∅ loc pos f := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="HistoryGeometry.lean.html#L46">OAI.DilutedSpinGlass.PrescribedTree.splitDepth</a>, <a href="MatrixNormalization.lean.html#L144">OAI.DilutedSpinGlass.PrescribedTree.weightedMatrixHistory</a></p></li><li id=L56><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.weightedMatrixHistory_protected_one</code> <small>line 56</small><div class="doc"><p>General complete-matrix normalization with a whole protected old tree.
+All paths, including those used by an old observable, are jointly retained.</p></div><pre>theorem weightedMatrixHistory_protected_one (T : PrescribedTree n) (q : C → T.Leaf)
+    (hq : Function.Bijective q) (K : KernelTower Ω n) (m : Fin (n+1) → ℝ)
+    (hm : StrictMono m) (hp : ∀ j, 0 ≤ m j) (hend : m (Fin.last n)=1)
+    (cs : List C) (hcs : cs.Nodup) (P : Finset C) (hP : P.Nonempty)
+    (hdis : ∀ c ∈ cs, c ∉ P) (hfull : P ∪ cs.toFinset=Finset.univ)
+    (S : PrescribedTree n) (U : Finset ι) (loc : ι → S.Leaf) (pos : C → S.Leaf)
+    (hcover : HistoryCover S U loc P pos)
+    (hsplit : ∀ a ∈ P, ∀ b ∈ P,
+      splitDepth S (pos a) (pos b)=splitDepth T (q a) (q b))
+    (A : (C → FinitePath Ω n) → ℝ) :
+    weightedMatrixHistory T q
+      (fun D pos g =&gt; (D.sampleLaw K).expect (fun z =&gt; g z*A (fun c =&gt; D.pathAt (pos c) z)))
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="../../../ComparatorChallenges/DilutedSpin.lean.html#L74">OAI.DilutedSpinGlass.q</a>, <a href="KernelTower.lean.html#L24">OAI.DilutedSpinGlass.KernelTower</a>, <a href="ProfileHistory.lean.html#L34">OAI.DilutedSpinGlass.PrescribedTree.HistoryCover</a>, <a href="HistoryGeometry.lean.html#L46">OAI.DilutedSpinGlass.PrescribedTree.splitDepth</a>, <a href="KernelTower.lean.html#L13">OAI.DilutedSpinGlass.FinitePath</a>, <a href="MatrixNormalization.lean.html#L144">OAI.DilutedSpinGlass.PrescribedTree.weightedMatrixHistory</a></p></li><li id=L96><b>theorem</b> <code>OAI.DilutedSpinGlass.PrescribedTree.labeledHistory_congr_protected_split</code> <small>line 96</small><div class="doc"><p>Split relations among colors which are never reassigned survive all
+old and fresh extensions. This transports an exact terminal identity through
+the actual signed expansion.</p></div><pre>theorem labeledHistory_congr_protected_split (m : Fin (n+1) → ℝ)
+    (V W : (R : PrescribedTree n) → (C → R.Leaf) → (Sample Ω R → ℝ) → ℝ)
+    (P : Finset C) (B : C → C → ℕ)
+    (h : ∀ R pos, (∀ a ∈ P, ∀ b ∈ P, splitDepth R (pos a) (pos b)=B a b) →
+      ∀ g, V R pos g=W R pos g)
+    (cs : List C) (hdis : ∀ c ∈ cs, c ∉ P)
+    (S : PrescribedTree n) (U : Finset ι) (loc : ι → S.Leaf) (pos : C → S.Leaf)
+    (hsplit : ∀ a ∈ P, ∀ b ∈ P, splitDepth S (pos a) (pos b)=B a b)
+    (f : Sample Ω S → ℝ) :
+    labeledHistory m V cs S U loc pos f=labeledHistory m W cs S U loc pos f := by
+…</pre><p class="refs">Mentions: <a href="TreeSampling.lean.html#L13">OAI.DilutedSpinGlass.PrescribedTree</a>, <a href="TreeSampling.lean.html#L98">OAI.DilutedSpinGlass.PrescribedTree.Sample</a>, <a href="HistoryGeometry.lean.html#L46">OAI.DilutedSpinGlass.PrescribedTree.splitDepth</a>, <a href="LabeledColorHistory.lean.html#L24">OAI.DilutedSpinGlass.PrescribedTree.labeledHistory</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

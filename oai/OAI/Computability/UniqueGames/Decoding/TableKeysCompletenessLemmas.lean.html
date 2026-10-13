@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/Decoding/TableKeysCompletenessLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/Decoding/TableKeysCompletenessLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">Decoding</a> / <span>TableKeysCompletenessLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">Decoding</a>/<span>TableKeysCompletenessLemmas.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/Decoding/TableKeysCompletenessLemmas.lean#L1">source</a></p><div class="doc"><p>Completeness of the v2 single-orbit matrix game. The generic finite-average
+calculation is shared with the proved actual completeness calculation. Its
+reuse is justified below by pointwise equality of restored answers under
+diagonal labels; the output vertices themselves are never doubled.</p><p>No gadget existence, dispersion hypothesis, inverse theorem, or legacy
+soundness theorem is a premise. The bound includes the exact fair-bit factor
+<code>1 / 2</code>, and is a statement about the actual finite edge occurrence list.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.diagonalLabeling</code> <small>line 31</small><div class="doc"><p>Use a single label function on both auxiliary sides, solely to share the
+already proved finite-average calculation. This does not change the v2 game.</p></div><pre>def diagonalLabeling (S : Source) (k s d : Nat)
+    (labeling : Fin (vertexCount S k s d) → Fin (2^s)) :
+    Fin (ActualGame.vertexCount S k s d) → Fin (2^s) :=
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.diagonal_unfolded</code> <small>line 36</small></li><li id=L45><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.acceptanceProbability_eq_diagonal</code> <small>line 45</small><div class="doc"><p>Pointwise-identical matrix tests have exactly the same acceptance average.</p></div><pre>theorem acceptanceProbability_eq_diagonal (S : Source) (k : Nat) {s d : Nat}
+    (g : SplitGadget s d) (labeling : Fin (vertexCount S k s d) → Fin (2^s)) :
+    acceptanceProbability S k g labeling =
+      ActualGame.acceptanceProbability S k g (diagonalLabeling S k s d labeling) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysCompletenessLemmas.lean.html#L31">OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.diagonalLabeling</a></p></li><li id=L52><b>def</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honestLabeling</code> <small>line 52</small></li><li id=L56><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.diagonal_honestLabeling</code> <small>line 56</small></li><li id=L64><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honest_unfolded</code> <small>line 64</small><div class="doc"><p>The removed affine intercept is recovered by gadget equivariance.</p></div><pre>theorem honest_unfolded (S : Source) (k : Nat) {s d : Nat}
+    (g : SplitGadget s d) (A : Fin S.variables → Bool) (q : Query S k s d) :
+    unfolded S k s d (honestLabeling S k g A) q =
+      g.f (ActualCompleteness.evaluate (ActualGame.names S) (fun n =&gt; ofBit (A n))
+        (canonical S k s d q)) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysCompletenessLemmas.lean.html#L52">OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honestLabeling</a></p></li><li id=L74><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honest_unfolded_valid</code> <small>line 74</small><div class="doc"><p>On a satisfied tuple, every sampled table evaluates the same homogeneous
+answer with first coordinate one.</p></div><pre>theorem honest_unfolded_valid (S : Source) (k : Nat) {s d : Nat}
+    (g : SplitGadget s d) (A : Fin S.variables → Bool) (q : Query S k s d)
+    (hgood : ∀ j, S.satisfied A (q.1 j) = true) :
+    unfolded S k s d (honestLabeling S k g A) q =
+      g.f (q.2 (ActualCompleteness.sourcePoint S k A q.1)) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysCompletenessLemmas.lean.html#L52">OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honestLabeling</a></p></li><li id=L82><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honest_acceptance_bound</code> <small>line 82</small></li><li id=L89><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honest_acceptance_of_bounds</code> <small>line 89</small></li><li id=L99><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honest_satisfied_fraction_bound</code> <small>line 99</small><div class="doc"><p>Completeness is measured on the generated single-orbit edge occurrences.</p></div><pre>theorem honest_satisfied_fraction_bound (S : Source) (k : Nat) {s d : Nat}
+    (g : SplitGadget s d) (A : Fin S.variables → Bool) :
+    1 - (k : ℚ) * S.failure A - g.stabilityError / 2 ≤
+      (countSatisfied (honestLabeling S k g A)
+        (outputInstance S k g).constraints : ℚ) /
+        (outputInstance S k g).constraints.length := by
+…</pre><p class="refs">Mentions: <a href="TableKeysCompletenessLemmas.lean.html#L52">OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.honestLabeling</a></p></li><li id=L108><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.completeAt</code> <small>line 108</small></li><li id=L122><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.TableKeysCompleteness.completeAt_withEnumeration</code> <small>line 122</small></li><li id=L156><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.MatrixGap.semantic_acceptance_le_address_value</code> <small>line 156</small><div class="doc"><p>Every semantic labeling extends to a labeling of the padded address space.
+The generated edge list retains its exact acceptance fraction.</p></div><pre>theorem semantic_acceptance_le_address_value (S : Source) (k : Nat) {s d : Nat}
+    (g : SplitGadget s d) (en : NoiseEnumeration g)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s)) :
+    (TableKeysGame.acceptanceProbability S k g labeling : ℝ) ≤
+      InstanceValue.value (TableKeysAddressGame.outputInstance S k g en) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.vertexCount</a>, <a href="TableKeysGame.lean.html#L114">OAI.UniqueGamesTheorem.Decoder.TableKeysGame.acceptanceProbability</a>, <a href="TableKeysAddressGameLemmas.lean.html#L99">OAI.UniqueGamesTheorem.Decoder.TableKeysAddressGame.outputInstance</a></p></li><li id=L183><b>theorem</b> <code>OAI.UniqueGamesTheorem.Decoder.MatrixGap.address_value_ge_of_near_assignment</code> <small>line 183</small><div class="doc"><p>The exact near-assignment loss and fair-bit factor one half, measured on
+the generated address instance and then cast to its real optimum value.</p></div><pre>theorem address_value_ge_of_near_assignment (S : Source) (k : Nat) {s d : Nat}
+    (T : NoiseTables.Table s d) (f : Ambient s d → Alphabet s)
+    (hf : ∀ x c, f (x + (c, 0)) = f x + c)
+    (assignment : Fin S.variables → Bool) (ξ p : ℚ)
+    (hfailure : S.failure assignment ≤ ξ)
+    (hstable : (T.gadget f hf).stabilityError ≤ p) :
+    (1 : ℝ) - ((k : ℝ) * (ξ : ℝ) + (p : ℝ) / 2) ≤
+      InstanceValue.value (TableKeysAddressGame.tableOutput S k T) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysAddressGameLemmas.lean.html#L184">OAI.UniqueGamesTheorem.Decoder.TableKeysAddressGame.tableOutput</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

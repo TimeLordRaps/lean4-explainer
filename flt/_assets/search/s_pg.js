@@ -1,0 +1,1 @@
+window.l4shard("pg", [["Dickson.PGL",47,35],["Dickson.PGLOf",48,105],["Dickson.dilationPGL",46,140],["Dickson.pglMap",48,208],["Dickson.translationPGL",46,135],["PSLImageInPGL",110,155],["SL2ToPGL",110,150]]);

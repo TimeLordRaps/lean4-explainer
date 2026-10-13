@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/BufferedIteration.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/BufferedIteration.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>BufferedIteration.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>BufferedIteration.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/BufferedIteration.lean#L1">source</a></p><div class="doc"><h3>Iterating the concrete buffered absorption</h3><p>The successive conjugacies move the residual representation into powers of
+the complementary isometry.  Both the accumulated error and the entire
+terminal representation are retained.  No norm decay is assigned to the
+terminal projection.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.WeakPureInfiniteness.bufferedAbsorptionValue</code> <small>line 21</small><div class="doc"><p>The exact target after <code>n</code> buffered absorptions.</p></div><pre>def bufferedAbsorptionValue (w t x : E) (n : ℕ) : E :=
+…</pre></li><li id=L24><b>lemma</b> <code>OAI.WeakPureInfiniteness.bufferedAbsorptionValue_zero</code> <small>line 24</small></li><li id=L29><b>lemma</b> <code>OAI.WeakPureInfiniteness.bufferedAbsorptionValue_one</code> <small>line 29</small></li><li id=L33><b>lemma</b> <code>OAI.WeakPureInfiniteness.bufferedAbsorptionValue_succ</code> <small>line 33</small></li><li id=L48><b>lemma</b> <code>OAI.WeakPureInfiniteness.bufferedAbsorption_conjugate</code> <small>line 48</small><div class="doc"><p>The inner conjugation used at the next absorption step.</p></div><pre>lemma bufferedAbsorption_conjugate (w t x : E) (hw : star w * w = 1)
+    (htw : Commute t w) (htsw : Commute t (star w)) (v : unitary E) :
+    (binaryCornerUnitary w hw v : E) *
+        (t * (1 - w * star w) + w * x * star w) *
+        star (binaryCornerUnitary w hw v : E) =
+      t * (1 - w * star w) + w * ((v : E) * x * star (v : E)) * star w := by
+…</pre><p class="refs">Mentions: <a href="BinaryFragmentation.lean.html#L19">OAI.WeakPureInfiniteness.binaryCornerUnitary</a></p></li><li id=L89><b>lemma</b> <code>OAI.WeakPureInfiniteness.buffered_sandwich_norm</code> <small>line 89</small></li><li id=L108><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_connected_buffered_iteration</code> <small>line 108</small><div class="doc"><p>Repeated absorption is implemented by actual connected unitaries.
+The error is at most <code>m * ε</code>; its target keeps the full terminal copy.</p></div><pre>lemma exists_connected_buffered_iteration {I : Type*}
+    (s t : I → E) (w : E) (hw : star w * w = 1)
+    (htw : ∀ i, Commute (t i) w) (htsw : ∀ i, Commute (t i) (star w))
+    (u : unitary E) (hu : Joined (1 : unitary E) u)
+    (ε : ℝ)
+    (he : ∀ i, ‖(u : E) * s i * star (u : E) -
+      bufferedAbsorptionValue w (t i) (s i) 1‖ ≤ ε)
+    (m : ℕ) :
+    ∃ v : unitary E, Joined (1 : unitary E) v ∧
+      ∀ i, ‖(v : E) * s i * star (v : E) -
+        bufferedAbsorptionValue w (t i) (s i) m‖ ≤ m * ε := by
+…</pre><p class="refs">Mentions: <a href="BufferedIteration.lean.html#L21">OAI.WeakPureInfiniteness.bufferedAbsorptionValue</a></p></li><li id=L165><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_canonical_buffered_iterations</code> <small>line 165</small><div class="doc"><p>One actual source corner works at every finite iteration depth.  The
+chosen unitary depends on the depth and requested final error.</p></div><pre>lemma exists_canonical_buffered_iterations [Nontrivial E]
+    (s t : ℕ → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hst : bergRowsCommute s t) (n : ℕ) (κ : ℝ) (hκ : 0 &lt; κ) :
+    ∃ D : BufferAbsorptionCorner E,
+      D.q ≠ 0 ∧
+      (∀ i : Fin (n + 1), ‖s i * D.q - D.q * s i‖ &lt; κ) ∧
+      (∀ i : Fin (n + 1),
+        ‖D.q * s i * D.q - zeroCornerRow D.q D.a D.b n i‖ &lt; κ) ∧
+      ∀ (m : ℕ) (ε : ℝ), 0 &lt; ε →
+        ∃ v : unitary E, Joined (1 : unitary E) v ∧
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="BufferAbsorption.lean.html#L22">OAI.WeakPureInfiniteness.BufferAbsorptionCorner</a>, <a href="ZeroCornerRows.lean.html#L45">OAI.WeakPureInfiniteness.zeroCornerRow</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

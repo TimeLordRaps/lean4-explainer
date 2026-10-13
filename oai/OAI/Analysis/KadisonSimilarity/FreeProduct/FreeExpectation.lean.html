@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/FreeExpectation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/FreeExpectation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>FreeExpectation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>FreeExpectation.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/FreeExpectation.lean#L1">source</a></p><div class="doc"><h3>The expectation of a free compression</h3><p>Scalar tracial freeness is expressed by vanishing alternating centered words.
+The formula <code>E(e b e) = τ(e)^2 b</code> is derived by testing against the second
+algebra, rather than included among the free-product input data.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>inductive</b> <code>OAI.KadisonSimilarity.AlternatingCenteredWord</code> <small>line 20</small><div class="doc"><p>An alternating word of centered letters in two specified algebras.</p></div><pre>inductive AlternatingCenteredWord (τ : R →ₗ[ℂ] ℂ) (P Q : StarSubalgebra ℂ R) :
+    Bool → List R → Prop
+  | nil (side : Bool) : AlternatingCenteredWord τ P Q side []
+  | cons {side : Bool} {x : R} {xs : List R}
+      (hmem : x ∈ if side then P else Q) (hzero : τ x = 0)
+      (htail : AlternatingCenteredWord τ P Q (!side) xs) :
+      AlternatingCenteredWord τ P Q side (x :: xs)
+
+/-- Scalar freeness, in the alternating-centered-word convention of the paper. -/</pre></li><li id=L29><b>def</b> <code>OAI.KadisonSimilarity.ScalarFree</code> <small>line 29</small><div class="doc"><p>Scalar freeness, in the alternating-centered-word convention of the paper.</p></div><pre>def ScalarFree (τ : R →ₗ[ℂ] ℂ) (P Q : StarSubalgebra ℂ R) : Prop :=
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.KadisonSimilarity.ScalarFree.trace_pair</code> <small>line 37</small></li><li id=L43><b>theorem</b> <code>OAI.KadisonSimilarity.ScalarFree.trace_triple</code> <small>line 43</small></li><li id=L50><b>theorem</b> <code>OAI.KadisonSimilarity.ScalarFree.trace_quadruple</code> <small>line 50</small></li><li id=L62><b>def</b> <code>OAI.KadisonSimilarity.traceCentered</code> <small>line 62</small><div class="doc"><p>Centering uses the normalized trace.</p></div><pre>def traceCentered (τ : R →ₗ[ℂ] ℂ) (a : R) : R := a - τ a • 1</pre></li><li id=L64><b>theorem</b> <code>OAI.KadisonSimilarity.traceCentered_mem</code> <small>line 64</small></li><li id=L69><b>theorem</b> <code>OAI.KadisonSimilarity.traceCentered_trace</code> <small>line 69</small></li><li id=L73><b>theorem</b> <code>OAI.KadisonSimilarity.traceCentered_add</code> <small>line 73</small></li><li id=L77><b>theorem</b> <code>OAI.KadisonSimilarity.trace_centered_mul_of_free</code> <small>line 77</small><div class="doc"><p>A centered letter is orthogonal, for the trace pairing, to the other algebra.</p></div><pre>theorem trace_centered_mul_of_free
+    (τ : R →ₗ[ℂ] ℂ) (hτ : τ 1 = 1) {P Q : StarSubalgebra ℂ R}
+    (hf : ScalarFree τ P Q) {a b : R} (ha : a ∈ P) (ha0 : τ a = 0) (hb : b ∈ Q) :
+    τ (a * b) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a></p></li><li id=L93><b>theorem</b> <code>OAI.KadisonSimilarity.trace_test_free_compression_errors</code> <small>line 93</small><div class="doc"><p>Orthogonality against the second algebra removes all three mixed terms
+in the free-compression expansion.</p></div><pre>theorem trace_test_free_compression_errors
+    (τ : R →ₗ[ℂ] ℂ) (hτ : τ 1 = 1)
+    (htr : ∀ a b, τ (a * b) = τ (b * a))
+    {P Q : StarSubalgebra ℂ R} (hf : ScalarFree τ P Q)
+    {a b c : R} (ha : a ∈ P) (ha0 : τ a = 0)
+    (hb : b ∈ Q) (hb0 : τ b = 0) (hc : c ∈ Q) :
+    τ (c * (a * b)) = 0 ∧ τ (c * (b * a)) = 0 ∧ τ (c * (a * b * a)) = 0 := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a></p></li><li id=L135><b>theorem</b> <code>OAI.KadisonSimilarity.expectation_eq_of_trace_pairings</code> <small>line 135</small><div class="doc"><p>The trace pairing determines the conditional expectation in a faithful
+tracial representation.</p></div><pre>theorem expectation_eq_of_trace_pairings
+    (τ : R →ₗ[ℂ] ℂ) (Q : StarSubalgebra ℂ R)
+    (hfaithful : ∀ z, τ (star z * z) = 0 → z = 0)
+    (E : R →ₗ[ℂ] R) (hE : ∀ x, E x ∈ Q)
+    (htrace : ∀ x c, c ∈ Q → τ (c * E x) = τ (c * x))
+    (x y : R) (hy : y ∈ Q)
+    (hxy : ∀ c, c ∈ Q → τ (c * x) = τ (c * y)) : E x = y := by
+…</pre></li><li id=L150><b>theorem</b> <code>OAI.KadisonSimilarity.expectation_free_compression</code> <small>line 150</small><div class="doc"><p>The expectation formula in <code>lem:free-compression</code>, proved from scalar
+freeness and the defining trace-pairing property of conditional expectation.
+The projection condition on <code>e</code> is not needed for this algebraic identity.</p></div><pre>theorem expectation_free_compression
+    (τ : R →ₗ[ℂ] ℂ) (hτ : τ 1 = 1)
+    (htr : ∀ a b, τ (a * b) = τ (b * a))
+    (hfaithful : ∀ z, τ (star z * z) = 0 → z = 0)
+    {P Q : StarSubalgebra ℂ R} (hf : ScalarFree τ P Q)
+    (E : R →ₗ[ℂ] R) (hE : ∀ x, E x ∈ Q)
+    (htrace : ∀ x c, c ∈ Q → τ (c * E x) = τ (c * x))
+    {e b : R} (he : e ∈ P) (hb : b ∈ Q) (hb0 : τ b = 0) :
+    E (e * b * e) = (τ e) ^ 2 • b := by
+…</pre><p class="refs">Mentions: <a href="FreeExpectation.lean.html#L29">OAI.KadisonSimilarity.ScalarFree</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

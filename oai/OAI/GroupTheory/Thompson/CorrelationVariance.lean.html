@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/Thompson/CorrelationVariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/Thompson/CorrelationVariance.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">GroupTheory</a> / <a href="index.html">Thompson</a> / <span>CorrelationVariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">GroupTheory</a>/<a href="index.html">Thompson</a>/<span>CorrelationVariance.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/Thompson/CorrelationVariance.lean#L1">source</a></p><div class="doc"><h3>Exact finite correlation and variance estimates</h3><p>The diagonal and off-diagonal coefficients are exact finite counts. The mixed
+sum has one exceptional parent column, hence D nested terms and D(D-1)
+separated terms. Every count identity permits arbitrary signed coefficients.
+The final cancellation imposes no positivity assumption on the common
+correlation alpha.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>theorem</b> <code>OAI.ThompsonNonamenability.sum_one_exception</code> <small>line 31</small><div class="doc"><p>One distinguished position and all the other positions, with signed values.</p></div><pre>theorem sum_one_exception (i : Fin D) (b c : ℝ) :
+    (∑ j : Fin D, if j = i then b else c) = b + ((D : ℝ) - 1) * c := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.ThompsonNonamenability.sum_matrix_le</code> <small>line 43</small><div class="doc"><p>D diagonal terms and D(D-1) off-diagonal terms, with no sign premise.</p></div><pre>theorem sum_matrix_le (K : Fin D → Fin D → ℝ) (b c : ℝ)
+    (hdiag : ∀ j, K j j ≤ b)
+    (hoff : ∀ j k, j ≠ k → K j k ≤ c) :
+    (∑ j, ∑ k, K j k) ≤
+      (D : ℝ) * ((D : ℝ) - 1) * c + (D : ℝ) * b := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.ThompsonNonamenability.sum_fixed_column_ge</code> <small>line 65</small><div class="doc"><p>The exceptional column contributes D terms, irrespective of the row index.</p></div><pre>theorem sum_fixed_column_ge (i : Fin D) (K : Fin D → Fin D → ℝ) (b c : ℝ)
+    (hnested : ∀ j, b ≤ K j i)
+    (hsep : ∀ j k, k ≠ i → c ≤ K j k) :
+    (D : ℝ) * ((D : ℝ) - 1) * c + (D : ℝ) * b ≤ ∑ j, ∑ k, K j k := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.ThompsonNonamenability.normalize_pair_total</code> <small>line 86</small></li><li id=L95><b>def</b> <code>OAI.ThompsonNonamenability.corr</code> <small>line 95</small><div class="doc"><p>The literal finite average of the real inner product.</p></div><pre>def corr (A : Finset G) (x y : G → E) : ℝ :=
+…</pre></li><li id=L98><b>theorem</b> <code>OAI.ThompsonNonamenability.corr_comm</code> <small>line 98</small></li><li id=L104><b>theorem</b> <code>OAI.ThompsonNonamenability.unit_inner_abs_le</code> <small>line 104</small></li><li id=L111><b>theorem</b> <code>OAI.ThompsonNonamenability.corr_abs_le_one</code> <small>line 111</small></li><li id=L124><b>theorem</b> <code>OAI.ThompsonNonamenability.realAvg_norm_finMean_sq</code> <small>line 124</small></li><li id=L129><b>theorem</b> <code>OAI.ThompsonNonamenability.corr_finMean</code> <small>line 129</small></li><li id=L134><b>theorem</b> <code>OAI.ThompsonNonamenability.realAvg_norm_sub_sq</code> <small>line 134</small></li><li id=L141><b>theorem</b> <code>OAI.ThompsonNonamenability.realAvg_norm_finMean_sq_le</code> <small>line 141</small><div class="doc"><p>Parent or sibling averages: the same exact diagonal count applies to both.</p></div><pre>theorem realAvg_norm_finMean_sq_le (A : Finset G) (hA : A.Nonempty)
+    (hD : 0 &lt; D) (x : G → Fin D → E) (c : ℝ)
+    (hx : ∀ g ∈ A, ∀ j, ‖x g j‖ ≤ 1)
+    (hsep : ∀ j k, j ≠ k → corr A (fun g =&gt; x g j) (fun g =&gt; x g k) ≤ c) :
+    realAvg A (fun g =&gt; ‖finMean (x g)‖^2) ≤
+      (1 - (D : ℝ)⁻¹) * c + (D : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="CorrelationVariance.lean.html#L95">OAI.ThompsonNonamenability.corr</a>, <a href="FiniteAverage.lean.html#L28">OAI.ThompsonNonamenability.realAvg</a>, <a href="HilbertAverage.lean.html#L28">OAI.ThompsonNonamenability.finMean</a></p></li><li id=L159><b>theorem</b> <code>OAI.ThompsonNonamenability.corr_finMean_ge</code> <small>line 159</small><div class="doc"><p>Only the designated parent column is uncontrolled in a mixed sum.</p></div><pre>theorem corr_finMean_ge (A : Finset G) (hA : A.Nonempty) (hD : 0 &lt; D)
+    (i : Fin D) (z x : G → Fin D → E) (c : ℝ)
+    (hz : ∀ g ∈ A, ∀ j, ‖z g j‖ ≤ 1)
+    (hx : ∀ g ∈ A, ∀ k, ‖x g k‖ ≤ 1)
+    (hsep : ∀ j k, k ≠ i → c ≤ corr A (fun g =&gt; z g j) (fun g =&gt; x g k)) :
+    (1 - (D : ℝ)⁻¹) * c - (D : ℝ)⁻¹ ≤
+      corr A (fun g =&gt; finMean (z g)) (fun g =&gt; finMean (x g)) := by
+…</pre><p class="refs">Mentions: <a href="CorrelationVariance.lean.html#L95">OAI.ThompsonNonamenability.corr</a>, <a href="HilbertAverage.lean.html#L28">OAI.ThompsonNonamenability.finMean</a></p></li><li id=L181><b>theorem</b> <code>OAI.ThompsonNonamenability.finite_variance_bound</code> <small>line 181</small><div class="doc"><p>The finite Hilbert variance bound with exact cancellation of signed alpha.</p></div><pre>theorem finite_variance_bound (A : Finset G) (hA : A.Nonempty) (hD : 0 &lt; D)
+    (x : G → Fin D → E) (y : G → Fin D → Fin D → E) (α η : ℝ)
+    (hx : ∀ g ∈ A, ∀ k, ‖x g k‖ ≤ 1)
+    (hy : ∀ g ∈ A, ∀ i j, ‖y g i j‖ ≤ 1)
+    (hparent : ∀ j k, j ≠ k →
+      |corr A (fun g =&gt; x g j) (fun g =&gt; x g k) - α| ≤ η)
+    (hchild : ∀ i j k, j ≠ k →
+      |corr A (fun g =&gt; y g i j) (fun g =&gt; y g i k) - α| ≤ η)
+    (hmixed : ∀ i j k, k ≠ i →
+      |corr A (fun g =&gt; y g i j) (fun g =&gt; x g k) - α| ≤ η) :
+    ∀ i, realAvg A (fun g =&gt; ‖finMean (y g i) - finMean (x g)‖^2) ≤
+      4 / (D : ℝ) + 4 * (1 - 1 / (D : ℝ)) * η := by
+…</pre><p class="refs">Mentions: <a href="CorrelationVariance.lean.html#L95">OAI.ThompsonNonamenability.corr</a>, <a href="FiniteAverage.lean.html#L28">OAI.ThompsonNonamenability.realAvg</a>, <a href="HilbertAverage.lean.html#L28">OAI.ThompsonNonamenability.finMean</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

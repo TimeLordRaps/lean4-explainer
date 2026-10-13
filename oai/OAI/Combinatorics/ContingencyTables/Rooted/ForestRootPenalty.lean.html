@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Rooted/ForestRootPenalty.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Rooted/ForestRootPenalty.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Rooted</a> / <span>ForestRootPenalty.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Rooted</a>/<span>ForestRootPenalty.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Rooted/ForestRootPenalty.lean#L1">source</a></p><div class="doc"><h3>Actual root residuals of the integral forest completion</h3><p>Summing a root-path flow gives the prescribed demand minus the total
+demand in the component. This formula also applies at roots and on
+singleton components, where the nonroot-only margin lemma is vacuous.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.completionFlow_divergence_all</code> <small>line 23</small></li><li id=L33><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.sum_abs_componentTotal</code> <small>line 33</small><div class="doc"><p>Absolute component totals sum to at most the total absolute demand.
+Each vertex is counted in one component, including isolated vertices.</p></div><pre>theorem sum_abs_componentTotal (root : V → V) (r : V → ℝ) :
+    (∑ a, |∑ v, if root v=a then r v else 0|)≤∑ v, |r v| := by
+…</pre></li><li id=L51><b>lemma</b> <code>OAI.ContingencyTables.ForestRootPenalty.root_eq_large</code> <small>line 51</small><div class="doc"><p>Maximum capacity makes every original large edge stay within a tree
+component, which is the exact cancellation needed at component roots.</p></div><pre>lemma root_eq_large (small : I → J → Bool) (b : I → J → ℕ)
+    (T : SimpleGraph (I⊕J)) (hT : T≤ForestCapacity.cellGraph small) (hacyc : T.IsAcyclic)
+    (hmax : ∀ F : SimpleGraph (I⊕J), F≤ForestCapacity.cellGraph small → F.IsAcyclic →
+      MaximumForest.weight F (ForestCapacity.capacity b)≤MaximumForest.weight T (ForestCapacity.capacity b))
+    (hb : ∀ i j, small i j=false → 1≤b i j) (i : I) (j : J) (hs : small i j=false) :
+    componentRoot T (.inl i)=componentRoot T (.inr j) := by
+…</pre><p class="refs">Mentions: <a href="ForestCapacity.lean.html#L27">OAI.ContingencyTables.ForestCapacity.cellGraph</a>, <a href="MaximumForest.lean.html#L25">OAI.ContingencyTables.MaximumForest.weight</a>, <a href="ForestCapacity.lean.html#L37">OAI.ContingencyTables.ForestCapacity.capacity</a></p></li><li id=L77><b>lemma</b> <code>OAI.ContingencyTables.ForestRootPenalty.tableCompletion_row_all</code> <small>line 77</small></li><li id=L91><b>lemma</b> <code>OAI.ContingencyTables.ForestRootPenalty.tableCompletion_column_all</code> <small>line 91</small></li><li id=L111><b>def</b> <code>OAI.ContingencyTables.ForestRootPenalty.residualDemand</code> <small>line 111</small></li><li id=L115><b>def</b> <code>OAI.ContingencyTables.ForestRootPenalty.componentTotal</code> <small>line 115</small></li><li id=L118><b>def</b> <code>OAI.ContingencyTables.ForestRootPenalty.smallDemand</code> <small>line 118</small></li><li id=L125><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.componentTotal_residual</code> <small>line 125</small><div class="doc"><p>Large-cell incidences cancel exactly within each component. The
+component residual therefore depends only on the small views, not on
+the chosen free values.</p></div><pre>theorem componentTotal_residual (small : I → J → Bool) (T : SimpleGraph (I⊕J))
+    (r : I → ℤ) (c : J → ℤ) (x q free X : I → J → ℤ)
+    (hr : ∀ i, (∑ j, X i j)=r i) (hc : ∀ j, (∑ i, X i j)=c j)
+    (hroot : ∀ i j, small i j=false → componentRoot T (.inl i)=componentRoot T (.inr j))
+    (a : I⊕J) :
+    componentTotal T (residualDemand small T r c x q free) a=
+      componentTotal T (smallDemand small X x q) a := by
+…</pre><p class="refs">Mentions: <a href="ForestRootPenalty.lean.html#L115">OAI.ContingencyTables.ForestRootPenalty.componentTotal</a>, <a href="ForestRootPenalty.lean.html#L111">OAI.ContingencyTables.ForestRootPenalty.residualDemand</a>, <a href="ForestRootPenalty.lean.html#L118">OAI.ContingencyTables.ForestRootPenalty.smallDemand</a></p></li><li id=L164><b>def</b> <code>OAI.ContingencyTables.ForestRootPenalty.signedResidual</code> <small>line 164</small></li><li id=L172><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.signedResidual_eq_component</code> <small>line 172</small><div class="doc"><p>The actual completed table's signed root discrepancy is exactly the
+negative component total of its original residual demands.</p></div><pre>theorem signedResidual_eq_component (small : I → J → Bool) (T : SimpleGraph (I⊕J))
+    (hT : T≤ForestCapacity.cellGraph small) (r : I → ℤ) (c : J → ℤ)
+    (x q free : I → J → ℤ) (a : I⊕J) :
+    signedResidual small T r c x q free a=
+      -(∑ v, if componentRoot T v=a then residualDemand small T r c x q free v else 0) := by
+…</pre><p class="refs">Mentions: <a href="ForestCapacity.lean.html#L27">OAI.ContingencyTables.ForestCapacity.cellGraph</a>, <a href="ForestRootPenalty.lean.html#L164">OAI.ContingencyTables.ForestRootPenalty.signedResidual</a>, <a href="ForestRootPenalty.lean.html#L111">OAI.ContingencyTables.ForestRootPenalty.residualDemand</a></p></li><li id=L204><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.signedResidual_eq_small</code> <small>line 204</small></li><li id=L220><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.signedResidual_independent</code> <small>line 220</small><div class="doc"><p>The original root deviations do not depend on the free assignment;
+this follows from the actual integral completion, rather than an assumed
+affine representation of the source count.</p></div><pre>theorem signedResidual_independent (small : I → J → Bool) (T : SimpleGraph (I⊕J))
+    (hT : T≤ForestCapacity.cellGraph small) (r : I → ℤ) (c : J → ℤ)
+    (x q free free&#x27; X : I → J → ℤ)
+    (hr : ∀ i, (∑ j, X i j)=r i) (hc : ∀ j, (∑ i, X i j)=c j)
+    (hroot : ∀ i j, small i j=false → componentRoot T (.inl i)=componentRoot T (.inr j)) :
+    signedResidual small T r c x q free=signedResidual small T r c x q free&#x27; := by
+…</pre><p class="refs">Mentions: <a href="ForestCapacity.lean.html#L27">OAI.ContingencyTables.ForestCapacity.cellGraph</a>, <a href="ForestRootPenalty.lean.html#L164">OAI.ContingencyTables.ForestRootPenalty.signedResidual</a></p></li><li id=L230><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.sum_abs_signedResidual_le</code> <small>line 230</small></li><li id=L289><b>lemma</b> <code>OAI.ContingencyTables.ForestRootPenalty.abs_actualDeviation_solved</code> <small>line 289</small></li><li id=L308><b>theorem</b> <code>OAI.ContingencyTables.ForestRootPenalty.rootPenalty_le</code> <small>line 308</small><div class="doc"><p>This is the root part of the source's actual penalty. Each small
+cell contributes at most its capacity at each of its two incidences.</p></div><pre>theorem rootPenalty_le (small : I → J → Bool) (T : SimpleGraph (I⊕J))
+    (hT : T≤ForestCapacity.cellGraph small) (b x y free : I → J → ℕ)
+    (r : I → ℤ) (c : J → ℤ) (X : I → J → ℤ)
+    (hr : ∀ i, (∑ j, X i j)=r i) (hc : ∀ j, (∑ i, X i j)=c j)
+    (hroot : ∀ i j, small i j=false → componentRoot T (.inl i)=componentRoot T (.inr j))
+    (hx : ∀ i j, small i j=true → x i j≤b i j)
+    (hX : ∀ i j, 0≤X i j ∧ X i j≤b i j) :
+    (∑ a, if ForestPenaltyApplication.rootFlag T a then
+      |actualDeviation small T b x y free r c
+        (solved small T r c (fun i j =&gt; (x i j:ℤ))
+          (fun i j =&gt; ((b i j-y i j:ℕ):ℤ)) (fun i j =&gt; (free i j:ℤ))) a| else 0)≤
+      2*∑ i, ∑ j, if small i j then (b i j:ℝ) else 0 := by
+…</pre><p class="refs">Mentions: <a href="ForestCapacity.lean.html#L27">OAI.ContingencyTables.ForestCapacity.cellGraph</a>, <a href="ForestPenaltyApplication.lean.html#L62">OAI.ContingencyTables.ForestPenaltyApplication.rootFlag</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

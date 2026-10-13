@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/Superstring/Instructions.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/Superstring/Instructions.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Computability</a> / <a href="index.html">Superstring</a> / <span>Instructions.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Computability</a>/<a href="index.html">Superstring</a>/<span>Instructions.lean</span></code></h1><p class="muted">33 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/Superstring/Instructions.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L7><b>abbrev</b> <code>OAI.Superstring.BitCode.Store</code> <small>line 7</small></li><li id=L11><b>inductive</b> <code>OAI.Superstring.BitCode.Instr</code> <small>line 11</small><div class="doc"><p>A finite-control bit-stack instruction. There is no unbounded internal
+state and no operation on an entire stack other than one push/pop/peek.</p></div><pre>inductive Instr (K L : Type)
+  | push (k : K) (b : Bool) (next : L)
+  | pop (k : K) (next : L)
+  | branch (k : K) (empty low high : L)
+  | jump (next : L)
+
+namespace Instr</pre></li><li id=L19><b>def</b> <code>OAI.Superstring.BitCode.Instr.map</code> <small>line 19</small></li><li id=L25><b>def</b> <code>OAI.Superstring.BitCode.Instr.run</code> <small>line 25</small></li><li id=L34><b>theorem</b> <code>OAI.Superstring.BitCode.Instr.run_map</code> <small>line 34</small></li><li id=L43><b>def</b> <code>OAI.Superstring.BitCode.Instr.emit</code> <small>line 43</small></li><li id=L56><b>theorem</b> <code>OAI.Superstring.BitCode.Instr.finish_step</code> <small>line 56</small></li><li id=L61><b>theorem</b> <code>OAI.Superstring.BitCode.Instr.emit_step</code> <small>line 61</small></li><li id=L77><b>inductive</b> <code>OAI.Superstring.BitCode.Block</code> <small>line 77</small><div class="doc"><p>Structured bit-stack code. Loops are ordinary operational loops, not
+unbounded-cost primitives. Their iteration count is charged in <code>Exec</code>.</p></div><pre>inductive Block (K : Type)
+  | push (k : K) (b : Bool)
+  | pop (k : K)
+  | skip
+  | branch (k : K) (empty low high : Block K)
+  | seq (first second : Block K)
+  | loop (k : K) (body : Block K)
+
+namespace Block</pre></li><li id=L87><b>def</b> <code>OAI.Superstring.BitCode.Block.Label</code> <small>line 87</small></li><li id=L93><b>instance</b> <code>OAI.Superstring.BitCode.Block.labelFintype</code> <small>line 93</small></li><li id=L108><b>instance</b> <code>OAI.Superstring.BitCode.Block.labelDecidableEq</code> <small>line 108</small></li><li id=L123><b>def</b> <code>OAI.Superstring.BitCode.Block.start</code> <small>line 123</small></li><li id=L129><b>def</b> <code>OAI.Superstring.BitCode.Block.code</code> <small>line 129</small></li><li id=L157><b>inductive</b> <code>OAI.Superstring.BitCode.Steps</code> <small>line 157</small><div class="doc"><p>Exact execution in the finite-control graph, stopping before a halt label
+is stepped. This is a finite trace, not an oracle for a computation.</p></div><pre>inductive Steps {L : Type} (code : L → Instr K (Option L)) :
+    (Option L × Store K) → ℕ → (Option L × Store K) → Prop
+  | refl (c) : Steps code c 0 c
+  | step (l : L) (s : Store K) {n d} (h : Steps code ((code l).run s) n d) :
+      Steps code (some l, s) (n + 1) d
+
+namespace Steps
+
+variable {L M : Type} {code : L → Instr K (Option L)}</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L11">OAI.Superstring.BitCode.Instr</a>, <a href="Instructions.lean.html#L7">OAI.Superstring.BitCode.Store</a></p></li><li id=L167><b>theorem</b> <code>OAI.Superstring.BitCode.Steps.trans</code> <small>line 167</small></li><li id=L173><b>theorem</b> <code>OAI.Superstring.BitCode.Steps.map</code> <small>line 173</small></li><li id=L191><b>inductive</b> <code>OAI.Superstring.BitCode.Block.Exec</code> <small>line 191</small><div class="doc"><p>Big-step semantics with the exact number of primitive bit instructions.</p></div><pre>inductive Exec : Block K → Store K → Store K → ℕ → Prop
+  | push (k b s) : Exec (.push k b) s (Function.update s k (b :: s k)) 1
+  | pop (k s) : Exec (.pop k) s (Function.update s k (s k).tail) 1
+  | skip (s) : Exec .skip s s 1
+  | branch_none {k a b c s t n} (h : (s k).head? = none) (run : Exec a s t n) :
+      Exec (.branch k a b c) s t (n + 1)
+  | branch_false {k a b c s t n} (h : (s k).head? = some false) (run : Exec b s t n) :
+      Exec (.branch k a b c) s t (n + 1)
+  | branch_true {k a b c s t n} (h : (s k).head? = some true) (run : Exec c s t n) :
+      Exec (.branch k a b c) s t (n + 1)
+  | seq {a b s t u m n} (first : Exec a s t m) (second : Exec b t u n) :
+      Exec (.seq a b) s u (m + n)
+…</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L77">OAI.Superstring.BitCode.Block</a>, <a href="Instructions.lean.html#L7">OAI.Superstring.BitCode.Store</a></p></li><li id=L207><b>theorem</b> <code>OAI.Superstring.BitCode.Block.exec_steps</code> <small>line 207</small></li><li id=L251><b>def</b> <code>OAI.Superstring.BitCode.Block.machine</code> <small>line 251</small></li><li id=L262><b>def</b> <code>OAI.Superstring.BitCode.Block.pack</code> <small>line 262</small></li><li id=L265><b>theorem</b> <code>OAI.Superstring.BitCode.Block.steps_iterate</code> <small>line 265</small></li><li id=L275><b>def</b> <code>OAI.Superstring.BitCode.Block.exec_machine</code> <small>line 275</small></li><li id=L290><b>def</b> <code>OAI.Superstring.BitCode.single</code> <small>line 290</small><div class="doc"><p>A single populated stack: the exact Mathlib initial/final convention.</p></div><pre>def single (k : K) (w : List Bool) : Store K := fun j =&gt; if j = k then w else []
+…</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L7">OAI.Superstring.BitCode.Store</a></p></li><li id=L294><b>theorem</b> <code>OAI.Superstring.BitCode.Block.init_eq</code> <small>line 294</small></li><li id=L304><b>theorem</b> <code>OAI.Superstring.BitCode.Block.halt_eq</code> <small>line 304</small></li><li id=L315><b>def</b> <code>OAI.Superstring.BitCode.Block.certificate</code> <small>line 315</small><div class="doc"><p>Execution with a polynomial clock gives a polynomial-time TM2 certificate.</p></div><pre>noncomputable def certificate [Fintype K] {α β : Type}
+    (ea : α → List Bool) (eb : β → List Bool) (f : α → β)
+    (b : Block K) (i o : K) (P : Polynomial ℕ)
+    (correct : ∀ a, ∃ n, n ≤ P.eval (ea a).length ∧
+      b.Exec (single i (ea a)) (single o (eb (f a))) n) :
+    Turing.TM2ComputableInPolyTime ea eb f where
+…</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L77">OAI.Superstring.BitCode.Block</a>, <a href="Instructions.lean.html#L290">OAI.Superstring.BitCode.single</a></p></li><li id=L339><b>theorem</b> <code>OAI.Superstring.BitCode.Block.certificate_finite</code> <small>line 339</small></li><li id=L352><b>def</b> <code>OAI.Superstring.BitCode.size</code> <small>line 352</small></li><li id=L354><b>theorem</b> <code>OAI.Superstring.BitCode.size_update</code> <small>line 354</small></li><li id=L369><b>theorem</b> <code>OAI.Superstring.BitCode.size_push</code> <small>line 369</small></li><li id=L375><b>theorem</b> <code>OAI.Superstring.BitCode.size_pop</code> <small>line 375</small></li><li id=L383><b>theorem</b> <code>OAI.Superstring.BitCode.Block.Exec.size_le</code> <small>line 383</small><div class="doc"><p>Every actually executed primitive bit instruction increases total stored
+length by at most one; branch tests and iterations do not hide bulk operations.</p></div><pre>theorem Block.Exec.size_le {b : Block K} {s t : Store K} {n : ℕ}
+    (h : b.Exec s t n) : size t ≤ size s + n := by
+…</pre><p class="refs">Mentions: <a href="Instructions.lean.html#L77">OAI.Superstring.BitCode.Block</a>, <a href="Instructions.lean.html#L7">OAI.Superstring.BitCode.Store</a>, <a href="Instructions.lean.html#L352">OAI.Superstring.BitCode.size</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

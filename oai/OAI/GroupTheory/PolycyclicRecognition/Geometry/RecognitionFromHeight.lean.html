@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/RecognitionFromHeight.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/RecognitionFromHeight.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>RecognitionFromHeight.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>RecognitionFromHeight.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/RecognitionFromHeight.lean#L1">source</a></p><div class="doc"><h3>Recognition from a geometric height estimate</h3><p>Corrected height bounds control intrinsic word growth of finitely generated
+subgroups of its kernel. Polynomial bounded-height chain packing gives
+elementary amenability, to which the finiteness and duality theorems apply.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.PolycyclicRecognition.virtuallyNilpotent_of_injective_boundedHeight</code> <small>line 26</small><div class="doc"><p>Intrinsic polynomial growth for an injectively parametrized subgroup of the
+ambient coarse source. All metric estimates use the ambient source metric.</p></div><pre>theorem virtuallyNilpotent_of_injective_boundedHeight
+    {J : Type u} [Group J] [Group.FG J] [DecidableEq J] [DecidableEq X]
+    (gromov : GromovPolynomialGrowthInput J)
+    (ι : J →* H) (hι : Function.Injective ι)
+    (f : H → X) (π : X → W) (packing : PolynomialBoundedChainPacking π)
+    (hfinite : ∀ R : ℝ, (Metric.closedBall (1 : H) R).Finite)
+    {K C K&#x27; C&#x27; M : ℝ} (hK : 0 ≤ K) (hC : 0 ≤ C) (hK&#x27; : 0 ≤ K&#x27;) (hM : 0 ≤ M)
+    (hupper : ∀ x y, dist (f x) (f y) ≤ K * dist x y + C)
+    (hlower : ∀ x y, dist x y ≤ K&#x27; * dist (f x) (f y) + C&#x27;)
+    (hheight : ∀ j, ‖π (f (ι j))‖ ≤ M) : Group.IsVirtuallyNilpotent J := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="../Analysis/BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li><li id=L57><b>theorem</b> <code>OAI.PolycyclicRecognition.elementaryAmenable_of_corrected_height</code> <small>line 57</small><div class="doc"><p>The height-kernel and finite-extension argument, including potentially
+infinitely generated kernels and nondiscrete height images.</p></div><pre>theorem elementaryAmenable_of_corrected_height [DecidableEq X]
+    (H₀ : Subgroup H) [H₀.FiniteIndex] (τ : H₀ →* Multiplicative W)
+    (gromov : ∀ (J : Subgroup τ.ker) [DecidableEq J], GromovPolynomialGrowthInput J)
+    (f : H → X) (π : X → W) (packing : PolynomialBoundedChainPacking π)
+    (hfinite : ∀ R : ℝ, (Metric.closedBall (1 : H) R).Finite)
+    {K C K&#x27; C&#x27; D : ℝ} (hK : 0 ≤ K) (hC : 0 ≤ C) (hK&#x27; : 0 ≤ K&#x27;) (hD : 0 ≤ D)
+    (hupper : ∀ x y, dist (f x) (f y) ≤ K * dist x y + C)
+    (hlower : ∀ x y, dist x y ≤ K&#x27; * dist (f x) (f y) + C&#x27;)
+    (hheight : ∀ h : H₀, ‖(τ h).toAdd - π (f h)‖ ≤ D) :
+    IsElementaryAmenable H := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="../Analysis/BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a>, <a href="../Analysis/ElementaryAmenable.lean.html#L21">OAI.PolycyclicRecognition.IsElementaryAmenable</a></p></li><li id=L89><b>theorem</b> <code>OAI.PolycyclicRecognition.elementaryAmenable_of_transferred_height</code> <small>line 89</small><div class="doc"><p>The transferred quasi-action, mean correction, intrinsic subgroup growth,
+and finite-extension step form one complete argument after the two geometric
+obligations have been supplied.</p></div><pre>theorem elementaryAmenable_of_transferred_height [DecidableEq X]
+    (gromov : ∀ (J : Type u) [Group J] [DecidableEq J], GromovPolynomialGrowthInput J)
+    (f : H → X) (r : X → H) (π : X → W)
+    (packing : PolynomialBoundedChainPacking π)
+    (A : H → W ≃L[ℝ] W) (hπsurj : Function.Surjective π)
+    (L K C E B K&#x27; C&#x27; : ℝ) (hL : 0 ≤ L) (hK : 0 ≤ K) (hC : 0 ≤ C)
+    (hE : 0 ≤ E) (hB : 0 ≤ B) (hK&#x27; : 0 ≤ K&#x27;)
+    (hπ : ∀ x y, ‖π x - π y‖ ≤ L * dist x y)
+    (hupper : ∀ a b, dist (f a) (f b) ≤ K * dist a b + C)
+    (hlower : ∀ a b, dist a b ≤ K&#x27; * dist (f a) (f b) + C&#x27;)
+    (hrf : ∀ a, dist (r (f a)) a ≤ E)
+    (haffine : ∀ h x,
+…</pre><p class="refs">Mentions: <a href="../Algebra/GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="../Analysis/BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li><li id=L116><b>theorem</b> <code>OAI.PolycyclicRecognition.virtuallyPolycyclic_of_corrected_height</code> <small>line 116</small><div class="doc"><p>The corrected geometric height and bounded-height chain packing imply
+virtual polycyclicity through the algebraic recognition theorem.</p></div><pre>theorem virtuallyPolycyclic_of_corrected_height
+    (liFP : LiFinitenessInput) (eaFP : ElementaryAmenableFinitenessInput)
+    (liPD : LiDualityInput) (bieri : BieriDualityInput)
+    (Γ H : Type) [Group Γ] [Group H] [MetricSpace H] [IsIsometricSMul H H]
+    [Group.FG Γ] [Group.FG H]
+    {X W : Type} [PseudoMetricSpace X] [DecidableEq X] [NormedAddCommGroup W]
+    (H₀ : Subgroup H) [H₀.FiniteIndex] (τ : H₀ →* Multiplicative W)
+    (gromov : ∀ (J : Subgroup τ.ker) [DecidableEq J], GromovPolynomialGrowthInput J)
+    (f : H → X) (π : X → W) (packing : PolynomialBoundedChainPacking π)
+    (hfinite : ∀ R : ℝ, (Metric.closedBall (1 : H) R).Finite)
+    {K C K&#x27; C&#x27; D : ℝ} (hK : 0 ≤ K) (hC : 0 ≤ C) (hK&#x27; : 0 ≤ K&#x27;) (hD : 0 ≤ D)
+    (hupper : ∀ x y, dist (f x) (f y) ≤ K * dist x y + C)
+…</pre><p class="refs">Mentions: <a href="../Finiteness/DualityEndgame.lean.html#L33">OAI.PolycyclicRecognition.LiFinitenessInput</a>, <a href="../Finiteness/DualityEndgame.lean.html#L39">OAI.PolycyclicRecognition.ElementaryAmenableFinitenessInput</a>, <a href="../Finiteness/DualityEndgame.lean.html#L47">OAI.PolycyclicRecognition.LiDualityInput</a>, <a href="../Finiteness/DualityEndgame.lean.html#L55">OAI.PolycyclicRecognition.BieriDualityInput</a>, <a href="../Algebra/GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="../Analysis/BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

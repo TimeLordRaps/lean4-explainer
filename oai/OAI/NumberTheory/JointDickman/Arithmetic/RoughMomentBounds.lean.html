@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/JointDickman/Arithmetic/RoughMomentBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/JointDickman/Arithmetic/RoughMomentBounds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">JointDickman</a> / <a href="index.html">Arithmetic</a> / <span>RoughMomentBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">JointDickman</a>/<a href="index.html">Arithmetic</a>/<span>RoughMomentBounds.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/JointDickman/Arithmetic/RoughMomentBounds.lean#L1">source</a></p><div class="doc"><h3>Uniform bounds for the moving roughness correction</h3><p>The exponent shift <code>1 / log P</code> costs only a fixed power of <code>log P</code>.
+This supplies the moment in Rankin's argument from Mertens' estimate,
+rather than assuming a cutoff-dependent bound.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.JointDickman.shifted_reciprocal_le</code> <small>line 20</small></li><li id=L31><b>theorem</b> <code>OAI.JointDickman.shifted_prime_sum_le</code> <small>line 31</small></li><li id=L43><b>theorem</b> <code>OAI.JointDickman.smoothCorrection_shifted_bound</code> <small>line 43</small><div class="doc"><p>Mertens controls the shifted absolute correction moment by a fixed
+power of the logarithm, uniformly over all finite truncations.</p></div><pre>theorem smoothCorrection_shifted_bound
+    (hM : PublishedInputs.PrimeReciprocalMertensInput) :
+    ∃ A : ℝ, 0 &lt; A ∧ ∀ (P : ℕ) (S : Finset ℕ) (z : ℝ),
+      2 ≤ P → 1 ≤ Real.log P → 0 ≤ z → z ≤ 1 / 2 →
+      (∑ n ∈ S, |smoothCorrection (Nat.primesLE P) z n| /
+        (n : ℝ) ^ (1 - 1 / Real.log P)) ≤
+        A * (Real.log P) ^ (Real.exp 1) := by
+…</pre><p class="refs">Mentions: <a href="../Amplification/ArithmeticInputs.lean.html#L46">OAI.JointDickman.PublishedInputs.PrimeReciprocalMertensInput</a>, <a href="RoughConvolution.lean.html#L36">OAI.JointDickman.smoothCorrection</a></p></li><li id=L86><b>theorem</b> <code>OAI.JointDickman.roughConvolutionTail_shifted_bound</code> <small>line 86</small><div class="doc"><p>The same constant controls the actual large-divisor convolution error.</p></div><pre>theorem roughConvolutionTail_shifted_bound
+    (hM : PublishedInputs.PrimeReciprocalMertensInput) :
+    ∃ A : ℝ, 0 &lt; A ∧ ∀ (P N V : ℕ) (z : ℝ),
+      2 ≤ P → 1 ≤ Real.log P → 0 &lt; V → 0 ≤ z → z ≤ 1 / 2 →
+      |roughConvolutionTail (Nat.primesLE P) z N V| ≤
+        (N : ℝ) / (V : ℝ) ^ (1 / Real.log P) *
+          (A * (Real.log P) ^ (Real.exp 1)) := by
+…</pre><p class="refs">Mentions: <a href="../Amplification/ArithmeticInputs.lean.html#L46">OAI.JointDickman.PublishedInputs.PrimeReciprocalMertensInput</a>, <a href="../Counting/ConvolutionTail.lean.html#L34">OAI.JointDickman.roughConvolutionTail</a></p></li><li id=L101><b>theorem</b> <code>OAI.JointDickman.log_pow_le_rpow</code> <small>line 101</small></li><li id=L116><b>theorem</b> <code>OAI.JointDickman.smoothCorrection_log_moment_le</code> <small>line 116</small><div class="doc"><p>Exponential tilting controls every logarithmic correction moment.</p></div><pre>theorem smoothCorrection_log_moment_le (E S : Finset ℕ) (k : ℕ)
+    (z : ℝ) {ε : ℝ} (hε : 0 &lt; ε) :
+    (∑ n ∈ S, |smoothCorrection E z n| / (n : ℝ) * (Real.log n) ^ k) ≤
+      ((k.factorial : ℝ) / ε ^ k) *
+        ∑ n ∈ S, |smoothCorrection E z n| / (n : ℝ) ^ (1 - ε) := by
+…</pre><p class="refs">Mentions: <a href="RoughConvolution.lean.html#L36">OAI.JointDickman.smoothCorrection</a></p></li><li id=L138><b>theorem</b> <code>OAI.JointDickman.smoothCorrection_log_moments_bound</code> <small>line 138</small><div class="doc"><p>The absolute constant in the roughness bound works for every fixed
+moment order; only the factorial and extra logarithmic power change.</p></div><pre>theorem smoothCorrection_log_moments_bound
+    (hM : PublishedInputs.PrimeReciprocalMertensInput) :
+    ∃ A : ℝ, 0 &lt; A ∧ ∀ (P : ℕ) (S : Finset ℕ) (z : ℝ) (k : ℕ),
+      2 ≤ P → 1 ≤ Real.log P → 0 ≤ z → z ≤ 1 / 2 →
+      (∑ n ∈ S, |smoothCorrection (Nat.primesLE P) z n| / (n : ℝ) *
+        (Real.log n) ^ k) ≤
+        A * (k.factorial : ℝ) * (Real.log P) ^ (Real.exp 1 + k) := by
+…</pre><p class="refs">Mentions: <a href="../Amplification/ArithmeticInputs.lean.html#L46">OAI.JointDickman.PublishedInputs.PrimeReciprocalMertensInput</a>, <a href="RoughConvolution.lean.html#L36">OAI.JointDickman.smoothCorrection</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

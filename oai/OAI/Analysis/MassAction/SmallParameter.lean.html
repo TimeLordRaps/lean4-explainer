@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/SmallParameter.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/SmallParameter.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>SmallParameter.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>SmallParameter.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/SmallParameter.lean#L1">source</a></p><div class="doc"><p>Simultaneous small-parameter choice for the affine trapping construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem326.exists_small_parameter</code> <small>line 15</small><div class="doc"><p>The final small parameter is chosen only after the positive gap is fixed.
+The rate type may be empty; the rate inequalities are then vacuous.</p></div><pre>theorem exists_small_parameter {ι : Type uIota} {η : Type uEta} [Fintype ι] [Fintype η]
+    (c : ι → ℝ) (κ : η → ℝ) {H h₀ : ℝ}
+    (hH : 0 &lt; H) (hh₀ : 0 &lt; h₀) (hκ : ∀ e, 0 &lt; κ e) :
+    ∃ h : ℝ, 0 &lt; h ∧ h &lt; h₀ ∧ h &lt; 1 ∧
+      (∀ i, |c i / Real.log h| &lt; H) ∧
+      ∀ e, h ^ H * (∑ e, κ e) &lt; κ e := by
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.Problem326.rpow_log_ratio</code> <small>line 44</small><div class="doc"><p>Logarithmic coordinates reconstruct a positive state for a base in <code>(0,1)</code>.</p></div><pre>theorem rpow_log_ratio {h x : ℝ} (hh : 0 &lt; h) (hh1 : h &lt; 1) (hx : 0 &lt; x) :
+    h ^ (Real.log x / Real.log h) = x := by
+…</pre></li><li id=L51><b>theorem</b> <code>OAI.Problem326.exists_initial_exponent_parameter</code> <small>line 51</small><div class="doc"><p>Simultaneous initial-exponent and rate separation with explicit reconstruction.</p></div><pre>theorem exists_initial_exponent_parameter {ι : Type uIota} {η : Type uEta} [Fintype ι] [Fintype η]
+    (x₀ : ι → ℝ) (κ : η → ℝ) {H h₀ : ℝ}
+    (hx₀ : ∀ i, 0 &lt; x₀ i) (hH : 0 &lt; H) (hh₀ : 0 &lt; h₀) (hκ : ∀ e, 0 &lt; κ e) :
+    ∃ (h : ℝ) (p : ι → ℝ), 0 &lt; h ∧ h &lt; h₀ ∧ h &lt; 1 ∧
+      (∀ i, |p i| &lt; H) ∧ (∀ i, h ^ (p i) = x₀ i) ∧
+      ∀ e, h ^ H * (∑ e, κ e) &lt; κ e := by
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.Problem326.tendsto_log_coordinate_div_log</code> <small>line 75</small><div class="doc"><p>The logarithmic exponent of a fixed coordinate tends to zero when the
+base tends to zero from the right.  Positivity of the coordinate is not
+needed for this limit (but is needed to reconstruct it from its exponent).</p></div><pre>theorem tendsto_log_coordinate_div_log (x : ℝ) :
+    Tendsto (fun h : ℝ =&gt; Real.log x / Real.log h) (𝓝[&gt;] (0 : ℝ)) (𝓝 0) :=
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.Problem326.tendsto_positive_rpow_nhdsGT_zero</code> <small>line 80</small><div class="doc"><p>A positive fixed power tends to zero, including on the positive side.</p></div><pre>theorem tendsto_positive_rpow_nhdsGT_zero {H : ℝ} (hH : 0 &lt; H) :
+    Tendsto (fun h : ℝ =&gt; h ^ H) (𝓝[&gt;] (0 : ℝ)) (𝓝 0) := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.Problem326.exists_small_parameter_for_rates</code> <small>line 89</small><div class="doc"><p>Choose one small parameter after all slopes and their positive separation
+have already been fixed.  All coordinate and reaction constraints hold
+simultaneously; an empty reaction type causes no exceptional case.</p></div><pre>theorem exists_small_parameter_for_rates
+    {ι : Type uIota} {E : Type uE} [Finite ι] [Fintype E]
+    (x0 : ι → ℝ) (κ : E → ℝ) {h0 H : ℝ}
+    (hh0 : 0 &lt; h0) (hH : 0 &lt; H) (hκ : ∀ e, 0 &lt; κ e) :
+    ∃ h : ℝ, 0 &lt; h ∧ h &lt; h0 ∧ h &lt; 1 ∧
+      (∀ i, |Real.log (x0 i) / Real.log h| &lt; H) ∧
+      (∀ e, h ^ H * (∑ f, κ f) &lt; κ e) := by
+…</pre></li><li id=L119><b>theorem</b> <code>OAI.Problem326.rpow_log_coordinate</code> <small>line 119</small><div class="doc"><p>Positive coordinates are recovered exactly from their logarithmic
+exponents for a base strictly between zero and one.</p></div><pre>theorem rpow_log_coordinate {h x : ℝ}
+    (hh : 0 &lt; h) (hh1 : h &lt; 1) (hx : 0 &lt; x) :
+    h ^ (Real.log x / Real.log h) = x := by
+…</pre></li><li id=L126><b>theorem</b> <code>OAI.Problem326.abs_log_coordinate_lt_one_iff</code> <small>line 126</small><div class="doc"><p>The open symmetric exponent interval describes the interior of the
+positive reciprocal box in each coordinate.</p></div><pre>theorem abs_log_coordinate_lt_one_iff {h x : ℝ}
+    (hh : 0 &lt; h) (hh1 : h &lt; 1) (hx : 0 &lt; x) :
+    |Real.log x / Real.log h| &lt; 1 ↔ h &lt; x ∧ x &lt; h⁻¹ := by
+…</pre></li><li id=L137><b>theorem</b> <code>OAI.Problem326.abs_log_coordinate_le_one_iff</code> <small>line 137</small><div class="doc"><p>The closed symmetric exponent interval describes the closed positive
+reciprocal box in each coordinate.</p></div><pre>theorem abs_log_coordinate_le_one_iff {h x : ℝ}
+    (hh : 0 &lt; h) (hh1 : h &lt; 1) (hx : 0 &lt; x) :
+    |Real.log x / Real.log h| ≤ 1 ↔ h ≤ x ∧ x ≤ h⁻¹ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

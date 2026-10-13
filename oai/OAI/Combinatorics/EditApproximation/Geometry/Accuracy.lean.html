@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/EditApproximation/Geometry/Accuracy.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/EditApproximation/Geometry/Accuracy.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">EditApproximation</a> / <a href="index.html">Geometry</a> / <span>Accuracy.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">EditApproximation</a>/<a href="index.html">Geometry</a>/<span>Accuracy.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/EditApproximation/Geometry/Accuracy.lean#L1">source</a></p><div class="doc"><h3>Accuracy assembly for the edit-distance approximation scheme</h3><p>The probability and integer-conversion bounds of Section 8 of
+<em>An Almost-Linear Approximation Scheme for Edit Distance</em>
+(OpenAI, September 24, 2026) follow from the refinement estimate and
+simultaneous seed guarantee using Markov's inequality.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.EditApproximation.integerAnswer</code> <small>line 19</small><div class="doc"><p>The implementation clamps to the input length and rounds down.</p></div><pre>noncomputable def integerAnswer (N : ℕ) (value : ℝ) : ℕ :=
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.EditApproximation.integerAnswer_spec</code> <small>line 24</small><div class="doc"><p>Clamping and rounding down preserve a one-sided approximation of an
+integer distance.  This does not assert that an estimator has that bound.</p></div><pre>theorem integerAnswer_spec {N D : ℕ} {value ε : ℝ}
+    (hDN : D ≤ N) (hε : 0 ≤ ε)
+    (hlower : (D : ℝ) ≤ value) (hupper : value ≤ (1 + ε) * D) :
+    D ≤ integerAnswer N value ∧
+      (integerAnswer N value : ℝ) ≤ (1 + ε) * D := by
+…</pre><p class="refs">Mentions: <a href="Accuracy.lean.html#L19">OAI.EditApproximation.integerAnswer</a></p></li><li id=L38><b>theorem</b> <code>OAI.EditApproximation.integerAnswer_zero</code> <small>line 38</small></li><li id=L42><b>def</b> <code>OAI.EditApproximation.goodExcess</code> <small>line 42</small><div class="doc"><p>The positive excess on executions having a good seed.</p></div><pre>noncomputable def goodExcess {Ω : Type*} (G : Set Ω) (value : Ω → ℝ) (D : ℕ) :
+    Ω → ℝ := G.indicator (fun ω =&gt; max (value ω - D) 0)</pre></li><li id=L45><b>theorem</b> <code>OAI.EditApproximation.goodExcess_nonneg</code> <small>line 45</small></li><li id=L52><b>theorem</b> <code>OAI.EditApproximation.goodExcess_tail</code> <small>line 52</small><div class="doc"><p>Markov's inequality converts the positive-excess expectation bound of
+Section 8 into an approximation tail bound.</p></div><pre>theorem goodExcess_tail {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsFiniteMeasure μ]
+    {G : Set Ω} {value : Ω → ℝ} {D : ℕ} {ℓ ε : ℝ}
+    (hD : 0 &lt; D) (hℓ : 0 &lt; ℓ) (hε : 0 &lt; ε)
+    (hint : Integrable (goodExcess G value D) μ)
+    (hmoment : (∫ ω, goodExcess G value D ω ∂μ) ≤ (D : ℝ) / ℓ) :
+    μ.real {ω | ε * D ≤ goodExcess G value D ω} ≤ 1 / (ℓ * ε) := by
+…</pre><p class="refs">Mentions: <a href="Accuracy.lean.html#L42">OAI.EditApproximation.goodExcess</a></p></li><li id=L73><b>theorem</b> <code>OAI.EditApproximation.final_answer_accuracy</code> <small>line 73</small><div class="doc"><p>Final probability assembly, with the two genuinely unresolved
+algorithmic guarantees exposed: a good-seed event and its excess moment.
+The stronger success probability <code>4/5</code> implies the paper's <code>2/3</code>.</p></div><pre>theorem final_answer_accuracy {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    {G : Set Ω} {value : Ω → ℝ} {N D : ℕ} {ℓ ε : ℝ}
+    (hvalue : Measurable value) (hDN : D ≤ N) (hD : 0 &lt; D)
+    (hℓ : 0 &lt; ℓ) (hε : 0 &lt; ε) (haccuracy : 10 ≤ ℓ * ε)
+    (hseed : μ.real Gᶜ ≤ 1 / 10)
+    (hlower : ∀ ω ∈ G, (D : ℝ) ≤ value ω)
+    (hint : Integrable (goodExcess G value D) μ)
+    (hmoment : (∫ ω, goodExcess G value D ω ∂μ) ≤ (D : ℝ) / ℓ) :
+    (4 / 5 : ℝ) ≤ μ.real {ω | D ≤ integerAnswer N (value ω) ∧
+      (integerAnswer N (value ω) : ℝ) ≤ (1 + ε) * D} := by
+…</pre><p class="refs">Mentions: <a href="Accuracy.lean.html#L42">OAI.EditApproximation.goodExcess</a>, <a href="Accuracy.lean.html#L19">OAI.EditApproximation.integerAnswer</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

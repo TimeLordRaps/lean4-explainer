@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/PCP/Overlap.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/PCP/Overlap.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">PCP</a> / <span>Overlap.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">PCP</a>/<span>Overlap.lean</span></code></h1><p class="muted">50 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/PCP/Overlap.lean#L1">source</a></p><div class="doc"><p>Direct diagonal-overlap comparison for the finite correlated sampler.
+All quantities are finite weight arrays; no reference sampler or embedding
+claim is assumed. The final theorem consumes the per-label lower bound that
+is proved for the actual finite threshold sampler in CorrelatedSampling.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.min_half_formula_inline_Overlap</code> <small>line 24</small></li><li id=L32><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.sum_min_one_sub_tv</code> <small>line 32</small></li><li id=L41><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.discount_le_self_inline_Overlap</code> <small>line 41</small></li><li id=L46><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.discount_loss_le_mul_inline_Overlap</code> <small>line 46</small></li><li id=L56><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.discountedCommonMass</code> <small>line 56</small></li><li id=L61><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.discounted_common_mass_bounds</code> <small>line 61</small><div class="doc"><p>The direct common-mass argument, with its exact finite-array premises.</p></div><pre>theorem discounted_common_mass_bounds {X S : Type*} [Fintype X] [Fintype S]
+    (p a b : X × S → ℝ) (μ t : X → ℝ)
+    (hp : IsProbability p) (ha : IsProbability a) (hb : IsProbability b)
+    (ht : ∀ x, 0 ≤ t x)
+    (hrow : ∀ x, (∑ s, a (x, s)) = μ x)
+    (htv : (∑ x, μ x * t x) = totalVariation a b) :
+    1 - 2 * totalVariation p a - 2 * totalVariation p b ≤ discountedCommonMass p a b t ∧
+      discountedCommonMass p a b t ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L56">OAI.MaxCutGames.Foundations.Repetition.discountedCommonMass</a></p></li><li id=L121><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.diagonalWeights</code> <small>line 121</small></li><li id=L126><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.diagonalWeights_isProbability</code> <small>line 126</small></li><li id=L137><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.diagonal_overlap_identity</code> <small>line 137</small></li><li id=L164><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.diagonal_sampler_totalVariation_le</code> <small>line 164</small><div class="doc"><p>The per-label diagonal guarantee implies direct TV control even when the
+target's question marginal differs from the simulator's question marginal.</p></div><pre>theorem diagonal_sampler_totalVariation_le {X S : Type*} [Fintype X] [Fintype S]
+    (p : X × S → ℝ) (μ : X → ℝ) (L R : X → S → ℝ)
+    (sim : X × S × S → ℝ) (hp : IsProbability p) (hμ : IsProbability μ)
+    (hL : ∀ x, IsProbability (L x)) (hR : ∀ x, IsProbability (R x))
+    (hsim : IsProbability sim) {τ : ℝ} (hτ0 : 0 ≤ τ) (hτ1 : τ ≤ 1)
+    (hdiag : ∀ x s, μ x * min (L x s) (R x s) /
+      (1 + totalVariation (L x) (R x)) * (1 - τ) ≤ sim (x, s, s)) :
+    totalVariation sim (diagonalWeights p) ≤
+      2 * totalVariation p (fun z =&gt; μ z.1 * L z.1 z.2) +
+      2 * totalVariation p (fun z =&gt; μ z.1 * R z.1 z.2) + τ := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L121">OAI.MaxCutGames.Foundations.Repetition.diagonalWeights</a></p></li><li id=L232><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.TraceSeed</code> <small>line 232</small></li><li id=L236><b>instance</b> <code>OAI.MaxCutGames.Foundations.Repetition.traceSeedFintype</code> <small>line 236</small></li><li id=L241><b>instance</b> <code>OAI.MaxCutGames.Foundations.Repetition.traceSeedUniqueZero</code> <small>line 241</small></li><li id=L244><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.traceList</code> <small>line 244</small></li><li id=L248><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.traceSeedLaw</code> <small>line 248</small></li><li id=L254><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.traceSeedLaw_expectation</code> <small>line 254</small></li><li id=L273><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.sharedOutputLaw</code> <small>line 273</small><div class="doc"><p>The law of the two local outputs, driven by a seed chosen independently
+of the question pair. Local maps receive only their own question.</p></div><pre>def sharedOutputLaw {X Y S Seed : Type*}
+    [Fintype X] [Fintype Y] [Fintype S] [Fintype Seed] [DecidableEq S]
+    (μ : FiniteDistribution (X × Y)) (seedLaw : FiniteDistribution Seed)
+    (left : Seed → X → S) (right : Seed → Y → S) :
+    FiniteDistribution ((X × Y) × S × S) :=
+…</pre></li><li id=L281><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.sharedOutputLaw_weight</code> <small>line 281</small></li><li id=L299><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.samplerLocal</code> <small>line 299</small></li><li id=L305><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw</code> <small>line 305</small></li><li id=L312><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.probability_weight_le_one</code> <small>line 312</small></li><li id=L320><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw_diagonal</code> <small>line 320</small><div class="doc"><p>The published per-label estimate now concerns the actual finite game-law
+sampler with a shared seed independent of the input questions.</p></div><pre>theorem samplerOutputLaw_diagonal (thresholds : List ℝ)
+    (μ : FiniteDistribution (X × Y))
+    (L : X → FiniteDistribution S) (R : Y → FiniteDistribution S)
+    (hL : ∀ x s, (L x).weight s ∈ thresholds)
+    (hR : ∀ y s, (R y).weight s ∈ thresholds)
+    (fallback : S) (n : Nat) (x : X) (y : Y) (a : S) :
+    μ.weight (x,y) * min ((L x).weight a) ((R y).weight a) /
+        (1 + Information.totalVariation (L x).weight (R y).weight) *
+        (1 - eventMass (rectangleWeight thresholds)
+          (fun s =&gt; !(rectangleAccept thresholds (L x).weight s ||
+            rectangleAccept thresholds (R y).weight s)) ^ n) ≤
+      (samplerOutputLaw thresholds μ L R fallback n).weight ((x,y),a,a) := by
+…</pre><p class="refs">Mentions: <a href="../Games/LabelBound.lean.html#L304">OAI.MaxCutGames.Foundations.Information.totalVariation</a>, <a href="Overlap.lean.html#L305">OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw</a></p></li><li id=L351><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw_uniform_diagonal</code> <small>line 351</small></li><li id=L374><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw_totalVariation</code> <small>line 374</small><div class="doc"><p>Actual finite shared sampler approximates any prescribed diagonal law.
+Its error is derived from the two actual conditional profiles and its uniform
+finite exhaustion probability.</p></div><pre>theorem samplerOutputLaw_totalVariation
+    (p : FiniteDistribution ((X × Y) × S)) (μ : FiniteDistribution (X × Y))
+    (L : X → FiniteDistribution S) (R : Y → FiniteDistribution S)
+    (fallback : S) (n : Nat) :
+    Information.totalVariation
+      (samplerOutputLaw (sharedProfileThresholds L R) μ L R fallback n).weight
+      (diagonalWeights p.weight) ≤
+      2 * Information.totalVariation p.weight (fun z =&gt; μ.weight z.1 * (L z.1.1).weight z.2) +
+      2 * Information.totalVariation p.weight (fun z =&gt; μ.weight z.1 * (R z.1.2).weight z.2) +
+      uniformRejectionRate S ^ n := by
+…</pre><p class="refs">Mentions: <a href="../Games/LabelBound.lean.html#L304">OAI.MaxCutGames.Foundations.Information.totalVariation</a>, <a href="Overlap.lean.html#L305">OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw</a>, <a href="Overlap.lean.html#L121">OAI.MaxCutGames.Foundations.Repetition.diagonalWeights</a></p></li><li id=L396><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.samplerOutputLaw_arbitrarily_close</code> <small>line 396</small></li><li id=L431><b>def</b> <code>OAI.MaxCutGames.Repetition.partialPairMass</code> <small>line 431</small></li><li id=L435><b>def</b> <code>OAI.MaxCutGames.Repetition.partialEdgeMass</code> <small>line 435</small></li><li id=L440><b>def</b> <code>OAI.MaxCutGames.Repetition.partialLabelScore</code> <small>line 440</small></li><li id=L444><b>def</b> <code>OAI.MaxCutGames.Repetition.partialSample</code> <small>line 444</small></li><li id=L448><b>theorem</b> <code>OAI.MaxCutGames.Repetition.expectation_mono_inline_RoundingSampling&#x27;</code> <small>line 448</small></li><li id=L455><b>theorem</b> <code>OAI.MaxCutGames.Repetition.expectation_const_inline_RoundingSampling&#x27;</code> <small>line 455</small></li><li id=L460><b>theorem</b> <code>OAI.MaxCutGames.Repetition.first_good_relation_le_inline_RoundingSampling</code> <small>line 460</small></li><li id=L483><b>theorem</b> <code>OAI.MaxCutGames.Repetition.partial_mass_bounds_inline_RoundingSampling</code> <small>line 483</small></li><li id=L512><b>theorem</b> <code>OAI.MaxCutGames.Repetition.partial_ratio_bound_inline_RoundingSampling</code> <small>line 512</small></li><li id=L536><b>theorem</b> <code>OAI.MaxCutGames.Repetition.partialSample_pair_lower</code> <small>line 536</small><div class="doc"><p>Pointwise success bound for the actual shared finite first-accept sampler.
+The relation may depend on the ordered pair and need not be symmetric.</p></div><pre>theorem partialSample_pair_lower (μ : FiniteDistribution S)
+    (accept : V → S → Bool) (label : V → S → A)
+    (R : V → V → A → A → Bool) (fallback : A) (density : ℝ)
+    (hdensity₀ : 0 &lt; density) (hdensity : ∀ v, μ.probability (accept v) = density)
+    (x y : V) (n : Nat) :
+    2 * (partialPairMass μ accept label R x y / density) - 1 - (1 - density) ^ n ≤
+      traceAverage μ.weight n (fun proposals =&gt;
+        if R x y (partialSample accept label fallback proposals x)
+          (partialSample accept label fallback proposals y) then 1 else 0) := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L431">OAI.MaxCutGames.Repetition.partialPairMass</a>, <a href="Overlap.lean.html#L444">OAI.MaxCutGames.Repetition.partialSample</a></p></li><li id=L575><b>theorem</b> <code>OAI.MaxCutGames.Repetition.expectation_partial_lower_inline_RoundingSampling</code> <small>line 575</small></li><li id=L592><b>theorem</b> <code>OAI.MaxCutGames.Repetition.exists_labeling_ge_partial</code> <small>line 592</small><div class="doc"><p>Finite partial-assignment correlated rounding. Every vertex has acceptance
+probability <code>density</code>. The normalized accepted good-pair mass <code>T</code> gives an actual
+deterministic labeling with success at least <code>2*T - 1</code>.</p></div><pre>theorem exists_labeling_ge_partial {E : Type*} [Fintype E] [Nonempty V] [Nonempty A]
+    (μ : FiniteDistribution S) (ν : FiniteDistribution E)
+    (accept : V → S → Bool) (label : V → S → A)
+    (left right : E → V) (R : E → A → A → Bool) (density : ℝ) (hdensity₀ : 0 &lt; density)
+    (hdensity : ∀ v, μ.probability (accept v) = density) :
+    ∃ f : V → A,
+      2 * (ν.expectation (partialEdgeMass μ accept label left right R) / density) - 1 ≤
+        partialLabelScore ν left right R f := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L435">OAI.MaxCutGames.Repetition.partialEdgeMass</a>, <a href="Overlap.lean.html#L440">OAI.MaxCutGames.Repetition.partialLabelScore</a></p></li><li id=L666><b>def</b> <code>OAI.MaxCutGames.Repetition.thresholdLevels</code> <small>line 666</small><div class="doc"><p>All squared amplitudes, including repetitions, determine a single shared
+finite threshold partition.</p></div><pre>def thresholdLevels (f : V → Ω → ℝ) : List ℝ := by
+…</pre></li><li id=L670><b>theorem</b> <code>OAI.MaxCutGames.Repetition.square_mem_thresholdLevels</code> <small>line 670</small></li><li id=L677><b>abbrev</b> <code>OAI.MaxCutGames.Repetition.ThresholdSeed</code> <small>line 677</small><div class="doc"><p>The seed is a coordinate and a finite threshold interval.</p></div><pre>abbrev ThresholdSeed (f : V → Ω → ℝ) := RectangleSeed (thresholdLevels f) Ω</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L666">OAI.MaxCutGames.Repetition.thresholdLevels</a></p></li><li id=L679><b>def</b> <code>OAI.MaxCutGames.Repetition.thresholdDistribution</code> <small>line 679</small></li><li id=L682><b>theorem</b> <code>OAI.MaxCutGames.Repetition.thresholdSeed_nonempty</code> <small>line 682</small></li><li id=L690><b>def</b> <code>OAI.MaxCutGames.Repetition.thresholdAccept</code> <small>line 690</small></li><li id=L694><b>def</b> <code>OAI.MaxCutGames.Repetition.thresholdLabel</code> <small>line 694</small><div class="doc"><p>Labels use only the local vertex and the shared coordinate.</p></div><pre>def thresholdLabel (f : V → Ω → ℝ) (a : V → Ω → A) (x : V)
+    (seed : ThresholdSeed f) : A := a x seed.1</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L677">OAI.MaxCutGames.Repetition.ThresholdSeed</a></p></li><li id=L697><b>def</b> <code>OAI.MaxCutGames.Repetition.thresholdRate</code> <small>line 697</small></li><li id=L699><b>theorem</b> <code>OAI.MaxCutGames.Repetition.thresholdRate_positive</code> <small>line 699</small></li><li id=L704><b>theorem</b> <code>OAI.MaxCutGames.Repetition.square_le_one_of_row_norm</code> <small>line 704</small></li><li id=L713><b>theorem</b> <code>OAI.MaxCutGames.Repetition.threshold_acceptance_mass</code> <small>line 713</small><div class="doc"><p>Every vertex accepts with the same positive mass, independently of its
+unit vector.  Nonnegativity of the amplitudes is unnecessary for this lemma.</p></div><pre>theorem threshold_acceptance_mass [Nonempty Ω] (f : V → Ω → ℝ)
+    (hnorm : ∀ x, ∑ ω, f x ω ^ 2 = 1) (x : V) :
+    (thresholdDistribution f).probability (thresholdAccept f x) = thresholdRate Ω := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L679">OAI.MaxCutGames.Repetition.thresholdDistribution</a>, <a href="Overlap.lean.html#L690">OAI.MaxCutGames.Repetition.thresholdAccept</a>, <a href="Overlap.lean.html#L697">OAI.MaxCutGames.Repetition.thresholdRate</a></p></li><li id=L725><b>theorem</b> <code>OAI.MaxCutGames.Repetition.threshold_good_pair_mass</code> <small>line 725</small><div class="doc"><p>Joint acceptance with any relation on the two local labels has exactly the
+minimum-overlap mass.  Both vertices use the same coordinate and threshold.</p></div><pre>theorem threshold_good_pair_mass [Nonempty Ω] (f : V → Ω → ℝ)
+    (hnorm : ∀ x, ∑ ω, f x ω ^ 2 = 1) (a : V → Ω → A)
+    (x y : V) (R : A → A → Prop) [DecidableRel R] :
+    (thresholdDistribution f).probability (fun seed =&gt;
+      (thresholdAccept f x seed &amp;&amp; thresholdAccept f y seed) &amp;&amp;
+        decide (R (thresholdLabel f a x seed) (thresholdLabel f a y seed))) =
+      thresholdRate Ω * ∑ ω,
+        if R (a x ω) (a y ω) then min (f x ω ^ 2) (f y ω ^ 2) else 0 := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L679">OAI.MaxCutGames.Repetition.thresholdDistribution</a>, <a href="Overlap.lean.html#L690">OAI.MaxCutGames.Repetition.thresholdAccept</a>, <a href="Overlap.lean.html#L694">OAI.MaxCutGames.Repetition.thresholdLabel</a>, <a href="Overlap.lean.html#L697">OAI.MaxCutGames.Repetition.thresholdRate</a></p></li><li id=L767><b>theorem</b> <code>OAI.MaxCutGames.Repetition.threshold_good_pair_mass_bool</code> <small>line 767</small><div class="doc"><p>Boolean-predicate form used by finite games and the shared sampler.</p></div><pre>theorem threshold_good_pair_mass_bool [Nonempty Ω] (f : V → Ω → ℝ)
+    (hnorm : ∀ x, ∑ ω, f x ω ^ 2 = 1) (a : V → Ω → A)
+    (x y : V) (R : A → A → Bool) :
+    (thresholdDistribution f).probability (fun seed =&gt;
+      (thresholdAccept f x seed &amp;&amp; thresholdAccept f y seed) &amp;&amp;
+        R (thresholdLabel f a x seed) (thresholdLabel f a y seed)) =
+      thresholdRate Ω * ∑ ω,
+        if R (a x ω) (a y ω) then min (f x ω ^ 2) (f y ω ^ 2) else 0 := by
+…</pre><p class="refs">Mentions: <a href="Overlap.lean.html#L679">OAI.MaxCutGames.Repetition.thresholdDistribution</a>, <a href="Overlap.lean.html#L690">OAI.MaxCutGames.Repetition.thresholdAccept</a>, <a href="Overlap.lean.html#L694">OAI.MaxCutGames.Repetition.thresholdLabel</a>, <a href="Overlap.lean.html#L697">OAI.MaxCutGames.Repetition.thresholdRate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

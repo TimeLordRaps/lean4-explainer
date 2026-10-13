@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/PeriodicResidueCount.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/PeriodicResidueCount.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>PeriodicResidueCount.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>PeriodicResidueCount.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/PeriodicResidueCount.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>theorem</b> <code>OAI.Problem337.periodic_count_mul</code> <small>line 9</small><div class="doc"><p>A periodic predicate has one full period's worth of solutions in each block.</p></div><pre>theorem periodic_count_mul {p : ℕ → Prop} [DecidablePred p] {d : ℕ}
+    (hp : Function.Periodic p d) (q : ℕ) :
+    Nat.count p (q * d) = q * Nat.count p d := by
+…</pre></li><li id=L23><b>theorem</b> <code>OAI.Problem337.periodic_count_div_mod</code> <small>line 23</small><div class="doc"><p>Exact quotient-and-remainder formula for a periodic counting function.</p></div><pre>theorem periodic_count_div_mod {p : ℕ → Prop} [DecidablePred p] {d : ℕ}
+    (hp : Function.Periodic p d) (N : ℕ) :
+    Nat.count p N = (N / d) * Nat.count p d + Nat.count p (N % d) := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.Problem337.periodic_count_discrepancy</code> <small>line 37</small><div class="doc"><p>The count on a prefix differs from its periodic mean by at most the number
+of allowed residues in one period. This bound is uniform in the prefix length.</p></div><pre>theorem periodic_count_discrepancy {p : ℕ → Prop} [DecidablePred p] {d : ℕ}
+    (hd : 0 &lt; d) (hp : Function.Periodic p d) (N : ℕ) :
+    |(Nat.count p N : ℝ) - (N : ℝ) * Nat.count p d / d| ≤ Nat.count p d := by
+…</pre></li><li id=L63><b>theorem</b> <code>OAI.Problem337.periodic_count_shift_period</code> <small>line 63</small><div class="doc"><p>Shifting a periodic predicate does not change its mass over a full period.</p></div><pre>theorem periodic_count_shift_period {p : ℕ → Prop} [DecidablePred p] {d : ℕ}
+    (hp : Function.Periodic p d) (a : ℕ) :
+    Nat.count (fun n =&gt; p (a + n)) d = Nat.count p d := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.Problem337.filter_Ico_card_eq_count_shift</code> <small>line 74</small><div class="doc"><p>Counting a predicate on a shifted natural interval is the same as counting
+its translate on a prefix.</p></div><pre>theorem filter_Ico_card_eq_count_shift (p : ℕ → Prop) [DecidablePred p]
+    (a N : ℕ) :
+    ((Finset.Ico a (a + N)).filter p).card =
+      Nat.count (fun n =&gt; p (a + n)) N := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.Problem337.periodic_Ico_count_discrepancy</code> <small>line 86</small><div class="doc"><p>Sharp periodic discrepancy on any shifted interval: the error is bounded
+by one period's mass, independent of both endpoints.</p></div><pre>theorem periodic_Ico_count_discrepancy {p : ℕ → Prop} [DecidablePred p] {d : ℕ}
+    (hd : 0 &lt; d) (hp : Function.Periodic p d) (a N : ℕ) :
+    |(((Finset.Ico a (a + N)).filter p).card : ℝ) -
+      (N : ℝ) * Nat.count p d / d| ≤ Nat.count p d := by
+…</pre></li><li id=L98><b>theorem</b> <code>OAI.Problem337.zmod_predicate_period_count</code> <small>line 98</small><div class="doc"><p>The periodic mass of a predicate on residue classes is its finite cardinality.</p></div><pre>theorem zmod_predicate_period_count (d : ℕ) [NeZero d]
+    (P : ZMod d → Prop) [DecidablePred P] :
+    Nat.count (fun n : ℕ =&gt; P (n : ZMod d)) d =
+      (Finset.univ.filter P).card := by
+…</pre></li><li id=L108><b>theorem</b> <code>OAI.Problem337.zmod_predicate_Ico_discrepancy</code> <small>line 108</small><div class="doc"><p>Residue classes are equidistributed up to one copy of the allowed set on
+any natural interval, without a primality or coprimality assumption.</p></div><pre>theorem zmod_predicate_Ico_discrepancy (d : ℕ) [NeZero d]
+    (P : ZMod d → Prop) [DecidablePred P] (a N : ℕ) :
+    |(((Finset.Ico a (a + N)).filter (fun n : ℕ =&gt; P (n : ZMod d))).card : ℝ) -
+      (N : ℝ) * (Finset.univ.filter P).card / d| ≤ (Finset.univ.filter P).card := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

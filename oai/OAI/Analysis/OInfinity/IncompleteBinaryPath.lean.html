@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/IncompleteBinaryPath.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/IncompleteBinaryPath.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>IncompleteBinaryPath.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>IncompleteBinaryPath.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/IncompleteBinaryPath.lean#L1">source</a></p><div class="doc"><h3>Uniform paths for the actual incomplete binary cocycle</h3><p>Binary fragmentation needs two orthogonal isometries, not a coisometric row.
+For the complemented binary corner map, the splitting defect of an iterated
+cocycle has a path controlled by the original one-step unitary. Thus the
+bound is independent of the number of cocycle factors. The binary family
+need not generate a dense subalgebra of O∞.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>lemma</b> <code>OAI.WeakPureInfiniteness.incompleteUnitaryShift_sub_norm_le</code> <small>line 21</small></li><li id=L30><b>lemma</b> <code>OAI.WeakPureInfiniteness.incompleteUnitaryShift_binary</code> <small>line 30</small></li><li id=L44><b>def</b> <code>OAI.WeakPureInfiniteness.conjugateUnitaryShift</code> <small>line 44</small></li><li id=L50><b>lemma</b> <code>OAI.WeakPureInfiniteness.conjugateUnitaryShift_continuous</code> <small>line 50</small></li><li id=L55><b>lemma</b> <code>OAI.WeakPureInfiniteness.conjugateUnitaryShift_sub_norm_le</code> <small>line 55</small></li><li id=L64><b>lemma</b> <code>OAI.WeakPureInfiniteness.unitaryShift_iterate_sub_norm_le</code> <small>line 64</small></li><li id=L75><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_controlled_cocycle_splitting_path</code> <small>line 75</small><div class="doc"><p>A fixed path for <code>u</code> controls the splitting defects of all its product
+cocycles. The two factors move simultaneously, so their speed is at most <code>2L</code>.</p></div><pre>lemma exists_controlled_cocycle_splitting_path (α : unitary E →* unitary E)
+    (hαcont : Continuous α)
+    (hα : ∀ x y, ‖(α x : E) - α y‖ ≤ ‖(x : E) - y‖)
+    (u : unitary E) (L : ℝ) (p : Path (1 : unitary E) u)
+    (hp : ∀ a b, ‖(p a : E) - p b‖ ≤ L * |(a : ℝ) - b|) (n : ℕ) :
+    ∃ q : Path (1 : unitary E)
+        (finiteGroupCocycle (G := unitary E) α u n *
+…</pre><p class="refs">Mentions: <a href="RowCocycleDefect.lean.html#L22">OAI.WeakPureInfiniteness.finiteGroupCocycle</a></p></li><li id=L113><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_uniform_incompleteBinaryCocycle_path</code> <small>line 113</small><div class="doc"><p>Uniform contraction of the genuine complemented binary cocycle. In
+particular, no norm bound on the terminal projection enters this theorem.</p></div><pre>lemma exists_uniform_incompleteBinaryCocycle_path (s : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (u : unitary E) (L : ℝ) (hL : 0 ≤ L) (p : Path (1 : unitary E) u)
+    (hp : ∀ a b, ‖(p a : E) - p b‖ ≤ L * |(a : ℝ) - b|) (n : ℕ) :
+    ∃ q : Path (finiteGroupCocycle (G := unitary E)
+…</pre><p class="refs">Mentions: <a href="RowCocycleDefect.lean.html#L22">OAI.WeakPureInfiniteness.finiteGroupCocycle</a></p></li><li id=L137><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_controlled_unitary_extension</code> <small>line 137</small><div class="doc"><p>The explicit two-swap completion has a path of speed at most <code>4π</code>.
+The bound does not depend on the rank of its initial projection.</p></div><pre>lemma exists_controlled_unitary_extension [Nontrivial E] (v r : E)
+    (hv : v * star v * v = v) (hr : star r * r = 1)
+    (hpr : (star v * v) * r = 0) (hqr : (v * star v) * r = 0) :
+    ∃ u : unitary E, (u : E) * (star v * v) = v ∧
+      ∃ p : Path (1 : unitary E) u,
+        ∀ a b, ‖(p a : E) - p b‖ ≤ (4 * Real.pi) * |(a : ℝ) - b| := by
+…</pre></li><li id=L175><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_controlled_row_transfer</code> <small>line 175</small><div class="doc"><p>A supplied common unused isometry gives an actual one-step transfer with
+a path bound independent of the number of tested row entries.</p></div><pre>lemma exists_controlled_row_transfer [Nontrivial E] (s t : I → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (r : E) (hr : star r * r = 1)
+    (hsr : ∀ i, star (s i) * r = 0) (htr : ∀ i, star (t i) * r = 0) :
+    ∃ u : unitary E, (∀ i, (u : E) * s i = t i) ∧
+      ∃ p : Path (1 : unitary E) u,
+        ∀ a b, ‖(p a : E) - p b‖ ≤ (4 * Real.pi) * |(a : ℝ) - b| := by
+…</pre></li><li id=L223><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_controlled_canonical_transfer</code> <small>line 223</small><div class="doc"><p>All canonical finite rows have a controlled one-step completion. The
+unused product generator supplies the common isometry explicitly.</p></div><pre>lemma exists_controlled_canonical_transfer [Nontrivial E] (s t : ℕ → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hc : ∀ i j, Commute (star (t i)) (s j)) (N : ℕ) :
+    ∃ u : unitary E, (∀ i &lt; N, (u : E) * s i = t i) ∧
+      ∃ p : Path (1 : unitary E) u,
+        ∀ a b, ‖(p a : E) - p b‖ ≤ (4 * Real.pi) * |(a : ℝ) - b| := by
+…</pre></li><li id=L251><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_uniform_canonicalBinaryCocycle_paths</code> <small>line 251</small><div class="doc"><p>Canonical binary cocycles have a uniform <code>320π</code> path bound.</p></div><pre>lemma exists_uniform_canonicalBinaryCocycle_paths [Nontrivial E] (s t : ℕ → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hc : ∀ i j, Commute (star (t i)) (s j)) :
+    ∃ u : unitary E, (∀ i &lt; 2, (u : E) * s i = t i) ∧
+      ∀ n, ∃ p : Path (canonicalIncompleteCocycle s hs 2 u n) 1,
+        ∀ a b, ‖(p a : E) - p b‖ ≤ (320 * Real.pi) * |(a : ℝ) - b| := by
+…</pre><p class="refs">Mentions: <a href="IncompleteCocycle.lean.html#L163">OAI.WeakPureInfiniteness.canonicalIncompleteCocycle</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

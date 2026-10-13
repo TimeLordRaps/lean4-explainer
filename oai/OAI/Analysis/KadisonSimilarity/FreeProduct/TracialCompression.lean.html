@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/FreeProduct/TracialCompression.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/FreeProduct/TracialCompression.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">FreeProduct</a> / <span>TracialCompression.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">FreeProduct</a>/<span>TracialCompression.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/FreeProduct/TracialCompression.lean#L1">source</a></p><div class="doc"><p>Dense tracial vectors determine the word-level operator compression.
+In particular the matrix-entry identity is proved from the trace and the
+two-sided expectation identity, rather than supplied as an operator hypothesis.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.KadisonSimilarity.operator_eq_of_dense_coefficients</code> <small>line 20</small><div class="doc"><p>Matrix coefficients on any dense family determine a bounded operator.</p></div><pre>theorem operator_eq_of_dense_coefficients {ι : Type*} (v : ι → K)
+    (hv : DenseRange v) (A B : K →L[ℂ] K)
+    (h : ∀ i j, inner ℂ (v i) (A (v j)) = inner ℂ (v i) (B (v j))) : A = B := by
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.KadisonSimilarity.star_unitary_zpow</code> <small>line 36</small><div class="doc"><p>Star reverses the exponent of a unitary, in the units convention used in
+the dihedral word calculation.</p></div><pre>theorem star_unitary_zpow (w : Rˣ) (hw : star w = w⁻¹) (j : ℤ) :
+    star ((↑(w ^ j) : R)) = (↑(w ^ (-j)) : R) := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.KadisonSimilarity.tracial_corner_word</code> <small>line 42</small><div class="doc"><p>Removing the supporting corner in a tracial word leaves precisely the
+two Fourier powers around the test operator.</p></div><pre>theorem tracial_corner_word (w : Rˣ) (hw : star w = w⁻¹)
+    (e h a b : R) (he : star e = e) (heh : e * h = h) (hhe : h * e = h)
+    (j k : ℤ) :
+    star (e * (↑(w ^ (-j)) : R) * a) *
+        (h * (e * (↑(w ^ (-k)) : R) * b)) =
+      star a * ((↑(w ^ j) : R) * h * (↑(w ^ (-k)) : R)) * b := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.KadisonSimilarity.tracial_expectation_test</code> <small>line 58</small><div class="doc"><p>A trace-preserving bimodule projection preserves all matrix coefficients
+against its range algebra.</p></div><pre>theorem tracial_expectation_test (A : StarSubalgebra ℂ R)
+    (τ : R →ₗ[ℂ] ℂ) (E : R →ₗ[ℂ] R)
+    (htrace : ∀ x, τ (E x) = τ x)
+    (hbimod : ∀ (a b : A) x, E ((a : R) * x * (b : R)) =
+      (a : R) * E x * (b : R)) (a b : A) (x : R) :
+    τ (star (a : R) * x * (b : R)) = τ (star (a : R) * E x * (b : R)) := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.KadisonSimilarity.tracial_word_compression_entry</code> <small>line 73</small><div class="doc"><p>Word-level compression computed from dense tracial vectors. <code>ρ</code> is the
+compression of the left action to the base Hilbert space; it need only be
+linear on the full algebra.</p></div><pre>theorem tracial_word_compression_entry
+    (A : StarSubalgebra ℂ R) (τ : R →ₗ[ℂ] ℂ)
+    (V : R →ₗ[ℂ] H) (L : R →ₗ[ℂ] (H →L[ℂ] H))
+    (hinner : ∀ a b, inner ℂ (V a) (V b) = τ (star a * b))
+    (hleft : ∀ a b, L a (V b) = V (a * b))
+    (v : A → K) (hv : DenseRange v) (ρ : R →ₗ[ℂ] (K →L[ℂ] K))
+    (hρ : ∀ (a b : A) x,
+      inner ℂ (v a) (ρ x (v b)) = τ (star (a : R) * x * (b : R)))
+    (E : R →ₗ[ℂ] R)
+    (htrace : ∀ x, τ (E x) = τ x)
+    (hbimod : ∀ (a b : A) x, E ((a : R) * x * (b : R)) =
+      (a : R) * E x * (b : R))
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.KadisonSimilarity.finite_dihedral_compression</code> <small>line 107</small><div class="doc"><p>Once the algebraic entry calculation is known, linearity and the exact
+corner normalization give the whole finite Toeplitz-plus-Hankel matrix.</p></div><pre>theorem finite_dihedral_compression
+    {N : ℕ} (U : Fin N → K →L[ℂ] H) (T : H →L[ℂ] H)
+    (ρ : R →ₗ[ℂ] (K →L[ℂ] K)) (hρone : ρ 1 = ContinuousLinearMap.id ℂ K)
+    (s : R) (γ : ℤ → ℂ) (t : ℂ) (ht : t ≠ 0)
+    (hentry : ∀ i j,
+      (U i).adjoint.comp (T.comp (U j)) =
+        t⁻¹ • ρ (((2 * t) ^ 2 / 2) •
+          (γ ((i : ℕ) - (j : ℤ)) • (1 : R) +
+            γ ((i : ℕ) + (j : ℤ) + 1) • s))) :
+    (sumColumns U).adjoint.comp (T.comp (sumColumns U)) =
+      (2 * t) • matrixOperator (fun i j =&gt;
+        γ ((i : ℕ) - (j : ℤ)) • ContinuousLinearMap.id ℂ K +
+…</pre><p class="refs">Mentions: <a href="../Representation/OrthogonalColumns.lean.html#L17">OAI.KadisonSimilarity.sumColumns</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L44">OAI.KadisonSimilarity.matrixOperator</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

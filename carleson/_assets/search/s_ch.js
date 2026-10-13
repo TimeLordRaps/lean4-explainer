@@ -1,0 +1,1 @@
+window.l4shard("ch", [["ChoiceScale.d_pos",25,207],["ChoiceScale.spf_ch",25,275],["ComputationsChoiceExponent.eq_exponents₃",26,1033],["Lemma6_1_3.const_check",20,359],["TileStructure.Forest.moderate_scale_change",80,207]]);

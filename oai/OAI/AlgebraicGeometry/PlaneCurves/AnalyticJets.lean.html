@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/AnalyticJets.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/AnalyticJets.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>AnalyticJets.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>AnalyticJets.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/AnalyticJets.lean#L1">source</a></p><div class="doc"><h3>Analytic scalar families, moving jets, and cofinite jet limits</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>theorem</b> <code>OAI.Nagata.Workers.W17.continuous_value_zero_of_cofinite</code> <small>line 30</small><div class="doc"><p>A continuous quantity vanishing outside a finite parameter set vanishes
+at the limiting parameter, including when the parameter lies in that set.</p></div><pre>theorem continuous_value_zero_of_cofinite
+    (f : 𝕜 → V) (x : 𝕜) (exceptional : Finset 𝕜)
+    (hf : ContinuousAt f x) (hzero : ∀ s, s ∉ exceptional → f s = 0) :
+    f x = 0 := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.Nagata.Workers.W17.continuous_value_zero_of_eventually_cofinite</code> <small>line 41</small><div class="doc"><p>Local version: only a neighborhood of the limiting parameter is needed.</p></div><pre>theorem continuous_value_zero_of_eventually_cofinite
+    (f : 𝕜 → V) (x : 𝕜) (exceptional : Finset 𝕜)
+    (hf : ContinuousAt f x)
+    (hzero : ∀ᶠ s in 𝓝 x, s ∉ exceptional → f s = 0) : f x = 0 := by
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.Nagata.Workers.W17.cofinite_moving_derivative_jets</code> <small>line 60</small><div class="doc"><p>Genuine low-order derivative jets survive a cofinite parameter limit.
+Continuity is explicitly required and is not hidden in a substitute object.</p></div><pre>theorem cofinite_moving_derivative_jets
+    (family : 𝕜 → E → F) (center : 𝕜 → E) (x : 𝕜)
+    (exceptional : Finset 𝕜) (m : Nat)
+    (hcontinuous : ∀ n &lt; m,
+      ContinuousAt (fun s =&gt; iteratedFDeriv 𝕜 n (family s) (center s)) x)
+    (hjets : ∀ s, s ∉ exceptional → ∀ n &lt; m,
+      iteratedFDeriv 𝕜 n (family s) (center s) = 0) :
+    ∀ n &lt; m, iteratedFDeriv 𝕜 n (family x) (center x) = 0 := by
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.Nagata.Workers.W17.local_cofinite_moving_derivative_jets</code> <small>line 75</small><div class="doc"><p>The source application: the holomorphic family and its jet identities
+need only hold near the limiting parameter outside finitely many values.</p></div><pre>theorem local_cofinite_moving_derivative_jets
+    (family : 𝕜 → E → F) (center : 𝕜 → E) (x : 𝕜)
+    (exceptional : Finset 𝕜) (m : Nat)
+    (hcontinuous : ∀ n &lt; m,
+      ContinuousAt (fun s =&gt; iteratedFDeriv 𝕜 n (family s) (center s)) x)
+    (hjets : ∀ᶠ s in 𝓝 x, s ∉ exceptional → ∀ n &lt; m,
+      iteratedFDeriv 𝕜 n (family s) (center s) = 0) :
+    ∀ n &lt; m, iteratedFDeriv 𝕜 n (family x) (center x) = 0 := by
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.Nagata.Workers.W17.powerSeries_diagonal_zero_of_iteratedFDeriv_zero</code> <small>line 107</small><div class="doc"><p>The diagonal of a Taylor coefficient vanishes when its derivative does.</p></div><pre>theorem powerSeries_diagonal_zero_of_iteratedFDeriv_zero
+    {f : E → F} {x : E} {p : FormalMultilinearSeries 𝕜 E F} {n : ℕ}
+    (hp : HasFPowerSeriesAt f p x) (hn : iteratedFDeriv 𝕜 n f x = 0) (v : E) :
+    p n (fun _ =&gt; v) = 0 := by
+…</pre></li><li id=L121><b>theorem</b> <code>OAI.Nagata.Workers.W17.analytic_order_of_iteratedFDeriv_zero</code> <small>line 121</small><div class="doc"><p>Actual analytic derivatives detect the existential convergent Taylor order.</p></div><pre>theorem analytic_order_of_iteratedFDeriv_zero
+    {f : E → F} {x : E} (hf : AnalyticAt 𝕜 f x) (m : ℕ)
+    (hz : ∀ n &lt; m, iteratedFDeriv 𝕜 n f x = 0) :
+    HasAnalyticOrderAtLeast (𝕜 := 𝕜) f x m := by
+…</pre></li><li id=L169><b>theorem</b> <code>OAI.Nagata.Workers.W17.analytic_order_const_smul</code> <small>line 169</small><div class="doc"><p>Multiplication by a constant preserves lower Taylor order.</p></div><pre>theorem analytic_order_const_smul {f : E → F} {x : E} {m : Nat}
+    (hf : HasAnalyticOrderAtLeast (𝕜 := 𝕜) f x m) (c : 𝕜) :
+…</pre></li><li id=L178><b>theorem</b> <code>OAI.Nagata.Workers.W17.analytic_order_const_smul_iff</code> <small>line 178</small><div class="doc"><p>A nonzero scalar preserves and reflects analytic Taylor order.</p></div><pre>theorem analytic_order_const_smul_iff (f : E → F) (x : E) (m : Nat)
+    (c : 𝕜) (hc : c ≠ 0) :
+    HasAnalyticOrderAtLeast (𝕜 := 𝕜) (c • f) x m ↔
+…</pre></li><li id=L190><b>theorem</b> <code>OAI.Nagata.Workers.W17.analytic_order_const_mul_iff</code> <small>line 190</small><div class="doc"><p>Scalar multiplication of a scalar-valued section in a local frame.</p></div><pre>theorem analytic_order_const_mul_iff (f : E → 𝕜) (x : E) (m : Nat)
+    (c : 𝕜) (hc : c ≠ 0) :
+    HasAnalyticOrderAtLeast (𝕜 := 𝕜) (fun y =&gt; c * f y) x m ↔
+…</pre></li><li id=L222><b>theorem</b> <code>OAI.Nagata.Workers.W17.contDiffAt_parameter_iteratedFDeriv</code> <small>line 222</small><div class="doc"><p>Fiber-variable iterated derivatives of a jointly smooth family are
+jointly smooth, proved by parameterized differentiation.</p></div><pre>theorem contDiffAt_parameter_iteratedFDeriv
+    (family : P → E → F) (p : P × E)
+    (hf : ContDiffAt 𝕜 ∞ (Function.uncurry family) p) (n : Nat) :
+    ContDiffAt 𝕜 ∞ (fun q : P × E =&gt; iteratedFDeriv 𝕜 n (family q.1) q.2) p := by
+…</pre></li><li id=L253><b>theorem</b> <code>OAI.Nagata.Workers.W17.analytic_moving_derivative_continuousAt</code> <small>line 253</small><div class="doc"><p>Joint analyticity supplies continuity of all ordinary fiber jets along
+any continuous moving center.</p></div><pre>theorem analytic_moving_derivative_continuousAt [CompleteSpace F]
+    (family : P → E → F) (center : P → E) (s₀ : P)
+    (hf : AnalyticAt 𝕜 (Function.uncurry family) (s₀, center s₀))
+    (hc : ContinuousAt center s₀) (n : Nat) :
+    ContinuousAt (fun s =&gt; iteratedFDeriv 𝕜 n (family s) (center s)) s₀ := by
+…</pre></li><li id=L267><b>theorem</b> <code>OAI.Nagata.Workers.W17.analytic_local_cofinite_moving_derivative_jets</code> <small>line 267</small><div class="doc"><p>Thus actual cofinite jet vanishing specializes in a jointly analytic
+family without any separately assumed derivative-continuity hypothesis.</p></div><pre>theorem analytic_local_cofinite_moving_derivative_jets [CompleteSpace F]
+    (family : 𝕜 → E → F) (center : 𝕜 → E) (s₀ : 𝕜)
+    (exceptional : Finset 𝕜) (m : Nat)
+    (hf : AnalyticAt 𝕜 (Function.uncurry family) (s₀, center s₀))
+    (hc : ContinuousAt center s₀)
+    (hjets : ∀ᶠ s in nhds s₀, s ∉ exceptional → ∀ n &lt; m,
+      iteratedFDeriv 𝕜 n (family s) (center s) = 0) :
+    ∀ n &lt; m, iteratedFDeriv 𝕜 n (family s₀) (center s₀) = 0 := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

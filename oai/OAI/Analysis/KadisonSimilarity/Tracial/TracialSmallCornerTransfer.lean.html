@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tracial/TracialSmallCornerTransfer.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tracial/TracialSmallCornerTransfer.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tracial</a> / <span>TracialSmallCornerTransfer.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tracial</a>/<span>TracialSmallCornerTransfer.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tracial/TracialSmallCornerTransfer.lean#L1">source</a></p><div class="doc"><p>A small-corner commutator estimate transports along a partial isometry
+in the algebra commuting with the implementing operator. Projection
+comparison then supplies that partial isometry in the prescribed factor.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.KadisonSimilarity.norm_le_one_of_initial_projection</code> <small>line 18</small><div class="doc"><p>A partial isometry is contractive, including when its initial projection
+is zero.</p></div><pre>theorem norm_le_one_of_initial_projection (v f : P) (hf : IsStarProjection f)
+    (hv : star v * v = f) : ‖v‖ ≤ 1 := by
+…</pre></li><li id=L28><b>theorem</b> <code>OAI.KadisonSimilarity.mul_eq_self_of_final_projection</code> <small>line 28</small><div class="doc"><p>The final support condition and the initial projection identity imply
+that the partial isometry lands in the requested corner.</p></div><pre>theorem mul_eq_self_of_final_projection (e f v : P) (hf : IsStarProjection f)
+    (hv : star v * v = f) (hev : e * (v * star v) = v * star v) : e * v = v := by
+…</pre></li><li id=L39><b>def</b> <code>OAI.KadisonSimilarity.partialIsometryCornerMap</code> <small>line 39</small><div class="doc"><p>Conjugation by the partial isometry is an actual ambient corner element.</p></div><pre>def partialIsometryCornerMap (e f : P) (he : IsStarProjection e) (hf : IsStarProjection f)
+    (v : P) (hv : star v * v = f) (hev : e * (v * star v) = v * star v)
+    (z : CStarCorner f hf) : CStarCorner e he :=
+…</pre><p class="refs">Mentions: <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a></p></li><li id=L51><b>theorem</b> <code>OAI.KadisonSimilarity.partialIsometryCornerMap_recover</code> <small>line 51</small><div class="doc"><p>The original corner element is recovered exactly.</p></div><pre>theorem partialIsometryCornerMap_recover (e f : P)
+    (he : IsStarProjection e) (hf : IsStarProjection f)
+    (v : P) (hv : star v * v = f) (hev : e * (v * star v) = v * star v)
+    (z : CStarCorner f hf) :
+    star v * (partialIsometryCornerMap e f he hf v hv hev z : P) * v = z := by
+…</pre><p class="refs">Mentions: <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a>, <a href="TracialSmallCornerTransfer.lean.html#L39">OAI.KadisonSimilarity.partialIsometryCornerMap</a></p></li><li id=L61><b>theorem</b> <code>OAI.KadisonSimilarity.norm_partialIsometryCornerMap_le</code> <small>line 61</small></li><li id=L77><b>theorem</b> <code>OAI.KadisonSimilarity.corner_commutator_bound_of_partial_isometry</code> <small>line 77</small><div class="doc"><p>Algebraic transport, before using any projection comparison theorem.</p></div><pre>theorem corner_commutator_bound_of_partial_isometry
+    (L : P →⋆ₐ[ℂ] (H →L[ℂ] H)) (T : H →L[ℂ] H)
+    (e f : P) (he : IsStarProjection e) (hf : IsStarProjection f)
+    (v : P) (hv : star v * v = f) (hev : e * (v * star v) = v * star v)
+    (hTv : T * L v = L v * T) (hTvs : T * L (star v) = L (star v) * T)
+    {ε : ℝ} (hε : 0 ≤ ε)
+    (hbound : ∀ x : CStarCorner e he, ‖commutator T (L (x : P))‖ ≤ ε * ‖x‖) :
+    ∀ z : CStarCorner f hf, ‖commutator T (L (z : P))‖ ≤ ε * ‖z‖ := by
+…</pre><p class="refs">Mentions: <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a></p></li><li id=L116><b>theorem</b> <code>OAI.KadisonSimilarity.corner_commutator_bound_of_hom_comparison</code> <small>line 116</small><div class="doc"><p>Projection comparison can be performed in a separate included factor;
+the resulting partial isometry is then mapped into the represented algebra.</p></div><pre>theorem corner_commutator_bound_of_hom_comparison
+    {A : Type*} [CStarAlgebra A] (φ : A →⋆ₐ[ℂ] P)
+    (L : P →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (τ : A → ℝ) (comparison : FiniteFactorProjectionComparison τ)
+    (e f : A) (he : IsStarProjection e) (hf : IsStarProjection f)
+    (htrace : τ f ≤ τ e) (T : H →L[ℂ] H)
+    (hcomm : ∀ a : A, T * L (φ a) = L (φ a) * T)
+    {ε : ℝ} (hε : 0 ≤ ε)
+    (hbound : ∀ z : CStarCorner (φ e) (he.map φ),
+      ‖commutator T (L (z : P))‖ ≤ ε * ‖z‖) :
+    ∀ z : CStarCorner (φ f) (hf.map φ),
+      ‖commutator T (L (z : P))‖ ≤ ε * ‖z‖ := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L308">OAI.KadisonSimilarity.FiniteFactorProjectionComparison</a>, <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a></p></li><li id=L142><b>theorem</b> <code>OAI.KadisonSimilarity.TracialCornerGeometry.small_corner_commutator_bound_of_comparison</code> <small>line 142</small><div class="doc"><p>Finite-factor comparison is used in <code>Q</code> itself, ensuring that the
+implementing partial isometry belongs to the algebra commuting with <code>T</code>.</p></div><pre>theorem small_corner_commutator_bound_of_comparison
+    (τ : Q → ℝ) (comparison : FiniteFactorProjectionComparison τ)
+    (e f : Q) (he : IsStarProjection (e : P)) (hf : IsStarProjection (f : P))
+    (htrace : τ f ≤ τ e) (T : H →L[ℂ] H)
+    (hTQ : ∀ a : Q, T.comp (G.left (a : P)) = (G.left (a : P)).comp T)
+    {ε : ℝ} (hε : 0 ≤ ε)
+    (hbound : ∀ x : CStarCorner (e : P) he,
+      ‖commutator T (G.left (x : P))‖ ≤ ε * ‖x‖) :
+    ∀ z : CStarCorner (f : P) hf,
+      ‖commutator T (G.left (z : P))‖ ≤ ε * ‖z‖ := by
+…</pre><p class="refs">Mentions: <a href="FullColumnTheorem.lean.html#L308">OAI.KadisonSimilarity.FiniteFactorProjectionComparison</a>, <a href="../Representation/CStarCorner.lean.html#L36">OAI.KadisonSimilarity.CStarCorner</a>, <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L30">OAI.KadisonSimilarity.commutator</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

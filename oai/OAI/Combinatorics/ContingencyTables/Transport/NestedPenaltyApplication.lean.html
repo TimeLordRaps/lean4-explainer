@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Transport/NestedPenaltyApplication.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Transport/NestedPenaltyApplication.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Transport</a> / <span>NestedPenaltyApplication.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Transport</a>/<span>NestedPenaltyApplication.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Transport/NestedPenaltyApplication.lean#L1">source</a></p><div class="doc"><h3>The first paper's actual positive penalties and hard equality limit</h3><p>Full row/column deviations give absolute affine line factors; the nested
+small-slot residual constraints give positive-part affine factors. Their
+product is exactly 2^(-L D). Balanced large-slot sums retain their proved
+signature, and their finite limit is the exact zero-penalty indicator sum.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>def</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.penalty</code> <small>line 27</small></li><li id=L32><b>def</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softWeight</code> <small>line 32</small></li><li id=L38><b>def</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.hardWeight</code> <small>line 38</small></li><li id=L42><b>lemma</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.penalty_nonnegative</code> <small>line 42</small></li><li id=L49><b>lemma</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.prod_pow</code> <small>line 49</small></li><li id=L57><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softWeight_eq</code> <small>line 57</small><div class="doc"><p>This is the manuscript's literal exponential of the full deviation
+plus the small residual violation penalty, with eta=2^(-L).</p></div><pre>theorem softWeight_eq (line : C → G) (inner : C → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ) (L : ℝ) (z : C → ℕ) :
+    softWeight line inner offset slope smallOffset smallSlope L z =
+      (2:ℝ)^(-L*penalty line inner offset slope smallOffset smallSlope z) := by
+…</pre><p class="refs">Mentions: <a href="NestedPenaltyApplication.lean.html#L32">OAI.ContingencyTables.NestedPenaltyApplication.softWeight</a>, <a href="NestedPenaltyApplication.lean.html#L27">OAI.ContingencyTables.NestedPenaltyApplication.penalty</a></p></li><li id=L66><b>lemma</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softWeight_positive</code> <small>line 66</small></li><li id=L72><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softWeight_removal</code> <small>line 72</small></li><li id=L82><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softWeight_tendsto</code> <small>line 82</small></li><li id=L93><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softened_marginal_slices</code> <small>line 93</small><div class="doc"><p>The actual softened marginal is positive before the hard limit and
+has the raw integer removal signature on every required display.</p></div><pre>theorem softened_marginal_slices (Ms : List ℕ) (m : I → ℕ) (R : ℕ)
+    (line : Coordinates I Ms → G) (inner : Coordinates I Ms → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ) (L : ℝ) (hL : 0 ≤ L)
+    (hwidth : ∀ M ∈ Ms, 2 ≤ M) :
+    PositiveSlice (eliminate Ms (softWeight line inner offset slope smallOffset smallSlope L)) m R ∧
+      RemovalSlice (eliminate Ms (softWeight line inner offset slope smallOffset smallSlope L)) m R := by
+…</pre><p class="refs">Mentions: <a href="NestedPenaltyApplication.lean.html#L32">OAI.ContingencyTables.NestedPenaltyApplication.softWeight</a></p></li><li id=L107><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.hard_marginal_removal</code> <small>line 107</small><div class="doc"><p>The first paper's hard-zero finite marginal inherits its actual raw
+signature. This proves the required input to factorial omission lifting.</p></div><pre>theorem hard_marginal_removal (Ms : List ℕ) (m : I → ℕ) (R : ℕ)
+    (line : Coordinates I Ms → G) (inner : Coordinates I Ms → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ)
+    (hwidth : ∀ M ∈ Ms, 2 ≤ M) :
+    RemovalSlice (eliminate Ms (hardWeight line inner offset slope smallOffset smallSlope)) m R := by
+…</pre><p class="refs">Mentions: <a href="NestedPenaltyApplication.lean.html#L38">OAI.ContingencyTables.NestedPenaltyApplication.hardWeight</a></p></li><li id=L124><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.truncate_softened_marginal</code> <small>line 124</small><div class="doc"><p>Zero extension outside the box and full total gives precisely the
+same actual softened marginal on its required state slice.</p></div><pre>theorem truncate_softened_marginal (Ms : List ℕ) (m : I → ℕ) (R : ℕ)
+    (line : Coordinates I Ms → G) (inner : Coordinates I Ms → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ) (L : ℝ)
+    (z : I → ℕ) (hz : InBox m z) (htotal : (∑ i, z i)=R) :
+    eliminate Ms
+      (IntegerBoxTruncation.truncate
+        (softWeight line inner offset slope smallOffset smallSlope L) (bounds m Ms) (R+Ms.sum)) z =
+      eliminate Ms (softWeight line inner offset slope smallOffset smallSlope L) z := by
+…</pre><p class="refs">Mentions: <a href="IntegerBoxTruncation.lean.html#L22">OAI.ContingencyTables.IntegerBoxTruncation.truncate</a>, <a href="NestedPenaltyApplication.lean.html#L32">OAI.ContingencyTables.NestedPenaltyApplication.softWeight</a></p></li><li id=L138><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.softened_firstLift_data</code> <small>line 138</small><div class="doc"><p>The actual softened factorial lift now has both required properties
+by the integer proofs above; neither binary property is assumed.</p></div><pre>theorem softened_firstLift_data {L : Type*} [Fintype L] (group : L → I)
+    (Ms : List ℕ) (R : ℕ) (D : ℝ) (hD : 0 &lt; D)
+    (line : Coordinates I Ms → G) (inner : Coordinates I Ms → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ) (a : ℝ) (ha : 0 ≤ a)
+    (hwidth : ∀ M ∈ Ms, 2 ≤ M) :
+    let f := LabelledFactorial.firstLift group
+…</pre><p class="refs">Mentions: <a href="LabelledFactorial.lean.html#L123">OAI.ContingencyTables.LabelledFactorial.firstLift</a></p></li><li id=L155><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.firstLift_limit</code> <small>line 155</small><div class="doc"><p>These are the literal subset weights consumed by endpoint-positive
+hard-zero transport, with no positivity requirement on internal limits.</p></div><pre>theorem firstLift_limit {L : Type*} [Fintype L] (group : L → I)
+    (Ms : List ℕ) (D : ℝ) (line : Coordinates I Ms → G) (inner : Coordinates I Ms → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ) (S : Set L) :
+    Tendsto (fun a : ℝ =&gt; LabelledFactorial.firstLift group
+      (eliminate Ms (softWeight line inner offset slope smallOffset smallSlope a)) D S) atTop
+      (nhds (LabelledFactorial.firstLift group
+        (eliminate Ms (hardWeight line inner offset slope smallOffset smallSlope)) D S)) := by
+…</pre><p class="refs">Mentions: <a href="LabelledFactorial.lean.html#L123">OAI.ContingencyTables.LabelledFactorial.firstLift</a>, <a href="NestedPenaltyApplication.lean.html#L32">OAI.ContingencyTables.NestedPenaltyApplication.softWeight</a>, <a href="NestedPenaltyApplication.lean.html#L38">OAI.ContingencyTables.NestedPenaltyApplication.hardWeight</a></p></li><li id=L170><b>theorem</b> <code>OAI.ContingencyTables.NestedPenaltyApplication.hard_firstLift_transport</code> <small>line 170</small><div class="doc"><p>Actual first-paper hard transport. The positive softened factorial
+properties are proved above from the explicit deviation penalties. Only
+the two hard limiting endpoint masses are required to be positive.</p></div><pre>theorem hard_firstLift_transport {L : Type*} [Fintype L]
+    (group : L → I) (Ms : List ℕ) (R : ℕ) (D : ℝ) (hD : 0 &lt; D)
+    (line : Coordinates I Ms → G) (inner : Coordinates I Ms → Bool)
+    (offset slope smallOffset smallSlope : G → ℝ) (hwidth : ∀ M ∈ Ms, 2 ≤ M)
+    (ps : List (L × L)) (H : Set L → ℝ) (A : Set L) (p d : L) (W : L → ℝ)
+    (hR : R ≤ Fintype.card L) (hdegree : A.ncard+ps.length+1=Fintype.card L-R)
+    (hpd : p≠d) (hpA : p∉A) (hdA : d∉A)
+    (hps : CommonBasesFPRAS.SlotsFresh ps (A ∪ Set.range (CommonBasesFPRAS.rootEmbedding p d)))
+    (hW : ∀ i, 0 &lt; W i) (hw : ∀ a∈ps, W a.1=W a.2)
+    (hsp : 0 &lt; CommonBasesFPRAS.slotTotal ps
+      (BinaryContraction.complementWeight (LabelledFactorial.firstLift group
+        (eliminate Ms (hardWeight line inner offset slope smallOffset smallSlope)) D)) (insert p A))
+…</pre><p class="refs">Mentions: <a href="../../MatroidCounting/CommonBases.lean.html#L1442">OAI.CommonBasesFPRAS.SlotsFresh</a>, <a href="../../MatroidCounting/CommonBases.lean.html#L1991">OAI.CommonBasesFPRAS.rootEmbedding</a>, <a href="../../MatroidCounting/CommonBases.lean.html#L1431">OAI.CommonBasesFPRAS.slotTotal</a>, <a href="../Machines/BinaryContraction.lean.html#L408">OAI.ContingencyTables.BinaryContraction.complementWeight</a>, <a href="LabelledFactorial.lean.html#L123">OAI.ContingencyTables.LabelledFactorial.firstLift</a>, <a href="NestedPenaltyApplication.lean.html#L38">OAI.ContingencyTables.NestedPenaltyApplication.hardWeight</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

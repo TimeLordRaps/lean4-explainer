@@ -1,0 +1,1 @@
+window.l4shard("ni", [["Imo2004P6.Nice",87,48],["Imo2012P3.bob_backward_bits_nil",104,824],["Usa1978P3.expressible_two_mul_add_nine",168,85],["Usa2005P6.nine_le_s_of_dvd",249,168],["Usa2012P3.exists_good_seq_of_nine_le",274,321]]);

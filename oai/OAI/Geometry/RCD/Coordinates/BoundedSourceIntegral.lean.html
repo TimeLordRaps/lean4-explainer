@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/BoundedSourceIntegral.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/BoundedSourceIntegral.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>BoundedSourceIntegral.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>BoundedSourceIntegral.lean</span></code></h1><p class="muted">2 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/BoundedSourceIntegral.lean#L1">source</a></p><div class="doc"><h3>Integrating the bounded curvature and endpoint source estimates</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_short_bounded_source_integral_bound</code> <small>line 23</small><div class="doc"><p>The complete short-time bounded-source contribution has the square
+of the averaging radius.</p></div><pre>theorem exists_short_bounded_source_integral_bound (hg : HasCoordinateHeatBounds μ ker)
+    (n : ℕ) {A V W : ℝ} (hA : 0 ≤ A) (hV : 0 &lt; V) (hW : 0 ≤ W) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (R : ℝ), 0 &lt; R → R ≤ 1 → ∀ (i : ℕ) (x q : X),
+      μ (ball q (R / 2 ^ i)) ≠ ∞ →
+      V * (R / 2 ^ i) ^ n ≤ μ.real (ball q (R / 2 ^ i)) →
+      dist x q ≤ A * (R / 2 ^ i) →
+      (∀ j ≤ i, μ.real (ball x (2 ^ j * (R / 2 ^ i))) ≤ W * (2 ^ j * (R / 2 ^ i)) ^ n) →
+      (∀ t, 0 &lt; t → t ≤ R ^ 2 → ∀ z ∈ ball x R,
+        V * (Real.sqrt t) ^ n ≤ μ.real (ball z (Real.sqrt t))) →
+      ∀ (f : Lp ℝ 2 μ) (B : ℝ), 0 ≤ B → (∀ᵐ z ∂μ, |f z| ≤ B) →
+      (∀ᵐ z ∂μ, z ∉ ball x R → f z = 0) →
+      |∫ t in (0 : ℝ)..(R / 2 ^ i) ^ 2,
+…</pre><p class="refs">Mentions: <a href="CoordinateHeatInput.lean.html#L20">OAI.RegularPointCoordinates.HasCoordinateHeatBounds</a></p></li><li id=L53><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_long_bounded_source_integral_bound</code> <small>line 53</small><div class="doc"><p>All long-time bounded-source blocks sum to r times the working
+radius. This is the gain needed for the curvature contribution.</p></div><pre>theorem exists_long_bounded_source_integral_bound (hg : HasCoordinateHeatBounds μ ker)
+    (hdiff : HasGaussianHeatDifferenceBounds μ ker)
+    (n : ℕ) {A V W : ℝ} (hA : 0 ≤ A) (hV : 0 &lt; V) (hW : 0 ≤ W) :
+    ∃ C : ℝ, 0 &lt; C ∧ ∀ (R : ℝ), 0 &lt; R → R ≤ 1 → ∀ (i : ℕ) (x q : X),
+      μ (ball q (R / 2 ^ i)) ≠ ∞ → 0 &lt; μ.real (ball q (R / 2 ^ i)) →
+      dist x q ≤ A * (R / 2 ^ i) →
+      (∀ j, μ.real (ball x (R / 2 ^ j)) ≤ W * (R / 2 ^ j) ^ n) →
+      (∀ t, 0 &lt; t → t ≤ R ^ 2 → ∀ z ∈ ball x R,
+        V * (Real.sqrt t) ^ n ≤ μ.real (ball z (Real.sqrt t))) →
+      ∀ (f : Lp ℝ 2 μ) (B : ℝ), 0 ≤ B → (∀ᵐ z ∂μ, |f z| ≤ B) →
+      (∀ᵐ z ∂μ, z ∉ ball x R → f z = 0) →
+      |∫ t in (R / 2 ^ i) ^ 2..R ^ 2,
+…</pre><p class="refs">Mentions: <a href="CoordinateHeatInput.lean.html#L20">OAI.RegularPointCoordinates.HasCoordinateHeatBounds</a>, <a href="../Heat/HeatKernelDifferenceInput.lean.html#L27">OAI.RegularPointCoordinates.HasGaussianHeatDifferenceBounds</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/EinsteinFour/HessianAlgebra.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/EinsteinFour/HessianAlgebra.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">EinsteinFour</a> / <span>HessianAlgebra.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">EinsteinFour</a>/<span>HessianAlgebra.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/EinsteinFour/HessianAlgebra.lean#L1">source</a></p><div class="doc"><h3>Finite algebra in the weighted Hessian inequality</h3><p>These are the energy metric, compressed curvature action, matrix (12), and
+sharp scalar optimization in (13). The manifold Hessian and its integration
+by parts are separate from these finite-dimensional identities.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.energy</code> <small>line 20</small><div class="doc"><p>The energy metric of the three Bianchi parameters.</p></div><pre>def energy (p k l : ℝ) : ℝ := (5 / 3) * p ^ 2 + 5 * k ^ 2 + l ^ 2</pre></li><li id=L24><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.curvatureForm</code> <small>line 24</small><div class="doc"><p>The quadratic form of the compressed matrix-slot action, normalized by
+<code>|Z|² / 6</code>.</p></div><pre>def curvatureForm (v σ ρ p k l : ℝ) : ℝ :=
+…</pre></li><li id=L29><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.squareCurvatureForm</code> <small>line 29</small><div class="doc"><p>The analogous form of the trace-free square of the Weyl block.</p></div><pre>def squareCurvatureForm (v σ ρ p k l : ℝ) : ℝ :=
+…</pre></li><li id=L34><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.actionP</code> <small>line 34</small><div class="doc"><p>First component of <code>H⁻¹ B</code>, for <code>H = diag(5/3,5,1)</code>.</p></div><pre>def actionP (v σ ρ p k : ℝ) : ℝ :=
+…</pre></li><li id=L38><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.actionK</code> <small>line 38</small><div class="doc"><p>Second component of <code>H⁻¹ B</code>.</p></div><pre>def actionK (v σ ρ p k l : ℝ) : ℝ :=
+…</pre></li><li id=L42><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.actionL</code> <small>line 42</small><div class="doc"><p>Last component of <code>H⁻¹ B</code>.</p></div><pre>def actionL (v k : ℝ) : ℝ := -v * k</pre></li><li id=L46><b>theorem</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.energy_pair_action</code> <small>line 46</small><div class="doc"><p>The compressed operator is represented by the curvature bilinear form
+in the energy metric.</p></div><pre>theorem energy_pair_action (v σ ρ p k l p&#x27; k&#x27; l&#x27; : ℝ) :
+    (5 / 3) * actionP v σ ρ p k * p&#x27; +
+        5 * actionK v σ ρ p k l * k&#x27; + actionL v k * l&#x27; =
+      v * ((4 / 3) * σ * p * p&#x27; - 4 * ρ / Real.sqrt 3 * (p * k&#x27; + k * p&#x27;) -
+        4 * σ * k * k&#x27; - k * l&#x27; - l * k&#x27;) := by
+…</pre><p class="refs">Mentions: <a href="HessianAlgebra.lean.html#L34">OAI.PositiveEinsteinFour.HessianAlgebra.actionP</a>, <a href="HessianAlgebra.lean.html#L38">OAI.PositiveEinsteinFour.HessianAlgebra.actionK</a>, <a href="HessianAlgebra.lean.html#L42">OAI.PositiveEinsteinFour.HessianAlgebra.actionL</a></p></li><li id=L56><b>theorem</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.squared_action_energy</code> <small>line 56</small><div class="doc"><p>The matrix of the squared operator is <code>B H⁻¹ B</code>, not the ordinary
+matrix square. This is the displayed formula for <code>E_B</code> before (12).</p></div><pre>theorem squared_action_energy (v σ ρ p k l : ℝ)
+    (hcircle : ρ ^ 2 = 1 - σ ^ 2) :
+    energy (actionP v σ ρ p k) (actionK v σ ρ p k l) (actionL v k) =
+      v ^ 2 * ((16 / 15) * p ^ 2 + (21 / 5) * k ^ 2 + l ^ 2 / 5 +
+        8 * ρ / (5 * Real.sqrt 3) * p * l + (8 / 5) * σ * k * l) := by
+…</pre><p class="refs">Mentions: <a href="HessianAlgebra.lean.html#L20">OAI.PositiveEinsteinFour.HessianAlgebra.energy</a>, <a href="HessianAlgebra.lean.html#L34">OAI.PositiveEinsteinFour.HessianAlgebra.actionP</a>, <a href="HessianAlgebra.lean.html#L38">OAI.PositiveEinsteinFour.HessianAlgebra.actionK</a>, <a href="HessianAlgebra.lean.html#L42">OAI.PositiveEinsteinFour.HessianAlgebra.actionL</a></p></li><li id=L72><b>def</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.hessianForm</code> <small>line 72</small><div class="doc"><p>The invariant scalar expression obtained after the Hessian integration
+by parts.</p></div><pre>def hessianForm (v b σ ρ p k l : ℝ) : ℝ :=
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.hessian_matrix</code> <small>line 79</small><div class="doc"><p>Exact matrix (12), with all off-diagonal entries counted twice.</p></div><pre>theorem hessian_matrix (v b σ ρ p k l : ℝ) (hcircle : ρ ^ 2 = 1 - σ ^ 2) :
+    hessianForm v b σ ρ p k l =
+      (-70 - 5 * b ^ 2 + 100 * σ * v - 25 * v ^ 2) * p ^ 2 +
+      (-210 - 15 * b ^ 2 - 300 * σ * v - 190 * v ^ 2) * k ^ 2 +
+      (-42 - 3 * b ^ 2 - 10 * v ^ 2) * l ^ 2 -
+      200 * Real.sqrt 3 * ρ * v * p * k -
+      70 * ρ * v ^ 2 / Real.sqrt 3 * p * l -
+      2 * (75 * v + 35 * σ * v ^ 2) * k * l := by
+…</pre><p class="refs">Mentions: <a href="HessianAlgebra.lean.html#L72">OAI.PositiveEinsteinFour.HessianAlgebra.hessianForm</a></p></li><li id=L100><b>theorem</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.cubic_energy_optimization</code> <small>line 100</small><div class="doc"><p>The last scalar maximization in the sharp cubic contraction estimate.
+Its hypotheses are precisely the energy spent by the distinguished tangent
+component, <code>e₁ = 5ν²/3 ≤ e</code>.</p></div><pre>theorem cubic_energy_optimization {ν e : ℝ}
+    (_hν : 0 ≤ ν) (he : (5 / 3) * ν ^ 2 ≤ e) :
+    ν * (e - ν ^ 2 / 3) ≤
+      (4 / 5) * Real.sqrt (3 / 5) * e * Real.sqrt e := by
+…</pre></li><li id=L120><b>theorem</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.weighted_operator_square</code> <small>line 120</small><div class="doc"><p>Positive operator square underlying (11), before integration.</p></div><pre>theorem weighted_operator_square
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (P : E →ₗ[ℝ] E)
+    (hsymm : ∀ x y, inner ℝ (P x) y = inner ℝ (P y) x)
+    (hpos : ∀ x, 0 ≤ inner ℝ (P x) x)
+    {m : ℝ} (hm : 0 &lt; m) (Y L : E) :
+    0 ≤ m / 6 * inner ℝ (P Y) Y + inner ℝ (P Y) L / 6 +
+      inner ℝ (P L) L / (24 * m) := by
+…</pre></li><li id=L139><b>theorem</b> <code>OAI.PositiveEinsteinFour.HessianAlgebra.projection_bracket_bound</code> <small>line 139</small><div class="doc"><p>The mixed radial/defect cost is controlled by an explicit square. The
+statement retains the actual tangent inner products.</p></div><pre>theorem projection_bracket_bound
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {v y σ ρ : ℝ} (hv : 0 ≤ v) (hσ : σ ≤ 1) (p k l : E) :
+    (7 / 12) * (4 + y) * ((5 / 3) * ‖p‖ ^ 2 + 5 * ‖k‖ ^ 2 + ‖l‖ ^ 2) -
+      (5 / 4) * v * ((4 / 3) * σ * ‖p‖ ^ 2 -
+        8 * ρ / Real.sqrt 3 * inner ℝ p k - 4 * σ * ‖k‖ ^ 2 - 2 * inner ℝ k l) ≤
+    QuarticEnergy.projectionCoefficient v y σ ρ * ((5 / 3) * ‖p‖ ^ 2) +
+      Energy.defectCoefficient v y * (5 * ‖k‖ ^ 2 + ‖l‖ ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="QuarticEnergy.lean.html#L15">OAI.PositiveEinsteinFour.QuarticEnergy.projectionCoefficient</a>, <a href="Energy.lean.html#L224">OAI.PositiveEinsteinFour.Energy.defectCoefficient</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

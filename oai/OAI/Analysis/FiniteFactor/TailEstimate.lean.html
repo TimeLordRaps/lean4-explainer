@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/FiniteFactor/TailEstimate.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/FiniteFactor/TailEstimate.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">FiniteFactor</a> / <span>TailEstimate.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">FiniteFactor</a>/<span>TailEstimate.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/FiniteFactor/TailEstimate.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.FiniteFactor.conditional_mask_integral_le</code> <small>line 19</small><div class="doc"><p>A conditional probability bound controls any nonnegative integrable weight
+measurable with respect to the conditioning sigma algebra.</p></div><pre>theorem conditional_mask_integral_le [IsFiniteMeasure μ]
+    {m : MeasurableSpace Ω} (hm : m ≤ mΩ) {f : Ω → ℝ} {H : Set Ω} {δ : ℝ}
+    (hf : Integrable f μ) (hfm : StronglyMeasurable[m] f)
+    (hf0 : 0 ≤ᵐ[μ] f) (hH : @MeasurableSet Ω mΩ H)
+    (hcond : ∀ᵐ ω ∂μ, μ[H.indicator (fun _ =&gt; (1 : ℝ)) | m] ω ≤ δ) :
+    ∫ ω in H, f ω ∂μ ≤ δ * ∫ ω, f ω ∂μ := by
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.FiniteFactor.integral_mul_le_sqrt_squares</code> <small>line 46</small><div class="doc"><p>Cauchy–Schwarz in the integral form used on Ω × ℤ.</p></div><pre>theorem integral_mul_le_sqrt_squares {f g : Ω → ℝ}
+    (hf : MemLp f 2 μ) (hg : MemLp g 2 μ)
+    (hf0 : 0 ≤ᵐ[μ] f) (hg0 : 0 ≤ᵐ[μ] g) :
+    ∫ ω, f ω * g ω ∂μ ≤
+      Real.sqrt (∫ ω, f ω ^ 2 ∂μ) * Real.sqrt (∫ ω, g ω ^ 2 ∂μ) := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.FiniteFactor.integral_mul_le_sqrt_of_square_bounds</code> <small>line 59</small><div class="doc"><p>A masked L² mass at most δ and an unmasked mass at most one yield √δ.
+The ambient measure can be probability times counting measure, so this is
+not restricted to a finite coefficient set.</p></div><pre>theorem integral_mul_le_sqrt_of_square_bounds {f g : Ω → ℝ} {δ : ℝ}
+    (hf : MemLp f 2 μ) (hg : MemLp g 2 μ)
+    (hf0 : 0 ≤ᵐ[μ] f) (hg0 : 0 ≤ᵐ[μ] g)
+    (hδ : ∫ ω, f ω ^ 2 ∂μ ≤ δ) (hg1 : ∫ ω, g ω ^ 2 ∂μ ≤ 1) :
+    ∫ ω, f ω * g ω ∂μ ≤ Real.sqrt δ := by
+…</pre></li><li id=L76><b>theorem</b> <code>OAI.FiniteFactor.conditional_mask_tsum_integral_le</code> <small>line 76</small><div class="doc"><p>Countably many masks, each with a conditional probability bound.
+The sum is genuinely infinite; no bound on the union of the events is used.
+Apply to f_v=|ξ_v(x)|² or f_v=|γ_{n+v}(y)|² in the two orientations.</p></div><pre>theorem conditional_mask_tsum_integral_le [IsFiniteMeasure μ]
+    {ι : Type*} [Countable ι] {m : MeasurableSpace Ω} (hm : m ≤ mΩ)
+    {f : ι → Ω → ℝ} {H : ι → Set Ω} {δ : ℝ}
+    (hf : ∀ i, Integrable (f i) μ)
+    (hfm : ∀ i, StronglyMeasurable[m] (f i))
+    (hf0 : ∀ i ω, 0 ≤ f i ω) (hH : ∀ i, @MeasurableSet Ω mΩ (H i))
+    (hsum : ∀ᵐ ω ∂μ, Summable (fun i =&gt; f i ω))
+    (hint : Integrable (fun ω =&gt; ∑&#x27; i, f i ω) μ)
+    (hcond : ∀ i, ∀ᵐ ω ∂μ,
+      μ[(H i).indicator (fun _ =&gt; (1 : ℝ)) | m] ω ≤ δ) :
+    ∫ ω, (∑&#x27; i, (H i).indicator (f i) ω) ∂μ ≤
+      δ * ∫ ω, (∑&#x27; i, f i ω) ∂μ := by
+…</pre></li><li id=L119><b>theorem</b> <code>OAI.FiniteFactor.attenuated_two_mask_integral_le</code> <small>line 119</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

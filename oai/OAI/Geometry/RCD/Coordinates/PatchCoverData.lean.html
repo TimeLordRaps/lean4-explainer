@@ -1,0 +1,124 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/PatchCoverData.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/PatchCoverData.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>PatchCoverData.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>PatchCoverData.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/PatchCoverData.lean#L1">source</a></p><div class="doc"><h3>Localized finite patch data from a uniform volume regime</h3><p>The centers form a maximal finite net. Cutoffs are affine pullbacks of a
+fixed Euclidean cutoff. The half-error volume regime, coarse separation,
+and slow normalization growth bound the overlap. The smooth cutoff has
+core radius two and support radius three.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L34><b>def</b> <code>OAI.RegularPointCoordinates.normalizedPatchCutoff</code> <small>line 34</small><div class="doc"><p>The coordinate cutoff centered at a point of the original metric space.</p></div><pre>def normalizedPatchCutoff (r : ℝ) (u : X → E) (T : X → E →L[ℝ] F)
+    (psi : F → ℝ) (y : X) (P : E) : ℝ :=
+…</pre></li><li id=L39><b>def</b> <code>OAI.RegularPointCoordinates.normalizedPatchDomain</code> <small>line 39</small><div class="doc"><p>The original-space active domain for one actual normalized cutoff.</p></div><pre>def normalizedPatchDomain (A : Set X) (r : ℝ) (u : X → E)
+    (T : X → E →L[ℝ] F) (psi : F → ℝ) (y : X) : Set X :=
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.RegularPointCoordinates.self_mem_normalizedPatchDomain</code> <small>line 45</small><div class="doc"><p>Every chosen net center belongs to its own active patch.</p></div><pre>theorem self_mem_normalizedPatchDomain (A : Set X) (r : ℝ) (u : X → E)
+    (T : X → E →L[ℝ] F) (psi : F → ℝ) {y : X} (hy : y ∈ A)
+    (hzero : psi 0 = 1) : y ∈ normalizedPatchDomain A r u T psi y := by
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L39">OAI.RegularPointCoordinates.normalizedPatchDomain</a></p></li><li id=L55><b>def</b> <code>OAI.RegularPointCoordinates.patchLocalizationFactor</code> <small>line 55</small><div class="doc"><p>The metric radius forced by the normalized support and coarse separation.</p></div><pre>def patchLocalizationFactor (c M L : ℝ) : ℝ := max 1 ((M * L / c) ^ 2)</pre></li><li id=L57><b>theorem</b> <code>OAI.RegularPointCoordinates.patchLocalizationFactor_ge_one</code> <small>line 57</small></li><li id=L62><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_pair_norm_estimate</code> <small>line 62</small><div class="doc"><p>Undoing the physical scaling in a pointed coordinate approximation
+gives the actual frozen displacement estimate.</p></div><pre>theorem normalized_pair_norm_estimate (u : X → E) (T : E →L[ℝ] F)
+    (x y : X) {t R delta : ℝ} (ht : 0 &lt; t) (hR : 0 ≤ R)
+    (hpoint : IsPointedApproximation y (0 : F) t R delta
+      (fun z =&gt; t⁻¹ • T (u z - u y)))
+    (hxy : dist x y ≤ R * t) :
+    |‖T (u x - u y)‖ - dist x y| ≤ delta * t := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L144">OAI.RegularPointCoordinates.IsPointedApproximation</a></p></li><li id=L83><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_near_pair_le</code> <small>line 83</small><div class="doc"><p>Approximation at four times the fine radius supplies the core-two
+near-pair hypothesis of the finite patch construction.</p></div><pre>theorem normalized_near_pair_le (u : X → E) (T : E →L[ℝ] F)
+    (x y : X) {r : ℝ} (hr : 0 &lt; r)
+    (hpoint : IsPointedApproximation y (0 : F) (4 * r) (1 / 2) (1 / 4)
+      (fun z =&gt; (4 * r)⁻¹ • T (u z - u y)))
+    (hxy : dist x y ≤ r) : ‖T (u x - u y)‖ ≤ 2 * r := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L144">OAI.RegularPointCoordinates.IsPointedApproximation</a></p></li><li id=L95><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_coarse_pair_lower</code> <small>line 95</small><div class="doc"><p>A coarse pointed approximation at the pair scale supplies a fixed
+positive separation coefficient, independently of the pair distance.</p></div><pre>theorem normalized_coarse_pair_lower (u : X → E) (T : E →L[ℝ] F)
+    (x y : X) (hxy : x ≠ y)
+    (hpoint : IsPointedApproximation y (0 : F) (4 * dist x y) (1 / 2) (1 / 8)
+      (fun z =&gt; (4 * dist x y)⁻¹ • T (u z - u y))) :
+    (1 / 2) * dist x y ≤ ‖T (u x - u y)‖ := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L144">OAI.RegularPointCoordinates.IsPointedApproximation</a></p></li><li id=L107><b>def</b> <code>OAI.RegularPointCoordinates.patchOverlapBound</code> <small>line 107</small><div class="doc"><p>A dimensional overlap bound in the half-error volume regime.</p></div><pre>def patchOverlapBound (n : ℕ) (c M L : ℝ) : ℕ :=
+…</pre></li><li id=L112><b>structure</b> <code>OAI.RegularPointCoordinates.IsLocalizedPatchCover</code> <small>line 112</small><div class="doc"><p>Concrete geometric and smoothness properties needed before assigning
+positive operators and energy centers to the finite patches.</p></div><pre>structure IsLocalizedPatchCover (A : Set X) (r : ℝ≥0) (u : X → E)
+    (s : Finset X) (phi : X → E → ℝ) (N : ℕ) (C L : ℝ) : Prop where
+…</pre></li><li id=L132><b>theorem</b> <code>OAI.RegularPointCoordinates.IsLocalizedPatchCover.one_le_cutoff_sum</code> <small>line 132</small><div class="doc"><p>The actual cutoff sum is positive throughout the covered domain.</p></div><pre>theorem one_le_cutoff_sum (d : IsLocalizedPatchCover A r u s phi N C L)
+    {x : X} (hx : x ∈ A) : 1 ≤ ∑ y ∈ s, phi y (u x) := by
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L112">OAI.RegularPointCoordinates.IsLocalizedPatchCover</a></p></li><li id=L141><b>theorem</b> <code>OAI.RegularPointCoordinates.IsLocalizedPatchCover.cutoff_sum_le</code> <small>line 141</small><div class="doc"><p>The same sum is bounded by the geometric overlap constant: inactive
+terms vanish, so the total number of net points never enters the bound.</p></div><pre>theorem cutoff_sum_le (d : IsLocalizedPatchCover A r u s phi N C L)
+    {x : X} (hx : x ∈ A) : (∑ y ∈ s, phi y (u x)) ≤ N := by
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L112">OAI.RegularPointCoordinates.IsLocalizedPatchCover</a></p></li><li id=L158><b>theorem</b> <code>OAI.RegularPointCoordinates.IsLocalizedPatchCover.support_inter_image_subset</code> <small>line 158</small><div class="doc"><p>Active support, restricted to the actual coordinate image, comes
+from points in a uniformly enlarged original metric ball.</p></div><pre>theorem support_inter_image_subset (d : IsLocalizedPatchCover A r u s phi N C L)
+    {y : X} (hy : y ∈ s) :
+    tsupport (phi y) ∩ u &#x27;&#x27; A ⊆ u &#x27;&#x27; (A ∩ closedBall y (C * r)) := by
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L112">OAI.RegularPointCoordinates.IsLocalizedPatchCover</a></p></li><li id=L166><b>theorem</b> <code>OAI.RegularPointCoordinates.IsLocalizedPatchCover.active_card_of_mem_image</code> <small>line 166</small><div class="doc"><p>The overlap bound in the exact coordinate-domain form used by
+<code>PatchIterationGeometry.active_card</code>. No injectivity is needed here.</p></div><pre>theorem active_card_of_mem_image (d : IsLocalizedPatchCover A r u s phi N C L)
+    {P : E} (hP : P ∈ u &#x27;&#x27; A) :
+    (s.filter (fun y =&gt; P ∈ tsupport (phi y))).card ≤ N := by
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L112">OAI.RegularPointCoordinates.IsLocalizedPatchCover</a></p></li><li id=L185><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_normalized_patch_energy_centers</code> <small>line 185</small><div class="doc"><p>The actual active domains supply the nonemptiness needed to choose
+fixed energy centers. They remain in the original bounded domain and the
+localized metric ball, and their affine displacement obeys the required
+three-times pair-energy bound at every active point.</p></div><pre>theorem exists_normalized_patch_energy_centers
+    (A : Set X) (r : ℝ≥0) (u : X → E) (T : X → E →L[ℝ] F)
+    (psi : F → ℝ) (s : Finset X) {N : ℕ} {C L D floor : ℝ}
+    (d : IsLocalizedPatchCover A r u s (normalizedPatchCutoff r u T psi) N C L)
+    (hzero : psi 0 = 1) (energy : X → ℝ) (hfloor : 0 &lt; floor)
+    (hlower : ∀ x ∈ A, floor ≤ energy x)
+    (op : X → E →L[ℝ] E) (hD : 0 ≤ D)
+    (hpair : ∀ y ∈ s, ∀ x ∈ normalizedPatchDomain A r u T psi y,
+      ∀ z ∈ normalizedPatchDomain A r u T psi y,
+      ⟪u x - u z, op y (u x - u z)⟫_ℝ ≤
+        D * (r : ℝ) ^ 2 * (energy x + energy z)) :
+    ∃ center : X → X, ∀ y ∈ s,
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L112">OAI.RegularPointCoordinates.IsLocalizedPatchCover</a>, <a href="PatchCoverData.lean.html#L34">OAI.RegularPointCoordinates.normalizedPatchCutoff</a>, <a href="PatchCoverData.lean.html#L39">OAI.RegularPointCoordinates.normalizedPatchDomain</a></p></li><li id=L223><b>theorem</b> <code>OAI.RegularPointCoordinates.half_volume_bounds</code> <small>line 223</small><div class="doc"><p>The half-error relative-volume estimate gives the two bounds used by
+the packing argument, with their common Euclidean volume factor explicit.</p></div><pre>theorem half_volume_bounds {V omega r : ℝ} {n : ℕ}
+    (homega : 0 &lt; omega) (hr : 0 &lt; r)
+    (hvolume : |V / (omega * r ^ n) - 1| ≤ 1 / 2) :
+    (omega / 2) * r ^ n ≤ V ∧ V ≤ (3 * omega / 2) * r ^ n := by
+…</pre></li><li id=L244><b>theorem</b> <code>OAI.RegularPointCoordinates.maximal_normalized_patch_cover</code> <small>line 244</small><div class="doc"><p>The actual maximal net and affine cutoff satisfy localization,
+weight-one covering and a scale-independent overlap bound. The measure
+premise is only the uniform half-error ball-volume estimate.</p></div><pre>theorem maximal_normalized_patch_cover
+    (μ : Measure X) (A : Set X) (hA : TotallyBounded A)
+    (r : ℝ≥0) (hr : 0 &lt; r) (u : X → E) (T : X → E →L[ℝ] F)
+    (psi : F → ℝ) (n : ℕ) {R omega c M L : ℝ}
+    (homega : 0 &lt; omega) (hc : 0 &lt; c) (hL : 2 ≤ L)
+    (hscale : (patchLocalizationFactor c M L + 1) * r ≤ R)
+    (hvolume : ∀ x ∈ A, ∀ t : ℝ, 0 &lt; t → t ≤ R →
+      |μ.real (ball x t) / (omega * t ^ n) - 1| ≤ 1 / 2)
+    (hfinite : ∀ x t, μ (ball x t) ≠ (⊤ : ℝ≥0∞))
+    (hsmooth : ContDiff ℝ ∞ psi)
+    (hzero : ∀ z, 0 ≤ psi z) (hone : ∀ z, psi z ≤ 1)
+    (hcore : ∀ z, ‖z‖ ≤ 2 → psi z = 1)
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L55">OAI.RegularPointCoordinates.patchLocalizationFactor</a></p></li><li id=L308><b>theorem</b> <code>OAI.RegularPointCoordinates.bounded_maximal_normalized_patch_cover</code> <small>line 308</small><div class="doc"><p>Properness is only used to turn a bounded, possibly nonclosed domain
+into the totally bounded set required for the actual finite net.</p></div><pre>theorem bounded_maximal_normalized_patch_cover [ProperSpace X]
+    (μ : Measure X) (A : Set X) (hA : Bornology.IsBounded A)
+    (r : ℝ≥0) (hr : 0 &lt; r) (u : X → E) (T : X → E →L[ℝ] F)
+    (psi : F → ℝ) (n : ℕ) {R omega c M L : ℝ}
+    (homega : 0 &lt; omega) (hc : 0 &lt; c) (hL : 2 ≤ L)
+    (hscale : (patchLocalizationFactor c M L + 1) * r ≤ R)
+    (hvolume : ∀ x ∈ A, ∀ t : ℝ, 0 &lt; t → t ≤ R →
+      |μ.real (ball x t) / (omega * t ^ n) - 1| ≤ 1 / 2)
+    (hfinite : ∀ x t, μ (ball x t) ≠ (⊤ : ℝ≥0∞))
+    (hsmooth : ContDiff ℝ ∞ psi)
+    (hzero : ∀ z, 0 ≤ psi z) (hone : ∀ z, psi z ≤ 1)
+    (hcore : ∀ z, ‖z‖ ≤ 2 → psi z = 1)
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L55">OAI.RegularPointCoordinates.patchLocalizationFactor</a></p></li><li id=L334><b>theorem</b> <code>OAI.RegularPointCoordinates.normalized_patch_cover_of_pointed_approximations</code> <small>line 334</small><div class="doc"><p>The coordinate premises can be stated as actual pointed
+approximations and slow norm growth. Their separation and near-pair
+consequences are derived before constructing the localized patch cover.</p></div><pre>theorem normalized_patch_cover_of_pointed_approximations [ProperSpace X]
+    (μ : Measure X) (A : Set X) (hA : Bornology.IsBounded A)
+    (r : ℝ≥0) (hr : 0 &lt; r) (u : X → E) (T : X → E →L[ℝ] F)
+    (psi : F → ℝ) (n : ℕ) {R omega M L exponent : ℝ}
+    (homega : 0 &lt; omega) (hM : 0 ≤ M) (hL : 2 ≤ L) (hexponent : exponent ≤ 1 / 2)
+    (hscale : (patchLocalizationFactor (1 / 2) M L + 1) * r ≤ R)
+    (hvolume : ∀ x ∈ A, ∀ t : ℝ, 0 &lt; t → t ≤ R →
+      |μ.real (ball x t) / (omega * t ^ n) - 1| ≤ 1 / 2)
+    (hfinite : ∀ x t, μ (ball x t) ≠ (⊤ : ℝ≥0∞))
+    (hsmooth : ContDiff ℝ ∞ psi)
+    (hzero : ∀ z, 0 ≤ psi z) (hone : ∀ z, psi z ≤ 1)
+    (hcore : ∀ z, ‖z‖ ≤ 2 → psi z = 1)
+…</pre><p class="refs">Mentions: <a href="PatchCoverData.lean.html#L55">OAI.RegularPointCoordinates.patchLocalizationFactor</a></p></li><li id=L375><b>def</b> <code>OAI.RegularPointCoordinates.patchCoreBump</code> <small>line 375</small><div class="doc"><p>An actual smooth core-two, support-three cutoff on the coordinate space.</p></div><pre>def patchCoreBump : ContDiffBump (0 : F) := ⟨2, 3, by norm_num, by norm_num⟩</pre></li><li id=L377><b>theorem</b> <code>OAI.RegularPointCoordinates.patchCoreBump_properties</code> <small>line 377</small></li><li id=L403><b>theorem</b> <code>OAI.RegularPointCoordinates.exists_regular_patch_cover_radius</code> <small>line 403</small><div class="doc"><p>The published volume convergence, Bishop--Gromov and density inputs
+give one working neighborhood and one uniform overlap constant for every
+smaller-scale normalized patch family. The remaining premises concern only
+the coordinate normalizations: near-pair control and coarse separation
+with slow growth. No patch conclusion is assumed.</p></div><pre>theorem exists_regular_patch_cover_radius
+    (μ : Measure X) (m : ℕ) {p : X} {a omega rho c M : ℝ}
+    (ha : 0 ≤ a) (homega : 0 &lt; omega) (hrho : 0 &lt; rho) (hc : 0 &lt; c)
+    (hcompact : PointedRescalingPrecompactness p) (hregular : IsRegular (m + 1) p)
+    (hvolume : EuclideanRescalingVolumeConvergence μ (m + 1) p omega)
+    (hcomparison : BallVolumeComparison μ (comparisonModelVolume m a))
+    (hdensity : ∀ y, SmallScaleVolumeUpper μ (comparisonModelVolume m a) y omega)
+    (hfinite : ∀ y t, μ (ball y t) ≠ (⊤ : ℝ≥0∞)) :
+    ∃ R : ℝ, 0 &lt; R ∧ R ≤ rho ∧
+      ∀ (r : ℝ≥0), 0 &lt; r → (patchLocalizationFactor c M 3 + 1) * r ≤ R →
+      ∀ (u : X → E) (T : X → E →L[ℝ] F),
+      (∀ x ∈ ball p R, ∀ y ∈ ball p R, dist x y ≤ r →
+…</pre><p class="refs">Mentions: <a href="RegularTangents.lean.html#L49">OAI.RegularPointCoordinates.PointedRescalingPrecompactness</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L167">OAI.RegularPointCoordinates.IsRegular</a>, <a href="../Metric/VolumeRegime.lean.html#L29">OAI.RegularPointCoordinates.EuclideanRescalingVolumeConvergence</a>, <a href="../Metric/VolumeComparison.lean.html#L24">OAI.RegularPointCoordinates.BallVolumeComparison</a>, <a href="../Metric/ComparisonModel.lean.html#L24">OAI.RegularPointCoordinates.comparisonModelVolume</a>, <a href="../Metric/VolumeComparison.lean.html#L66">OAI.RegularPointCoordinates.SmallScaleVolumeUpper</a>, <a href="PatchCoverData.lean.html#L55">OAI.RegularPointCoordinates.patchLocalizationFactor</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

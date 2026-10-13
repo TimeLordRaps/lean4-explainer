@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/PrimitiveBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/PrimitiveBound.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>PrimitiveBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>PrimitiveBound.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/PrimitiveBound.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>theorem</b> <code>OAI.SymmetricMahler.sine_reciprocal_bound</code> <small>line 10</small><div class="doc"><p>Dividing the sine lower bound yields the exact residual reciprocal estimate.</p></div><pre>theorem sine_reciprocal_bound {r θ Δ : ℝ} (hr : 0 &lt; r) (hr1 : r &lt; 1)
+    (hΔ : 0 &lt; Δ) (hsine : sqrt ((1-r^2)*Δ/r) ≤ sin θ) :
+    (1-r^2)/(r*sin θ) ≤ sqrt (1-r^2)/(sqrt r*sqrt Δ) := by
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.SymmetricMahler.radial_primitive_density_bound</code> <small>line 29</small><div class="doc"><p>The reciprocal angular-speed estimate converts to the
+error-integral density, with the explicit coefficient π.</p></div><pre>theorem radial_primitive_density_bound {r θ Δ m : ℝ}
+    (hr : 0 &lt; r) (hr1 : r &lt; 1) (hm : 0 ≤ m) (hΔ : 0 &lt; Δ)
+    (hsine : sqrt ((1-r^2)*Δ/r) ≤ sin θ) :
+    (4*m/Real.pi)*(r^(2*m-1 : ℝ)/angularSpeed r θ) ≤
+      2*m*r^(2*m-1 : ℝ) +
+      Real.pi*(m*r^(2*m-3/2 : ℝ)*sqrt (1-r^2)/sqrt Δ) := by
+…</pre><p class="refs">Mentions: <a href="PlanarEstimates.lean.html#L68">OAI.SymmetricMahler.angularSpeed</a></p></li><li id=L60><b>def</b> <code>OAI.SymmetricMahler.radialPrimitiveDensity</code> <small>line 60</small><div class="doc"><p>The radial form of the vertical primitive, before proving its equality
+with the integral in the image domain.</p></div><pre>noncomputable def radialPrimitiveDensity (θ : ℝ → ℝ) (m r : ℝ) : ℝ :=
+…</pre></li><li id=L63><b>lemma</b> <code>OAI.SymmetricMahler.radial_error_integrable</code> <small>line 63</small></li><li id=L70><b>theorem</b> <code>OAI.SymmetricMahler.radial_primitive_integrable</code> <small>line 70</small><div class="doc"><p>The density is integrable through the potentially singular initial radius;
+the square-root sine bound, rather than an assumed endpoint regularity, controls it.</p></div><pre>theorem radial_primitive_integrable {θ : ℝ → ℝ} {m r₀ s : ℝ}
+    (hθ : Measurable θ) (hm : 2 ≤ m) (hr₀ : 0 ≤ r₀) (hr₀s : r₀ ≤ s) (hs1 : s &lt; 1)
+    (hsine : ∀ r ∈ Ioo r₀ 1,
+      sqrt ((1-r^2)*(radialMap r-radialMap r₀)/r) ≤ sin (θ r)) :
+    IntervalIntegrable (radialPrimitiveDensity θ m) volume r₀ s := by
+…</pre><p class="refs">Mentions: <a href="RadialBridge.lean.html#L13">OAI.SymmetricMahler.radialMap</a>, <a href="PrimitiveBound.lean.html#L60">OAI.SymmetricMahler.radialPrimitiveDensity</a></p></li><li id=L107><b>theorem</b> <code>OAI.SymmetricMahler.integral_radial_leading</code> <small>line 107</small><div class="doc"><p>The leading term of the radial primitive integrates with coefficient exactly one.</p></div><pre>theorem integral_radial_leading {m a b : ℝ} (hm : 0 &lt; m) :
+    (∫ r in a..b, 2*m*r^(2*m-1 : ℝ)) = b^(2*m : ℝ)-a^(2*m : ℝ) := by
+…</pre></li><li id=L117><b>theorem</b> <code>OAI.SymmetricMahler.radial_primitive_integral_bound</code> <small>line 117</small><div class="doc"><p>The radial primitive is bounded by s^(2m) plus π times the
+uniformly controlled error. This bound does not assert equality
+with the image-domain primitive.</p></div><pre>theorem radial_primitive_integral_bound {θ : ℝ → ℝ} {m r₀ s : ℝ}
+    (hθ : Measurable θ) (hm : 2 ≤ m) (hr₀ : 0 ≤ r₀) (hr₀s : r₀ ≤ s) (hs1 : s &lt; 1)
+    (hsine : ∀ r ∈ Ioo r₀ 1,
+      sqrt ((1-r^2)*(radialMap r-radialMap r₀)/r) ≤ sin (θ r)) :
+    (∫ r in r₀..s, radialPrimitiveDensity θ m r) ≤
+      s^(2*m : ℝ) + Real.pi*(∫ r in r₀..(1 : ℝ), errorIntegrand radialMap r₀ m r) := by
+…</pre><p class="refs">Mentions: <a href="RadialBridge.lean.html#L13">OAI.SymmetricMahler.radialMap</a>, <a href="PrimitiveBound.lean.html#L60">OAI.SymmetricMahler.radialPrimitiveDensity</a>, <a href="ErrorBound.lean.html#L141">OAI.SymmetricMahler.errorIntegrand</a></p></li><li id=L155><b>theorem</b> <code>OAI.SymmetricMahler.radial_primitive_uniform_small</code> <small>line 155</small><div class="doc"><p>Uniform small error for every measurable angular fiber satisfying the
+proved sine condition. The threshold is independent of the basepoint and fiber.</p></div><pre>theorem radial_primitive_uniform_small {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ m₀ : ℝ, ∀ m : ℝ, m₀ ≤ m → ∀ r₀ ∈ Ico (0 : ℝ) 1,
+      ∀ θ : ℝ → ℝ, Measurable θ →
+        (∀ r ∈ Ioo r₀ 1,
+          sqrt ((1-r^2)*(radialMap r-radialMap r₀)/r) ≤ sin (θ r)) →
+        ∀ s ∈ Ico r₀ 1,
+          IntervalIntegrable (radialPrimitiveDensity θ m) volume r₀ s ∧
+          (∫ r in r₀..s, radialPrimitiveDensity θ m r) &lt; s^(2*m : ℝ)+ε := by
+…</pre><p class="refs">Mentions: <a href="RadialBridge.lean.html#L13">OAI.SymmetricMahler.radialMap</a>, <a href="PrimitiveBound.lean.html#L60">OAI.SymmetricMahler.radialPrimitiveDensity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

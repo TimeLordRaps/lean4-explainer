@@ -1,0 +1,1 @@
+window.l4shard("sb", [["Imo1999P3.card_sw_eq_card_sb",75,512],["Imo1999P3.disjoint_sw_sb",75,489],["Imo1999P3.sb",75,63],["Usa2000P5.shared_vertex_sbtw",233,201],["cospherical_or_collinear_of_mul_dist_eq_mul_dist_of_sbtw",105,52]]);

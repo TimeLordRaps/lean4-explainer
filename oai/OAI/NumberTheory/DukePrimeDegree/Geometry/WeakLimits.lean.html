@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Geometry/WeakLimits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Geometry/WeakLimits.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Geometry</a> / <span>WeakLimits.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Geometry</a>/<span>WeakLimits.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Geometry/WeakLimits.lean#L1">source</a></p><div class="doc"><h3>Passing packet estimates to weak limits</h3><p>The ordinary-ball estimate in paper 031-01 is proved for each fixed ball,
+with a packet threshold that may depend on that ball. Portmanteau passes
+this estimate to the limit without a uniform threshold or an exchange of
+shrinking-radius and packet limits. Continuous diagonal transformations
+also preserve invariance in the weak limit.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>theorem</b> <code>OAI.DukePrimeDegree.open_mass_le_of_tendsto</code> <small>line 26</small><div class="doc"><p>Any eventual upper bound on the mass of a fixed open set passes to a
+weak probability limit.</p></div><pre>theorem open_mass_le_of_tendsto
+    (μs : I → ProbabilityMeasure X) (μ : ProbabilityMeasure X)
+    (hlim : Tendsto μs L (𝓝 μ)) (U : Set X) (hU : IsOpen U)
+    (C : ℝ≥0∞) (hbound : ∀ᶠ i in L, (μs i : Measure X) U ≤ C) :
+    (μ : Measure X) U ≤ C := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.DukePrimeDegree.ball_bounds_of_tendsto</code> <small>line 38</small><div class="doc"><p>The radius and center dependent thresholds in the manuscript's vector
+box estimate suffice for a uniform ordinary-ball bound on the limit.</p></div><pre>theorem ball_bounds_of_tendsto
+    (μs : I → ProbabilityMeasure X) (μ : ProbabilityMeasure X)
+    (hlim : Tendsto μs L (𝓝 μ)) (balls : X → ℝ → Set X)
+    (hopen : ∀ x r, IsOpen (balls x r)) (n : ℕ)
+    (hbound : ∀ K : Set X, IsCompact K →
+      ∃ C r₀ : ℝ, 0 ≤ C ∧ 0 &lt; r₀ ∧
+        ∀ x ∈ K, ∀ r, 0 &lt; r → r &lt; r₀ →
+          ∀ᶠ i in L, (μs i : Measure X) (balls x r) ≤ ENNReal.ofReal (C * r ^ n)) :
+    ∀ K : Set X, IsCompact K →
+      ∃ C r₀ : ℝ, 0 ≤ C ∧ 0 &lt; r₀ ∧
+        ∀ x ∈ K, ∀ r, 0 &lt; r → r &lt; r₀ →
+          (μ : Measure X) (balls x r) ≤ ENNReal.ofReal (C * r ^ n) := by
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.DukePrimeDegree.invariant_of_tendsto</code> <small>line 59</small><div class="doc"><p>Push-forward invariance under a continuous transformation survives
+weak convergence. Eventual invariance is enough.</p></div><pre>theorem invariant_of_tendsto
+    (μs : I → ProbabilityMeasure X) (μ : ProbabilityMeasure X)
+    (hlim : Tendsto μs L (𝓝 μ)) (T : X → X) (hT : Continuous T)
+    (hinv : ∀ᶠ i in L, (μs i).map T = μs i) :
+    μ.map T = μ := by
+…</pre></li><li id=L71><b>theorem</b> <code>OAI.DukePrimeDegree.measure_invariant_of_tendsto</code> <small>line 71</small><div class="doc"><p>Weak limits of invariant probabilities remain invariant as measures.</p></div><pre>theorem measure_invariant_of_tendsto
+    (μs : I → ProbabilityMeasure X) (μ : ProbabilityMeasure X)
+    (hlim : Tendsto μs L (𝓝 μ)) (T : X → X) (hT : Continuous T)
+    (hinv : ∀ᶠ i in L, Measure.map T (μs i : Measure X) = (μs i : Measure X)) :
+    Measure.map T (μ : Measure X) = (μ : Measure X) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/AffineApproximation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/AffineApproximation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>AffineApproximation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>AffineApproximation.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/AffineApproximation.lean#L1">source</a></p><div class="doc"><p>Topological compactness tools for the affine-label construction.
+These lemmas concern an arbitrary activity relation, so no continuity in the
+small parameter or in the label-dependent tolerance is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.Problem326.AffineApproximation.smallActivity</code> <small>line 23</small><div class="doc"><p>Points at which a label is active for some positive parameter below <code>δ</code>.</p></div><pre>def smallActivity (A : ℝ → X → I → Prop) (δ : ℝ) (i : I) : Set X :=
+…</pre></li><li id=L27><b>def</b> <code>OAI.Problem326.AffineApproximation.limitActivity</code> <small>line 27</small><div class="doc"><p>All limiting activity points as the positive parameter tends to zero.</p></div><pre>def limitActivity (A : ℝ → X → I → Prop) (i : I) : Set X :=
+…</pre></li><li id=L30><b>theorem</b> <code>OAI.Problem326.AffineApproximation.isClosed_limitActivity</code> <small>line 30</small></li><li id=L35><b>theorem</b> <code>OAI.Problem326.AffineApproximation.smallActivity_mono</code> <small>line 35</small></li><li id=L42><b>theorem</b> <code>OAI.Problem326.AffineApproximation.uniform_activity_one</code> <small>line 42</small><div class="doc"><p>A compact set whose limiting activity points all lie in an open set has
+uniformly small activity in that open set.</p></div><pre>theorem uniform_activity_one [T2Space X]
+    (A : ℝ → X → I → Prop) (i : I) {K G : Set X}
+    (hK : IsCompact K) (hG : IsOpen G)
+    (hlim : K ∩ limitActivity A i ⊆ G) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ ∀ h, 0 &lt; h → h &lt; δ →
+      ∀ x ∈ K, A h x i → x ∈ G := by
+…</pre><p class="refs">Mentions: <a href="AffineApproximation.lean.html#L27">OAI.Problem326.AffineApproximation.limitActivity</a></p></li><li id=L74><b>theorem</b> <code>OAI.Problem326.AffineApproximation.uniform_activity</code> <small>line 74</small><div class="doc"><p>Uniformity holds simultaneously for a finite family of labels.</p></div><pre>theorem uniform_activity [T2Space X] [Fintype I]
+    (A : ℝ → X → I → Prop) {K : Set X} (G : I → Set X)
+    (hK : IsCompact K) (hG : ∀ i, IsOpen (G i))
+    (hlim : ∀ i, K ∩ limitActivity A i ⊆ G i) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ ∀ h, 0 &lt; h → h &lt; δ →
+      ∀ x ∈ K, ∀ i, A h x i → x ∈ G i := by
+…</pre><p class="refs">Mentions: <a href="AffineApproximation.lean.html#L27">OAI.Problem326.AffineApproximation.limitActivity</a></p></li><li id=L93><b>theorem</b> <code>OAI.Problem326.AffineApproximation.nearby_level_activity</code> <small>line 93</small><div class="doc"><p>The fixed-minimum guarantee extends to a neighborhood of that minimum.
+Only the finitely many fixed tolerance values are used.</p></div><pre>theorem nearby_level_activity [Finite I]
+    (A : ℝ → X → I → Prop) {K : Set X} (hK : IsCompact K)
+    (μ : X → ℝ) (hμ : Continuous μ) (t : ℝ)
+    (err : I → X → ℝ) (herr : ∀ i, Continuous (err i)) (E : I → ℝ)
+    (hgood : ∀ i, ∀ p ∈ K, p ∈ limitActivity A i → μ p = t → err i p &lt; E i) :
+    ∃ ρ : ℝ, 0 &lt; ρ ∧ ∀ i, ∀ p ∈ K,
+      p ∈ limitActivity A i → |μ p - t| &lt; ρ → err i p &lt; E i := by
+…</pre><p class="refs">Mentions: <a href="AffineApproximation.lean.html#L27">OAI.Problem326.AffineApproximation.limitActivity</a></p></li><li id=L126><b>theorem</b> <code>OAI.Problem326.AffineApproximation.mem_limitActivity_iff_seq</code> <small>line 126</small></li><li id=L160><b>theorem</b> <code>OAI.Problem326.AffineApproximation.uniform_activity_of_sequence</code> <small>line 160</small><div class="doc"><p>Uniform activity bound in exactly the sequential form used by the affine
+approximation lemma.</p></div><pre>theorem uniform_activity_of_sequence [T2Space X] [Fintype I]
+    (A : ℝ → X → I → Prop) {K : Set X} (hK : IsCompact K)
+    (err : I → X → ℝ) (herr : ∀ i, Continuous (err i)) (E : I → ℝ)
+    (hseq : ∀ i, ∀ p ∈ K, ∀ h : ℕ → ℝ, ∀ x : ℕ → X,
+      (∀ n, 0 &lt; h n) → Tendsto h atTop (𝓝 0) → Tendsto x atTop (𝓝 p) →
+      (∀ n, A (h n) (x n) i) → err i p &lt; E i) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ ∀ h, 0 &lt; h → h &lt; δ →
+      ∀ p ∈ K, ∀ i, A h p i → err i p &lt; E i := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

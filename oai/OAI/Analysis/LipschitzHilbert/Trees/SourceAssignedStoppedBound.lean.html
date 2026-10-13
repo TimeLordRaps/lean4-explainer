@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceAssignedStoppedBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceAssignedStoppedBound.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceAssignedStoppedBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceAssignedStoppedBound.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceAssignedStoppedBound.lean#L1">source</a></p><div class="doc"><p>The supported assigned-top estimates apply to the original individual
+physical packets. These identities retain their analyzing coefficients,
+alternate profiles, stopping levels, masks and source transitions.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.physicalMaskedBand_const_eq_rawBand</code> <small>line 19</small><div class="doc"><p>A constant top mask can be placed in the raw coefficients exactly.</p></div><pre>theorem physicalMaskedBand_const_eq_rawBand (P : SourceLabeledLattice N κ Label Item)
+    (alt : ∀ j (l : P.labels j), Item j l → κ → SchwartzMap (ℝ×ℝ) ℂ)
+    (hAlt : ∀ j l u k, planarProfileConstant (alt j l u k) (2*P.order) ≤ P.profileBound)
+    (t : ℝ) (b : ∀ j, P.labels j → κ → ℝ → ℂ) (v : ℝ×ℝ → ℝ)
+    (f : ℝ×ℝ → EuclideanSpace ℂ κ) (T : SlopeBox) (L A : ℝ)
+    (z : ℝ×ℝ) (j : Fin N) :
+    P.physicalMaskedBand alt hAlt t b v f (fun _ _ _ =&gt; T) L A (z.2-t*z.1) j z.1 =
+      (P.withProfile alt hAlt).rawBand
+        (fun j l u =&gt; T.mask L A z • P.physicalMultiplierCoefficient t b v f j l u)
+        0 j z.1 (z.2-t*z.1) := by
+…</pre><p class="refs">Mentions: <a href="SourceSlottedLattice.lean.html#L21">OAI.LipschitzHilbert.SourceLabeledLattice</a>, <a href="../Estimates/PlanarProfileBounds.lean.html#L36">OAI.LipschitzHilbert.planarProfileConstant</a>, <a href="../Estimates/TopWeight.lean.html#L17">OAI.LipschitzHilbert.SlopeBox</a>, <a href="../Estimates/StoppingScaleIntervals.lean.html#L95">OAI.LipschitzHilbert.SourceLabeledLattice.rawBand</a></p></li><li id=L56><b>def</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReferenceFamily</code> <small>line 56</small><div class="doc"><p>The common-type recentered family used in the actual top envelopes.</p></div><pre>def assignedReferenceFamily (top : τ) :
+    SourceLabeledLattice N κ (fun j =&gt; τ×P.labels j) (P.AssignedTopItem packets assigned) :=
+…</pre><p class="refs">Mentions: <a href="SourceSlottedLattice.lean.html#L21">OAI.LipschitzHilbert.SourceLabeledLattice</a></p></li><li id=L64><b>def</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReferenceOriginalLabel</code> <small>line 64</small></li><li id=L74><b>def</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReferenceAlternate</code> <small>line 74</small></li><li id=L82><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReferenceAlternate_bound</code> <small>line 82</small></li><li id=L93><b>def</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReferenceSelector</code> <small>line 93</small></li><li id=L99><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReference_rawBand_original</code> <small>line 99</small></li><li id=L115><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReference_packetAmplitude_original</code> <small>line 115</small><div class="doc"><p>Original packets, their literal top/length fibers and the recentered
+raw bands have exactly the same source amplitude.</p></div><pre>theorem assignedReference_packetAmplitude_original
+    (grid : AngularGrid) (tops : Finset τ) (precision : τ → ℝ) (cut : ℝ)
+    (weight : τ → (ℝ×ℝ) → ℝ) (K : ℕ) (gap : ℕ → ℝ)
+    (hassigned : ∀ q ∈ packets, assigned q ∈ tops)
+    (hcondition : ∀ q ∈ packets,
+      P.referenceCondition oldSlope (T (assigned q)).slope (R (assigned q)) cone w q.1 q.2.1)
+    (stop : τ → Fin N → ℕ) (phase : ℕ → ℂ) (a L A : ℝ)
+    (z : ℝ×ℝ) (level : ℕ) (cell : ℤ) :
+    grid.sourcePacketAmplitude tops (fun t =&gt; (T t).slope) precision cut weight K gap
+      packets assigned (fun q =&gt; stop (assigned q) q.1)
+      (P.physicalMaskedValue alt hAlt oldSlope b v f
+        (fun j l u =&gt; T (assigned ⟨j,⟨l,u⟩⟩)) L A z) phase a z level cell =
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li><li id=L151><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLabeledLattice.assignedReference_offchildAmplitude_original</code> <small>line 151</small><div class="doc"><p>The exact off-child regrouping also retains original packet masks
+and coefficients; only the assignment fiber is summed.</p></div><pre>theorem assignedReference_offchildAmplitude_original
+    (grid : AngularGrid) (tops : Finset τ) (precision : τ → ℝ) (cut : ℝ)
+    (weight : τ → (ℝ×ℝ) → ℝ) (K : ℕ) (gap : ℕ → ℝ)
+    (hassigned : ∀ q ∈ packets, assigned q ∈ tops)
+    (hcondition : ∀ q ∈ packets,
+      P.referenceCondition oldSlope (T (assigned q)).slope (R (assigned q)) cone w q.1 q.2.1)
+    (stop : τ → Fin N → ℕ) (phase : ℕ → ℂ) (a L A : ℝ)
+    (z : ℝ×ℝ) (level : ℕ) (cell : ℤ) (child : Finset τ) :
+    grid.sourcePacketAmplitude tops (fun t =&gt; (T t).slope) precision cut weight K gap
+      (packets.filter (fun u =&gt; assigned u ∉ child)) assigned (fun q =&gt; stop (assigned q) q.1)
+      (P.physicalMaskedValue alt hAlt oldSlope b v f
+        (fun j l u =&gt; T (assigned ⟨j,⟨l,u⟩⟩)) L A z) phase a z level cell =
+…</pre><p class="refs">Mentions: <a href="../Phase/AngularGrid.lean.html#L16">OAI.LipschitzHilbert.AngularGrid</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

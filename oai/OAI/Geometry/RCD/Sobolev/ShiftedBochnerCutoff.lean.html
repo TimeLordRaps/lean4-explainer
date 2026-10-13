@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Sobolev/ShiftedBochnerCutoff.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Sobolev/ShiftedBochnerCutoff.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Sobolev</a> / <span>ShiftedBochnerCutoff.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Sobolev</a>/<span>ShiftedBochnerCutoff.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Sobolev/ShiftedBochnerCutoff.lean#L1">source</a></p><div class="doc"><h3>The shifted Poisson mass estimate from the actual local equations</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.RegularPointCoordinates.IsMeasureLaplacianOn.test_positive_defect</code> <small>line 23</small><div class="doc"><p>The weak equation for a full signed Laplacian gives the defect
+identity against an actual Sobolev cutoff.</p></div><pre>theorem IsMeasureLaplacianOn.test_positive_defect
+    {S : Set X} [IsFiniteMeasure (μ.restrict S)]
+    (Q : SobolevSpace μ hQ) (a : ℝ) (σ : Measure X) [IsFiniteMeasure σ]
+    (hQsource : IsMeasureLaplacianOn μ hQ S Q
+      (a • (μ.restrict S).toSignedMeasure - σ.toSignedMeasure))
+    (χ : X →ᵇ ℝ) (hχs : HasCompactSupport (χ : X → ℝ))
+    (hχS : tsupport (χ : X → ℝ) ⊆ S)
+    (c : SobolevSpace μ hQ) (hc : SobolevSpace.toLp μ hQ c =ᵐ[μ] χ)
+    (q : Lp ℝ 2 μ) (hq : IsWeakLaplacian μ hQ c q)
+    (hqs : ∀ᵐ x ∂μ, x ∉ S → q x = 0) :
+    (∫ x in S, SobolevSpace.toLp μ hQ Q x * q x ∂μ) =
+      a * (∫ x in S, χ x ∂μ) - ∫ x, χ x ∂σ := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="MeasureLaplacianProduct.lean.html#L26">OAI.RegularPointCoordinates.IsMeasureLaplacianOn</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L328">OAI.RegularPointCoordinates.IsWeakLaplacian</a></p></li><li id=L62><b>theorem</b> <code>OAI.RegularPointCoordinates.LocalHarmonicEnergy.test_shifted_cutoff</code> <small>line 62</small><div class="doc"><p>The shifted measure satisfies the exact cutoff identity, including
+the trace correction and its full singular mass.</p></div><pre>theorem LocalHarmonicEnergy.test_shifted_cutoff
+    {U : E →L[ℝ] SobolevSpace μ hQ} {M : PositiveBilinearMeasure X E}
+    {κ : ℝ} {p : X} {r : ℝ} {L : ℝ≥0} {v : E}
+    [IsFiniteMeasure (μ.restrict (ball p (2 * r)))]
+    (G : LocalHarmonicEnergy μ hQ U M κ p r L v)
+    (ell : E →ₗ[ℝ] ℝ) (n b : ℝ)
+    (hshift : ShiftedBochnerLowerBound M (μ.restrict (ball p (2 * r))) ell n)
+    (χ : X →ᵇ ℝ) (hχs : HasCompactSupport (χ : X → ℝ))
+    (hχS : tsupport (χ : X → ℝ) ⊆ ball p (2 * r))
+    (c : SobolevSpace μ hQ) (hc : SobolevSpace.toLp μ hQ c =ᵐ[μ] χ)
+    (q : Lp ℝ 2 μ) (hq : IsWeakLaplacian μ hQ c q)
+    (hqs : ∀ᵐ x ∂μ, x ∉ ball p (2 * r) → q x = 0) :
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a>, <a href="LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a>, <a href="ShiftedBochnerMeasure.lean.html#L28">OAI.RegularPointCoordinates.ShiftedBochnerLowerBound</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L328">OAI.RegularPointCoordinates.IsWeakLaplacian</a></p></li><li id=L98><b>theorem</b> <code>OAI.RegularPointCoordinates.shifted_poisson_bochner_mass_le</code> <small>line 98</small><div class="doc"><p>Both raw source identities in the shifted Bochner estimate follow
+from the local PDEs and the cutoff Laplacian.</p></div><pre>theorem shifted_poisson_bochner_mass_le
+    {U : E →L[ℝ] SobolevSpace μ hQ} {M : PositiveBilinearMeasure X E}
+    {κ : ℝ} {p : X} {r : ℝ} {L : ℝ≥0} {v : E}
+    [IsFiniteMeasure (μ.restrict (ball p (2 * r)))]
+    (G : LocalHarmonicEnergy μ hQ U M κ p r L v)
+    (ell : E →ₗ[ℝ] ℝ) (n : ℝ)
+    (hshift : ShiftedBochnerLowerBound M (μ.restrict (ball p (2 * r))) ell n)
+    (Q : SobolevSpace μ hQ) (σ : Measure X) [IsFiniteMeasure σ]
+    (hQsource : IsMeasureLaplacianOn μ hQ (ball p (2 * r)) Q
+      (ell v • (μ.restrict (ball p (2 * r))).toSignedMeasure - σ.toSignedMeasure))
+    (χ : X →ᵇ ℝ) (hχ : ∀ x, 0 ≤ χ x ∧ χ x ≤ 1)
+    (hχs : HasCompactSupport (χ : X → ℝ))
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../Coordinates/PositiveBilinearMeasure.lean.html#L24">OAI.RegularPointCoordinates.PositiveBilinearMeasure</a>, <a href="LocalBochnerInput.lean.html#L41">OAI.RegularPointCoordinates.LocalHarmonicEnergy</a>, <a href="ShiftedBochnerMeasure.lean.html#L28">OAI.RegularPointCoordinates.ShiftedBochnerLowerBound</a>, <a href="MeasureLaplacianProduct.lean.html#L26">OAI.RegularPointCoordinates.IsMeasureLaplacianOn</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

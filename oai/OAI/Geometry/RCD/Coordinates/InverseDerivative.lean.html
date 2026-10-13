@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Coordinates/InverseDerivative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Coordinates/InverseDerivative.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Coordinates</a> / <span>InverseDerivative.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Coordinates</a>/<span>InverseDerivative.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Coordinates/InverseDerivative.lean#L1">source</a></p><div class="doc"><h3>Inverse-transpose differentiation and contraction</h3><p>The metric iteration uses cancellation before estimating the derivative of
+an inverse transpose.  These identities work with bounded operators on any
+real Hilbert space; no matrix coordinates or condition-number bounds enter
+the cancellation itself.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.RegularPointCoordinates.inverseTranspose</code> <small>line 28</small><div class="doc"><p>The adjoint of the inverse of a bounded linear equivalence.</p></div><pre>def inverseTranspose (J : E ≃L[ℝ] E) : E →L[ℝ] E :=
+…</pre></li><li id=L32><b>theorem</b> <code>OAI.RegularPointCoordinates.inner_apply_inverseTranspose</code> <small>line 32</small><div class="doc"><p>The inverse transpose cancels the undifferentiated Jacobian in an inner product.</p></div><pre>theorem inner_apply_inverseTranspose (J : E ≃L[ℝ] E) (ξ w : E) :
+    ⟪J ξ, inverseTranspose J w⟫_ℝ = ⟪ξ, w⟫_ℝ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L28">OAI.RegularPointCoordinates.inverseTranspose</a></p></li><li id=L38><b>def</b> <code>OAI.RegularPointCoordinates.inverseTransposeVariation</code> <small>line 38</small><div class="doc"><p>The first variation of an inverse transpose.</p></div><pre>def inverseTransposeVariation (J : E ≃L[ℝ] E) (dJ : E →L[ℝ] E) : E →L[ℝ] E :=
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.RegularPointCoordinates.inner_apply_inverseTransposeVariation</code> <small>line 43</small><div class="doc"><p>Exact cancellation in the differentiated inverse-transpose term.
+This is the operator form of <code>re:inverse-transpose-contraction</code>.</p></div><pre>theorem inner_apply_inverseTransposeVariation (J : E ≃L[ℝ] E)
+    (dJ : E →L[ℝ] E) (ξ w : E) :
+    ⟪J ξ, inverseTransposeVariation J dJ w⟫_ℝ =
+      -⟪dJ ξ, inverseTranspose J w⟫_ℝ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L38">OAI.RegularPointCoordinates.inverseTransposeVariation</a>, <a href="InverseDerivative.lean.html#L28">OAI.RegularPointCoordinates.inverseTranspose</a></p></li><li id=L52><b>theorem</b> <code>OAI.RegularPointCoordinates.abs_inner_apply_inverseTransposeVariation_le</code> <small>line 52</small><div class="doc"><p>The differentiated-inverse error is controlled by the diagonal
+Jacobian derivative, with no operator norm of that derivative.</p></div><pre>theorem abs_inner_apply_inverseTransposeVariation_le (J : E ≃L[ℝ] E)
+    (dJ : E →L[ℝ] E) (ξ w : E) :
+    |⟪J ξ, inverseTransposeVariation J dJ w⟫_ℝ| ≤
+      ‖dJ ξ‖ * ‖inverseTranspose J w‖ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L38">OAI.RegularPointCoordinates.inverseTransposeVariation</a>, <a href="InverseDerivative.lean.html#L28">OAI.RegularPointCoordinates.inverseTranspose</a></p></li><li id=L61><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_sq_inverseTranspose_increment</code> <small>line 61</small><div class="doc"><p>The exact metric increment splits into the principal term, the
+diagonal differentiated-inverse error, and the squared increment.</p></div><pre>theorem norm_sq_inverseTranspose_increment (J : E ≃L[ℝ] E)
+    (dJ : E →L[ℝ] E) (ξ dv v : E) :
+    ‖J ξ + (inverseTranspose J dv + inverseTransposeVariation J dJ v)‖ ^ 2 -
+        ‖J ξ‖ ^ 2 =
+      2 * ⟪ξ, dv⟫_ℝ - 2 * ⟪dJ ξ, inverseTranspose J v⟫_ℝ +
+        ‖inverseTranspose J dv + inverseTransposeVariation J dJ v‖ ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L28">OAI.RegularPointCoordinates.inverseTranspose</a>, <a href="InverseDerivative.lean.html#L38">OAI.RegularPointCoordinates.inverseTransposeVariation</a></p></li><li id=L72><b>theorem</b> <code>OAI.RegularPointCoordinates.hasFDerivAt_operator_inverse</code> <small>line 72</small><div class="doc"><p>Fréchet derivative of inversion at a bounded linear equivalence.</p></div><pre>theorem hasFDerivAt_operator_inverse (J : E ≃L[ℝ] E) :
+    HasFDerivAt (Ring.inverse : (E →L[ℝ] E) → E →L[ℝ] E)
+      (-mulLeftRight ℝ (E →L[ℝ] E) (J.symm : E →L[ℝ] E)
+        (J.symm : E →L[ℝ] E)) (J : E →L[ℝ] E) := by
+…</pre></li><li id=L79><b>def</b> <code>OAI.RegularPointCoordinates.adjointOperator</code> <small>line 79</small><div class="doc"><p>The adjoint operation, viewed as a real continuous linear map.</p></div><pre>def adjointOperator : (E →L[ℝ] E) →L[ℝ] (E →L[ℝ] E) :=
+…</pre></li><li id=L84><b>def</b> <code>OAI.RegularPointCoordinates.operatorInverseTranspose</code> <small>line 84</small><div class="doc"><p>The inverse-transpose operation on all bounded operators.  Only its
+behavior at an invertible operator is used.</p></div><pre>def operatorInverseTranspose (J : E →L[ℝ] E) : E →L[ℝ] E :=
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.RegularPointCoordinates.operatorInverseTranspose_equiv</code> <small>line 87</small></li><li id=L94><b>theorem</b> <code>OAI.RegularPointCoordinates.hasFDerivAt_operator_inverseTranspose</code> <small>line 94</small><div class="doc"><p>Differentiating the inverse transpose of a varying Jacobian.</p></div><pre>theorem hasFDerivAt_operator_inverseTranspose (J : E ≃L[ℝ] E) :
+    HasFDerivAt (operatorInverseTranspose : (E →L[ℝ] E) → E →L[ℝ] E)
+      (adjointOperator ∘L
+        (-mulLeftRight ℝ (E →L[ℝ] E) (J.symm : E →L[ℝ] E)
+          (J.symm : E →L[ℝ] E))) (J : E →L[ℝ] E) := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a>, <a href="InverseDerivative.lean.html#L79">OAI.RegularPointCoordinates.adjointOperator</a></p></li><li id=L102><b>theorem</b> <code>OAI.RegularPointCoordinates.inverseTranspose_derivative_apply</code> <small>line 102</small><div class="doc"><p>The derivative above is exactly the inverse-transpose variation.</p></div><pre>theorem inverseTranspose_derivative_apply (J : E ≃L[ℝ] E) (dJ : E →L[ℝ] E) :
+    (adjointOperator ∘L
+      (-mulLeftRight ℝ (E →L[ℝ] E) (J.symm : E →L[ℝ] E)
+        (J.symm : E →L[ℝ] E))) dJ = inverseTransposeVariation J dJ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L79">OAI.RegularPointCoordinates.adjointOperator</a>, <a href="InverseDerivative.lean.html#L38">OAI.RegularPointCoordinates.inverseTransposeVariation</a></p></li><li id=L111><b>theorem</b> <code>OAI.RegularPointCoordinates.inverseTranspose_fderiv_contraction</code> <small>line 111</small><div class="doc"><p>The cancellation for the actual directional Fréchet derivative of
+a variable inverse transpose.</p></div><pre>theorem inverseTranspose_fderiv_contraction
+    {J : X → E →L[ℝ] E} {J&#x27; : X →L[ℝ] (E →L[ℝ] E)} {x : X}
+    (e : E ≃L[ℝ] E) (he : J x = (e : E →L[ℝ] E))
+    (hJ : HasFDerivAt J J&#x27; x) (u : X) (ξ w : E) :
+    ⟪e ξ, (fderiv ℝ (fun y =&gt; operatorInverseTranspose (J y)) x u) w⟫_ℝ =
+      -⟪J&#x27; u ξ, inverseTranspose e w⟫_ℝ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a>, <a href="InverseDerivative.lean.html#L28">OAI.RegularPointCoordinates.inverseTranspose</a></p></li><li id=L125><b>theorem</b> <code>OAI.RegularPointCoordinates.abs_inverseTranspose_fderiv_contraction_le</code> <small>line 125</small><div class="doc"><p>The same diagonal bound for the actual directional derivative.</p></div><pre>theorem abs_inverseTranspose_fderiv_contraction_le
+    {J : X → E →L[ℝ] E} {J&#x27; : X →L[ℝ] (E →L[ℝ] E)} {x : X}
+    (e : E ≃L[ℝ] E) (he : J x = (e : E →L[ℝ] E))
+    (hJ : HasFDerivAt J J&#x27; x) (u : X) (ξ w : E) :
+    |⟪e ξ, (fderiv ℝ (fun y =&gt; operatorInverseTranspose (J y)) x u) w⟫_ℝ| ≤
+      ‖J&#x27; u ξ‖ * ‖inverseTranspose e w‖ := by
+…</pre><p class="refs">Mentions: <a href="InverseDerivative.lean.html#L84">OAI.RegularPointCoordinates.operatorInverseTranspose</a>, <a href="InverseDerivative.lean.html#L28">OAI.RegularPointCoordinates.inverseTranspose</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/MovingPairedTransform.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/MovingPairedTransform.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>MovingPairedTransform.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>MovingPairedTransform.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/MovingPairedTransform.lean#L1">source</a></p><div class="doc"><h3>The surviving Fourier factors in the paired regular template</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Ostmann.movingPairedGiantEquiv</code> <small>line 15</small></li><li id=L43><b>theorem</b> <code>OAI.Ostmann.movingTaggedTransform_paired</code> <small>line 43</small><div class="doc"><p>Both surviving giants and every regular factor occur once in the next
+full transform. This is independent of the reconstructed pivot.</p></div><pre>theorem movingTaggedTransform_paired {A : Type*} (value : A → ℕ)
+    (n r m : ℕ) (left right : MovingRegularSlot n r m → A) (XL XR : ℕ)
+    (hXL : XL ≠ 0) (hXR : XR ≠ 0)
+    (hleft : ∀ i, value (left i) ≠ 0) (hright : ∀ i, value (right i) ≠ 0)
+    (greg ggiant : ∀ q : ℕ, ZMod q → ℂ) (favorable : ℕ → Bool) (D : ℕ) (s : ℤ) :
+    movingTaggedTransform
+      (Sum.elim (Sum.elim (fun _ : Unit =&gt; XL) (value ∘ left))
+        (Sum.elim (fun _ : Unit =&gt; XR) (value ∘ right)))
+      (Sum.elim (Sum.elim (fun _ : Unit =&gt; true) (fun _ =&gt; false))
+        (Sum.elim (fun _ : Unit =&gt; true) (fun _ =&gt; false))) greg ggiant favorable D s =
+    movingTaggedTransform
+      (Sum.elim (fun b : Bool =&gt; if b then XL else XR)
+…</pre><p class="refs">Mentions: <a href="MovingRegularTemplate.lean.html#L12">OAI.Ostmann.MovingRegularSlot</a>, <a href="MovingTransferTransform.lean.html#L13">OAI.Ostmann.movingTaggedTransform</a></p></li><li id=L86><b>theorem</b> <code>OAI.Ostmann.movingTaggedTransform_full</code> <small>line 86</small><div class="doc"><p>The tagged presentation is the same full transform used by the
+coefficient-to-prime-statistic identity.</p></div><pre>theorem movingTaggedTransform_full {I : Type*} [Fintype I]
+    (q : Bool → ℕ) (p : I → ℕ) [∀ b, NeZero (q b)] [∀ i, NeZero (p i)]
+    (greg ggiant : ∀ q : ℕ, ZMod q → ℂ) (favorable : ℕ → Bool) (D : ℕ) (s : ℤ) :
+    movingTaggedTransform (Sum.elim q p)
+      (Sum.elim (fun _ =&gt; true) (fun _ =&gt; false)) greg ggiant favorable D s =
+    movingRegularTransform (Sum.elim q p)
+      (fun i =&gt; match i with
+        | .inl b =&gt; fun t =&gt; if favorable (q b) then complexUnitPhase (ggiant (q b) t) else 0
+        | .inr j =&gt; greg (p j)) D s := by
+…</pre><p class="refs">Mentions: <a href="MovingTransferTransform.lean.html#L13">OAI.Ostmann.movingTaggedTransform</a>, <a href="MovingRegularTransfer.lean.html#L55">OAI.Ostmann.movingRegularTransform</a>, <a href="../Construction/PhaseGiantTest.lean.html#L11">OAI.Ostmann.complexUnitPhase</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

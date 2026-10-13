@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/MatroidSecretary/Transport/TransferContracts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/MatroidSecretary/Transport/TransferContracts.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">MatroidSecretary</a> / <a href="index.html">Transport</a> / <span>TransferContracts.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">MatroidSecretary</a>/<a href="index.html">Transport</a>/<span>TransferContracts.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/MatroidSecretary/Transport/TransferContracts.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>lemma</b> <code>OAI.MatroidProphet.TransferContracts.recordsPivots_unique</code> <small>line 15</small><div class="doc"><p>An injectively timed sequence determines one recorded pivot-mark vector.</p></div><pre>lemma recordsPivots_unique (M : Matroid α) (label : Occurrence r q → α)
+    (test : Fin n → α) (time : Occurrence r q → ℕ)
+    (htime : Function.Injective time) (oldMark : Fin r → Bool)
+    (movableMark : Fin q → Bool) {t u : Finset (Fin n)}
+    (ht : RecordsPivots M label test time oldMark movableMark t)
+    (hu : RecordsPivots M label test time oldMark movableMark u) : t = u := by
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.MatroidProphet.TransferContracts.marked_pivot_contract</code> <small>line 35</small><div class="doc"><p>Complete marked-pivot contract: arbitrary repeated/redundant old labels,
+all placements/orders/marks of at most <code>s</code> movable occurrences, and the exact
+binomial bound. Source old-spanning/nonloop assumptions ensure every permitted
+interleaving actually contributes exactly one vector. No positivity assumption
+on <code>s</code>, <code>q</code>, <code>r</code>, or <code>n</code> is imposed.</p></div><pre>theorem marked_pivot_contract (M : Matroid α) (b : ℕ → α) (a : Fin q → α)
+    (test : Fin n → α) (oldMark : Fin r → Bool) (s : ℕ) (hqs : q ≤ s)
+    (hground : ∀ o : Occurrence r q, occurrenceLabel b a o ∈ M.E)
+    (holdspan : M.closure (oldPrefix b r) = M.E)
+    (htest : ∀ f, test f ∈ M.E ∧ test f ∉ M.closure ∅) :
+    (markedPivotPatterns M b a test oldMark).card ≤
+        4 ^ s * ∑ k ∈ Finset.Iic s, n.choose k ∧
+      ∀ (time : Occurrence r q → ℕ), OldOrdered time → Function.Injective time →
+        ∀ movableMark : Fin q → Bool,
+          ∃! t, t ∈ markedPivotPatterns M b a test oldMark ∧
+            RecordsPivots M (occurrenceLabel b a) test time oldMark movableMark t := by
+…</pre></li><li id=L62><b>lemma</b> <code>OAI.MatroidProphet.TransferContracts.comparison_group_indep_subset</code> <small>line 62</small><div class="doc"><p>The independent comparison group is constructed by priority greedy and
+fair-mask deletion, exactly as in the manuscript (<code>Y_i = (I* \ H) ∩ U_i</code>).</p></div><pre>lemma comparison_group_indep_subset (M : Matroid (Fin n)) (hE : M.E = Set.univ)
+    (d : MainMasks n) (a : Fin n → Option ℤ) (i : ℤ) :
+    let Y := (positiveGreedy M a \ d.H).filter (fun e =&gt; a e = some i)
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L10">OAI.MatroidProphet.MainMasks</a></p></li><li id=L81><b>theorem</b> <code>OAI.MatroidProphet.TransferContracts.sample_to_rank_contract</code> <small>line 81</small><div class="doc"><p>Full sample-to-rank inequality for the actual rounded weight vector.
+<code>withMasks</code> averages all density, guard and test bits while fixing <code>H</code>;
+<code>fairParityExpectation</code> averages parity. <code>listedRankStatistic</code> is explicitly
+zero on the unlisted branch. Thus there is no conditioning on listing and no
+independence assumption about the selected residual.</p></div><pre>theorem sample_to_rank_contract (M : Matroid (Fin n)) (hE : M.E = Set.univ)
+    (w : Weights n) (d : MainMasks n) (i : ℤ)
+    (hn : densityThreshold ≤
+      ((trueGroup M d (fun e =&gt; roundedLevel weightBase (w e)) i).card : ℝ)) :
+    let a := fun e =&gt; roundedLevel weightBase (w e)
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L20">OAI.MatroidProphet.Weights</a>, <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L10">OAI.MatroidProphet.MainMasks</a>, <a href="../../MatroidProphet/Constants.lean.html#L12">OAI.MatroidProphet.densityThreshold</a>, <a href="../../MatroidProphet/Rounding.lean.html#L16">OAI.MatroidProphet.roundedLevel</a>, <a href="../../MatroidProphet/Constants.lean.html#L11">OAI.MatroidProphet.weightBase</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

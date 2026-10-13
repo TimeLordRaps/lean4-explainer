@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/TransmittedSubtreeErrors.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/TransmittedSubtreeErrors.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>TransmittedSubtreeErrors.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>TransmittedSubtreeErrors.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/TransmittedSubtreeErrors.lean#L1">source</a></p><div class="doc"><h3>Error transmitted from constant terminal values</h3><p>Every map displacement is counted at its actual node, with its actual path
+weight.  The proof follows the concrete finite evaluator.  No positive
+uniform lower bound on the weights and no affine property of the node maps
+is needed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L29><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.sum_descendant_weighted_children</code> <small>line 29</small><div class="doc"><p>Regroup the weighted children of the descendants at one level.</p></div><pre>theorem sum_descendant_weighted_children {k n : ℕ} (h : k ≤ n)
+    (v : T.Node k) (f : T.Node (n + 1) → ℝ) :
+    (∑ p ∈ T.descendants h v, W.pathWeight n p *
+      (∑ c ∈ Finset.univ.filter (fun c =&gt; T.parent n c = p), W.weight n c * f c)) =
+      ∑ c ∈ T.descendants (Nat.le_succ_of_le h) v, W.pathWeight (n + 1) c * f c := by
+…</pre></li><li id=L51><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.subtreeOutput_scaled_norm_sub_le</code> <small>line 51</small><div class="doc"><p>The actual path weight times subtree sensitivity is bounded by the
+weighted cutoff errors on that subtree's own descendants.</p></div><pre>theorem subtreeOutput_scaled_norm_sub_le {k N : ℕ} (h : k ≤ N) :
+    ∀ (H H&#x27; : T.Node N → K) (v : T.Node k),
+      W.pathWeight k v *
+          ‖(E.subtreeOutput h H v : X) - E.subtreeOutput h H&#x27; v‖ ≤
+        ∑ s ∈ T.descendants h v, W.pathWeight N s * ‖(H s : X) - H&#x27; s‖ := by
+…</pre></li><li id=L83><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.terminalDefect</code> <small>line 83</small><div class="doc"><p>The unweighted displacement of all maps strictly above terminal depth.</p></div><pre>noncomputable def terminalDefect (N : ℕ) (b : K) : ℝ :=
+…</pre></li><li id=L88><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.descendantLevelDefect</code> <small>line 88</small><div class="doc"><p>Weighted map displacement on one level below a specified ancestor.
+Levels before the ancestor contribute zero.</p></div><pre>noncomputable def descendantLevelDefect {k : ℕ} (v : T.Node k) (b : K)
+    (d : ℕ) : ℝ := by
+…</pre></li><li id=L96><b>def</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.internalDescendantDefect</code> <small>line 96</small><div class="doc"><p>The exact finite weighted sum over internal descendants of a node.</p></div><pre>noncomputable def internalDescendantDefect {k : ℕ} (N : ℕ) (b : K)
+    (v : T.Node k) : ℝ :=
+…</pre></li><li id=L100><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.internalDescendantDefect_self</code> <small>line 100</small></li><li id=L107><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.internalDescendantDefect_succ</code> <small>line 107</small></li><li id=L116><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.descendantLevelDefect_le</code> <small>line 116</small><div class="doc"><p>Every descendant path weight is at most its ancestor's path weight.</p></div><pre>theorem descendantLevelDefect_le {k : ℕ} (v : T.Node k) (b : K) (d : ℕ) :
+    E.descendantLevelDefect v b d ≤
+      W.pathWeight k v * ∑ s : T.Node d, ‖(E.map d s b : X) - b‖ := by
+…</pre></li><li id=L137><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.internalDescendantDefect_le</code> <small>line 137</small><div class="doc"><p>Summing the ancestor-weight comparisons gives the full unweighted
+terminal displacement budget, multiplied by just the ancestor's weight.</p></div><pre>theorem internalDescendantDefect_le {k : ℕ} (N : ℕ) (b : K) (v : T.Node k) :
+    E.internalDescendantDefect N b v ≤ W.pathWeight k v * E.terminalDefect N b := by
+…</pre></li><li id=L147><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.subtreeOutput_const_scaled_norm_sub_le</code> <small>line 147</small><div class="doc"><p>Exact scaled transmitted bound for a constant terminal assignment.</p></div><pre>theorem subtreeOutput_const_scaled_norm_sub_le {k N : ℕ} (h : k ≤ N)
+    (b : K) (v : T.Node k) :
+    W.pathWeight k v * ‖(E.subtreeOutput h (fun _ =&gt; b) v : X) - b‖ ≤
+      E.internalDescendantDefect N b v := by
+…</pre></li><li id=L183><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.subtreeOutput_const_norm_sub_le_quotient</code> <small>line 183</small><div class="doc"><p>Dividing by the positive weight gives the weighted
+internal-descendant error formula.</p></div><pre>theorem subtreeOutput_const_norm_sub_le_quotient {k N : ℕ} (h : k ≤ N)
+    (b : K) (v : T.Node k) :
+    ‖(E.subtreeOutput h (fun _ =&gt; b) v : X) - b‖ ≤
+      E.internalDescendantDefect N b v / W.pathWeight k v := by
+…</pre></li><li id=L192><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.subtreeOutput_const_norm_sub_le_terminalDefect</code> <small>line 192</small><div class="doc"><p>Constant terminal error is at most the total unweighted displacement.
+Only positivity of this one path weight is used to cancel it.</p></div><pre>theorem subtreeOutput_const_norm_sub_le_terminalDefect {k N : ℕ} (h : k ≤ N)
+    (b : K) (v : T.Node k) :
+    ‖(E.subtreeOutput h (fun _ =&gt; b) v : X) - b‖ ≤ E.terminalDefect N b := by
+…</pre></li><li id=L200><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.subtreeOutput_scaled_norm_sub_le_of_descendants_eq</code> <small>line 200</small><div class="doc"><p>The scaled bound only needs constant terminal values below this node.</p></div><pre>theorem subtreeOutput_scaled_norm_sub_le_of_descendants_eq {k N : ℕ} (h : k ≤ N)
+    (H : T.Node N → K) (b : K) (v : T.Node k)
+    (heq : ∀ s ∈ T.descendants h v, H s = b) :
+    W.pathWeight k v * ‖(E.subtreeOutput h H v : X) - b‖ ≤
+      E.internalDescendantDefect N b v := by
+…</pre></li><li id=L210><b>theorem</b> <code>OAI.ReflexiveFixedPoints.TreeEvaluation.subtreeOutput_norm_sub_le_terminalDefect</code> <small>line 210</small><div class="doc"><p>A completely switched subtree has error bounded by the common terminal
+budget, regardless of all terminal values outside that subtree.</p></div><pre>theorem subtreeOutput_norm_sub_le_terminalDefect {k N : ℕ} (h : k ≤ N)
+    (H : T.Node N → K) (b : K) (v : T.Node k)
+    (heq : ∀ s ∈ T.descendants h v, H s = b) :
+    ‖(E.subtreeOutput h H v : X) - b‖ ≤ E.terminalDefect N b := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

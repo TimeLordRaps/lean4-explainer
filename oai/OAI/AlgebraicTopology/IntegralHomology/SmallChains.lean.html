@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicTopology/IntegralHomology/SmallChains.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicTopology/IntegralHomology/SmallChains.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicTopology</a> / <a href="index.html">IntegralHomology</a> / <span>SmallChains.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicTopology</a>/<a href="index.html">IntegralHomology</a>/<span>SmallChains.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicTopology/IntegralHomology/SmallChains.lean#L1">source</a></p><div class="doc"><p>Simplicial gluing, small singular subcomplexes, and cover meshes.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.Kaplansky.integralSimplicialChains</code> <small>line 24</small><div class="doc"><p>Integral simplicial chains, using the same free-chain construction as
+the preserved integral singular chain complex.</p></div><pre>def integralSimplicialChains : SSet.{0} ⥤ ChainComplex (ModuleCat.{0} ℤ) ℕ :=
+…</pre></li><li id=L27><b>instance</b> <code>OAI.Kaplansky.integralSimplicialChains_preservesColimitsOfShape</code> <small>line 27</small></li><li id=L36><b>instance</b> <code>OAI.Kaplansky.integralSimplicialChains_preservesMonomorphisms</code> <small>line 36</small></li><li id=L47><b>theorem</b> <code>OAI.Kaplansky.subcomplexChains_isPushout</code> <small>line 47</small><div class="doc"><p>Chains in a union of subcomplexes form the actual pushout over their
+intersection. No topological excision assertion is used.</p></div><pre>theorem subcomplexChains_isPushout :
+    IsPushout
+      (integralSimplicialChains.map (SSet.Subcomplex.homOfLE (inf_le_left : U ⊓ V ≤ U)))
+      (integralSimplicialChains.map (SSet.Subcomplex.homOfLE (inf_le_right : U ⊓ V ≤ V)))
+      (integralSimplicialChains.map (SSet.Subcomplex.homOfLE (le_sup_left : U ≤ U ⊔ V)))
+      (integralSimplicialChains.map (SSet.Subcomplex.homOfLE (le_sup_right : V ≤ U ⊔ V))) := by
+…</pre></li><li id=L56><b>def</b> <code>OAI.Kaplansky.subcomplexChainSequence</code> <small>line 56</small></li><li id=L59><b>theorem</b> <code>OAI.Kaplansky.subcomplexChainSequence_shortExact</code> <small>line 59</small></li><li id=L71><b>def</b> <code>OAI.Kaplansky.subcomplexRelativeChainIso</code> <small>line 71</small><div class="doc"><p>The chain-level relative excision map for a union of simplicial
+subcomplexes. The map is an isomorphism before taking homology.</p></div><pre>def subcomplexRelativeChainIso :
+    cokernel (integralSimplicialChains.map
+      (SSet.Subcomplex.homOfLE (inf_le_left : U ⊓ V ≤ U))) ≅
+    cokernel (integralSimplicialChains.map
+      (SSet.Subcomplex.homOfLE (le_sup_right : V ≤ U ⊔ V))) := by
+…</pre></li><li id=L84><b>def</b> <code>OAI.Kaplansky.singularSimplexMap</code> <small>line 84</small></li><li id=L90><b>def</b> <code>OAI.Kaplansky.singularSubset</code> <small>line 90</small><div class="doc"><p>Singular simplices whose entire image lies in the specified subspace.</p></div><pre>def singularSubset (U : Set X) : (TopCat.toSSet.obj (TopCat.of X)).Subcomplex :=
+…</pre></li><li id=L93><b>theorem</b> <code>OAI.Kaplansky.mem_singularSubset_iff</code> <small>line 93</small></li><li id=L104><b>theorem</b> <code>OAI.Kaplansky.singularSubset_mono</code> <small>line 104</small></li><li id=L110><b>theorem</b> <code>OAI.Kaplansky.singularSubset_inter</code> <small>line 110</small></li><li id=L119><b>theorem</b> <code>OAI.Kaplansky.singularSubset_univ</code> <small>line 119</small></li><li id=L125><b>def</b> <code>OAI.Kaplansky.singularSubsetIso</code> <small>line 125</small><div class="doc"><p>Identification with singular simplices of the actual subspace,
+including its inherited topology, rather than a replacement chain theory.</p></div><pre>def singularSubsetIso (U : Set X) :
+    TopCat.toSSet.obj (TopCat.of U) ≅ (singularSubset U).toSSet := by
+…</pre><p class="refs">Mentions: <a href="SmallChains.lean.html#L90">OAI.Kaplansky.singularSubset</a></p></li><li id=L133><b>theorem</b> <code>OAI.Kaplansky.singularSubsetIso_hom_ι</code> <small>line 133</small></li><li id=L137><b>def</b> <code>OAI.Kaplansky.singularSubsetChainsIso</code> <small>line 137</small></li><li id=L144><b>def</b> <code>OAI.Kaplansky.smallSingularSet</code> <small>line 144</small><div class="doc"><p>The complex of simplices small for the two-set family. Its simplices
+lie wholly in one member, which need not hold for an arbitrary singular simplex.</p></div><pre>def smallSingularSet (U V : Set X) : SSet.{0} :=
+…</pre></li><li id=L147><b>def</b> <code>OAI.Kaplansky.smallSingularChains</code> <small>line 147</small></li><li id=L150><b>def</b> <code>OAI.Kaplansky.smallSingularChainInclusion</code> <small>line 150</small></li><li id=L154><b>instance</b> <code>OAI.Kaplansky.(instance at line 154)</code> <small>line 154</small></li><li id=L157><b>theorem</b> <code>OAI.Kaplansky.mem_smallSingularSet_iff</code> <small>line 157</small></li><li id=L167><b>def</b> <code>OAI.Kaplansky.smallSingularChainSequence</code> <small>line 167</small><div class="doc"><p>Proven gluing sequence for actual small singular chains. A quasi-isomorphism
+from small to full chains is a separate subdivision theorem.</p></div><pre>def smallSingularChainSequence (U V : Set X) :=
+…</pre></li><li id=L170><b>theorem</b> <code>OAI.Kaplansky.smallSingularChainSequence_shortExact</code> <small>line 170</small></li><li id=L182><b>theorem</b> <code>OAI.Kaplansky.continuousMap_cover_mesh</code> <small>line 182</small><div class="doc"><p>A sufficiently small subset of the domain of one singular simplex is
+carried into one member of a two-set open cover.</p></div><pre>theorem continuousMap_cover_mesh (σ : C(P, X)) (U V : Set X)
+    (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) :
+    ∃ δ &gt; 0, ∀ s : Set P, (∀ a ∈ s, ∀ b ∈ s, dist a b &lt; δ) →
+      (∀ a ∈ s, σ a ∈ U) ∨ (∀ a ∈ s, σ a ∈ V) := by
+…</pre></li><li id=L211><b>theorem</b> <code>OAI.Kaplansky.finite_continuousMaps_cover_mesh</code> <small>line 211</small><div class="doc"><p>A single positive mesh works simultaneously for a finite collection
+of continuous simplices, as required for a finite singular chain.</p></div><pre>theorem finite_continuousMaps_cover_mesh {ι : Type} (F : Finset ι) (σ : ι → C(P, X))
+    (U V : Set X) (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) :
+    ∃ δ &gt; 0, ∀ i ∈ F, ∀ s : Set P, (∀ a ∈ s, ∀ b ∈ s, dist a b &lt; δ) →
+      (∀ a ∈ s, σ i a ∈ U) ∨ (∀ a ∈ s, σ i a ∈ V) := by
+…</pre></li><li id=L229><b>theorem</b> <code>OAI.Kaplansky.finite_continuousMaps_eventually_small</code> <small>line 229</small><div class="doc"><p>Geometric decay of mesh supplies one subdivision depth for an entire
+finite chain. This proves the compactness/limit step; construction of a
+subdivision chain operator with this bound remains separate.</p></div><pre>theorem finite_continuousMaps_eventually_small {ι : Type} (F : Finset ι)
+    (σ : ι → C(P, X)) (U V : Set X) (hU : IsOpen U) (hV : IsOpen V)
+    (hUV : U ∪ V = Set.univ) (L c : ℝ) (hc₀ : 0 ≤ c) (hc₁ : c &lt; 1) :
+    ∃ N : ℕ, ∀ k ≥ N, ∀ i ∈ F, ∀ s : Set P,
+      (∀ a ∈ s, ∀ b ∈ s, dist a b ≤ L * c ^ k) →
+      (∀ a ∈ s, σ i a ∈ U) ∨ (∀ a ∈ s, σ i a ∈ V) := by
+…</pre></li><li id=L245><b>instance</b> <code>OAI.Kaplansky.standardSimplexMetricSpace</code> <small>line 245</small></li><li id=L252><b>theorem</b> <code>OAI.Kaplansky.singularSimplices_cover_mesh</code> <small>line 252</small><div class="doc"><p>The finite mesh estimate applies to the actual standard-simplex
+coordinates of the library's singular simplices.</p></div><pre>theorem singularSimplices_cover_mesh (n : ℕ)
+    (F : Finset ((TopCat.toSSet.obj (TopCat.of X)).obj (Opposite.op ⦋n⦌)))
+    (U V : Set X) (hU : IsOpen U) (hV : IsOpen V) (hUV : U ∪ V = Set.univ) :
+    ∃ δ &gt; 0, ∀ σ ∈ F, ∀ s : Set (Convexity.StdSimplex ℝ (Fin (n+1))),
+      (∀ a ∈ s, ∀ b ∈ s, dist a b &lt; δ) →
+      (∀ a ∈ s, TopCat.toSSetObjEquiv (TopCat.of X) (Opposite.op ⦋n⦌) σ a ∈ U) ∨
+      (∀ a ∈ s, TopCat.toSSetObjEquiv (TopCat.of X) (Opposite.op ⦋n⦌) σ a ∈ V) :=
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

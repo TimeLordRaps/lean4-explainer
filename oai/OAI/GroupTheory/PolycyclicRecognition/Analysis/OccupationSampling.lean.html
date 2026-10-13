@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/OccupationSampling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/OccupationSampling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>OccupationSampling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>OccupationSampling.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/OccupationSampling.lean#L1">source</a></p><div class="doc"><h3>Actual probability laws of independent chart samples</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>def</b> <code>OAI.PolycyclicRecognition.cellProbabilityMeasure</code> <small>line 17</small><div class="doc"><p>Uniform sampling from an actual measurable cell of positive finite mass.</p></div><pre>def cellProbabilityMeasure {Z : Type*} [MeasurableSpace Z]
+    (μ : Measure Z) (S : Set Z) (hzero : μ S ≠ 0) (hfin : μ S ≠ ⊤) :
+    ProbabilityMeasure Z :=
+…</pre></li><li id=L25><b>theorem</b> <code>OAI.PolycyclicRecognition.integral_cellProbabilityMeasure</code> <small>line 25</small></li><li id=L35><b>def</b> <code>OAI.PolycyclicRecognition.densityProbabilityMeasure</code> <small>line 35</small><div class="doc"><p>A nonnegative integrable density of mass one defines a probability.</p></div><pre>def densityProbabilityMeasure {Z : Type*} [MeasurableSpace Z]
+    (μ : Measure Z) (ρ : Z → ℝ) (hi : Integrable ρ μ)
+    (hp : ∀ z, 0 ≤ ρ z) (hmass : ∫ z, ρ z ∂μ = 1) : ProbabilityMeasure Z :=
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.PolycyclicRecognition.integral_densityProbabilityMeasure</code> <small>line 46</small><div class="doc"><p>Integrating against that probability is the ordinary density-weighted
+integral, including for scale-dependent observables.</p></div><pre>theorem integral_densityProbabilityMeasure
+    {Z : Type*} [MeasurableSpace Z]
+    (μ : Measure Z) (ρ : Z → ℝ) (hi : Integrable ρ μ)
+    (hp : ∀ z, 0 ≤ ρ z) (hmass : ∫ z, ρ z ∂μ = 1)
+    (f : Z → ℝ) :
+    (∫ z, f z ∂(densityProbabilityMeasure μ ρ hi hp hmass : Measure Z)) =
+      ∫ z, ρ z * f z ∂μ := by
+…</pre><p class="refs">Mentions: <a href="OccupationSampling.lean.html#L35">OAI.PolycyclicRecognition.densityProbabilityMeasure</a></p></li><li id=L61><b>theorem</b> <code>OAI.PolycyclicRecognition.ae_mem_densityProbabilityMeasure</code> <small>line 61</small><div class="doc"><p>A density sample lies almost surely in every set outside which the
+density vanishes. In particular its compact support carries the law.</p></div><pre>theorem ae_mem_densityProbabilityMeasure
+    {Z : Type*} [MeasurableSpace Z]
+    (μ : Measure Z) (ρ : Z → ℝ) (hi : Integrable ρ μ)
+    (hp : ∀ z, 0 ≤ ρ z) (hmass : ∫ z, ρ z ∂μ = 1)
+    (K : Set Z) (hK : ∀ z, z ∉ K → ρ z = 0) :
+    ∀ᵐ z ∂(densityProbabilityMeasure μ ρ hi hp hmass : Measure Z), z ∈ K := by
+…</pre><p class="refs">Mentions: <a href="OccupationSampling.lean.html#L35">OAI.PolycyclicRecognition.densityProbabilityMeasure</a></p></li><li id=L74><b>def</b> <code>OAI.PolycyclicRecognition.productOccupationLaw</code> <small>line 74</small><div class="doc"><p>The law of a measurable chart sampled independently in its two factors.</p></div><pre>def productOccupationLaw {A D X : Type*}
+    [MeasurableSpace A] [MeasurableSpace D] [MeasurableSpace X]
+    (μ : ProbabilityMeasure A) (ν : ProbabilityMeasure D) (p : A × D → X) :
+    ProbabilityMeasure X :=
+…</pre></li><li id=L82><b>theorem</b> <code>OAI.PolycyclicRecognition.integral_productOccupationLaw</code> <small>line 82</small><div class="doc"><p>Fubini's formula for a bounded continuous observable of a chart sample.</p></div><pre>theorem integral_productOccupationLaw
+    {A D X : Type*} [MeasurableSpace A] [MeasurableSpace D]
+    [TopologicalSpace X] [CompactSpace X] [MeasurableSpace X] [BorelSpace X]
+    (μ : ProbabilityMeasure A) (ν : ProbabilityMeasure D)
+    (p : A × D → X) (hp : Measurable p) (f : C(X, ℝ)) :
+    (∫ x, f x ∂(productOccupationLaw μ ν p : Measure X)) =
+      ∫ a, ∫ d, f (p (a, d)) ∂(ν : Measure D) ∂(μ : Measure A) := by
+…</pre><p class="refs">Mentions: <a href="OccupationSampling.lean.html#L74">OAI.PolycyclicRecognition.productOccupationLaw</a></p></li><li id=L96><b>theorem</b> <code>OAI.PolycyclicRecognition.integral_productOccupationLaw_symm</code> <small>line 96</small><div class="doc"><p>The same formula with the other factor outside.</p></div><pre>theorem integral_productOccupationLaw_symm
+    {A D X : Type*} [MeasurableSpace A] [MeasurableSpace D]
+    [TopologicalSpace X] [CompactSpace X] [MeasurableSpace X] [BorelSpace X]
+    (μ : ProbabilityMeasure A) (ν : ProbabilityMeasure D)
+    (p : A × D → X) (hp : Measurable p) (f : C(X, ℝ)) :
+    (∫ x, f x ∂(productOccupationLaw μ ν p : Measure X)) =
+      ∫ d, ∫ a, f (p (a, d)) ∂(μ : Measure A) ∂(ν : Measure D) := by
+…</pre><p class="refs">Mentions: <a href="OccupationSampling.lean.html#L74">OAI.PolycyclicRecognition.productOccupationLaw</a></p></li><li id=L111><b>theorem</b> <code>OAI.PolycyclicRecognition.productOccupationLaw_error_eq</code> <small>line 111</small><div class="doc"><p>Exact translated-law error formula. In particular, estimates only on
+the support of the second sampling measure suffice after this identity.</p></div><pre>theorem productOccupationLaw_error_eq
+    {A D X G : Type*} [MeasurableSpace A] [MeasurableSpace D]
+    [TopologicalSpace X] [CompactSpace X] [MeasurableSpace X] [BorelSpace X]
+    [SMul G X] [ContinuousConstSMul G X]
+    (μ : ProbabilityMeasure A) (ν : ProbabilityMeasure D)
+    (p : A × D → X) (hp : Measurable p) (g : G) (f : C(X, ℝ)) :
+    (∫ x, f (g • x) ∂(productOccupationLaw μ ν p : Measure X)) -
+        ∫ x, f x ∂(productOccupationLaw μ ν p : Measure X) =
+      ∫ d, ((∫ a, f (g • p (a, d)) ∂(μ : Measure A)) -
+        ∫ a, f (p (a, d)) ∂(μ : Measure A)) ∂(ν : Measure D) := by
+…</pre><p class="refs">Mentions: <a href="OccupationSampling.lean.html#L74">OAI.PolycyclicRecognition.productOccupationLaw</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

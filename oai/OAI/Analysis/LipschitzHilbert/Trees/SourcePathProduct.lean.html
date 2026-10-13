@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourcePathProduct.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourcePathProduct.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourcePathProduct.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourcePathProduct.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourcePathProduct.lean#L1">source</a></p><div class="doc"><p>The finite path-product argument in §10. Marked indices retain the
+residual-free predictor; all consecutive unary runs use one common cubic
+variation estimate. The remaining unmarked large-drop index is unique.
+The estimates are independent of the number of angular levels.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.LipschitzHilbert.UnaryRunPartition.indices_disjoint</code> <small>line 23</small></li><li id=L33><b>theorem</b> <code>OAI.LipschitzHilbert.UnaryRunPartition.indices_union</code> <small>line 33</small></li><li id=L52><b>theorem</b> <code>OAI.LipschitzHilbert.UnaryRunPartition.sum_runs</code> <small>line 52</small></li><li id=L60><b>theorem</b> <code>OAI.LipschitzHilbert.UnaryRunPartition.sum_segments</code> <small>line 60</small></li><li id=L83><b>theorem</b> <code>OAI.LipschitzHilbert.source_unary_runs_weighted_drop</code> <small>line 83</small><div class="doc"><p>The discarded-top contributions sum against true relative drops,
+also when the unary indices have many separate consecutive runs.</p></div><pre>theorem source_unary_runs_weighted_drop {unary : ℕ → Prop} {n : ℕ → ℝ}
+    {start finish : ℕ} (R : UnaryRunPartition unary start finish)
+    (P : ∀ r : R.runs, UnarySegmentPartition n r.val.1 r.val.2)
+    (hn : Antitone n) {μ Q : ℝ} (hμ : μ ≤ 1)
+    (hnpos : ∀ j ∈ Finset.Ico start finish, 0 &lt; n j)
+    (hQ : ∀ j ∈ Finset.Ico start finish, n j^μ ≤ Q) :
+    (∑ i : UnaryRunSegment R P,
+      n i.2.val.1^(μ-1)*(n i.2.val.1-n i.2.val.2)) ≤
+        Q*∑ j ∈ (Finset.Ico start finish).filter unary, pathDrop n j := by
+…</pre><p class="refs">Mentions: <a href="UnaryRuns.lean.html#L11">OAI.LipschitzHilbert.UnaryRunPartition</a>, <a href="UnarySegmentation.lean.html#L43">OAI.LipschitzHilbert.UnarySegmentPartition</a>, <a href="UnaryRunCharging.lean.html#L18">OAI.LipschitzHilbert.UnaryRunSegment</a>, <a href="PathDrops.lean.html#L13">OAI.LipschitzHilbert.pathDrop</a></p></li><li id=L119><b>theorem</b> <code>OAI.LipschitzHilbert.source_unary_segment_log_cost</code> <small>line 119</small><div class="doc"><p>Reindex the actual unary energy telescope to an arbitrary segment.
+The propagated comparison amplitude is required only on that segment.</p></div><pre>theorem source_unary_segment_log_cost {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] (n : ℕ → ℝ) (A Astar : ℕ → E) (beta : ℕ → ℝ)
+    {e f : ℕ} {a p D : ℝ} (hef : e ≤ f)
+    (hp : 1 ≤ p) (ha : 1 ≤ a) (hap : a ≤ p) (hD : 0 ≤ D)
+    (hstart : 4 ≤ n e) (hn : Antitone n) (hdrop : n e-n f ≤ 2)
+    (hcontraction : ∀ j ∈ Finset.Ico e f, ‖Astar j‖ ≤ ‖Astar (j+1)‖)
+    (hend : Astar f = A f) (hbeta : ∀ j ∈ Finset.Ico e f, 0 &lt; beta j)
+    (hprediction : ∀ j ∈ Finset.Ico e f, beta j ≤
+      vertexAmount (n j) (A j) a p /
+        (n j-n (j+1)+vertexAmount (n (j+1)) (A (j+1)) a p))
+    (herror : ∀ j ∈ Finset.Icc e f, ‖A j-Astar j‖ ≤ D) :
+    (∑ j ∈ Finset.Ico e f, Real.log (beta j)) ≤ 4*p*n e^((a-1)/p-1)*D := by
+…</pre><p class="refs">Mentions: <a href="VertexIntegration.lean.html#L131">OAI.LipschitzHilbert.vertexAmount</a></p></li><li id=L153><b>theorem</b> <code>OAI.LipschitzHilbert.source_unary_runs_log_cost</code> <small>line 153</small><div class="doc"><p>All unary runs use one cubic-variation budget. The local error bound
+is the actual propagated amplitude error from Abel summation, not a
+hypothesis about the path product.</p></div><pre>theorem source_unary_runs_log_cost {unary : ℕ → Prop} {n : ℕ → ℝ}
+    {start finish : ℕ} (R : UnaryRunPartition unary start finish)
+    (P : ∀ r : R.runs, UnarySegmentPartition n r.val.1 r.val.2)
+    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F]
+    (A : ℕ → E) (Astar : ℕ → ℕ → ℕ → E) (beta : ℕ → ℝ)
+    (profile : ℕ → F) (level : ℕ → ℕ) (hlevel : StrictMono level) (N : ℕ)
+    (hendlevel : level finish ≤ N) (hn : Antitone n)
+    {a p c M V C ε Q : ℝ} (hp : 1 ≤ p) (ha : 1 ≤ a) (hap : a ≤ p)
+    (hc : 0 &lt; c) (hc1 : c ≤ 1) (hM : 4 ≤ M) (hμ : (a-1)/p ≤ 1/12)
+    (hV : 0 ≤ V) (hC : 0 ≤ C) (hε : 0 ≤ ε)
+    (hmass : ∀ j ∈ (Finset.Ico start finish).filter unary, M ≤ n j)
+    (hnpos : ∀ j ∈ Finset.Ico start finish, 0 &lt; n j)
+…</pre><p class="refs">Mentions: <a href="UnaryRuns.lean.html#L11">OAI.LipschitzHilbert.UnaryRunPartition</a>, <a href="UnarySegmentation.lean.html#L43">OAI.LipschitzHilbert.UnarySegmentPartition</a></p></li><li id=L231><b>theorem</b> <code>OAI.LipschitzHilbert.source_unary_propagated_log_cost</code> <small>line 231</small><div class="doc"><p>The comparison amplitudes used above can be the literal products of
+the path coefficients and the endpoint amplitude. This discharges their
+contraction and endpoint conditions from the true unary recurrence.</p></div><pre>theorem source_unary_propagated_log_cost {unary : ℕ → Prop} {n : ℕ → ℝ}
+    {start finish : ℕ} (R : UnaryRunPartition unary start finish)
+    (P : ∀ r : R.runs, UnarySegmentPartition n r.val.1 r.val.2)
+    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E]
+    [NormedAddCommGroup F] (A U W : ℕ → E) (coeff : ℕ → ℂ) (beta : ℕ → ℝ)
+    (profile : ℕ → F) (level : ℕ → ℕ) (hlevel : StrictMono level) (N : ℕ)
+    (hendlevel : level finish ≤ N) (hn : Antitone n)
+    {a p c M V C ε Q : ℝ} (hp : 1 ≤ p) (ha : 1 ≤ a) (hap : a ≤ p)
+    (hc : 0 &lt; c) (hc1 : c ≤ 1) (hM : 4 ≤ M) (hμ : (a-1)/p ≤ 1/12)
+    (hV : 0 ≤ V) (hC : 0 ≤ C) (hε : 0 ≤ ε)
+    (hmass : ∀ j ∈ (Finset.Ico start finish).filter unary, M ≤ n j)
+    (hnpos : ∀ j ∈ Finset.Ico start finish, 0 &lt; n j)
+…</pre><p class="refs">Mentions: <a href="UnaryRuns.lean.html#L11">OAI.LipschitzHilbert.UnaryRunPartition</a>, <a href="UnarySegmentation.lean.html#L43">OAI.LipschitzHilbert.UnarySegmentPartition</a></p></li><li id=L292><b>theorem</b> <code>OAI.LipschitzHilbert.source_exceptional_factor_le</code> <small>line 292</small><div class="doc"><p>The exceptional factor is controlled just by its amplitude and the
+baseline mass in its denominator.</p></div><pre>theorem source_exceptional_factor_le {E : Type*} [NormedAddCommGroup E]
+    (A : E) {n denominator M C a p : ℝ}
+    (hn : 0 &lt; n) (hden : n ≤ denominator) (hM : n ≤ M+1)
+    (hC : 0 ≤ C) (ha : 1 ≤ a) (hp : 0 ≤ p) (hA : ‖A‖ ≤ C*n) :
+    vertexAmount n A a p/denominator ≤ 1+C^p*(M+1)^(a-1) := by
+…</pre><p class="refs">Mentions: <a href="VertexIntegration.lean.html#L131">OAI.LipschitzHilbert.vertexAmount</a></p></li><li id=L321><b>theorem</b> <code>OAI.LipschitzHilbert.source_path_product_of_log_costs</code> <small>line 321</small><div class="doc"><p>Split a finite active product into marked, unary and exceptional
+indices. The exceptional contribution costs once, even if its logarithm
+is negative.</p></div><pre>theorem source_path_product_of_log_costs (count : ℕ) (marked unary exceptional : ℕ → Prop)
+    (beta beta0 : ℕ → ℝ) (markedCost unaryCost exceptionalCost : ℝ)
+    (hbeta : ∀ j &lt; count, 0 &lt; beta j) (hbeta0 : ∀ j &lt; count, marked j → 0 &lt; beta0 j)
+    (hpartition : ∀ j &lt; count,
+      (marked j ∨ unary j ∨ exceptional j) ∧
+        ¬(marked j ∧ unary j) ∧ ¬(marked j ∧ exceptional j) ∧ ¬(unary j ∧ exceptional j))
+    (hmarked : (∑ j ∈ (Finset.range count).filter marked,
+      (Real.log (beta j)-Real.log (beta0 j))) ≤ markedCost)
+    (hunary : (∑ j ∈ (Finset.range count).filter unary, Real.log (beta j)) ≤ unaryCost)
+    (hexceptional : Set.Subsingleton {j | j &lt; count ∧ exceptional j})
+    (hcost : 0 ≤ exceptionalCost)
+    (hexbound : ∀ j &lt; count, exceptional j → Real.log (beta j) ≤ exceptionalCost) :
+…</pre></li><li id=L396><b>theorem</b> <code>OAI.LipschitzHilbert.source_marked_log_cost</code> <small>line 396</small><div class="doc"><p>The exact marked correction for the parent amplitude and its literal
+residual-free value. The square sum is over the marked blocks only.</p></div><pre>theorem source_marked_log_cost {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (n : ℕ → ℝ) (hn : Antitone n) (S : Finset ℕ)
+    (A residual : ℕ → E) (denominator : ℕ → ℝ)
+    {a p c M B : ℝ} (hp : 1 ≤ p) (hc : 0 &lt; c) (hM : 1 ≤ M)
+    (hμ : (a-1)/p ≤ 1/12) (hB : 0 ≤ B)
+    (hdrop : ∀ j ∈ S, c ≤ n j-n (j+1))
+    (hmass : ∀ j ∈ S, M ≤ n j) (hden : ∀ j ∈ S, 0 &lt; denominator j)
+    (hsquare : (∑ j ∈ S, ‖residual j‖^2) ≤ B^2) :
+    (∑ j ∈ S, (Real.log (vertexAmount (n j) (A j) a p/denominator j)-
+      Real.log (vertexAmount (n j) (A j-residual j) a p/denominator j))) ≤
+      p*Real.sqrt (2*(1+3/c))*M^(-(1/2:ℝ)+(a-1)/p)*B := by
+…</pre><p class="refs">Mentions: <a href="VertexIntegration.lean.html#L131">OAI.LipschitzHilbert.vertexAmount</a></p></li><li id=L414><b>theorem</b> <code>OAI.LipschitzHilbert.source_path_product_from_vertex_costs</code> <small>line 414</small><div class="doc"><p>Actual vertex ratios admit the finite source path bound. The unary
+cost is supplied by <code>source_unary_runs_log_cost</code>; the marked cost and
+unique exceptional factor are proved here from their local data.</p></div><pre>theorem source_path_product_from_vertex_costs
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (count : ℕ) (n : ℕ → ℝ) (A residual : ℕ → E) (denominator : ℕ → ℝ)
+    (marked : ℕ → Prop) {a p c M B U C : ℝ}
+    (hn : Antitone n) (hp : 1 ≤ p) (ha : 1 ≤ a) (hc : 0 &lt; c)
+    (hM : 1 ≤ M) (hμ : (a-1)/p ≤ 1/12) (hB : 0 ≤ B) (hC : 0 ≤ C)
+    (hactive : ∀ j &lt; count, M &lt; n j)
+    (hden : ∀ j &lt; count, n j ≤ denominator j)
+    (hdrop : ∀ j &lt; count, marked j → c ≤ n j-n (j+1))
+    (hsquare : (∑ j ∈ (Finset.range count).filter marked, ‖residual j‖^2) ≤ B^2)
+    (hunary : (∑ j ∈ (Finset.range count).filter
+      (fun j =&gt; ¬marked j ∧ n j-n (j+1) &lt; 1),
+…</pre></li><li id=L483><b>theorem</b> <code>OAI.LipschitzHilbert.source_path_product_from_propagated_residuals</code> <small>line 483</small><div class="doc"><p>Assemble the full finite active path directly from residual square
+sums, the common cubic variation, and the actual propagated recurrence.
+The only interval hypothesis is the Abel bound on the propagated main
+residuals. It is imposed on unary intervals of total drop below two,
+exactly the intervals constructed in the proof.</p></div><pre>theorem source_path_product_from_propagated_residuals
+    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E]
+    [NormedAddCommGroup F]
+    (count : ℕ) (n : ℕ → ℝ) (A U W residual : ℕ → E)
+    (coeff : ℕ → ℂ) (denominator : ℕ → ℝ) (marked : ℕ → Prop)
+    (profile : ℕ → F) (level : ℕ → ℕ) (hlevel : StrictMono level) (N : ℕ)
+    (hendlevel : level count ≤ N) (hn : Antitone n)
+    {a p c M B V C ε Q Cex : ℝ}
+    (hp : 1 ≤ p) (ha : 1 ≤ a) (hap : a ≤ p) (hc : 0 &lt; c) (hc1 : c ≤ 1)
+    (hM : 4 ≤ M) (hμ : (a-1)/p ≤ 1/12)
+    (hB : 0 ≤ B) (hV : 0 ≤ V) (hC : 0 ≤ C) (hε : 0 ≤ ε) (hCex : 0 ≤ Cex)
+    (hactive : ∀ j &lt; count, M &lt; n j)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/HyperbolaCorrelation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/HyperbolaCorrelation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>HyperbolaCorrelation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>HyperbolaCorrelation.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/HyperbolaCorrelation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.product_support_iff</code> <small>line 11</small><div class="doc"><p>The common support of two columns cut off by a product bound.</p></div><pre>theorem product_support_iff (X m n₁ n₂ : ℕ) (hn : 0 &lt; max n₁ n₂) :
+    (m * n₁ ≤ X ∧ m * n₂ ≤ X) ↔ m ≤ X / max n₁ n₂ := by
+…</pre></li><li id=L17><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.filter_common_support</code> <small>line 17</small><div class="doc"><p>Intersecting two hyperbolic columns leaves an ordinary integer interval.
+Empty intervals and a zero value of one of the two column indices are allowed.</p></div><pre>theorem filter_common_support (X L U n₁ n₂ : ℕ) (hn : 0 &lt; max n₁ n₂) :
+    (Finset.Icc L U).filter (fun m =&gt; m * n₁ ≤ X ∧ m * n₂ ≤ X) =
+      Finset.Icc L (min U (X / max n₁ n₂)) := by
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.cutoff_correlation</code> <small>line 26</small><div class="doc"><p>Exact correlation identity for arbitrary complex hyperbolic columns.</p></div><pre>theorem cutoff_correlation (X L U n₁ n₂ : ℕ) (hn : 0 &lt; max n₁ n₂)
+    (f g : ℕ → ℂ) :
+    (∑ m ∈ Finset.Icc L U,
+      (if m * n₁ ≤ X then f m else 0) *
+        conj (if m * n₂ ≤ X then g m else 0)) =
+      ∑ m ∈ Finset.Icc L (min U (X / max n₁ n₂)), f m * conj (g m) := by
+…</pre></li><li id=L38><b>def</b> <code>OAI.Problem337.HyperbolaCorrelation.phase</code> <small>line 38</small><div class="doc"><p>The standard real-frequency complex phase.</p></div><pre>def phase (x : ℝ) : ℂ := Complex.exp ((2 * Real.pi * x : ℝ) * Complex.I)</pre></li><li id=L40><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.norm_phase</code> <small>line 40</small></li><li id=L43><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.phase_sub</code> <small>line 43</small></li><li id=L51><b>def</b> <code>OAI.Problem337.HyperbolaCorrelation.column</code> <small>line 51</small><div class="doc"><p>A column of a bilinear exponential sum with its actual hyperbolic support.</p></div><pre>def column (α : ℝ) (X n m : ℕ) : ℂ :=
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.column_correlation</code> <small>line 57</small><div class="doc"><p>The off-diagonal correlation is a geometric exponential sum on one interval,
+not a sum over an arbitrary subset. Differences are taken in <code>ℝ</code>, so negative
+frequencies are retained rather than truncated by natural subtraction.</p></div><pre>theorem column_correlation (α : ℝ) (X L U n₁ n₂ : ℕ)
+    (hn : 0 &lt; max n₁ n₂) :
+    (∑ m ∈ Finset.Icc L U, column α X n₁ m * conj (column α X n₂ m)) =
+      ∑ m ∈ Finset.Icc L (min U (X / max n₁ n₂)),
+        phase (α * (m : ℝ) * ((n₁ : ℝ) - (n₂ : ℝ))) := by
+…</pre><p class="refs">Mentions: <a href="HyperbolaCorrelation.lean.html#L51">OAI.Problem337.HyperbolaCorrelation.column</a>, <a href="HyperbolaCorrelation.lean.html#L38">OAI.Problem337.HyperbolaCorrelation.phase</a></p></li><li id=L71><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.column_diagonal</code> <small>line 71</small><div class="doc"><p>Diagonal correlations count the surviving rows exactly.</p></div><pre>theorem column_diagonal (α : ℝ) (X L U n : ℕ) (hn : 0 &lt; n) :
+    (∑ m ∈ Finset.Icc L U, column α X n m * conj (column α X n m)) =
+      ((Finset.Icc L (min U (X / n))).card : ℂ) := by
+…</pre><p class="refs">Mentions: <a href="HyperbolaCorrelation.lean.html#L51">OAI.Problem337.HyperbolaCorrelation.column</a></p></li><li id=L79><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.norm_column_le_one</code> <small>line 79</small><div class="doc"><p>Unit modulus survives restriction, the hypothesis used in finite Type-II
+Cauchy--Schwarz estimates.</p></div><pre>theorem norm_column_le_one (α : ℝ) (X n m : ℕ) : ‖column α X n m‖ ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="HyperbolaCorrelation.lean.html#L51">OAI.Problem337.HyperbolaCorrelation.column</a></p></li><li id=L84><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.weighted_column_correlation</code> <small>line 84</small><div class="doc"><p>Constant column weights factor out before the geometric estimate.</p></div><pre>theorem weighted_column_correlation (α : ℝ) (X L U n₁ n₂ : ℕ)
+    (hn : 0 &lt; max n₁ n₂) (b₁ b₂ : ℂ) :
+    (∑ m ∈ Finset.Icc L U,
+      (b₁ * column α X n₁ m) * conj (b₂ * column α X n₂ m)) =
+      (b₁ * conj b₂) *
+        ∑ m ∈ Finset.Icc L (min U (X / max n₁ n₂)),
+          phase (α * (m : ℝ) * ((n₁ : ℝ) - (n₂ : ℝ))) := by
+…</pre><p class="refs">Mentions: <a href="HyperbolaCorrelation.lean.html#L51">OAI.Problem337.HyperbolaCorrelation.column</a>, <a href="HyperbolaCorrelation.lean.html#L38">OAI.Problem337.HyperbolaCorrelation.phase</a></p></li><li id=L98><b>theorem</b> <code>OAI.Problem337.HyperbolaCorrelation.norm_weighted_column_correlation</code> <small>line 98</small><div class="doc"><p>The weighted-correlation norm has precisely the product of the two weights.</p></div><pre>theorem norm_weighted_column_correlation (α : ℝ) (X L U n₁ n₂ : ℕ)
+    (hn : 0 &lt; max n₁ n₂) (b₁ b₂ : ℂ) :
+    ‖∑ m ∈ Finset.Icc L U,
+      (b₁ * column α X n₁ m) * conj (b₂ * column α X n₂ m)‖ =
+      ‖b₁‖ * ‖b₂‖ *
+        ‖∑ m ∈ Finset.Icc L (min U (X / max n₁ n₂)),
+          phase (α * (m : ℝ) * ((n₁ : ℝ) - (n₂ : ℝ)))‖ := by
+…</pre><p class="refs">Mentions: <a href="HyperbolaCorrelation.lean.html#L51">OAI.Problem337.HyperbolaCorrelation.column</a>, <a href="HyperbolaCorrelation.lean.html#L38">OAI.Problem337.HyperbolaCorrelation.phase</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

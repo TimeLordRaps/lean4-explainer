@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/NormalPolynomials.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/NormalPolynomials.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>NormalPolynomials.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>NormalPolynomials.lean</span></code></h1><p class="muted">25 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/NormalPolynomials.lean#L1">source</a></p><div class="doc"><h3>Normal frame identities, restricted polynomials, and automorphy</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Nagata.Workers.W17.differentiableAt_mvPolynomial_section_eval</code> <small>line 21</small><div class="doc"><p>Evaluating an actual multivariate polynomial in holomorphic coordinate
+functions gives a holomorphic function on their common genuine domain.</p></div><pre>theorem differentiableAt_mvPolynomial_section_eval
+    {σ : Type*} {τ L : ℂ} {N : ℤ}
+    (X : σ → Nagata.W08.automorphicSections τ N L)
+    (T : MvPolynomial σ ℂ) (z : ℂ) (hz : z ≠ 0) :
+    DifferentiableAt ℂ (fun w =&gt; MvPolynomial.eval (fun i =&gt; (X i).val w) T) z := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L36><b>theorem</b> <code>OAI.Nagata.Workers.W17.homogeneous_section_eval_automorphy</code> <small>line 36</small><div class="doc"><p>Homogeneous evaluation has the exact multiplied degree and multiplier.</p></div><pre>theorem homogeneous_section_eval_automorphy
+    {σ : Type*} {τ L : ℂ} {N : ℤ}
+    (X : σ → Nagata.W08.automorphicSections τ N L)
+    (T : MvPolynomial σ ℂ) (n : ℕ) (hT : T.IsHomogeneous n)
+    (z : ℂ) (hz : z ≠ 0) :
+    MvPolynomial.eval (fun i =&gt; (X i).val (τ*z)) T =
+      L^n * z^(-(N*(n:ℤ))) * MvPolynomial.eval (fun i =&gt; (X i).val z) T := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a></p></li><li id=L56><b>theorem</b> <code>OAI.Nagata.Workers.W17.homogeneous_eval_mem_automorphicSections</code> <small>line 56</small><div class="doc"><p>The forced-zero extension is an actual section with the precise degree.
+The punctured-domain convention is preserved even for constant polynomials.</p></div><pre>theorem homogeneous_eval_mem_automorphicSections
+    {σ : Type*} {τ L : ℂ} {N : ℤ} (hτ : τ ≠ 0)
+    (X : σ → Nagata.W08.automorphicSections τ N L)
+    (T : MvPolynomial σ ℂ) (n : ℕ) (hT : T.IsHomogeneous n) :
+    Nagata.W08.normalizeAtZero (fun z =&gt; MvPolynomial.eval (fun i =&gt; (X i).val z) T) ∈
+      Nagata.W08.automorphicSections τ (N*(n:ℤ)) (L^n) := by
+…</pre><p class="refs">Mentions: <a href="Automorphic.lean.html#L28">OAI.Nagata.W08.automorphicSections</a>, <a href="Automorphic.lean.html#L92">OAI.Nagata.W08.normalizeAtZero</a></p></li><li id=L83><b>def</b> <code>OAI.Nagata.Workers.W17.restrictedCoefficient</code> <small>line 83</small></li><li id=L86><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedCoefficient_zero</code> <small>line 86</small></li><li id=L91><b>def</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial</code> <small>line 91</small></li><li id=L96><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_coeff</code> <small>line 96</small></li><li id=L101><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_bound</code> <small>line 101</small><div class="doc"><p>The finite degree bound survives restriction, including at the forced-zero origin.</p></div><pre>theorem restrictedNormalPolynomial_bound
+    (X : σ → ℂ → ℂ) (F : Polynomial (MvPolynomial σ ℂ)) (N : ℕ)
+    (hF : ∀ j, N &lt; j → F.coeff j = 0) :
+    ∀ j, N &lt; j → (restrictedNormalPolynomial X F).coeff j = 0 := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L91">OAI.Nagata.Workers.W17.restrictedNormalPolynomial</a></p></li><li id=L109><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_ne_zero</code> <small>line 109</small><div class="doc"><p>A genuine coefficient evaluation witness proves the restricted polynomial nonzero.</p></div><pre>theorem restrictedNormalPolynomial_ne_zero
+    (X : σ → ℂ → ℂ) (F : Polynomial (MvPolynomial σ ℂ))
+    (hw : ∃ j z, z ≠ 0 ∧ MvPolynomial.eval (fun i =&gt; X i z) (F.coeff j) ≠ 0) :
+    restrictedNormalPolynomial X F ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L91">OAI.Nagata.Workers.W17.restrictedNormalPolynomial</a></p></li><li id=L121><b>def</b> <code>OAI.Nagata.Workers.W17.functionEvaluation</code> <small>line 121</small><div class="doc"><p>Evaluation at a genuine punctured-plane point is a unital ring map.</p></div><pre>def functionEvaluation (z : ℂ) : (ℂ → ℂ) →+* ℂ where
+…</pre></li><li id=L129><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_map_evaluation</code> <small>line 129</small><div class="doc"><p>Coefficient restriction commutes with every genuine point evaluation.</p></div><pre>theorem restrictedNormalPolynomial_map_evaluation
+    (X : σ → ℂ → ℂ) (F : Polynomial (MvPolynomial σ ℂ)) (z : ℂ) (hz : z ≠ 0) :
+    (restrictedNormalPolynomial X F).map (functionEvaluation z) =
+      F.map (MvPolynomial.eval (fun i =&gt; X i z)) := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L91">OAI.Nagata.Workers.W17.restrictedNormalPolynomial</a>, <a href="NormalPolynomials.lean.html#L121">OAI.Nagata.Workers.W17.functionEvaluation</a></p></li><li id=L139><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_scalarExpression</code> <small>line 139</small><div class="doc"><p>Exact scalar expression in the covering frame, needed for the local normal jets.</p></div><pre>theorem restrictedNormalPolynomial_scalarExpression
+    (X : σ → ℂ → ℂ) (F : Polynomial (MvPolynomial σ ℂ))
+    (z w : ℂ) (hz : z ≠ 0) :
+    Nagata.CoefficientSpaces.scalarExpression (restrictedNormalPolynomial X F) z w =
+      (F.map (MvPolynomial.eval (fun i =&gt; X i z))).eval w := by
+…</pre><p class="refs">Mentions: <a href="CoefficientSpaces.lean.html#L125">OAI.Nagata.CoefficientSpaces.scalarExpression</a>, <a href="NormalPolynomials.lean.html#L91">OAI.Nagata.Workers.W17.restrictedNormalPolynomial</a></p></li><li id=L150><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_source_sections</code> <small>line 150</small></li><li id=L181><b>theorem</b> <code>OAI.Nagata.Workers.W17.eval_directChartHom</code> <small>line 181</small><div class="doc"><p>Evaluation commutes with the actual two-variable projective chart map.</p></div><pre>theorem eval_directChartHom (c : Fin 3) (T : MvPolynomial (Fin 3) ℂ)
+    (v : Fin 2 → ℂ) :
+    MvPolynomial.eval v (Nagata.W27.directChartHom c T) =
+      MvPolynomial.eval (Fin.insertNth (α := fun _ : Fin 3 =&gt; ℂ) c 1 v) T := by
+…</pre><p class="refs">Mentions: <a href="ChartJets.lean.html#L470">OAI.Nagata.W27.directChartHom</a></p></li><li id=L199><b>theorem</b> <code>OAI.Nagata.Workers.W17.scaled_chart_vector</code> <small>line 199</small><div class="doc"><p>Normalizing a nonzero chart coordinate reconstructs the genuine cone vector.</p></div><pre>theorem scaled_chart_vector (c : Fin 3) (x : Fin 3 → ℂ) (hx : x c ≠ 0) :
+    (x c) • Fin.insertNth (α := fun _ : Fin 3 =&gt; ℂ) c 1 (fun b =&gt; x (c.succAbove b) / x c) = x := by
+…</pre></li><li id=L210><b>theorem</b> <code>OAI.Nagata.Workers.W17.normal_polynomial_frame_identity</code> <small>line 210</small><div class="doc"><p>The homogeneous normal polynomial transforms by weight d, and its fiber
+coordinate by weight k. This supplies the exact covering-frame scalar identity.</p></div><pre>theorem normal_polynomial_frame_identity
+    (I : Finset ℕ) (j : ℕ → ℕ) (T : ℕ → MvPolynomial (Fin 3) ℂ)
+    (d k : ℕ) (hhom : ∀ α ∈ I, (T α).IsHomogeneous (d-k*j α))
+    (hbound : ∀ α ∈ I, k*j α ≤ d)
+    (c : Fin 3) (x : Fin 3 → ℂ) (hx : x c ≠ 0) (w : ℂ) :
+    (∑ α ∈ I, w^j α * MvPolynomial.eval x (T α)) =
+      (x c)^d * ∑ α ∈ I, (w/(x c)^k)^j α *
+        MvPolynomial.eval (fun b =&gt; x (c.succAbove b)/x c)
+          (Nagata.W27.directChartHom c (T α)) := by
+…</pre><p class="refs">Mentions: <a href="ChartJets.lean.html#L470">OAI.Nagata.W27.directChartHom</a></p></li><li id=L236><b>theorem</b> <code>OAI.Nagata.Workers.W17.restrictedNormalPolynomial_ne_zero_of_principal_relations</code> <small>line 236</small><div class="doc"><p>The actual restriction of a polynomial with nonzero residue remains nonzero
+once the actual ideal of coordinate relations is identified with the equation.</p></div><pre>theorem restrictedNormalPolynomial_ne_zero_of_principal_relations
+    (X : Fin 3 → ℂ → ℂ) (G : MvPolynomial (Fin 3) ℂ)
+    (hrelations : Nagata.Workers.W25.polynomialRelationIdeal X = Ideal.span ({G} : Set _))
+    (F : Polynomial (MvPolynomial (Fin 3) ℂ))
+    (hF : F.map (Ideal.Quotient.mk (Ideal.span ({G} : Set (MvPolynomial (Fin 3) ℂ)))) ≠ 0) :
+    restrictedNormalPolynomial X F ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="RelationIdeals.lean.html#L19">OAI.Nagata.Workers.W25.polynomialRelationIdeal</a>, <a href="NormalPolynomials.lean.html#L91">OAI.Nagata.Workers.W17.restrictedNormalPolynomial</a></p></li><li id=L267><b>def</b> <code>OAI.Nagata.Workers.W17.affineSwap</code> <small>line 267</small><div class="doc"><p>The genuine polynomial-ring equivalence exchanging the two affine variables.</p></div><pre>def affineSwap : MvPolynomial (Fin 2) ℂ ≃+* MvPolynomial (Fin 2) ℂ :=
+…</pre></li><li id=L270><b>theorem</b> <code>OAI.Nagata.Workers.W17.eval_affineSwap</code> <small>line 270</small></li><li id=L280><b>theorem</b> <code>OAI.Nagata.Workers.W17.order_affineSwap_iff</code> <small>line 280</small><div class="doc"><p>Every actual ordinary multiplicity condition survives the coordinate swap.</p></div><pre>theorem order_affineSwap_iff (P : MvPolynomial (Fin 2) ℂ) (p : ComplexPlane) (m : ℕ) :
+    Nagata.AffineMultiplicity.orderAtLeast
+      (fun i : Fin 2 =&gt; if i = 0 then p.2 else p.1) m (affineSwap P) ↔
+    Nagata.AffineMultiplicity.orderAtLeast
+      (fun i : Fin 2 =&gt; if i = 0 then p.1 else p.2) m P := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L267">OAI.Nagata.Workers.W17.affineSwap</a></p></li><li id=L290><b>theorem</b> <code>OAI.Nagata.Workers.W17.affineSwap_factoredPlaneFamily</code> <small>line 290</small><div class="doc"><p>Swapping the actual variables commutes with the finite G-adic family.</p></div><pre>theorem affineSwap_factoredPlaneFamily
+    (I : Finset ℕ) (j : ℕ → ℕ) (R : ℕ → MvPolynomial (Fin 2) ℂ)
+    (G : MvPolynomial (Fin 2) ℂ) (s : ℂ) :
+    affineSwap (factoredPlaneFamily I j R G s) =
+      factoredPlaneFamily I j (fun α =&gt; affineSwap (R α)) (affineSwap G) s := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L267">OAI.Nagata.Workers.W17.affineSwap</a></p></li><li id=L298><b>theorem</b> <code>OAI.Nagata.Workers.W17.partialY_affineSwap</code> <small>line 298</small><div class="doc"><p>The alternative normal partial becomes the standard one after swapping.</p></div><pre>theorem partialY_affineSwap (G : MvPolynomial (Fin 2) ℂ) (p : ComplexPlane) :
+    planePolynomialEval (MvPolynomial.pderiv 1 (affineSwap G)) p.swap =
+      planePolynomialEval (MvPolynomial.pderiv 0 G) p := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L267">OAI.Nagata.Workers.W17.affineSwap</a></p></li><li id=L308><b>theorem</b> <code>OAI.Nagata.Workers.W17.partialX_affineSwap</code> <small>line 308</small><div class="doc"><p>The other derivative coordinate is exchanged at the same actual point.</p></div><pre>theorem partialX_affineSwap (G : MvPolynomial (Fin 2) ℂ) (p : ComplexPlane) :
+    planePolynomialEval (MvPolynomial.pderiv 0 (affineSwap G)) p.swap =
+      planePolynomialEval (MvPolynomial.pderiv 1 G) p := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L267">OAI.Nagata.Workers.W17.affineSwap</a></p></li><li id=L319><b>theorem</b> <code>OAI.Nagata.Workers.W17.polynomialGradient_affineSwap</code> <small>line 319</small><div class="doc"><p>The actual normal displacement is unchanged when both variables and
+velocity coordinates are swapped.</p></div><pre>theorem polynomialGradient_affineSwap (G : MvPolynomial (Fin 2) ℂ) (p V : ComplexPlane) :
+    polynomialGradient (affineSwap G) p.swap V.swap = polynomialGradient G p V := by
+…</pre><p class="refs">Mentions: <a href="NormalPolynomials.lean.html#L267">OAI.Nagata.Workers.W17.affineSwap</a></p></li><li id=L328><b>theorem</b> <code>OAI.Nagata.Workers.W17.swap_affine_motion</code> <small>line 328</small><div class="doc"><p>Swapping commutes with the actual affine-linear moving point.</p></div><pre>theorem swap_affine_motion (p V : ComplexPlane) (s : ℂ) :
+    (p+s • V).swap = p.swap+s • V.swap := rfl
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

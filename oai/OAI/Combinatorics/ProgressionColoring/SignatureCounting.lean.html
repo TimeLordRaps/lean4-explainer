@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ProgressionColoring/SignatureCounting.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ProgressionColoring/SignatureCounting.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">ProgressionColoring</a> / <span>SignatureCounting.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">ProgressionColoring</a>/<span>SignatureCounting.lean</span></code></h1><p class="muted">24 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ProgressionColoring/SignatureCounting.lean#L1">source</a></p><div class="doc"><h3>Counting literal signatures on affine progressions</h3><p>Only coefficient triples whose evaluations lie in the specified bounded
+interval are counted. Integer threshold comparisons, including equality,
+determine their floor words. The proved arrangement estimate in dimension
+three gives <code>25 * (k * (B + 1) + 1)^8</code>; no cubic arrangement bound is asserted.</p><p>The full label word and the floor word determine each original color and
+literal <code>(box, integer band)</code> key. The product count never renames keys.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>def</b> <code>OAI.QuantitativeVanDerWaerden.quadraticValue</code> <small>line 33</small><div class="doc"><p>Evaluation of the three actual quadratic coefficients.</p></div><pre>def quadraticValue (θ : Fin 3 → ℝ) (j : ℕ) : ℝ :=
+…</pre></li><li id=L36><b>def</b> <code>OAI.QuantitativeVanDerWaerden.quadraticFloorWord</code> <small>line 36</small></li><li id=L41><b>def</b> <code>OAI.QuantitativeVanDerWaerden.boundedQuadraticDomain</code> <small>line 41</small><div class="doc"><p>The evaluation restriction is essential: unrestricted coefficient triples
+have infinitely many literal integer floor words.</p></div><pre>def boundedQuadraticDomain (k B : ℕ) : Set (Fin 3 → ℝ) :=
+…</pre></li><li id=L44><b>def</b> <code>OAI.QuantitativeVanDerWaerden.quadraticComparisonForm</code> <small>line 44</small></li><li id=L48><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.quadraticComparisonForm_eval</code> <small>line 48</small></li><li id=L54><b>def</b> <code>OAI.QuantitativeVanDerWaerden.quadraticComparisonForms</code> <small>line 54</small><div class="doc"><p>One form for every position and every threshold <code>0,...,B</code>.</p></div><pre>def quadraticComparisonForms (k B : ℕ) : Fin (k * (B + 1)) → AffineForm 3 :=
+…</pre><p class="refs">Mentions: <a href="Arrangement.lean.html#L27">OAI.QuantitativeVanDerWaerden.AffineForm</a></p></li><li id=L59><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.quadraticComparisonForms_eval</code> <small>line 59</small></li><li id=L68><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.floor_le_of_comparisons</code> <small>line 68</small><div class="doc"><p>Testing the threshold equal to the first floor forces the corresponding
+lower bound for the second floor. The threshold is an original integer.</p></div><pre>private theorem floor_le_of_comparisons {B : ℕ} {x y : ℝ}
+    (hx0 : 0 ≤ x) (hxB : x ≤ (B : ℝ))
+    (h : ∀ b : Fin (B + 1), ternarySign (x - b.val) = ternarySign (y - b.val)) :
+    ⌊x⌋ ≤ ⌊y⌋ := by
+…</pre><p class="refs">Mentions: <a href="TernarySign.lean.html#L13">OAI.QuantitativeVanDerWaerden.ternarySign</a></p></li><li id=L88><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.floor_eq_of_comparisons</code> <small>line 88</small></li><li id=L97><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.quadraticFloorWord_eq_of_signVector_eq</code> <small>line 97</small><div class="doc"><p>Sign equality determines the entire floor word, with both zero and upper
+boundary evaluations allowed.</p></div><pre>theorem quadraticFloorWord_eq_of_signVector_eq (k B : ℕ)
+    {θ η : Fin 3 → ℝ} (hθ : θ ∈ boundedQuadraticDomain k B)
+    (hη : η ∈ boundedQuadraticDomain k B)
+    (h : signVector (quadraticComparisonForms k B) θ =
+      signVector (quadraticComparisonForms k B) η) :
+    quadraticFloorWord k θ = quadraticFloorWord k η := by
+…</pre><p class="refs">Mentions: <a href="SignatureCounting.lean.html#L41">OAI.QuantitativeVanDerWaerden.boundedQuadraticDomain</a>, <a href="Arrangement.lean.html#L34">OAI.QuantitativeVanDerWaerden.signVector</a>, <a href="SignatureCounting.lean.html#L54">OAI.QuantitativeVanDerWaerden.quadraticComparisonForms</a>, <a href="SignatureCounting.lean.html#L36">OAI.QuantitativeVanDerWaerden.quadraticFloorWord</a></p></li><li id=L110><b>def</b> <code>OAI.QuantitativeVanDerWaerden.normSqCoefficients</code> <small>line 110</small><div class="doc"><p>The genuine coefficients of the squared norm on an affine line.</p></div><pre>def normSqCoefficients {D : ℕ} (A B : Vec D) : Fin 3 → ℝ :=
+…</pre><p class="refs">Mentions: <a href="NormBands.lean.html#L19">OAI.QuantitativeVanDerWaerden.Vec</a></p></li><li id=L113><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.quadraticValue_normSqCoefficients</code> <small>line 113</small></li><li id=L122><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.normSq_scaled_le</code> <small>line 122</small><div class="doc"><p>Coarse natural bound used in the counting estimate. Centered coordinate
+bounds imply this for the actual <code>q</code>-scaled representative.</p></div><pre>theorem normSq_scaled_le {D : ℕ} (q : ℕ) (x : Vec D)
+    (hx : ∀ i, -(1 / 2 : ℝ) ≤ x i ∧ x i &lt; 1 / 2) :
+    normSq (fun i =&gt; (q : ℝ) * x i) ≤ ((D * q ^ 2 : ℕ) : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="NormBands.lean.html#L19">OAI.QuantitativeVanDerWaerden.Vec</a>, <a href="NormBands.lean.html#L21">OAI.QuantitativeVanDerWaerden.normSq</a></p></li><li id=L136><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.normSq_scaled_yRep_bounds</code> <small>line 136</small></li><li id=L143><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.finite_quadraticFloorWords</code> <small>line 143</small><div class="doc"><p>The exact finite image of bounded quadratic floor words. In particular,
+the family also covers triples not arising from squared norms.</p></div><pre>theorem finite_quadraticFloorWords (k B : ℕ) :
+    ∃ W : Finset (Fin k → ℤ),
+      (∀ w, w ∈ W ↔ ∃ θ ∈ boundedQuadraticDomain k B, quadraticFloorWord k θ = w) ∧
+      W.card ≤ 25 * (k * (B + 1) + 1) ^ 8 := by
+…</pre><p class="refs">Mentions: <a href="SignatureCounting.lean.html#L41">OAI.QuantitativeVanDerWaerden.boundedQuadraticDomain</a>, <a href="SignatureCounting.lean.html#L36">OAI.QuantitativeVanDerWaerden.quadraticFloorWord</a></p></li><li id=L154><b>def</b> <code>OAI.QuantitativeVanDerWaerden.literalSignature</code> <small>line 154</small><div class="doc"><p>The color and box are fixed functions of the full label, while the band
+is the literal integer value. No signature-dependent coding is used.</p></div><pre>def literalSignature {Label : Type uLabel} {Box : Type uBox} {k : ℕ}
+    (color : Label → Bool) (boxOf : Label → Box)
+    (labels : Fin k → Label) (bands : Fin k → ℤ) : Fin k → Bool × (Box × ℤ) :=
+…</pre></li><li id=L161><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_literalSignatures_le_mul</code> <small>line 161</small><div class="doc"><p>Finite-image factorization: one full label word and one band word suffice.
+The ambient label and box types need not be finite.</p></div><pre>theorem card_literalSignatures_le_mul {ι : Type uIndex} {Label : Type uLabel} {Box : Type uBox} {k : ℕ}
+    [DecidableEq Label] [DecidableEq Box]
+    (P : Finset ι) (labels : ι → Fin k → Label) (bands : ι → Fin k → ℤ)
+    (color : Label → Bool) (boxOf : Label → Box) (W : Finset (Fin k → ℤ))
+    (hW : ∀ p ∈ P, bands p ∈ W) :
+    (P.image (fun p =&gt; literalSignature color boxOf (labels p) (bands p))).card ≤
+      (P.image labels).card * W.card := by
+…</pre><p class="refs">Mentions: <a href="SignatureCounting.lean.html#L154">OAI.QuantitativeVanDerWaerden.literalSignature</a></p></li><li id=L182><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_quadraticSignatures_le</code> <small>line 182</small></li><li id=L197><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_affineNormSignatures_le</code> <small>line 197</small><div class="doc"><p>Actual affine squared-norm words have the preceding coefficient witnesses.
+Affinity and the evaluation bound are stated for the finite family being counted.</p></div><pre>theorem card_affineNormSignatures_le {ι : Type uIndex} {Label : Type uLabel} {Box : Type uBox} {k D B : ℕ}
+    [DecidableEq Label] [DecidableEq Box]
+    (P : Finset ι) (labels : ι → Fin k → Label) (point : ι → Fin k → Vec D)
+    (color : Label → Bool) (boxOf : Label → Box)
+    (haff : ∀ p ∈ P, ∃ A C : Vec D,
+      ∀ j : Fin k, point p j = fun i =&gt; A i + (j.val : ℝ) * C i)
+    (hbound : ∀ p ∈ P, ∀ j, normSq (point p j) ≤ (B : ℝ)) :
+    (P.image (fun p =&gt; literalSignature color boxOf (labels p)
+      (fun j =&gt; ⌊normSq (point p j)⌋))).card ≤
+      (P.image labels).card * (25 * (k * (B + 1) + 1) ^ 8) := by
+…</pre><p class="refs">Mentions: <a href="NormBands.lean.html#L19">OAI.QuantitativeVanDerWaerden.Vec</a>, <a href="NormBands.lean.html#L21">OAI.QuantitativeVanDerWaerden.normSq</a>, <a href="SignatureCounting.lean.html#L154">OAI.QuantitativeVanDerWaerden.literalSignature</a></p></li><li id=L223><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_affine_yRep_signatures_le</code> <small>line 223</small><div class="doc"><p>The concrete centered cyclic representative supplies its own bounded
+evaluation domain. The coarse natural threshold is exactly <code>D*q^2</code>.</p></div><pre>theorem card_affine_yRep_signatures_le {ι : Type uIndex} {Label : Type uLabel} {Box : Type uBox} {k q D dilation : ℕ}
+    [DecidableEq Label] [DecidableEq Box]
+    (P : Finset ι) (labels : ι → Fin k → Label)
+    (n : ι → Fin k → CyclicGroup q D) (color : Label → Bool) (boxOf : Label → Box)
+    (haff : ∀ p ∈ P, ∃ A C : Vec D, ∀ j : Fin k,
+      (fun i =&gt; (q : ℝ) * yRep q D dilation (n p j) i) =
+        fun i =&gt; A i + (j.val : ℝ) * C i) :
+    (P.image (fun p =&gt; literalSignature color boxOf (labels p)
+      (fun j =&gt; ⌊normSq (fun i =&gt; (q : ℝ) * yRep q D dilation (n p j) i)⌋))).card ≤
+      (P.image labels).card * (25 * (k * (D * q ^ 2 + 1) + 1) ^ 8) := by
+…</pre><p class="refs">Mentions: <a href="Dilation.lean.html#L22">OAI.QuantitativeVanDerWaerden.dilation</a>, <a href="CyclicModel.lean.html#L20">OAI.QuantitativeVanDerWaerden.CyclicGroup</a>, <a href="NormBands.lean.html#L19">OAI.QuantitativeVanDerWaerden.Vec</a>, <a href="CyclicModel.lean.html#L42">OAI.QuantitativeVanDerWaerden.yRep</a>, <a href="SignatureCounting.lean.html#L154">OAI.QuantitativeVanDerWaerden.literalSignature</a>, <a href="NormBands.lean.html#L21">OAI.QuantitativeVanDerWaerden.normSq</a></p></li><li id=L240><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_affine_yRep_fullLabel_signatures_le</code> <small>line 240</small><div class="doc"><p>With full labels the original second-system box is precisely the second
+projection, an entire vector of literal interval identities.</p></div><pre>theorem card_affine_yRep_fullLabel_signatures_le {ι : Type uIndex} {U : Type uU} {V : Type uV} {k q D dilation : ℕ}
+    [DecidableEq U] [DecidableEq V]
+    (P : Finset ι) (labels : ι → Fin k → FullLabel D U V)
+    (n : ι → Fin k → CyclicGroup q D) (color : FullLabel D U V → Bool)
+    (haff : ∀ p ∈ P, ∃ A C : Vec D, ∀ j : Fin k,
+      (fun i =&gt; (q : ℝ) * yRep q D dilation (n p j) i) =
+        fun i =&gt; A i + (j.val : ℝ) * C i) :
+    (P.image (fun p =&gt; literalSignature color Prod.snd (labels p)
+      (fun j =&gt; ⌊normSq (fun i =&gt; (q : ℝ) * yRep q D dilation (n p j) i)⌋))).card ≤
+      (P.image labels).card * (25 * (k * (D * q ^ 2 + 1) + 1) ^ 8) :=
+…</pre><p class="refs">Mentions: <a href="Dilation.lean.html#L22">OAI.QuantitativeVanDerWaerden.dilation</a>, <a href="LabelCounts.lean.html#L16">OAI.QuantitativeVanDerWaerden.FullLabel</a>, <a href="CyclicModel.lean.html#L20">OAI.QuantitativeVanDerWaerden.CyclicGroup</a>, <a href="NormBands.lean.html#L19">OAI.QuantitativeVanDerWaerden.Vec</a>, <a href="CyclicModel.lean.html#L42">OAI.QuantitativeVanDerWaerden.yRep</a>, <a href="SignatureCounting.lean.html#L154">OAI.QuantitativeVanDerWaerden.literalSignature</a>, <a href="NormBands.lean.html#L21">OAI.QuantitativeVanDerWaerden.normSq</a></p></li><li id=L254><b>def</b> <code>OAI.QuantitativeVanDerWaerden.signatureKeyMap</code> <small>line 254</small><div class="doc"><p>In the finite-key application this map is the subtype's injective
+inclusion into the ambient literal box/band pairs.</p></div><pre>def signatureKeyMap {K : Type uK} {L : Type uL} {k : ℕ} (f : K → L)
+    (σ : Fin k → Bool × K) : Fin k → Bool × L :=
+…</pre></li><li id=L258><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.signatureKeyMap_injective</code> <small>line 258</small></li><li id=L266><b>theorem</b> <code>OAI.QuantitativeVanDerWaerden.card_signatureKeyMap_image</code> <small>line 266</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

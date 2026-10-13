@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Algebra/UniformDynkinProducts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Algebra/UniformDynkinProducts.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Algebra</a> / <span>UniformDynkinProducts.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Algebra</a>/<span>UniformDynkinProducts.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Algebra/UniformDynkinProducts.lean#L1">source</a></p><div class="doc"><h3>Uniform convergence in exponential coordinates</h3><p>Compact coordinate balls give a uniform modulus for right multiplication
+by a small exponential. Combining it with the common BCH tail estimate
+gives uniform convergence of families of contracting products. No
+invariance of the coordinate metric is asserted or used.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_coordinate_mul_modulus</code> <small>line 24</small><div class="doc"><p>Right multiplication by a point tending to the identity approaches the
+identity map uniformly on each bounded coordinate ball.</p></div><pre>theorem exists_coordinate_mul_modulus
+    {V G : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
+    [TopologicalSpace G] [Group G] [IsTopologicalGroup G]
+    (e : V ≃ₜ G) (he : e 0 = 1) (R : ℝ) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ δ : ℝ, 0 &lt; δ ∧ ∀ x : V, ‖x‖ ≤ R → ∀ y : V, ‖y‖ &lt; δ →
+      dist (e.symm (e x * e y)) x &lt; ε := by
+…</pre></li><li id=L47><b>theorem</b> <code>OAI.PolycyclicRecognition.tendstoUniformly_of_uniform_forward_cauchy</code> <small>line 47</small><div class="doc"><p>Pointwise limits of a uniformly Cauchy family of sequences are uniform
+limits. The tail estimate is only needed in the forward direction.</p></div><pre>theorem tendstoUniformly_of_uniform_forward_cauchy
+    {P V : Type*} [PseudoMetricSpace V] (f : P → ℕ → V) (b : P → V)
+    (hlim : ∀ p, Tendsto (f p) atTop (𝓝 (b p)))
+    (hc : ∀ ε : ℝ, 0 &lt; ε → ∃ N : ℕ, ∀ p n, N ≤ n → ∀ m, n ≤ m →
+      dist (f p n) (f p m) &lt; ε) :
+    TendstoUniformly (fun n p =&gt; f p n) b atTop := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_uniform_limit_of_summable_log_products</code> <small>line 72</small><div class="doc"><p>A common summable logarithmic increment bound gives uniform convergence
+in any fixed global exponential coordinates. This applies simultaneously
+to the normalized trajectories for an entire quasi-isometry family.</p></div><pre>theorem exists_uniform_limit_of_summable_log_products
+    (dynkin : NilpotentDynkinExpansionInput E G)
+    (Exp : GroupLieAlgebra (𝓘(ℝ, E)) G → G) (hExp : IsGroupExponential Exp)
+    (chart : GroupLieAlgebra (𝓘(ℝ, E)) G ≃ₜ G) (hchart : ∀ v, chart v = Exp v)
+    {c : ℕ} (hc : lowerCentralSeries ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G)
+      (GroupLieAlgebra (𝓘(ℝ, E)) G) c = ⊥)
+    (b : Basis J ℝ (GroupLieAlgebra (𝓘(ℝ, E)) G))
+    {C : ℝ} (hC : 0 ≤ C) (hbracket : ∀ i j k, |b.repr ⁅b i, b j⁆ k| ≤ C)
+    (X : P → ℕ → GroupLieAlgebra (𝓘(ℝ, E)) G) (d : ℕ → ℝ) (hd : Summable d)
+    (hX : ∀ p n, ‖b.equivFun (X p n)‖ ≤ d n) :
+    ∃ g : P → G,
+      (∀ p, Tendsto (exponentialPartialProduct Exp (X p)) atTop (𝓝 (g p))) ∧
+…</pre><p class="refs">Mentions: <a href="DynkinInput.lean.html#L38">OAI.PolycyclicRecognition.NilpotentDynkinExpansionInput</a>, <a href="DynkinProductTails.lean.html#L29">OAI.PolycyclicRecognition.exponentialPartialProduct</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

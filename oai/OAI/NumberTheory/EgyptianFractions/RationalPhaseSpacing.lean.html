@@ -1,0 +1,93 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RationalPhaseSpacing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RationalPhaseSpacing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RationalPhaseSpacing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RationalPhaseSpacing.lean</span></code></h1><p class="muted">25 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RationalPhaseSpacing.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.separation_of_rational_approximation</code> <small>line 12</small><div class="doc"><p>A reduced rational approximation with error at most <code>q⁻²</code> separates
+frequencies whose index difference has absolute value at most <code>q/2</code>.
+The estimate is uniform over every possible nearest integer.</p></div><pre>theorem separation_of_rational_approximation
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (h : ℤ) (hne : h ≠ 0) (hsmall : 2 * |h| ≤ (q : ℤ)) (k : ℤ) :
+    1 / (2 * (q : ℝ)) ≤ |α * (h : ℝ) - k| := by
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.fract_separation</code> <small>line 54</small><div class="doc"><p>Fractional parts at two nearby distinct integer indices are separated
+under the same reduced rational approximation.</p></div><pre>theorem fract_separation
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (m n : ℤ) (hne : m ≠ n) (hsmall : 2 * |m - n| ≤ (q : ℤ)) :
+    1 / (2 * (q : ℝ)) ≤ |Int.fract (α * m) - Int.fract (α * n)| := by
+…</pre></li><li id=L66><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.card_fract_interval_le_one</code> <small>line 66</small><div class="doc"><p>The fractional parts of a short block occupy each interval of length
+<code>1/(2q)</code> at most once. Half-open endpoints are important at exact spacing.</p></div><pre>theorem card_fract_interval_le_one
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (A : Finset ℤ) (hspan : ∀ m ∈ A, ∀ n ∈ A, 2 * |m - n| ≤ (q : ℤ))
+    (b : ℝ) :
+    (A.filter (fun n : ℤ =&gt; b ≤ Int.fract (α * (n : ℝ)) ∧
+      Int.fract (α * (n : ℝ)) &lt; b + 1 / (2 * (q : ℝ)))).card ≤ 1 := by
+…</pre></li><li id=L87><b>def</b> <code>OAI.Problem337.RationalPhaseSpacing.phaseBin</code> <small>line 87</small><div class="doc"><p>A canonical finite bin index for the phase of an integer.</p></div><pre>def phaseBin (q : ℕ) (α : ℝ) (n : ℤ) : ℕ :=
+…</pre></li><li id=L90><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.phaseBin_lt</code> <small>line 90</small></li><li id=L99><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.phaseBin_injOn</code> <small>line 99</small><div class="doc"><p>Bin encoding preserves the multiplicity of indices in every short block:
+no two indices have the same bin.</p></div><pre>theorem phaseBin_injOn
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (A : Finset ℤ) (hspan : ∀ m ∈ A, ∀ n ∈ A, 2 * |m - n| ≤ (q : ℤ)) :
+    Set.InjOn (phaseBin q α) A := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L87">OAI.Problem337.RationalPhaseSpacing.phaseBin</a></p></li><li id=L130><b>def</b> <code>OAI.Problem337.RationalPhaseSpacing.truncatedInv</code> <small>line 130</small><div class="doc"><p>A reciprocal truncated at <code>Y</code>, with its correct value at the singular
+point. The special value is needed for geometric exponential sums.</p></div><pre>def truncatedInv (Y x : ℝ) : ℝ := if x = 0 then Y else min Y (1 / x)</pre></li><li id=L132><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.truncatedInv_nonneg</code> <small>line 132</small></li><li id=L139><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.truncatedInv_le_cap</code> <small>line 139</small></li><li id=L146><b>def</b> <code>OAI.Problem337.RationalPhaseSpacing.binWeight</code> <small>line 146</small><div class="doc"><p>Bin majorant for the one-sided reciprocal distance.</p></div><pre>def binWeight (H : ℕ) (Y : ℝ) (j : ℕ) : ℝ :=
+…</pre></li><li id=L149><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.binWeight_nonneg</code> <small>line 149</small></li><li id=L156><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.truncatedInv_fract_le_binWeight</code> <small>line 156</small></li><li id=L174><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_binWeight_le</code> <small>line 174</small><div class="doc"><p>Summing the bin majorants costs one singular term and a harmonic sum.</p></div><pre>theorem sum_binWeight_le (H : ℕ) (hH : 0 &lt; H) (Y : ℝ) :
+    (∑ j ∈ Finset.range H, binWeight H Y j) ≤
+      Y + (H : ℝ) * (1 + Real.log (H : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L146">OAI.Problem337.RationalPhaseSpacing.binWeight</a></p></li><li id=L202><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_truncatedInv_fract_le</code> <small>line 202</small><div class="doc"><p>A reduced rational approximation controls the sum of truncated one-sided
+reciprocal distances on every short block. No cancellation hypothesis is used.</p></div><pre>theorem sum_truncatedInv_fract_le
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (A : Finset ℤ) (hspan : ∀ m ∈ A, ∀ n ∈ A, 2 * |m - n| ≤ (q : ℤ))
+    (Y : ℝ) (hY : 0 ≤ Y) :
+    (∑ n ∈ A, truncatedInv Y (Int.fract (α * n))) ≤
+      Y + (2 * (q : ℝ)) * (1 + Real.log (2 * (q : ℝ))) := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a></p></li><li id=L229><b>def</b> <code>OAI.Problem337.RationalPhaseSpacing.intDistance</code> <small>line 229</small><div class="doc"><p>Distance of a real phase to the nearest integer, expressed without a
+choice of nearest integer.</p></div><pre>def intDistance (x : ℝ) : ℝ := min (Int.fract x) (1 - Int.fract x)</pre></li><li id=L231><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.intDistance_eq_abs_sub_round</code> <small>line 231</small></li><li id=L234><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.intDistance_nonneg</code> <small>line 234</small></li><li id=L239><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.truncatedInv_intDistance_le</code> <small>line 239</small><div class="doc"><p>Two one-sided reciprocal majorants control the nearest-integer one,
+including integer phases where the truncation must equal <code>Y</code>.</p></div><pre>theorem truncatedInv_intDistance_le {Y : ℝ} (hY : 0 ≤ Y) (x : ℝ) :
+    truncatedInv Y (intDistance x) ≤
+      truncatedInv Y (Int.fract x) + truncatedInv Y (Int.fract (-x)) := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li><li id=L257><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_truncatedInv_intDistance_le</code> <small>line 257</small><div class="doc"><p>The classical truncated reciprocal-distance estimate on one short block,
+with an explicit constant and correct treatment of integer phases.</p></div><pre>theorem sum_truncatedInv_intDistance_le
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (A : Finset ℤ) (hspan : ∀ m ∈ A, ∀ n ∈ A, 2 * |m - n| ≤ (q : ℤ))
+    (Y : ℝ) (hY : 0 ≤ Y) :
+    (∑ n ∈ A, truncatedInv Y (intDistance (α * n))) ≤
+      2 * Y + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ))) := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li><li id=L279><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.short_interval_span</code> <small>line 279</small><div class="doc"><p>Any interval of <code>floor(q/2)+1</code> consecutive integers is a short block.</p></div><pre>theorem short_interval_span (q : ℕ) (L : ℤ) :
+    ∀ m ∈ Finset.Ico L (L + (q / 2 : ℕ) + 1),
+      ∀ n ∈ Finset.Ico L (L + (q / 2 : ℕ) + 1),
+        2 * |m - n| ≤ (q : ℤ) := by
+…</pre></li><li id=L294><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_truncatedInv_intDistance_short_interval_le</code> <small>line 294</small><div class="doc"><p>Interval form of the short-block estimate used in Type I/II decompositions.</p></div><pre>theorem sum_truncatedInv_intDistance_short_interval_le
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (L : ℤ) (Y : ℝ) (hY : 0 ≤ Y) :
+    (∑ n ∈ Finset.Ico L (L + (q / 2 : ℕ) + 1), truncatedInv Y (intDistance (α * n))) ≤
+      2 * Y + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ))) :=
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li><li id=L303><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_int_Ico_add</code> <small>line 303</small></li><li id=L320><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_int_Ico_le_blocks</code> <small>line 320</small><div class="doc"><p>Aggregate an estimate on consecutive blocks, with no periodicity premise.</p></div><pre>theorem sum_int_Ico_le_blocks (f : ℤ → ℝ) (B : ℕ) (hB : 0 &lt; B) (C : ℝ)
+    (hblock : ∀ L : ℤ, (∑ n ∈ Finset.Ico L (L + B), f n) ≤ C)
+    (L : ℤ) (k : ℕ) :
+    (∑ n ∈ Finset.Ico L (L + (k : ℤ) * B), f n) ≤ (k : ℝ) * C := by
+…</pre></li><li id=L340><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_truncatedInv_intDistance_interval_le_blocks</code> <small>line 340</small><div class="doc"><p>Full interval version, with the exact number of short blocks.</p></div><pre>theorem sum_truncatedInv_intDistance_interval_le_blocks
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (L : ℤ) (N : ℕ) (Y : ℝ) (hY : 0 ≤ Y) :
+    (∑ n ∈ Finset.Ico L (L + N), truncatedInv Y (intDistance (α * n))) ≤
+      ((N / (q / 2 + 1) + 1 : ℕ) : ℝ) *
+        (2 * Y + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ)))) := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li><li id=L368><b>theorem</b> <code>OAI.Problem337.RationalPhaseSpacing.sum_truncatedInv_intDistance_interval_le</code> <small>line 368</small><div class="doc"><p>Standard convenient full-interval form of the rational approximation
+reciprocal-distance estimate. It applies equally to negative interval origins.</p></div><pre>theorem sum_truncatedInv_intDistance_interval_le
+    (α : ℝ) (a : ℤ) (q : ℕ) (hq : 0 &lt; q)
+    (hcop : IsCoprime a (q : ℤ))
+    (happrox : |α - (a : ℝ) / q| ≤ 1 / (q : ℝ) ^ 2)
+    (L : ℤ) (N : ℕ) (Y : ℝ) (hY : 0 ≤ Y) :
+    (∑ n ∈ Finset.Ico L (L + N), truncatedInv Y (intDistance (α * n))) ≤
+      (2 * (N : ℝ) / q + 1) *
+        (2 * Y + 4 * (q : ℝ) * (1 + Real.log (2 * (q : ℝ)))) := by
+…</pre><p class="refs">Mentions: <a href="RationalPhaseSpacing.lean.html#L130">OAI.Problem337.RationalPhaseSpacing.truncatedInv</a>, <a href="RationalPhaseSpacing.lean.html#L229">OAI.Problem337.RationalPhaseSpacing.intDistance</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

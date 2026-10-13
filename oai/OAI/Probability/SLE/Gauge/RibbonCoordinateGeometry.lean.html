@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/RibbonCoordinateGeometry.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/RibbonCoordinateGeometry.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>RibbonCoordinateGeometry.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>RibbonCoordinateGeometry.lean</span></code></h1><p class="muted">30 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/RibbonCoordinateGeometry.lean#L1">source</a></p><div class="doc"><p>Coordinate balls in an embedded ribbon. These deterministic lemmas
+turn the local lower Lipschitz bound into physical clearance, and identify
+the future ribbon with part of the actual unbounded surviving component.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.ball_subset_image_ball</code> <small>line 20</small><div class="doc"><p>An open coordinate disk whose inverse has Lipschitz constant <code>K</code>
+contains the physical disk of radius <code>r / K</code>. Compactness of the closed
+coordinate disk prevents an interior physical point from escaping its image.</p></div><pre>theorem ball_subset_image_ball
+    (P : ℂ → ℂ) (x : ℂ) {r K : ℝ} (hr : 0 &lt; r) (hK : 0 &lt; K)
+    (hP : ContinuousOn P (closedBall x r))
+    (hopen : IsOpen (P &#x27;&#x27; ball x r))
+    (hlower : ∀ y ∈ closedBall x r, dist y x ≤ K * dist (P y) (P x)) :
+    ball (P x) (r / K) ⊆ P &#x27;&#x27; ball x r := by
+…</pre></li><li id=L45><b>def</b> <code>OAI.SLEExactGauge.RibbonCoordinates.closedRibbon</code> <small>line 45</small></li><li id=L46><b>def</b> <code>OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</code> <small>line 46</small></li><li id=L48><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.futureRibbon_subset_closedRibbon</code> <small>line 48</small></li><li id=L53><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.futureRibbon_convex</code> <small>line 53</small></li><li id=L62><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.free_preconnected_subset_surviving</code> <small>line 62</small><div class="doc"><p>Any unbounded connected free set belongs to the unbounded component
+used in the actual Loewner surviving domain.</p></div><pre>theorem free_preconnected_subset_surviving
+    (γ : ℝ≥0 → ℂ) (T : ℝ≥0) (S : Set ℂ)
+    (hS : IsPreconnected S) (hfree : S ⊆ upperHalfPlane \ (γ &#x27;&#x27; Icc 0 T))
+    (hunbounded : ¬ Bornology.IsBounded S) : S ⊆ survivingDomain γ T := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a></p></li><li id=L74><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.futureRibbon_survives</code> <small>line 74</small><div class="doc"><p>Embedding excludes all nonlocal pieces of the stopped past from the
+future ribbon. Escape to infinity places the whole future ribbon in the
+surviving component, without assuming a filled-hull containment.</p></div><pre>theorem futureRibbon_survives
+    (P : ℂ → ℂ) (hP : ContinuousOn P closedRibbon)
+    (hi : InjOn P closedRibbon) {k : ℝ} (hk : 0 ≤ k)
+    (hH : ∀ z ∈ closedRibbon, 0 &lt; z.re → P z ∈ upperHalfPlane)
+    (γ : ℝ≥0 → ℂ) (T : ℝ≥0)
+    (hpast : γ &#x27;&#x27; Icc 0 T ⊆ P &#x27;&#x27; {z ∈ closedRibbon | z.re ≤ k})
+    (hunbounded : ¬ Bornology.IsBounded (P &#x27;&#x27; futureRibbon k)) :
+    P &#x27;&#x27; futureRibbon k ⊆ survivingDomain γ T := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L45">OAI.SLEExactGauge.RibbonCoordinates.closedRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="RibbonCoordinateGeometry.lean.html#L46">OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a></p></li><li id=L94><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.coordinate_ball_clearance</code> <small>line 94</small><div class="doc"><p>A coordinate disk strictly ahead of the front and away from the two
+ribbon edges gives a physical disk in the actual surviving domain.</p></div><pre>theorem coordinate_ball_clearance
+    (P : ℂ → ℂ) (hP : ContinuousOn P closedRibbon)
+    (hi : InjOn P closedRibbon) {k : ℝ} (hk : 0 ≤ k)
+    (hH : ∀ z ∈ closedRibbon, 0 &lt; z.re → P z ∈ upperHalfPlane)
+    (γ : ℝ≥0 → ℂ) (T : ℝ≥0)
+    (hpast : γ &#x27;&#x27; Icc 0 T ⊆ P &#x27;&#x27; {z ∈ closedRibbon | z.re ≤ k})
+    (hunbounded : ¬ Bornology.IsBounded (P &#x27;&#x27; futureRibbon k))
+    (x : ℂ) {r K : ℝ} (hr : 0 &lt; r) (hK : 0 &lt; K)
+    (hfront : k + r &lt; x.re) (hedge : |x.im| + r &lt; 1)
+    (hopen : IsOpen (P &#x27;&#x27; ball x r))
+    (hlower : ∀ y ∈ closedBall x r, dist y x ≤ K * dist (P y) (P x)) :
+    ball (P x) (r / K) ⊆ survivingDomain γ T := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L45">OAI.SLEExactGauge.RibbonCoordinates.closedRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="RibbonCoordinateGeometry.lean.html#L46">OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L19">OAI.SLEExactGauge.survivingDomain</a></p></li><li id=L122><b>def</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate</code> <small>line 122</small><div class="doc"><p>The paper's access guide, before applying the ribbon coordinate map.</p></div><pre>def guideCoordinate (k x t : ℝ) : ℂ :=
+…</pre></li><li id=L125><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_re</code> <small>line 125</small></li><li id=L128><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_im</code> <small>line 128</small></li><li id=L131><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_continuous</code> <small>line 131</small></li><li id=L135><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_im_bound</code> <small>line 135</small></li><li id=L141><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_lower_chord</code> <small>line 141</small><div class="doc"><p>The longitudinal coordinate gives the lower chord bound directly.</p></div><pre>theorem guideCoordinate_lower_chord (k x u v : ℝ) :
+    |u - v| ≤ dist (guideCoordinate k x u) (guideCoordinate k x v) := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L122">OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate</a></p></li><li id=L147><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_upper_chord</code> <small>line 147</small></li><li id=L165><b>def</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideRadius</code> <small>line 165</small></li><li id=L167><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideRadius_pos</code> <small>line 167</small></li><li id=L172><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_disk_margins</code> <small>line 172</small><div class="doc"><p>The guide is at most a quarter of the ribbon half-width from the
+centerline; its coordinate disks have radius proportional to <code>min(t,1)</code>.</p></div><pre>theorem guideCoordinate_disk_margins
+    {k x t : ℝ} (hx : |x| ≤ 1 / 4) (ht : 0 &lt; t) :
+    k + guideRadius t &lt; (guideCoordinate k x t).re ∧
+      |(guideCoordinate k x t).im| + guideRadius t &lt; 1 := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L165">OAI.SLEExactGauge.RibbonCoordinates.guideRadius</a>, <a href="RibbonCoordinateGeometry.lean.html#L122">OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate</a></p></li><li id=L184><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.physical_guide_clearance</code> <small>line 184</small><div class="doc"><p>Applying the coordinate disk lemma proves the paper's guide clearance
+for every positive guide time, with the actual surviving domain.</p></div><pre>theorem physical_guide_clearance
+    (P : ℂ → ℂ) (hP : ContinuousOn P closedRibbon)
+    (hi : InjOn P closedRibbon) {k x K : ℝ} (hk : 0 ≤ k)
+    (hx : |x| ≤ 1 / 4) (hK : 0 &lt; K)
+    (hH : ∀ z ∈ closedRibbon, 0 &lt; z.re → P z ∈ upperHalfPlane)
+    (γ : ℝ≥0 → ℂ) (T : ℝ≥0)
+    (hpast : γ &#x27;&#x27; Icc 0 T ⊆ P &#x27;&#x27; {z ∈ closedRibbon | z.re ≤ k})
+    (hunbounded : ¬ Bornology.IsBounded (P &#x27;&#x27; futureRibbon k))
+    (hopen : ∀ t ∈ Ioc (0 : ℝ) 2,
+      IsOpen (P &#x27;&#x27; ball (guideCoordinate k x t) (guideRadius t)))
+    (hlower : ∀ t ∈ Ioc (0 : ℝ) 2,
+      ∀ y ∈ closedBall (guideCoordinate k x t) (guideRadius t),
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L45">OAI.SLEExactGauge.RibbonCoordinates.closedRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="RibbonCoordinateGeometry.lean.html#L46">OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</a>, <a href="RibbonCoordinateGeometry.lean.html#L122">OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate</a>, <a href="RibbonCoordinateGeometry.lean.html#L165">OAI.SLEExactGauge.RibbonCoordinates.guideRadius</a></p></li><li id=L206><b>def</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guidePatch</code> <small>line 206</small><div class="doc"><p>The fixed length-four patch appearing in the admissible ribbon class.</p></div><pre>def guidePatch (k : ℝ) : Set ℂ := {z | k ≤ z.re ∧ z.re ≤ k + 3 ∧ |z.im| ≤ 1}</pre></li><li id=L208><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_disk_subset_patch</code> <small>line 208</small></li><li id=L231><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guidePatch_subset_closedRibbon</code> <small>line 231</small></li><li id=L238><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.physical_guide_clearance_of_patch</code> <small>line 238</small><div class="doc"><p>The actual fixed patch inverse-Lipschitz bound suffices for all guide
+disks. The only topological parameter is the cited planar disk theorem.</p></div><pre>theorem physical_guide_clearance_of_patch
+    (hpublished : PublishedPlanarDiskOpenness)
+    (P : ℂ → ℂ) (hP : ContinuousOn P closedRibbon)
+    (hi : InjOn P closedRibbon) {k x K : ℝ} (hk : 0 ≤ k)
+    (hx : |x| ≤ 1 / 4) (hK : 0 &lt; K)
+    (hH : ∀ z ∈ closedRibbon, 0 &lt; z.re → P z ∈ upperHalfPlane)
+    (γ : ℝ≥0 → ℂ) (T : ℝ≥0)
+    (hpast : γ &#x27;&#x27; Icc 0 T ⊆ P &#x27;&#x27; {z ∈ closedRibbon | z.re ≤ k})
+    (hunbounded : ¬ Bornology.IsBounded (P &#x27;&#x27; futureRibbon k))
+    (hlower : ∀ u ∈ guidePatch k, ∀ v ∈ guidePatch k,
+      dist u v ≤ K * dist (P u) (P v)) :
+    ∀ t ∈ Ioc (0 : ℝ) 2,
+…</pre><p class="refs">Mentions: <a href="../Geometry/PublishedPlanarDiskOpenness.lean.html#L16">OAI.SLEExactGauge.PublishedPlanarDiskOpenness</a>, <a href="RibbonCoordinateGeometry.lean.html#L45">OAI.SLEExactGauge.RibbonCoordinates.closedRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="RibbonCoordinateGeometry.lean.html#L46">OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</a>, <a href="RibbonCoordinateGeometry.lean.html#L206">OAI.SLEExactGauge.RibbonCoordinates.guidePatch</a></p></li><li id=L262><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.physical_guide_clearance_away</code> <small>line 262</small><div class="doc"><p>Uniform clearance on every closed interval away from the tip is the
+form used by joint physical/conformal guide compactness.</p></div><pre>theorem physical_guide_clearance_away
+    (hpublished : PublishedPlanarDiskOpenness)
+    (P : ℂ → ℂ) (hP : ContinuousOn P closedRibbon)
+    (hi : InjOn P closedRibbon) {k x K : ℝ} (hk : 0 ≤ k)
+    (hx : |x| ≤ 1 / 4) (hK : 0 &lt; K)
+    (hH : ∀ z ∈ closedRibbon, 0 &lt; z.re → P z ∈ upperHalfPlane)
+    (γ : ℝ≥0 → ℂ) (T : ℝ≥0)
+    (hpast : γ &#x27;&#x27; Icc 0 T ⊆ P &#x27;&#x27; {z ∈ closedRibbon | z.re ≤ k})
+    (hunbounded : ¬ Bornology.IsBounded (P &#x27;&#x27; futureRibbon k))
+    (hlower : ∀ u ∈ guidePatch k, ∀ v ∈ guidePatch k,
+      dist u v ≤ K * dist (P u) (P v))
+    {δ : ℝ} (hδ : 0 &lt; δ) (_hδ2 : δ ≤ 2) :
+…</pre><p class="refs">Mentions: <a href="../Geometry/PublishedPlanarDiskOpenness.lean.html#L16">OAI.SLEExactGauge.PublishedPlanarDiskOpenness</a>, <a href="RibbonCoordinateGeometry.lean.html#L45">OAI.SLEExactGauge.RibbonCoordinates.closedRibbon</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="RibbonCoordinateGeometry.lean.html#L46">OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</a>, <a href="RibbonCoordinateGeometry.lean.html#L206">OAI.SLEExactGauge.RibbonCoordinates.guidePatch</a></p></li><li id=L282><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_mem_patch</code> <small>line 282</small></li><li id=L293><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.physical_guide_lipschitz</code> <small>line 293</small><div class="doc"><p>The fixed coordinate patch speed bound gives the physical guide speed
+bound required by the compactness and access-localization arguments.</p></div><pre>theorem physical_guide_lipschitz
+    (P : ℂ → ℂ) (C : ℝ≥0) {k x : ℝ} (hx : |x| ≤ 1 / 4)
+    (hL : LipschitzOnWith C P (guidePatch k)) :
+    LipschitzOnWith (2 * C) (fun t =&gt; P (guideCoordinate k x t)) (Icc (0 : ℝ) 2) := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L206">OAI.SLEExactGauge.RibbonCoordinates.guidePatch</a>, <a href="RibbonCoordinateGeometry.lean.html#L122">OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate</a></p></li><li id=L310><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.physical_guide_lower_chord</code> <small>line 310</small><div class="doc"><p>The lower patch Lipschitz bound makes the physical guide uniformly
+simple, including its initial boundary point.</p></div><pre>theorem physical_guide_lower_chord
+    (P : ℂ → ℂ) {k x K : ℝ} (hx : |x| ≤ 1 / 4) (hK : 0 &lt; K)
+    (hlower : ∀ u ∈ guidePatch k, ∀ v ∈ guidePatch k,
+      dist u v ≤ K * dist (P u) (P v)) :
+    ∀ u ∈ Icc (0 : ℝ) 2, ∀ v ∈ Icc (0 : ℝ) 2,
+      (1 / K) * |u - v| ≤ dist (P (guideCoordinate k x u)) (P (guideCoordinate k x v)) := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L206">OAI.SLEExactGauge.RibbonCoordinates.guidePatch</a>, <a href="RibbonCoordinateGeometry.lean.html#L122">OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate</a></p></li><li id=L322><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_zero</code> <small>line 322</small></li><li id=L325><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.guideCoordinate_waypoint</code> <small>line 325</small></li><li id=L331><b>theorem</b> <code>OAI.SLEExactGauge.RibbonCoordinates.futureRibbon_unbounded_of_centerline_escape</code> <small>line 331</small><div class="doc"><p>The paper's escape condition on the centerline supplies the
+unboundedness used to select the actual surviving component.</p></div><pre>theorem futureRibbon_unbounded_of_centerline_escape
+    (P : ℂ → ℂ) (k : ℝ)
+    (hescape : Tendsto (fun s : ℝ =&gt; ‖P (s : ℂ)‖) atTop atTop) :
+    ¬ Bornology.IsBounded (P &#x27;&#x27; futureRibbon k) := by
+…</pre><p class="refs">Mentions: <a href="RibbonCoordinateGeometry.lean.html#L46">OAI.SLEExactGauge.RibbonCoordinates.futureRibbon</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

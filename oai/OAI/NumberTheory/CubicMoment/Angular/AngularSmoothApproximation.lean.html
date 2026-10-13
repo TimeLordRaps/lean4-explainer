@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/CubicMoment/Angular/AngularSmoothApproximation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/CubicMoment/Angular/AngularSmoothApproximation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">CubicMoment</a> / <a href="index.html">Angular</a> / <span>AngularSmoothApproximation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">CubicMoment</a>/<a href="index.html">Angular</a>/<span>AngularSmoothApproximation.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/CubicMoment/Angular/AngularSmoothApproximation.lean#L1">source</a></p><div class="doc"><p>Uniform smooth dual approximation at each fixed infinity type,
+derived from the precise published completion and classical Gamma
+inputs. The original sum retains every primitive local Euler factor.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>def</b> <code>OAI.CubicFirstMoment.angularRetainedIntegral</code> <small>line 13</small></li><li id=L22><b>theorem</b> <code>OAI.CubicFirstMoment.angular_smooth_approximation</code> <small>line 22</small><div class="doc"><p>Uniform arbitrary-power approximation beyond the natural dual
+length. The original sum and retained integral are explicitly defined.</p></div><pre>theorem angular_smooth_approximation
+    (W : ℝ → ℂ) (hW : HasCompactSupport W) (hpos : tsupport W ⊆ Ioi 0)
+    (hsm : ContDiff ℝ ∞ W) {k : ℝ} (hk : 0 ≤ k) {δ : ℝ} (hδ : 0 &lt; δ) (B R : ℝ) :
+    ∃ (m : ℕ) (C : ℝ), 2 ≤ m ∧ 0 ≤ C ∧
+      ∀ (χ χdual : EisensteinIdealExponent → ℂ),
+      (∀ ν, ‖χ ν‖ ≤ 1) → (∀ ν, ‖χdual ν‖ ≤ 1) →
+      ∀ (ε : ℂ), ‖ε‖ ≤ 1 → ∀ (Y A Z J t : ℝ),
+      1 ≤ Y → 0 &lt; A → 1 ≤ Z → 0 &lt; J → Z ≤ Y^B → J ≤ Y^B →
+      (A^2*(1+|t|)^2)/(Z*J) ≤ Y^(-δ) →
+      ∀ (L Ldual : ℂ → ℂ), ShiftedPrimitiveHeckeAnalyticData χ χdual A k ε L Ldual →
+      ShiftedCompletedHeckeFiniteOrder A k L →
+      AngularGammaQuotientStripBound k (1/2-(m:ℝ)) →
+…</pre><p class="refs">Mentions: <a href="../Estimates/ShortMoebius.lean.html#L23">OAI.CubicFirstMoment.EisensteinIdealExponent</a>, <a href="AngularHeckeGrowth.lean.html#L144">OAI.CubicFirstMoment.ShiftedPrimitiveHeckeAnalyticData</a>, <a href="AngularHeckeGrowth.lean.html#L13">OAI.CubicFirstMoment.ShiftedCompletedHeckeFiniteOrder</a>, <a href="AngularDualContour.lean.html#L19">OAI.CubicFirstMoment.AngularGammaQuotientStripBound</a></p></li><li id=L56><b>theorem</b> <code>OAI.CubicFirstMoment.primitive_angular_smooth_approximation</code> <small>line 56</small><div class="doc"><p>Actual primitive angular characters satisfy the proved approximation.
+The constant is chosen before the modulus, character, root and lengths.</p></div><pre>theorem primitive_angular_smooth_approximation (hpub : PrimitiveAngularHeckeInput)
+    (ℓ : ℤ) (W : ℝ → ℂ) (hW : HasCompactSupport W) (hpos : tsupport W ⊆ Ioi 0)
+    (hsm : ContDiff ℝ ∞ W) {δ : ℝ} (hδ : 0 &lt; δ) (H R : ℝ)
+    (hGI : ∀ m : ℕ, GammaInverseFiniteOrder
+      (1/2-(m:ℝ)+|(ℓ:ℝ)|/2) (2+|(ℓ:ℝ)|/2))
+    (hGQ : ∀ m : ℕ, AngularGammaQuotientStripBound (|(ℓ:ℝ)|/2) (1/2-(m:ℝ))) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (q : Eisenstein), q ≠ 0 →
+      ∀ χ : MulChar (Residues q) ℂ, PrimitiveResidueCharacter q χ →
+      AngularUnitCompatible q χ ℓ → (ℓ ≠ 0 ∨ χ ≠ 1) →
+      ∃ root : ℂ, ‖root‖ = 1 ∧ ∀ (Y Z J t : ℝ),
+      1 ≤ Y → 1 ≤ Z → 0 &lt; J → Z ≤ Y^H → J ≤ Y^H →
+      ((residueHeckeScale q)^2*(1+|t|)^2)/(Z*J) ≤ Y^(-δ) →
+…</pre><p class="refs">Mentions: <a href="../Estimates/PublishedAngularHecke.lean.html#L20">OAI.CubicFirstMoment.PrimitiveAngularHeckeInput</a>, <a href="../Estimates/HeckeCompletedOrder.lean.html#L27">OAI.CubicFirstMoment.GammaInverseFiniteOrder</a>, <a href="AngularDualContour.lean.html#L19">OAI.CubicFirstMoment.AngularGammaQuotientStripBound</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L19">OAI.CubicFirstMoment.Eisenstein</a>, <a href="../../../../ComparatorChallenges/PattersonFirstMoment.lean.html#L34">OAI.CubicFirstMoment.Residues</a>, <a href="../Estimates/PrimitiveConductor.lean.html#L20">OAI.CubicFirstMoment.PrimitiveResidueCharacter</a>, <a href="AngularHeckeCharacter.lean.html#L117">OAI.CubicFirstMoment.AngularUnitCompatible</a>, <a href="../Estimates/PublishedPrimitiveHecke.lean.html#L16">OAI.CubicFirstMoment.residueHeckeScale</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

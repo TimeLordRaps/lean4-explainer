@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/InvariantIsing/Arrays/DiagonalCovariance.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/InvariantIsing/Arrays/DiagonalCovariance.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">InvariantIsing</a> / <a href="index.html">Arrays</a> / <span>DiagonalCovariance.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">InvariantIsing</a>/<a href="index.html">Arrays</a>/<span>DiagonalCovariance.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/InvariantIsing/Arrays/DiagonalCovariance.lean#L1">source</a></p><div class="doc"><p>Control of the finite spectral GG diagonal error by its actual L1 deviation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>lemma</b> <code>OAI.InvariantIsing.randomCoefficient_bounded_observable_covariance</code> <small>line 19</small></li><li id=L84><b>theorem</b> <code>OAI.InvariantIsing.randomCoefficient_diagonal_covariance_le</code> <small>line 84</small><div class="doc"><p>No constant self-overlap is imposed at finite N. Its actual Gibbs L1
+fluctuation controls precisely the extra covariance in the GG estimate.</p></div><pre>theorem randomCoefficient_diagonal_covariance_le (hν : Measurable ν)
+    (A : Ω → X → ℕ →₀ ℝ)
+    (hAm : Measurable (fun p : (Ω × (ℕ → ℝ)) × X =&gt; cylinderField (A p.1.1 p.2) p.1.2))
+    (hcross : Measurable (fun p : Ω × (X × X) =&gt; cylinderCross (A p.1 p.2.1) (A p.1 p.2.2)))
+    {B : ℝ} (hA : ∀ ω x, (A ω x).sum (fun _ c =&gt; c ^ 2) ≤ B)
+    (t d : ℝ) {r : ℕ} (D : Ω → (Fin (r + 1) → X) → ℝ)
+    (hDm : Measurable (Function.uncurry D)) {c : ℝ} (hc : 0 ≤ c)
+    (hD : ∀ ω σ, |D ω σ| ≤ c) :
+    |randomCoefficientAverage P ν A t
+        (fun ω σ =&gt; D ω σ * cylinderCross (A ω (σ 0)) (A ω (σ 0))) -
+      randomCoefficientAverage P ν A t D * randomCoefficientAverage P ν A t
+        (fun ω (σ : Fin 1 → X) =&gt; cylinderCross (A ω (σ 0)) (A ω (σ 0)))| ≤
+…</pre><p class="refs">Mentions: <a href="../Pressure/RandomCoefficientGG.lean.html#L20">OAI.InvariantIsing.randomCoefficientAverage</a></p></li><li id=L137><b>theorem</b> <code>OAI.InvariantIsing.randomCoefficient_gaussian_gg_L1_bound</code> <small>line 137</small><div class="doc"><p>Quantitative GG with both errors expressed as actual Gibbs L1 deviations.
+The energy fluctuation is divided by the perturbation scale when passing to
+the limiting GG identities; the diagonal fluctuation is not.</p></div><pre>theorem randomCoefficient_gaussian_gg_L1_bound (hν : Measurable ν)
+    (A : Ω → X → ℕ →₀ ℝ)
+    (hAm : Measurable (fun p : (Ω × (ℕ → ℝ)) × X =&gt; cylinderField (A p.1.1 p.2) p.1.2))
+    (hcross : Measurable (fun p : Ω × (X × X) =&gt; cylinderCross (A p.1 p.2.1) (A p.1 p.2.2)))
+    {B : ℝ} (hA : ∀ ω x, (A ω x).sum (fun _ c =&gt; c ^ 2) ≤ B)
+    (t b d : ℝ) {r : ℕ} (D : Ω → (Fin (r + 1) → X) → ℝ)
+    (hDm : Measurable (Function.uncurry D)) {c : ℝ} (hc : 0 ≤ c)
+    (hD : ∀ ω σ, |D ω σ| ≤ c)
+    (hE : Integrable (fun z : Ω × (ℕ → ℝ) =&gt; ∫ x,
+      |cylinderField (A z.1 x) z.2 - b|
+        ∂(ν z.1).tilted (fun x =&gt; t * cylinderField (A z.1 x) z.2))
+      (P.prod gaussianCoordinates)) :
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

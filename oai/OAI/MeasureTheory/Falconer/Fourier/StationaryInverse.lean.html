@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/Falconer/Fourier/StationaryInverse.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/Falconer/Fourier/StationaryInverse.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MeasureTheory</a> / <a href="../index.html">Falconer</a> / <a href="index.html">Fourier</a> / <span>StationaryInverse.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MeasureTheory</a>/<a href="../index.html">Falconer</a>/<a href="index.html">Fourier</a>/<span>StationaryInverse.lean</span></code></h1><p class="muted">17 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/Falconer/Fourier/StationaryInverse.lean#L1">source</a></p><div class="doc"><h3>The finite inverse for the higher-dimensional stationary expansion</h3><p>The polynomials are those of <code>osc:L-operators</code> and <code>osc:B-operators</code> in
+Section 6 of the manuscript. Their variable represents the sphere Laplacian.
+The finite inverse identity is algebraic and independent of a sphere
+stationary-phase expansion.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.Falconer.sphereStationaryConstant</code> <small>line 23</small></li><li id=L27><b>theorem</b> <code>OAI.Falconer.sphereStationaryConstant_ne_zero</code> <small>line 27</small></li><li id=L36><b>def</b> <code>OAI.Falconer.sphereDirectPolynomial</code> <small>line 36</small><div class="doc"><p>The direct stationary coefficient, as a polynomial in the sphere Laplacian.
+Here <code>n</code> is the sphere dimension, so the ambient dimension is <code>n+1</code>.</p></div><pre>noncomputable def sphereDirectPolynomial (n j : ℕ) : Polynomial ℂ :=
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.Falconer.sphereDirectPolynomial_zero</code> <small>line 41</small></li><li id=L45><b>theorem</b> <code>OAI.Falconer.sphereDirectPolynomial_degree</code> <small>line 45</small></li><li id=L54><b>theorem</b> <code>OAI.Falconer.constant_polynomial_product</code> <small>line 54</small></li><li id=L59><b>theorem</b> <code>OAI.Falconer.polynomial_product_reorder</code> <small>line 59</small></li><li id=L64><b>theorem</b> <code>OAI.Falconer.sphereDirectPolynomial_succ</code> <small>line 64</small><div class="doc"><p>The coefficient recurrence obtained by substituting the outgoing series
+in the Helmholtz equation, with the manuscript's Laplacian sign convention.</p></div><pre>theorem sphereDirectPolynomial_succ (n j : ℕ) :
+    C (2 * Complex.I * (j+1)) * sphereDirectPolynomial n (j+1) =
+      (X + C ((j : ℂ)*(j+1) - (n : ℂ)*((n : ℂ)-2)/4)) *
+        sphereDirectPolynomial n j := by
+…</pre><p class="refs">Mentions: <a href="StationaryInverse.lean.html#L36">OAI.Falconer.sphereDirectPolynomial</a></p></li><li id=L91><b>def</b> <code>OAI.Falconer.sphereInversePolynomial</code> <small>line 91</small><div class="doc"><p>The finite inverse coefficients from <code>osc:B-operators</code>.</p></div><pre>noncomputable def sphereInversePolynomial (n : ℕ) : ℕ → Polynomial ℂ
+  | 0 =&gt; C ((sphereStationaryConstant n)⁻¹)
+  | j+1 =&gt; C (-(sphereStationaryConstant n)⁻¹) *
+      ∑ h ∈ Finset.range (j+1),
+        sphereDirectPolynomial n (h+1) * sphereInversePolynomial n (j-h)
+termination_by j =&gt; j
+decreasing_by omega</pre><p class="refs">Mentions: <a href="StationaryInverse.lean.html#L23">OAI.Falconer.sphereStationaryConstant</a>, <a href="StationaryInverse.lean.html#L36">OAI.Falconer.sphereDirectPolynomial</a></p></li><li id=L99><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_zero</code> <small>line 99</small></li><li id=L103><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_degree</code> <small>line 103</small></li><li id=L119><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_cancellation</code> <small>line 119</small></li><li id=L135><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_cancellation_reverse</code> <small>line 135</small></li><li id=L149><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_triangle</code> <small>line 149</small><div class="doc"><p>Exact cancellation in the triangular truncation used for the inverse
+stationary expansion, before estimating any analytic remainder.</p></div><pre>theorem sphereInversePolynomial_triangle (n J : ℕ) (t : ℂ) :
+    (∑ j ∈ Finset.range (J+1), ∑ h ∈ Finset.range (J+1-j),
+      C (t^(j+h)) * sphereDirectPolynomial n h * sphereInversePolynomial n j) = 1 := by
+…</pre><p class="refs">Mentions: <a href="StationaryInverse.lean.html#L36">OAI.Falconer.sphereDirectPolynomial</a>, <a href="StationaryInverse.lean.html#L91">OAI.Falconer.sphereInversePolynomial</a></p></li><li id=L168><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_triangle_linear</code> <small>line 168</small><div class="doc"><p>Applying the triangular identity to a Laplacian jet evaluated at a point.
+The relevant linear map is <code>p ↦ (p(Δ)b)(e)</code>.</p></div><pre>theorem sphereInversePolynomial_triangle_linear (n J : ℕ) (t : ℂ)
+    (F : Polynomial ℂ →ₗ[ℂ] ℂ) :
+    (∑ j ∈ Finset.range (J+1), t^j *
+      ∑ h ∈ Finset.range (J+1-j),
+        t^h * F (sphereDirectPolynomial n h * sphereInversePolynomial n j)) = F 1 := by
+…</pre><p class="refs">Mentions: <a href="StationaryInverse.lean.html#L36">OAI.Falconer.sphereDirectPolynomial</a>, <a href="StationaryInverse.lean.html#L91">OAI.Falconer.sphereInversePolynomial</a></p></li><li id=L187><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_error_identity</code> <small>line 187</small><div class="doc"><p>The exact error identity for inversion. Each <code>I j</code> is a normalized
+stationary integral of <code>B_j b</code>, expanded through order <code>J-j</code>.</p></div><pre>theorem sphereInversePolynomial_error_identity (n J : ℕ) (t z : ℂ)
+    (F : Polynomial ℂ →ₗ[ℂ] ℂ) (I : ℕ → ℂ) :
+    (∑ j ∈ Finset.range (J+1), t^j * I j) - z * F 1 =
+      ∑ j ∈ Finset.range (J+1), t^j *
+        (I j - z * ∑ h ∈ Finset.range (J+1-j),
+          t^h * F (sphereDirectPolynomial n h * sphereInversePolynomial n j)) := by
+…</pre><p class="refs">Mentions: <a href="StationaryInverse.lean.html#L36">OAI.Falconer.sphereDirectPolynomial</a>, <a href="StationaryInverse.lean.html#L91">OAI.Falconer.sphereInversePolynomial</a></p></li><li id=L202><b>theorem</b> <code>OAI.Falconer.sphereInversePolynomial_remainder</code> <small>line 202</small><div class="doc"><p>No uniformity or analyticity is hidden in finite inversion: it costs
+exactly the sum of the weighted direct remainder bounds.</p></div><pre>theorem sphereInversePolynomial_remainder (n J : ℕ) (t z : ℂ)
+    (F : Polynomial ℂ →ₗ[ℂ] ℂ) (I : ℕ → ℂ) (E : ℕ → ℝ)
+    (hE : ∀ j ∈ Finset.range (J+1),
+      ‖I j - z * ∑ h ∈ Finset.range (J+1-j),
+        t^h * F (sphereDirectPolynomial n h * sphereInversePolynomial n j)‖ ≤ E j) :
+    ‖(∑ j ∈ Finset.range (J+1), t^j * I j) - z * F 1‖ ≤
+      ∑ j ∈ Finset.range (J+1), ‖t‖^j * E j := by
+…</pre><p class="refs">Mentions: <a href="StationaryInverse.lean.html#L36">OAI.Falconer.sphereDirectPolynomial</a>, <a href="StationaryInverse.lean.html#L91">OAI.Falconer.sphereInversePolynomial</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

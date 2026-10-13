@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/TracialMatrixInjectivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/TracialMatrixInjectivity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>TracialMatrixInjectivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>TracialMatrixInjectivity.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/TracialMatrixInjectivity.lean#L1">source</a></p><div class="doc"><h3>Injectivity of a tracial increasing matrix closure</h3><p>The finite-stage ambient retractions preserve the given trace. Their
+restrictions therefore converge in trace norm to the identity on the weak
+closure. A pointwise weak limit is the required ambient projection.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.KadisonKastler.matrixExpectations_tendsto</code> <small>line 25</small><div class="doc"><p>Increasing matrix-stage expectations converge on their weak closure.</p></div><pre>theorem matrixExpectations_tendsto (τ : TracialRepresentation N)
+    (A : ℕ → FiniteMatrixStage N)
+    (hA : Monotone (fun n =&gt; (A n).units.concreteAlgebra))
+    (x : Algebra N) (hx : x.val ∈ FiniteMatrixStage.generated A) :
+    Tendsto (fun n =&gt; τ.norm₂
+      (conditionalExpectation τ
+        (matrixUnitConcreteAlgebra_le (A n).units) x - x))
+      atTop (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="FiniteMatrixInjectivity.lean.html#L106">OAI.KadisonKastler.matrixUnitConcreteAlgebra_le</a></p></li><li id=L58><b>def</b> <code>OAI.KadisonKastler.matrixTraceAmbientRetraction</code> <small>line 58</small><div class="doc"><p>The finite matrix retraction, with codomain viewed in ambient operators.</p></div><pre>def matrixTraceAmbientRetraction [Nontrivial H] (τ : TracialRepresentation N)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    (E : MatrixUnitSystem ι (Algebra N)) (o : ι) :
+    (H →L[ℂ] H) →L[ℂ] (H →L[ℂ] H) :=
+…</pre><p class="refs">Mentions: <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a></p></li><li id=L67><b>theorem</b> <code>OAI.KadisonKastler.isInjective_tracial_matrix_closure_of_nontrivial</code> <small>line 67</small><div class="doc"><p>The weak closure of increasing full matrix algebras is injective in a
+faithful tracial representation.</p></div><pre>theorem isInjective_tracial_matrix_closure_of_nontrivial [Nontrivial H]
+    (τ : TracialRepresentation N) (A : ℕ → FiniteMatrixStage N)
+    (hA : Monotone (fun n =&gt; (A n).units.concreteAlgebra)) :
+    IsInjective (FiniteMatrixStage.generatedVonNeumann A) := by
+…</pre><p class="refs">Mentions: <a href="Amenable.lean.html#L25">OAI.KadisonKastler.IsInjective</a></p></li><li id=L99><b>theorem</b> <code>OAI.KadisonKastler.isInjective_tracial_matrix_closure</code> <small>line 99</small><div class="doc"><p>A faithful unit trace vector itself supplies nontriviality of the Hilbert space.</p></div><pre>theorem isInjective_tracial_matrix_closure
+    (τ : TracialRepresentation N) (A : ℕ → FiniteMatrixStage N)
+    (hA : Monotone (fun n =&gt; (A n).units.concreteAlgebra)) :
+    IsInjective (FiniteMatrixStage.generatedVonNeumann A) := by
+…</pre><p class="refs">Mentions: <a href="Amenable.lean.html#L25">OAI.KadisonKastler.IsInjective</a></p></li><li id=L113><b>theorem</b> <code>OAI.KadisonKastler.exists_irreducible_injective_subfactor_tracial</code> <small>line 113</small><div class="doc"><p>A separably represented II₁ factor has an irreducible injective
+tracial subfactor.</p></div><pre>theorem exists_irreducible_injective_subfactor_tracial
+    [TopologicalSpace.SeparableSpace H]
+    (τ : TracialRepresentation M) (hM : IsII1Factor M.toStarSubalgebra) :
+    ∃ (R : VonNeumannAlgebra H) (hRM : R ≤ M),
+      IsII1Factor R.toStarSubalgebra ∧ IsInjective R ∧
+      (∀ b : Algebra M,
+        (∀ r : Algebra R, coordinateInclusion hRM r * b = b * coordinateInclusion hRM r) →
+        ∃ c : ℂ, b = c • (1 : Algebra M)) := by
+…</pre><p class="refs">Mentions: <a href="Amenable.lean.html#L25">OAI.KadisonKastler.IsInjective</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

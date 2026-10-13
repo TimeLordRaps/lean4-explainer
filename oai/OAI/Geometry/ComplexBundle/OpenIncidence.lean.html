@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/ComplexBundle/OpenIncidence.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/ComplexBundle/OpenIncidence.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">ComplexBundle</a> / <span>OpenIncidence.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">ComplexBundle</a>/<span>OpenIncidence.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/ComplexBundle/OpenIncidence.lean#L1">source</a></p><div class="doc"><p>Openness of kernel, graph, frame, and rank incidence conditions.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Kaplansky.SmoothKernel.open_kernel_incidence_image_null</code> <small>line 21</small><div class="doc"><p>Nullity for a surjective family defined smoothly only on an open domain.
+Values outside that domain need not be smooth, continuous or surjective.</p></div><pre>theorem open_kernel_incidence_image_null [MeasurableSpace V] [BorelSpace V]
+    (a : X → V →L[ℂ] W) (U : Set X) (hU : IsOpen U)
+    (ha : ContDiffOn ℝ ∞ a U) (hs : ∀ x ∈ U, Function.Surjective (a x))
+    (hd : finrank ℝ (X × KernelModel V W)&lt;finrank ℝ V) :
+    μH[finrank ℝ V] {v : V | ∃ x ∈ U, a x v=0}=0 := by
+…</pre><p class="refs">Mentions: <a href="Kernel.lean.html#L176">OAI.Kaplansky.SmoothKernel.KernelModel</a></p></li><li id=L76><b>theorem</b> <code>OAI.Kaplansky.Incidence.graphEvaluation_smoothOn</code> <small>line 76</small></li><li id=L88><b>theorem</b> <code>OAI.Kaplansky.Incidence.open_graph_incidence_image_null</code> <small>line 88</small><div class="doc"><p>Actual graph incidence over an open base chart is null under the real
+dimension gap; no extension of its evaluation map off the chart is assumed.</p></div><pre>theorem open_graph_incidence_image_null [MeasurableSpace V] [BorelSpace V]
+    (hU : IsOpen U) (he : ContDiffOn ℝ ∞ ev U)
+    (hs : ∀ y ∈ U, Function.Surjective (ev y))
+    (hgap : finrank ℝ Y+2*s*k+2*t*l&lt;2*q*s*l) :
+    μH[finrank ℝ V] {v : V | ∃ y ∈ U, ∃ (a : GraphSlope s k) (b : GraphSlope t l),
+      ∀ i, ∀ x ∈ a.toLinearMap.graph, ev y v i x ∈ b.toLinearMap.graph}=0 := by
+…</pre></li><li id=L133><b>def</b> <code>OAI.Kaplansky.Incidence.OpenFrameBad</code> <small>line 133</small></li><li id=L137><b>theorem</b> <code>OAI.Kaplansky.Incidence.openFrameBad_null</code> <small>line 137</small></li><li id=L182><b>def</b> <code>OAI.Kaplansky.Incidence.OpenRankBad</code> <small>line 182</small></li><li id=L185><b>theorem</b> <code>OAI.Kaplansky.Incidence.openRankBad_null</code> <small>line 185</small></li><li id=L207><b>theorem</b> <code>OAI.Kaplansky.Incidence.exists_countable_chart_incidence_parameter</code> <small>line 207</small><div class="doc"><p>A single parameter avoids every forbidden rank pair on every chart of a
+countable family. The maps, kernels, graph coverage and nullity are actual;
+only the smooth surjective coordinate evaluation data enter as hypotheses.</p></div><pre>theorem exists_countable_chart_incidence_parameter {ι : Type*} [Countable ι]
+    (ev : ι → Y → V →L[ℂ] MatrixTuple q d r) (U : ι → Set Y)
+    (hU : ∀ j, IsOpen (U j)) (he : ∀ j, ContDiffOn ℝ ∞ (ev j) (U j))
+    (hs : ∀ j y, y ∈ U j → Function.Surjective (ev j y))
+    (pairs : Finset (ℕ × ℕ))
+    (hpairs : ∀ p ∈ pairs, p.1≤d ∧ p.2≤r ∧
+      finrank ℝ Y+2*p.1*(d-p.1)+2*p.2*(r-p.2)&lt;2*q*p.1*(r-p.2)) :
+    ∃ v : V, ∀ j y, y ∈ U j → ∀ p ∈ pairs, ∀ S : Submodule ℂ (Fin d → ℂ),
+      finrank ℂ S=p.1 → p.2&lt;finrank ℂ
+        (⨆ i, S.map (ev j y v i).toLinearMap : Submodule ℂ (Fin r → ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="PointExpansion.lean.html#L114">OAI.Kaplansky.Incidence.MatrixTuple</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

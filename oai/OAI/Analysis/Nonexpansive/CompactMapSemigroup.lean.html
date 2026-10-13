@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Nonexpansive/CompactMapSemigroup.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Nonexpansive/CompactMapSemigroup.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Nonexpansive</a> / <span>CompactMapSemigroup.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Nonexpansive</a>/<span>CompactMapSemigroup.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Nonexpansive/CompactMapSemigroup.lean#L1">source</a></p><div class="doc"><h3>Compact semigroups of nonexpansive selfmaps</h3><p>Convexity converts pointwise weak closure into finite simultaneous norm
+approximation.  This justifies composition of limits without asserting weak
+continuity of an arbitrary nonlinear map.  Fixed right translations are
+continuous and the compact semigroup theorem then gives an idempotent.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>def</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.ConvexFamily</code> <small>line 33</small><div class="doc"><p>Convexity of an actual map family is measured in its ambient function
+vector space.  The subtype of points of <code>K</code> need not be a vector space.</p></div><pre>def ConvexFamily (B : Set (WeakSelfMap K)) : Prop :=
+…</pre><p class="refs">Mentions: <a href="WeakSelfMap.lean.html#L26">OAI.ReflexiveFixedPoints.WeakSelfMap</a></p></li><li id=L37><b>theorem</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.exists_finite_norm_approx</code> <small>line 37</small><div class="doc"><p>One actual member approximates at all the chosen arguments.</p></div><pre>theorem exists_finite_norm_approx {B : Set (WeakSelfMap K)}
+    (hB : ConvexFamily B) {h : WeakSelfMap K} (hh : h ∈ closure B)
+    {ι : Type v} [Fintype ι] (a : ι → K) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ g ∈ B, ∀ i, dist (toNorm g (a i)) (toNorm h (a i)) &lt; ε := by
+…</pre><p class="refs">Mentions: <a href="WeakSelfMap.lean.html#L26">OAI.ReflexiveFixedPoints.WeakSelfMap</a>, <a href="CompactMapSemigroup.lean.html#L33">OAI.ReflexiveFixedPoints.WeakSelfMap.ConvexFamily</a>, <a href="WeakSelfMap.lean.html#L34">OAI.ReflexiveFixedPoints.WeakSelfMap.toNorm</a></p></li><li id=L50><b>theorem</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.exists_finset_norm_approx</code> <small>line 50</small></li><li id=L60><b>theorem</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.nonexpansive_of_mem_closure</code> <small>line 60</small><div class="doc"><p>Nonexpansiveness passes to pointwise weak closure of a convex family.</p></div><pre>theorem nonexpansive_of_mem_closure {B : Set (WeakSelfMap K)}
+    (hB : ConvexFamily B)
+    (hLip : ∀ g ∈ B, LipschitzWith 1 (toNorm g))
+    {h : WeakSelfMap K} (hh : h ∈ closure B) :
+    LipschitzWith 1 (toNorm h) := by
+…</pre><p class="refs">Mentions: <a href="WeakSelfMap.lean.html#L26">OAI.ReflexiveFixedPoints.WeakSelfMap</a>, <a href="CompactMapSemigroup.lean.html#L33">OAI.ReflexiveFixedPoints.WeakSelfMap.ConvexFamily</a>, <a href="WeakSelfMap.lean.html#L34">OAI.ReflexiveFixedPoints.WeakSelfMap.toNorm</a></p></li><li id=L86><b>theorem</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.mem_closure_of_finite_norm_approx</code> <small>line 86</small><div class="doc"><p>Finite norm approximations suffice for membership in weak closure.</p></div><pre>theorem mem_closure_of_finite_norm_approx {B : Set (WeakSelfMap K)}
+    {h : WeakSelfMap K}
+    (happrox : ∀ (s : Finset K) (ε : ℝ), 0 &lt; ε →
+      ∃ g ∈ B, ∀ a ∈ s, dist (toNorm g a) (toNorm h a) &lt; ε) :
+    h ∈ closure B := by
+…</pre><p class="refs">Mentions: <a href="WeakSelfMap.lean.html#L26">OAI.ReflexiveFixedPoints.WeakSelfMap</a>, <a href="WeakSelfMap.lean.html#L34">OAI.ReflexiveFixedPoints.WeakSelfMap.toNorm</a></p></li><li id=L104><b>theorem</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.comp_mem_closure</code> <small>line 104</small><div class="doc"><p>The closure is composition-closed using two finite simultaneous
+approximations, both evaluated at arguments fixed before approximation.</p></div><pre>theorem comp_mem_closure {B : Set (WeakSelfMap K)}
+    (hB : ConvexFamily B)
+    (hLip : ∀ g ∈ B, LipschitzWith 1 (toNorm g))
+    (hcomp : ∀ f ∈ B, ∀ g ∈ B, comp f g ∈ B)
+    {h k : WeakSelfMap K} (hh : h ∈ closure B) (hk : k ∈ closure B) :
+    comp h k ∈ closure B := by
+…</pre><p class="refs">Mentions: <a href="WeakSelfMap.lean.html#L26">OAI.ReflexiveFixedPoints.WeakSelfMap</a>, <a href="CompactMapSemigroup.lean.html#L33">OAI.ReflexiveFixedPoints.WeakSelfMap.ConvexFamily</a>, <a href="WeakSelfMap.lean.html#L34">OAI.ReflexiveFixedPoints.WeakSelfMap.toNorm</a>, <a href="WeakSelfMap.lean.html#L74">OAI.ReflexiveFixedPoints.WeakSelfMap.comp</a></p></li><li id=L132><b>theorem</b> <code>OAI.ReflexiveFixedPoints.WeakSelfMap.exists_idempotent_in_iInter_closure</code> <small>line 132</small><div class="doc"><p>A decreasing family of nonempty convex composition-closed families
+of nonexpansive maps has an idempotent in the intersection of its
+pointwise weak closures.</p></div><pre>theorem exists_idempotent_in_iInter_closure
+    [CompactSpace (WeakCarrier K)] [T2Space (WeakCarrier K)]
+    (B : ℕ → Set (WeakSelfMap K))
+    (hBn : ∀ n, (B n).Nonempty) (hBanti : Antitone B)
+    (hBconv : ∀ n, ConvexFamily (B n))
+    (hBLip : ∀ n g, g ∈ B n → LipschitzWith 1 (toNorm g))
+    (hBcomp : ∀ n f, f ∈ B n → ∀ g, g ∈ B n → comp f g ∈ B n) :
+    ∃ P ∈ ⋂ n, closure (B n), comp P P = P ∧ LipschitzWith 1 (toNorm P) := by
+…</pre><p class="refs">Mentions: <a href="Basic.lean.html#L29">OAI.ReflexiveFixedPoints.WeakCarrier</a>, <a href="WeakSelfMap.lean.html#L26">OAI.ReflexiveFixedPoints.WeakSelfMap</a>, <a href="CompactMapSemigroup.lean.html#L33">OAI.ReflexiveFixedPoints.WeakSelfMap.ConvexFamily</a>, <a href="WeakSelfMap.lean.html#L34">OAI.ReflexiveFixedPoints.WeakSelfMap.toNorm</a>, <a href="WeakSelfMap.lean.html#L74">OAI.ReflexiveFixedPoints.WeakSelfMap.comp</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

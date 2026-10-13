@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Geometry/WeightedColumnBasis.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Geometry/WeightedColumnBasis.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Geometry</a> / <span>WeightedColumnBasis.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Geometry</a>/<span>WeightedColumnBasis.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Geometry/WeightedColumnBasis.lean#L1">source</a></p><div class="doc"><p>+# Maximizing bases and normalized box coefficients</p><p>This is the basis-exchange step in the manuscript's box calculus. A nonzero
+coefficient permits column replacement. Maximality of the basis weight then
+makes the exponential rescaling factor at most one.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.PolycyclicRecognition.columnBasisMatrix</code> <small>line 24</small><div class="doc"><p>The columns chosen from a finite list of vectors.</p></div><pre>def columnBasisMatrix (v : I → Fin n → ℝ) (b : Fin n → I) : Matrix (Fin n) (Fin n) ℝ :=
+…</pre></li><li id=L27><b>def</b> <code>OAI.PolycyclicRecognition.columnBasisWeight</code> <small>line 27</small></li><li id=L30><b>def</b> <code>OAI.PolycyclicRecognition.IsMaximizingColumnBasis</code> <small>line 30</small><div class="doc"><p>A genuine invertible column basis maximizing the prescribed total weight.</p></div><pre>def IsMaximizingColumnBasis (v : I → Fin n → ℝ) (w : I → ℝ) (b : Fin n → I) : Prop :=
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_maximizingColumnBasis</code> <small>line 35</small></li><li id=L51><b>theorem</b> <code>OAI.PolycyclicRecognition.det_columnBasis_update</code> <small>line 51</small><div class="doc"><p>A vector with nonzero coordinate at column <code>j</code> can replace that column.
+The determinant identity is the exact algebraic exchange witness.</p></div><pre>theorem det_columnBasis_update
+    (v : I → Fin n → ℝ) (b : Fin n → I) (y : I) (j : Fin n)
+    (c : Fin n → ℝ) (hc : ∀ k, v y k = ∑ i, c i * v (b i) k) :
+    (columnBasisMatrix v (Function.update b j y)).det =
+      c j * (columnBasisMatrix v b).det := by
+…</pre><p class="refs">Mentions: <a href="WeightedColumnBasis.lean.html#L24">OAI.PolycyclicRecognition.columnBasisMatrix</a></p></li><li id=L67><b>theorem</b> <code>OAI.PolycyclicRecognition.weight_le_of_nonzero_coordinate</code> <small>line 67</small><div class="doc"><p>Maximal total weight gives domination whenever the coordinate is nonzero.</p></div><pre>theorem weight_le_of_nonzero_coordinate
+    (v : I → Fin n → ℝ) (w : I → ℝ) (b : Fin n → I)
+    (hb : IsMaximizingColumnBasis v w b) (y : I) (j : Fin n)
+    (c : Fin n → ℝ) (hc : ∀ k, v y k = ∑ i, c i * v (b i) k)
+    (hcj : c j ≠ 0) : w y ≤ w (b j) := by
+…</pre><p class="refs">Mentions: <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a></p></li><li id=L88><b>theorem</b> <code>OAI.PolycyclicRecognition.normalized_coordinate_le</code> <small>line 88</small><div class="doc"><p>Scaling a maximizing basis introduces no growth in its coordinate
+coefficients. Zero coordinates require no weight comparison.</p></div><pre>theorem normalized_coordinate_le
+    (v : I → Fin n → ℝ) (w : I → ℝ) (b : Fin n → I)
+    (hb : IsMaximizingColumnBasis v w b) (y : I) (j : Fin n)
+    (c : Fin n → ℝ) (hc : ∀ k, v y k = ∑ i, c i * v (b i) k)
+    {r : ℝ} (hr : 0 ≤ r) :
+    |c j * Real.exp (r * (w y - w (b j)))| ≤ |c j| := by
+…</pre><p class="refs">Mentions: <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a></p></li><li id=L104><b>def</b> <code>OAI.PolycyclicRecognition.columnCoordinates</code> <small>line 104</small><div class="doc"><p>Coordinates in an invertible selected column basis. The definition also
+exists for singular selections, which simplifies the finite uniform bound.</p></div><pre>def columnCoordinates (v : I → Fin n → ℝ) (b : Fin n → I) (y : I) : Fin n → ℝ :=
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.PolycyclicRecognition.columnCoordinates_repr</code> <small>line 107</small></li><li id=L119><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_uniform_normalized_coordinate_bound</code> <small>line 119</small><div class="doc"><p>A single constant controls every normalized coefficient, uniformly over
+all weights, all maximizing bases, and all nonnegative scales.</p></div><pre>theorem exists_uniform_normalized_coordinate_bound [Fintype I]
+    (v : I → Fin n → ℝ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (w : I → ℝ) (b : Fin n → I),
+      IsMaximizingColumnBasis v w b → ∀ (y : I) (j : Fin n) (r : ℝ), 0 ≤ r →
+        |columnCoordinates v b y j * Real.exp (r * (w y - w (b j)))| ≤ C := by
+…</pre><p class="refs">Mentions: <a href="WeightedColumnBasis.lean.html#L30">OAI.PolycyclicRecognition.IsMaximizingColumnBasis</a>, <a href="WeightedColumnBasis.lean.html#L104">OAI.PolycyclicRecognition.columnCoordinates</a></p></li><li id=L147><b>theorem</b> <code>OAI.PolycyclicRecognition.scaled_columnCoordinates_repr</code> <small>line 147</small><div class="doc"><p>The bounded coefficients above reconstruct the scaled vector in the
+scaled selected basis, exactly as in the weighted box definition.</p></div><pre>theorem scaled_columnCoordinates_repr (v : I → Fin n → ℝ) (w : I → ℝ)
+    (b : Fin n → I) (hb : (columnBasisMatrix v b).det ≠ 0)
+    (y : I) (r : ℝ) (k : Fin n) :
+    Real.exp (r * w y) * v y k =
+      ∑ i, (columnCoordinates v b y i * Real.exp (r * (w y - w (b i)))) *
+        (Real.exp (r * w (b i)) * v (b i) k) := by
+…</pre><p class="refs">Mentions: <a href="WeightedColumnBasis.lean.html#L24">OAI.PolycyclicRecognition.columnBasisMatrix</a>, <a href="WeightedColumnBasis.lean.html#L104">OAI.PolycyclicRecognition.columnCoordinates</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

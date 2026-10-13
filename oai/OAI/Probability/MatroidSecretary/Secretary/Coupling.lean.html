@@ -1,0 +1,101 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/MatroidSecretary/Secretary/Coupling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/MatroidSecretary/Secretary/Coupling.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">MatroidSecretary</a> / <a href="index.html">Secretary</a> / <span>Coupling.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">MatroidSecretary</a>/<a href="index.html">Secretary</a>/<span>Coupling.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/MatroidSecretary/Secretary/Coupling.lean#L1">source</a></p><div class="doc"><h3>Initial-seed / random-prefix coupling</h3><p>The complete table is drawn with the initial seed, before the independent
+arrival permutation.  Reassociation here is only a proof of the joint law;
+the implementation does not defer any table randomness until after the prefix.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L31><b>theorem</b> <code>OAI.MatroidProphet.Secretary.initial_seed_reassociate</code> <small>line 31</small><div class="doc"><p>Moving the independent arrival randomness next to the source seed does not
+change the product law; the entire precommitted table remains present.</p></div><pre>theorem initial_seed_reassociate (μ : Measure U) (ν : Measure T) (η : Measure S)
+    [SFinite μ] [SFinite ν] [SFinite η] :
+    MeasurePreserving (fun z : (U × T) × S =&gt; ((z.1.1, z.2), z.1.2))
+      ((μ.prod ν).prod η) ((μ.prod η).prod ν) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.MatroidProphet.Secretary.observation_table_joint</code> <small>line 43</small><div class="doc"><p>Any observation of source seed and independent prefix randomness retains
+independence from the complete pre-drawn table.</p></div><pre>theorem observation_table_joint (μ : Measure U) (ν : Measure T) (η : Measure S)
+    (ρ : Measure B) [SFinite μ] [SFinite ν] [SFinite η]
+    (index : U × S → B) (hi : Measurable index)
+    (hindex : (μ.prod η).map index = ρ) :
+    ((μ.prod ν).prod η).map
+      (fun z : (U × T) × S =&gt; (index (z.1.1, z.2), z.1.2)) = ρ.prod ν := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.MatroidProphet.Secretary.reconstructed_seed_law</code> <small>line 56</small><div class="doc"><p>Decoding the precommitted table after observing the prefix has the same
+law as selecting from an independent table at an index with the required
+observation law.  No future arrival information is an input to <code>decode</code>.</p></div><pre>theorem reconstructed_seed_law (μ : Measure U) (ν : Measure T) (η : Measure S)
+    (ρ : Measure B) (ξ : Measure A) [SFinite μ] [SFinite ν] [SFinite η]
+    (index : U × S → B) (hi : Measurable index)
+    (hindex : (μ.prod η).map index = ρ)
+    (decode : B × T → A) (hd : Measurable decode)
+    (hdecode : (ρ.prod ν).map decode = ξ) :
+    ((μ.prod ν).prod η).map
+      (fun z : (U × T) × S =&gt; decode (index (z.1.1, z.2), z.1.2)) = ξ := by
+…</pre></li><li id=L82><b>def</b> <code>OAI.MatroidProphet.Secretary.conditionalSourceLaw</code> <small>line 82</small><div class="doc"><p>Normalize the actual source measure on each observation fiber.</p></div><pre>noncomputable def conditionalSourceLaw (μ : Measure A) (obs : A → B)
+    (fallback : A) (b : B) : Measure A :=
+…</pre></li><li id=L89><b>instance</b> <code>OAI.MatroidProphet.Secretary.conditionalSourceLaw_probability</code> <small>line 89</small></li><li id=L96><b>theorem</b> <code>OAI.MatroidProphet.Secretary.observation_graph_atom</code> <small>line 96</small><div class="doc"><p>The graph of the observation keeps the full source realization.</p></div><pre>theorem observation_graph_atom (μ : Measure A) (obs : A → B) (b : B) (a : A) :
+    (μ.map (fun a =&gt; (obs a, a))) {(b, a)} =
+      if obs a = b then μ {a} else 0 := by
+…</pre></li><li id=L122><b>theorem</b> <code>OAI.MatroidProphet.Secretary.conditionalSourceLaw_joint_atom</code> <small>line 122</small><div class="doc"><p>The true observation marginal times the normalized conditional law is the
+exact graph law of the complete source seed, including unused coordinates.</p></div><pre>theorem conditionalSourceLaw_joint_atom (μ : Measure A) [IsProbabilityMeasure μ]
+    (obs : A → B) (fallback : A) (b : B) (a : A) :
+    (μ.map obs) {b} * conditionalSourceLaw μ obs fallback b {a} =
+      (μ.map (fun a =&gt; (obs a, a))) {(b, a)} := by
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L82">OAI.MatroidProphet.Secretary.conditionalSourceLaw</a></p></li><li id=L147><b>theorem</b> <code>OAI.MatroidProphet.Secretary.conditional_table_joint</code> <small>line 147</small><div class="doc"><p>Predrawing every conditional source seed and selecting the observed fiber
+reconstructs the complete source joint law exactly.</p></div><pre>theorem conditional_table_joint (μ : Measure A) [IsProbabilityMeasure μ]
+    (obs : A → B) (fallback : A) :
+    ((μ.map obs).prod (Measure.pi (conditionalSourceLaw μ obs fallback))).map
+      (fun z : B × (B → A) =&gt; (z.1, z.2 z.1)) =
+      μ.map (fun a =&gt; (obs a, a)) := by
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L82">OAI.MatroidProphet.Secretary.conditionalSourceLaw</a></p></li><li id=L159><b>theorem</b> <code>OAI.MatroidProphet.Secretary.precommitted_source_joint</code> <small>line 159</small><div class="doc"><p>The actual initial seed is <code>(source seed, whole conditional table)</code>,
+independent of prefix randomness.  If the prefix observation has the true
+observation law, lookup recovers the full joint source law.</p></div><pre>theorem precommitted_source_joint {S : Type*} [MeasurableSpace S]
+    (μ : Measure A) [IsProbabilityMeasure μ] (η : Measure S) [SFinite η]
+    (obs : A → B) (fallback : A) (index : A × S → B)
+    (hi : Measurable index) (hindex : (μ.prod η).map index = μ.map obs) :
+    ((μ.prod (Measure.pi (conditionalSourceLaw μ obs fallback))).prod η).map
+      (fun z : (A × (B → A)) × S =&gt;
+        (index (z.1.1, z.2), z.1.2 (index (z.1.1, z.2)))) =
+      μ.map (fun a =&gt; (obs a, a)) := by
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L82">OAI.MatroidProphet.Secretary.conditionalSourceLaw</a></p></li><li id=L174><b>theorem</b> <code>OAI.MatroidProphet.Secretary.precommitted_source_marginal</code> <small>line 174</small><div class="doc"><p>In particular the reconstructed seed, with all unused coordinates, has
+the original source marginal.</p></div><pre>theorem precommitted_source_marginal {S : Type*} [MeasurableSpace S]
+    (μ : Measure A) [IsProbabilityMeasure μ] (η : Measure S) [SFinite η]
+    (obs : A → B) (fallback : A) (index : A × S → B)
+    (hi : Measurable index) (hindex : (μ.prod η).map index = μ.map obs) :
+    ((μ.prod (Measure.pi (conditionalSourceLaw μ obs fallback))).prod η).map
+      (fun z : (A × (B → A)) × S =&gt; z.1.2 (index (z.1.1, z.2))) = μ := by
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L82">OAI.MatroidProphet.Secretary.conditionalSourceLaw</a></p></li><li id=L192><b>theorem</b> <code>OAI.MatroidProphet.Secretary.ae_precommitted_source_observation</code> <small>line 192</small></li><li id=L216><b>abbrev</b> <code>OAI.MatroidProphet.Secretary.SourceObservation</code> <small>line 216</small></li><li id=L219><b>abbrev</b> <code>OAI.MatroidProphet.Secretary.CouplingSeed</code> <small>line 219</small><div class="doc"><p>The full source seed together with every conditional draw, all predrawn.</p></div><pre>abbrev CouplingSeed (n : ℕ) :=
+…</pre></li><li id=L222><b>def</b> <code>OAI.MatroidProphet.Secretary.couplingObservation</code> <small>line 222</small></li><li id=L226><b>def</b> <code>OAI.MatroidProphet.Secretary.couplingKernel</code> <small>line 226</small></li><li id=L230><b>instance</b> <code>OAI.MatroidProphet.Secretary.couplingKernel_probability</code> <small>line 230</small></li><li id=L237><b>def</b> <code>OAI.MatroidProphet.Secretary.couplingSeedLaw</code> <small>line 237</small><div class="doc"><p>This initial seed law depends on the matroid but not on any weights.</p></div><pre>noncomputable def couplingSeedLaw {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ) : Measure (CouplingSeed n) :=
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a></p></li><li id=L241><b>instance</b> <code>OAI.MatroidProphet.Secretary.couplingSeedLaw_probability</code> <small>line 241</small></li><li id=L247><b>def</b> <code>OAI.MatroidProphet.Secretary.couplingLength</code> <small>line 247</small><div class="doc"><p>The cutoff is fixed before arrivals using only the first part of the seed.</p></div><pre>noncomputable def couplingLength {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ) (q : CouplingSeed n) : Fin (n + 1) :=
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a></p></li><li id=L255><b>def</b> <code>OAI.MatroidProphet.Secretary.couplingDecode</code> <small>line 255</small><div class="doc"><p>Lookup needs only the seed and the observed label set, not its weights or
+the future suffix order.</p></div><pre>def couplingDecode {n : ℕ} (q : CouplingSeed n) (P : Finset (Fin n)) :
+    Seed (mainSeedBits n) := q.2 (mainBranch q.1, P)</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a>, <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L21">OAI.MatroidProphet.Seed</a>, <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L17">OAI.MatroidProphet.mainSeedBits</a>, <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L29">OAI.MatroidProphet.mainBranch</a></p></li><li id=L258><b>def</b> <code>OAI.MatroidProphet.Secretary.couplingIndex</code> <small>line 258</small></li><li id=L265><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_joint_of_prefix_law</code> <small>line 265</small><div class="doc"><p>The remaining input is the independently proved random-prefix law, not a
+hypothesis of the final secretary endpoint.</p></div><pre>theorem coupling_joint_of_prefix_law {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ)
+    (hprefix : ((sourceSeedLaw n).prod (uniformArrivalLaw n)).map (couplingIndex M hE) =
+      (sourceSeedLaw n).map (couplingObservation M hE)) :
+    ((couplingSeedLaw M hE).prod (uniformArrivalLaw n)).map
+      (fun z : CouplingSeed n × ArrivalOrder n =&gt;
+        ((mainBranch z.1.1, orderPrefix z.2 (couplingLength M hE z.1).val),
+          couplingDecode z.1 (orderPrefix z.2 (couplingLength M hE z.1).val))) =
+      (sourceSeedLaw n).map (fun r =&gt; (couplingObservation M hE r, r)) := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Seed.lean.html#L21">OAI.MatroidProphet.sourceSeedLaw</a>, <a href="../../../../ComparatorChallenges/MatroidSecretary.lean.html#L200">OAI.MatroidProphet.Secretary.uniformArrivalLaw</a>, <a href="Coupling.lean.html#L258">OAI.MatroidProphet.Secretary.couplingIndex</a>, <a href="Coupling.lean.html#L222">OAI.MatroidProphet.Secretary.couplingObservation</a>, <a href="Coupling.lean.html#L237">OAI.MatroidProphet.Secretary.couplingSeedLaw</a>, <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a>, <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L22">OAI.MatroidProphet.ArrivalOrder</a>, <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L29">OAI.MatroidProphet.mainBranch</a>, <a href="PrefixObservationModel.lean.html#L10">OAI.MatroidProphet.orderPrefix</a>, <a href="Coupling.lean.html#L247">OAI.MatroidProphet.Secretary.couplingLength</a>, <a href="Coupling.lean.html#L255">OAI.MatroidProphet.Secretary.couplingDecode</a></p></li><li id=L278><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_marginal_of_prefix_law</code> <small>line 278</small></li><li id=L290><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_mask_ae_of_prefix_law</code> <small>line 290</small></li><li id=L311><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_source_prefix_law</code> <small>line 311</small><div class="doc"><p>Concrete random-prefix identity, with no transport premise.</p></div><pre>theorem coupling_source_prefix_law {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ) :
+    ((sourceSeedLaw n).prod (uniformArrivalLaw n)).map (couplingIndex M hE) =
+      (sourceSeedLaw n).map (couplingObservation M hE) := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidProphet/Seed.lean.html#L21">OAI.MatroidProphet.sourceSeedLaw</a>, <a href="../../../../ComparatorChallenges/MatroidSecretary.lean.html#L200">OAI.MatroidProphet.Secretary.uniformArrivalLaw</a>, <a href="Coupling.lean.html#L258">OAI.MatroidProphet.Secretary.couplingIndex</a>, <a href="Coupling.lean.html#L222">OAI.MatroidProphet.Secretary.couplingObservation</a></p></li><li id=L319><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_joint_law</code> <small>line 319</small><div class="doc"><p>The complete initial finite seed and independent arrival order reconstruct
+exactly the original full source graph law. No assumption is added to an endpoint.</p></div><pre>theorem coupling_joint_law {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ) :
+    ((couplingSeedLaw M hE).prod (uniformArrivalLaw n)).map
+      (fun z : CouplingSeed n × ArrivalOrder n =&gt;
+        ((mainBranch z.1.1, orderPrefix z.2 (couplingLength M hE z.1).val),
+          couplingDecode z.1 (orderPrefix z.2 (couplingLength M hE z.1).val))) =
+      (sourceSeedLaw n).map (fun r =&gt; (couplingObservation M hE r, r)) :=
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L237">OAI.MatroidProphet.Secretary.couplingSeedLaw</a>, <a href="../../../../ComparatorChallenges/MatroidSecretary.lean.html#L200">OAI.MatroidProphet.Secretary.uniformArrivalLaw</a>, <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a>, <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L22">OAI.MatroidProphet.ArrivalOrder</a>, <a href="../../MatroidProphet/Algorithm/Rule.lean.html#L29">OAI.MatroidProphet.mainBranch</a>, <a href="PrefixObservationModel.lean.html#L10">OAI.MatroidProphet.orderPrefix</a>, <a href="Coupling.lean.html#L247">OAI.MatroidProphet.Secretary.couplingLength</a>, <a href="Coupling.lean.html#L255">OAI.MatroidProphet.Secretary.couplingDecode</a>, <a href="../../MatroidProphet/Seed.lean.html#L21">OAI.MatroidProphet.sourceSeedLaw</a>, <a href="Coupling.lean.html#L222">OAI.MatroidProphet.Secretary.couplingObservation</a></p></li><li id=L329><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_source_law</code> <small>line 329</small><div class="doc"><p>The decoded seed retains the law of every source bit, including unused bits.</p></div><pre>theorem coupling_source_law {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ) :
+    ((couplingSeedLaw M hE).prod (uniformArrivalLaw n)).map
+      (fun z : CouplingSeed n × ArrivalOrder n =&gt;
+        couplingDecode z.1 (orderPrefix z.2 (couplingLength M hE z.1).val)) =
+      sourceSeedLaw n :=
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L237">OAI.MatroidProphet.Secretary.couplingSeedLaw</a>, <a href="../../../../ComparatorChallenges/MatroidSecretary.lean.html#L200">OAI.MatroidProphet.Secretary.uniformArrivalLaw</a>, <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a>, <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L22">OAI.MatroidProphet.ArrivalOrder</a>, <a href="Coupling.lean.html#L255">OAI.MatroidProphet.Secretary.couplingDecode</a>, <a href="PrefixObservationModel.lean.html#L10">OAI.MatroidProphet.orderPrefix</a>, <a href="Coupling.lean.html#L247">OAI.MatroidProphet.Secretary.couplingLength</a>, <a href="../../MatroidProphet/Seed.lean.html#L21">OAI.MatroidProphet.sourceSeedLaw</a></p></li><li id=L339><b>theorem</b> <code>OAI.MatroidProphet.Secretary.coupling_mask_ae</code> <small>line 339</small><div class="doc"><p>Almost-sure mask agreement for the concrete initial-seed experiment.
+Every-seed feasibility separately uses the replay's mismatch-rejection guard.</p></div><pre>theorem coupling_mask_ae {n : ℕ} (M : Matroid (Fin n))
+    (hE : M.E = Set.univ) :
+    ∀ᵐ z : CouplingSeed n × ArrivalOrder n
+      ∂(couplingSeedLaw M hE).prod (uniformArrivalLaw n),
+      (completeHiddenRule M hE).mask
+          (couplingDecode z.1 (orderPrefix z.2 (couplingLength M hE z.1).val)) =
+        orderPrefix z.2 (couplingLength M hE z.1).val :=
+…</pre><p class="refs">Mentions: <a href="Coupling.lean.html#L219">OAI.MatroidProphet.Secretary.CouplingSeed</a>, <a href="../../../../ComparatorChallenges/MatroidProphet.lean.html#L22">OAI.MatroidProphet.ArrivalOrder</a>, <a href="Coupling.lean.html#L237">OAI.MatroidProphet.Secretary.couplingSeedLaw</a>, <a href="../../../../ComparatorChallenges/MatroidSecretary.lean.html#L200">OAI.MatroidProphet.Secretary.uniformArrivalLaw</a>, <a href="../../MatroidProphet/BranchMix.lean.html#L73">OAI.MatroidProphet.completeHiddenRule</a>, <a href="Coupling.lean.html#L255">OAI.MatroidProphet.Secretary.couplingDecode</a>, <a href="PrefixObservationModel.lean.html#L10">OAI.MatroidProphet.orderPrefix</a>, <a href="Coupling.lean.html#L247">OAI.MatroidProphet.Secretary.couplingLength</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

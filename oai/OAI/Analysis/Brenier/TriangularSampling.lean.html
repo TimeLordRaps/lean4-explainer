@@ -1,0 +1,178 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/TriangularSampling.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/TriangularSampling.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>TriangularSampling.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>TriangularSampling.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/TriangularSampling.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>theorem</b> <code>OAI.Problem358.measurePreserving_finSnoc</code> <small>line 12</small><div class="doc"><p>Appending the last coordinate identifies a finite product law with a product of
+its prefix law and its last-coordinate law.</p></div><pre>theorem measurePreserving_finSnoc {X : Type*} [MeasurableSpace X]
+    (n : ℕ) (η : Measure X) [SigmaFinite η] :
+    MeasurePreserving (fun p : (Fin n → X) × X =&gt; Fin.snoc p.1 p.2)
+      ((Measure.pi fun _ : Fin n =&gt; η).prod η)
+      (Measure.pi fun _ : Fin (n + 1) =&gt; η) := by
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Problem358.measurePreserving_finInitLast</code> <small>line 26</small><div class="doc"><p>Splitting the prefix and last coordinate preserves a finite product law.</p></div><pre>theorem measurePreserving_finInitLast {X : Type*} [MeasurableSpace X]
+    (n : ℕ) (η : Measure X) [SigmaFinite η] :
+    MeasurePreserving (fun x : Fin (n + 1) → X =&gt; (Fin.init x, x (Fin.last n)))
+      (Measure.pi fun _ : Fin (n + 1) =&gt; η)
+      ((Measure.pi fun _ : Fin n =&gt; η).prod η) := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.Problem358.TriangularSampling.map_prod_eq_compProd</code> <small>line 56</small><div class="doc"><p>A measurable triangular sampler has the prescribed dependent-product law
+when its prefix has the prescribed law and its last coordinate has the
+prescribed conditional law almost everywhere.</p></div><pre>theorem map_prod_eq_compProd
+    (μ : Measure A) (η : Measure B) (ρ : Measure X) (κ : Kernel X Y)
+    [SFinite μ] [SFinite η] [SFinite ρ] [IsSFiniteKernel κ]
+    (F : A → X) (G : A × B → Y)
+    (hF : Measurable F) (hG : Measurable G)
+    (hbase : Measure.map F μ = ρ)
+    (hfiber : ∀ᵐ a ∂μ, Measure.map (fun b =&gt; G (a, b)) η = κ (F a)) :
+    Measure.map (fun p : A × B =&gt; (F p.1, G p)) (μ.prod η) = ρ ⊗ₘ κ := by
+…</pre></li><li id=L82><b>theorem</b> <code>OAI.Problem358.TriangularSampling.map_init_last_pi</code> <small>line 82</small><div class="doc"><p>Splitting a finite product at its last coordinate preserves its product law.</p></div><pre>theorem map_init_last_pi {Z : Type*} [MeasurableSpace Z]
+    (η : Measure Z) [SigmaFinite η] (n : ℕ) :
+    Measure.map (fun s : Fin (n + 1) → Z =&gt; (Fin.init s, s (Fin.last n)))
+      (Measure.pi (fun _ : Fin (n + 1) =&gt; η)) =
+      (Measure.pi (fun _ : Fin n =&gt; η)).prod η := by
+…</pre></li><li id=L93><b>theorem</b> <code>OAI.Problem358.TriangularSampling.map_snoc_pi_eq</code> <small>line 93</small><div class="doc"><p>The last-coordinate induction step for the law of a finite triangular sampler.</p></div><pre>theorem map_snoc_pi_eq
+    (n : ℕ) (η : Measure B) [SigmaFinite η]
+    (ρ : Measure (Fin n → Y)) (κ : Kernel (Fin n → Y) Y)
+    [SFinite ρ] [IsSFiniteKernel κ]
+    (F : (Fin n → B) → (Fin n → Y)) (G : (Fin n → B) × B → Y)
+    (hF : Measurable F) (hG : Measurable G)
+    (hbase : Measure.map F (Measure.pi (fun _ : Fin n =&gt; η)) = ρ)
+    (hfiber : ∀ᵐ a ∂Measure.pi (fun _ : Fin n =&gt; η),
+      Measure.map (fun b =&gt; G (a, b)) η = κ (F a)) :
+    Measure.map (fun s : Fin (n + 1) → B =&gt;
+      Fin.snoc (F (Fin.init s)) (G (Fin.init s, s (Fin.last n))))
+      (Measure.pi (fun _ : Fin (n + 1) =&gt; η)) =
+…</pre></li><li id=L150><b>theorem</b> <code>OAI.Problem358.TriangularSampling.map_sample_pi_eq</code> <small>line 150</small><div class="doc"><p>Successive conditional quantiles sample a consistent family of prefix laws.
+The conditional law is needed only almost everywhere under the prescribed
+prefix law, so values of a quantile outside its valid prefix domain are irrelevant.</p></div><pre>theorem map_sample_pi_eq
+    (Q : TriangularRecursion.ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (η : Measure ℝ) [SigmaFinite η]
+    (ρ : (n : ℕ) → Measure (Fin n → ℝ))
+    (κ : (n : ℕ) → Kernel (Fin n → ℝ) ℝ)
+    [∀ n, SFinite (ρ n)] [∀ n, IsSFiniteKernel (κ n)]
+    (hzero : ρ 0 = Measure.pi (fun _ : Fin 0 =&gt; η))
+    (hstep : ∀ n, ρ (n + 1) =
+      Measure.map (fun p : (Fin n → ℝ) × ℝ =&gt;
+        (Fin.snoc p.1 p.2 : Fin (n + 1) → ℝ)) (ρ n ⊗ₘ κ n))
+    (hfiber : ∀ n, ∀ᵐ x ∂ρ n, Measure.map (Q n x) η = κ n x) :
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a></p></li><li id=L188><b>theorem</b> <code>OAI.Problem358.TriangularSampling.map_sample_pi_eq_of_steps</code> <small>line 188</small><div class="doc"><p>A finite-dimensional version: only the first <code>N</code> disintegration identities
+and conditional laws are required. No consistency beyond the desired dimension
+is assumed.</p></div><pre>theorem map_sample_pi_eq_of_steps
+    (N : ℕ) (Q : TriangularRecursion.ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (η : Measure ℝ) [SigmaFinite η]
+    (ρ : (n : ℕ) → Measure (Fin n → ℝ))
+    (κ : (n : ℕ) → Kernel (Fin n → ℝ) ℝ)
+    (hρ : ∀ n ≤ N, SFinite (ρ n))
+    (hκ : ∀ n &lt; N, IsSFiniteKernel (κ n))
+    (hzero : ρ 0 = Measure.pi (fun _ : Fin 0 =&gt; η))
+    (hstep : ∀ n &lt; N, ρ (n + 1) =
+      Measure.map (fun p : (Fin n → ℝ) × ℝ =&gt;
+        (Fin.snoc p.1 p.2 : Fin (n + 1) → ℝ)) (ρ n ⊗ₘ κ n))
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a></p></li><li id=L243><b>theorem</b> <code>OAI.Problem358.map_triangular_recursion</code> <small>line 243</small><div class="doc"><p>Law induction for triangular samplers with explicit conditional laws.</p></div><pre>theorem map_triangular_recursion
+    {X : Type*} [MeasurableSpace X] (η : Measure X) [SigmaFinite η]
+    (ν : (n : ℕ) → Measure (Fin n → X))
+    (κ : (n : ℕ) → Kernel (Fin n → X) X)
+    [∀ n, SFinite (ν n)] [∀ n, IsSFiniteKernel (κ n)]
+    (F : (n : ℕ) → (Fin n → X) → (Fin n → X))
+    (G : (n : ℕ) → ((Fin n → X) × X) → X)
+    (hF : ∀ n, Measurable (F n)) (hG : ∀ n, Measurable (G n))
+    (hzero : Measure.map (F 0) (Measure.pi fun _ : Fin 0 =&gt; η) = ν 0)
+    (hrecursion : ∀ n s t,
+      F (n + 1) (Fin.snoc s t) = Fin.snoc (F n s) (G n (s, t)))
+    (htarget : ∀ n, ν (n + 1) =
+…</pre></li><li id=L289><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_sample_of_conditional_laws</code> <small>line 289</small><div class="doc"><p>The law of the recursive sampler follows from conditional laws valid almost
+everywhere under the desired prefix law. No pointwise law on null prefixes is needed.</p></div><pre>theorem map_sample_of_conditional_laws
+    (η : Measure ℝ) [SigmaFinite η]
+    (Q : ConditionalFamily)
+    (ν : (n : ℕ) → Measure (Fin n → ℝ))
+    (κ : (n : ℕ) → Kernel (Fin n → ℝ) ℝ)
+    [∀ n, SFinite (ν n)] [∀ n, IsSFiniteKernel (κ n)]
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hzero : (Measure.pi fun _ : Fin 0 =&gt; η) = ν 0)
+    (htarget : ∀ n, ν (n + 1) =
+      Measure.map (fun p : (Fin n → ℝ) × ℝ =&gt; Fin.snoc p.1 p.2) (ν n ⊗ₘ κ n))
+    (hfiber : ∀ n, ∀ᵐ x ∂ν n, Measure.map (Q n x) η = κ n x) :
+    ∀ n, Measure.map (sample Q n) (Measure.pi fun _ : Fin n =&gt; η) = ν n := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L339><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.empty_prefix_law</code> <small>line 339</small><div class="doc"><p>The empty-prefix base law is automatic for probability laws.</p></div><pre>theorem empty_prefix_law (η : Measure ℝ) [IsProbabilityMeasure η]
+    (ν : Measure (Fin 0 → ℝ)) [IsProbabilityMeasure ν] :
+    (Measure.pi fun _ : Fin 0 =&gt; η) = ν := by
+…</pre></li><li id=L353><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_sample_probability</code> <small>line 353</small><div class="doc"><p>Probability-prefix form of the triangular sampling law.</p></div><pre>theorem map_sample_probability
+    (η : Measure ℝ) [IsProbabilityMeasure η]
+    (Q : ConditionalFamily)
+    (ν : (n : ℕ) → Measure (Fin n → ℝ))
+    (κ : (n : ℕ) → Kernel (Fin n → ℝ) ℝ)
+    [∀ n, IsProbabilityMeasure (ν n)] [∀ n, IsSFiniteKernel (κ n)]
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (htarget : ∀ n, ν (n + 1) =
+      Measure.map (fun p : (Fin n → ℝ) × ℝ =&gt; Fin.snoc p.1 p.2) (ν n ⊗ₘ κ n))
+    (hfiber : ∀ n, ∀ᵐ x ∂ν n, Measure.map (Q n x) η = κ n x) :
+    ∀ n, Measure.map (sample Q n) (Measure.pi fun _ : Fin n =&gt; η) = ν n :=
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L376><b>def</b> <code>OAI.Problem358.TriangularRecursion.jointPlan</code> <small>line 376</small><div class="doc"><p>Couple two triangular samplers by using the same independent scalar inputs.</p></div><pre>def jointPlan (η : Measure ℝ) (Q R : ConditionalFamily) (n : ℕ) :
+    Measure ((Fin n → ℝ) × (Fin n → ℝ)) :=
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a></p></li><li id=L382><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.measurable_jointSample</code> <small>line 382</small><div class="doc"><p>The joint sampler is measurable whenever both conditional families are measurable.</p></div><pre>theorem measurable_jointSample (Q R : ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hR : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; R n p.1 p.2)) (n : ℕ) :
+    Measurable (fun s =&gt; (sample Q n s, sample R n s)) :=
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L389><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.isProbabilityMeasure_jointPlan</code> <small>line 389</small><div class="doc"><p>The common-parameter joint law is a probability measure.</p></div><pre>theorem isProbabilityMeasure_jointPlan (η : Measure ℝ) [IsProbabilityMeasure η]
+    (Q R : ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hR : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; R n p.1 p.2)) (n : ℕ) :
+    IsProbabilityMeasure (jointPlan η Q R n) :=
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularSampling.lean.html#L376">OAI.Problem358.TriangularRecursion.jointPlan</a></p></li><li id=L398><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_fst_jointPlan</code> <small>line 398</small><div class="doc"><p>Its first marginal is exactly the first sampler law.</p></div><pre>theorem map_fst_jointPlan (η : Measure ℝ) (Q R : ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hR : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; R n p.1 p.2)) (n : ℕ) :
+    Measure.map Prod.fst (jointPlan η Q R n) =
+      Measure.map (sample Q n) (Measure.pi fun _ : Fin n =&gt; η) := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularSampling.lean.html#L376">OAI.Problem358.TriangularRecursion.jointPlan</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L407><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_snd_jointPlan</code> <small>line 407</small><div class="doc"><p>Its second marginal is exactly the second sampler law.</p></div><pre>theorem map_snd_jointPlan (η : Measure ℝ) (Q R : ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hR : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; R n p.1 p.2)) (n : ℕ) :
+    Measure.map Prod.snd (jointPlan η Q R n) =
+      Measure.map (sample R n) (Measure.pi fun _ : Fin n =&gt; η) := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularSampling.lean.html#L376">OAI.Problem358.TriangularRecursion.jointPlan</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L416><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_midpoint_jointPlan</code> <small>line 416</small><div class="doc"><p>Taking the midpoint of the coupling is exactly the recursively decomposed midpoint law.</p></div><pre>theorem map_midpoint_jointPlan (η : Measure ℝ) (Q R : ConditionalFamily)
+    (hQ : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hR : ∀ n, Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; R n p.1 p.2)) (n : ℕ) :
+    Measure.map (fun p : (Fin n → ℝ) × (Fin n → ℝ) =&gt;
+      (1 / 2 : ℝ) • p.1 + (1 / 2 : ℝ) • p.2) (jointPlan η Q R n) =
+      Measure.map (midpoint Q R n) (Measure.pi fun _ : Fin n =&gt; η) := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularSampling.lean.html#L376">OAI.Problem358.TriangularRecursion.jointPlan</a>, <a href="TriangularRecursion.lean.html#L139">OAI.Problem358.TriangularRecursion.midpoint</a></p></li><li id=L430><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.jointPlan_spec_of_laws</code> <small>line 430</small><div class="doc"><p>A fixed-depth coupling certificate needs only the two measurable full samplers
+and their laws, so it also applies to finite-depth conditional families.</p></div><pre>theorem jointPlan_spec_of_laws (η : Measure ℝ) [IsProbabilityMeasure η]
+    (Q R : ConditionalFamily) (n : ℕ)
+    {ν μ : Measure (Fin n → ℝ)}
+    (hQ : Measurable (sample Q n)) (hR : Measurable (sample R n))
+    (hν : Measure.map (sample Q n) (Measure.pi fun _ : Fin n =&gt; η) = ν)
+    (hμ : Measure.map (sample R n) (Measure.pi fun _ : Fin n =&gt; η) = μ) :
+    IsProbabilityMeasure (jointPlan η Q R n) ∧
+      Measure.map Prod.fst (jointPlan η Q R n) = ν ∧
+      Measure.map Prod.snd (jointPlan η Q R n) = μ ∧
+      Measure.map (fun p : (Fin n → ℝ) × (Fin n → ℝ) =&gt;
+        (1 / 2 : ℝ) • p.1 + (1 / 2 : ℝ) • p.2) (jointPlan η Q R n) =
+        Measure.map (midpoint Q R n) (Measure.pi fun _ : Fin n =&gt; η) := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a>, <a href="TriangularSampling.lean.html#L376">OAI.Problem358.TriangularRecursion.jointPlan</a>, <a href="TriangularRecursion.lean.html#L139">OAI.Problem358.TriangularRecursion.midpoint</a></p></li><li id=L465><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.measurable_sample_upto</code> <small>line 465</small><div class="doc"><p>Measurability only requires the conditional samplers used before the given depth.</p></div><pre>theorem measurable_sample_upto (Q : ConditionalFamily) (d : ℕ)
+    (hQ : ∀ k, k &lt; d → Measurable (fun p : (Fin k → ℝ) × ℝ =&gt; Q k p.1 p.2)) :
+    ∀ n, n ≤ d → Measurable (sample Q n) := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L488><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_sample_of_conditional_laws_upto</code> <small>line 488</small><div class="doc"><p>Finite-depth sampling law: no regularity or law hypotheses are imposed beyond d.</p></div><pre>theorem map_sample_of_conditional_laws_upto
+    (η : Measure ℝ) [SigmaFinite η] (Q : ConditionalFamily) (d : ℕ)
+    (ν : (n : ℕ) → Measure (Fin n → ℝ))
+    (κ : (n : ℕ) → Kernel (Fin n → ℝ) ℝ)
+    (hν : ∀ n, n ≤ d → SFinite (ν n))
+    (hκ : ∀ n, n &lt; d → IsSFiniteKernel (κ n))
+    (hQ : ∀ n, n &lt; d → Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (hzero : (Measure.pi fun _ : Fin 0 =&gt; η) = ν 0)
+    (htarget : ∀ n, n &lt; d → ν (n + 1) =
+      Measure.map (fun p : (Fin n → ℝ) × ℝ =&gt; Fin.snoc p.1 p.2) (ν n ⊗ₘ κ n))
+    (hfiber : ∀ n, n &lt; d → ∀ᵐ x ∂ν n, Measure.map (Q n x) η = κ n x) :
+    ∀ n, n ≤ d → Measure.map (sample Q n) (Measure.pi fun _ : Fin n =&gt; η) = ν n := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L544><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.map_sample_probability_upto</code> <small>line 544</small><div class="doc"><p>Probability-law form with the empty-prefix base case discharged automatically.</p></div><pre>theorem map_sample_probability_upto
+    (η : Measure ℝ) [IsProbabilityMeasure η] (Q : ConditionalFamily) (d : ℕ)
+    (ν : (n : ℕ) → Measure (Fin n → ℝ))
+    (κ : (n : ℕ) → Kernel (Fin n → ℝ) ℝ)
+    (hν : ∀ n, n ≤ d → IsProbabilityMeasure (ν n))
+    (hκ : ∀ n, n &lt; d → IsSFiniteKernel (κ n))
+    (hQ : ∀ n, n &lt; d → Measurable (fun p : (Fin n → ℝ) × ℝ =&gt; Q n p.1 p.2))
+    (htarget : ∀ n, n &lt; d → ν (n + 1) =
+      Measure.map (fun p : (Fin n → ℝ) × ℝ =&gt; Fin.snoc p.1 p.2) (ν n ⊗ₘ κ n))
+    (hfiber : ∀ n, n &lt; d → ∀ᵐ x ∂ν n, Measure.map (Q n x) η = κ n x) :
+    ∀ n, n ≤ d → Measure.map (sample Q n) (Measure.pi fun _ : Fin n =&gt; η) = ν n := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li><li id=L564><b>theorem</b> <code>OAI.Problem358.TriangularRecursion.sample_mem_domains_upto</code> <small>line 564</small><div class="doc"><p>Pointwise valid-prefix preservation also needs conditional data only below d.</p></div><pre>theorem sample_mem_domains_upto (Q : ConditionalFamily) (d : ℕ)
+    (D : (n : ℕ) → Set (Fin n → ℝ))
+    (hzero : ∀ x, x ∈ D 0)
+    (hstep : ∀ n, n &lt; d → ∀ x, x ∈ D n → ∀ t ∈ Set.Ioo (0 : ℝ) 1,
+      Fin.snoc x (Q n x t) ∈ D (n+1)) :
+    ∀ n, n ≤ d → ∀ s, (∀ i, s i ∈ Set.Ioo (0 : ℝ) 1) → sample Q n s ∈ D n := by
+…</pre><p class="refs">Mentions: <a href="TriangularRecursion.lean.html#L11">OAI.Problem358.TriangularRecursion.ConditionalFamily</a>, <a href="TriangularRecursion.lean.html#L14">OAI.Problem358.TriangularRecursion.sample</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

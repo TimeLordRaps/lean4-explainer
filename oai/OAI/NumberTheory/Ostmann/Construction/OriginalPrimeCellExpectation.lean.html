@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Construction/OriginalPrimeCellExpectation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Construction/OriginalPrimeCellExpectation.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Construction</a> / <span>OriginalPrimeCellExpectation.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Construction</a>/<span>OriginalPrimeCellExpectation.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Construction/OriginalPrimeCellExpectation.lean#L1">source</a></p><div class="doc"><h3>Reassembly of the bulk comparison under the original prime law</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>theorem</b> <code>OAI.Ostmann.BulkIntegrand.averages_originalPrimeCells</code> <small>line 11</small></li><li id=L37><b>theorem</b> <code>OAI.Ostmann.BulkIntegrand.originalPrimeCells_mean</code> <small>line 37</small><div class="doc"><p>Replacing any selected bulk coordinates by their original cell mixtures
+preserves the full original product expectation, including all other roles.</p></div><pre>theorem BulkIntegrand.originalPrimeCells_mean {σ C : Type*} [Fintype σ] [Fintype C]
+    (f : BulkIntegrand σ) (P : Finset ℕ) (q : σ → ℕ) (a : σ → C → ℕ)
+    (u v : σ → C → ℝ)
+    (hSP : ∀ i, primeCellSupport (q i) (a i) (u i) (v i) ⊆ P)
+    (hsep : ∀ i c d, c ≠ d →
+      ¬Nat.ModEq (q i) (a i c) (a i d) ∨ v i c ≤ u i d ∨ v i d ≤ u i c)
+    (hS : ∀ i, (∑ p ∈ primeCellSupport (q i) (a i) (u i) (v i), (p : ℝ)⁻¹) ≠ 0)
+    (l : List σ) :
+    let S := fun i =&gt; primeCellSupport (q i) (a i) (u i) (v i)
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/BulkIntegrands.lean.html#L16">OAI.Ostmann.BulkIntegrand</a>, <a href="PrimeCellPartitionConstruction.lean.html#L34">OAI.Ostmann.primeCellSupport</a></p></li><li id=L57><b>theorem</b> <code>OAI.Ostmann.originalPrimePrior_mean_comparison</code> <small>line 57</small><div class="doc"><p>A pointwise joint replacement estimate survives the original normalized
+prime expectation with its error unchanged.</p></div><pre>theorem originalPrimePrior_mean_comparison {σ : Type*} [Fintype σ]
+    (P : Finset ℕ) (Q : σ → Finset ℕ) (hQP : ∀ i, Q i ⊆ P)
+    (hQ : ∀ i, (∑ p ∈ Q i, (p : ℝ)⁻¹) ≠ 0)
+    (F G : (σ → P) → ℂ) (ε : ℝ) (herr : ∀ x, ‖F x - G x‖ ≤ ε) :
+    ‖(∑ x : σ → P, ((∏ i, primeSubsetPrior P (Q i) (x i) : ℝ) : ℂ) * F x) -
+      ∑ x : σ → P, ((∏ i, primeSubsetPrior P (Q i) (x i) : ℝ) : ℂ) * G x‖ ≤ ε := by
+…</pre><p class="refs">Mentions: <a href="HarmonicWordPriors.lean.html#L11">OAI.Ostmann.primeSubsetPrior</a></p></li><li id=L82><b>theorem</b> <code>OAI.Ostmann.BulkIntegrand.originalPrimeCells_mean_comparison</code> <small>line 82</small><div class="doc"><p>The joint cell comparison can be integrated against the original product
+law without introducing another normalization or a count of prime samples.</p></div><pre>theorem BulkIntegrand.originalPrimeCells_mean_comparison {σ C : Type*}
+    [Fintype σ] [Fintype C] (f : BulkIntegrand σ) (P : Finset ℕ)
+    (q : σ → ℕ) (a : σ → C → ℕ) (u v : σ → C → ℝ)
+    (hSP : ∀ i, primeCellSupport (q i) (a i) (u i) (v i) ⊆ P)
+    (hsep : ∀ i c d, c ≠ d →
+      ¬Nat.ModEq (q i) (a i c) (a i d) ∨ v i c ≤ u i d ∨ v i d ≤ u i c)
+    (hS : ∀ i, (∑ p ∈ primeCellSupport (q i) (a i) (u i) (v i), (p : ℝ)⁻¹) ≠ 0)
+    (l : List σ) (ν : σ → Measure ℝ) [∀ i, IsFiniteMeasure (ν i)] (ε : ℝ)
+    (herr : ∀ x, ‖f.averages (fun i =&gt; bulkCellMixture
+        (∑ p ∈ primeCellSupport (q i) (a i) (u i) (v i), (p : ℝ)⁻¹)⁻¹
+        (fun c =&gt; primeLogCellMeasure (q i) (a i c) (u i c) (v i c))) l x -
+      f.averages ν l x‖ ≤ ε) :
+…</pre><p class="refs">Mentions: <a href="../Arithmetic/BulkIntegrands.lean.html#L16">OAI.Ostmann.BulkIntegrand</a>, <a href="PrimeCellPartitionConstruction.lean.html#L34">OAI.Ostmann.primeCellSupport</a>, <a href="../Arithmetic/BulkCellMixtures.lean.html#L11">OAI.Ostmann.bulkCellMixture</a>, <a href="PrimeLogCellMeasure.lean.html#L17">OAI.Ostmann.primeLogCellMeasure</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

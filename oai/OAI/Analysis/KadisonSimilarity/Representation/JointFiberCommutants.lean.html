@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Representation/JointFiberCommutants.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Representation/JointFiberCommutants.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Representation</a> / <span>JointFiberCommutants.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Representation</a>/<span>JointFiberCommutants.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Representation/JointFiberCommutants.lean#L1">source</a></p><div class="doc"><h3>Central elements of a joint fiber representation</h3><p>For commuting sources <code>B,C</code>, a central element of the represented
+bicommutant of <code>B</code> commutes with the full joint bicommutant. The proof uses
+norm generation of the joint source, with no normality assertion for a
+pointwise fiber representation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.KadisonSimilarity.joint_source_representation_mem</code> <small>line 24</small><div class="doc"><p>A representation of the joint norm closure lands in any closed star
+algebra containing the represented copies of both sources.</p></div><pre>theorem joint_source_representation_mem
+    (B C : StarSubalgebra ℂ A)
+    (σ : jointCStarSource B C →⋆ₐ[ℂ] (K →L[ℂ] K))
+    (N : StarSubalgebra ℂ (K →L[ℂ] K)) (hN : IsClosed (N : Set (K →L[ℂ] K)))
+    (hB : ∀ b : B, σ (StarSubalgebra.inclusion (le_jointCStarSource_left B C) b) ∈ N)
+    (hC : ∀ c : C, σ (StarSubalgebra.inclusion (le_jointCStarSource_right B C) c) ∈ N)
+    (s : jointCStarSource B C) : σ s ∈ N := by
+…</pre><p class="refs">Mentions: <a href="../Tracial/JointCStarSource.lean.html#L21">OAI.KadisonSimilarity.jointCStarSource</a>, <a href="../Tracial/JointCStarSource.lean.html#L28">OAI.KadisonSimilarity.le_jointCStarSource_left</a>, <a href="../Tracial/JointCStarSource.lean.html#L32">OAI.KadisonSimilarity.le_jointCStarSource_right</a></p></li><li id=L52><b>theorem</b> <code>OAI.KadisonSimilarity.joint_second_mem_first_commutant</code> <small>line 52</small><div class="doc"><p>The represented second source commutes with the bicommutant of the
+first source, since the two original sources commute.</p></div><pre>theorem joint_second_mem_first_commutant
+    (B C : StarSubalgebra ℂ A)
+    [IsClosed (B : Set A)] [IsClosed (C : Set A)]
+    (hBC : ∀ b : B, ∀ c : C, (b : A) * (c : A) = (c : A) * (b : A))
+    (σ : jointCStarSource B C →⋆ₐ[ℂ] (K →L[ℂ] K)) (c : C) :
+    σ (StarSubalgebra.inclusion (le_jointCStarSource_right B C) c) ∈
+      (representationVonNeumannAlgebra
+        (σ.comp (StarSubalgebra.inclusion (le_jointCStarSource_left B C)))).commutant := by
+…</pre><p class="refs">Mentions: <a href="../Tracial/JointCStarSource.lean.html#L21">OAI.KadisonSimilarity.jointCStarSource</a>, <a href="../Tracial/JointCStarSource.lean.html#L32">OAI.KadisonSimilarity.le_jointCStarSource_right</a>, <a href="../Derivation/CyclicApproximation.lean.html#L36">OAI.KadisonSimilarity.representationVonNeumannAlgebra</a>, <a href="../Tracial/JointCStarSource.lean.html#L28">OAI.KadisonSimilarity.le_jointCStarSource_left</a></p></li><li id=L73><b>theorem</b> <code>OAI.KadisonSimilarity.joint_center_mem_joint_commutant</code> <small>line 73</small><div class="doc"><p>Centrality in the first represented bicommutant gives commutation with
+the entire joint representation.</p></div><pre>theorem joint_center_mem_joint_commutant
+    (B C : StarSubalgebra ℂ A)
+    [IsClosed (B : Set A)] [IsClosed (C : Set A)]
+    (hBC : ∀ b : B, ∀ c : C, (b : A) * (c : A) = (c : A) * (b : A))
+    (σ : jointCStarSource B C →⋆ₐ[ℂ] (K →L[ℂ] K)) (T : K →L[ℂ] K)
+    (hT : T ∈ vonNeumannCenter (representationVonNeumannAlgebra
+      (σ.comp (StarSubalgebra.inclusion (le_jointCStarSource_left B C))))) :
+    T ∈ (representationVonNeumannAlgebra σ).commutant := by
+…</pre><p class="refs">Mentions: <a href="../Tracial/JointCStarSource.lean.html#L21">OAI.KadisonSimilarity.jointCStarSource</a>, <a href="CentralSymmetrization.lean.html#L27">OAI.KadisonSimilarity.vonNeumannCenter</a>, <a href="../Derivation/CyclicApproximation.lean.html#L36">OAI.KadisonSimilarity.representationVonNeumannAlgebra</a>, <a href="../Tracial/JointCStarSource.lean.html#L28">OAI.KadisonSimilarity.le_jointCStarSource_left</a></p></li><li id=L116><b>theorem</b> <code>OAI.KadisonSimilarity.joint_center_commutes_joint_bicommutant</code> <small>line 116</small><div class="doc"><p>In particular a central first-source operator commutes with every
+operator in the represented joint bicommutant, including rank-one tests.</p></div><pre>theorem joint_center_commutes_joint_bicommutant
+    (B C : StarSubalgebra ℂ A)
+    [IsClosed (B : Set A)] [IsClosed (C : Set A)]
+    (hBC : ∀ b : B, ∀ c : C, (b : A) * (c : A) = (c : A) * (b : A))
+    (σ : jointCStarSource B C →⋆ₐ[ℂ] (K →L[ℂ] K)) (T Q : K →L[ℂ] K)
+    (hT : T ∈ vonNeumannCenter (representationVonNeumannAlgebra
+      (σ.comp (StarSubalgebra.inclusion (le_jointCStarSource_left B C)))))
+    (hQ : Q ∈ representationVonNeumannAlgebra σ) : T * Q = Q * T :=
+…</pre><p class="refs">Mentions: <a href="../Tracial/JointCStarSource.lean.html#L21">OAI.KadisonSimilarity.jointCStarSource</a>, <a href="CentralSymmetrization.lean.html#L27">OAI.KadisonSimilarity.vonNeumannCenter</a>, <a href="../Derivation/CyclicApproximation.lean.html#L36">OAI.KadisonSimilarity.representationVonNeumannAlgebra</a>, <a href="../Tracial/JointCStarSource.lean.html#L28">OAI.KadisonSimilarity.le_jointCStarSource_left</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

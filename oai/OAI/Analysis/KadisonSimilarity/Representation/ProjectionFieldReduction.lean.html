@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Representation/ProjectionFieldReduction.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Representation/ProjectionFieldReduction.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Representation</a> / <span>ProjectionFieldReduction.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Representation</a>/<span>ProjectionFieldReduction.lean</span></code></h1><p class="muted">23 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Representation/ProjectionFieldReduction.lean#L1">source</a></p><div class="doc"><h3>Reducing operator fields to their projection fibers</h3><p>Each orthogonal projection has an actual closed Hilbert range. Compression
+of a supported operator to this range preserves its norm and action. These
+constructions are pointwise, so they apply to every fixed operator field;
+no simultaneous representation law on an uncountable algebra is required.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.KadisonSimilarity.projectionFiber</code> <small>line 21</small><div class="doc"><p>The actual closed range of an orthogonal projection.</p></div><pre>def projectionFiber (p : H →L[ℂ] H) (hp : IsStarProjection p) : ClosedSubmodule ℂ H :=
+…</pre></li><li id=L24><b>def</b> <code>OAI.KadisonSimilarity.projectionFiberInclusion</code> <small>line 24</small></li><li id=L27><b>def</b> <code>OAI.KadisonSimilarity.projectionFiberRetraction</code> <small>line 27</small></li><li id=L30><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberRetraction_coe</code> <small>line 30</small></li><li id=L33><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiber_fixed</code> <small>line 33</small></li><li id=L40><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberRetraction_inclusion</code> <small>line 40</small></li><li id=L48><b>theorem</b> <code>OAI.KadisonSimilarity.norm_projectionFiberRetraction_le</code> <small>line 48</small></li><li id=L57><b>def</b> <code>OAI.KadisonSimilarity.projectionFiberCompression</code> <small>line 57</small><div class="doc"><p>Compression is defined on every operator, even before support is proved.</p></div><pre>def projectionFiberCompression (p : H →L[ℂ] H) (hp : IsStarProjection p) (T : H →L[ℂ] H) :
+    projectionFiber p hp →L[ℂ] projectionFiber p hp :=
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L21">OAI.KadisonSimilarity.projectionFiber</a></p></li><li id=L61><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberCompression_coe</code> <small>line 61</small></li><li id=L66><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberCompression_apply_of_left_support</code> <small>line 66</small><div class="doc"><p>A left-supported operator retains its actual action on the range.</p></div><pre>theorem projectionFiberCompression_apply_of_left_support
+    (p : H →L[ℂ] H) (hp : IsStarProjection p) (T : H →L[ℂ] H) (hT : p * T = T)
+    (x : projectionFiber p hp) : (projectionFiberCompression p hp T x : H) = T x :=
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L21">OAI.KadisonSimilarity.projectionFiber</a>, <a href="ProjectionFieldReduction.lean.html#L57">OAI.KadisonSimilarity.projectionFiberCompression</a></p></li><li id=L72><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberCompression_extension</code> <small>line 72</small><div class="doc"><p>Extending the compressed supported operator by zero recovers it.</p></div><pre>theorem projectionFiberCompression_extension
+    (p : H →L[ℂ] H) (hp : IsStarProjection p) (T : H →L[ℂ] H)
+    (hleft : p * T = T) (hright : T * p = T) :
+    (projectionFiberInclusion p hp).toContinuousLinearMap.comp
+      ((projectionFiberCompression p hp T).comp (projectionFiberRetraction p hp)) = T := by
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L24">OAI.KadisonSimilarity.projectionFiberInclusion</a>, <a href="ProjectionFieldReduction.lean.html#L57">OAI.KadisonSimilarity.projectionFiberCompression</a>, <a href="ProjectionFieldReduction.lean.html#L27">OAI.KadisonSimilarity.projectionFiberRetraction</a></p></li><li id=L85><b>theorem</b> <code>OAI.KadisonSimilarity.norm_projectionFiberCompression</code> <small>line 85</small><div class="doc"><p>No norm is lost by restricting a supported operator to the projection range.</p></div><pre>theorem norm_projectionFiberCompression
+    (p : H →L[ℂ] H) (hp : IsStarProjection p) (T : H →L[ℂ] H)
+    (hleft : p * T = T) (hright : T * p = T) :
+    ‖projectionFiberCompression p hp T‖ = ‖T‖ := by
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L57">OAI.KadisonSimilarity.projectionFiberCompression</a></p></li><li id=L99><b>theorem</b> <code>OAI.KadisonSimilarity.norm_matrix_projectionFiberCompression</code> <small>line 99</small><div class="doc"><p>The same supported restriction preserves every finite operator-matrix
+norm; the coordinate inclusions and retractions remain contractive.</p></div><pre>theorem norm_matrix_projectionFiberCompression
+    (p : H →L[ℂ] H) (hp : IsStarProjection p) {n : ℕ}
+    (X : Matrix (Fin n) (Fin n) (H →L[ℂ] H))
+    (hleft : ∀ i j, p * X i j = X i j) (hright : ∀ i j, X i j * p = X i j) :
+    ‖matrixOperator (fun i j =&gt; projectionFiberCompression p hp (X i j))‖ =
+      ‖matrixOperator X‖ := by
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KadisonSimilarity.lean.html#L44">OAI.KadisonSimilarity.matrixOperator</a>, <a href="ProjectionFieldReduction.lean.html#L57">OAI.KadisonSimilarity.projectionFiberCompression</a></p></li><li id=L139><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiber_invariant</code> <small>line 139</small></li><li id=L147><b>def</b> <code>OAI.KadisonSimilarity.projectionFiberAction</code> <small>line 147</small><div class="doc"><p>A commuting operator acts on the closed range by ordinary restriction.</p></div><pre>def projectionFiberAction (p : H →L[ℂ] H) (hp : IsStarProjection p)
+    (T : H →L[ℂ] H) (hcomm : Commute p T) :
+    projectionFiber p hp →L[ℂ] projectionFiber p hp :=
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L21">OAI.KadisonSimilarity.projectionFiber</a></p></li><li id=L152><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberAction_coe</code> <small>line 152</small></li><li id=L156><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberAction_eq_compression</code> <small>line 156</small></li><li id=L168><b>def</b> <code>OAI.KadisonSimilarity.projectionFiberRepresentation</code> <small>line 168</small><div class="doc"><p>A genuine representation commuting with a projection restricts to a
+genuine unital representation on its actual Hilbert range.</p></div><pre>def projectionFiberRepresentation (σ : A →⋆ₐ[ℂ] (H →L[ℂ] H))
+    (p : H →L[ℂ] H) (hp : IsStarProjection p) (hcomm : ∀ a, Commute p (σ a)) :
+    A →⋆ₐ[ℂ] (projectionFiber p hp →L[ℂ] projectionFiber p hp) where
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L21">OAI.KadisonSimilarity.projectionFiber</a></p></li><li id=L190><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberRepresentation_coe</code> <small>line 190</small></li><li id=L205><b>theorem</b> <code>OAI.KadisonSimilarity.ae_field_left_support</code> <small>line 205</small><div class="doc"><p>An actual left-support identity gives the corresponding field identity
+almost everywhere.</p></div><pre>theorem ae_field_left_support
+    (P T : Lp H 2 μ →L[ℂ] Lp H 2 μ) (p R : Ω → H →L[ℂ] H)
+    (hP : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, P f a = p a (f a))
+    (hR : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, T f a = R a (f a))
+    (hPT : P * T = T) : ∀ᵐ a ∂μ, p a * R a = R a := by
+…</pre></li><li id=L215><b>theorem</b> <code>OAI.KadisonSimilarity.ae_field_right_support</code> <small>line 215</small><div class="doc"><p>Right support is also inherited from the actual L² operator equation.</p></div><pre>theorem ae_field_right_support
+    (P T : Lp H 2 μ →L[ℂ] Lp H 2 μ) (p R : Ω → H →L[ℂ] H)
+    (hP : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, P f a = p a (f a))
+    (hR : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, T f a = R a (f a))
+    (hTP : T * P = T) : ∀ᵐ a ∂μ, R a * p a = R a := by
+…</pre></li><li id=L225><b>theorem</b> <code>OAI.KadisonSimilarity.ae_norm_projectionFiberCompression</code> <small>line 225</small><div class="doc"><p>Restricting supported fields to their projection fibers loses no
+pointwise norm, with support derived from the original operators.</p></div><pre>theorem ae_norm_projectionFiberCompression
+    (P T : Lp H 2 μ →L[ℂ] Lp H 2 μ) (p R : Ω → H →L[ℂ] H)
+    (hp : ∀ a, IsStarProjection (p a))
+    (hP : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, P f a = p a (f a))
+    (hR : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, T f a = R a (f a))
+    (hPT : P * T = T) (hTP : T * P = T) :
+    ∀ᵐ a ∂μ, ‖projectionFiberCompression (p a) (hp a) (R a)‖ = ‖R a‖ := by
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L57">OAI.KadisonSimilarity.projectionFiberCompression</a></p></li><li id=L238><b>theorem</b> <code>OAI.KadisonSimilarity.projectionFiberCompression_section_action</code> <small>line 238</small><div class="doc"><p>The restricted field has the same action on every section taking
+values in the projection fibers.</p></div><pre>theorem projectionFiberCompression_section_action
+    (P T : Lp H 2 μ →L[ℂ] Lp H 2 μ) (p R : Ω → H →L[ℂ] H)
+    (hp : ∀ a, IsStarProjection (p a))
+    (hP : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, P f a = p a (f a))
+    (hR : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, T f a = R a (f a))
+    (hPT : P * T = T) (f : Lp H 2 μ)
+    (v : ∀ a, projectionFiber (p a) (hp a))
+    (hv : ∀ᵐ a ∂μ, (v a : H) = f a) :
+    ∀ᵐ a ∂μ, (projectionFiberCompression (p a) (hp a) (R a) (v a) : H) = T f a := by
+…</pre><p class="refs">Mentions: <a href="ProjectionFieldReduction.lean.html#L21">OAI.KadisonSimilarity.projectionFiber</a>, <a href="ProjectionFieldReduction.lean.html#L57">OAI.KadisonSimilarity.projectionFiberCompression</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,1 @@
+window.l4shard("rn", [["NavierStokes.NavierStokesExistenceAndSmoothnessRn",1158,246],["VCDimConvex.exists_convex_rn_add_two_vc_n_forall_not_hasAddVCNDimAtMost",1521,54],["VCDimConvex.exists_exponential_bound_hasAddVCNDimAtMost_n_of_convex_rn_add_one",1521,91],["VCDimConvex.hasAddVCNDimAtMost_n_two_of_convex_rn_add_one",1521,98]]);

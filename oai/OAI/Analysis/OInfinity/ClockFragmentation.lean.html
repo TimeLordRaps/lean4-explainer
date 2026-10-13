@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/ClockFragmentation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/ClockFragmentation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>ClockFragmentation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>ClockFragmentation.lean</span></code></h1><p class="muted">22 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/ClockFragmentation.lean#L1">source</a></p><div class="doc"><h3>Controlled fragmentation on a joint cyclic partition</h3><p>The clock-corrected quarter paths have a uniform sampled modulus, with an
+arbitrarily small additive error. The finite fragmentation operations below
+retain that modulus and the actual cell commutators. No continuity estimate
+for an arbitrary choice of a polar decomposition is used.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>structure</b> <code>OAI.WeakPureInfiniteness.ClockPathControl</code> <small>line 22</small><div class="doc"><p>The two estimates needed when a finite path is sampled on the cyclic tower.</p></div><pre>structure ClockPathControl {u v : unitary E} (p : Path u v) (e : I → E)
+    (L ρ C : ℝ) : Prop where
+…</pre></li><li id=L27><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.mono</code> <small>line 27</small></li><li id=L34><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.cast</code> <small>line 34</small></li><li id=L45><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.symm</code> <small>line 45</small></li><li id=L54><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_product_commutator</code> <small>line 54</small><p class="refs">Distinct definitions of this name: <a href="ClockGram.lean.html#L228">OAI/Analysis/OInfinity/ClockGram.lean:228</a> (different statement). Qualify references as OAI.WeakPureInfiniteness.clock_product_commutator@path.</p></li><li id=L67><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.mul</code> <small>line 67</small></li><li id=L87><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockPathControl_refl</code> <small>line 87</small></li><li id=L94><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.trans</code> <small>line 94</small><div class="doc"><p>Concatenation doubles the mesh speed and adds at most two additive errors.</p></div><pre>lemma ClockPathControl.trans {u v w : unitary E} {p : Path u v} {q : Path v w}
+    {e : I → E} {L ρ C : ℝ} (hρ : 0 ≤ ρ)
+    (hp : ClockPathControl p e L ρ C) (hq : ClockPathControl q e L ρ C) :
+    ClockPathControl (p.trans q) e (2 * L) (2 * ρ) C where
+…</pre><p class="refs">Mentions: <a href="ClockFragmentation.lean.html#L22">OAI.WeakPureInfiniteness.ClockPathControl</a></p></li><li id=L144><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_fragment_isometry_norm</code> <small>line 144</small></li><li id=L149><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_corner_commutator</code> <small>line 149</small></li><li id=L177><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.corner</code> <small>line 177</small></li><li id=L190><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_joint_clocked_quarter_control</code> <small>line 190</small><div class="doc"><p>The actual corrected angular paths, expressed on the unit interval
+with the two estimates used by fragmentation.</p></div><pre>lemma exists_joint_clocked_quarter_control [Nontrivial E] (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (m n : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ e : ZMod (2 ^ m) → E,
+      (∀ j, IsStarProjection (e j)) ∧ (∑ j, e j) = 1 ∧
+      (∀ j l, j ≠ l → e j * e l = 0) ∧
+      (∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ &lt; ε) ∧
+      (∀ j, ‖finiteRowShift t (e j) - e (j + 1)‖ &lt; ε) ∧
+      ∀ i r l : Fin 2, i ≠ l → ∃ p : Path
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a></p></li><li id=L234><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_fragment_product_transport</code> <small>line 234</small></li><li id=L256><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_clocked_binaryQuarter</code> <small>line 256</small><div class="doc"><p>The finite quarter-fragmentation step preserves cell commutators and
+an additive sampled modulus. Its cancellation paths are kept literal.</p></div><pre>lemma exists_clocked_binaryQuarter {N : ℕ} (e : ZMod N → E)
+    (he : ∀ j, star (e j) = e j) (a b A B : E)
+    (ha : star a * a = 1) (hb : star b * b = 1)
+    (hA : star A * A = 1) (hB : star B * B = 1)
+    (u : unitary E) (L K ρ C δ : ℝ)
+    (hL : 0 ≤ L) (hK : 0 ≤ K) (hρ : 0 ≤ ρ) (hC : 0 ≤ C) (hδ : 0 ≤ δ)
+    (hu : ∀ j, ‖(u : E) * e j - e j * (u : E)‖ ≤ C)
+    (haT : ∀ j, ‖a * e j - e (j + 1) * a‖ ≤ δ)
+    (hAT : ∀ j, ‖A * e j - e (j + 1) * A‖ ≤ δ)
+    (hBT : ∀ j, ‖B * e j - e (j + 1) * B‖ ≤ δ)
+    (p : Path u (binaryCornerUnitary a ha u * binaryCornerUnitary b hb u))
+    (hp : ClockPathControl p e L ρ C)
+…</pre><p class="refs">Mentions: <a href="BinaryFragmentation.lean.html#L19">OAI.WeakPureInfiniteness.binaryCornerUnitary</a>, <a href="ClockFragmentation.lean.html#L22">OAI.WeakPureInfiniteness.ClockPathControl</a></p></li><li id=L322><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_clocked_binaryFragmentation</code> <small>line 322</small><div class="doc"><p>The complete finite binary fragmentation, with its actual supplied
+quarter paths and quantitative tower control.</p></div><pre>lemma exists_clocked_binaryFragmentation {N : ℕ} (s : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, star (e j) = e j)
+    (u : unitary E) (L K ρ C δ : ℝ)
+    (hL : 0 ≤ L) (hK : 0 ≤ K) (hρ : 0 ≤ ρ) (hC : 0 ≤ C) (hδ : 0 ≤ δ)
+    (hu : ∀ j, ‖(u : E) * e j - e j * (u : E)‖ ≤ C)
+    (hT : ∀ i j, ‖s i * e j - e (j + 1) * s i‖ ≤ δ)
+    (p : Path u (binaryCornerUnitary (s 0) (by simpa using hs 0 0) u *
+      binaryCornerUnitary (s 1) (by simpa using hs 1 1) u))
+    (hp : ClockPathControl p e L ρ C)
+    (hc₁ : ∀ i j : Fin 2, i ≠ j → ∃ c : Path
+      (binaryCornerUnitary (s i) (by simpa using hs i i) u *
+…</pre><p class="refs">Mentions: <a href="BinaryFragmentation.lean.html#L19">OAI.WeakPureInfiniteness.binaryCornerUnitary</a>, <a href="ClockFragmentation.lean.html#L22">OAI.WeakPureInfiniteness.ClockPathControl</a></p></li><li id=L415><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_balanced_clockCancellation</code> <small>line 415</small><div class="doc"><p>Equal-degree cancellation needs no clock correction: its literal
+quarter rotation already almost commutes with the partition.</p></div><pre>lemma exists_balanced_clockCancellation {N : ℕ} (e : ZMod N → E)
+    (he : ∀ j, star (e j) = e j) (a b : E) (u : unitary E)
+    (ha : star a * a = 1) (hb : star b * b = 1) (hab : star a * b = 0)
+    (d : ZMod N) (C δ : ℝ) (hC : 0 ≤ C) (hδ : 0 ≤ δ)
+    (haT : ∀ j, ‖a * e j - e (j + d) * a‖ ≤ δ)
+    (hbT : ∀ j, ‖b * e j - e (j + d) * b‖ ≤ δ)
+    (hu : ∀ j, ‖(u : E) * e j - e j * (u : E)‖ ≤ C) :
+    ∃ p : Path (binaryCornerUnitary a ha u * binaryCornerUnitary b hb (star u)) 1,
+      ClockPathControl p e (2 * Real.pi) 0 (20 * (C + δ)) := by
+…</pre><p class="refs">Mentions: <a href="BinaryFragmentation.lean.html#L19">OAI.WeakPureInfiniteness.binaryCornerUnitary</a>, <a href="ClockFragmentation.lean.html#L22">OAI.WeakPureInfiniteness.ClockPathControl</a></p></li><li id=L461><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_jointWord_norm</code> <small>line 461</small></li><li id=L475><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_jointWord_transport</code> <small>line 475</small></li><li id=L518><b>lemma</b> <code>OAI.WeakPureInfiniteness.finiteJointPermutation_commutator_le</code> <small>line 518</small><div class="doc"><p>Balanced finite matrix words commute approximately with the actual
+joint partition. This applies to each reflection in the cycle factorization.</p></div><pre>lemma finiteJointPermutation_commutator_le {N : ℕ} (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, star (e j) = e j) (η : ℝ) (hη : 0 ≤ η)
+    (hS : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η)
+    (hT : ∀ j, ‖finiteRowShift t (e j) - e (j + 1)‖ ≤ η)
+    (n : ℕ) (σ : Equiv.Perm (Fin (n + 1) → Fin 2)) (j : ZMod N) :
+    ‖finiteRowPermutation (finiteJointWord s t n) σ * e j -
+      e j * finiteRowPermutation (finiteJointWord s t n) σ‖ ≤
+      (Fintype.card (Fin (n + 1) → Fin 2) : ℝ) * (5 * (((n : ℝ) + 1) * η)) := by
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="FinitePermutation.lean.html#L20">OAI.WeakPureInfiniteness.finiteRowPermutation</a>, <a href="JointWordCycle.lean.html#L20">OAI.WeakPureInfiniteness.finiteJointWord</a></p></li><li id=L549><b>lemma</b> <code>OAI.WeakPureInfiniteness.ClockPathControl.map_star</code> <small>line 549</small></li><li id=L562><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_jointCycle_affine_control</code> <small>line 562</small><div class="doc"><p>The literal two-reflection path for the splitting defect retains the
+finite joint-word commutator bound.</p></div><pre>lemma exists_jointCycle_affine_control {N : ℕ} (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (e : ZMod N → E)
+    (he : ∀ j, star (e j) = e j) (η : ℝ) (hη : 0 ≤ η)
+    (hS : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η)
+    (hT : ∀ j, ‖finiteRowShift t (e j) - e (j + 1)‖ ≤ η) (n : ℕ) :
+    ∃ (c : unitary E), (c : E) = finiteJointCycleCoboundary t s n ∧
+      ∃ p : Path (1 : unitary E) c, ClockPathControl p e (2 * Real.pi) 0
+        (2 * (Fintype.card (Fin (n + 1) → Fin 2) : ℝ) * (5 * (((n : ℝ) + 1) * η))) := by
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="JointCycleIdentity.lean.html#L176">OAI.WeakPureInfiniteness.finiteJointCycleCoboundary</a>, <a href="ClockFragmentation.lean.html#L22">OAI.WeakPureInfiniteness.ClockPathControl</a></p></li><li id=L634><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_joint_clocked_cocycle_path</code> <small>line 634</small><div class="doc"><p>Actual cocycle contractions on an actual joint partition. The speed is
+uniform in the cocycle length; both additive sampling error and cell
+commutators can be made arbitrarily small. The source rows here are full
+coisometric binary rows.</p></div><pre>lemma exists_joint_clocked_cocycle_path [Nontrivial E] (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (m n : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ e : ZMod (2 ^ m) → E,
+      (∀ j, IsStarProjection (e j)) ∧ (∑ j, e j) = 1 ∧
+      (∀ j l, j ≠ l → e j * e l = 0) ∧
+      (∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ &lt; ε) ∧
+      (∀ j, ‖finiteRowShift t (e j) - e (j + 1)‖ &lt; ε) ∧
+      ∃ p : Path (binaryRowCocycleUnitary s t hs ht hsum htsum n) 1,
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="RowCocycleDefect.lean.html#L144">OAI.WeakPureInfiniteness.binaryRowCocycleUnitary</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/JointDickman/Arithmetic/SieveRectangleCRT.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/JointDickman/Arithmetic/SieveRectangleCRT.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">JointDickman</a> / <a href="index.html">Arithmetic</a> / <span>SieveRectangleCRT.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">JointDickman</a>/<a href="index.html">Arithmetic</a>/<span>SieveRectangleCRT.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/JointDickman/Arithmetic/SieveRectangleCRT.lean#L1">source</a></p><div class="doc"><h3>Chinese remainder counts in two variables</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.JointDickman.crt_rectangle_period_sum</code> <small>line 13</small><div class="doc"><p>Complete residue squares factor by two applications of the CRT.</p></div><pre>theorem crt_rectangle_period_sum {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (m : ι → ℕ) [∀ i, NeZero (m i)] (hm : ∀ i, 0 &lt; m i)
+    (hcop : Pairwise (fun i j =&gt; (m i).Coprime (m j)))
+    (F : ∀ i, ZMod (m i) → ZMod (m i) → ℝ) :
+    (∑ r ∈ range (∏ i, m i), ∑ s ∈ range (∏ i, m i),
+      ∏ i, F i (r : ZMod (m i)) (s : ZMod (m i))) =
+      ∏ i, ∑ r : ZMod (m i), ∑ s : ZMod (m i), F i r s := by
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.JointDickman.crt_pair_period_count</code> <small>line 29</small><div class="doc"><p>A family of prescribed residue-pair sets has exactly the product of
+its local cardinalities in a complete square.</p></div><pre>theorem crt_pair_period_count {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (m : ι → ℕ) (hm : ∀ i, 0 &lt; m i)
+    (hcop : Pairwise (fun i j =&gt; (m i).Coprime (m j)))
+    (A : ∀ i, Finset (ZMod (m i) × ZMod (m i))) :
+    (∑ r ∈ range (∏ i, m i), ∑ s ∈ range (∏ i, m i),
+      if ∀ i, ((r : ZMod (m i)), (s : ZMod (m i))) ∈ A i then (1 : ℝ) else 0) =
+      ∏ i, ((A i).card : ℝ) := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.JointDickman.crt_pair_rectangle_error</code> <small>line 56</small><div class="doc"><p>The two-dimensional CRT remainder retains the exact number of
+prescribed residue pairs.</p></div><pre>theorem crt_pair_rectangle_error {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (m : ι → ℕ) (hm : ∀ i, 0 &lt; m i)
+    (hcop : Pairwise (fun i j =&gt; (m i).Coprime (m j)))
+    (A : ∀ i, Finset (ZMod (m i) × ZMod (m i)))
+    {a b c d : ℕ} (hab : a ≤ b) (hcd : c ≤ d) :
+    |(∑ r ∈ Ico a b, ∑ s ∈ Ico c d,
+        if ∀ i, ((r : ZMod (m i)), (s : ZMod (m i))) ∈ A i then (1 : ℝ) else 0) -
+      (((b : ℝ) - a) * ((d : ℝ) - c) / (∏ i, (m i : ℝ)) ^ 2) *
+        ∏ i, ((A i).card : ℝ)| ≤
+      2 * ((((b : ℝ) - a) + ((d : ℝ) - c)) / (∏ i, (m i : ℝ)) + 2) *
+        ∏ i, ((A i).card : ℝ) := by
+…</pre></li><li id=L88><b>theorem</b> <code>OAI.JointDickman.prime_pair_rectangle_error</code> <small>line 88</small><div class="doc"><p>Prime-set specialization with the local densities already factored.</p></div><pre>theorem prime_pair_rectangle_error (P : Finset ℕ) (hP : ∀ p ∈ P, p.Prime)
+    (A : ∀ p : ℕ, Finset (ZMod p × ZMod p))
+    {a b c d : ℕ} (hab : a ≤ b) (hcd : c ≤ d) :
+    |(∑ r ∈ Ico a b, ∑ s ∈ Ico c d,
+        if ∀ p ∈ P, ((r : ZMod p), (s : ZMod p)) ∈ A p then (1 : ℝ) else 0) -
+      ((b : ℝ) - a) * ((d : ℝ) - c) *
+        ∏ p ∈ P, ((A p).card : ℝ) / (p : ℝ) ^ 2| ≤
+      2 * ((((b : ℝ) - a) + ((d : ℝ) - c)) / (∏ p ∈ P, (p : ℝ)) + 2) *
+        ∏ p ∈ P, ((A p).card : ℝ) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

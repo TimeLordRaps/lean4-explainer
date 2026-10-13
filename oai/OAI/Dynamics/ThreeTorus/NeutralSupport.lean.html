@@ -1,0 +1,86 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/ThreeTorus/NeutralSupport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/ThreeTorus/NeutralSupport.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">ThreeTorus</a> / <span>NeutralSupport.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">ThreeTorus</a>/<span>NeutralSupport.lean</span></code></h1><p class="muted">27 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/ThreeTorus/NeutralSupport.lean#L1">source</a></p><div class="doc"><p>Neutral lattice sampling, retained support, and stationary image separation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>lemma</b> <code>OAI.ThreeTorus.cell_sample_error</code> <small>line 14</small></li><li id=L42><b>lemma</b> <code>OAI.ThreeTorus.lattice_sample_error</code> <small>line 42</small><div class="doc"><p>Arbitrary-offset unit lattice estimate, before scaling to the neutral refresh mesh.</p></div><pre>lemma lattice_sample_error {f : ℝ → ℝ} (hf : ContDiff ℝ 1 f)
+    (hi : Integrable f) (hdi : Integrable (fun x =&gt; |deriv f x|)) (a : ℝ) :
+    Summable (fun j : ℤ =&gt; f (a+j)) ∧
+      |(∑&#x27; j : ℤ, f (a+j)) - ∫ x, f x| ≤ ∫ x, |deriv f x| := by
+…</pre></li><li id=L65><b>lemma</b> <code>OAI.ThreeTorus.mesh_sample_error</code> <small>line 65</small><div class="doc"><p>The mesh version of the arbitrary-offset Riemann estimate in neutral refresh.</p></div><pre>lemma mesh_sample_error {f : ℝ → ℝ} (hf : ContDiff ℝ 1 f)
+    (hi : Integrable f) (hdi : Integrable (fun x =&gt; |deriv f x|))
+    {h : ℝ} (hh : 0 &lt; h) (a : ℝ) :
+    Summable (fun j : ℤ =&gt; f (a+h*j)) ∧
+      |h*(∑&#x27; j : ℤ, f (a+h*j)) - ∫ x, f x| ≤ h*∫ x, |deriv f x| := by
+…</pre></li><li id=L102><b>lemma</b> <code>OAI.ThreeTorus.neutral_residue_riemann_error</code> <small>line 102</small><div class="doc"><p>Exact normalization for a residue class of the neutral refresh lattice.</p></div><pre>lemma neutral_residue_riemann_error {f : ℝ → ℝ} (hf : ContDiff ℝ 1 f)
+    (hi : Integrable f) (hdi : Integrable (fun x =&gt; |deriv f x|))
+    {P s L : ℝ} (hP : 0 &lt; P) (hs : 0 &lt; s) (hL : 0 &lt; L) (a : ℝ) :
+    |(s*L)⁻¹*(∑&#x27; j : ℤ, f (a+P/(s*L)*j)) - P⁻¹*(∫ x, f x)|
+      ≤ (s*L)⁻¹*(∫ x, |deriv f x|) := by
+…</pre></li><li id=L127><b>lemma</b> <code>OAI.ThreeTorus.signed_mesh_sample_error</code> <small>line 127</small><div class="doc"><p>Mesh reversal uses the actual integer negation bijection; negative old
+angular indices have the same arbitrary-offset Riemann estimate.</p></div><pre>lemma signed_mesh_sample_error {f : ℝ → ℝ} (hf : ContDiff ℝ 1 f)
+    (hi : Integrable f) (hdi : Integrable (fun x =&gt; |deriv f x|))
+    {h : ℝ} (hh : h ≠ 0) (a : ℝ) :
+    Summable (fun j : ℤ =&gt; f (a+h*j)) ∧
+      |(|h| *(∑&#x27; j : ℤ, f (a+h*j))) - ∫ x, f x| ≤ |h| *∫ x, |deriv f x| := by
+…</pre></li><li id=L147><b>lemma</b> <code>OAI.ThreeTorus.signed_neutral_residue_error</code> <small>line 147</small><div class="doc"><p>Exact signed normalization, with arbitrary offset and arbitrary positive
+integer residue spacing. This is source (neutral-riemann-error).</p></div><pre>lemma signed_neutral_residue_error {f : ℝ → ℝ} (hf : ContDiff ℝ 1 f)
+    (hi : Integrable f) (hdi : Integrable (fun x =&gt; |deriv f x|))
+    {P s L : ℝ} (hP : 0 &lt; P) (hs : s ≠ 0) (hL : 0 &lt; L) (y β : ℝ) :
+    Summable (fun j : ℤ =&gt; (|s| *L)⁻¹*f (((y+j*P)/s-β)/L)) ∧
+      |(∑&#x27; j : ℤ, (|s| *L)⁻¹*f (((y+j*P)/s-β)/L))-
+          P⁻¹*(∫ a, f a)| ≤ (|s| *L)⁻¹*(∫ a, |deriv f a|) := by
+…</pre></li><li id=L171><b>lemma</b> <code>OAI.ThreeTorus.fine_affine_neutral_error</code> <small>line 171</small></li><li id=L200><b>lemma</b> <code>OAI.ThreeTorus.compact_slice_tsupport</code> <small>line 200</small></li><li id=L208><b>lemma</b> <code>OAI.ThreeTorus.compact_slice_support</code> <small>line 208</small></li><li id=L213><b>lemma</b> <code>OAI.ThreeTorus.compact_slice_derivative_bound</code> <small>line 213</small></li><li id=L245><b>lemma</b> <code>OAI.ThreeTorus.compact_slice_integral_continuous</code> <small>line 245</small></li><li id=L254><b>lemma</b> <code>OAI.ThreeTorus.fine_affine_neutral_uniform</code> <small>line 254</small></li><li id=L287><b>lemma</b> <code>OAI.ThreeTorus.fine_affine_neutral_l1_error</code> <small>line 287</small></li><li id=L325><b>lemma</b> <code>OAI.ThreeTorus.compact_rect_bounds</code> <small>line 325</small></li><li id=L346><b>lemma</b> <code>OAI.ThreeTorus.neutral_fine_l1_bound</code> <small>line 346</small><div class="doc"><p>Uniform residue equalization for actual compact smooth stationary weight.
+One slope is chosen before the passage integer, with all lattice phases,
+all residues, and both signs controlled.</p></div><pre>lemma neutral_fine_l1_bound {F : ℝ × ℝ → ℝ}
+    (hF : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) F) (hcF : HasCompactSupport F)
+    {ε : ℝ} (hε : 0 &lt; ε) (hz : ∀ s a, |s| &lt; ε → F (s,a) = 0) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ {P n : ℕ}, 0 &lt; P → 0 &lt; n → ∀ h : ℤ, ∀ L : ℝ, 0 &lt; L → ∀ β : ℝ,
+      (∫ s, |fineResidueKernel (affineKernel F L β) P h n s-
+        (P:ℝ)⁻¹*(∫ a, F (s,a))|) ≤ C/L := by
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L886">OAI.ThreeTorus.fineResidueKernel</a>, <a href="PassageDensity.lean.html#L579">OAI.ThreeTorus.affineKernel</a></p></li><li id=L365><b>lemma</b> <code>OAI.ThreeTorus.deriv_affine_on</code> <small>line 365</small></li><li id=L375><b>lemma</b> <code>OAI.ThreeTorus.branchKernel_affine_on</code> <small>line 375</small><div class="doc"><p>The branch is the actual inverse of the affine jitter on the good arc.
+Off that image both sides vanish because the old stationary weight is cut off.</p></div><pre>lemma branchKernel_affine_on {I : Set ℝ} {J : ℝ → ℝ} {F : ℝ × ℝ → ℝ} {L β : ℝ}
+    (hIo : IsOpen I) (hL : 0 &lt; L) (he : ∀ a ∈ I, J a = L*a+β)
+    (hs : tsupport F ⊆ I ×ˢ univ) (y s : ℝ) :
+    branchKernel I J F (y,s) = L⁻¹*F ((y-β)/L,s) := by
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L488">OAI.ThreeTorus.branchKernel</a></p></li><li id=L403><b>lemma</b> <code>OAI.ThreeTorus.passageBranchKernel_affine_on</code> <small>line 403</small></li><li id=L412><b>lemma</b> <code>OAI.ThreeTorus.compact_slice_integral_regular</code> <small>line 412</small></li><li id=L423><b>lemma</b> <code>OAI.ThreeTorus.affine_fine_regular</code> <small>line 423</small></li><li id=L440><b>lemma</b> <code>OAI.ThreeTorus.neutral_branch_circle_l1_bound</code> <small>line 440</small><div class="doc"><p>The neutral equalization estimate on the actual temporal circle, uniformly
+in the large preparation integer, residues, offsets and affine good-arc jitter.
+The constant is fixed using only the old cut-off stationary weight.</p></div><pre>lemma neutral_branch_circle_l1_bound {F : ℝ × ℝ → ℝ}
+    (hF : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) F) (hcF : HasCompactSupport F)
+    {ε : ℝ} (hε : 0 &lt; ε) (hz : ∀ a s, |s| &lt; ε → F (a,s) = 0) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ {I : Set ℝ} {J : ℝ → ℝ} {P n : ℕ},
+      IsOpen I → tsupport F ⊆ I ×ˢ univ → 0 &lt; P → 0 &lt; n →
+      ∀ h : ℤ, ∀ L : ℝ, 0 &lt; L → ∀ β : ℝ, (∀ a ∈ I, J a = L*a+β) →
+      (∫ z, |foldCircleDensity (fineResidueKernel (passageBranchKernel I J F) P h n) z-
+        foldCircleDensity (fun s =&gt; (P:ℝ)⁻¹*(∫ a, F (a,s))) z| ∂AddCircle.haarAddCircle) ≤ C/L := by
+…</pre><p class="refs">Mentions: <a href="PassageDensity.lean.html#L1991">OAI.ThreeTorus.foldCircleDensity</a>, <a href="PassageDensity.lean.html#L886">OAI.ThreeTorus.fineResidueKernel</a>, <a href="PassageDensity.lean.html#L1152">OAI.ThreeTorus.passageBranchKernel</a></p></li><li id=L475><b>lemma</b> <code>OAI.ThreeTorus.exact_neutral_circle_spectral_estimate</code> <small>line 475</small><div class="doc"><p>The broad slope is chosen after the cutoff weight and before the periodic jitter is fixed;
+the final passage integer is only subject to a lower bound. The displayed
+reference density is exactly the old cutoff stationary marginal, folded to
+the temporal circle and divided by the residue modulus.</p></div><pre>lemma exact_neutral_circle_spectral_estimate
+    {A : UnitAddCircle × UnitAddCircle → ℂ} {A₀ : UnitAddCircle → ℝ → ℂ}
+    {Pr V : ℝ → ℝ} {m : ℤ} {δ : ℕ → ℝ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {o l u R : ℝ}
+    (hm : m ≠ 0)
+    (hH : ∀ n (x : ℝ), H n (x : UnitAddCircle) = ((n:ℝ)*(Pr x+δ n*x) : UnitAddCircle))
+    (hA : ∀ a x, x ∈ Ioc o (o+1) → A ((x : UnitAddCircle),a) = A₀ a x)
+    (hA₀ : ∀ a, ContDiff ℝ 2 (A₀ a)) (hAc : Continuous A₀.uncurry)
+    (hAd : Continuous (fun p : UnitAddCircle × ℝ =&gt; deriv (A₀ p.1) p.2))
+    (hAr : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
+      (fun p : ℝ × ℝ =&gt; A₀ (p.2 : UnitAddCircle) p.1))
+    (hsupp : ∀ a, support (A₀ a) ⊆ Ioc l u)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L590><b>theorem</b> <code>OAI.ThreeTorus.exists_integral_speed_separation</code> <small>line 590</small><div class="doc"><p>One integral shift separates the speed ranges for all distinct integer
+angular indices in a finite list. It also keeps every range away from zero.</p></div><pre>theorem exists_integral_speed_separation {ι X : Type*} [Finite ι]
+    [TopologicalSpace X] [CompactSpace X] (m : ι → ℤ) (φ : X → ℝ)
+    (hm : ∀ i, m i ≠ 0) (hφ : Continuous φ) :
+    ∃ c : ℕ, 0 &lt; c ∧
+      (∀ i x, (m i : ℝ) * ((c:ℝ) + φ x) ≠ 0) ∧
+      (∀ i j x y, (m i : ℝ) * ((c:ℝ) + φ x) =
+        (m j : ℝ) * ((c:ℝ) + φ y) → m i = m j) := by
+…</pre></li><li id=L633><b>def</b> <code>OAI.ThreeTorus.stationaryImage</code> <small>line 633</small><div class="doc"><p>A stationary image of an amplitude support. The pair records frequency
+and the unchanged slow coordinate.</p></div><pre>def stationaryImage (m : ℤ) (V : ℝ → ℝ) (K : Set (ℝ × UnitAddCircle)) :
+    Set (ℝ × UnitAddCircle) :=
+…</pre></li><li id=L637><b>lemma</b> <code>OAI.ThreeTorus.stationaryImage_compact</code> <small>line 637</small></li><li id=L643><b>lemma</b> <code>OAI.ThreeTorus.stationaryImage_disjoint_same</code> <small>line 643</small><div class="doc"><p>For equal angular indices, branch injectivity preserves the exact gaps
+between disjoint coefficient supports.</p></div><pre>lemma stationaryImage_disjoint_same {m : ℤ} (hm : m ≠ 0) {V : ℝ → ℝ} {I : Set ℝ}
+    (hV : InjOn V I) {K L : Set (ℝ × UnitAddCircle)}
+    (hK : K ⊆ I ×ˢ univ) (hL : L ⊆ I ×ˢ univ) (hd : Disjoint K L) :
+    Disjoint (stationaryImage m V K) (stationaryImage m V L) := by
+…</pre><p class="refs">Mentions: <a href="NeutralSupport.lean.html#L633">OAI.ThreeTorus.stationaryImage</a></p></li><li id=L656><b>lemma</b> <code>OAI.ThreeTorus.stationaryImage_disjoint_distinct</code> <small>line 656</small><div class="doc"><p>Different angular indices are separated by their frequency ranges.</p></div><pre>lemma stationaryImage_disjoint_distinct {m n : ℤ} {V : ℝ → ℝ}
+    {K L : Set (ℝ × UnitAddCircle)}
+    (hsep : ∀ p ∈ K, ∀ q ∈ L, (m:ℝ)*V p.1 ≠ (n:ℝ)*V q.1) :
+    Disjoint (stationaryImage m V K) (stationaryImage n V L) := by
+…</pre><p class="refs">Mentions: <a href="NeutralSupport.lean.html#L633">OAI.ThreeTorus.stationaryImage</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

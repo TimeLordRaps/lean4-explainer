@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Preliminaries/Stability.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Preliminaries/Stability.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Preliminaries</a> / <span>Stability.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Preliminaries</a>/<span>Stability.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Preliminaries/Stability.lean#L1">source</a></p><div class="doc"><h3>The finite collision-stability inequality</h3><p>This is the finite quantitative calculation in Lemma 2.5 of the manuscript.
+The final theorem takes the exact numerical consequences of Chebyshev's
+bound and Mertens' first theorem at the chosen cutoff as explicit hypotheses.
+No main theorem of the manuscript is assumed here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Ostmann.collisionDefect</code> <small>line 19</small><div class="doc"><p>The three nonnegative terms in the collision stability estimate.</p></div><pre>noncomputable def collisionDefect (p : ℕ) (s t : Finset ℕ) (μ ν : ℕ → ℝ) : ℝ :=
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Ostmann.collisionDefect_nonneg</code> <small>line 24</small></li><li id=L38><b>theorem</b> <code>OAI.Ostmann.collisionDefect_eq</code> <small>line 38</small></li><li id=L49><b>theorem</b> <code>OAI.Ostmann.weighted_collisionDefect_eq</code> <small>line 49</small><div class="doc"><p>The sum of stability defects is the sum of the collision energies minus
+the universal baseline <code>4 ∑ log p / p</code>.</p></div><pre>theorem weighted_collisionDefect_eq (P : Finset ℕ) (s t : ℕ → Finset ℕ)
+    (μ ν : ℕ → ℕ → ℝ)
+    (hs : ∀ p ∈ P, (s p).Nonempty) (ht : ∀ p ∈ P, (t p).Nonempty)
+    (hμ : ∀ p ∈ P, ∑ r ∈ s p, μ p r = 1)
+    (hν : ∀ p ∈ P, ∑ r ∈ t p, ν p r = 1) :
+    (∑ p ∈ P, Real.log (p : ℝ) * collisionDefect p (s p) (t p) (μ p) (ν p)) =
+      (∑ p ∈ P, Real.log (p : ℝ) * ∑ r ∈ s p, μ p r ^ 2) +
+      (∑ p ∈ P, Real.log (p : ℝ) * ∑ r ∈ t p, ν p r ^ 2) -
+      4 * ∑ p ∈ P, Real.log (p : ℝ) / (p : ℝ) := by
+…</pre><p class="refs">Mentions: <a href="Stability.lean.html#L19">OAI.Ostmann.collisionDefect</a></p></li><li id=L75><b>theorem</b> <code>OAI.Ostmann.collision_stability_of_prime_sums</code> <small>line 75</small><div class="doc"><p>A finite, explicit form of collision stability. The two energy bounds
+come from <code>residue_collision_bound</code>; the last two hypotheses are exactly
+the prime-sum estimates needed at the cutoff, rather than full asymptotic
+theories. Mertens' first theorem (1874) supplies the lower prime sum.</p></div><pre>theorem collision_stability_of_prime_sums (P : Finset ℕ)
+    (s t : ℕ → Finset ℕ) (μ ν : ℕ → ℕ → ℝ)
+    (X Q : ℕ) (m K C : ℝ)
+    (hs : ∀ p ∈ P, (s p).Nonempty) (ht : ∀ p ∈ P, (t p).Nonempty)
+    (hμ : ∀ p ∈ P, ∑ r ∈ s p, μ p r = 1)
+    (hν : ∀ p ∈ P, ∑ r ∈ t p, ν p r = 1)
+    (hm : 0 ≤ m)
+    (henergyμ : (∑ p ∈ P, Real.log (p : ℝ) * ∑ r ∈ s p, μ p r ^ 2) ≤
+      Real.log (X : ℝ) + m * ∑ p ∈ P, Real.log (p : ℝ))
+    (henergyν : (∑ p ∈ P, Real.log (p : ℝ) * ∑ r ∈ t p, ν p r ^ 2) ≤
+      Real.log (X : ℝ) + m * ∑ p ∈ P, Real.log (p : ℝ))
+    (hchebyshev : (∑ p ∈ P, Real.log (p : ℝ)) ≤ K * Q)
+…</pre></li><li id=L99><b>theorem</b> <code>OAI.Ostmann.finite_measure_collision_stability</code> <small>line 99</small><div class="doc"><p>Apply the stability inequality to two actual finite measures on integers.
+The maps <code>f</code> and <code>g</code> label their residue classes; allowing a relabeling is
+needed for the negative second summand. The prime-sum hypotheses are the
+finite specializations of the published inputs used here.</p></div><pre>theorem finite_measure_collision_stability (P A B : Finset ℕ)
+    (μ ν : ℕ → ℝ) (s t : ℕ → Finset ℕ) (f g : ℕ → ℕ → ℕ)
+    (X Q : ℕ) (m K C : ℝ)
+    (hX : 1 ≤ X) (hP : ∀ p ∈ P, p.Prime)
+    (hA : ∀ a ∈ A, a ≤ X) (hB : ∀ b ∈ B, b ≤ X)
+    (hμ : ∀ a ∈ A, 0 ≤ μ a) (hν : ∀ b ∈ B, 0 ≤ ν b)
+    (hmassμ : ∑ a ∈ A, μ a = 1) (hmassν : ∑ b ∈ B, ν b = 1)
+    (hatomμ : ∀ a ∈ A, μ a ≤ m) (hatomν : ∀ b ∈ B, ν b ≤ m)
+    (hs : ∀ p ∈ P, (s p).Nonempty) (ht : ∀ p ∈ P, (t p).Nonempty)
+    (hf : ∀ p ∈ P, ∀ a ∈ A, f p a ∈ s p)
+    (hg : ∀ p ∈ P, ∀ b ∈ B, g p b ∈ t p)
+    (hcongrf : ∀ p ∈ P, ∀ a ∈ A, ∀ b ∈ A, f p a = f p b ↔ a ≡ b [MOD p])
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

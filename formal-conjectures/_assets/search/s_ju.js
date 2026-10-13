@@ -1,0 +1,1 @@
+window.l4shard("ju", [["Erdos214.erdos_214.variants.juhasz",352,74],["Erdos214.erdos_214.variants.juhasz_twelve_points",352,89],["Erdos961.erdos_961.variants.jutila_ramachandra_shorey_upper_bound",890,92],["Hypergraph.HasDensityJump",1043,91],["JugglerConjecture.jugglerStep",1073,35],["JugglerConjecture.jugglerStep_36",1073,50],["JugglerConjecture.juggler_conjecture",1073,45]]);

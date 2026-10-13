@@ -1,0 +1,89 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MathematicalPhysics/Elasticity/Rigidity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MathematicalPhysics/Elasticity/Rigidity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MathematicalPhysics</a> / <a href="index.html">Elasticity</a> / <span>Rigidity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MathematicalPhysics</a>/<a href="index.html">Elasticity</a>/<span>Rigidity.lean</span></code></h1><p class="muted">53 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MathematicalPhysics/Elasticity/Rigidity.lean#L1">source</a></p><div class="doc"><p>Two-chart proof of precisely the holomorphic-conic rigidity step. The
+analytic construction of the comparison from DN equality is NOT assumed in
+the main target and is still missing.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L12><b>def</b> <code>OAI.ElasticityAugmented.diagonalGauge</code> <small>line 12</small></li><li id=L15><b>lemma</b> <code>OAI.ElasticityAugmented.diagonalGauge_mul</code> <small>line 15</small></li><li id=L24><b>lemma</b> <code>OAI.ElasticityAugmented.diagonalGauge_sub</code> <small>line 24</small></li><li id=L29><b>lemma</b> <code>OAI.ElasticityAugmented.diagonalGauge_one</code> <small>line 29</small></li><li id=L37><b>lemma</b> <code>OAI.ElasticityAugmented.matrixD_diagonalGauge</code> <small>line 37</small></li><li id=L42><b>lemma</b> <code>OAI.ElasticityAugmented.matrixD_direction_smul</code> <small>line 42</small></li><li id=L48><b>lemma</b> <code>OAI.ElasticityAugmented.diagonalGauge_smul</code> <small>line 48</small></li><li id=L54><b>lemma</b> <code>OAI.ElasticityAugmented.diagonalGauge_equation</code> <small>line 54</small></li><li id=L61><b>lemma</b> <code>OAI.ElasticityAugmented.diagonalGauge_supported</code> <small>line 61</small></li><li id=L86><b>lemma</b> <code>OAI.ElasticityAugmented.direction_theta_smul</code> <small>line 86</small></li><li id=L89><b>lemma</b> <code>OAI.ElasticityAugmented.thetaGamma_smul</code> <small>line 89</small></li><li id=L92><b>lemma</b> <code>OAI.ElasticityAugmented.transportT_smul</code> <small>line 92</small></li><li id=L96><b>lemma</b> <code>OAI.ElasticityAugmented.transportQ_smul</code> <small>line 96</small></li><li id=L110><b>def</b> <code>OAI.ElasticityConic.chartDiagonal</code> <small>line 110</small></li><li id=L111><b>lemma</b> <code>OAI.ElasticityConic.chartDiagonal_ne_zero</code> <small>line 111</small></li><li id=L114><b>lemma</b> <code>OAI.ElasticityConic.chartTheta_transition</code> <small>line 114</small></li><li id=L118><b>lemma</b> <code>OAI.ElasticityConic.chartMatrix_transition</code> <small>line 118</small></li><li id=L126><b>lemma</b> <code>OAI.ElasticityConic.physical_chart_transition</code> <small>line 126</small></li><li id=L137><b>theorem</b> <code>OAI.ElasticityConic.supported_chart_glue</code> <small>line 137</small><div class="doc"><p>The projective conic transition law is forced by supported uniqueness;
+comparisons constructed using unrelated weak subsequences glue exactly.</p></div><pre>theorem supported_chart_glue (k r : Fin 2 → Smooth)
+    (hr : ∀ q x,(r q : X → ℂ) x≠0) (hk : ∀ q x,(k q : X → ℂ) x≠0)
+    (hl : ∀ q x,((k q+r q*r q : Smooth) : X → ℂ) x≠0)
+    {K : Set X} (hK : IsCompact K) (G : Bool → ℂ → Matrix (Fin 3) (Fin 3) Smooth)
+    (hs : ∀ b z i j,tsupport ((G b z i j-(1 : Matrix (Fin 3) (Fin 3) Smooth) i j : Smooth) : X → ℂ)⊆K)
+    (he : ∀ b z,matrixD (chartTheta b z) (G b z)=
+      chartMatrix b z (transportT (chartTheta b z) (k 1) (r 1) (hk 1) (hl 1))
+        (transportQ (chartTheta b z) (k 1) (r 1) (hr 1) (hk 1) (hl 1))*G b z-
+      G b z*chartMatrix b z (transportT (chartTheta b z) (k 0) (r 0) (hk 0) (hl 0))
+        (transportQ (chartTheta b z) (k 0) (r 0) (hr 0) (hk 0) (hl 0)))
+    (z : ℂ) (hz : z≠0) : G false z=diagonalGauge (chartDiagonal z) (G true z⁻¹) := by
+…</pre><p class="refs">Mentions: <a href="Conic.lean.html#L71">OAI.ElasticityConic.chartTheta</a>, <a href="Conic.lean.html#L239">OAI.ElasticityConic.chartMatrix</a>, <a href="Rigidity.lean.html#L110">OAI.ElasticityConic.chartDiagonal</a></p></li><li id=L181><b>abbrev</b> <code>OAI.ElasticityRigidity.X</code> <small>line 181</small></li><li id=L182><b>abbrev</b> <code>OAI.ElasticityRigidity.Mat</code> <small>line 182</small></li><li id=L184><b>def</b> <code>OAI.ElasticityRigidity.θ</code> <small>line 184</small></li><li id=L186><b>def</b> <code>OAI.ElasticityRigidity.e</code> <small>line 186</small></li><li id=L188><b>def</b> <code>OAI.ElasticityRigidity.D</code> <small>line 188</small></li><li id=L192><b>lemma</b> <code>OAI.ElasticityRigidity.sphere_function_constant</code> <small>line 192</small><div class="doc"><p>Two-chart Liouville argument for degree-zero entries.</p></div><pre>lemma sphere_function_constant {f g : ℂ → ℂ} (hf : Differentiable ℂ f)
+    (hg : ContinuousAt g 0) (hglue : ∀ z : ℂ, z ≠ 0 → f z = g z⁻¹) :
+    ∀ z, f z = f 0 := by
+…</pre></li><li id=L207><b>lemma</b> <code>OAI.ElasticityRigidity.negative_section_zero</code> <small>line 207</small><div class="doc"><p>The negative-degree transition forces every holomorphic section to vanish.</p></div><pre>lemma negative_section_zero {f g : ℂ → ℂ} (hf : Differentiable ℂ f)
+    (hg : ContinuousAt g 0) (hglue : ∀ z : ℂ, z ≠ 0 → f z = z⁻¹ * g z⁻¹) :
+    ∀ z, f z = 0 := by
+…</pre></li><li id=L223><b>def</b> <code>OAI.ElasticityRigidity.HolomorphicComparison</code> <small>line 223</small><div class="doc"><p>The exact chart transition for End(O(-1)² ⊕ O). The two spatial
+coefficients are expressed in h₁(1,z),h₂(1,z) and h₁(w,1),h₂(w,1).</p></div><pre>def HolomorphicComparison (G₀ Ginf : X → ℂ → Mat) : Prop :=
+…</pre><p class="refs">Mentions: <a href="Rigidity.lean.html#L181">OAI.ElasticityRigidity.X</a>, <a href="Rigidity.lean.html#L182">OAI.ElasticityRigidity.Mat</a></p></li><li id=L231><b>lemma</b> <code>OAI.ElasticityRigidity.diagonal_degree_zero</code> <small>line 231</small></li><li id=L243><b>lemma</b> <code>OAI.ElasticityRigidity.upperright_zero</code> <small>line 243</small></li><li id=L252><b>def</b> <code>OAI.ElasticityRigidity.M</code> <small>line 252</small><div class="doc"><p>Normal-form connection matrix on the finite chart; q is the bottom-left
+row in this frame and T the original scalar coefficient.</p></div><pre>def M (q : X → ℂ → Fin 2 → ℂ) (T : X → ℂ → ℂ) (x : X) (z : ℂ) : Mat :=
+…</pre><p class="refs">Mentions: <a href="Rigidity.lean.html#L181">OAI.ElasticityRigidity.X</a>, <a href="Rigidity.lean.html#L182">OAI.ElasticityRigidity.Mat</a></p></li><li id=L255><b>def</b> <code>OAI.ElasticityRigidity.Transport</code> <small>line 255</small></li><li id=L260><b>lemma</b> <code>OAI.ElasticityRigidity.D_zero</code> <small>line 260</small></li><li id=L263><b>lemma</b> <code>OAI.ElasticityRigidity.top_blocks_scalar</code> <small>line 263</small></li><li id=L307><b>lemma</b> <code>OAI.ElasticityRigidity.comparison_scalar_and_dir_zero</code> <small>line 307</small></li><li id=L352><b>lemma</b> <code>OAI.ElasticityRigidity.fderiv_zero_of_chart_dirs</code> <small>line 352</small></li><li id=L370><b>theorem</b> <code>OAI.ElasticityRigidity.comparison_identity</code> <small>line 370</small><div class="doc"><p>Exact comparison rigidity in the two charts of the projective null conic.
+The exterior identity assumption is used only at a single exterior point.</p></div><pre>theorem comparison_identity {G₀ Ginf : X → ℂ → Mat}
+    {q₁ q₂ : X → ℂ → Fin 2 → ℂ} {T₁ T₂ : X → ℂ → ℂ}
+    (hG : HolomorphicComparison G₀ Ginf) (hT : Transport G₀ q₁ q₂ T₁ T₂)
+    (hs : ∀ z i j, Differentiable ℝ (fun x =&gt; G₀ x z i j))
+    {x₀ : X} (hext : G₀ x₀ 0 = 1) :
+    (∀ x z, G₀ x z = 1) ∧ (∀ x w, Ginf x w = 1) := by
+…</pre><p class="refs">Mentions: <a href="Rigidity.lean.html#L181">OAI.ElasticityRigidity.X</a>, <a href="Rigidity.lean.html#L182">OAI.ElasticityRigidity.Mat</a>, <a href="Rigidity.lean.html#L223">OAI.ElasticityRigidity.HolomorphicComparison</a>, <a href="Rigidity.lean.html#L255">OAI.ElasticityRigidity.Transport</a></p></li><li id=L416><b>theorem</b> <code>OAI.ElasticityRigidity.connections_equal</code> <small>line 416</small><div class="doc"><p>The comparison equation now yields the equality of connection matrices,
+without any residual scalar gauge or assumed transport equality.</p></div><pre>theorem connections_equal {G₀ Ginf : X → ℂ → Mat}
+    {q₁ q₂ : X → ℂ → Fin 2 → ℂ} {T₁ T₂ : X → ℂ → ℂ}
+    (hG : HolomorphicComparison G₀ Ginf) (hT : Transport G₀ q₁ q₂ T₁ T₂)
+    (hs : ∀ z i j, Differentiable ℝ (fun x =&gt; G₀ x z i j))
+    {x₀ : X} (hext : G₀ x₀ 0 = 1) :
+    ∀ x z, M q₁ T₁ x z = M q₂ T₂ x z := by
+…</pre><p class="refs">Mentions: <a href="Rigidity.lean.html#L181">OAI.ElasticityRigidity.X</a>, <a href="Rigidity.lean.html#L182">OAI.ElasticityRigidity.Mat</a>, <a href="Rigidity.lean.html#L223">OAI.ElasticityRigidity.HolomorphicComparison</a>, <a href="Rigidity.lean.html#L255">OAI.ElasticityRigidity.Transport</a>, <a href="Rigidity.lean.html#L252">OAI.ElasticityRigidity.M</a></p></li><li id=L445><b>def</b> <code>OAI.ElasticityConic.physicalChartMatrix</code> <small>line 445</small></li><li id=L451><b>lemma</b> <code>OAI.ElasticityConic.physicalChartMatrix_regular</code> <small>line 451</small></li><li id=L460><b>lemma</b> <code>OAI.ElasticityConic.physicalChartMatrix_eqOn</code> <small>line 460</small></li><li id=L475><b>lemma</b> <code>OAI.ElasticityConic.chart_transition_scalar</code> <small>line 475</small></li><li id=L481><b>lemma</b> <code>OAI.ElasticityConic.chartTheta_smooth</code> <small>line 481</small></li><li id=L485><b>lemma</b> <code>OAI.ElasticityConic.chartTheta_false</code> <small>line 485</small></li><li id=L492><b>theorem</b> <code>OAI.ElasticityConic.chart_comparison_trivial</code> <small>line 492</small><div class="doc"><p>The abstract conic rigidity calculation, separated from the lengthy
+physical coefficient formulas. All analytic matching properties are supplied
+below by proved supported uniqueness and regularity, not by inverse hypotheses.</p></div><pre>theorem chart_comparison_trivial (T : Bool → ℂ → Fin 2 → Smooth)
+    (Q : Bool → ℂ → Fin 2 → Fin 3 → Smooth)
+    (G : Bool → ℂ → Matrix (Fin 3) (Fin 3) Smooth)
+    (hG : ∀ b i j,JointHolomorphic (fun y : X × ℂ =&gt; (G b y.2 i j : X → ℂ) y.1))
+    (hglue : ∀ z : ℂ,z≠0 → G false z=diagonalGauge (chartDiagonal z) (G true z⁻¹))
+    (he : ∀ b z,matrixD (chartTheta b z) (G b z)=
+      chartMatrix b z (T b z 1) (Q b z 1)*G b z-G b z*chartMatrix b z (T b z 0) (Q b z 0))
+    (x₀ : X) (hbase : matrixEval x₀ (G false 0)=1) : ∀ b z,G b z=1 := by
+…</pre><p class="refs">Mentions: <a href="Holomorphy.lean.html#L326">OAI.ElasticityConic.JointHolomorphic</a>, <a href="Rigidity.lean.html#L110">OAI.ElasticityConic.chartDiagonal</a>, <a href="Conic.lean.html#L71">OAI.ElasticityConic.chartTheta</a>, <a href="Conic.lean.html#L239">OAI.ElasticityConic.chartMatrix</a></p></li><li id=L538><b>theorem</b> <code>OAI.ElasticityConic.supported_physical_holomorphic</code> <small>line 538</small><div class="doc"><p>Rigidity of the genuine two-chart physical connection. The entire analytic
+matching input is only separately smooth supported transport; joint smoothness,
+holomorphy and transition compatibility are conclusions of the transport equations, never additional properties imposed upon CGO weak limits.</p></div><pre>theorem supported_physical_holomorphic (k r : Fin 2 → Smooth)
+    (hr : ∀ q x,(r q : X → ℂ) x≠0) (hk : ∀ q x,(k q : X → ℂ) x≠0)
+    (hl : ∀ q x,((k q+r q*r q : Smooth) : X → ℂ) x≠0)
+    {K : Set X} (hK : IsCompact K) (χ : Smooth) (hχ : HasCompactSupport (χ : X → ℂ))
+    (hχ1 : ∀ x∈K,(χ : X → ℂ) x=1)
+    (hexk : EqOn (k 0 : X → ℂ) (k 1) Kᶜ) (hexr : EqOn (r 0 : X → ℂ) (r 1) Kᶜ)
+    (G : Bool → ℂ → Matrix (Fin 3) (Fin 3) Smooth)
+    (hs : ∀ b z i j,tsupport ((G b z i j-(1 : Matrix (Fin 3) (Fin 3) Smooth) i j : Smooth) : X → ℂ)⊆K)
+    (he : ∀ b z,matrixD (chartTheta b z) (G b z)=
+      physicalChartMatrix b z (k 1) (r 1) (hr 1) (hk 1) (hl 1)*G b z-
+      G b z*physicalChartMatrix b z (k 0) (r 0) (hr 0) (hk 0) (hl 0)) :
+    ∀ b i j,JointHolomorphic (fun y : X × ℂ =&gt; (G b y.2 i j : X → ℂ) y.1) := by
+…</pre><p class="refs">Mentions: <a href="Conic.lean.html#L71">OAI.ElasticityConic.chartTheta</a>, <a href="Rigidity.lean.html#L445">OAI.ElasticityConic.physicalChartMatrix</a>, <a href="Holomorphy.lean.html#L326">OAI.ElasticityConic.JointHolomorphic</a></p></li><li id=L564><b>theorem</b> <code>OAI.ElasticityConic.physical_conic_connections_equal</code> <small>line 564</small></li><li id=L598><b>lemma</b> <code>OAI.ElasticityConic.chart_covers_null</code> <small>line 598</small><div class="doc"><p>The two affine charts exhaust every nonzero complex characteristic direction,
+up to its nonzero scalar. No arbitrary choice of a square root is needed.</p></div><pre>lemma chart_covers_null (v : C3) (hv : v≠0) (hn : null v) :
+    ∃ (b : Bool) (z c : ℂ), c≠0 ∧ v=c • chartTheta b z := by
+…</pre><p class="refs">Mentions: <a href="Recovery.lean.html#L11">OAI.ElasticityConic.C3</a>, <a href="Recovery.lean.html#L14">OAI.ElasticityConic.null</a>, <a href="Conic.lean.html#L71">OAI.ElasticityConic.chartTheta</a></p></li><li id=L646><b>lemma</b> <code>OAI.ElasticityConic.chart_bottom_equal</code> <small>line 646</small></li><li id=L670><b>lemma</b> <code>OAI.ElasticityRecovery.T_smul</code> <small>line 670</small></li><li id=L673><b>lemma</b> <code>OAI.ElasticityRecovery.Q_smul</code> <small>line 673</small></li><li id=L681><b>theorem</b> <code>OAI.ElasticityAugmented.restricted_transports_of_chart_equal</code> <small>line 681</small><div class="doc"><p>Equality of the actual conic connections is precisely sufficient for the
+restricted physical transports used by Lamé coefficient recovery.</p></div><pre>theorem restricted_transports_of_chart_equal (m k : Fin 2 → X → ℝ)
+    (hm : ∀ q,ContDiff ℝ (⊤ : ℕ∞) (m q)) (hk : ∀ q,ContDiff ℝ (⊤ : ℕ∞) (k q))
+    (hmp : ∀ q x,0 &lt; m q x) (hkp : ∀ q x,0 &lt; k q x)
+    (he : ∀ b z,
+      chartMatrix b z
+        (transportT (chartTheta b z) (smoothOfReal (k 0) (hk 0)) (positiveRoot (m 0) (hm 0) (hmp 0))
+          (fun x =&gt; Complex.ofReal_ne_zero.mpr (hkp 0 x).ne&#x27;) (real_sum_nonzero (m 0) (k 0) (hm 0) (hk 0) (hmp 0) (hkp 0)))
+        (transportQ (chartTheta b z) (smoothOfReal (k 0) (hk 0)) (positiveRoot (m 0) (hm 0) (hmp 0))
+          (positiveRoot_nonzero (m 0) (hm 0) (hmp 0)) (fun x =&gt; Complex.ofReal_ne_zero.mpr (hkp 0 x).ne&#x27;)
+          (real_sum_nonzero (m 0) (k 0) (hm 0) (hk 0) (hmp 0) (hkp 0)))=
+      chartMatrix b z
+        (transportT (chartTheta b z) (smoothOfReal (k 1) (hk 1)) (positiveRoot (m 1) (hm 1) (hmp 1))
+…</pre><p class="refs">Mentions: <a href="Augmented.lean.html#L12">OAI.ElasticityAugmented.X</a>, <a href="Transport.lean.html#L910">OAI.ElasticityAugmented.transportT</a>, <a href="PhysicalCGO.lean.html#L13">OAI.ElasticityAugmented.smoothOfReal</a>, <a href="PhysicalCGO.lean.html#L28">OAI.ElasticityAugmented.positiveRoot</a>, <a href="PhysicalCGO.lean.html#L104">OAI.ElasticityAugmented.real_sum_nonzero</a>, <a href="Transport.lean.html#L914">OAI.ElasticityAugmented.transportQ</a>, <a href="PhysicalCGO.lean.html#L30">OAI.ElasticityAugmented.positiveRoot_nonzero</a></p></li><li id=L733><b>lemma</b> <code>OAI.Elasticity.physicalChartMatrix_congr_k</code> <small>line 733</small></li><li id=L744><b>theorem</b> <code>OAI.Elasticity.dn_global_coefficients_equal</code> <small>line 744</small><div class="doc"><p>The global transport-matching implication for a genuine common exterior.
+Its only inverse-data hypothesis is equality of the physical DN maps.</p></div><pre>theorem dn_global_coefficients_equal {Ω : Set X} (hΩ : IsOpen Ω) (hOB : Bornology.IsBounded Ω)
+    (lam m : Fin 2 → X → ℝ)
+    (hl : ∀ q,ContDiff ℝ (⊤ : ℕ∞) (lam q)) (hm : ∀ q,ContDiff ℝ (⊤ : ℕ∞) (m q))
+    (hp : ∀ q x,0 &lt; m q x ∧ 0&lt;3*lam q x+2*m q x)
+    (hcll : ∀ q,ExteriorConstant (smoothOfReal (lam q) (hl q)))
+    (hclm : ∀ q,ExteriorConstant (smoothOfReal (m q) (hm q)))
+    (he : ∀ x∉Ω,lam 0 x=lam 1 x ∧ m 0 x=m 1 x)
+    (hDN : DN Ω (lam 0) (m 0)=DN Ω (lam 1) (m 1)) :
+    lam 0=lam 1 ∧ m 0=m 1 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ElasticityUniqueness.lean.html#L19">OAI.Elasticity.X</a>, <a href="../../../ComparatorChallenges/ElasticityUniqueness.lean.html#L93">OAI.Elasticity.DN</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

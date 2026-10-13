@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RandomProductParameters.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RandomProductParameters.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RandomProductParameters.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RandomProductParameters.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RandomProductParameters.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.Problem337.RandomProducts.freshLength</code> <small>line 10</small><div class="doc"><p>The short fresh-product length, with the constants used in the random
+residue construction.</p></div><pre>def freshLength (S V : ℝ) : ℕ := ⌊(3 / 4 : ℝ) * V / (100 * Real.log S)⌋₊</pre></li><li id=L12><b>def</b> <code>OAI.Problem337.RandomProducts.blockLength</code> <small>line 12</small></li><li id=L14><b>theorem</b> <code>OAI.Problem337.RandomProducts.freshLength_bounds</code> <small>line 14</small></li><li id=L33><b>theorem</b> <code>OAI.Problem337.RandomProducts.freshLength_eight_le_blockLength</code> <small>line 33</small></li><li id=L56><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_product_le_exp</code> <small>line 56</small><div class="doc"><p>Every fresh product is shorter than the reduced modulus threshold.</p></div><pre>theorem fresh_product_le_exp {S V : ℝ} (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) :
+    (2 * S ^ 100) ^ freshLength S V ≤ Real.exp ((4 / 5 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L74><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_factorial_atom_le_exp</code> <small>line 74</small><div class="doc"><p>The factorial multiplicity bound implies the required small atom bound.</p></div><pre>theorem fresh_factorial_atom_le_exp {S V : ℝ} (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S) :
+    ((freshLength S V).factorial : ℝ) / (S ^ 99) ^ freshLength S V ≤
+      Real.exp (-(7 / 10 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L108><b>theorem</b> <code>OAI.Problem337.RandomProducts.freshLength_pos</code> <small>line 108</small><div class="doc"><p>The fresh tuple is nonempty throughout the construction's range.</p></div><pre>theorem freshLength_pos {S V : ℝ} (hS : 1 &lt; S)
+    (hV : 100000 * Real.log S ≤ V) :
+    1 ≤ freshLength S V := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L121><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_factorial_atom_of_card</code> <small>line 121</small><div class="doc"><p>Atom estimate with the actual cardinality of the prime sampling set.</p></div><pre>theorem fresh_factorial_atom_of_card {S V : ℝ} (P : ℕ) (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S)
+    (hP : S ^ 99 ≤ (P : ℝ)) :
+    ((freshLength S V).factorial : ℝ) / (P : ℝ) ^ freshLength S V ≤
+      Real.exp (-(7 / 10 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L135><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_samples_product_le_exp</code> <small>line 135</small><div class="doc"><p>Product estimate for individual prime samples, ready for an injective
+reduction-modulo-modulus argument.</p></div><pre>theorem fresh_samples_product_le_exp {S V : ℝ} (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V)
+    (p : Fin (freshLength S V) → ℕ)
+    (hp : ∀ i, (p i : ℝ) ≤ 2 * S ^ 100) :
+    ((∏ i, p i : ℕ) : ℝ) ≤ Real.exp ((4 / 5 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L148><b>def</b> <code>OAI.Problem337.RandomProducts.badGcdThreshold</code> <small>line 148</small><div class="doc"><p>Hit threshold used when the exposed gcd makes the reduced modulus small.</p></div><pre>def badGcdThreshold (S V : ℝ) : ℕ := ⌈(2 / 25 : ℝ) * V / (101 * Real.log S)⌉₊</pre></li><li id=L150><b>theorem</b> <code>OAI.Problem337.RandomProducts.bad_gcd_implies_many_hits</code> <small>line 150</small></li><li id=L172><b>theorem</b> <code>OAI.Problem337.RandomProducts.hit_tail_parameter_bound</code> <small>line 172</small><div class="doc"><p>The elementary union-bound expression is exponentially small with the
+specific random-products parameters.</p></div><pre>theorem hit_tail_parameter_bound {S V : ℝ} (hS : 1 &lt; S) (hV : 0 ≤ V)
+    (m H P k : ℕ) (hm : (m : ℝ) ≤ S) (hH : (H : ℝ) ≤ S)
+    (hP : S ^ 99 ≤ (P : ℝ))
+    (hk : badGcdThreshold S V ≤ k) :
+    ((m : ℝ) * (H : ℝ) / (P : ℝ)) ^ k ≤ Real.exp (-(1 / 20 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L148">OAI.Problem337.RandomProducts.badGcdThreshold</a></p></li><li id=L199><b>theorem</b> <code>OAI.Problem337.RandomProducts.blockLength_le_self</code> <small>line 199</small></li><li id=L211><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_samples_product_lt_modulus</code> <small>line 211</small><div class="doc"><p>Small fresh products remain distinct after reduction modulo any good
+reduced modulus.</p></div><pre>theorem fresh_samples_product_lt_modulus {S V : ℝ} (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (q : ℕ)
+    (hq : Real.exp ((9 / 10 : ℝ) * V) ≤ (q : ℝ))
+    (p : Fin (freshLength S V) → ℕ)
+    (hp : ∀ i, (p i : ℝ) ≤ 2 * S ^ 100) :
+    (∏ i, p i) &lt; q := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L228><b>theorem</b> <code>OAI.Problem337.RandomProducts.bilinear_atom_parameter_bound</code> <small>line 228</small><div class="doc"><p>Numerical endgame of the bilinear Fourier estimate.</p></div><pre>theorem bilinear_atom_parameter_bound {S V : ℝ} (P q : ℕ) (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S)
+    (hP : S ^ 99 ≤ (P : ℝ)) (hq : (q : ℝ) ≤ Real.exp V) :
+    Real.sqrt (q : ℝ) * (((freshLength S V).factorial : ℝ) /
+      (P : ℝ) ^ freshLength S V) ≤ Real.exp (-(1 / 5 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L255><b>theorem</b> <code>OAI.Problem337.RandomProducts.three_errors_le_final_scale</code> <small>line 255</small><div class="doc"><p>Combines Hamming exceptions, bad gcd exposures, and good-exposure
+bilinear cancellation into the final second-moment scale.</p></div><pre>theorem three_errors_le_final_scale {m V w : ℝ}
+    (hwm : w ≤ m) (hwV : w ≤ V) (hw : 50 ≤ w) :
+    Real.exp (-m / 16) + Real.exp (-V / 20) + Real.exp (-V / 5) ≤
+      Real.exp (-w / 100) := by
+…</pre></li><li id=L277><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_samples_powerBound_le_exp</code> <small>line 277</small><div class="doc"><p>A version independent of the constant in the prime sampling interval.
+In particular it applies to <code>[S^100,4*S^100]</code> once <code>S≥4</code>.</p></div><pre>theorem fresh_samples_powerBound_le_exp {S V : ℝ} (hS : 1 &lt; S)
+    (hV : 100000 * Real.log S ≤ V)
+    (p : Fin (freshLength S V) → ℕ)
+    (hp : ∀ i, (p i : ℝ) ≤ S ^ 101) :
+    ((∏ i, p i : ℕ) : ℝ) ≤ Real.exp ((4 / 5 : ℝ) * V) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L298><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_samples_powerBound_lt_modulus</code> <small>line 298</small></li><li id=L315><b>theorem</b> <code>OAI.Problem337.RandomProducts.fresh_coordinates_fit</code> <small>line 315</small><div class="doc"><p>The Hamming-distance condition supplies two disjoint fresh blocks.</p></div><pre>theorem fresh_coordinates_fit {S V : ℝ} (hS : 1 &lt; S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S)
+    (B : ℕ) (hB : blockLength S ≤ 4 * B) :
+    2 * freshLength S V ≤ B := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a>, <a href="RandomProductParameters.lean.html#L10">OAI.Problem337.RandomProducts.freshLength</a></p></li><li id=L322><b>theorem</b> <code>OAI.Problem337.RandomProducts.blockLength_large</code> <small>line 322</small></li><li id=L332><b>theorem</b> <code>OAI.Problem337.RandomProducts.random_errors_le_final_scale</code> <small>line 332</small><div class="doc"><p>The range assumptions automatically make the final scale large enough
+for absorption of all three error terms.</p></div><pre>theorem random_errors_le_final_scale {S V : ℝ} (hS : 2 ≤ S)
+    (hV : 100000 * Real.log S ≤ V) (hVS : V ≤ S) :
+    Real.exp (-(blockLength S : ℝ) / 16) + Real.exp (-V / 20) +
+      Real.exp (-V / 5) ≤ Real.exp (-min (blockLength S : ℝ) V / 100) := by
+…</pre><p class="refs">Mentions: <a href="RandomProductParameters.lean.html#L12">OAI.Problem337.RandomProducts.blockLength</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

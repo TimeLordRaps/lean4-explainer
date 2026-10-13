@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Phase/Quantiles.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Phase/Quantiles.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Phase</a> / <span>Quantiles.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Phase</a>/<span>Quantiles.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Phase/Quantiles.lean#L1">source</a></p><div class="doc"><h3>Finite quantiles for the fourth-moment gap</h3><p>The lower and upper quantile choices in the proof of <code>phase:quantile-gap</code>, §7.
+Weights are listed in increasing frequency order. No uniform measure on the
+frequency list is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>def</b> <code>OAI.LipschitzHilbert.prefixMass</code> <small>line 23</small></li><li id=L25><b>theorem</b> <code>OAI.LipschitzHilbert.prefixMass_succ</code> <small>line 25</small></li><li id=L28><b>theorem</b> <code>OAI.LipschitzHilbert.prefixMass_mono</code> <small>line 28</small></li><li id=L36><b>theorem</b> <code>OAI.LipschitzHilbert.exists_first_crossing</code> <small>line 36</small><div class="doc"><p>The first cumulative crossing has an atom on its right and a strict
+inequality immediately to its left.</p></div><pre>theorem exists_first_crossing (w : ℕ → ℝ) (N : ℕ) {t : ℝ}
+    (ht : 0 &lt; t) (htN : t ≤ prefixMass w N) :
+    ∃ a &lt; N, prefixMass w a &lt; t ∧ t ≤ prefixMass w (a + 1) := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L23">OAI.LipschitzHilbert.prefixMass</a></p></li><li id=L55><b>theorem</b> <code>OAI.LipschitzHilbert.exists_distinct_quantiles</code> <small>line 55</small><div class="doc"><p>Nonconcentration of single atoms forces the two quarter-tail quantiles
+to be distinct. The inequalities also bound the mass outside their interval.</p></div><pre>theorem exists_distinct_quantiles (w : ℕ → ℝ) (N : ℕ) {κ : ℝ}
+    (hκ : 0 &lt; κ) (hκ1 : κ &lt; 1) (hw : ∀ i, 0 ≤ w i)
+    (htotal : prefixMass w N = 1) (hatom : ∀ i &lt; N, w i ≤ 1 - κ) :
+    ∃ a b : ℕ, a &lt; b ∧ b &lt; N ∧
+      prefixMass w a &lt; κ / 4 ∧ κ / 4 ≤ prefixMass w (a + 1) ∧
+      prefixMass w b &lt; 1 - κ / 4 ∧ 1 - κ / 4 ≤ prefixMass w (b + 1) ∧
+      1 - κ / 2 ≤ prefixMass w (b + 1) - prefixMass w a := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L23">OAI.LipschitzHilbert.prefixMass</a></p></li><li id=L77><b>def</b> <code>OAI.LipschitzHilbert.intervalMass</code> <small>line 77</small><div class="doc"><p>The mass of a closed frequency interval.</p></div><pre>noncomputable def intervalMass {ι : Type*} [Fintype ι] (w frequency : ι → ℝ)
+    (a b : ℝ) : ℝ := by
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.LipschitzHilbert.intervalMass_le_halves</code> <small>line 84</small><div class="doc"><p>The two closed halves cover the closed interval; midpoint atoms may be
+counted twice, which has the favorable sign.</p></div><pre>theorem intervalMass_le_halves {ι : Type*} [Fintype ι]
+    (w frequency : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (a b : ℝ) :
+    intervalMass w frequency a b ≤ intervalMass w frequency a ((a + b) / 2) +
+      intervalMass w frequency ((a + b) / 2) b := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L77">OAI.LipschitzHilbert.intervalMass</a></p></li><li id=L103><b>theorem</b> <code>OAI.LipschitzHilbert.exists_heavy_half</code> <small>line 103</small><div class="doc"><p>One half of a frequency interval carries at least half its mass.</p></div><pre>theorem exists_heavy_half {ι : Type*} [Fintype ι]
+    (w frequency : ι → ℝ) (hw : ∀ i, 0 ≤ w i) {a b m : ℝ}
+    (hab : a ≤ b) (hm : m ≤ intervalMass w frequency a b) :
+    ∃ e h : ℝ, a ≤ e ∧ e ≤ h ∧ h ≤ b ∧
+      h - e = (b - a) / 2 ∧ m / 2 ≤ intervalMass w frequency e h := by
+…</pre><p class="refs">Mentions: <a href="Quantiles.lean.html#L77">OAI.LipschitzHilbert.intervalMass</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

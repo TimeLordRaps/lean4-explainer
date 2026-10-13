@@ -1,0 +1,122 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Wasserstein.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Wasserstein.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Wasserstein.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Wasserstein.lean</span></code></h1><p class="muted">25 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Wasserstein.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem358.wasserstein2_nonneg</code> <small>line 15</small><div class="doc"><p>The real-valued transport distance is nonnegative.</p></div><pre>theorem wasserstein2_nonneg (μ ν : Measure (E d)) :
+    0 ≤ wasserstein2 μ ν :=
+…</pre></li><li id=L20><b>theorem</b> <code>OAI.Problem358.wasserstein2_le_of_coupling</code> <small>line 20</small><div class="doc"><p>Any finite-cost coupling supplies an upper bound for the transport distance.</p></div><pre>theorem wasserstein2_le_of_coupling {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} (hπ : IsCoupling μ ν π)
+    (hfin : quadraticPlanCost π ≠ ∞) :
+    wasserstein2 μ ν ≤ Real.sqrt (quadraticPlanCost π).toReal := by
+…</pre></li><li id=L29><b>theorem</b> <code>OAI.Problem358.wasserstein2_eq_of_minimizing_coupling</code> <small>line 29</small><div class="doc"><p>A coupling which minimizes the extended cost computes the defined distance.</p></div><pre>theorem wasserstein2_eq_of_minimizing_coupling {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} (hπ : IsCoupling μ ν π)
+    (hmin : ∀ π&#x27;, IsCoupling μ ν π&#x27; → quadraticPlanCost π ≤ quadraticPlanCost π&#x27;) :
+    wasserstein2 μ ν = Real.sqrt (quadraticPlanCost π).toReal := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.Problem358.swap_isCoupling</code> <small>line 43</small></li><li id=L54><b>theorem</b> <code>OAI.Problem358.quadraticPlanCost_swap</code> <small>line 54</small><div class="doc"><p>Swapping both variables in a plan preserves quadratic cost.</p></div><pre>theorem quadraticPlanCost_swap (π : Measure (E d × E d)) :
+    quadraticPlanCost (π.map Prod.swap) = quadraticPlanCost π := by
+…</pre></li><li id=L64><b>theorem</b> <code>OAI.Problem358.wasserstein2_symm</code> <small>line 64</small><div class="doc"><p>The transport distance is symmetric, including for arbitrary input measures.</p></div><pre>theorem wasserstein2_symm (μ ν : Measure (E d)) :
+    wasserstein2 μ ν = wasserstein2 ν μ := by
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.Problem358.wasserstein2_self</code> <small>line 80</small><div class="doc"><p>Every probability measure has zero distance from itself.</p></div><pre>theorem wasserstein2_self (μ : Measure (E d)) [IsProbabilityMeasure μ] :
+    wasserstein2 μ μ = 0 := by
+…</pre></li><li id=L103><b>theorem</b> <code>OAI.Problem358.exists_coupling_sqrt_cost_lt</code> <small>line 103</small><div class="doc"><p>The infimum defining <code>wasserstein2</code> can be approximated by finite-cost plans.
+This does not require existence of an optimal coupling.</p></div><pre>theorem exists_coupling_sqrt_cost_lt {μ ν : Measure (E d)}
+    {π₀ : Measure (E d × E d)} (hπ₀ : IsCoupling μ ν π₀)
+    (hfinite : quadraticPlanCost π₀ ≠ ∞) {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ π : Measure (E d × E d), IsCoupling μ ν π ∧
+      quadraticPlanCost π ≠ ∞ ∧
+      Real.sqrt (quadraticPlanCost π).toReal &lt; wasserstein2 μ ν + ε := by
+…</pre></li><li id=L131><b>lemma</b> <code>OAI.Problem358.coordinate_sq_le_norm_sq</code> <small>line 131</small><div class="doc"><p>A single Euclidean coordinate is dominated by the Euclidean norm.</p></div><pre>lemma coordinate_sq_le_norm_sq {d : ℕ} (x : E d) (j : Fin d) :
+    (x j) ^ 2 ≤ ‖x‖ ^ 2 := by
+…</pre></li><li id=L138><b>lemma</b> <code>OAI.Problem358.coordinate_sq_le_displacement_sq</code> <small>line 138</small><div class="doc"><p>If the source coordinate vanishes, displacement controls the target coordinate.</p></div><pre>lemma coordinate_sq_le_displacement_sq {d : ℕ} (x y : E d) (j : Fin d)
+    (hx : x j = 0) :
+    (y j) ^ 2 ≤ ‖x - y‖ ^ 2 := by
+…</pre></li><li id=L145><b>lemma</b> <code>OAI.Problem358.coordinate_moment_le_quadraticPlanCost</code> <small>line 145</small><div class="doc"><p>Every coupling pays at least the target coordinate second moment when the
+source is concentrated on the zero coordinate hyperplane.</p></div><pre>lemma coordinate_moment_le_quadraticPlanCost {d : ℕ}
+    {μ ν : Measure (E d)} {π : Measure (E d × E d)} (j : Fin d)
+    (hμ : ∀ᵐ x ∂μ, x j = 0) (hπ : IsCoupling μ ν π) :
+    (∫⁻ y, ENNReal.ofReal ((y j) ^ 2) ∂ν) ≤ quadraticPlanCost π := by
+…</pre></li><li id=L159><b>lemma</b> <code>OAI.Problem358.coordinate_moment_le_sInf_cost</code> <small>line 159</small><div class="doc"><p>The same lower bound passes to the infimum of all coupling costs.</p></div><pre>lemma coordinate_moment_le_sInf_cost {d : ℕ}
+    {μ ν : Measure (E d)} (j : Fin d) (hμ : ∀ᵐ x ∂μ, x j = 0) :
+    (∫⁻ y, ENNReal.ofReal ((y j) ^ 2) ∂ν) ≤
+      sInf {r : ℝ≥0∞ | ∃ π : Measure (E d × E d),
+        IsCoupling μ ν π ∧ quadraticPlanCost π = r} := by
+…</pre></li><li id=L171><b>lemma</b> <code>OAI.Problem358.sqrt_coordinate_moment_le_wasserstein2</code> <small>line 171</small><div class="doc"><p>A finite-cost coupling makes the coordinate-moment bound valid after taking
+<code>toReal</code> and square roots. The finiteness hypothesis is essential because
+<code>ENNReal.toReal ∞ = 0</code>.</p></div><pre>lemma sqrt_coordinate_moment_le_wasserstein2 {d : ℕ}
+    {μ ν : Measure (E d)} {π : Measure (E d × E d)} (j : Fin d)
+    (hμ : ∀ᵐ x ∂μ, x j = 0) (hπ : IsCoupling μ ν π)
+    (hfinite : quadraticPlanCost π &lt; ∞) :
+    Real.sqrt (ENNReal.toReal (∫⁻ y, ENNReal.ofReal ((y j) ^ 2) ∂ν)) ≤
+      wasserstein2 μ ν := by
+…</pre></li><li id=L186><b>lemma</b> <code>OAI.Problem358.wasserstein2_eq_sqrt_coordinate_moment</code> <small>line 186</small><div class="doc"><p>A coupling attaining the coordinate lower bound computes the Wasserstein
+quantity exactly; in particular this applies to the central-atom matching plan.</p></div><pre>lemma wasserstein2_eq_sqrt_coordinate_moment {d : ℕ}
+    {μ ν : Measure (E d)} {π : Measure (E d × E d)} (j : Fin d)
+    (hμ : ∀ᵐ x ∂μ, x j = 0) (hπ : IsCoupling μ ν π)
+    (hcost : quadraticPlanCost π = ∫⁻ y, ENNReal.ofReal ((y j) ^ 2) ∂ν) :
+    wasserstein2 μ ν =
+      Real.sqrt (ENNReal.toReal (∫⁻ y, ENNReal.ofReal ((y j) ^ 2) ∂ν)) := by
+…</pre></li><li id=L200><b>lemma</b> <code>OAI.Problem358.wasserstein2_pos_of_coordinate_moment_pos</code> <small>line 200</small><div class="doc"><p>A positive target coordinate moment separates the measures in Wasserstein
+quantity whenever a finite-cost coupling exists.</p></div><pre>lemma wasserstein2_pos_of_coordinate_moment_pos {d : ℕ}
+    {μ ν : Measure (E d)} {π : Measure (E d × E d)} (j : Fin d)
+    (hμ : ∀ᵐ x ∂μ, x j = 0) (hπ : IsCoupling μ ν π)
+    (hfinite : quadraticPlanCost π &lt; ∞)
+    (hpos : 0 &lt; ∫⁻ y, ENNReal.ofReal ((y j) ^ 2) ∂ν) :
+    0 &lt; wasserstein2 μ ν := by
+…</pre></li><li id=L224><b>theorem</b> <code>OAI.Problem358.testing_integral_sq_le</code> <small>line 224</small><div class="doc"><p>The second-moment inequality for a real random variable on a probability space.</p></div><pre>theorem testing_integral_sq_le {X : Type*} [MeasurableSpace X]
+    {ρ : Measure X} [IsProbabilityMeasure ρ] {f : X → ℝ} (hf : MemLp f 2 ρ) :
+    (∫ x, f x ∂ρ) ^ 2 ≤ ∫ x, (f x) ^ 2 ∂ρ := by
+…</pre></li><li id=L232><b>theorem</b> <code>OAI.Problem358.integral_test_le_sqrt_cost</code> <small>line 232</small><div class="doc"><p>A finite-cost coupling controls the difference of Lipschitz test integrals.</p></div><pre>theorem integral_test_le_sqrt_cost {d : ℕ} {μ ν : Measure (E d)}
+    {π : Measure (E d × E d)} (hπ : IsCoupling μ ν π)
+    (hc : quadraticPlanCost π ≠ ∞) {L : ℝ≥0} {f : E d → ℝ}
+    (hf : LipschitzWith L f) (hfμ : Integrable f μ) (hfν : Integrable f ν) :
+    |(∫ x, f x ∂μ) - ∫ y, f y ∂ν| ≤
+      L * Real.sqrt (quadraticPlanCost π).toReal := by
+…</pre></li><li id=L266><b>theorem</b> <code>OAI.Problem358.testing_sqrt_sInf_bound</code> <small>line 266</small><div class="doc"><p>A nonnegative square-root lower bound passes to the infimum of extended costs.</p></div><pre>theorem testing_sqrt_sInf_bound (S : Set ℝ≥0∞)
+    (hfinite : ∃ r ∈ S, r ≠ ∞) {D L : ℝ} (hD : 0 ≤ D) (hL : 0 ≤ L)
+    (hbound : ∀ r ∈ S, r ≠ ∞ → D ≤ L * Real.sqrt r.toReal) :
+    D ≤ L * Real.sqrt (sInf S).toReal := by
+…</pre></li><li id=L292><b>theorem</b> <code>OAI.Problem358.integral_test_le_wasserstein2</code> <small>line 292</small><div class="doc"><p>Lipschitz testing is controlled by the problem's Wasserstein distance whenever a
+finite-cost coupling exists. Compact support is not required in this interface.</p></div><pre>theorem integral_test_le_wasserstein2 {d : ℕ} {μ ν : Measure (E d)}
+    (hfinite : ∃ π : Measure (E d × E d),
+      IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞)
+    {L : ℝ≥0} {f : E d → ℝ} (hf : LipschitzWith L f)
+    (hfμ : Integrable f μ) (hfν : Integrable f ν) :
+    |(∫ x, f x ∂μ) - ∫ y, f y ∂ν| ≤ L * wasserstein2 μ ν := by
+…</pre></li><li id=L307><b>theorem</b> <code>OAI.Problem358.integral_test_eq_of_wasserstein2_eq_zero</code> <small>line 307</small><div class="doc"><p>A zero-Wasserstein pair agrees on every integrable Lipschitz test.</p></div><pre>theorem integral_test_eq_of_wasserstein2_eq_zero {d : ℕ} {μ ν : Measure (E d)}
+    (hfinite : ∃ π : Measure (E d × E d),
+      IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞)
+    (hzero : wasserstein2 μ ν = 0) {L : ℝ≥0} {f : E d → ℝ}
+    (hf : LipschitzWith L f) (hfμ : Integrable f μ) (hfν : Integrable f ν) :
+    (∫ x, f x ∂μ) = ∫ y, f y ∂ν := by
+…</pre></li><li id=L318><b>theorem</b> <code>OAI.Problem358.tendsto_probabilityMeasure_of_wasserstein2_tendsto_zero</code> <small>line 318</small><div class="doc"><p>Wasserstein convergence with finite-cost couplings implies weak convergence.</p></div><pre>theorem tendsto_probabilityMeasure_of_wasserstein2_tendsto_zero
+    {d : ℕ} {ι : Type*} {l : Filter ι} [l.IsCountablyGenerated]
+    {μs : ι → ProbabilityMeasure (E d)} {ν : ProbabilityMeasure (E d)}
+    (hfinite : ∀ i, ∃ π : Measure (E d × E d),
+      IsCoupling (μs i : Measure (E d)) (ν : Measure (E d)) π ∧ quadraticPlanCost π ≠ ∞)
+    (hW : Tendsto (fun i =&gt; wasserstein2 (μs i : Measure (E d)) (ν : Measure (E d))) l (𝓝 0)) :
+    Tendsto μs l (𝓝 ν) := by
+…</pre></li><li id=L343><b>theorem</b> <code>OAI.Problem358.measure_eq_of_wasserstein2_eq_zero</code> <small>line 343</small><div class="doc"><p>Finite-cost probability measures at zero Wasserstein distance are equal.</p></div><pre>theorem measure_eq_of_wasserstein2_eq_zero {d : ℕ} {μ ν : Measure (E d)}
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    (hfinite : ∃ π : Measure (E d × E d),
+      IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞)
+    (hzero : wasserstein2 μ ν = 0) : μ = ν := by
+…</pre></li><li id=L359><b>theorem</b> <code>OAI.Problem358.wasserstein2_pos_of_ne_of_finite_coupling</code> <small>line 359</small><div class="doc"><p>Distinct probabilities with a finite-cost coupling have positive Wasserstein distance.</p></div><pre>theorem wasserstein2_pos_of_ne_of_finite_coupling {d : ℕ} {μ ν : Measure (E d)}
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    (hfinite : ∃ π : Measure (E d × E d),
+      IsCoupling μ ν π ∧ quadraticPlanCost π ≠ ∞) (hne : μ ≠ ν) :
+    0 &lt; wasserstein2 μ ν := by
+…</pre></li><li id=L383><b>theorem</b> <code>OAI.Problem358.le_of_le_all_coupling_sqrt_cost</code> <small>line 383</small><div class="doc"><p>A continuous nondecreasing function of root cost commutes with the transport
+infimum for purposes of universal lower estimates. No minimizing plan is required.</p></div><pre>theorem le_of_le_all_coupling_sqrt_cost {μ ν : Measure (E d)}
+    {π₀ : Measure (E d × E d)} (hπ₀ : IsCoupling μ ν π₀)
+    (hfinite : quadraticPlanCost π₀ ≠ ∞) {F : ℝ → ℝ}
+    (hmono : MonotoneOn F (Set.Ici 0))
+    (hcont : ContinuousAt F (wasserstein2 μ ν)) {a : ℝ}
+    (hbound : ∀ π : Measure (E d × E d), IsCoupling μ ν π →
+      quadraticPlanCost π ≠ ∞ → a ≤ F (Real.sqrt (quadraticPlanCost π).toReal)) :
+    a ≤ F (wasserstein2 μ ν) := by
+…</pre></li><li id=L406><b>theorem</b> <code>OAI.Problem358.le_mul_rpow_wasserstein2_of_coupling_bound</code> <small>line 406</small><div class="doc"><p>Power-type estimates valid for every finite-cost coupling descend to the
+exact transport distance, including at zero distance.</p></div><pre>theorem le_mul_rpow_wasserstein2_of_coupling_bound {μ ν : Measure (E d)}
+    {π₀ : Measure (E d × E d)} (hπ₀ : IsCoupling μ ν π₀)
+    (hfinite : quadraticPlanCost π₀ ≠ ∞) {a C α : ℝ}
+    (hC : 0 ≤ C) (hα : 0 ≤ α)
+    (hbound : ∀ π : Measure (E d × E d), IsCoupling μ ν π →
+      quadraticPlanCost π ≠ ∞ →
+      a ≤ C * Real.rpow (Real.sqrt (quadraticPlanCost π).toReal) α) :
+    a ≤ C * Real.rpow (wasserstein2 μ ν) α := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

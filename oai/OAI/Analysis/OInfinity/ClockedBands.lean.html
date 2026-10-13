@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/ClockedBands.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/ClockedBands.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>ClockedBands.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>ClockedBands.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/ClockedBands.lean#L1">source</a></p><div class="doc"><h3>Clock correction of the actual cyclic bands</h3><p>A clock which cycles the projection partition turns a band of degree <code>d</code>
+into a block diagonal element after multiplication by its inverse <code>d</code>th
+power. The clock and the partition can be constructed inside a prescribed
+closed row algebra. This does not assert the endpoint cocycle equation.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_cycles_pow</code> <small>line 20</small></li><li id=L37><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_inverse_pow_cycles</code> <small>line 37</small></li><li id=L44><b>lemma</b> <code>OAI.WeakPureInfiniteness.clocked_band_diagonal</code> <small>line 44</small><div class="doc"><p>Exact removal of the outer band degree. Coefficients remain literal.</p></div><pre>lemma clocked_band_diagonal {N : ℕ} [NeZero N] (u : E) (e : ZMod N → E)
+    (he : ∀ j, star (e j) = e j)
+    (hc : ∀ j, u * e j = e (j + 1) * u) (d : ℕ) (x : ZMod N → E) :
+    star (u ^ d) * towerBand e (Equiv.addRight (d : ZMod N)) x =
+      ∑ j, e j * (star (u ^ d) * x j) * e j := by
+…</pre><p class="refs">Mentions: <a href="BandOperators.lean.html#L69">OAI.WeakPureInfiniteness.towerBand</a></p></li><li id=L58><b>lemma</b> <code>OAI.WeakPureInfiniteness.clocked_band_commute</code> <small>line 58</small><div class="doc"><p>The inverse clock makes the band commute with every projection cell.</p></div><pre>lemma clocked_band_commute {N : ℕ} [NeZero N] (u : E) (e : ZMod N → E)
+    (he : ∀ j, IsStarProjection (e j))
+    (ho : ∀ i j, i ≠ j → e i * e j = 0)
+    (hc : ∀ j, u * e j = e (j + 1) * u) (d : ℕ) (x : ZMod N → E) (k : ZMod N) :
+    Commute (star (u ^ d) * towerBand e (Equiv.addRight (d : ZMod N)) x) (e k) := by
+…</pre><p class="refs">Mentions: <a href="BandOperators.lean.html#L69">OAI.WeakPureInfiniteness.towerBand</a></p></li><li id=L88><b>lemma</b> <code>OAI.WeakPureInfiniteness.clocked_masked_band_commute</code> <small>line 88</small></li><li id=L97><b>lemma</b> <code>OAI.WeakPureInfiniteness.clocked_band_gram</code> <small>line 97</small><div class="doc"><p>The norm and initial Gram are unchanged by multiplication by a unitary clock.</p></div><pre>lemma clocked_band_gram (u x : E) (hu : u ∈ unitary E) (d : ℕ) :
+    star (star (u ^ d) * x) * (star (u ^ d) * x) = star x * x := by
+…</pre></li><li id=L105><b>lemma</b> <code>OAI.WeakPureInfiniteness.clocked_band_norm</code> <small>line 105</small></li><li id=L109><b>lemma</b> <code>OAI.WeakPureInfiniteness.evenRohlinClock_cycles_mod</code> <small>line 109</small></li><li id=L127><b>lemma</b> <code>OAI.WeakPureInfiniteness.evenRohlinClock_transports</code> <small>line 127</small></li><li id=L137><b>lemma</b> <code>OAI.WeakPureInfiniteness.clock_small_sqrt</code> <small>line 137</small></li><li id=L158><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_even_clock_partition_in</code> <small>line 158</small><div class="doc"><p>The clock and all cells are constructed in <code>B</code>; their row commutators
+and shift errors have an arbitrary prescribed tolerance.</p></div><pre>lemma exists_even_clock_partition_in {n : ℕ} (B : StarSubalgebra ℂ E)
+    [IsClosed (B : Set E)] (r : Fin 2 × Fin n → E)
+    (hr : ∀ i j, star (r i) * r j = if i = j then 1 else 0)
+    (hsum : (∑ i, r i * star (r i)) = 1) (hmem : ∀ i, r i ∈ B)
+    (m : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ (u : E) (e : ZMod (2 ^ m) → E),
+      u ∈ B ∧ u ∈ unitary E ∧ u ^ (2 ^ m) = 1 ∧
+      (∀ j, e j ∈ B) ∧ (∀ j, IsStarProjection (e j)) ∧ (∑ j, e j) = 1 ∧
+      (∀ i j, i ≠ j → e i * e j = 0) ∧
+      (∀ j, u * e j = e (j + 1) * u) ∧
+      ‖evenRowShift r u - u‖ &lt; ε ∧
+      (∀ i, ‖u * r i - r i * u‖ &lt; ε) ∧
+…</pre><p class="refs">Mentions: <a href="EvenRowCAR.lean.html#L22">OAI.WeakPureInfiniteness.evenRowShift</a></p></li><li id=L241><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_binary_clock_commuting</code> <small>line 241</small><div class="doc"><p>In the two-row application the clock and source partition commute
+exactly with the opposite row, because they lie in the generated source
+algebra. The source-generator estimate is quantitative.</p></div><pre>lemma exists_binary_clock_commuting (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (hcomm : bergRowsCommute s t) (m : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ (u : E) (e : ZMod (2 ^ m) → E),
+      u ∈ unitary E ∧ u ^ (2 ^ m) = 1 ∧
+      (∀ j, IsStarProjection (e j)) ∧ (∑ j, e j) = 1 ∧
+      (∀ i j, i ≠ j → e i * e j = 0) ∧
+      (∀ j, u * e j = e (j + 1) * u) ∧
+      ‖finiteRowShift s u - u‖ &lt; ε ∧
+      (∀ i, ‖u * s i - s i * u‖ &lt; ε) ∧
+      (∀ i, Commute u (t i)) ∧ (∀ j i, Commute (e j) (t i)) ∧
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/CellFaces.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/CellFaces.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>CellFaces.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>CellFaces.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/CellFaces.lean#L1">source</a></p><div class="doc"><p>Canonical first-moment coefficients of common affine-cell faces.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>theorem</b> <code>OAI.Problem358.CellGeometry.mem_commonFace_iff</code> <small>line 18</small><div class="doc"><p>A common cell face is exactly one closed cell restricted to the tie plane.</p></div><pre>theorem mem_commonFace_iff (K : Set (E d)) (y : ι → E d) (c : ι → ℝ)
+    (i j : ι) (x : E d) :
+    x ∈ closedCell K y c i ∩ closedCell K y c j ↔
+      x ∈ closedCell K y c i ∧ ⟪x, y i⟫ + c i = ⟪x, y j⟫ + c j := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L29><b>theorem</b> <code>OAI.Problem358.CellGeometry.mem_commonFace_iff_of_tie</code> <small>line 29</small><div class="doc"><p>On the tie plane only the other branches constrain the common face.</p></div><pre>theorem mem_commonFace_iff_of_tie (K : Set (E d)) (y : ι → E d)
+    (c : ι → ℝ) (i j : ι) {x : E d}
+    (htie : ⟪x, y i⟫ + c i = ⟪x, y j⟫ + c j) :
+    x ∈ closedCell K y c i ∩ closedCell K y c j ↔
+      x ∈ K ∧ ∀ k, k ≠ i → k ≠ j → ⟪x, y k⟫ + c k ≤ ⟪x, y i⟫ + c i := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L50><b>def</b> <code>OAI.Problem358.CellGeometry.faceMoment</code> <small>line 50</small><div class="doc"><p>The vector face coefficient used by both mass site-motion and stationary
+first-moment differentiation. The diagonal is zero by the normal-length factor.</p></div><pre>def faceMoment (K : Set (E d)) (y : ι → E d) (c : ι → ℝ) (i j : ι) : E d :=
+…</pre></li><li id=L55><b>theorem</b> <code>OAI.Problem358.CellGeometry.faceMoment_symm</code> <small>line 55</small></li><li id=L61><b>theorem</b> <code>OAI.Problem358.CellGeometry.faceMoment_self</code> <small>line 61</small></li><li id=L66><b>theorem</b> <code>OAI.Problem358.CellGeometry.faceMoment_eq_chart</code> <small>line 66</small><div class="doc"><p>A tie-plane chart gives the same canonical normalized first moment.</p></div><pre>theorem faceMoment_eq_chart (K : Set (E d)) (y : ι → E d) (c : ι → ℝ)
+    {i j : ι} (hy : y i ≠ y j) {z : E d}
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j) :
+    faceMoment K y c i j = ((volume K).toReal * ‖y i - y j‖)⁻¹ •
+      ∫ w : (ℝ ∙ (y i - y j))ᗮ in
+        {w : (ℝ ∙ (y i - y j))ᗮ |
+          z + (w : E d) ∈ closedCell K y c i ∩ closedCell K y c j},
+        z + (w : E d) := by
+…</pre><p class="refs">Mentions: <a href="CellFaces.lean.html#L50">OAI.Problem358.CellGeometry.faceMoment</a>, <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L95><b>theorem</b> <code>OAI.Problem358.CellGeometry.commonFace_indicator_eq_cut_product</code> <small>line 95</small><div class="doc"><p>On an equality plane the remaining cut indicators describe exactly the
+common face, including its boundary.</p></div><pre>theorem commonFace_indicator_eq_cut_product (K : Set (E d))
+    (y : ι → E d) (c : ι → ℝ) (i j : ι) (J : Finset ι)
+    (hJ : ∀ k, k ∈ J ↔ k ≠ i ∧ k ≠ j) (f : E d → ℝ) {x : E d}
+    (htie : ⟪x, y i⟫ + c i = ⟪x, y j⟫ + c j) :
+    (closedCell K y c i ∩ closedCell K y c j).indicator f x =
+      K.indicator f x * ∏ k ∈ J,
+        MovingCellTrace.cutIndicator (⟪x, y i - y k⟫ + (c i - c k)) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="MovingTrace.lean.html#L13">OAI.Problem358.MovingCellTrace.cutIndicator</a></p></li><li id=L135><b>theorem</b> <code>OAI.Problem358.CellGeometry.tie_on_tangent_chart</code> <small>line 135</small><div class="doc"><p>Translating a tangent vector preserves the affine equality.</p></div><pre>theorem tie_on_tangent_chart (y : ι → E d) (c : ι → ℝ) (i j : ι)
+    {z : E d} (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j)
+    (w : (ℝ ∙ (y i - y j))ᗮ) :
+    ⟪z + (w : E d), y i⟫ + c i = ⟪z + (w : E d), y j⟫ + c j := by
+…</pre></li><li id=L150><b>theorem</b> <code>OAI.Problem358.CellGeometry.interface_integral_eq_cut_trace</code> <small>line 150</small><div class="doc"><p>The scalar face integral in a moving-cut formula is the canonical intrinsic
+integral over the common cell face. No boundary or third-tie exception is needed
+for this exact identification.</p></div><pre>theorem interface_integral_eq_cut_trace {K : Set (E d)} (hK : IsClosed K)
+    (y : ι → E d) (c : ι → ℝ) {i j : ι} (hy : y i ≠ y j)
+    (J : Finset ι) (hJ : ∀ k, k ∈ J ↔ k ≠ i ∧ k ≠ j)
+    (f : E d → ℝ) {z : E d}
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j) :
+    (∫ x in closedCell K y c i ∩ closedCell K y c j, f x
+      ∂IntrinsicSurface.interfaceMeasure (y i) (y j) (c i) (c j)) =
+      ∫ w : (ℝ ∙ (y i - y j))ᗮ,
+        K.indicator f (z + (w : E d)) * ∏ k ∈ J,
+          MovingCellTrace.cutIndicator
+            (⟪z + (w : E d), y i - y k⟫ + (c i - c k)) := by
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="SurfaceMeasure.lean.html#L117">OAI.Problem358.IntrinsicSurface.interfaceMeasure</a>, <a href="MovingTrace.lean.html#L13">OAI.Problem358.MovingCellTrace.cutIndicator</a></p></li><li id=L188><b>theorem</b> <code>OAI.Problem358.PositiveCellFullDerivative.faceVariation_eq_intrinsic</code> <small>line 188</small><div class="doc"><p>The cut derivative is intrinsically defined and independent of the chosen
+tie-plane basepoint. This identity holds for every scalar weight.</p></div><pre>theorem faceVariation_eq_intrinsic {K : Set (E d)} (hK : IsClosed K)
+    (y v : ι → E d) (c r : ι → ℝ) (w : E d → ℝ)
+    {i j : ι} (hy : y i ≠ y j) {z : E d}
+    (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j) :
+    faceVariation K y v c r w i j z =
+      ∫ x in closedCell K y c i ∩ closedCell K y c j,
+        ((r i - r j + ⟪v i - v j, x⟫) / ‖y i - y j‖) * w x
+        ∂IntrinsicSurface.interfaceMeasure (y i) (y j) (c i) (c j) := by
+…</pre><p class="refs">Mentions: <a href="CellDerivative.lean.html#L218">OAI.Problem358.PositiveCellFullDerivative.faceVariation</a>, <a href="SurfaceMeasure.lean.html#L117">OAI.Problem358.IntrinsicSurface.interfaceMeasure</a></p></li><li id=L217><b>theorem</b> <code>OAI.Problem358.PositiveCellFullDerivative.normalized_faceVariation_one</code> <small>line 217</small><div class="doc"><p>The mass face contribution equals the scalar and first-moment coefficients
+with the exact source-volume normalization. No positive-volume cancellation is
+needed in this algebraic identity.</p></div><pre>theorem normalized_faceVariation_one {K : Set (E d)} (hK : IsCompact K)
+    (y v : ι → E d) (c r : ι → ℝ) {i j : ι} (hy : y i ≠ y j)
+    {z : E d} (htie : ⟪z, y i⟫ + c i = ⟪z, y j⟫ + c j) :
+    (volume K).toReal⁻¹ * faceVariation K y v c r (fun _ =&gt; 1) i j z =
+      (IntrinsicSurface.interfaceMeasure (y i) (y j) (c i) (c j)
+        (closedCell K y c i ∩ closedCell K y c j)).toReal /
+          ((volume K).toReal * ‖y i - y j‖) * (r i - r j) +
+        ⟪faceMoment K y c i j, v i - v j⟫ := by
+…</pre><p class="refs">Mentions: <a href="CellDerivative.lean.html#L218">OAI.Problem358.PositiveCellFullDerivative.faceVariation</a>, <a href="SurfaceMeasure.lean.html#L117">OAI.Problem358.IntrinsicSurface.interfaceMeasure</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

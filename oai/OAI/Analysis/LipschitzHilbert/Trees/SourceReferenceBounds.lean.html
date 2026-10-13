@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/SourceReferenceBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/SourceReferenceBounds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>SourceReferenceBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>SourceReferenceBounds.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/SourceReferenceBounds.lean#L1">source</a></p><div class="doc"><p>Square and cubic-variation moments for the actual normalized
+reference collection. Its root window need only contain retained
+lengths, so the short-packet restriction introduces no larger window.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.referenceSquareMomentCost</code> <small>line 16</small></li><li id=L21><b>def</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.referenceVariationMomentCost</code> <small>line 21</small></li><li id=L29><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.reference_uniform_moments</code> <small>line 29</small><div class="doc"><p>Both constants precede all finite index types and the horizontal
+scale. The spectra are the concrete annuli proved from original packet
+spectra by <code>frozenProfile_fourier_cutoffs</code>.</p></div><pre>theorem reference_uniform_moments (hL : LepingleInput) {lo hi : ℝ}
+    (hlo : 0 &lt; lo) (hhi : 0 ≤ hi) :
+    ∃ A M : ℝ, 0 &lt; A ∧ 0 &lt; M ∧ ∀ (N : ℕ) (κ : Type) (ι : Fin N → Type)
+      [Fintype κ] [∀ j, Fintype (ι j)] (P : SourceLatticePacket N κ ι)
+      (d : Fin N → ℝ) (v : ℝ×ℝ → ℝ) (hv : Measurable v)
+      (g : ℝ×ℝ → EuclideanSpace ℂ κ) (hg : Measurable g) (hg1 : ∀ z, ‖g z‖ ≤ 1),
+      Monotone d →
+      (∀ j u k y xi, |xi| &lt; (lo/P.topLength)*(2:ℝ)^j.val → 𝓕 (P.raw 0 j u k y) xi = 0) →
+      (∀ j u k y xi, (hi/P.topLength)*(2:ℝ)^j.val &lt; |xi| → 𝓕 (P.raw 0 j u k y) xi = 0) →
+      ∀ (y : ℝ) (grid : FiniteLineGrid), 1 &lt; grid.branching →
+      (∀ j (_u : ι j), P.length j ≤ P.topLength*grid.width) → ∀ p : ℝ, 0 ≤ p →
+      let Q := P.referenceAnalyzedLine d v hv g hg hg1 y
+…</pre><p class="refs">Mentions: <a href="../Estimates/PublishedInputs.lean.html#L159">OAI.LipschitzHilbert.LepingleInput</a>, <a href="../Packets/SourceLatticePacket.lean.html#L20">OAI.LipschitzHilbert.SourceLatticePacket</a>, <a href="FiniteLineGrid.lean.html#L15">OAI.LipschitzHilbert.FiniteLineGrid</a></p></li><li id=L67><b>theorem</b> <code>OAI.LipschitzHilbert.SourceLatticePacket.frozen_reference_spectral_inputs</code> <small>line 67</small><div class="doc"><p>Active frozen selector values give the required normalized spectra
+from just the original physical packet spectrum.</p></div><pre>theorem frozen_reference_spectral_inputs {N : ℕ} {κ : Type} {ι : Fin N → Type}
+    [Fintype κ] [∀ j, Fintype (ι j)] (P : SourceLatticePacket N κ ι)
+    (c : ∀ j, ι j → κ → ℂ) (hc : ∀ j u k, ‖c j u k‖ ≤ 1)
+    (t w cStar cEta CEta cb Cb : ℝ)
+    (hw : 0 &lt; w) (hcEta : 0 &lt; cEta) (hcb : 0 ≤ cb) (hCb : 0 ≤ Cb)
+    (hspectrum : ∀ j u k xi eta, planarAngularFourier (P.physicalPacket t j u k) (xi,eta) ≠ 0 →
+      |xi+(t+P.rowSlope j)*eta| ≤ cStar/P.length j ∧ cEta ≤ w*eta ∧ w*eta ≤ CEta)
+    (hselector : ∀ j u k, c j u k ≠ 0 →
+      cb*w/P.length j ≤ |P.rowSlope j| ∧ |P.rowSlope j| ≤ Cb*w/P.length j) :
+    (∀ j u k y xi,
+      |xi| &lt; (((cEta*cb-cStar)/(2*Real.pi))/(P.frozenProfile c hc).topLength)*(2:ℝ)^j.val →
+      𝓕 ((P.frozenProfile c hc).raw 0 j u k y) xi = 0) ∧
+…</pre><p class="refs">Mentions: <a href="../Packets/SourceLatticePacket.lean.html#L20">OAI.LipschitzHilbert.SourceLatticePacket</a>, <a href="../Phase/PlanarSliceFourierAngular.lean.html#L15">OAI.LipschitzHilbert.planarAngularFourier</a>, <a href="../Packets/SourceLatticePacket.lean.html#L74">OAI.LipschitzHilbert.SourceLatticePacket.raw</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CoulombTransport/LocalImplicit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CoulombTransport/LocalImplicit.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">CoulombTransport</a> / <span>LocalImplicit.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">CoulombTransport</a>/<span>LocalImplicit.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CoulombTransport/LocalImplicit.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.Problem356.LocalImplicit.exists_analytic_implicit_branch</code> <small>line 20</small><div class="doc"><p>Analytic implicit-function theorem, packaged on open product neighborhoods.
+The equation is normalized to zero, as for a stationary-point equation.</p></div><pre>theorem exists_analytic_implicit_branch
+    (G : P × S → S) (p : P) (s : S)
+    (hG : ContDiffAt ℝ ω G (p, s))
+    (hzero : G (p, s) = 0)
+    (hinv : (fderiv ℝ G (p, s) ∘L ContinuousLinearMap.inr ℝ P S).IsInvertible) :
+    ∃ (ψ : P → S) (U : Set P) (V : Set S),
+      IsOpen U ∧ p ∈ U ∧ IsOpen V ∧ s ∈ V ∧
+      ContDiffOn ℝ ω ψ U ∧ MapsTo ψ U V ∧ ψ p = s ∧
+      (∀ y ∈ U, G (y, ψ y) = 0) ∧
+      (∀ y ∈ U, ∀ z ∈ V, G (y, z) = 0 ↔ ψ y = z) ∧
+      HasStrictFDerivAt ψ
+        (-(fderiv ℝ G (p, s) ∘L ContinuousLinearMap.inr ℝ P S).inverse ∘L
+…</pre></li><li id=L59><b>theorem</b> <code>OAI.Problem356.LocalImplicit.exists_analytic_local_diffeomorph</code> <small>line 59</small><div class="doc"><p>A map analytic at one point with invertible derivative is analytic in both
+directions on a suitable open partial homeomorphism.</p></div><pre>theorem exists_analytic_local_diffeomorph
+    (f : P → S) (p : P)
+    (hf : ContDiffAt ℝ ω f p)
+    (hinv : (fderiv ℝ f p).IsInvertible) :
+    ∃ e : OpenPartialHomeomorph P S,
+      (e : P → S) = f ∧ p ∈ e.source ∧
+      ContDiffOn ℝ ω e e.source ∧ ContDiffOn ℝ ω e.symm e.target := by
+…</pre></li><li id=L101><b>theorem</b> <code>OAI.Problem356.LocalImplicit.exists_two_analytic_local_charts</code> <small>line 101</small><div class="doc"><p>The two projections of a local branch can be made analytic diffeomorphisms
+on one common source neighborhood, contained in any prescribed neighborhood.</p></div><pre>theorem exists_two_analytic_local_charts
+    (ψ : P → S × S) (p : P) (U : Set P) (hU : U ∈ 𝓝 p)
+    (hψ : ContDiffAt ℝ ω ψ p)
+    (hinv₁ : (fderiv ℝ (fun y =&gt; (ψ y).1) p).IsInvertible)
+    (hinv₂ : (fderiv ℝ (fun y =&gt; (ψ y).2) p).IsInvertible) :
+    ∃ e₁ e₂ : OpenPartialHomeomorph P S,
+      (e₁ : P → S) = (fun y =&gt; (ψ y).1) ∧
+      (e₂ : P → S) = (fun y =&gt; (ψ y).2) ∧
+      p ∈ e₁.source ∧ e₁.source = e₂.source ∧ e₁.source ⊆ U ∧
+      ContDiffOn ℝ ω e₁ e₁.source ∧ ContDiffOn ℝ ω e₁.symm e₁.target ∧
+      ContDiffOn ℝ ω e₂ e₂.source ∧ ContDiffOn ℝ ω e₂.symm e₂.target := by
+…</pre></li><li id=L135><b>def</b> <code>OAI.Problem356.LocalImplicit.implicitDerivative</code> <small>line 135</small><div class="doc"><p>The derivative supplied by the implicit-function theorem, with parameter first.</p></div><pre>def implicitDerivative (G : P × (S × S) → S × S) (p : P) (s : S × S) :
+    P →L[ℝ] S × S :=
+…</pre></li><li id=L141><b>structure</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts</code> <small>line 141</small><div class="doc"><p>Two separately invertible coordinates of one local stationary branch.</p></div><pre>structure AnalyticStationaryCharts (G : P × (S × S) → S × S) (p : P) (s : S × S) where
+…</pre></li><li id=L162><b>theorem</b> <code>OAI.Problem356.LocalImplicit.nonempty_analyticStationaryCharts</code> <small>line 162</small><div class="doc"><p>Local stationarity plus the three invertibility checks produces two genuine
+analytic charts on a common open source.</p></div><pre>theorem nonempty_analyticStationaryCharts
+    (G : P × (S × S) → S × S) (p : P) (s : S × S)
+    (hG : ContDiffAt ℝ ω G (p, s)) (hzero : G (p, s) = 0)
+    (hinv : (fderiv ℝ G (p, s) ∘L ContinuousLinearMap.inr ℝ P (S × S)).IsInvertible)
+    (hcentral : (ContinuousLinearMap.fst ℝ S S ∘L implicitDerivative G p s).IsInvertible)
+    (hopposite : (ContinuousLinearMap.snd ℝ S S ∘L implicitDerivative G p s).IsInvertible) :
+    Nonempty (AnalyticStationaryCharts G p s) := by
+…</pre><p class="refs">Mentions: <a href="LocalImplicit.lean.html#L135">OAI.Problem356.LocalImplicit.implicitDerivative</a>, <a href="LocalImplicit.lean.html#L141">OAI.Problem356.LocalImplicit.AnalyticStationaryCharts</a></p></li><li id=L214><b>def</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts.restrictSource</code> <small>line 214</small><div class="doc"><p>Restrict both parameter charts to the same additional open neighborhood.</p></div><pre>def restrictSource (c : AnalyticStationaryCharts G p s)
+    (U : Set P) (hU : IsOpen U) (hp : p ∈ U) : AnalyticStationaryCharts G p s where
+…</pre><p class="refs">Mentions: <a href="LocalImplicit.lean.html#L141">OAI.Problem356.LocalImplicit.AnalyticStationaryCharts</a></p></li><li id=L235><b>theorem</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts.restrictSource_central_coe</code> <small>line 235</small></li><li id=L239><b>theorem</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts.restrictSource_opposite_coe</code> <small>line 239</small></li><li id=L243><b>theorem</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts.restrictSource_source</code> <small>line 243</small></li><li id=L249><b>theorem</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts.exists_restrict_state</code> <small>line 249</small><div class="doc"><p>Any smaller open state neighborhood can be used after shrinking the common
+parameter domain. All chart functions and all uniqueness conclusions are preserved.</p></div><pre>theorem exists_restrict_state
+    (c : AnalyticStationaryCharts G p s) (W : Set (S × S))
+    (hW : IsOpen W) (hsW : s ∈ W) (hWV : W ⊆ c.stateDomain) :
+    ∃ d : AnalyticStationaryCharts G p s,
+      d.stateDomain = W ∧ d.central.source ⊆ c.central.source ∧
+      (d.central : P → S) = c.central ∧ (d.opposite : P → S) = c.opposite := by
+…</pre><p class="refs">Mentions: <a href="LocalImplicit.lean.html#L141">OAI.Problem356.LocalImplicit.AnalyticStationaryCharts</a></p></li><li id=L277><b>theorem</b> <code>OAI.Problem356.LocalImplicit.AnalyticStationaryCharts.exists_restrict_ball</code> <small>line 277</small><div class="doc"><p>The common source can be chosen to be a genuine positive-radius ball,
+inside any prescribed parameter neighborhood, without changing either chart function.</p></div><pre>theorem exists_restrict_ball
+    (c : AnalyticStationaryCharts G p s) (U : Set P) (hU : U ∈ 𝓝 p) :
+    ∃ r : ℝ, 0 &lt; r ∧ ∃ d : AnalyticStationaryCharts G p s,
+      d.central.source = Metric.ball p r ∧ d.central.source ⊆ U ∧
+      d.stateDomain = c.stateDomain ∧
+      (d.central : P → S) = c.central ∧ (d.opposite : P → S) = c.opposite := by
+…</pre><p class="refs">Mentions: <a href="LocalImplicit.lean.html#L141">OAI.Problem356.LocalImplicit.AnalyticStationaryCharts</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

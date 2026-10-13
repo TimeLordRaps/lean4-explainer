@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/CompositeSpectral.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/CompositeSpectral.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>CompositeSpectral.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>CompositeSpectral.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/CompositeSpectral.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L10><b>def</b> <code>OAI.Problem337.CompositeSpectral.sumTuples</code> <small>line 10</small><div class="doc"><p>Ordered tuples with a prescribed sum in a finite cyclic group.</p></div><pre>def sumTuples {q : ℕ} [NeZero q] {X : Type*} [Fintype X]
+    (f : X → ZMod q) (k : ℕ) (t : ZMod q) : Finset (Fin k → X) := by
+…</pre></li><li id=L17><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.sumTuples_fourier</code> <small>line 17</small><div class="doc"><p>Exact Fourier inversion for an arbitrary tuple length and target. The
+modulus need not be prime, and the sample type can retain multiplicities.</p></div><pre>theorem sumTuples_fourier {q : ℕ} [NeZero q] {X : Type*} [Fintype X]
+    (f : X → ZMod q) (k : ℕ) (t : ZMod q) :
+    (∑ r : ZMod q, ZMod.stdAddChar (-t * r) *
+      (∑ x : X, ZMod.stdAddChar (f x * r)) ^ k) =
+      (q : ℂ) * (sumTuples f k t).card := by
+…</pre><p class="refs">Mentions: <a href="CompositeSpectral.lean.html#L10">OAI.Problem337.CompositeSpectral.sumTuples</a></p></li><li id=L41><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.sumTuples_discrepancy_le</code> <small>line 41</small><div class="doc"><p>The nontrivial Fourier frequencies control the discrepancy from the
+uniform tuple count. Keeping the sum, rather than using a worst frequency,
+allows different proper quotients of a composite modulus to be estimated
+separately.</p></div><pre>theorem sumTuples_discrepancy_le {q : ℕ} [NeZero q]
+    {X : Type*} [Fintype X] (f : X → ZMod q) (k : ℕ) (t : ZMod q) :
+    |(q : ℝ) * (sumTuples f k t).card - (Fintype.card X : ℝ) ^ k| ≤
+      ∑ r ∈ (Finset.univ : Finset (ZMod q)).erase 0,
+        ‖∑ x : X, ZMod.stdAddChar (f x * r)‖ ^ k := by
+…</pre><p class="refs">Mentions: <a href="CompositeSpectral.lean.html#L10">OAI.Problem337.CompositeSpectral.sumTuples</a></p></li><li id=L70><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.sumTuples_lower_bound</code> <small>line 70</small><div class="doc"><p>A frequency-by-frequency bound gives a quantitative lower bound for
+the number of tuples having any prescribed sum.</p></div><pre>theorem sumTuples_lower_bound {q : ℕ} [NeZero q]
+    {X : Type*} [Fintype X] (f : X → ZMod q) (k : ℕ) (t : ZMod q)
+    (B : ZMod q → ℝ)
+    (hB : ∀ r : ZMod q, r ≠ 0 →
+      ‖∑ x : X, ZMod.stdAddChar (f x * r)‖ ≤ B r) :
+    (Fintype.card X : ℝ) ^ k -
+      (∑ r ∈ (Finset.univ : Finset (ZMod q)).erase 0, B r ^ k) ≤
+        (q : ℝ) * (sumTuples f k t).card := by
+…</pre><p class="refs">Mentions: <a href="CompositeSpectral.lean.html#L10">OAI.Problem337.CompositeSpectral.sumTuples</a></p></li><li id=L91><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.exists_sum_of_character_bounds</code> <small>line 91</small><div class="doc"><p>Summed spectral losses below the zero frequency force a tuple of the
+specified sum, without any prime-modulus hypothesis.</p></div><pre>theorem exists_sum_of_character_bounds {q : ℕ} [NeZero q]
+    {X : Type*} [Fintype X] (f : X → ZMod q) (k : ℕ) (t : ZMod q)
+    (B : ZMod q → ℝ)
+    (hB : ∀ r : ZMod q, r ≠ 0 →
+      ‖∑ x : X, ZMod.stdAddChar (f x * r)‖ ≤ B r)
+    (hbudget : (∑ r ∈ (Finset.univ : Finset (ZMod q)).erase 0, B r ^ k) &lt;
+      (Fintype.card X : ℝ) ^ k) :
+    ∃ v : Fin k → X, ∑ i, f (v i) = t := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/EgyptianFractions.lean.html#L42">OAI.Problem337.v</a></p></li><li id=L112><b>theorem</b> <code>OAI.Problem337.CompositeSpectral.products_sum_of_character_bounds</code> <small>line 112</small><div class="doc"><p>Product sums inherit the frequency-dependent criterion. This is the
+composite-modulus counterpart of the prime-field five-product extraction;
+the genuinely arithmetic spectral budget remains an explicit premise.</p></div><pre>theorem products_sum_of_character_bounds {q : ℕ} [NeZero q]
+    (H : Finset (ZMod q)) (k : ℕ) (t : ZMod q) (B : ZMod q → ℝ)
+    (hB : ∀ r : ZMod q, r ≠ 0 →
+      ‖∑ a ∈ H, ∑ b ∈ H, ZMod.stdAddChar (a * b * r)‖ ≤ B r)
+    (hbudget : (∑ r ∈ (Finset.univ : Finset (ZMod q)).erase 0, B r ^ k) &lt;
+      (H.card : ℝ) ^ (2 * k)) :
+    ∃ a b : Fin k → H, ∑ i, (a i : ZMod q) * (b i : ZMod q) = t := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

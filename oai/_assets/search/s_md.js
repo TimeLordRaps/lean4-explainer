@@ -1,0 +1,1 @@
+window.l4shard("md", [["OAI.PolycyclicRecognition.IsGroupExponential.map_of_mdifferentiable",14014,74],["OAI.PolycyclicRecognition.SmoothLie.IsGroupExponential.map_of_mdifferentiable",14084,79],["OAI.PolycyclicRecognition.mdifferentiable_hom_of_mdifferentiableAt_one",14288,19]]);

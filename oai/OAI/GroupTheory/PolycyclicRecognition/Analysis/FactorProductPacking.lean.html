@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/FactorProductPacking.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/FactorProductPacking.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>FactorProductPacking.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>FactorProductPacking.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/FactorProductPacking.lean#L1">source</a></p><div class="doc"><h3>Packing through a possibly noninjective factor map</h3><p>Left translations on a semidirect product act separately on its two factor
+coordinates. Their product measure is preserved when the action preserves
+the first factor's measure. Disjointness is tested after projection to the
+ambient metric group, so no injectivity of that projection is required.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>def</b> <code>OAI.PolycyclicRecognition.factorTranslate</code> <small>line 26</small><div class="doc"><p>Semidirect left translation, written on the product of the factors.</p></div><pre>def factorTranslate (φ : D →* MulAut N) (p z : N × D) : N × D :=
+…</pre></li><li id=L30><b>def</b> <code>OAI.PolycyclicRecognition.factorTranslationEquiv</code> <small>line 30</small><div class="doc"><p>Measurable automorphisms give measurable product-coordinate translations.</p></div><pre>def factorTranslationEquiv (φ : D →* MulAut N)
+    (hφ : ∀ d, Measurable (φ d)) (p : N × D) : (N × D) ≃ᵐ (N × D) :=
+…</pre></li><li id=L44><b>theorem</b> <code>OAI.PolycyclicRecognition.factorTranslationEquiv_apply</code> <small>line 44</small></li><li id=L49><b>theorem</b> <code>OAI.PolycyclicRecognition.factorTranslate_measure</code> <small>line 49</small><div class="doc"><p>Product Haar mass is unchanged by these translations.</p></div><pre>theorem factorTranslate_measure (φ : D →* MulAut N)
+    (μ : Measure N) (ν : Measure D) [μ.IsMulLeftInvariant] [ν.IsMulLeftInvariant]
+    [SFinite μ] [SFinite ν] (hφ : ∀ d, MeasurePreserving (φ d) μ μ)
+    (p : N × D) (U : Set (N × D)) :
+    (μ.prod ν) (factorTranslate φ p &#x27;&#x27; U) = (μ.prod ν) U := by
+…</pre><p class="refs">Mentions: <a href="FactorProductPacking.lean.html#L26">OAI.PolycyclicRecognition.factorTranslate</a></p></li><li id=L65><b>theorem</b> <code>OAI.PolycyclicRecognition.factorTranslate_projection</code> <small>line 65</small><div class="doc"><p>The product-coordinate map intertwines translations and ambient multiplication.</p></div><pre>theorem factorTranslate_projection (φ : D →* MulAut N)
+    (ι : N →* G) (κ : D →* G)
+    (hc : ∀ d n, ι (φ d n) = κ d * ι n * (κ d)⁻¹) (p z : N × D) :
+    ι (factorTranslate φ p z).1 * κ (factorTranslate φ p z).2 =
+      (ι p.1 * κ p.2) * (ι z.1 * κ z.2) := by
+…</pre><p class="refs">Mentions: <a href="FactorProductPacking.lean.html#L26">OAI.PolycyclicRecognition.factorTranslate</a></p></li><li id=L78><b>theorem</b> <code>OAI.PolycyclicRecognition.factor_separated_card_mul_le</code> <small>line 78</small><div class="doc"><p>Every finite separated family of ambient projections gives disjoint
+translated cells in the product of the factors, even if the factor map has
+nontrivial fibers.</p></div><pre>theorem factor_separated_card_mul_le (φ : D →* MulAut N)
+    (ι : N →* G) (κ : D →* G)
+    (hc : ∀ d n, ι (φ d n) = κ d * ι n * (κ d)⁻¹)
+    (μ : Measure N) (ν : Measure D) [μ.IsMulLeftInvariant] [ν.IsMulLeftInvariant]
+    [SFinite μ] [SFinite ν] (hφ : ∀ d, MeasurePreserving (φ d) μ μ)
+    (s : Finset G) (p : G → N × D) (U region : Set (N × D))
+    (hU : MeasurableSet U) {ρ : ℝ}
+    (hp : ∀ x ∈ s, ι (p x).1 * κ (p x).2 = x)
+    (hsmall : ∀ z ∈ U, dist (1 : G) (ι z.1 * κ z.2) &lt; ρ / 2)
+    (hsep : ∀ x ∈ s, ∀ y ∈ s, x ≠ y → ρ ≤ dist x y)
+    (hthick : ∀ x ∈ s, factorTranslate φ (p x) &#x27;&#x27; U ⊆ region) :
+    (s.card : ℝ≥0∞) * (μ.prod ν) U ≤ (μ.prod ν) region := by
+…</pre><p class="refs">Mentions: <a href="FactorProductPacking.lean.html#L26">OAI.PolycyclicRecognition.factorTranslate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

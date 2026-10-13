@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/ContingencyTables/Transport/RecursiveSignedTransport.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/ContingencyTables/Transport/RecursiveSignedTransport.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Combinatorics</a> / <a href="../index.html">ContingencyTables</a> / <a href="index.html">Transport</a> / <span>RecursiveSignedTransport.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Combinatorics</a>/<a href="../index.html">ContingencyTables</a>/<a href="index.html">Transport</a>/<span>RecursiveSignedTransport.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/ContingencyTables/Transport/RecursiveSignedTransport.lean#L1">source</a></p><div class="doc"><h3>Recursive signed transport for fixed-degree weights</h3><p>The recursive transport construction of the bounded-table counting paper
+uses positivity at the valid subset degree. Signatures after pair summation
+follow from that degree's addition property and full cubic contraction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>lemma</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.slotTotal_degree_positive</code> <small>line 20</small></li><li id=L42><b>lemma</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.embedded_union_card</code> <small>line 42</small></li><li id=L53><b>theorem</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.slot_pair_signature</code> <small>line 53</small><div class="doc"><p>The exact signature needed by the recursion, obtained after summing
+fresh pairs only on the valid residual degree.</p></div><pre>theorem slot_pair_signature (ps : List (Γ × Γ)) :
+    ∀ {κ : Type*} [Fintype κ] [DecidableEq κ] [Nonempty κ]
+      (f : Set Γ → ℝ) (k : ℕ) (A : Set Γ) (e : κ → Γ),
+      DegreePositive f k → AdditionProperty f k →
+      A.ncard + ps.length + 2 = k → Function.Injective e →
+      (∀ i, e i ∉ A) → SlotsFresh ps (A ∪ Set.range e) →
+      CommonBasesFPRAS.OnePositive (pairMatrix (slotTotal ps f) A e).toBilin&#x27; := by
+…</pre><p class="refs">Mentions: <a href="../../MatroidCounting/CommonBases.lean.html#L133">OAI.CommonBasesFPRAS.OnePositive</a></p></li><li id=L176><b>lemma</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.slot_split_signature_degree</code> <small>line 176</small></li><li id=L205><b>theorem</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.transport_linear_bound_degree</code> <small>line 205</small><div class="doc"><p>The full recursive signed transport bound. Every mass and signature
+is supplied by the proved exact-degree lemmas above, and all future-slot
+corrections telescope through the actual binary recursion.</p></div><pre>theorem transport_linear_bound_degree (ps : List (Γ × Γ)) :
+    ∀ {κ : Type*} [Fintype κ] [DecidableEq κ] [Nonempty κ]
+      (f H : Set Γ → ℝ) (A : Set Γ) (e : κ → Γ) (h : κ → ℝ) (W : Γ → ℝ) (k : ℕ),
+      DegreePositive f k → AdditionProperty f k →
+      A.ncard + ps.length + 1 = k → Function.Injective e →
+      (∀ i, e i ∉ A) → SlotsFresh ps (A ∪ Set.range e) →
+      (∀ i, 0 &lt; W i) → (∀ p ∈ ps, W p.1 = W p.2) →
+      (∑ i, slotTotal ps f (insert (e i) A)*h i = 0) →
+      2*transportDemand ps f H A e h ≤
+        transportPotential ps f A e h W - transportCorrection ps f A e h W +
+          transportEnergy ps f H A e W := by
+…</pre></li><li id=L301><b>theorem</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.transport_squared_bound_degree</code> <small>line 301</small></li><li id=L322><b>lemma</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.rootCoefficient_degree_pos</code> <small>line 322</small></li><li id=L368><b>theorem</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.transport_root_bound_degree</code> <small>line 368</small><div class="doc"><p>The paper's root transport coefficient and weighted mean difference,
+with fixed-degree positivity and addition signatures only. For one-hole
+states this is applied to the complement-set weight.</p></div><pre>theorem transport_root_bound_degree (ps : List (Γ × Γ)) (f H : Set Γ → ℝ)
+    (A : Set Γ) (p d : Γ) (W : Γ → ℝ) (k : ℕ)
+    (hf : DegreePositive f k) (hSig : AdditionProperty f k)
+    (hdegree : A.ncard + ps.length + 1 = k)
+    (hpd : p ≠ d) (hpA : p ∉ A) (hdA : d ∉ A)
+    (hps : SlotsFresh ps (A ∪ Set.range (rootEmbedding p d)))
+    (hW : ∀ i, 0 &lt; W i) (hw : ∀ p ∈ ps, W p.1 = W p.2) :
+    (slotTotal ps (fun S =&gt; f S*H S) (insert p A) / slotTotal ps f (insert p A) -
+      slotTotal ps (fun S =&gt; f S*H S) (insert d A) / slotTotal ps f (insert d A))^2 ≤
+    rootCoefficient ps f A p d W * transportEnergy ps f H A (rootEmbedding p d) W := by
+…</pre></li><li id=L410><b>lemma</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.slotVertices_degree</code> <small>line 410</small></li><li id=L443><b>lemma</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.transportEnergy_le_graphEnergy_degree</code> <small>line 443</small></li><li id=L467><b>theorem</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.transport_graph_bound_degree</code> <small>line 467</small><div class="doc"><p>Full one-hole transport on the actual exchange graph with the exact
+minimum-endpoint conductances and unordered-edge convention.</p></div><pre>theorem transport_graph_bound_degree (ps : List (Γ × Γ)) (f H : Set Γ → ℝ)
+    (A : Set Γ) (p d : Γ) (W : Γ → ℝ) (k : ℕ)
+    (hf : DegreePositive f k) (hSig : AdditionProperty f k)
+    (hdegree : A.ncard + ps.length + 1 = k)
+    (hpd : p ≠ d) (hpA : p ∉ A) (hdA : d ∉ A)
+    (hps : SlotsFresh ps (A ∪ Set.range (rootEmbedding p d)))
+    (hW : ∀ i, 0 &lt; W i) (hw : ∀ p ∈ ps, W p.1 = W p.2) :
+    (slotTotal ps (fun S =&gt; f S*H S) (insert p A) / slotTotal ps f (insert p A) -
+      slotTotal ps (fun S =&gt; f S*H S) (insert d A) / slotTotal ps f (insert d A))^2 ≤
+    rootCoefficient ps f A p d W * slotGraphEnergy ps f H A (rootEmbedding p d) W := by
+…</pre></li><li id=L489><b>theorem</b> <code>OAI.ContingencyTables.RecursiveSignedTransport.one_hole_transport</code> <small>line 489</small><div class="doc"><p>The one-hole statement in the paper's omission convention. An encoded
+set is the complement of the original table-lift state, so the multiplier
+marks its unique hole slot.</p></div><pre>theorem one_hole_transport (ps : List (Γ × Γ)) (f H : Set Γ → ℝ)
+    (A : Set Γ) (p d : Γ) (W : Γ → ℝ) (k : ℕ)
+    (hk : k ≤ Fintype.card Γ) (hf : DegreePositive f k) (hSig : OmissionProperty f k)
+    (hdegree : A.ncard + ps.length + 1 = Fintype.card Γ - k)
+    (hpd : p ≠ d) (hpA : p ∉ A) (hdA : d ∉ A)
+    (hps : SlotsFresh ps (A ∪ Set.range (rootEmbedding p d)))
+    (hW : ∀ i, 0 &lt; W i) (hw : ∀ p ∈ ps, W p.1 = W p.2) :
+    let fc := complementWeight f
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

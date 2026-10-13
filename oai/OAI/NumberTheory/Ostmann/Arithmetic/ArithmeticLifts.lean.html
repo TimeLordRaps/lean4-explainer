@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Arithmetic/ArithmeticLifts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Arithmetic/ArithmeticLifts.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Arithmetic</a> / <span>ArithmeticLifts.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Arithmetic</a>/<span>ArithmeticLifts.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Arithmetic/ArithmeticLifts.lean#L1">source</a></p><div class="doc"><h3>Uniform lifts of a nonzero line modulo a prime square</h3><p>The reduction map has exactly <code>p</code> lifts over every residue. A line with a
+unit coefficient has exactly <code>p</code> zero lifts among the <code>p²</code> pairs over a
+fixed solution modulo <code>p</code>. This is the relative <code>1/p</code> loss in §8.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.Ostmann.additiveFiberEquiv</code> <small>line 18</small><div class="doc"><p>Translate an additive fiber to the zero fiber.</p></div><pre>def additiveFiberEquiv {G H : Type*} [AddGroup G] [AddGroup H]
+    (φ : G →+ H) (x : G) : {y : G // φ y = φ x} ≃ {y : G // φ y = 0} where
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.Ostmann.card_additiveFiber</code> <small>line 27</small><div class="doc"><p>Every fiber of a surjective homomorphism between finite additive groups
+has the same size.</p></div><pre>theorem card_additiveFiber {G H : Type*} [AddGroup G] [AddGroup H]
+    [Fintype G] [Fintype H] [DecidableEq H]
+    (φ : G →+ H) (hφ : Function.Surjective φ) (a : H) :
+    Fintype.card G = Fintype.card H * Fintype.card {y : G // φ y = a} := by
+…</pre></li><li id=L43><b>def</b> <code>OAI.Ostmann.squareReduction</code> <small>line 43</small><div class="doc"><p>The actual reduction map modulo a prime.</p></div><pre>def squareReduction (p : ℕ) : ZMod (p ^ 2) →+* ZMod p :=
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.Ostmann.squareReduction_natCast</code> <small>line 46</small></li><li id=L49><b>theorem</b> <code>OAI.Ostmann.card_squareReduction_fiber</code> <small>line 49</small></li><li id=L57><b>theorem</b> <code>OAI.Ostmann.isUnit_square_iff</code> <small>line 57</small><div class="doc"><p>A prime-square residue is a unit exactly when its reduction is nonzero.</p></div><pre>theorem isUnit_square_iff {p : ℕ} [Fact p.Prime] (x : ZMod (p ^ 2)) :
+    IsUnit x ↔ squareReduction p x ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="ArithmeticLifts.lean.html#L43">OAI.Ostmann.squareReduction</a></p></li><li id=L74><b>def</b> <code>OAI.Ostmann.squareUnitLiftEquiv</code> <small>line 74</small><div class="doc"><p>Above a nonzero residue every lift is a unit; passing to Haar-unit
+coordinates leaves the same <code>p</code> uniformly weighted lifts.</p></div><pre>noncomputable def squareUnitLiftEquiv {p : ℕ} [Fact p.Prime]
+    (a : ZMod p) (ha : a ≠ 0) :
+    {u : (ZMod (p ^ 2))ˣ // squareReduction p u = a} ≃
+      {x : ZMod (p ^ 2) // squareReduction p x = a} where
+…</pre><p class="refs">Mentions: <a href="ArithmeticLifts.lean.html#L43">OAI.Ostmann.squareReduction</a></p></li><li id=L95><b>theorem</b> <code>OAI.Ostmann.card_squareUnitLift</code> <small>line 95</small></li><li id=L101><b>theorem</b> <code>OAI.Ostmann.square_line_first_isUnit</code> <small>line 101</small><div class="doc"><p>In both giant environments the second residue is a unit. A nonzero
+row vanishing there must have a unit first coefficient.</p></div><pre>theorem square_line_first_isUnit {p : ℕ} [Fact p.Prime]
+    (a b : ZMod (p ^ 2)) (x₀ y₀ : ZMod p) (hy : y₀ ≠ 0)
+    (hrow : squareReduction p a ≠ 0 ∨ squareReduction p b ≠ 0)
+    (hbase : squareReduction p a * x₀ + squareReduction p b * y₀ = 0) :
+    IsUnit a := by
+…</pre><p class="refs">Mentions: <a href="ArithmeticLifts.lean.html#L43">OAI.Ostmann.squareReduction</a></p></li><li id=L111><b>theorem</b> <code>OAI.Ostmann.unit_linear_solution</code> <small>line 111</small></li><li id=L120><b>def</b> <code>OAI.Ostmann.liftedLineEquiv</code> <small>line 120</small><div class="doc"><p>A line with a unit first coefficient has one zero lift for each lift of
+the second coordinate, over any fixed solution in the quotient.</p></div><pre>def liftedLineEquiv {R K : Type*} [CommRing R] [CommRing K]
+    (φ : R →+* K) (a : Rˣ) (b : R) (x₀ y₀ : K)
+    (hbase : φ a * x₀ + φ b * y₀ = 0) :
+    {xy : R × R // φ xy.1 = x₀ ∧ φ xy.2 = y₀ ∧ (a : R) * xy.1 + b * xy.2 = 0} ≃
+      {y : R // φ y = y₀} where
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.Ostmann.square_line_lift_probability</code> <small>line 141</small><div class="doc"><p>Exactly one out of <code>p</code> uniform pairs of lifts makes the line vanish
+modulo <code>p²</code>, conditional on its vanishing modulo <code>p</code>.</p></div><pre>theorem square_line_lift_probability {p : ℕ} [Fact p.Prime]
+    (a : (ZMod (p ^ 2))ˣ) (b : ZMod (p ^ 2)) (x₀ y₀ : ZMod p)
+    (hbase : squareReduction p a * x₀ + squareReduction p b * y₀ = 0) :
+    (Fintype.card {xy : ZMod (p ^ 2) × ZMod (p ^ 2) //
+      squareReduction p xy.1 = x₀ ∧ squareReduction p xy.2 = y₀ ∧
+        (a : ZMod (p ^ 2)) * xy.1 + b * xy.2 = 0} : ℝ) /
+    ((Fintype.card {x : ZMod (p ^ 2) // squareReduction p x = x₀} : ℝ) *
+      (Fintype.card {y : ZMod (p ^ 2) // squareReduction p y = y₀} : ℝ)) =
+      (p : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="ArithmeticLifts.lean.html#L43">OAI.Ostmann.squareReduction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

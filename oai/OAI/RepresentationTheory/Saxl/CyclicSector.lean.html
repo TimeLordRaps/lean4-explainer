@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/Saxl/CyclicSector.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/Saxl/CyclicSector.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">Saxl</a> / <span>CyclicSector.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">Saxl</a>/<span>CyclicSector.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/Saxl/CyclicSector.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Saxl.averagedMap</code> <small>line 14</small><div class="doc plain">Explicit finite-group induction on a linear map.</div><pre>def averagedMap {G : Type uG} {X : Type uX} {Y : Type uY} [Group G] [Fintype G]
+    [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y]
+    (ρ : Representation ℂ G X) (σ : Representation ℂ G Y) (f : X →ₗ[ℂ] Y) :
+    Representation.IntertwiningMap ρ σ where
+…</pre></li><li id=L34><b>lemma</b> <code>OAI.Saxl.averagedMap_apply</code> <small>line 34</small></li><li id=L43><b>theorem</b> <code>OAI.Saxl.sector_average_nonzero</code> <small>line 43</small><div class="doc plain">Coordinate-sector induction, in precisely the nonzero-Hom form used in
+the staircase induction. The projector kills translates outside the stabilizer.</div><pre>theorem sector_average_nonzero {G : Type uG} {X : Type uX} {Y : Type uY} [Group G] [Fintype G]
+    [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y]
+    (ρ : Representation ℂ G X) (σ : Representation ℂ G Y)
+    (H : Subgroup G) (f : X →ₗ[ℂ] Y) (hf : f ≠ 0)
+    (he : ∀ g ∈ H, ∀ x, f (ρ g x) = σ g (f x))
+    (P : Y →ₗ[ℂ] Y) (hP : ∀ x, P (f x) = f x)
+    (hkill : ∀ g ∉ H, ∀ x, P (σ g (f x)) = 0) :
+    averagedMap ρ σ f ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="CyclicSector.lean.html#L14">OAI.Saxl.averagedMap</a></p></li><li id=L78><b>theorem</b> <code>OAI.Saxl.intertwining_lift_surjective</code> <small>line 78</small></li><li id=L98><b>def</b> <code>OAI.Saxl.wordSector</code> <small>line 98</small></li><li id=L103><b>theorem</b> <code>OAI.Saxl.sector_support_transfer</code> <small>line 103</small><div class="doc plain">Concrete sector averaging produces a constituent of the full cyclic
+module from an equivariant map on its coordinate sector.</div><pre>theorem sector_support_transfer {n d : ℕ} {X : Type uX} [AddCommGroup X] [Module ℂ X]
+    (ρ : Representation ℂ (Equiv.Perm (Fin n)) X)
+    (D : Fin n → Prop) (A : Fin d → Prop) (z : WordSpace n d)
+    (f : X →ₗ[ℂ] WordSpace n d) (hf : f ≠ 0)
+    (he : ∀ g ∈ sectorGroup D, ∀ x, f (ρ g x) = wordRep n d g (f x))
+    (hm : ∀ x, f x ∈ cyclic (wordRep n d) z)
+    (hs : ∀ x w, f x w ≠ 0 → wordSector D A w) :
+    ∃ F : Representation.IntertwiningMap ρ (cyclic (wordRep n d) z).toRepresentation,
+      F ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/Saxl.lean.html#L14">OAI.Saxl.WordSpace</a>, <a href="CoordinateSector.lean.html#L35">OAI.Saxl.sectorGroup</a>, <a href="../../../ComparatorChallenges/Saxl.lean.html#L17">OAI.Saxl.wordRep</a>, <a href="../../../ComparatorChallenges/Saxl.lean.html#L26">OAI.Saxl.cyclic</a>, <a href="CyclicSector.lean.html#L98">OAI.Saxl.wordSector</a></p></li><li id=L154><b>lemma</b> <code>OAI.Saxl.intertwiner_cyclic_mem</code> <small>line 154</small></li><li id=L170><b>def</b> <code>OAI.Saxl.cyclicMap</code> <small>line 170</small></li><li id=L182><b>lemma</b> <code>OAI.Saxl.cyclicMap_surjective</code> <small>line 182</small></li><li id=L214><b>theorem</b> <code>OAI.Saxl.cyclic_projection_support</code> <small>line 214</small><div class="doc plain">A genuine equivariant projection of a cyclic generator transfers every
+nonzero constituent map back to the original cyclic module by Maschke.</div><pre>theorem cyclic_projection_support {G : Type uG} {X : Type uX} {Y : Type uY} {Z : Type uZ} [Group G] [Finite G]
+    [AddCommGroup X] [Module ℂ X] [AddCommGroup Y] [Module ℂ Y]
+    [AddCommGroup Z] [Module ℂ Z]
+    {ρ : Representation ℂ G X} {σ : Representation ℂ G Y} {τ : Representation ℂ G Z}
+    (F : Representation.IntertwiningMap ρ σ) (v : X)
+    (f : Representation.IntertwiningMap τ (cyclic σ (F v)).toRepresentation) (hf : f ≠ 0) :
+    ∃ g : Representation.IntertwiningMap τ (cyclic ρ v).toRepresentation, g ≠ 0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/Saxl.lean.html#L26">OAI.Saxl.cyclic</a></p></li><li id=L233><b>lemma</b> <code>OAI.Saxl.cyclic_smul_eq</code> <small>line 233</small></li><li id=L244><b>lemma</b> <code>OAI.Saxl.cyclic_action_eq</code> <small>line 244</small></li><li id=L253><b>lemma</b> <code>OAI.Saxl.support_relabel</code> <small>line 253</small></li><li id=L267><b>def</b> <code>OAI.Saxl.restrictLetters</code> <small>line 267</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

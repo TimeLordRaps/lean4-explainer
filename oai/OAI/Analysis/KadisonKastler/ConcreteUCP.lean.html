@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/ConcreteUCP.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/ConcreteUCP.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>ConcreteUCP.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>ConcreteUCP.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/ConcreteUCP.lean#L1">source</a></p><div class="doc"><h3>The UCP criterion for concrete von Neumann algebras</h3><p>The ordinary Kadison--Kastler gap supplies precisely the reverse unit-ball
+approximation used in the UCP range argument.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>abbrev</b> <code>OAI.KadisonKastler.algebraInclusion</code> <small>line 33</small><div class="doc"><p>The faithful inclusion of a concrete von Neumann algebra into its
+ambient bounded operators.</p></div><pre>abbrev algebraInclusion (M : VonNeumannAlgebra H) :
+    Algebra M →⋆ₐ[ℂ] (H →L[ℂ] H) := M.toStarSubalgebra.subtype</pre><p class="refs">Mentions: <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a></p></li><li id=L36><b>theorem</b> <code>OAI.KadisonKastler.reverse_gap_of_kkDistance_lt</code> <small>line 36</small></li><li id=L49><b>theorem</b> <code>OAI.KadisonKastler.conjugates_of_starEquiv</code> <small>line 49</small><div class="doc"><p>An intertwining star-algebra equivalence gives equality of the
+concrete algebras after unitary conjugation.</p></div><pre>theorem conjugates_of_starEquiv {M N : VonNeumannAlgebra H}
+    (θ : Algebra M ≃⋆ₐ[ℂ] Algebra N) (u : unitary (H →L[ℂ] H))
+    (hθ : ∀ x : Algebra M,
+      (u : H →L[ℂ] H) * algebraInclusion M x * star (u : H →L[ℂ] H) =
+        algebraInclusion N (θ x)) :
+    Conjugates u M N := by
+…</pre><p class="refs">Mentions: <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="ConcreteUCP.lean.html#L33">OAI.KadisonKastler.algebraInclusion</a>, <a href="../../../ComparatorChallenges/StrongKadisonKastler.lean.html#L25">OAI.KadisonKastler.Conjugates</a></p></li><li id=L69><b>theorem</b> <code>OAI.KadisonKastler.concrete_ucp_starEquiv_of_published</code> <small>line 69</small><div class="doc"><p>The concrete-algebra isomorphism part of the UCP criterion, with the
+ordinary metric used only for the reverse gap.</p></div><pre>theorem concrete_ucp_starEquiv_of_published {M N : VonNeumannAlgebra H}
+    (hPublished : PublishedMultiplicationCorrection M)
+    (φ : Algebra M →CP Algebra N) (hφ : φ 1 = 1)
+    {e g : ℝ} (he : 0 ≤ e) (he₁ : e &lt; 1 / 1000) (hge : g + e &lt; 1)
+    (hclose : CompletelyBoundedBy
+      ((algebraInclusion N).toAlgHom.toLinearMap.comp φ.toLinearMap -
+        (algebraInclusion M).toAlgHom.toLinearMap) e)
+    (hgap : kkDistance M N &lt; g) :
+    ∃ θ : Algebra M ≃⋆ₐ[ℂ] Algebra N,
+      CompletelyBoundedBy
+        ((algebraInclusion N).toAlgHom.toLinearMap.comp θ.toAlgEquiv.toLinearMap -
+          (algebraInclusion M).toAlgHom.toLinearMap) (32 * e) := by
+…</pre><p class="refs">Mentions: <a href="PublishedCorrection.lean.html#L37">OAI.KadisonKastler.PublishedMultiplicationCorrection</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="CompletelyBounded.lean.html#L38">OAI.KadisonKastler.CompletelyBoundedBy</a>, <a href="ConcreteUCP.lean.html#L33">OAI.KadisonKastler.algebraInclusion</a>, <a href="../../../ComparatorChallenges/StrongKadisonKastler.lean.html#L19">OAI.KadisonKastler.kkDistance</a></p></li><li id=L88><b>theorem</b> <code>OAI.KadisonKastler.concrete_ucp_unitary_of_published</code> <small>line 88</small><div class="doc"><p>The unitary-conjugacy conclusion of the UCP criterion for concrete
+algebras. Both published inputs are explicit, while positivity,
+surjectivity, correction estimates, and polar implementation are proved.</p></div><pre>theorem concrete_ucp_unitary_of_published {M N : VonNeumannAlgebra H}
+    (hCorrection : PublishedMultiplicationCorrection M)
+    (hCommutant : PublishedBlockCommutantApproximation (Algebra M) H)
+    (φ : Algebra M →CP Algebra N) (hφ : φ 1 = 1)
+    {e g : ℝ} (he : 0 ≤ e) (he₁ : e &lt; 1 / 1000) (hge : g + e &lt; 1)
+    (hclose : CompletelyBoundedBy
+      ((algebraInclusion N).toAlgHom.toLinearMap.comp φ.toLinearMap -
+        (algebraInclusion M).toAlgHom.toLinearMap) e)
+    (hgap : kkDistance M N &lt; g) :
+    ∃ u : unitary (H →L[ℂ] H),
+      Conjugates u M N ∧ ‖(u : H →L[ℂ] H) - 1‖ ≤ 128 * e := by
+…</pre><p class="refs">Mentions: <a href="PublishedCorrection.lean.html#L37">OAI.KadisonKastler.PublishedMultiplicationCorrection</a>, <a href="PairedRepresentations.lean.html#L94">OAI.KadisonKastler.PublishedBlockCommutantApproximation</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="CompletelyBounded.lean.html#L38">OAI.KadisonKastler.CompletelyBoundedBy</a>, <a href="ConcreteUCP.lean.html#L33">OAI.KadisonKastler.algebraInclusion</a>, <a href="../../../ComparatorChallenges/StrongKadisonKastler.lean.html#L19">OAI.KadisonKastler.kkDistance</a>, <a href="../../../ComparatorChallenges/StrongKadisonKastler.lean.html#L25">OAI.KadisonKastler.Conjugates</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

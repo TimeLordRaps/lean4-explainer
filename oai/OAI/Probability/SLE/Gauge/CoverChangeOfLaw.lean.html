@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Gauge/CoverChangeOfLaw.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Gauge/CoverChangeOfLaw.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Gauge</a> / <span>CoverChangeOfLaw.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Gauge</a>/<span>CoverChangeOfLaw.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Gauge/CoverChangeOfLaw.lean#L1">source</a></p><div class="doc"><p>The finite-stop change of measure in the missed-cell estimate of
+<code>prop:dense-cover-upper</code>, <em>An explicit exact Hausdorff gauge for SLE</em>.</p><p>A conditional approach estimate is the hypothesis for the conditioning
+and change-of-law steps.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.SLEExactGauge.setLIntegral_eq_mul_normalizedDensity</code> <small>line 22</small><div class="doc"><p>Restricting a normalized density to an event exactly recovers its
+unnormalized integral. No measurability of the density is needed here.</p></div><pre>theorem setLIntegral_eq_mul_normalizedDensity
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (w : Ω → ℝ) {a : ℝ} (ha : 0 &lt; a) {A : Set Ω} (hA : MeasurableSet A) :
+    (∫⁻ ω in A, ENNReal.ofReal (w ω) ∂P) =
+      ENNReal.ofReal a *
+        P.withDensity (fun ω =&gt; ENNReal.ofReal (w ω / a)) A := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_event_identity</code> <small>line 37</small><div class="doc"><p>The precise event identity for the finite centered law, at a fixed
+logarithmic conformal-radius stop.</p></div><pre>theorem finiteCenteredLaw_event_identity
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (κ : ℝ)
+    (B : ℝ≥0 → Ω → ℝ) (γ : Ω → ℝ≥0 → ℂ)
+    (G : Ω → ℝ≥0 → ℂ → ℂ) (z : ℂ) (hz : z ∈ upperHalfPlane)
+    (u : ℝ) {A : Set Ω} (hA : MeasurableSet A) :
+    (∫⁻ ω in A, ENNReal.ofReal
+      (stoppedGreen κ (fun t =&gt; Real.sqrt κ * B t ω) (γ ω) (G ω) z u) ∂P) =
+      ENNReal.ofReal (initialGreen κ z) * finiteCenteredLaw P κ B γ G z u A :=
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../SwallowExit.lean.html#L296">OAI.SLEExactGauge.stoppedGreen</a>, <a href="../SwallowExit.lean.html#L284">OAI.SLEExactGauge.initialGreen</a>, <a href="../FiniteStoppedLaw.lean.html#L188">OAI.SLEExactGauge.finiteCenteredLaw</a></p></li><li id=L49><b>theorem</b> <code>OAI.SLEExactGauge.measure_le_setLIntegral_of_conditional_approach</code> <small>line 49</small><div class="doc"><p>A conditional approach bound can be integrated on any event determined
+by the conditioning sigma algebra. The smaller event need not be measurable.</p></div><pre>theorem measure_le_setLIntegral_of_conditional_approach
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (m : MeasurableSpace Ω) (hm : m ≤ mΩ)
+    {E V A : Set Ω} (hV : MeasurableSet[mΩ] V) (hA : MeasurableSet[m] A)
+    (hE : E ⊆ V ∩ A) (W : Ω → ℝ≥0∞) (K : ℝ≥0∞) (hK : K ≠ ∞)
+    (happroach : ∀ᵐ ω ∂P, ω ∈ A →
+      P⁻[V.indicator (fun _ =&gt; 1) | m] ω ≤ K * W ω) :
+    P E ≤ K * ∫⁻ ω in A, W ω ∂P := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_missed_cell_bound</code> <small>line 72</small><div class="doc"><p>Transfer a visited cell with no candidate from the original law to a
+finite centered law. <code>A</code> is the adapted failure event and <code>V</code> the visit event.
+The displayed conditional approach bound is the only probabilistic estimate
+assumed by this reduction.</p></div><pre>theorem finiteCenteredLaw_missed_cell_bound
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (κ : ℝ) (B : ℝ≥0 → Ω → ℝ) (γ : Ω → ℝ≥0 → ℂ)
+    (G : Ω → ℝ≥0 → ℂ → ℂ) (z : ℂ) (hz : z ∈ upperHalfPlane) (u : ℝ)
+    (m : MeasurableSpace Ω) (hm : m ≤ mΩ)
+    {E V A : Set Ω} (hV : MeasurableSet[mΩ] V) (hA : MeasurableSet[m] A)
+    (hE : E ⊆ V ∩ A) (C r p : ℝ)
+    (happroach : ∀ᵐ ω ∂P, ω ∈ A →
+      P⁻[V.indicator (fun _ =&gt; 1) | m] ω ≤ ENNReal.ofReal (C * r ^ p) *
+        ENNReal.ofReal (stoppedGreen κ (fun t =&gt; Real.sqrt κ * B t ω)
+          (γ ω) (G ω) z u)) :
+    P E ≤ ENNReal.ofReal (C * r ^ p) * ENNReal.ofReal (initialGreen κ z) *
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../SwallowExit.lean.html#L296">OAI.SLEExactGauge.stoppedGreen</a>, <a href="../SwallowExit.lean.html#L284">OAI.SLEExactGauge.initialGreen</a></p></li><li id=L94><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_missed_cell_bound_of_failure_bound</code> <small>line 94</small><div class="doc"><p>Any tilted-law failure estimate, in particular the stretched exponential
+bound from repeated adapted tests, gives the corresponding missed-cell bound.</p></div><pre>theorem finiteCenteredLaw_missed_cell_bound_of_failure_bound
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω) [IsFiniteMeasure P]
+    (κ : ℝ) (B : ℝ≥0 → Ω → ℝ) (γ : Ω → ℝ≥0 → ℂ)
+    (G : Ω → ℝ≥0 → ℂ → ℂ) (z : ℂ) (hz : z ∈ upperHalfPlane) (u : ℝ)
+    (m : MeasurableSpace Ω) (hm : m ≤ mΩ)
+    {E V A : Set Ω} (hV : MeasurableSet[mΩ] V) (hA : MeasurableSet[m] A)
+    (hE : E ⊆ V ∩ A) (C r p : ℝ) (ε : ℝ≥0∞)
+    (happroach : ∀ᵐ ω ∂P, ω ∈ A →
+      P⁻[V.indicator (fun _ =&gt; 1) | m] ω ≤ ENNReal.ofReal (C * r ^ p) *
+        ENNReal.ofReal (stoppedGreen κ (fun t =&gt; Real.sqrt κ * B t ω)
+          (γ ω) (G ω) z u))
+    (hfailure : @finiteCenteredLaw Ω mΩ P κ B γ G z u A ≤ ε) :
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a>, <a href="../SwallowExit.lean.html#L296">OAI.SLEExactGauge.stoppedGreen</a>, <a href="../FiniteStoppedLaw.lean.html#L188">OAI.SLEExactGauge.finiteCenteredLaw</a></p></li><li id=L113><b>theorem</b> <code>OAI.SLEExactGauge.finiteCenteredLaw_adapted_failures_bound</code> <small>line 113</small><div class="doc"><p>The failure probability is a product bound under the centered law; no
+independence assumption is used.</p></div><pre>theorem finiteCenteredLaw_adapted_failures_bound
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {B : ℝ≥0 → Ω → ℝ} (hB : IsBrownianReal B P)
+    (κ : ℝ) (hκ : 0 &lt; κ) (hκ8 : κ &lt; 8)
+    (γ : Ω → ℝ≥0 → ℂ) (G F : Ω → ℝ≥0 → ℂ → ℂ)
+    (hw : ∀ᵐ ω ∂P, IsCapacityTwoWitness
+      (fun t =&gt; Real.sqrt κ * B t ω) (γ ω) (G ω) (F ω))
+    (z : ℂ) (hz : z ∈ upperHalfPlane) (u : ℝ) (hu : 0 ≤ u)
+    (filtration : Filtration ℕ mΩ) (failure : ℕ → Set Ω)
+    (hmeas : ∀ n, MeasurableSet[filtration (n + 1)] (failure n))
+    (q : ℝ≥0∞)
+    (hstep : ∀ n (A : Set Ω), MeasurableSet[filtration n] A →
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L23">OAI.SLEExactGauge.IsCapacityTwoWitness</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/FixedMinimumEstimates.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/FixedMinimumEstimates.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>FixedMinimumEstimates.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>FixedMinimumEstimates.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/FixedMinimumEstimates.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.Problem326.FixedMinimum.relativeValue</code> <small>line 15</small><div class="doc"><p>The affine value relative to the constant-slope branch <code>t</code>.</p></div><pre>def relativeValue {ι : Type uIota} [Fintype ι]
+    (t : ℝ) (r p : ι → ℝ) (h c : ℝ) : ℝ :=
+…</pre></li><li id=L21><b>theorem</b> <code>OAI.Problem326.FixedMinimum.tendsto_rpow_ratio</code> <small>line 21</small><div class="doc"><p>A strict limiting exponent gap makes the normalized monomial vanish.
+This formulation permits the approximating exponents to leave their cube.</p></div><pre>theorem tendsto_rpow_ratio {h p : ℕ → ℝ} {q p₀ : ℝ}
+    (hh : ∀ n, 0 &lt; h n) (hh0 : Tendsto h atTop (𝓝 0))
+    (hp : Tendsto p atTop (𝓝 p₀)) (hqp : q &lt; p₀) :
+    Tendsto (fun n =&gt; h n ^ p n / h n ^ q) atTop (𝓝 0) := by
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.Problem326.FixedMinimum.tendsto_normalized_sum</code> <small>line 33</small><div class="doc"><p>Finite sums of monomials whose nonzero coefficients have exponent above <code>q</code>
+are negligible relative to <code>h^q</code>.</p></div><pre>theorem tendsto_normalized_sum {ι : Type uIota} [Fintype ι]
+    {h : ℕ → ℝ} {p : ℕ → ι → ℝ} {p₀ a : ι → ℝ} {q : ℝ}
+    (hh : ∀ n, 0 &lt; h n) (hh0 : Tendsto h atTop (𝓝 0))
+    (hp : ∀ i, Tendsto (fun n =&gt; p n i) atTop (𝓝 (p₀ i)))
+    (hgap : ∀ i, a i ≠ 0 → q &lt; p₀ i) :
+    Tendsto (fun n =&gt; (∑ i, a i * h n ^ p n i) / h n ^ q)
+      atTop (𝓝 0) := by
+…</pre></li><li id=L51><b>theorem</b> <code>OAI.Problem326.FixedMinimum.coefficient_nonpos_of_domination</code> <small>line 51</small><div class="doc"><p>A positive coefficient in a nonnegative sum cannot be dominated by a
+strictly higher exponent, even in the presence of a negligible offset.</p></div><pre>theorem coefficient_nonpos_of_domination
+    {A B d : ℕ → ℝ} {c : ℝ}
+    (hA : ∀ n, 0 &lt; A n) (hB : ∀ n, 0 &lt; B n)
+    (hBA : Tendsto (fun n =&gt; B n / A n) atTop (𝓝 0))
+    (hd : Tendsto (fun n =&gt; d n / B n) atTop (𝓝 0))
+    (hdom : ∀ n, c * A n ≤ B n - d n) : c ≤ 0 := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.Problem326.FixedMinimum.tendsto_rpow_ratio_of_gap</code> <small>line 67</small><div class="doc"><p>The quotient version also allows a moving denominator exponent.</p></div><pre>theorem tendsto_rpow_ratio_of_gap {h p q : ℕ → ℝ} {p₀ q₀ : ℝ}
+    (hh : ∀ n, 0 &lt; h n) (hh0 : Tendsto h atTop (𝓝 0))
+    (hp : Tendsto p atTop (𝓝 p₀)) (hq : Tendsto q atTop (𝓝 q₀))
+    (hqp : q₀ &lt; p₀) :
+    Tendsto (fun n =&gt; h n ^ p n / h n ^ q n) atTop (𝓝 0) := by
+…</pre></li><li id=L80><b>theorem</b> <code>OAI.Problem326.FixedMinimum.active_raised_exponent_ge</code> <small>line 80</small><div class="doc"><p>Nonnegative raised coordinates of an active branch cannot have limiting
+exponent below the offset exponent.</p></div><pre>theorem active_raised_exponent_ge {ι : Type uIota} [Fintype ι]
+    {h c : ℕ → ℝ} {p : ℕ → ι → ℝ} {p₀ r : ι → ℝ} {t β : ℝ}
+    (hh : ∀ n, 0 &lt; h n) (hh0 : Tendsto h atTop (𝓝 0))
+    (hp : ∀ i, Tendsto (fun n =&gt; p n i) atTop (𝓝 (p₀ i)))
+    (hr : ∀ i, t ≤ r i)
+    (hc : Tendsto (fun n =&gt; c n / h n ^ β) atTop (𝓝 (-1)))
+    (hactive : ∀ n, relativeValue t r (p n) (h n) (c n) ≤ 0)
+    {i : ι} (hi : t &lt; r i) : β ≤ p₀ i := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimumEstimates.lean.html#L15">OAI.Problem326.FixedMinimum.relativeValue</a></p></li><li id=L115><b>theorem</b> <code>OAI.Problem326.FixedMinimum.not_active_of_offset_gap</code> <small>line 115</small><div class="doc"><p>A competitor with normalized value tending to <code>-1</code> defeats any branch
+whose slope is coordinatewise above the baseline and whose normalized
+offset tends to zero. No continuity of either offset is needed.</p></div><pre>theorem not_active_of_offset_gap {ι : Type uIota} [Fintype ι]
+    {h c d : ℕ → ℝ} {p : ℕ → ι → ℝ} {p₀ r s : ι → ℝ} {t γ : ℝ}
+    (hh : ∀ n, 0 &lt; h n) (hh0 : Tendsto h atTop (𝓝 0))
+    (hp : ∀ i, Tendsto (fun n =&gt; p n i) atTop (𝓝 (p₀ i)))
+    (hr : ∀ i, t ≤ r i)
+    (hc : Tendsto (fun n =&gt; c n / h n ^ γ) atTop (𝓝 0))
+    (hd : Tendsto (fun n =&gt; d n / h n ^ γ) atTop (𝓝 (-1)))
+    (hgap : ∀ i, s i ≠ t → γ &lt; p₀ i) :
+    ¬ (∀ n, relativeValue t r (p n) (h n) (c n) ≤
+      relativeValue t s (p n) (h n) (d n)) := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimumEstimates.lean.html#L15">OAI.Problem326.FixedMinimum.relativeValue</a></p></li><li id=L147><b>theorem</b> <code>OAI.Problem326.FixedMinimum.unraised_exponent_le</code> <small>line 147</small><div class="doc"><p>The second exclusion in the fixed-minimum argument. A next-type
+competitor supported on <code>U ∪ {j}</code> forces every unraised exponent below
+its offset threshold.</p></div><pre>theorem unraised_exponent_le {ι : Type uIota} [Fintype ι] [DecidableEq ι]
+    {h c d : ℕ → ℝ} {p : ℕ → ι → ℝ} {p₀ r s : ι → ℝ}
+    {t β γ : ℝ} {U : Finset ι} {j : ι}
+    (hh : ∀ n, 0 &lt; h n) (hh0 : Tendsto h atTop (𝓝 0))
+    (hp : ∀ i, Tendsto (fun n =&gt; p n i) atTop (𝓝 (p₀ i)))
+    (hr : ∀ i, t ≤ r i)
+    (hc : Tendsto (fun n =&gt; c n / h n ^ γ) atTop (𝓝 0))
+    (hd : Tendsto (fun n =&gt; d n / h n ^ γ) atTop (𝓝 (-1)))
+    (hγβ : γ &lt; β) (hpU : ∀ i ∈ U, β ≤ p₀ i)
+    (hs : ∀ i, i ∉ U → i ≠ j → s i = t)
+    (hactive : ∀ n, relativeValue t r (p n) (h n) (c n) ≤
+      relativeValue t s (p n) (h n) (d n)) : p₀ j ≤ γ := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimumEstimates.lean.html#L15">OAI.Problem326.FixedMinimum.relativeValue</a></p></li><li id=L172><b>theorem</b> <code>OAI.Problem326.FixedMinimum.last_unraised_eq_minimum</code> <small>line 172</small><div class="doc"><p>When only one coordinate is unraised, the fixed minimum determines
+that coordinate exactly.</p></div><pre>theorem last_unraised_eq_minimum {ι : Type uIota} {p : ι → ℝ} {t β : ℝ} {j : ι}
+    (hmin : ∃ i, p i = t) (htβ : t &lt; β)
+    (hother : ∀ i, i ≠ j → β ≤ p i) : p j = t := by
+…</pre></li><li id=L185><b>theorem</b> <code>OAI.Problem326.FixedMinimum.error_of_raised_and_unraised</code> <small>line 185</small><div class="doc"><p>Combining the inductive error on raised coordinates with the threshold
+bound on all other coordinates yields the full sup-norm error estimate.</p></div><pre>theorem error_of_raised_and_unraised {ι : Type uIota} [Fintype ι]
+    {p r : ι → ℝ} {U : Set ι} {t γ ε : ℝ}
+    (hraised : ∀ i ∈ U, |p i - r i| &lt; ε)
+    (hr : ∀ i ∉ U, r i = t)
+    (hlo : ∀ i ∉ U, t ≤ p i)
+    (hhi : ∀ i ∉ U, p i ≤ γ) (hε : γ - t &lt; ε) :
+    ∀ i, |p i - r i| &lt; ε := by
+…</pre></li><li id=L198><b>theorem</b> <code>OAI.Problem326.FixedMinimum.fixed_minimum_label_bound</code> <small>line 198</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

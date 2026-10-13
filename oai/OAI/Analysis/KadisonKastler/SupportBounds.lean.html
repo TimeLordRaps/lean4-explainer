@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/SupportBounds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/SupportBounds.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>SupportBounds.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>SupportBounds.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/SupportBounds.lean#L1">source</a></p><div class="doc"><h3>Square sums over orthogonal supports</h3><p>These are the Hilbert-space estimates converting bounds through each
+diagonal label into the uniform coefficient-column drift in §3.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.KadisonKastler.norm_sum_sq_of_pairwise_orthogonal</code> <small>line 20</small></li><li id=L39><b>theorem</b> <code>OAI.KadisonKastler.weighted_orthogonal_supports_le</code> <small>line 39</small><div class="doc"><p>A bound on the squared weights through each label controls the sum
+over all supports. Each support is counted just once.</p></div><pre>theorem weighted_orthogonal_supports_le {ι ω : Type*} [Fintype ι] [DecidableEq ι] [Fintype ω]
+    (v : ι → H) (S : ω → Finset ι) (β : ω → ℝ) {B : ℝ}
+    (hv : Pairwise (fun i j =&gt; inner ℂ (v i) (v j) = 0))
+    (hβ : ∀ i, (∑ w : ω, if i ∈ S w then β w ^ 2 else 0) ≤ B) :
+    (∑ w : ω, β w ^ 2 * ‖∑ i ∈ S w, v i‖ ^ 2) ≤
+      B * ‖∑ i : ι, v i‖ ^ 2 := by
+…</pre></li><li id=L67><b>theorem</b> <code>OAI.KadisonKastler.orthogonal_projection_vectors</code> <small>line 67</small></li><li id=L82><b>theorem</b> <code>OAI.KadisonKastler.weighted_projection_supports_le</code> <small>line 82</small><div class="doc"><p>The support-weighted estimate for an actual orthogonal partition of
+the identity in an operator algebra.</p></div><pre>theorem weighted_projection_supports_le {ι ω : Type*} [Fintype ι] [DecidableEq ι] [Fintype ω]
+    (P : ι → H →L[ℂ] H) (S : ω → Finset ι) (β : ω → ℝ) {B : ℝ}
+    (hself : ∀ i, IsSelfAdjoint (P i))
+    (horth : ∀ i j, i ≠ j → P i * P j = 0) (htotal : ∑ i, P i = 1)
+    (hβ : ∀ i, (∑ w : ω, if i ∈ S w then β w ^ 2 else 0) ≤ B) (x : H) :
+    (∑ w : ω, β w ^ 2 * ‖(∑ i ∈ S w, P i) x‖ ^ 2) ≤ B * ‖x‖ ^ 2 := by
+…</pre></li><li id=L94><b>theorem</b> <code>OAI.KadisonKastler.support_drift_le_sixty_four</code> <small>line 94</small><div class="doc"><p>The through-label square bound <code>64</code>, together with the cyclic
+column constant <code>8</code>, gives the coefficient drift constant <code>64</code>.</p></div><pre>theorem support_drift_le_sixty_four {ι ω : Type*} [Fintype ι] [DecidableEq ι] [Fintype ω]
+    (P : ι → H →L[ℂ] H) (S : ω → Finset ι) (β : ω → ℝ)
+    (hself : ∀ i, IsSelfAdjoint (P i))
+    (horth : ∀ i j, i ≠ j → P i * P j = 0) (htotal : ∑ i, P i = 1)
+    (hβ : ∀ i, (∑ w : ω, if i ∈ S w then β w ^ 2 else 0) ≤ 64)
+    {δ : ℝ} (hδ : 0 ≤ δ)
+    (D : ω → H) (x : H)
+    (hD : ∀ w, ‖D w‖ ≤ 8 * δ * β w * ‖(∑ i ∈ S w, P i) x‖) :
+    ‖WithLp.toLp 2 D‖ ≤ 64 * δ * ‖x‖ := by
+…</pre></li><li id=L124><b>theorem</b> <code>OAI.KadisonKastler.norm_pointwise_operator_le</code> <small>line 124</small><div class="doc"><p>Applying one bounded operator in every component has the same bound
+on the Hilbert direct sum.</p></div><pre>theorem norm_pointwise_operator_le {ω : Type*} [Fintype ω]
+    (T : H →L[ℂ] H) (v : ω → H) :
+    ‖WithLp.toLp 2 (fun w =&gt; T (v w))‖ ≤ ‖T‖ * ‖WithLp.toLp 2 v‖ := by
+…</pre></li><li id=L136><b>theorem</b> <code>OAI.KadisonKastler.norm_column_commutator_le</code> <small>line 136</small><div class="doc"><p>A contractive column of coefficients costs at most twice the norm
+of a perturbation when commuting that perturbation past the column.</p></div><pre>theorem norm_column_commutator_le {ω : Type*} [Fintype ω]
+    (K : ω → H →L[ℂ] H)
+    (hK : ∀ y : H, ‖WithLp.toLp 2 (fun w =&gt; K w y)‖ ≤ ‖y‖)
+    (T : H →L[ℂ] H) (x : H) :
+    ‖WithLp.toLp 2 (fun w =&gt; (T * K w - K w * T) x)‖ ≤ 2 * ‖T‖ * ‖x‖ := by
+…</pre></li><li id=L156><b>theorem</b> <code>OAI.KadisonKastler.coefficient_drift_le_sixty_six</code> <small>line 156</small><div class="doc"><p>The <code>64δ</code> bound obtained after averaging changes to <code>66δ</code> for the
+original implementing operator.</p></div><pre>theorem coefficient_drift_le_sixty_six {ω : Type*} [Fintype ω]
+    (K : ω → H →L[ℂ] H)
+    (hK : ∀ y : H, ‖WithLp.toLp 2 (fun w =&gt; K w y)‖ ≤ ‖y‖)
+    (h h0 : H →L[ℂ] H) {δ : ℝ} (hclose : ‖h - h0‖ ≤ δ)
+    (x : H)
+    (hbound : ‖WithLp.toLp 2 (fun w =&gt; (h0 * K w - K w * h0) x)‖ ≤
+      64 * δ * ‖x‖) :
+    ‖WithLp.toLp 2 (fun w =&gt; (h * K w - K w * h) x)‖ ≤ 66 * δ * ‖x‖ := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

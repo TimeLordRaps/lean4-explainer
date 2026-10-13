@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CoulombTransport/CoulombCoercivity.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CoulombTransport/CoulombCoercivity.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">CoulombTransport</a> / <span>CoulombCoercivity.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">CoulombTransport</a>/<span>CoulombCoercivity.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CoulombTransport/CoulombCoercivity.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.pairHessian_quadratic_lower_of_two_thirds</code> <small>line 16</small><div class="doc"><p>A uniform lower Hessian bound away from a Coulomb collision.</p></div><pre>theorem pairHessian_quadratic_lower_of_two_thirds {a : E}
+    (ha : (2 : ℝ) / 3 ≤ ‖a‖) (u : E) :
+    -(27 / 8 : ℝ) * ‖u‖ ^ 2 ≤ ⟪u, pairHessian a u⟫ := by
+…</pre><p class="refs">Mentions: <a href="CoulombCalculus.lean.html#L48">OAI.Problem356.CoulombCalculus.pairHessian</a></p></li><li id=L33><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.regularized_hessian_coercive_of_separated</code> <small>line 33</small><div class="doc"><p>The explicit K=20 regularization dominates every negative Coulomb Hessian
+contribution on a domain where all three pair distances are at least 2/3.</p></div><pre>theorem regularized_hessian_coercive_of_separated
+    {a b c : E} (ha : (2 : ℝ) / 3 ≤ ‖a‖)
+    (hb : (2 : ℝ) / 3 ≤ ‖b‖) (hc : (2 : ℝ) / 3 ≤ ‖c‖) (u v : E) :
+    (79 / 8 : ℝ) * (‖u‖ ^ 2 + ‖v‖ ^ 2) ≤
+      20 * (‖u‖ ^ 2 + ‖v‖ ^ 2) +
+        ⟪u, pairHessian a u⟫ +
+        ⟪u - v, pairHessian b (u - v)⟫ +
+        ⟪v, pairHessian c v⟫ := by
+…</pre><p class="refs">Mentions: <a href="CoulombCalculus.lean.html#L48">OAI.Problem356.CoulombCalculus.pairHessian</a></p></li><li id=L50><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.regularized_hessian_pos_of_separated</code> <small>line 50</small><div class="doc"><p>Strict positivity for every nonzero state direction.</p></div><pre>theorem regularized_hessian_pos_of_separated
+    {a b c : E} (ha : (2 : ℝ) / 3 ≤ ‖a‖)
+    (hb : (2 : ℝ) / 3 ≤ ‖b‖) (hc : (2 : ℝ) / 3 ≤ ‖c‖)
+    {u v : E} (huv : u ≠ 0 ∨ v ≠ 0) :
+    0 &lt; 20 * (‖u‖ ^ 2 + ‖v‖ ^ 2) +
+        ⟪u, pairHessian a u⟫ +
+        ⟪u - v, pairHessian b (u - v)⟫ +
+        ⟪v, pairHessian c v⟫ := by
+…</pre><p class="refs">Mentions: <a href="CoulombCalculus.lean.html#L48">OAI.Problem356.CoulombCalculus.pairHessian</a></p></li><li id=L67><b>def</b> <code>OAI.Problem356.CoulombCalculus.regularizedStateHessian</code> <small>line 67</small><div class="doc"><p>The regularized state-Jacobian, written in component form suitable for the
+parameter/state stationarity equation.</p></div><pre>def regularizedStateHessian (a b c : E) : (E × E) →L[ℝ] E × E :=
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.regularizedStateHessian_apply</code> <small>line 77</small></li><li id=L83><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.regularizedStateHessian_quadratic</code> <small>line 83</small><div class="doc"><p>Expansion of the product-state quadratic form.</p></div><pre>theorem regularizedStateHessian_quadratic (a b c : E) (q : E × E) :
+    ⟪q.1, (regularizedStateHessian a b c q).1⟫ +
+        ⟪q.2, (regularizedStateHessian a b c q).2⟫ =
+      20 * (‖q.1‖ ^ 2 + ‖q.2‖ ^ 2) +
+        ⟪q.1, pairHessian a q.1⟫ +
+        ⟪q.1 - q.2, pairHessian b (q.1 - q.2)⟫ +
+        ⟪q.2, pairHessian c q.2⟫ := by
+…</pre><p class="refs">Mentions: <a href="CoulombCoercivity.lean.html#L67">OAI.Problem356.CoulombCalculus.regularizedStateHessian</a>, <a href="CoulombCalculus.lean.html#L48">OAI.Problem356.CoulombCalculus.pairHessian</a></p></li><li id=L96><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.regularizedStateHessian_coercive</code> <small>line 96</small><div class="doc"><p>Quantitative coercivity of the state-Jacobian in the actual max product norm.</p></div><pre>theorem regularizedStateHessian_coercive
+    {a b c : E} (ha : (2 : ℝ) / 3 ≤ ‖a‖)
+    (hb : (2 : ℝ) / 3 ≤ ‖b‖) (hc : (2 : ℝ) / 3 ≤ ‖c‖) (q : E × E) :
+    (79 / 8 : ℝ) * ‖q‖ ^ 2 ≤
+      ⟪q.1, (regularizedStateHessian a b c q).1⟫ +
+        ⟪q.2, (regularizedStateHessian a b c q).2⟫ := by
+…</pre><p class="refs">Mentions: <a href="CoulombCoercivity.lean.html#L67">OAI.Problem356.CoulombCalculus.regularizedStateHessian</a></p></li><li id=L114><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.regularizedStateHessian_pos</code> <small>line 114</small><div class="doc"><p>Strict positivity in every nonzero direction.</p></div><pre>theorem regularizedStateHessian_pos
+    {a b c : E} (ha : (2 : ℝ) / 3 ≤ ‖a‖)
+    (hb : (2 : ℝ) / 3 ≤ ‖b‖) (hc : (2 : ℝ) / 3 ≤ ‖c‖)
+    {q : E × E} (hq : q ≠ 0) :
+    0 &lt; ⟪q.1, (regularizedStateHessian a b c q).1⟫ +
+        ⟪q.2, (regularizedStateHessian a b c q).2⟫ :=
+…</pre><p class="refs">Mentions: <a href="CoulombCoercivity.lean.html#L67">OAI.Problem356.CoulombCalculus.regularizedStateHessian</a></p></li><li id=L126><b>theorem</b> <code>OAI.Problem356.CoulombCalculus.hasFDerivAt_regularizedStateGradient</code> <small>line 126</small><div class="doc"><p>The explicit Jacobian of the regularized Coulomb stationarity equation.
+The constant vector in the second component accommodates the chosen outer
+potential and has no effect on the Hessian.</p></div><pre>theorem hasFDerivAt_regularizedStateGradient (y k : E) {s : E × E}
+    (hxy : s.1 - y ≠ 0) (hxz : s.1 - s.2 ≠ 0) (hzy : s.2 - y ≠ 0) :
+    HasFDerivAt
+      (fun p : E × E =&gt;
+        (pairGradient (p.1 - y) + pairGradient (p.1 - p.2) + (20 : ℝ) • p.1,
+          -pairGradient (p.1 - p.2) + pairGradient (p.2 - y) +
+            (20 : ℝ) • p.2 + k))
+      (regularizedStateHessian (s.1 - y) (s.1 - s.2) (s.2 - y)) s := by
+…</pre><p class="refs">Mentions: <a href="CoulombCalculus.lean.html#L19">OAI.Problem356.CoulombCalculus.pairGradient</a>, <a href="CoulombCoercivity.lean.html#L67">OAI.Problem356.CoulombCalculus.regularizedStateHessian</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

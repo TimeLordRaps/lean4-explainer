@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Mahler/RegularPartition.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Mahler/RegularPartition.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Mahler</a> / <span>RegularPartition.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Mahler</a>/<span>RegularPartition.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Mahler/RegularPartition.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.MahlerStokes.exists_compact_smooth_partition</code> <small>line 14</small><div class="doc"><p>An actual smooth partition with compact supports in a given finite bounded
+open cover, equal to one on a neighborhood of the compact set.</p></div><pre>theorem exists_compact_smooth_partition {d : ℕ} {ι : Type} [Fintype ι]
+    {K : Set (Fin d → ℝ)} (hK : IsCompact K) (V : ι → Set (Fin d → ℝ))
+    (hVo : ∀ i, IsOpen (V i)) (hVb : ∀ i, Bornology.IsBounded (V i))
+    (hcover : K ⊆ ⋃ i, V i) :
+    ∃ (W : Set (Fin d → ℝ))
+      (ρ : SmoothPartitionOfUnity ι 𝓘(ℝ, Fin d → ℝ) (Fin d → ℝ) (closure W)),
+      IsOpen W ∧ K ⊆ W ∧ IsCompact (closure W) ∧
+      ρ.IsSubordinate V ∧ (∀ i, HasCompactSupport (ρ i)) ∧
+      (∀ x ∈ W, ∑ i, ρ i x = 1) := by
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.MahlerStokes.RegularBoundaryAtlas.exists_partition</code> <small>line 35</small><div class="doc"><p>The boundary atlas has an actual finite smooth subordinate partition,
+with compact supports and sum one on a boundary neighborhood.</p></div><pre>theorem RegularBoundaryAtlas.exists_partition {d : ℕ} {U K : Set (Fin d → ℝ)}
+    {g : (Fin d → ℝ) → ℝ} (a : RegularBoundaryAtlas d U g K) (hK : IsCompact K) :
+    ∃ (W : Set (Fin d → ℝ))
+      (ρ : SmoothPartitionOfUnity a.Index 𝓘(ℝ, Fin d → ℝ) (Fin d → ℝ) (closure W)),
+      IsOpen W ∧ K ⊆ W ∧ IsCompact (closure W) ∧
+      (∀ i, tsupport (ρ i) ⊆ (a.patch i).domain) ∧
+      (∀ i, HasCompactSupport (ρ i)) ∧ (∀ x ∈ W, ∑ i, ρ i x = 1) :=
+…</pre><p class="refs">Mentions: <a href="RegularBoundaryAtlas.lean.html#L37">OAI.MahlerStokes.RegularBoundaryAtlas</a></p></li><li id=L47><b>def</b> <code>OAI.MahlerStokes.sublevelPatchDomain</code> <small>line 47</small><div class="doc"><p>Adjoin the actual sublevel as the interior patch. This finite cover covers
+the whole closure, so derivative cancellation can be used throughout D_R.</p></div><pre>def sublevelPatchDomain {d : ℕ} {U : Set (Fin d → ℝ)} {g : (Fin d → ℝ) → ℝ}
+    {R : ℝ} (a : RegularBoundaryAtlas d U g (frontier (regularSublevel U g R))) :
+    Option a.Index → Set (Fin d → ℝ)
+  | none =&gt; regularSublevel U g R
+  | some i =&gt; (a.patch i).domain
+
+ theorem sublevelPatchDomain_covers {d : ℕ} {U : Set (Fin d → ℝ)}
+    {g : (Fin d → ℝ) → ℝ} {R : ℝ} (hU : IsOpen U) (hg : ContinuousOn g U)
+    (a : RegularBoundaryAtlas d U g (frontier (regularSublevel U g R))) :
+    closure (regularSublevel U g R) ⊆ ⋃ i, sublevelPatchDomain a i := by
+…</pre><p class="refs">Mentions: <a href="RegularBoundaryAtlas.lean.html#L37">OAI.MahlerStokes.RegularBoundaryAtlas</a>, <a href="RegularSublevel.lean.html#L12">OAI.MahlerStokes.regularSublevel</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

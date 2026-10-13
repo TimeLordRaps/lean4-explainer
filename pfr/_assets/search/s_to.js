@@ -1,0 +1,1 @@
+window.l4shard("to", [["FiniteRange.toFinset",2,16],["Mathlib.Tactic.RPowRing.ExBase.toProd",8,72],["torsion_PFR",41,974],["torsion_PFR_conjecture_aux",41,816],["torsion_dist_shrinking",5,215],["torsion_exists_subgroup_subset_card_le",41,930],["torsion_free_doubling",5,95]]);

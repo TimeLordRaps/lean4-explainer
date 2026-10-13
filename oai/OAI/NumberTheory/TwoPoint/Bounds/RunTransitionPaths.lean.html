@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/Bounds/RunTransitionPaths.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/Bounds/RunTransitionPaths.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">Bounds</a> / <span>RunTransitionPaths.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">Bounds</a>/<span>RunTransitionPaths.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/Bounds/RunTransitionPaths.lean#L1">source</a></p><div class="doc"><p>Greedy transitions of an actual constant-run sequence give quotient paths.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.TwoPointCorrelations.scanRunTransitions</code> <small>line 14</small><div class="doc"><p>Scan the remaining positions, recording precisely the starts of new runs.</p></div><pre>def scanRunTransitions (runLabel : ℕ → ι) : ℕ → ℕ → ι → List (ℕ × ι)
+  | _, 0, _ =&gt; []
+  | n, len + 1, previous =&gt;
+      if runLabel n = previous then scanRunTransitions runLabel (n + 1) len previous
+      else (n, runLabel n) :: scanRunTransitions runLabel (n + 1) len (runLabel n)
+
+/-- Local constant-run geometry suffices for the actual greedy transition list;
+no path, run boundaries, or scalar sums are supplied as encoding data. -/</pre></li><li id=L22><b>theorem</b> <code>OAI.TwoPointCorrelations.scanRunTransitions_data</code> <small>line 22</small><div class="doc"><p>Local constant-run geometry suffices for the actual greedy transition list;
+no path, run boundaries, or scalar sums are supplied as encoding data.</p></div><pre>theorem scanRunTransitions_data (D : Submodule K (α → K))
+    (anchor : ι → (α → K) ⧸ D) (regularLabel : ι → α)
+    (label : ℕ → α) (coefficient : ℕ → K) (runLabel : ℕ → ι)
+    (start finish : ℕ)
+    (hlabel : ∀ t ∈ Ico start finish, label t = regularLabel (runLabel t))
+    (hline : ∀ t ∈ Ico start finish,
+      ∃ c : K, D.mkQ (formalDeparture label coefficient t) = anchor (runLabel t) +
+        c • D.mkQ (Pi.basisFun K α (regularLabel (runLabel t))))
+    (hnonzero : ∀ a b i, start ≤ a → a &lt; b → b ≤ finish →
+      (∀ t ∈ Ico a b, label t = regularLabel i) → (∑ t ∈ Ico a b, coefficient t) ≠ 0)
+    (a n len : ℕ) (i : ι) (hsa : start ≤ a) (han : a &lt; n) (hend : n + len ≤ finish)
+    (hcurrent : runLabel a = i)
+…</pre><p class="refs">Mentions: <a href="FormalDepartures.lean.html#L15">OAI.TwoPointCorrelations.formalDeparture</a></p></li><li id=L61><b>theorem</b> <code>OAI.TwoPointCorrelations.regular_segment_run_data</code> <small>line 61</small><div class="doc"><p>Begin immediately after the first position of a nonempty regular segment.</p></div><pre>theorem regular_segment_run_data (D : Submodule K (α → K))
+    (anchor : ι → (α → K) ⧸ D) (regularLabel : ι → α)
+    (label : ℕ → α) (coefficient : ℕ → K) (runLabel : ℕ → ι)
+    (start len : ℕ) (hlen : 0 &lt; len)
+    (hlabel : ∀ t ∈ Ico start (start + len), label t = regularLabel (runLabel t))
+    (hline : ∀ t ∈ Ico start (start + len),
+      ∃ c : K, D.mkQ (formalDeparture label coefficient t) = anchor (runLabel t) +
+        c • D.mkQ (Pi.basisFun K α (regularLabel (runLabel t))))
+    (hnonzero : ∀ a b i, start ≤ a → a &lt; b → b ≤ start + len →
+      (∀ t ∈ Ico a b, label t = regularLabel i) → (∑ t ∈ Ico a b, coefficient t) ≠ 0) :
+    QuotientRunData D anchor regularLabel label coefficient start (runLabel start)
+      (scanRunTransitions runLabel (start + 1) (len - 1) (runLabel start)) := by
+…</pre><p class="refs">Mentions: <a href="FormalDepartures.lean.html#L15">OAI.TwoPointCorrelations.formalDeparture</a>, <a href="QuotientRunPaths.lean.html#L16">OAI.TwoPointCorrelations.QuotientRunData</a>, <a href="RunTransitionPaths.lean.html#L14">OAI.TwoPointCorrelations.scanRunTransitions</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,131 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/HarmonicGrowth/GlobalControl.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/HarmonicGrowth/GlobalControl.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">HarmonicGrowth</a> / <span>GlobalControl.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">HarmonicGrowth</a>/<span>GlobalControl.lean</span></code></h1><p class="muted">51 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/HarmonicGrowth/GlobalControl.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.weighted_slope_gap_deriv</code> <small>line 13</small></li><li id=L37><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.riccati_quadratic_upper</code> <small>line 37</small></li><li id=L71><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.symmetric_norm_bound</code> <small>line 71</small></li><li id=L100><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_slope_norm_bound</code> <small>line 100</small><div class="doc"><p>The history-independent Riccati bound is proved for the actual center-regular
+PB solution. It is not an assumption on an arbitrary incoming solution.</p></div><pre>theorem actual_slope_norm_bound {A : ℝ → E →L[ℝ] E} {p : ℝ → ℝ}
+    (hA : Continuous A) (hp : Continuous p) {MA Mp : ℝ}
+    (hMA : 0 ≤ MA) (hMp : 0 ≤ Mp)
+    (hAn : ∀ t,‖A t‖ ≤ MA) (hpn : ∀ t,|p t| ≤ Mp)
+    (hAs : ∀ t x y,inner ℝ (A t x) y=inner ℝ x (A t y))
+    (hAp : ∀ t x,0 ≤ inner ℝ x (A t x))
+    {l B : ℝ} (hl : 0 &lt; l) (hAc : ∀ t ≤ 0,∀ x,A t x=(l*(l+B)) • x)
+    (hpc : ∀ t ≤ 0,p t=B) {t : ℝ} (ht : 0 ≤ t) :
+    ‖slope A p l t‖ ≤ l+MA+Mp+1 := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L675">OAI.HarmonicCounterexample.LinearODE.slope</a></p></li><li id=L155><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.uniform_round_reset</code> <small>line 155</small><div class="doc"><p>A single late threshold resets EVERY positive symmetric bounded history.
+Only the actual preceding round interval is used.</p></div><pre>theorem uniform_round_reset (basis : OrthonormalBasis ι ℝ E)
+    {α p : ℝ → ℝ} (hp : Continuous p) {β p₀ γ θ B l B₀ MA Mp : ℝ}
+    (hαlim : Tendsto α atTop (𝓝 β)) (hplim : Tendsto p atTop (𝓝 p₀))
+    (hγ : 0 &lt; γ) (hθ : 0 &lt; θ) (hpl : ∀ᶠ t in atTop,γ ≤ p t)
+    (hroot : β*B-p₀*θ-θ^2=0) (hMA : 0 ≤ MA) (hMp : 0 ≤ Mp)
+    (hpn : ∀ t,|p t| ≤ Mp) (hl : 0 &lt; l) (hpc : ∀ t ≤ 0,p t=B₀)
+    {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ J : ℕ,∀ j,J ≤ j → ∀ A : ℝ → E →L[ℝ] E,
+      Continuous A → (∀ t,‖A t‖ ≤ MA) →
+      (∀ t x y,inner ℝ (A t x) y=inner ℝ x (A t y)) →
+      (∀ t x,0 ≤ inner ℝ x (A t x)) →
+      (∀ t ≤ 0,∀ x,A t x=(l*(l+B₀)) • x) →
+…</pre></li><li id=L239><b>structure</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry</code> <small>line 239</small><div class="doc"><p>Primitive radial coefficients and fixed angular operators. All fields are
+scalar/asymptotic or pointwise geometric facts; no transmission/reset/growth
+conclusion is part of this data.</p></div><pre>structure HistoryGeometry (S : PulseSystem E ι κ) where
+…</pre><p class="refs">Mentions: <a href="PulseSystem.lean.html#L387">OAI.HarmonicCounterexample.LinearODE.PulseSystem</a></p></li><li id=L268><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient</code> <small>line 268</small></li><li id=L271><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.bound</code> <small>line 271</small></li><li id=L276><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.bound_nonneg</code> <small>line 276</small></li><li id=L286><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_smooth</code> <small>line 286</small></li><li id=L291><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_bound</code> <small>line 291</small></li><li id=L300><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_nonnegative</code> <small>line 300</small></li><li id=L313><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_symmetric</code> <small>line 313</small></li><li id=L323><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_center</code> <small>line 323</small></li><li id=L330><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_round</code> <small>line 330</small></li><li id=L336><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_rest</code> <small>line 336</small></li><li id=L362><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.uniform_incoming</code> <small>line 362</small><div class="doc"><p>Uniform reset for the explicit smooth angular stream, including the first
+active period and arbitrary prior admissible control choices.</p></div><pre>theorem HistoryGeometry.uniform_incoming {ε : ℝ} (hε : 0 &lt; ε) :
+    ∃ J : ℕ,∀ j0 j,J ≤ j → ∀ s : ℕ → Fin n → ℝ,
+      (∀ k,j0 ≤ k → ∀ t i,packetStretch (s k) (pulse k) t i ∈ Icc (1/2:ℝ) (3/2)) →
+      ∀ b,‖orthogonalMatrix (S.basis b) (slope (G.coefficient slot s j0 b) G.drift (G.l b) (time j))-
+        S.θ b • (1:Matrix (ι b) (ι b) ℝ)‖ ≤ ε := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Damping.lean.html#L25">OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix</a>, <a href="Flow.lean.html#L675">OAI.HarmonicCounterexample.LinearODE.slope</a></p></li><li id=L387><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.uniform_radial_tail</code> <small>line 387</small></li><li id=L406><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.eventual_history_conditions</code> <small>line 406</small><div class="doc"><p>All scalar and incoming thresholds simultaneously, chosen BEFORE the
+start index, entire control stream, and current history.</p></div><pre>theorem HistoryGeometry.eventual_history_conditions (T₀ : ℝ) {ρ : ℝ} (hρ : 0 &lt; ρ) :
+    ∃ J : ℕ,∀ j0 j,J ≤ j0 → j0 ≤ j →
+      T₀ ≤ pulse j ∧ ρ/4+(pulse j)⁻¹+ρ/4 ≤ ρ ∧
+      (∀ t,time j ≤ t → (∀ b,|G.α t-S.β b| ≤ ρ/4) ∧
+        |G.drift t-S.p₀| ≤ ρ/4 ∧ S.γ ≤ G.drift t) ∧
+      ∀ s : ℕ → Fin n → ℝ,
+        (∀ k,j0 ≤ k → ∀ t i,packetStretch (s k) (pulse k) t i ∈ Icc (1/2:ℝ) (3/2)) →
+        ∀ b,‖orthogonalMatrix (S.basis b) (slope (G.coefficient slot s j0 b) G.drift (G.l b) (time j))-
+          S.θ b • (1:Matrix (ι b) (ι b) ℝ)‖ ≤ ρ/4 := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Damping.lean.html#L25">OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix</a>, <a href="Flow.lean.html#L675">OAI.HarmonicCounterexample.LinearODE.slope</a></p></li><li id=L450><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.ideal_factor</code> <small>line 450</small></li><li id=L458><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.value_factor</code> <small>line 458</small></li><li id=L467><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.defect_factor</code> <small>line 467</small></li><li id=L475><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.word_physical_C1</code> <small>line 475</small><div class="doc"><p>Packaged uniform estimate with precisely the data that occur in a recursive
+center-regular geometric construction.</p></div><pre>theorem word_physical_C1 (S : PulseSystem E ι κ) (w : PhysicalWord κ) :
+    ∃ T₀ ρ C : ℝ,1 ≤ T₀ ∧ 0 &lt; ρ ∧ 1 ≤ C ∧
+      ∀ H : PulseHistory S,T₀ ≤ H.T → H.δ+H.T⁻¹+H.ε ≤ ρ →
+      ∀ x ∈ w.ball,
+        DifferentiableAt ℝ (w.value S H) x ∧ DifferentiableAt ℝ (w.defect S H) x ∧
+        max (max ‖w.value S H x-w.ideal S x‖ ‖fderiv ℝ (w.value S H) x-fderiv ℝ (w.ideal S) x‖)
+          (max ‖w.defect S H x‖ ‖fderiv ℝ (w.defect S H) x‖) ≤ C*(H.δ+H.T⁻¹+H.ε) := by
+…</pre><p class="refs">Mentions: <a href="PulseSystem.lean.html#L387">OAI.HarmonicCounterexample.LinearODE.PulseSystem</a>, <a href="PulseSystem.lean.html#L451">OAI.HarmonicCounterexample.LinearODE.PhysicalWord</a>, <a href="PulseSystem.lean.html#L415">OAI.HarmonicCounterexample.LinearODE.PulseHistory</a></p></li><li id=L534><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.local_physical_tuning</code> <small>line 534</small><div class="doc"><p>The uniform local producer: the genuine simultaneous Lie packet admits
+exact physical whole-period tuning, with all thresholds chosen before histories
+and BEFORE the bounded complete diagonal-leg normalizers.</p></div><pre>theorem local_physical_tuning (S : PulseSystem E ι κ)
+    (htrace : ∀ j b,(S.generator j b).trace=0)
+    (hfull : ∀ X : MatrixProduct ι,(∀ b,(X b).trace=0) →
+      X ∈ LieSubalgebra.lieSpan ℝ _ (Set.range S.generator))
+    (target : ∀ b,Matrix.SpecialLinearGroup (ι b) ℝ)
+    {K₀ : ℝ} (hK₀ : 0 ≤ K₀) :
+    ∃ (w : PhysicalWord κ) (T₀ ρ : ℝ),1 ≤ T₀ ∧ 0 &lt; ρ ∧
+      ∀ H : PulseHistory S,T₀ ≤ H.T → H.δ+H.T⁻¹+H.ε ≤ ρ →
+      ∀ K : MatrixProduct ι,‖K‖ ≤ K₀ →
+      ∃ x ∈ w.ball,∀ b,∃ c : ℝ,c ∈ Ioo (1/2:ℝ) (3/2) ∧
+        wholePeriod K (w.defect S H x) (w.value S H x) b=
+          c • ((slProductToUnits target:MatrixProduct ι) b) := by
+…</pre><p class="refs">Mentions: <a href="PulseSystem.lean.html#L387">OAI.HarmonicCounterexample.LinearODE.PulseSystem</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="PulseSystem.lean.html#L451">OAI.HarmonicCounterexample.LinearODE.PhysicalWord</a>, <a href="PulseSystem.lean.html#L415">OAI.HarmonicCounterexample.LinearODE.PulseHistory</a></p></li><li id=L585><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.admissible</code> <small>line 585</small><div class="doc"><p>Zero belongs to the admissible control space as a genuinely absent pulse,
+not as the generally nonzero word at parameter zero.</p></div><pre>def PhysicalWord.admissible : Set (Fin w.n → ℝ) :=
+…</pre></li><li id=L588><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.zero_admissible</code> <small>line 588</small></li><li id=L590><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.amplitudes_admissible</code> <small>line 590</small></li><li id=L593><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.admissible_uniform_bound</code> <small>line 593</small></li><li id=L608><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.PhysicalWord.admissible_stretch_threshold</code> <small>line 608</small><div class="doc"><p>The same compact parameter ball works in every later pulse, with a
+threshold independent of histories or later parameter choices.</p></div><pre>theorem PhysicalWord.admissible_stretch_threshold : ∃ J : ℕ,∀ j,J ≤ j →
+    ∀ a ∈ w.admissible,∀ t i,packetStretch a (pulse j) t i ∈ Icc (1/2:ℝ) (3/2) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L634><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.baseline</code> <small>line 634</small></li><li id=L638><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.packet</code> <small>line 638</small></li><li id=L643><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.defect</code> <small>line 643</small></li><li id=L648><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.coefficient_causal</code> <small>line 648</small></li><li id=L655><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.packet_causal</code> <small>line 655</small></li><li id=L700><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.pulseHistory</code> <small>line 700</small><div class="doc"><p>This is a constructor from the actual stream. All nontrivial input facts
+are supplied by the single history-independent threshold theorem.</p></div><pre>def HistoryGeometry.pulseHistory : PulseHistory S where
+…</pre><p class="refs">Mentions: <a href="PulseSystem.lean.html#L415">OAI.HarmonicCounterexample.LinearODE.PulseHistory</a></p></li><li id=L756><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.global_physical_tuning</code> <small>line 756</small><div class="doc"><p>One smooth infinite stream simultaneously tunes every whole-period packet.
+All thresholds precede EVERY history. The bounded normalizers may be any
+predetermined actual complete diagonal legs; they do not supply transmissions.</p></div><pre>theorem global_physical_tuning (S : PulseSystem E ι κ) (G : HistoryGeometry S)
+    (htrace : ∀ j b,(S.generator j b).trace=0)
+    (hfull : ∀ X : MatrixProduct ι,(∀ b,(X b).trace=0) →
+      X ∈ LieSubalgebra.lieSpan ℝ _ (Set.range S.generator))
+    (target : ∀ b,Matrix.SpecialLinearGroup (ι b) ℝ)
+    {K₀ : ℝ} (hK₀ : 0 ≤ K₀) :
+    ∃ w : PhysicalWord κ,∃ J : ℕ,∀ j0,J ≤ j0 →
+      ∀ K : ℕ → MatrixProduct ι,(∀ j,j0 ≤ j → ‖K j‖ ≤ K₀) →
+      ∃ s : ℕ → Fin w.n → ℝ,
+        (∀ j,s j ∈ w.admissible) ∧ (∀ j,j&lt;j0 → s j=0) ∧
+        (∀ j,j0 ≤ j → ∀ t i,packetStretch (s j) (pulse j) t i ∈ Icc (1/2:ℝ) (3/2)) ∧
+        ∀ j,j0 ≤ j → ∀ b,∃ c : ℝ,c ∈ Ioo (1/2:ℝ) (3/2) ∧
+…</pre><p class="refs">Mentions: <a href="PulseSystem.lean.html#L387">OAI.HarmonicCounterexample.LinearODE.PulseSystem</a>, <a href="GlobalControl.lean.html#L239">OAI.HarmonicCounterexample.LinearODE.HistoryGeometry</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="PulseSystem.lean.html#L451">OAI.HarmonicCounterexample.LinearODE.PhysicalWord</a></p></li><li id=L850><b>lemma</b> <code>OAI.HarmonicCounterexample.Transmission.blockwise_whole_period_exact_leg</code> <small>line 850</small><div class="doc"><p>Block-dependent Riccati roots are kept in the complete-leg identity.</p></div><pre>lemma blockwise_whole_period_exact_leg
+    {U V P B : ∀ b,Matrix (ι b) (ι b) ℝ} (θ : β → ℝ)
+    (D M : ∀ b,(Matrix (ι b) (ι b) ℝ)ˣ)
+    (hD : ∀ b,(D b:Matrix (ι b) (ι b) ℝ)=U b+θ b • V b)
+    (hatt : ∀ b,∃ c : ℝ,c ∈ Ioo (1/2:ℝ) (3/2) ∧
+      wholePeriod ((↑(D b)⁻¹:Matrix (ι b) (ι b) ℝ)*V b) (P b-θ b • 1) (B b)=
+        c • (M b:Matrix (ι b) (ι b) ℝ)) :
+    ∀ b,∃ c : ℝ,c ∈ Ioo (1/2:ℝ) (3/2) ∧
+      (U b+V b*P b)*B b=c • ((D b:Matrix (ι b) (ι b) ℝ)*(M b:Matrix (ι b) (ι b) ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Attainment.lean.html#L562">OAI.HarmonicCounterexample.Transmission.wholePeriod</a></p></li><li id=L873><b>lemma</b> <code>OAI.HarmonicCounterexample.Transmission.unnormalize_whole_leg</code> <small>line 873</small><div class="doc"><p>Undo ONLY the harmless scalar pulse normalization. The scalar logarithmic
+cost is separated from the genuine diagonal factor of the entire leg.</p></div><pre>lemma unnormalize_whole_leg {Fa Fc Fd U V P D M : R} {I c : ℝ}
+    (hvalue : Fd=(U+V*P)*Fc)
+    (htune : (U+V*P)*(Real.exp (-I) • (Fc*Fa))=c • (D*M)) :
+    Fd*Fa=(Real.exp I*c) • (D*M) := by
+…</pre></li><li id=L910><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.zero_stretch</code> <small>line 910</small></li><li id=L915><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.baseCoefficient</code> <small>line 915</small><div class="doc"><p>Background diagonal coefficient, independent of all control choices.</p></div><pre>def HistoryGeometry.baseCoefficient (j0 : ℕ) (b : ξ) (t : ℝ) : E b →L[ℝ] E b :=
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L919><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.baseCoefficient_eq</code> <small>line 919</small></li><li id=L933><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.baseCoefficient_diagonal</code> <small>line 933</small></li><li id=L947><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.legLambda</code> <small>line 947</small><div class="doc"><p>The genuine fixed diagonal scalar coefficient.</p></div><pre>def HistoryGeometry.legLambda (d₀ : ∀ b,ι b → ℝ) (j0 : ℕ) (b : ξ) (i : ι b) (t : ℝ) : ℝ :=
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L952><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.legLambda_properties</code> <small>line 952</small></li><li id=L987><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.legU</code> <small>line 987</small><div class="doc"><p>ACTUAL complete-leg columns with the physical schedule.</p></div><pre>def HistoryGeometry.legU (d₀ : ∀ b,ι b → ℝ) (j0 j : ℕ) (b : ξ) : Matrix (ι b) (ι b) ℝ :=
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L990><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.legV</code> <small>line 990</small></li><li id=L995><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.leg_normalizer</code> <small>line 995</small></li><li id=L1029><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.transmission</code> <small>line 1029</small><div class="doc"><p>Actual center-regular value transmission, including the complete diagonal
+leg and with no pulse scalar normalization.</p></div><pre>def HistoryGeometry.transmission (s : ℕ → Fin n → ℝ) (j0 j : ℕ) (b : ξ) : Matrix (ι b) (ι b) ℝ :=
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L1035><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.actual_leg_restart</code> <small>line 1035</small></li><li id=L1072><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.HistoryGeometry.exact_period</code> <small>line 1072</small><div class="doc"><p>Attainment in normalized pulse coordinates gives the actual WHOLE period,
+with its scalar exactly separated.</p></div><pre>theorem HistoryGeometry.exact_period (d₀ : ∀ b,ι b → ℝ)
+    (hd₀ : ∀ b,orthogonalMatrix (S.basis b) (G.D₀ b)=Matrix.diagonal (d₀ b))
+    (s : ℕ → Fin n → ℝ) (j0 j : ℕ)
+    (hpos : ∀ k,j0 ≤ k → ∀ t i,packetStretch (s k) (pulse k) t i ∈ Icc (1/2:ℝ) (3/2))
+    (hj : j0 ≤ j) (b : ξ) (D : (Matrix (ι b) (ι b) ℝ)ˣ)
+    (hD : (D:Matrix (ι b) (ι b) ℝ)=G.legU d₀ j0 j b+S.θ b • G.legV d₀ j0 j b)
+    (M : Matrix (ι b) (ι b) ℝ) {c : ℝ}
+    (htune : wholePeriod ((↑D⁻¹:Matrix (ι b) (ι b) ℝ)*G.legV d₀ j0 j b)
+      (G.defect slot s j0 j b) (G.packet slot s j0 j b)=c • M) :
+    G.transmission slot s j0 j b=
+      (Real.exp (∫ t in time j..time j+pulse j,G.baseline j b t)*c) • ((D:Matrix (ι b) (ι b) ℝ)*M) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Damping.lean.html#L25">OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix</a></p></li><li id=L1123><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.global_actual_transmission</code> <small>line 1123</small><div class="doc"><p>One actual infinite center-regular equation realizes ALL the requested
+complete-period transmissions. Its normalizers are the true second-order
+post-pulse columns U,V, not supplied targets or asymptotic substitutes.</p></div><pre>theorem global_actual_transmission (S : PulseSystem E ι κ) (G : HistoryGeometry S)
+    (d₀ : ∀ b,ι b → ℝ)
+    (hd₀ : ∀ b,orthogonalMatrix (S.basis b) (G.D₀ b)=Matrix.diagonal (d₀ b))
+    (htrace : ∀ j b,(S.generator j b).trace=0)
+    (hfull : ∀ X : MatrixProduct ι,(∀ b,(X b).trace=0) →
+      X ∈ LieSubalgebra.lieSpan ℝ _ (Set.range S.generator))
+    (target : ∀ b,Matrix.SpecialLinearGroup (ι b) ℝ) :
+    ∃ w : PhysicalWord κ,∃ J : ℕ,∀ j0,J ≤ j0 →
+      ∃ s : ℕ → Fin w.n → ℝ,
+        (∀ j,s j ∈ w.admissible) ∧ (∀ j,j&lt;j0 → s j=0) ∧
+        (∀ j,j0 ≤ j → ∀ t i,packetStretch (s j) (pulse j) t i ∈ Icc (1/2:ℝ) (3/2)) ∧
+        ∀ j,j0 ≤ j → ∀ b,∃ D : (Matrix (ι b) (ι b) ℝ)ˣ,
+…</pre><p class="refs">Mentions: <a href="PulseSystem.lean.html#L387">OAI.HarmonicCounterexample.LinearODE.PulseSystem</a>, <a href="GlobalControl.lean.html#L239">OAI.HarmonicCounterexample.LinearODE.HistoryGeometry</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Damping.lean.html#L25">OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix</a>, <a href="PulseSystem.lean.html#L451">OAI.HarmonicCounterexample.LinearODE.PhysicalWord</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Arithmetic/ResidueComparison.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Arithmetic/ResidueComparison.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Arithmetic</a> / <span>ResidueComparison.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Arithmetic</a>/<span>ResidueComparison.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Arithmetic/ResidueComparison.lean#L1">source</a></p><div class="doc"><h3>Integrating the logarithmic derivative</h3><p>The calculus step in <code>lem:residue</code> of paper 031-01. After the zero
+comparison bounds the logarithmic derivative of
+<code>F(σ) = (σ-1) ζ_K(σ)</code>, this lemma compares <code>F(1+h)</code> with its residue
+<code>F(1)</code> on an interval of length at most <code>4/log D</code>.
+The analytic continuation and the zeta identities are separate inputs.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.DukePrimeDegree.comparison_of_log_deriv_bound</code> <small>line 24</small><div class="doc"><p>Integrating a uniform bound on the logarithmic derivative gives a
+multiplicative comparison of the endpoint values.</p></div><pre>theorem comparison_of_log_deriv_bound
+    (F : ℝ → ℝ) {a b C : ℝ} (hab : a &lt; b)
+    (ha : 0 &lt; F a) (hb : 0 &lt; F b)
+    (hcont : ContinuousOn (fun x =&gt; Real.log (F x)) (Icc a b))
+    (hdiff : DifferentiableOn ℝ (fun x =&gt; Real.log (F x)) (Ioo a b))
+    (hbound : ∀ x ∈ Ioo a b, |deriv (fun y =&gt; Real.log (F y)) x| ≤ C) :
+    Real.exp (-C * (b - a)) * F a ≤ F b ∧
+      F b ≤ Real.exp (C * (b - a)) * F a := by
+…</pre></li><li id=L53><b>theorem</b> <code>OAI.DukePrimeDegree.residue_comparison_on_short_interval</code> <small>line 53</small><div class="doc"><p>The uniform form used at <code>h ≤ 4/log D</code>. The comparison constant
+is independent of <code>L</code> and of <code>h</code>, including arbitrarily small <code>h</code>.</p></div><pre>theorem residue_comparison_on_short_interval
+    (F : ℝ → ℝ) {L h C : ℝ} (hL : 0 &lt; L) (hh : 0 &lt; h)
+    (hC : 0 ≤ C) (hlength : h ≤ 4 / L)
+    (hresidue : 0 &lt; F 1) (hvalue : 0 &lt; F (1 + h))
+    (hcont : ContinuousOn (fun x =&gt; Real.log (F x)) (Icc 1 (1 + h)))
+    (hdiff : DifferentiableOn ℝ (fun x =&gt; Real.log (F x)) (Ioo 1 (1 + h)))
+    (hbound : ∀ x ∈ Ioo 1 (1 + h), |deriv (fun y =&gt; Real.log (F y)) x| ≤ C * L) :
+    Real.exp (-4 * C) * F 1 ≤ F (1 + h) ∧
+      F (1 + h) ≤ Real.exp (4 * C) * F 1 := by
+…</pre></li><li id=L77><b>lemma</b> <code>OAI.DukePrimeDegree.log_derivative_bound_from_hadamard</code> <small>line 77</small><div class="doc"><p>The elementary estimate after applying the real Hadamard identity.
+Here <code>S</code> is the nonnegative zero sum and <code>G</code> is the gamma-factor term.</p></div><pre>lemma log_derivative_bound_from_hadamard
+    {L σ A B S G d : ℝ} (hL : 1 ≤ L) (hσ : 1 ≤ σ)
+    (hB : 0 ≤ B) (hS : 0 ≤ S) (hSup : S ≤ A * L)
+    (hG : |G| ≤ B) (hd : d = S - 1 / σ - L / 2 - G) :
+    |d| ≤ (A + B + 2) * L := by
+…</pre></li><li id=L92><b>lemma</b> <code>OAI.DukePrimeDegree.reciprocal_residue_bound</code> <small>line 92</small><div class="doc"><p>Evaluating at <code>h = 1/L</code> and using <code>ζ(1+h) ≥ 1</code> bounds the reciprocal
+residue. <code>hupper</code> is the upper endpoint comparison just proved.</p></div><pre>lemma reciprocal_residue_bound {κ F L C : ℝ}
+    (hκ : 0 &lt; κ) (hL : 0 &lt; L)
+    (hvalue : 1 / L ≤ F) (hupper : F ≤ Real.exp (4 * C) * κ) :
+    1 / κ ≤ Real.exp (4 * C) * L := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/SharpThreshold/RussoReindex.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/SharpThreshold/RussoReindex.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">SharpThreshold</a> / <span>RussoReindex.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">SharpThreshold</a>/<span>RussoReindex.lean</span></code></h1><p class="muted">11 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/SharpThreshold/RussoReindex.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem313.russoInsert</code> <small>line 14</small><div class="doc"><p>Reinsert one Boolean coordinate in a function on the remaining coordinates.</p></div><pre>def russoInsert (i : ι) (b : Bool) (z : {j : ι // j ≠ i} → Bool) : ι → Bool :=
+…</pre></li><li id=L17><b>theorem</b> <code>OAI.Problem313.russoInsert_self</code> <small>line 17</small></li><li id=L21><b>theorem</b> <code>OAI.Problem313.russoInsert_of_ne</code> <small>line 21</small></li><li id=L26><b>theorem</b> <code>OAI.Problem313.update_russoInsert</code> <small>line 26</small></li><li id=L37><b>theorem</b> <code>OAI.Problem313.sum_bool_split</code> <small>line 37</small><div class="doc"><p>Splitting a finite Boolean cube at one coordinate.</p></div><pre>theorem sum_bool_split (i : ι) (g : (ι → Bool) → ℝ) :
+    (∑ x, g x) = ∑ z : {j : ι // j ≠ i} → Bool,
+      (g (russoInsert i true z) + g (russoInsert i false z)) := by
+…</pre><p class="refs">Mentions: <a href="RussoReindex.lean.html#L14">OAI.Problem313.russoInsert</a></p></li><li id=L45><b>theorem</b> <code>OAI.Problem313.prod_erase_russoInsert</code> <small>line 45</small><div class="doc"><p>The product excluding a coordinate does not depend on that coordinate.</p></div><pre>theorem prod_erase_russoInsert (p : ℝ) (i : ι) (b c : Bool)
+    (z : {j : ι // j ≠ i} → Bool) :
+    (∏ j ∈ Finset.univ.erase i, if russoInsert i b z j = true then p else 1-p) =
+    ∏ j ∈ Finset.univ.erase i, if russoInsert i c z j = true then p else 1-p := by
+…</pre><p class="refs">Mentions: <a href="RussoReindex.lean.html#L14">OAI.Problem313.russoInsert</a></p></li><li id=L55><b>theorem</b> <code>OAI.Problem313.prod_russoInsert</code> <small>line 55</small><div class="doc"><p>A Bernoulli weight factors at a chosen coordinate.</p></div><pre>theorem prod_russoInsert (p : ℝ) (i : ι) (b : Bool)
+    (z : {j : ι // j ≠ i} → Bool) :
+    (∏ j, if russoInsert i b z j = true then p else 1-p) =
+    (if b = true then p else 1-p) *
+      ∏ j ∈ Finset.univ.erase i, if russoInsert i false z j = true then p else 1-p := by
+…</pre><p class="refs">Mentions: <a href="RussoReindex.lean.html#L14">OAI.Problem313.russoInsert</a></p></li><li id=L67><b>theorem</b> <code>OAI.Problem313.russo_sum_reindex</code> <small>line 67</small><div class="doc"><p>Finite reindexing identity behind the Russo--Margulis derivative formula.
+No positivity assumptions on the bias or the observable are needed.</p></div><pre>theorem russo_sum_reindex (p : ℝ) (i : ι) (g : (ι → Bool) → ℝ) :
+    (∑ x : ι → Bool, (if x i = true then (1 : ℝ) else -1) *
+      (∏ j ∈ Finset.univ.erase i, if x j = true then p else 1-p) * g x) =
+    ∑ x : ι → Bool, (∏ j, if x j = true then p else 1-p) *
+      (g (Function.update x i true) - g (Function.update x i false)) := by
+…</pre></li><li id=L81><b>theorem</b> <code>OAI.Problem313.sum_weight_conditioning</code> <small>line 81</small><div class="doc"><p>Integrating out one coordinate is unchanged by Bernoulli resampling.</p></div><pre>theorem sum_weight_conditioning (p : ℝ) (i : ι) (g : (ι → Bool) → ℝ) :
+    (∑ x : ι → Bool, (∏ j, if x j = true then p else 1-p) * g x) =
+    ∑ x : ι → Bool, (∏ j, if x j = true then p else 1-p) *
+      ((1-p) * g (Function.update x i false) + p * g (Function.update x i true)) := by
+…</pre></li><li id=L92><b>theorem</b> <code>OAI.Problem313.sum_weight_update</code> <small>line 92</small><div class="doc"><p>A reset observable can be integrated on the cube with that coordinate removed.</p></div><pre>theorem sum_weight_update (p : ℝ) (i : ι) (b : Bool) (g : (ι → Bool) → ℝ) :
+    (∑ x : ι → Bool, (∏ j, if x j = true then p else 1-p) *
+      g (Function.update x i b)) =
+    ∑ z : {j : ι // j ≠ i} → Bool,
+      (∏ j ∈ Finset.univ.erase i, if russoInsert i false z j = true then p else 1-p) *
+      g (russoInsert i b z) := by
+…</pre><p class="refs">Mentions: <a href="RussoReindex.lean.html#L14">OAI.Problem313.russoInsert</a></p></li><li id=L105><b>theorem</b> <code>OAI.Problem313.sum_weight_centered_coordinate</code> <small>line 105</small><div class="doc"><p>Discrete integration by parts for a centered Bernoulli coordinate.</p></div><pre>theorem sum_weight_centered_coordinate (p : ℝ) (i : ι) (g : (ι → Bool) → ℝ) :
+    (∑ x : ι → Bool, (∏ j, if x j = true then p else 1-p) * g x *
+      ((if x i = true then (1 : ℝ) else 0) - p)) =
+    p * (1-p) * ∑ x : ι → Bool, (∏ j, if x j = true then p else 1-p) *
+      (g (Function.update x i true) - g (Function.update x i false)) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

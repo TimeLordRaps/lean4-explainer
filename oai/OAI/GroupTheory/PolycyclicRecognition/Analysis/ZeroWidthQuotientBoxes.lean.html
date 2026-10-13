@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/ZeroWidthQuotientBoxes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/ZeroWidthQuotientBoxes.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>ZeroWidthQuotientBoxes.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>ZeroWidthQuotientBoxes.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/ZeroWidthQuotientBoxes.lean#L1">source</a></p><div class="doc"><h3>Actual quotient images of zero-width Cartan boxes</h3><p>Mixed words vanish in the cone quotient. Every remaining word has exponent
+zero, so projection of a full box has a radius independent of the scale.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.PolycyclicRecognition.exists_zero_width_word_projection_bound</code> <small>line 25</small><div class="doc"><p>A linear projection annihilating all words with nonzero cost has a
+uniform norm bound on every rescaled word basis.</p></div><pre>theorem exists_zero_width_word_projection_bound
+    (X : I → L) (S : Finset (FreeMagma I)) (q : L →ₗ[ℝ] V) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (β : WordBasisSelections X S) (cost : S → ℝ),
+      (∀ w : S, q (evalBracketWord X w) ≠ 0 → cost w = 0) →
+      ∀ (r : ℝ) (v : L), ‖q v‖ ≤ C *
+        ‖(exponentialRescaleBasis (WordBasisSelections.basis X S β)
+          (fun j =&gt; cost (β.val j)) r).equivFun v‖ := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/FiniteWordBases.lean.html#L21">OAI.PolycyclicRecognition.WordBasisSelections</a>, <a href="../Algebra/BracketWords.lean.html#L26">OAI.PolycyclicRecognition.evalBracketWord</a>, <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a></p></li><li id=L77><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.coneProjection_word_cost_eq_zero</code> <small>line 77</small><div class="doc"><p>A word survives the cone projection only when all its letters are
+inside the cone, hence has cost zero under the stated letter costs.</p></div><pre>theorem coneProjection_word_cost_eq_zero
+    (s : Fin M.letterCount → ℝ)
+    (hzero : ∀ i, (M.weight i : H →ₗ[ℝ] ℝ) ∈ C → s i = 0)
+    (w : FreeMagma (Fin M.letterCount))
+    (hw : M.coneProjection C (evalBracketWord M.letter w) ≠ 0) :
+    bracketWordExponent s w = 0 := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/BracketWords.lean.html#L26">OAI.PolycyclicRecognition.evalBracketWord</a>, <a href="../Algebra/WordExponents.lean.html#L17">OAI.PolycyclicRecognition.bracketWordExponent</a></p></li><li id=L94><b>theorem</b> <code>OAI.PolycyclicRecognition.CartanWordModel.exists_cone_quotient_box_bound</code> <small>line 94</small><div class="doc"><p>The true group quotient sends every zero-width full box into a fixed
+multiple of the quotient logarithmic box. Neither the radius nor the
+constant contains an exponential scale factor.</p></div><pre>theorem exists_cone_quotient_box_bound {N Q : Type*} [Group N] [Group Q]
+    (ExpN : cartanRootIdeal H → N)
+    (ExpQ : ((cartanRootIdeal H) ⧸ M.coneWordIdeal C) → Q)
+    (π : N →* Q) (hπ : ∀ v, π (ExpN v) = ExpQ (M.coneProjection C v))
+    {n : ℕ} (bQ : Basis (Fin n) ℝ ((cartanRootIdeal H) ⧸ M.coneWordIdeal C)) :
+    ∃ A : ℝ, 0 ≤ A ∧ ∀ (β : M.Bases) (s : Fin M.letterCount → ℝ),
+      (∀ i, (M.weight i : H →ₗ[ℝ] ℝ) ∈ C → s i = 0) →
+      ∀ r R : ℝ, π &#x27;&#x27; exponentialCoordinateBox ExpN
+        (exponentialRescaleBasis (WordBasisSelections.basis M.letter M.wordList β)
+          (fun j =&gt; bracketWordExponent s (β.val j)) r) R ⊆
+        exponentialCoordinateBox ExpQ bQ (A * R) := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/CartanModel.lean.html#L61">OAI.PolycyclicRecognition.cartanRootIdeal</a>, <a href="NilpotentBoxes.lean.html#L25">OAI.PolycyclicRecognition.exponentialCoordinateBox</a>, <a href="../Algebra/NormalizedWordBrackets.lean.html#L73">OAI.PolycyclicRecognition.exponentialRescaleBasis</a>, <a href="../Algebra/FiniteWordBases.lean.html#L38">OAI.PolycyclicRecognition.WordBasisSelections.basis</a>, <a href="../Algebra/WordExponents.lean.html#L17">OAI.PolycyclicRecognition.bracketWordExponent</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

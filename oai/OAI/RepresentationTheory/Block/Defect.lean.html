@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/Block/Defect.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/Block/Defect.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">Block</a> / <span>Defect.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">Block</a>/<span>Defect.lean</span></code></h1><p class="muted">47 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/Block/Defect.lean#L1">source</a></p><div class="doc"><h3>Blocks, defect groups, and the bounded-order formulation of Donovan's conjecture</h3><p>This file develops supporting results, not a proof of Donovan's conjecture.
+The algebra of a block is the actual corner <code>b (KG) b = (KG) b</code>, with identity <code>b</code>.
+Morita equivalence is Mathlib's equivalence of module categories by a linear functor.</p><p>We prove finiteness of blocks for a fixed finite-dimensional algebra, existence of
+defect groups, the conditional reduction from bounded-order to fixed-defect Morita
+finiteness, and equality of defect subgroups for blocks corresponding under a
+coefficient-field embedding.</p><p>Uniform bounded-defect-order Morita finiteness across varying finite groups remains
+unproved. Block-idempotent descent and bijectivity, preservation of primitivity, and
+scalar extension of Morita equivalences are also not established here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L33><b>def</b> <code>OAI.Donovan.IsBlockIdempotent</code> <small>line 33</small><div class="doc"><p>A block is a nonzero primitive idempotent in the center, not necessarily
+a primitive idempotent of the whole ring.</p></div><pre>def IsBlockIdempotent (b : A) : Prop :=
+…</pre></li><li id=L38><b>def</b> <code>OAI.Donovan.BlockIdempotent</code> <small>line 38</small><div class="doc"><p>The block idempotents in a ring.</p></div><pre>def BlockIdempotent (A : Type u) [Ring A] := {b : A // IsBlockIdempotent b}
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L33">OAI.Donovan.IsBlockIdempotent</a></p></li><li id=L42><b>instance</b> <code>OAI.Donovan.BlockIdempotent.(instance at line 42)</code> <small>line 42</small></li><li id=L44><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.ext</code> <small>line 44</small></li><li id=L47><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.ne_zero</code> <small>line 47</small></li><li id=L49><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.idempotent</code> <small>line 49</small></li><li id=L52><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.central</code> <small>line 52</small></li><li id=L55><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.primitive</code> <small>line 55</small></li><li id=L62><b>abbrev</b> <code>OAI.Donovan.BlockIdempotent.Algebra</code> <small>line 62</small><div class="doc"><p>The ring of the block: the corner has identity <code>b</code>, rather than the
+identity of the ambient ring.</p></div><pre>abbrev Algebra (b : BlockIdempotent A) := b.idempotent.Corner</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L65><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.mem_corner_iff</code> <small>line 65</small><div class="doc"><p>For a central idempotent the corner is exactly the summand <code>A b</code>.</p></div><pre>theorem mem_corner_iff (b : BlockIdempotent A) (x : A) :
+    x ∈ Subsemigroup.corner (b : A) ↔ ∃ a : A, a * b = x :=
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L72><b>def</b> <code>OAI.Donovan.BlockIdempotent.scalarHom</code> <small>line 72</small><div class="doc"><p>Scalars in the block are <code>k b</code>. In particular the identity is <code>b</code>.</p></div><pre>def scalarHom (b : BlockIdempotent A) : K →+* b.Algebra where
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L85><b>instance</b> <code>OAI.Donovan.BlockIdempotent.algebra</code> <small>line 85</small></li><li id=L94><b>def</b> <code>OAI.Donovan.BlockIdempotent.inclusion</code> <small>line 94</small><div class="doc"><p>Inclusion of the block into the ambient algebra is linear. It is not
+generally a unital homomorphism of rings, since the identities differ.</p></div><pre>def inclusion (b : BlockIdempotent A) : b.Algebra →ₗ[K] A where
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L101><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.inclusion_injective</code> <small>line 101</small></li><li id=L114><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.mul_eq_zero</code> <small>line 114</small><div class="doc"><p>Distinct primitive central idempotents are orthogonal.</p></div><pre>theorem mul_eq_zero {b c : BlockIdempotent A} (h : b ≠ c) : (b : A) * c = 0 := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L137><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.linearIndependent</code> <small>line 137</small><div class="doc"><p>Primitive central idempotents form a linearly independent family.</p></div><pre>theorem linearIndependent : LinearIndependent K (fun b : BlockIdempotent A =&gt; (b : A)) := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L150><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.finite</code> <small>line 150</small><div class="doc"><p>A single finite-dimensional algebra has only finitely many blocks.
+This does not bound the number of Morita types as the algebra varies.</p></div><pre>theorem finite [Module.Finite K A] : Finite (BlockIdempotent A) :=
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L155><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.finiteDimensional_corner</code> <small>line 155</small><div class="doc"><p>A block of a finite-dimensional algebra is itself finite-dimensional,
+for its natural scalar structure.</p></div><pre>theorem finiteDimensional_corner [Module.Finite K A] (b : BlockIdempotent A) :
+    FiniteDimensional K b.Algebra :=
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L168><b>theorem</b> <code>OAI.Donovan.BlockIdempotent.conjugation_fixed</code> <small>line 168</small><div class="doc"><p>A block idempotent is fixed under conjugation by every group element.
+Thus it belongs to the domain of each genuine Brauer map.</p></div><pre>theorem BlockIdempotent.conjugation_fixed (b : BlockIdempotent (MonoidAlgebra K G))
+    (g : G) :
+    MonoidAlgebra.single g 1 * (b : MonoidAlgebra K G) *
+      MonoidAlgebra.single g⁻¹ 1 = (b : MonoidAlgebra K G) := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L179><b>def</b> <code>OAI.Donovan.brauerProjection</code> <small>line 179</small><div class="doc"><p>Delete coefficients outside the centralizer of <code>D</code>. On the <code>D</code>-fixed group algebra
+in characteristic <code>p</code>, for a <code>p</code>-subgroup <code>D</code>, this is the Brauer map. We only use it on
+central idempotents; no multiplicativity on the entire group algebra is asserted.</p></div><pre>def brauerProjection (D : Subgroup G) (x : MonoidAlgebra K G) :
+    MonoidAlgebra K (Subgroup.centralizer (D : Set G)) :=
+…</pre></li><li id=L184><b>theorem</b> <code>OAI.Donovan.brauerProjection_coeff</code> <small>line 184</small></li><li id=L188><b>theorem</b> <code>OAI.Donovan.brauerProjection_zero</code> <small>line 188</small></li><li id=L193><b>def</b> <code>OAI.Donovan.IsDefectGroup</code> <small>line 193</small><div class="doc"><p>Defect groups are maximal, under inclusion, among the <code>p</code>-subgroups
+with nonzero Brauer image. This does not impose a commutativity condition.</p></div><pre>def IsDefectGroup (p : ℕ) (b : BlockIdempotent (MonoidAlgebra K G))
+    (D : Subgroup G) : Prop :=
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L197><b>theorem</b> <code>OAI.Donovan.brauerProjection_bot_eq_zero_iff</code> <small>line 197</small></li><li id=L210><b>theorem</b> <code>OAI.Donovan.exists_defectGroup_ge</code> <small>line 210</small><div class="doc"><p>Any <code>p</code>-subgroup with nonzero Brauer image is contained in a defect
+group. This uses finiteness of the subgroup poset.</p></div><pre>theorem exists_defectGroup_ge [Finite G] (p : ℕ)
+    (b : BlockIdempotent (MonoidAlgebra K G)) (Q : Subgroup G)
+    (hQ : IsPGroup p Q) (hbQ : brauerProjection Q (b : MonoidAlgebra K G) ≠ 0) :
+    ∃ D : Subgroup G, Q ≤ D ∧ IsDefectGroup p b D :=
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a>, <a href="Defect.lean.html#L179">OAI.Donovan.brauerProjection</a>, <a href="Defect.lean.html#L193">OAI.Donovan.IsDefectGroup</a></p></li><li id=L218><b>theorem</b> <code>OAI.Donovan.exists_defectGroup</code> <small>line 218</small><div class="doc"><p>A finite-group block has at least one defect group as defined above.</p></div><pre>theorem exists_defectGroup [Finite G] (p : ℕ)
+    (b : BlockIdempotent (MonoidAlgebra K G)) :
+    ∃ D : Subgroup G, IsDefectGroup p b D := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a>, <a href="Defect.lean.html#L193">OAI.Donovan.IsDefectGroup</a></p></li><li id=L234><b>structure</b> <code>OAI.Donovan.FiniteGroupBlock</code> <small>line 234</small><div class="doc"><p>A block of a finite group algebra over <code>K</code>. The group is allowed to
+vary over all finite group types in the specified universe.</p></div><pre>structure FiniteGroupBlock (K : Type v) [Field K] where
+…</pre></li><li id=L247><b>abbrev</b> <code>OAI.Donovan.FiniteGroupBlock.Algebra</code> <small>line 247</small><div class="doc"><p>The actual block algebra <code>KGb</code>.</p></div><pre>abbrev Algebra (B : FiniteGroupBlock.{u, v} K) := B.block.Algebra</pre></li><li id=L251><b>def</b> <code>OAI.Donovan.FiniteGroupBlock.moritaSetoid</code> <small>line 251</small><div class="doc"><p>The equivalence relation is linear Morita equivalence, not ring
+isomorphism or equivalence of the underlying un-enriched categories.</p></div><pre>def moritaSetoid (K : Type v) [Field K] : Setoid (FiniteGroupBlock.{u, v} K) where
+…</pre></li><li id=L259><b>def</b> <code>OAI.Donovan.MoritaClass</code> <small>line 259</small><div class="doc"><p>Morita classes of all finite-group blocks over the fixed field <code>K</code>.</p></div><pre>def MoritaClass (K : Type v) [Field K] :=
+…</pre></li><li id=L263><b>def</b> <code>OAI.Donovan.moritaClass</code> <small>line 263</small><div class="doc"><p>The Morita class represented by a block.</p></div><pre>def moritaClass {K : Type v} [Field K] (B : FiniteGroupBlock.{u, v} K) :
+    MoritaClass.{u, v} K := Quotient.mk _ B</pre></li><li id=L267><b>def</b> <code>OAI.Donovan.HasDefectAtMost</code> <small>line 267</small><div class="doc"><p>The block has a defect group whose order is at most <code>M</code>.</p></div><pre>def HasDefectAtMost {K : Type v} [Field K] (p M : ℕ) (B : FiniteGroupBlock.{u, v} K) :
+    Prop :=
+…</pre></li><li id=L272><b>def</b> <code>OAI.Donovan.HasDefectIsomorphic</code> <small>line 272</small><div class="doc"><p>The block has a defect group isomorphic to the given group <code>P</code>.</p></div><pre>def HasDefectIsomorphic {K : Type v} [Field K] (p : ℕ) (P : Type w) [Group P]
+    (B : FiniteGroupBlock.{u, v} K) : Prop :=
+…</pre></li><li id=L277><b>def</b> <code>OAI.Donovan.boundedClasses</code> <small>line 277</small><div class="doc"><p>Morita classes represented by blocks with a defect group of order at most <code>M</code>.</p></div><pre>def boundedClasses (p : ℕ) (K : Type v) [Field K] (M : ℕ) :
+    Set (MoritaClass.{u, v} K) :=
+…</pre></li><li id=L282><b>def</b> <code>OAI.Donovan.fixedDefectClasses</code> <small>line 282</small><div class="doc"><p>Morita classes represented by blocks with a defect group isomorphic to <code>P</code>.</p></div><pre>def fixedDefectClasses (p : ℕ) (K : Type v) [Field K] (P : Type w) [Group P] :
+    Set (MoritaClass.{u, v} K) :=
+…</pre></li><li id=L289><b>theorem</b> <code>OAI.Donovan.moritaClass_eq_iff</code> <small>line 289</small><div class="doc"><p>Equality of classes means linear Morita equivalence of the actual block algebras.</p></div><pre>theorem moritaClass_eq_iff (B C : FiniteGroupBlock.{u, v} K) :
+    moritaClass B = moritaClass C ↔ IsMoritaEquivalent K B.Algebra C.Algebra :=
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L263">OAI.Donovan.moritaClass</a></p></li><li id=L294><b>theorem</b> <code>OAI.Donovan.HasDefectAtMost.pos</code> <small>line 294</small><div class="doc"><p>The order of a defect group is positive.</p></div><pre>theorem HasDefectAtMost.pos {M : ℕ} {B : FiniteGroupBlock.{u, v} K}
+    (h : HasDefectAtMost p M B) : 0 &lt; M := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L267">OAI.Donovan.HasDefectAtMost</a></p></li><li id=L301><b>theorem</b> <code>OAI.Donovan.exists_positive_defect_bound</code> <small>line 301</small><div class="doc"><p>Every block is covered by some positive bound; the bounded-order classes
+are not made empty by the definition of a defect group.</p></div><pre>theorem exists_positive_defect_bound (p : ℕ) (B : FiniteGroupBlock.{u, v} K) :
+    ∃ M : ℕ, 0 &lt; M ∧ HasDefectAtMost p M B := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L267">OAI.Donovan.HasDefectAtMost</a></p></li><li id=L307><b>theorem</b> <code>OAI.Donovan.HasDefectIsomorphic.hasDefectAtMost</code> <small>line 307</small><div class="doc"><p>An isomorphism of defect groups gives equality of their orders.</p></div><pre>theorem HasDefectIsomorphic.hasDefectAtMost {P : Type w} [Group P]
+    {B : FiniteGroupBlock.{u, v} K} (h : HasDefectIsomorphic p P B) :
+    HasDefectAtMost p (Nat.card P) B := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L272">OAI.Donovan.HasDefectIsomorphic</a>, <a href="Defect.lean.html#L267">OAI.Donovan.HasDefectAtMost</a></p></li><li id=L314><b>theorem</b> <code>OAI.Donovan.fixedDefectClasses_subset</code> <small>line 314</small><div class="doc"><p>The fixed-defect classes are a subset of the bounded-order classes.</p></div><pre>theorem fixedDefectClasses_subset (p : ℕ) (K : Type v) [Field K]
+    (P : Type w) [Group P] :
+    fixedDefectClasses.{u, v, w} p K P ⊆ boundedClasses p K (Nat.card P) := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L277">OAI.Donovan.boundedClasses</a></p></li><li id=L322><b>theorem</b> <code>OAI.Donovan.finite_fixedDefectClasses_of_bounded</code> <small>line 322</small><div class="doc"><p>The elementary fixed-defect reduction. Uniform bounded-order finiteness is
+an assumption, not a result proved here. There is no abelian hypothesis on <code>P</code>.</p></div><pre>theorem finite_fixedDefectClasses_of_bounded
+    (h : ∀ M : ℕ, 0 &lt; M → (boundedClasses.{u, v} p K M).Finite)
+    (P : Type w) [Group P] [Finite P] :
+    (fixedDefectClasses.{u, v, w} p K P).Finite :=
+…</pre></li><li id=L334><b>def</b> <code>OAI.Donovan.FiniteGroupBlock.ofBlock</code> <small>line 334</small><div class="doc"><p>Regard a block for one fixed ambient group as a member of the class of
+all finite-group blocks.</p></div><pre>def ofBlock (b : BlockIdempotent (MonoidAlgebra K G)) : FiniteGroupBlock.{u, v} K where
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a></p></li><li id=L342><b>theorem</b> <code>OAI.Donovan.finite_classes_for_one_group</code> <small>line 342</small><div class="doc"><p>For a fixed finite group, its blocks give a finite collection of Morita
+classes. This is only the fixed-ambient-group claim, not Donovan's theorem.</p></div><pre>theorem finite_classes_for_one_group (K : Type v) [Field K]
+    (G : Type u) [Group G] [Finite G] :
+    (Set.range (fun b : BlockIdempotent (MonoidAlgebra K G) =&gt;
+      moritaClass (FiniteGroupBlock.ofBlock b))).Finite := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a>, <a href="Defect.lean.html#L263">OAI.Donovan.moritaClass</a>, <a href="Defect.lean.html#L334">OAI.Donovan.FiniteGroupBlock.ofBlock</a></p></li><li id=L357><b>theorem</b> <code>OAI.Donovan.coefficientExtension_injective</code> <small>line 357</small><div class="doc"><p>Applying a field embedding to group-ring coefficients is injective.</p></div><pre>theorem coefficientExtension_injective (f : K →+* L) :
+    Function.Injective (MonoidAlgebra.mapRingHom G f) := by
+…</pre></li><li id=L368><b>theorem</b> <code>OAI.Donovan.brauerProjection_coefficientExtension</code> <small>line 368</small><div class="doc"><p>Deleting coefficients outside the centralizer commutes with applying a
+field embedding. This is the coefficient calculation for the Brauer map.</p></div><pre>theorem brauerProjection_coefficientExtension (f : K →+* L) (D : Subgroup G)
+    (x : MonoidAlgebra K G) :
+    brauerProjection D (MonoidAlgebra.mapRingHom G f x) =
+      MonoidAlgebra.mapRingHom (Subgroup.centralizer (D : Set G)) f
+        (brauerProjection D x) := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L179">OAI.Donovan.brauerProjection</a></p></li><li id=L379><b>theorem</b> <code>OAI.Donovan.brauerProjection_coefficientExtension_eq_zero_iff</code> <small>line 379</small><div class="doc"><p>The vanishing criterion used to compute defects is unchanged by a
+coefficient-field embedding.</p></div><pre>theorem brauerProjection_coefficientExtension_eq_zero_iff (f : K →+* L)
+    (D : Subgroup G) (x : MonoidAlgebra K G) :
+    brauerProjection D (MonoidAlgebra.mapRingHom G f x) = 0 ↔
+      brauerProjection D x = 0 := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L179">OAI.Donovan.brauerProjection</a></p></li><li id=L394><b>theorem</b> <code>OAI.Donovan.isDefectGroup_coefficientExtension_iff</code> <small>line 394</small><div class="doc"><p>If two actual block idempotents correspond by coefficient extension,
+then their defect subgroups are identical. This lemma does not assert
+that every block descends, or that primitivity is preserved.</p></div><pre>theorem isDefectGroup_coefficientExtension_iff (f : K →+* L) (p : ℕ)
+    (b : BlockIdempotent (MonoidAlgebra K G))
+    (c : BlockIdempotent (MonoidAlgebra L G))
+    (h : MonoidAlgebra.mapRingHom G f (b : MonoidAlgebra K G) = (c : MonoidAlgebra L G))
+    (D : Subgroup G) : IsDefectGroup p c D ↔ IsDefectGroup p b D := by
+…</pre><p class="refs">Mentions: <a href="Defect.lean.html#L38">OAI.Donovan.BlockIdempotent</a>, <a href="Defect.lean.html#L193">OAI.Donovan.IsDefectGroup</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

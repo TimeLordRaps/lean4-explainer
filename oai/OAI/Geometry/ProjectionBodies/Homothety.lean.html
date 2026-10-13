@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/ProjectionBodies/Homothety.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/ProjectionBodies/Homothety.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">ProjectionBodies</a> / <span>Homothety.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">ProjectionBodies</a>/<span>Homothety.lean</span></code></h1><p class="muted">26 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/ProjectionBodies/Homothety.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L11><b>lemma</b> <code>OAI.PettyProjection.quantile_first_moment</code> <small>line 11</small></li><li id=L32><b>theorem</b> <code>OAI.PettyProjection.slice_transport_equality</code> <small>line 32</small><div class="doc"><p>Equality in slice transport forces the two full marginal distributions to
+be translates. In particular both projection endpoints differ by the difference
+of their first moments.</p></div><pre>theorem slice_transport_equality {m : ℕ} (hm : 0 &lt; m) {a b l r L R : ℝ}
+    (ha : 0 &lt; a) (hb : 0 &lt; b) (hab : a+b=1) (hlr : l&lt;r) (hLR : L&lt;R)
+    {f g h : ℝ → ℝ}
+    (hf : ContinuousOn f (Ioo l r)) (hg : ContinuousOn g (Ioo L R))
+    (hfi : IntervalIntegrable f volume l r) (hgi : IntervalIntegrable g volume L R)
+    (hfp : ∀ x ∈ Ioo l r, 0 &lt; f x) (hgp : ∀ x ∈ Ioo L R, 0 &lt; g x)
+    (hfI : (∫ x in l..r, f x)=1) (hgI : (∫ x in L..R, g x)=1)
+    (hhi : IntervalIntegrable h volume (a*l+b*L) (a*r+b*R))
+    (hbound : ∀ x ∈ Ioo l r, ∀ y ∈ Ioo L R,
+      (a*(f x)^((m:ℝ)⁻¹)+b*(g y)^((m:ℝ)⁻¹))^m ≤ h (a*x+b*y))
+    (hI : (∫ z in (a*l+b*L)..(a*r+b*R), h z)=1) :
+    l-L=(∫ x in l..r, x*f x)-(∫ y in L..R, y*g y) ∧
+…</pre></li><li id=L152><b>lemma</b> <code>OAI.PettyProjection.sliceDensity_moment_indicator</code> <small>line 152</small></li><li id=L163><b>lemma</b> <code>OAI.PettyProjection.sliceDensity_moment_integrable</code> <small>line 163</small></li><li id=L170><b>lemma</b> <code>OAI.PettyProjection.sliceDensity_moment</code> <small>line 170</small></li><li id=L179><b>lemma</b> <code>OAI.PettyProjection.sliceDensity_interval_moment</code> <small>line 179</small></li><li id=L203><b>theorem</b> <code>OAI.PettyProjection.brunnMinkowski_product_unit_equality</code> <small>line 203</small><div class="doc"><p>Equality in the actual product-body step identifies both extreme heights
+with the difference of the (unit-volume) vertical first moments.</p></div><pre>theorem brunnMinkowski_product_unit_equality {m : ℕ} (hm0 : 0 &lt; m) (hm : BrunnMinkowskiRoot E m)
+    {K M : Set (E × ℝ)} (hK : IsCompact K) (hcK : Convex ℝ K)
+    (hiK : (interior K).Nonempty) (hM : IsCompact M) (hcM : Convex ℝ M)
+    (hiM : (interior M).Nonempty) (hvK : volume.real K=1) (hvM : volume.real M=1)
+    {a b : ℝ} (ha : 0 &lt; a) (hb : 0 &lt; b) (hab : a+b=1)
+    (hvC : volume.real (a • K+b • M)=1)
+    {l r L R : ℝ} (hlr : l&lt;r) (hLR : L&lt;R)
+    (hpr : Prod.snd &#x27;&#x27; K=Icc l r) (hPR : Prod.snd &#x27;&#x27; M=Icc L R) :
+    l-L=(∫ x in K, x.2)-(∫ x in M, x.2) ∧
+    r-R=(∫ x in K, x.2)-(∫ x in M, x.2) := by
+…</pre><p class="refs">Mentions: <a href="BrunnMinkowski.lean.html#L18">OAI.PettyProjection.BrunnMinkowskiRoot</a></p></li><li id=L265><b>def</b> <code>OAI.PettyProjection.firstMoment</code> <small>line 265</small><div class="doc"><p>The unnormalized Euclidean first moment. It is the barycenter for unit
+volume bodies, the only place where it is used below.</p></div><pre>def firstMoment {n : ℕ} (K : Set (Space n)) : Space n := ∫ x in K, x</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/PettyProjectionVolume.lean.html#L11">OAI.PettyProjection.Space</a></p></li><li id=L267><b>lemma</b> <code>OAI.PettyProjection.shadowContinuousEquiv_inner</code> <small>line 267</small></li><li id=L274><b>lemma</b> <code>OAI.PettyProjection.shadow_vertical_image</code> <small>line 274</small></li><li id=L284><b>lemma</b> <code>OAI.PettyProjection.shadow_firstMoment</code> <small>line 284</small></li><li id=L293><b>lemma</b> <code>OAI.PettyProjection.perpendicular_finrank</code> <small>line 293</small></li><li id=L305><b>theorem</b> <code>OAI.PettyProjection.brunnMinkowski_unit_support_equality</code> <small>line 305</small><div class="doc"><p>Equality for an intermediate Minkowski combination of unit-volume bodies
+identifies every directional support difference with the first-moment shift.</p></div><pre>theorem brunnMinkowski_unit_support_equality {n : ℕ} (hn : 2 ≤ n)
+    {K M : Set (Space n)} (hK : IsCompact K) (hcK : Convex ℝ K)
+    (hiK : (interior K).Nonempty) (hM : IsCompact M) (hcM : Convex ℝ M)
+    (hiM : (interior M).Nonempty) (hvK : volume.real K=1) (hvM : volume.real M=1)
+    {a b : ℝ} (ha : 0 &lt; a) (hb : 0 &lt; b) (hab : a+b=1)
+    (hvC : volume.real (a • K+b • M)=1) (u : Sphere n) :
+    support K u-support M u=⟪(u : Space n),firstMoment K-firstMoment M⟫ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/PettyProjectionVolume.lean.html#L11">OAI.PettyProjection.Space</a>, <a href="Support.lean.html#L13">OAI.PettyProjection.support</a>, <a href="Homothety.lean.html#L265">OAI.PettyProjection.firstMoment</a></p></li><li id=L348><b>lemma</b> <code>OAI.PettyProjection.support_translate</code> <small>line 348</small></li><li id=L362><b>theorem</b> <code>OAI.PettyProjection.brunnMinkowski_unit_equality</code> <small>line 362</small><div class="doc"><p>The unrestricted translated-body equality case of the unit-volume
+Brunn--Minkowski inequality (no origin symmetry or boundary regularity).</p></div><pre>theorem brunnMinkowski_unit_equality {n : ℕ} (hn : 2 ≤ n)
+    {K M : Set (Space n)} (hK : IsCompact K) (hcK : Convex ℝ K)
+    (hiK : (interior K).Nonempty) (hM : IsCompact M) (hcM : Convex ℝ M)
+    (hiM : (interior M).Nonempty) (hvK : volume.real K=1) (hvM : volume.real M=1)
+    {a b : ℝ} (ha : 0 &lt; a) (hb : 0 &lt; b) (hab : a+b=1)
+    (hvC : volume.real (a • K+b • M)=1) :
+    K=(fun x =&gt; firstMoment K-firstMoment M+x) &#x27;&#x27; M := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/PettyProjectionVolume.lean.html#L11">OAI.PettyProjection.Space</a>, <a href="Homothety.lean.html#L265">OAI.PettyProjection.firstMoment</a></p></li><li id=L395><b>def</b> <code>OAI.PettyProjection.volumeRoot</code> <small>line 395</small></li><li id=L397><b>lemma</b> <code>OAI.PettyProjection.volumeRoot_pos</code> <small>line 397</small></li><li id=L401><b>lemma</b> <code>OAI.PettyProjection.volumeRoot_pow</code> <small>line 401</small></li><li id=L405><b>lemma</b> <code>OAI.PettyProjection.volumeRoot_smul</code> <small>line 405</small></li><li id=L413><b>lemma</b> <code>OAI.PettyProjection.interior_add_nonempty_left</code> <small>line 413</small></li><li id=L422><b>theorem</b> <code>OAI.PettyProjection.brunnMinkowski_add</code> <small>line 422</small><div class="doc"><p>The homogeneous, additive form of Brunn--Minkowski.</p></div><pre>theorem brunnMinkowski_add {n : ℕ} (hn : 0 &lt; n)
+    {K M : Set (Space n)} (hK : IsCompact K) (hcK : Convex ℝ K)
+    (hiK : (interior K).Nonempty) (hM : IsCompact M) (hcM : Convex ℝ M)
+    (hiM : (interior M).Nonempty) :
+    volumeRoot K+volumeRoot M ≤ volumeRoot (K+M) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/PettyProjectionVolume.lean.html#L11">OAI.PettyProjection.Space</a>, <a href="Homothety.lean.html#L395">OAI.PettyProjection.volumeRoot</a></p></li><li id=L434><b>theorem</b> <code>OAI.PettyProjection.brunnMinkowski_add_equality</code> <small>line 434</small><div class="doc"><p>Equality in the homogeneous additive form, retaining arbitrary translation.</p></div><pre>theorem brunnMinkowski_add_equality {n : ℕ} (hn : 2 ≤ n)
+    {K M : Set (Space n)} (hK : IsCompact K) (hcK : Convex ℝ K)
+    (hiK : (interior K).Nonempty) (hM : IsCompact M) (hcM : Convex ℝ M)
+    (hiM : (interior M).Nonempty)
+    (hv : volumeRoot (K+M)=volumeRoot K+volumeRoot M) :
+    ∃ z : Space n, ∃ c : ℝ, 0 &lt; c ∧ K=(fun x =&gt; z+c • x) &#x27;&#x27; M := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/PettyProjectionVolume.lean.html#L11">OAI.PettyProjection.Space</a>, <a href="Homothety.lean.html#L395">OAI.PettyProjection.volumeRoot</a></p></li><li id=L487><b>lemma</b> <code>OAI.PettyProjection.minkowski_parameter_combo</code> <small>line 487</small></li><li id=L494><b>lemma</b> <code>OAI.PettyProjection.minkowski_volumeRoot_concave</code> <small>line 494</small></li><li id=L508><b>lemma</b> <code>OAI.PettyProjection.volumeRoot_diff_factor</code> <small>line 508</small></li><li id=L521><b>theorem</b> <code>OAI.PettyProjection.minkowski_derivative_bound_equality</code> <small>line 521</small><div class="doc"><p>The sharp first-variation inequality together with its global translated
+homothety equality implication, derived from actual Brunn--Minkowski concavity.</p></div><pre>theorem minkowski_derivative_bound_equality {n : ℕ} (hn : 2 ≤ n)
+    {K M : Set (Space n)} (hK : IsCompact K) (hcK : Convex ℝ K)
+    (hiK : (interior K).Nonempty) (hM : IsCompact M) (hcM : Convex ℝ M)
+    (hiM : (interior M).Nonempty) {d : ℝ}
+    (hd : HasDerivWithinAt (fun t : ℝ =&gt; volume.real (K+t • M)) d (Ici 0) 0) :
+    (n:ℝ)*volumeRoot K^(n-1)*volumeRoot M ≤ d ∧
+      (d=(n:ℝ)*volumeRoot K^(n-1)*volumeRoot M →
+        ∃ z : Space n, ∃ c : ℝ, 0 &lt; c ∧ K=(fun x =&gt; z+c • x) &#x27;&#x27; M) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/PettyProjectionVolume.lean.html#L11">OAI.PettyProjection.Space</a>, <a href="Homothety.lean.html#L395">OAI.PettyProjection.volumeRoot</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

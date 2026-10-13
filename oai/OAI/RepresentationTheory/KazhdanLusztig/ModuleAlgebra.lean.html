@@ -1,0 +1,119 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/KazhdanLusztig/ModuleAlgebra.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/KazhdanLusztig/ModuleAlgebra.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">KazhdanLusztig</a> / <span>ModuleAlgebra.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">KazhdanLusztig</a>/<span>ModuleAlgebra.lean</span></code></h1><p class="muted">34 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/KazhdanLusztig/ModuleAlgebra.lean#L1">source</a></p><div class="doc"><p>Height-one membership into free targets, minimal covers, graded Nakayama, reverse projectivity, saturated edge kernels and strict Hilbert detection.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.KLInvariance.EdgeLattice.finsupp_divide</code> <small>line 17</small></li><li id=L35><b>theorem</b> <code>OAI.KLInvariance.EdgeLattice.basis_divide</code> <small>line 35</small><div class="doc"><p>In a free module, divisibility can be checked on a basis.</p></div><pre>private theorem basis_divide {E : Type*} [AddCommGroup E] [Module R E]
+    {ι : Type*} (b : Module.Basis ι R E) (p : R) (m : E)
+    (h : ∀ i, p ∣ b.repr m i) : ∃ n : E, p • n = m := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.KLInvariance.EdgeLattice.mem_of_prime_local_membership</code> <small>line 45</small><div class="doc"><p>Scalar-denominator formulation of the height-one intersection property.
+A generic-span witness and local denominators away from each prime element
+force membership in a free target, with no reflexivity hypothesis on a source.</p></div><pre>theorem mem_of_prime_local_membership
+    {E : Type*} [AddCommGroup E] [Module R E] [Module.IsTorsionFree R E]
+    (M : Submodule R E) [Module.Free R M] (x : E)
+    (hgeneric : ∃ c : R, c ≠ 0 ∧ c • x ∈ M)
+    (hlocal : ∀ p : R, Prime p → ∃ a : R, ¬p ∣ a ∧ a • x ∈ M) : x ∈ M := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.KLInvariance.EdgeLattice.exists_denominator_of_localized_mem</code> <small>line 89</small><div class="doc"><p>A localization membership can be written with a scalar denominator outside
+its prime, without requiring a choice of basis in the ambient module.</p></div><pre>theorem exists_denominator_of_localized_mem
+    {E : Type*} [AddCommGroup E] [Module R E]
+    (M : Submodule R E) (P : Ideal R) [P.IsPrime] (x : E)
+    (hx : LocalizedModule.mk x (1 : P.primeCompl) ∈ M.localized P.primeCompl) :
+    ∃ a : R, a ∉ P ∧ a • x ∈ M := by
+…</pre></li><li id=L106><b>theorem</b> <code>OAI.KLInvariance.EdgeLattice.mem_iff_localized_at_height_one</code> <small>line 106</small></li><li id=L129><b>theorem</b> <code>OAI.KLInvariance.EdgeLattice.eq_iInf_height_one_localizations</code> <small>line 129</small><div class="doc"><p>Equality with the intersection of preimages of all height-one localizations.
+It includes the field case: an empty height-one intersection is the full module.</p></div><pre>theorem eq_iInf_height_one_localizations
+    [IsNoetherianRing R]
+    {E : Type*} [AddCommGroup E] [Module R E] [Module.IsTorsionFree R E]
+    (M : Submodule R E) [Module.Free R M]
+    (hgeneric : ∀ x : E, ∃ c : R, c ≠ 0 ∧ c • x ∈ M) :
+    M = ⨅ (P : PrimeSpectrum R) (_ : P.asIdeal.height = 1),
+      ((M.localized P.asIdeal.primeCompl).restrictScalars R).comap
+        (LocalizedModule.mkLinearMap P.asIdeal.primeCompl E) := by
+…</pre></li><li id=L165><b>theorem</b> <code>OAI.KLInvariance.LocalCover.lift_surjective</code> <small>line 165</small><div class="doc"><p>A lift through a minimal free cover is automatically surjective. This
+is the exact Nakayama step of plane-localized BMP decomposition.</p></div><pre>theorem lift_surjective [Module.Finite R P]
+    (π : P →ₗ[R] N) (φ : B →ₗ[R] N) (g : B →ₗ[R] P)
+    (hφ : Function.Surjective φ) (hg : π.comp g = φ)
+    (hmin : LinearMap.ker π ≤ IsLocalRing.maximalIdeal R • (⊤ : Submodule R P)) :
+    Function.Surjective g := by
+…</pre></li><li id=L184><b>def</b> <code>OAI.KLInvariance.LocalCover.splitEquiv</code> <small>line 184</small><div class="doc"><p>An explicit linear equivalence for a split surjection, with the kernel
+as the second summand. It is used below to produce the local sheaf summand.</p></div><pre>noncomputable def splitEquiv (g : B →ₗ[R] P) (s : P →ₗ[R] B)
+    (hs : g.comp s = LinearMap.id) : B ≃ₗ[R] P × LinearMap.ker g := by
+…</pre></li><li id=L206><b>theorem</b> <code>OAI.KLInvariance.LocalCover.exists_split_minimal_cover</code> <small>line 206</small><div class="doc"><p>The full minimal-cover splitting required at each descending vertex.
+The new kernel is proved finite free over the local ring, not introduced
+as a free summand hypothesis.</p></div><pre>theorem exists_split_minimal_cover [Module.Free R B] [Module.Finite R B]
+    [Module.Free R P] [Module.Finite R P]
+    (π : P →ₗ[R] N) (φ : B →ₗ[R] N)
+    (hπ : Function.Surjective π) (hφ : Function.Surjective φ)
+    (hmin : LinearMap.ker π ≤ IsLocalRing.maximalIdeal R • (⊤ : Submodule R P)) :
+    ∃ (g : B →ₗ[R] P) (e : B ≃ₗ[R] P × LinearMap.ker g),
+      Function.Surjective g ∧ π.comp g = φ ∧
+      Module.Free R (LinearMap.ker g) ∧ Module.Finite R (LinearMap.ker g) ∧
+      ∀ b, (e b).1 = g b ∧ π (e b).1 = φ b := by
+…</pre></li><li id=L246><b>theorem</b> <code>OAI.KLInvariance.ReverseFiltration.kernel_projective_of_presentation</code> <small>line 246</small><div class="doc"><p>The kernel of a surjection from a projective module is projective if
+the target has an actual length-one projective presentation.</p></div><pre>theorem kernel_projective_of_presentation
+    [Module.Projective R F] [Module.Projective R E]
+    (f : F →ₗ[R] I) (g : E →ₗ[R] I)
+    (hf : Function.Surjective f) (hg : Function.Surjective g)
+    [Module.Projective R (LinearMap.ker g)] :
+    Module.Projective R (LinearMap.ker f) := by
+…</pre></li><li id=L280><b>def</b> <code>OAI.KLInvariance.Graded.component</code> <small>line 280</small></li><li id=L286><b>def</b> <code>OAI.KLInvariance.Graded.positiveIdeal</code> <small>line 286</small></li><li id=L293><b>theorem</b> <code>OAI.KLInvariance.Graded.subsingleton_of_positiveIdeal_smul_eq_top</code> <small>line 293</small><div class="doc"><p>A bounded-below internally graded module which equals its positive-ideal
+multiple is zero.  This is the exact graded Nakayama vanishing step used to
+remove the complementary kernel in the source's free-cover construction.</p></div><pre>theorem subsingleton_of_positiveIdeal_smul_eq_top
+    (𝓐 : ℤ → Submodule k A) (𝓜 : ℤ → Submodule k M)
+    [DirectSum.Decomposition 𝓜] [SetLike.GradedSMul 𝓐 𝓜]
+    (d₀ : ℤ) (hbound : ∀ j &lt; d₀, 𝓜 j = ⊥)
+    (hgen : positiveIdeal 𝓐 • (⊤ : Submodule A M) = ⊤) :
+    Subsingleton M := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L286">OAI.KLInvariance.Graded.positiveIdeal</a></p></li><li id=L381><b>theorem</b> <code>OAI.KLInvariance.EdgeImage.kernel_saturated</code> <small>line 381</small><div class="doc"><p>The simultaneous vanishing conditions are saturated with respect to α
+when multiplication by α is injective on their target.</p></div><pre>theorem kernel_saturated (f : B →ₗ[A] D) (α : A)
+    (hα : Function.Injective (fun x : D =&gt; α • x)) (b : B) :
+    α • b ∈ LinearMap.ker f ↔ b ∈ LinearMap.ker f := by
+…</pre></li><li id=L394><b>theorem</b> <code>OAI.KLInvariance.EdgeImage.reduced_kernel_injective</code> <small>line 394</small><div class="doc"><p>Reducing the saturated kernel modulo α introduces no additional
+relations. This is the injectivity behind L/αL ≃ J.</p></div><pre>theorem reduced_kernel_injective (f : B →ₗ[A] D) (α : A)
+    (hα : Function.Injective (fun x : D =&gt; α • x)) :
+    Function.Injective (QuotSMulTop.map α (LinearMap.ker f).subtype) := by
+…</pre></li><li id=L413><b>def</b> <code>OAI.KLInvariance.EdgeImage.reducedInclusion</code> <small>line 413</small><div class="doc"><p>The inclusion after reduction, viewed over the actual factor ring.</p></div><pre>def reducedInclusion (f : B →ₗ[A] D) (α : A) :
+    QuotSMulTop α (LinearMap.ker f) →ₗ[A ⧸ Ideal.span {α}] QuotSMulTop α B :=
+…</pre></li><li id=L420><b>theorem</b> <code>OAI.KLInvariance.EdgeImage.range_reducedInclusion_free</code> <small>line 420</small><div class="doc"><p>Freeness of the later-edge kernel proves freeness of its actual edge
+image over A/(α), not merely generic freeness.</p></div><pre>theorem range_reducedInclusion_free (f : B →ₗ[A] D) (α : A)
+    (hα : Function.Injective (fun x : D =&gt; α • x))
+    [Module.Free A (LinearMap.ker f)] :
+    Module.Free (A ⧸ Ideal.span {α}) (LinearMap.range (reducedInclusion f α)) := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L413">OAI.KLInvariance.EdgeImage.reducedInclusion</a></p></li><li id=L441><b>theorem</b> <code>OAI.KLInvariance.Graded.positive_smul_kernel_of_minimal_split</code> <small>line 441</small><div class="doc"><p>If a split cover is minimal modulo I, its complementary kernel equals
+its own I-multiple. This is the exact input to the graded Nakayama step.</p></div><pre>theorem positive_smul_kernel_of_minimal_split
+    (I : Ideal A) (f : F →ₗ[A] P) (s : P →ₗ[A] F)
+    (hs : f.comp s = LinearMap.id)
+    (hmin : LinearMap.ker f ≤ I • (⊤ : Submodule A F)) :
+    I • (⊤ : Submodule A (LinearMap.ker f)) = ⊤ := by
+…</pre></li><li id=L468><b>theorem</b> <code>OAI.KLInvariance.Graded.bijective_of_graded_minimal_split</code> <small>line 468</small><div class="doc"><p>Minimality makes a split free cover an isomorphism in the bounded-below
+graded situation. Its kernel is not assumed to vanish.</p></div><pre>theorem bijective_of_graded_minimal_split
+    {k : Type*} [CommRing k] [Algebra k A]
+    (𝓐 : ℤ → Submodule k A) (f : F →ₗ[A] P) (s : P →ₗ[A] F)
+    (hs : f.comp s = LinearMap.id)
+    (hmin : LinearMap.ker f ≤ positiveIdeal 𝓐 • (⊤ : Submodule A F))
+    [Module k (LinearMap.ker f)] [IsScalarTower k A (LinearMap.ker f)]
+    (𝓚 : ℤ → Submodule k (LinearMap.ker f))
+    [DirectSum.Decomposition 𝓚] [SetLike.GradedSMul 𝓐 𝓚]
+    (d₀ : ℤ) (hbound : ∀ j &lt; d₀, 𝓚 j = ⊥) : Function.Bijective f := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L286">OAI.KLInvariance.Graded.positiveIdeal</a></p></li><li id=L500><b>def</b> <code>OAI.KLInvariance.Hilbert.piece</code> <small>line 500</small><div class="doc"><p>The actual degree-n vector space of a submodule, expressed in the fixed
+ambient homogeneous piece.</p></div><pre>def piece (𝓜 : ℤ → Submodule k M) (S : Submodule k M) (n : ℤ) :
+    Submodule k (𝓜 n) := S.comap (𝓜 n).subtype</pre></li><li id=L503><b>def</b> <code>OAI.KLInvariance.Hilbert.term</code> <small>line 503</small></li><li id=L506><b>def</b> <code>OAI.KLInvariance.Hilbert.value</code> <small>line 506</small></li><li id=L509><b>lemma</b> <code>OAI.KLInvariance.Hilbert.piece_mono</code> <small>line 509</small></li><li id=L513><b>lemma</b> <code>OAI.KLInvariance.Hilbert.term_nonneg</code> <small>line 513</small></li><li id=L517><b>lemma</b> <code>OAI.KLInvariance.Hilbert.term_mono</code> <small>line 517</small></li><li id=L523><b>lemma</b> <code>OAI.KLInvariance.Hilbert.summable_of_le</code> <small>line 523</small></li><li id=L530><b>theorem</b> <code>OAI.KLInvariance.Hilbert.pieces_eq_of_value_eq</code> <small>line 530</small><div class="doc"><p>Equality at one positive convergent parameter, with actual inclusion,
+forces equality of each homogeneous piece.</p></div><pre>theorem pieces_eq_of_value_eq (𝓜 : ℤ → Submodule k M)
+    [∀ n, Module.Finite k (𝓜 n)] {S T : Submodule k M}
+    (h : S ≤ T) {q : ℝ} (hq : 0 &lt; q)
+    (hT : Summable (term 𝓜 T q)) (hv : value 𝓜 S q = value 𝓜 T q) :
+    ∀ n, piece 𝓜 S n = piece 𝓜 T n := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L503">OAI.KLInvariance.Hilbert.term</a>, <a href="ModuleAlgebra.lean.html#L506">OAI.KLInvariance.Hilbert.value</a>, <a href="ModuleAlgebra.lean.html#L500">OAI.KLInvariance.Hilbert.piece</a></p></li><li id=L549><b>theorem</b> <code>OAI.KLInvariance.Hilbert.eq_of_value_eq</code> <small>line 549</small><div class="doc"><p>No assumption on support codimension is involved. Equality of convergent
+Hilbert values detects equality with a homogeneous target globally.</p></div><pre>theorem eq_of_value_eq (𝓜 : ℤ → Submodule k M) [DirectSum.Decomposition 𝓜]
+    [∀ n, Module.Finite k (𝓜 n)] {S T : Submodule k M}
+    (h : S ≤ T) (hhom : ∀ n m, m ∈ T → (DirectSum.decompose 𝓜 m n : M) ∈ T)
+    {q : ℝ} (hq : 0 &lt; q) (hT : Summable (term 𝓜 T q))
+    (hv : value 𝓜 S q = value 𝓜 T q) : S = T := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L503">OAI.KLInvariance.Hilbert.term</a>, <a href="ModuleAlgebra.lean.html#L506">OAI.KLInvariance.Hilbert.value</a></p></li><li id=L565><b>lemma</b> <code>OAI.KLInvariance.Hilbert.value_mono</code> <small>line 565</small></li><li id=L571><b>abbrev</b> <code>OAI.KLInvariance.Hilbert.defectPiece</code> <small>line 571</small><div class="doc"><p>The degree-n piece of the actual quotient T/S.</p></div><pre>abbrev defectPiece (𝓜 : ℤ → Submodule k M) (S T : Submodule k M) (n : ℤ) :=
+…</pre></li><li id=L574><b>def</b> <code>OAI.KLInvariance.Hilbert.defectTerm</code> <small>line 574</small></li><li id=L577><b>lemma</b> <code>OAI.KLInvariance.Hilbert.defectTerm_eq_sub</code> <small>line 577</small></li><li id=L590><b>theorem</b> <code>OAI.KLInvariance.Hilbert.defect_value_eq_sub</code> <small>line 590</small><div class="doc"><p>Additivity of convergent Hilbert values for the actual degreewise quotient.</p></div><pre>theorem defect_value_eq_sub (𝓜 : ℤ → Submodule k M)
+    [∀ n, Module.Finite k (𝓜 n)] {S T : Submodule k M} (h : S ≤ T)
+    {q : ℝ} (hq : 0 &lt; q) (hT : Summable (term 𝓜 T q)) :
+    Summable (defectTerm 𝓜 S T q) ∧
+      ∑&#x27; n, defectTerm 𝓜 S T q n = value 𝓜 T q-value 𝓜 S q := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L503">OAI.KLInvariance.Hilbert.term</a>, <a href="ModuleAlgebra.lean.html#L574">OAI.KLInvariance.Hilbert.defectTerm</a>, <a href="ModuleAlgebra.lean.html#L506">OAI.KLInvariance.Hilbert.value</a></p></li><li id=L603><b>theorem</b> <code>OAI.KLInvariance.Hilbert.defect_value_pos</code> <small>line 603</small><div class="doc"><p>All proper homogeneous defects have a strictly positive Hilbert series;
+there is no exception for support in codimension ≥2 or finite length.</p></div><pre>theorem defect_value_pos (𝓜 : ℤ → Submodule k M) [DirectSum.Decomposition 𝓜]
+    [∀ n, Module.Finite k (𝓜 n)] {S T : Submodule k M}
+    (h : S ≤ T) (hne : S ≠ T)
+    (hhom : ∀ n m, m ∈ T → (DirectSum.decompose 𝓜 m n : M) ∈ T)
+    {q : ℝ} (hq : 0 &lt; q) (hT : Summable (term 𝓜 T q)) :
+    0 &lt; ∑&#x27; n, defectTerm 𝓜 S T q n := by
+…</pre><p class="refs">Mentions: <a href="ModuleAlgebra.lean.html#L503">OAI.KLInvariance.Hilbert.term</a>, <a href="ModuleAlgebra.lean.html#L574">OAI.KLInvariance.Hilbert.defectTerm</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

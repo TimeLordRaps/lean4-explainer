@@ -1,0 +1,1 @@
+window.l4shard("cy", [["ContinuousCohomology.toCycles_comp_cyclesIsoKer_hom",29,224],["CyclotomicCharacterAux",40,45],["CyclotomicCharacterZHat",40,62],["Dickson.CyclicPartitionConfig",45,60],["Dickson.HasCyclicPartition",45,69],["HomologicalComplex.cyclesIsoKer",79,157],["cyclic_base_change",72,127]]);

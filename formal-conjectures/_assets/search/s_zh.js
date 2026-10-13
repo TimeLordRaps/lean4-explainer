@@ -1,0 +1,1 @@
+window.l4shard("zh", [["Erdos22.erdos_22.variants.fox_loh_zhao",355,104],["Erdos615.erdos_615.variants.fox_loh_zhao",661,78],["Erdos973.erdos_973.variants.luo_yang_zhu",900,69],["Green16.IsTrivialZhaoSolution",971,68],["Green16.ZhaoSolutionFree",971,73],["Green16.zhao_question",971,84]]);

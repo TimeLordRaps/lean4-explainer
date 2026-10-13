@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/ThreeTorus/PassageFamilies.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/ThreeTorus/PassageFamilies.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">ThreeTorus</a> / <span>PassageFamilies.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">ThreeTorus</a>/<span>PassageFamilies.lean</span></code></h1><p class="muted">46 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/ThreeTorus/PassageFamilies.lean#L1">source</a></p><div class="doc"><p>Rounded common primitives, neutral and quantile families, exact indices, signal passages, and support tracking.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>lemma</b> <code>OAI.ThreeTorus.deriv_real_primitive</code> <small>line 18</small></li><li id=L26><b>theorem</b> <code>OAI.ThreeTorus.exists_rounded_primitive_family</code> <small>line 26</small><div class="doc"><p>One integer-rounded primitive sequence works for every later choice of jitter.
+In particular the estimates for a finite list can all use exactly this sequence.</p></div><pre>theorem exists_rounded_primitive_family {V : ℝ → ℝ}
+    (hp : Periodic V 1) (hV : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) V) :
+    ∃ Δ : ℕ → ℝ, ∃ H : ℕ → UnitAddCircle → UnitAddCircle,
+      (∀ n, 0 &lt; n → |Δ n| ≤ (n:ℝ)⁻¹) ∧ Tendsto Δ atTop (𝓝 0) ∧
+      (∀ n, Continuous (H n)) ∧
+      (∀ n (x : ℝ), H n (x:UnitAddCircle) =
+        ((n:ℝ)*((∫ t in 0..x, V t)+Δ n*x):UnitAddCircle)) ∧
+      ∀ J : ℝ → ℝ, ∀ hJp : Periodic J 1,
+        ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) J →
+        let σ := fun (n : ℕ) (a : UnitAddCircle) =&gt; (((1+hJp.lift a/(n:ℝ))/(n:ℝ):ℝ):UnitAddCircle)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L144><b>lemma</b> <code>OAI.ThreeTorus.continuous_twistIter</code> <small>line 144</small></li><li id=L149><b>lemma</b> <code>OAI.ThreeTorus.two_mode_packet_correlation_zero</code> <small>line 149</small></li><li id=L198><b>lemma</b> <code>OAI.ThreeTorus.retainedPassage_pair_zero</code> <small>line 198</small></li><li id=L246><b>lemma</b> <code>OAI.ThreeTorus.finite_orthogonal_correlation</code> <small>line 246</small></li><li id=L288><b>theorem</b> <code>OAI.ThreeTorus.retained_family_spectral_moment</code> <small>line 288</small><div class="doc"><p>Exact spectral density for a finite color list, including constant tags.
+Overlapping output angular indices do not cause interference: the old
+angular index becomes the new spare Fourier index.</p></div><pre>theorem retained_family_spectral_moment {ι : Type*} [Fintype ι]
+    {ψ : UnitAddCircle → ℝ} {χ : ι → ℝ → UnitAddCircle → ℝ}
+    {m : ι → ℤ} {H : ℕ → UnitAddCircle → UnitAddCircle}
+    {A : ι → UnitAddCircle × UnitAddCircle → ℂ}
+    {J : UnitAddCircle → ℝ} {J₀ : ℝ → ℝ} {I : Set ℝ}
+    (hψ : Continuous ψ) (hχ : ∀ i, Continuous (χ i).uncurry)
+    (hH : ∀ n, Continuous (H n)) (hA : ∀ i, Continuous (A i))
+    (hψs : ∀ x ∈ Ioc (0:ℝ) 1, ψ (x:UnitAddCircle) ≠ 0 → x ∈ I)
+    (hj : Continuous J) (hJ : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) J₀)
+    (hJe : ∀ x ∈ I, J (x:UnitAddCircle) = J₀ x)
+    (hIo : IsOpen I) (hinj : InjOn J₀ I) (hd : ∀ x ∈ I, deriv J₀ x ≠ 0)
+    (hcut : ∀ i j, i ≠ j → m i = m j → ∀ s a, χ i s a*χ j s a = 0)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a></p></li><li id=L355><b>lemma</b> <code>OAI.ThreeTorus.sum_eq_of_zero_off</code> <small>line 355</small></li><li id=L369><b>lemma</b> <code>OAI.ThreeTorus.retainedPassage_eq_of_cover</code> <small>line 369</small></li><li id=L381><b>lemma</b> <code>OAI.ThreeTorus.exactRetainedPacketDensity_eq_of_cover</code> <small>line 381</small></li><li id=L400><b>lemma</b> <code>OAI.ThreeTorus.scalar_cutoff_stationary_one</code> <small>line 400</small></li><li id=L410><b>lemma</b> <code>OAI.ThreeTorus.core_character_support</code> <small>line 410</small><div class="doc"><p>The actual second-passage coefficients have no spare-dependent modulus;
+in particular their support is controlled by the actual first core.</p></div><pre>lemma core_character_support (C : ℝ → ℂ) (m : ℤ) (b : UnitAddCircle) :
+    support (fun u =&gt; C u*fourier m b) ⊆ tsupport C := by
+…</pre></li><li id=L416><b>theorem</b> <code>OAI.ThreeTorus.cylinder_cutoff_exact_indices</code> <small>line 416</small><div class="doc"><p>The exact finite sampling set, with no identically zero extra modes.</p></div><pre>theorem cylinder_cutoff_exact_indices {ι : Type*}
+    (χ : ι → ℝ → UnitAddCircle → ℝ)
+    (hc : ∀ i, HasCompactSupport (χ i).uncurry) (hz : ∀ i a, χ i 0 a = 0) :
+    ∃ S : ℕ → ι → Finset ℤ,
+      (∀ n i j, j ∈ S n i → j ≠ 0) ∧
+      ∀ n, 0 &lt; n → ∀ i j, j ∈ S n i ↔ ∃ a, χ i ((j:ℝ)/n) a ≠ 0 := by
+…</pre></li><li id=L460><b>theorem</b> <code>OAI.ThreeTorus.exists_simultaneous_neutral_passage</code> <small>line 460</small><div class="doc"><p>The jitter, all packet lists and all cutoffs are fixed before the final
+passage integer. No primitive, convergence, or spectral data are assumed.</p></div><pre>theorem exists_simultaneous_neutral_passage {ι : Type*} [Fintype ι]
+    {A : ι → UnitAddCircle × UnitAddCircle → ℂ} {A₀ : ι → UnitAddCircle → ℝ → ℂ}
+    {V : ℝ → ℝ} {m : ι → ℤ} {o l u R : ℝ}
+    (hm : ∀ i, m i ≠ 0)
+    (hA : ∀ i a x, x ∈ Ioc o (o+1) → A i ((x : UnitAddCircle),a) = A₀ i a x)
+    (hA₀ : ∀ i a, ContDiff ℝ 2 (A₀ i a)) (hAc : ∀ i, Continuous (A₀ i).uncurry)
+    (hAd : ∀ i, Continuous (fun p : UnitAddCircle × ℝ =&gt; deriv (A₀ i p.1) p.2))
+    (hAr : ∀ i, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
+      (fun p : ℝ × ℝ =&gt; A₀ i (p.2 : UnitAddCircle) p.1))
+    (hsupp : ∀ i a, support (A₀ i a) ⊆ Ioc l u)
+    (hlo : o ≤ l) (huo : u ≤ o+1) (hlu : l ≤ u) (hR : 0 &lt; R)
+    (hp : Periodic V 1) (hV : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) V)
+…</pre></li><li id=L574><b>def</b> <code>OAI.ThreeTorus.retainedRealCore</code> <small>line 574</small></li><li id=L579><b>def</b> <code>OAI.ThreeTorus.retainedRealAmplitude</code> <small>line 579</small></li><li id=L585><b>lemma</b> <code>OAI.ThreeTorus.retainedRealCore_smooth</code> <small>line 585</small></li><li id=L599><b>lemma</b> <code>OAI.ThreeTorus.retainedRealAmplitude_support</code> <small>line 599</small></li><li id=L608><b>lemma</b> <code>OAI.ThreeTorus.retainedRealAmplitude_regular</code> <small>line 608</small><div class="doc"><p>Every analytic lift condition required by the next stationary-phase
+passage follows from the smooth real core and the spare character.</p></div><pre>lemma retainedRealAmplitude_regular {C : ℝ → ℂ}
+    (hC : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) C) (m : ℤ) :
+    (∀ b : UnitAddCircle, ContDiff ℝ 2 (fun u : ℝ =&gt; C u*fourier m b)) ∧
+    Continuous (fun p : UnitAddCircle × ℝ =&gt; C p.2*fourier m p.1) ∧
+    Continuous (fun p : UnitAddCircle × ℝ =&gt; deriv (fun u : ℝ =&gt; C u*fourier m p.1) p.2) ∧
+    ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
+      (fun p : ℝ × ℝ =&gt; C p.1*fourier m (p.2:UnitAddCircle)) := by
+…</pre></li><li id=L625><b>lemma</b> <code>OAI.ThreeTorus.retainedRealAmplitude_matches</code> <small>line 625</small></li><li id=L635><b>lemma</b> <code>OAI.ThreeTorus.retainedAmplitude_smooth_lift</code> <small>line 635</small></li><li id=L658><b>lemma</b> <code>OAI.ThreeTorus.retainedRealCore_tsupport_subset</code> <small>line 658</small></li><li id=L668><b>lemma</b> <code>OAI.ThreeTorus.retainedRealCore_tsupport_cylinder</code> <small>line 668</small></li><li id=L680><b>lemma</b> <code>OAI.ThreeTorus.retainedRealCore_disjoint</code> <small>line 680</small></li><li id=L692><b>lemma</b> <code>OAI.ThreeTorus.compact_inside_buffered_interval</code> <small>line 692</small><div class="doc"><p>The buffered real integration interval can always be fixed before the
+next passage integer, even when all the coefficients are zero.</p></div><pre>lemma compact_inside_buffered_interval {K : Set ℝ} {a b : ℝ}
+    (hK : IsCompact K) (hab : a &lt; b) (hKI : K ⊆ Ioo a b) :
+    ∃ l u R : ℝ, a &lt; l ∧ l &lt; u ∧ u &lt; b ∧ 0 &lt; R ∧
+      K ⊆ Ioc l u ∧ Icc (l-2*R) (u+2*R) ⊆ Ioo a b := by
+…</pre></li><li id=L751><b>abbrev</b> <code>OAI.ThreeTorus.PassageOutputIndex</code> <small>line 751</small></li><li id=L753><b>def</b> <code>OAI.ThreeTorus.passageOutputCore</code> <small>line 753</small></li><li id=L759><b>lemma</b> <code>OAI.ThreeTorus.passageOutputCore_disjoint</code> <small>line 759</small></li><li id=L784><b>theorem</b> <code>OAI.ThreeTorus.second_separation_of_actual_output</code> <small>line 784</small><div class="doc"><p>After the first finite passage integer is fixed, a single integral
+carrier and a family of smooth scalar-only cutoffs give the second passage
+exactly disjoint final angular index sets. These cutoffs are one near the
+stationary images of the actual first output supports.</p></div><pre>theorem second_separation_of_actual_output {ι : Type*} [Fintype ι]
+    (S : ι → Finset ℤ) (ψ₀ : ℝ → ℝ) (χ : ι → ℝ → UnitAddCircle → ℝ)
+    (m : ι → ℤ) (H : UnitAddCircle → UnitAddCircle)
+    (A : ι → UnitAddCircle × UnitAddCircle → ℂ) (n : ℕ)
+    (hS : ∀ i j, j ∈ S i → j ≠ 0)
+    (hψ : HasCompactSupport ψ₀) (I : Set ℝ) (hψI : tsupport ψ₀ ⊆ I)
+    (hχd : Pairwise (fun i j =&gt; Disjoint (tsupport (χ i).uncurry) (tsupport (χ j).uncurry)))
+    (φ : UnitAddCircle → ℝ) (hφ : Continuous φ)
+    (hi : InjOn (fun u : ℝ =&gt; φ (u:UnitAddCircle)) I) :
+    ∃ c : ℕ, 0 &lt; c ∧
+      (∀ u : ℝ, (c:ℝ)+φ (u:UnitAddCircle) ≠ 0) ∧
+      ∃ (ξ : PassageOutputIndex S → ℝ → ℝ) (T : ℕ → PassageOutputIndex S → Finset ℤ),
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a>, <a href="PassageFamilies.lean.html#L751">OAI.ThreeTorus.PassageOutputIndex</a></p></li><li id=L854><b>structure</b> <code>OAI.ThreeTorus.PassagePackets</code> <small>line 854</small><div class="doc"><p>All input data used by the proved simultaneous passage theorems.  No
+asymptotic estimate, transport, density, or conclusion is a field.</p></div><pre>structure PassagePackets (ι : Type*) where
+…</pre></li><li id=L882><b>def</b> <code>OAI.ThreeTorus.PassagePackets.SpareIndependent</code> <small>line 882</small></li><li id=L886><b>lemma</b> <code>OAI.ThreeTorus.smooth_new_speed</code> <small>line 886</small></li><li id=L891><b>lemma</b> <code>OAI.ThreeTorus.positive_deriv_new_speed</code> <small>line 891</small></li><li id=L901><b>theorem</b> <code>OAI.ThreeTorus.literal_output_packets</code> <small>line 901</small><div class="doc"><p>A neutral or quantile passage produces a valid input family for the next
+passage, with all real lifts supported in one common compact good interval.
+The jitter may be arbitrarily broad. The constructor works at EVERY positive
+passage integer, independently of the spectral/physical approximation bounds.</p></div><pre>theorem literal_output_packets {ι : Type*} [Fintype ι]
+    (m : ι → ℤ) (A : ι → UnitAddCircle × UnitAddCircle → ℂ)
+    (H : ℕ → UnitAddCircle → UnitAddCircle) (Hl : ℕ → ℝ → ℝ)
+    (χ : ι → ℝ → UnitAddCircle → ℝ) (S : ι → Finset ℤ)
+    (hS : ∀ i j, j ∈ S i → j ≠ 0)
+    (hAc : ∀ i, Continuous (A i))
+    (hAs : ∀ i, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun p : ℝ × ℝ =&gt; A i (p.1,p.2)))
+    (hχ : ∀ i, CylinderSmooth (χ i).uncurry) (hχc : ∀ i, Continuous (χ i).uncurry)
+    (hHc : ∀ n, Continuous (H n))
+    (hHl : ∀ n, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (Hl n))
+    (hHe : ∀ n (x : ℝ), H n (x:UnitAddCircle) = (Hl n x:UnitAddCircle))
+    {δ : ℝ} (c : LawCutoffs δ) (hδ : 0 &lt; δ) (hδ&#x27; : δ &lt; 1/8)
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/ThreeTorus.lean.html#L35">OAI.ThreeTorus.H</a>, <a href="Cutoffs.lean.html#L105">OAI.ThreeTorus.CylinderSmooth</a>, <a href="Jitter.lean.html#L236">OAI.ThreeTorus.LawCutoffs</a></p></li><li id=L978><b>lemma</b> <code>OAI.ThreeTorus.output_index_injective</code> <small>line 978</small></li><li id=L1007><b>theorem</b> <code>OAI.ThreeTorus.exists_simultaneous_quantile_passage</code> <small>line 1007</small></li><li id=L1124><b>theorem</b> <code>OAI.ThreeTorus.exists_signal_family_law</code> <small>line 1124</small></li><li id=L1179><b>theorem</b> <code>OAI.ThreeTorus.eventually_integral_speed_separation</code> <small>line 1179</small><div class="doc"><p>The integral carrier can meet every additional lower bound, as required
+when the signal strength and approximation tolerance are selected first.</p></div><pre>theorem eventually_integral_speed_separation {ι X : Type*} [Finite ι]
+    [TopologicalSpace X] [CompactSpace X] (m : ι → ℤ) (φ : X → ℝ)
+    (hm : ∀ i, m i ≠ 0) (hφ : Continuous φ) :
+    ∀ᶠ c : ℕ in Filter.atTop, 0 &lt; c ∧
+      (∀ i x, (m i : ℝ) * ((c:ℝ) + φ x) ≠ 0) ∧
+      (∀ i j x y, (m i : ℝ) * ((c:ℝ) + φ x) =
+        (m j : ℝ) * ((c:ℝ) + φ y) → m i = m j) := by
+…</pre></li><li id=L1242><b>def</b> <code>OAI.ThreeTorus.ActualQuantileFamily</code> <small>line 1242</small><div class="doc"><p>The full conclusion of the actual quantile passage. This abbreviation
+contains geometry, exact Fourier coefficients, all moments, and both errors;
+its constructor below assumes no one of these output conclusions.</p></div><pre>def ActualQuantileFamily {ι : Type*}
+    (A : ι → UnitAddCircle × UnitAddCircle → ℂ)
+    (A₀ : ι → UnitAddCircle → ℝ → ℂ) (V : ℝ → ℝ) (m : ι → ℤ)
+    (l u R : ℝ) (ρ : ℝ → ℝ) {δ : ℝ} (c : LawCutoffs δ)
+    (χ : ι → ℝ → UnitAddCircle → ℝ) (g : ι → UnitAddCircle → ℝ) (ε : ℝ) : Prop :=
+…</pre><p class="refs">Mentions: <a href="Jitter.lean.html#L236">OAI.ThreeTorus.LawCutoffs</a></p></li><li id=L1290><b>theorem</b> <code>OAI.ThreeTorus.exists_actual_signal_family</code> <small>line 1290</small></li><li id=L1386><b>theorem</b> <code>OAI.ThreeTorus.tracked_frequency_cutoffs</code> <small>line 1386</small><div class="doc"><p>Scalar cutoffs with an arbitrarily small stationary-image enlargement,
+exactly disjoint angular ranges, and the required identity on the true weights.</p></div><pre>theorem tracked_frequency_cutoffs {ι : Type*} [Finite ι]
+    (m : ι → ℤ) (V : ℝ → ℝ) (K : ι → Set ℝ)
+    (hV : Continuous V) (hK : ∀ i, IsCompact (K i))
+    (h0 : ∀ i, 0 ∉ (fun x =&gt; (m i:ℝ)*V x) &#x27;&#x27; K i)
+    (hsep : Pairwise (fun i j =&gt; Disjoint ((fun x =&gt; (m i:ℝ)*V x) &#x27;&#x27; K i)
+      ((fun x =&gt; (m j:ℝ)*V x) &#x27;&#x27; K j)))
+    {η : ℝ} (hη : 0 &lt; η) :
+    ∃ χ : ι → ℝ → ℝ,
+      (∀ i, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (χ i) ∧ HasCompactSupport (χ i) ∧
+        χ i 0 = 0 ∧ (∀ s, 0 ≤ χ i s ∧ χ i s ≤ 1) ∧
+        (∀ s ∈ (fun x =&gt; (m i:ℝ)*V x) &#x27;&#x27; K i, χ i =ᶠ[𝓝 s] 1) ∧
+        (∀ s ∈ tsupport (χ i), ∃ x ∈ K i, |s-(m i:ℝ)*V x| &lt; η) ∧
+…</pre></li><li id=L1418><b>lemma</b> <code>OAI.ThreeTorus.circle_dist_le_real</code> <small>line 1418</small></li><li id=L1423><b>lemma</b> <code>OAI.ThreeTorus.integral_carrier_circle</code> <small>line 1423</small></li><li id=L1433><b>lemma</b> <code>OAI.ThreeTorus.passage_temporal_drift</code> <small>line 1433</small><div class="doc"><p>The temporal displacement uses the SAME old support point as the index
+location.  A large jitter changes only the final lower bound on <code>n</code>.</p></div><pre>lemma passage_temporal_drift {s v J η : ℝ} {m c : ℤ} {n : ℕ}
+    (hn : 0 &lt; n) (hs : |s-(m:ℝ)*((c:ℝ)+v)| ≤ η) :
+    dist ((s+s*J/n:ℝ):UnitAddCircle) ((m:ℝ)*v:UnitAddCircle) ≤
+      η+|s| *|J|/n := by
+…</pre></li><li id=L1446><b>lemma</b> <code>OAI.ThreeTorus.passage_index_drift</code> <small>line 1446</small></li><li id=L1465><b>lemma</b> <code>OAI.ThreeTorus.passage_retained_size</code> <small>line 1465</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

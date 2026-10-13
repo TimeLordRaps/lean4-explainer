@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/AffineProfileConcentration.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/AffineProfileConcentration.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>AffineProfileConcentration.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>AffineProfileConcentration.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/AffineProfileConcentration.lean#L1">source</a></p><div class="doc"><h3>Concentration near a finite family of affine profiles</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.PolycyclicRecognition.affineProfileClass</code> <small>line 19</small><div class="doc"><p>Restrictions of the finitely many linear profiles, with arbitrary offsets.</p></div><pre>def affineProfileClass {Z W L : Type*} [TopologicalSpace Z]
+    [TopologicalSpace W] [Add W] (A : L → C(Z, W)) : Set C(Z, W) :=
+…</pre></li><li id=L23><b>theorem</b> <code>OAI.PolycyclicRecognition.affineProfileClass_nonempty</code> <small>line 23</small></li><li id=L31><b>theorem</b> <code>OAI.PolycyclicRecognition.isClosed_affineProfileClass</code> <small>line 31</small><div class="doc"><p>One evaluation recovers the offset. This makes the affine class closed
+without requiring an a priori bound on its offsets.</p></div><pre>theorem isClosed_affineProfileClass {Z W L : Type*} [TopologicalSpace Z]
+    [TopologicalSpace W] [AddCommGroup W] [IsTopologicalAddGroup W] [T2Space W]
+    [Finite L] (A : L → C(Z, W)) (z₀ : Z) :
+    IsClosed (affineProfileClass A) := by
+…</pre><p class="refs">Mentions: <a href="AffineProfileConcentration.lean.html#L19">OAI.PolycyclicRecognition.affineProfileClass</a></p></li><li id=L57><b>theorem</b> <code>OAI.PolycyclicRecognition.measure_closed_tendsto_zero_of_support</code> <small>line 57</small><div class="doc"><p>A closed event disjoint from the support of the limit has probability
+converging to zero.</p></div><pre>theorem measure_closed_tendsto_zero_of_support
+    {S : Type*} [TopologicalSpace S] [MeasurableSpace S] [BorelSpace S]
+    [HasOuterApproxClosed S] [HereditarilyLindelofSpace S]
+    {μn : ℕ → ProbabilityMeasure S} {μ : ProbabilityMeasure S}
+    (hμ : Tendsto μn atTop (𝓝 μ)) {B : Set S} (hB : IsClosed B)
+    (hs : ∀ f ∈ (μ : Measure S).support, f ∉ B) :
+    Tendsto (fun n =&gt; (μn n : Measure S) B) atTop (𝓝 0) := by
+…</pre></li><li id=L73><b>theorem</b> <code>OAI.PolycyclicRecognition.measure_closed_tendsto_zero_of_all_supported_limits</code> <small>line 73</small><div class="doc"><p>Compactness turns a statement about every supported sequential limit
+into concentration for the original sequence.</p></div><pre>theorem measure_closed_tendsto_zero_of_all_supported_limits
+    {S : Type*} [TopologicalSpace S] [CompactSpace S] [MetrizableSpace S]
+    [MeasurableSpace S] [BorelSpace S] (μn : ℕ → ProbabilityMeasure S)
+    {B : Set S} (hB : IsClosed B)
+    (hs : ∀ (ι : ℕ → ℕ), StrictMono ι → ∀ μ : ProbabilityMeasure S,
+      Tendsto (μn ∘ ι) atTop (𝓝 μ) → ∀ f ∈ (μ : Measure S).support, f ∉ B) :
+    Tendsto (fun n =&gt; (μn n : Measure S) B) atTop (𝓝 0) := by
+…</pre></li><li id=L90><b>theorem</b> <code>OAI.PolycyclicRecognition.affine_distance_concentration</code> <small>line 90</small><div class="doc"><p>On a compact profile space, affine support of every weak limit gives
+vanishing probability of a fixed positive distance from the affine class.</p></div><pre>theorem affine_distance_concentration
+    {V W L : Type*} [TopologicalSpace V] [LocallyCompactSpace V]
+    [NormedAddCommGroup W] [Nonempty L]
+    (S : Set C(V, W)) [CompactSpace S] [MetrizableSpace S]
+    [MeasurableSpace S] [BorelSpace S]
+    (μn : ℕ → ProbabilityMeasure S) (Z : Set V) [CompactSpace Z]
+    (A : L → C(Z, W))
+    (hs : ∀ (ι : ℕ → ℕ), StrictMono ι → ∀ μ : ProbabilityMeasure S,
+      Tendsto (μn ∘ ι) atTop (𝓝 μ) → ∀ f ∈ (μ : Measure S).support,
+        f.val.restrict Z ∈ affineProfileClass A)
+    {η : ℝ} (hη : 0 &lt; η) :
+    Tendsto (fun n =&gt; (μn n : Measure S)
+…</pre><p class="refs">Mentions: <a href="AffineProfileConcentration.lean.html#L19">OAI.PolycyclicRecognition.affineProfileClass</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

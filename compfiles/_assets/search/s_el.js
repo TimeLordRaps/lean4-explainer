@@ -1,0 +1,1 @@
+window.l4shard("el", [["Imo1986P6.getElem_congr",48,280],["Imo2010P5.Reachable.five_eleven",101,109],["Imo2011P4.insertList_getElem",103,536],["Usa2015P6.sum_elements_sub_card",287,42],["Usa2017P2.sorted_getElem!_le_iff",292,537],["Usa2017P2.sorted_getElem!_lt_iff",292,526],["Usa2022P5.good_eleven",312,590],["Usa2024P2.at_least_solution_elements",318,1751]]);

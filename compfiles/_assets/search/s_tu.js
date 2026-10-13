@@ -1,0 +1,1 @@
+window.l4shard("tu", [["Imo2014P6.turn_at_blue_pt",110,1234],["Usa2005P4.tuples",248,52],["Usa2005P4.tuples_card_eq_sum",248,94],["Usa2021P2.Park.turn",307,78],["Usa2021P2.Park.turn_inv_turn",307,101],["Usa2021P2.Park.turn_ne",307,94],["Usa2021P2.Park.turn_not_two_cycle",307,113]]);

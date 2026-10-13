@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/RemoveRepetitions.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/RemoveRepetitions.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>RemoveRepetitions.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>RemoveRepetitions.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/RemoveRepetitions.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>theorem</b> <code>OAI.Problem337.reciprocal_pair_replacement</code> <small>line 9</small><div class="doc"><p>Replacing two equal unit fractions by two unequal smaller-first terms.</p></div><pre>theorem reciprocal_pair_replacement (m : ℕ) (hm : 3 ≤ m) :
+    ∃ a b : ℕ, 1 ≤ a ∧ 1 ≤ b ∧ a &lt; m ∧
+      (1 : ℚ) / a + 1 / b = 1 / m + 1 / m := by
+…</pre></li><li id=L27><b>theorem</b> <code>OAI.Problem337.reciprocal_sum_update</code> <small>line 27</small><div class="doc"><p>Effect of a one-coordinate replacement on a finite reciprocal sum.</p></div><pre>theorem reciprocal_sum_update {k : ℕ} (n : Fin k → ℕ) (i : Fin k) (a : ℕ) :
+    (∑ t, (1 : ℚ) / (Function.update n i a t : ℚ)) =
+      (∑ t, (1 : ℚ) / (n t : ℚ)) + 1 / (a : ℚ) - 1 / (n i : ℚ) := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.Problem337.reciprocal_sum_update_two</code> <small>line 37</small><div class="doc"><p>Two-coordinate replacement preserves the sum when the two reciprocals agree.</p></div><pre>theorem reciprocal_sum_update_two {k : ℕ} (n : Fin k → ℕ) {i j : Fin k}
+    (hij : i ≠ j) (a b : ℕ)
+    (hab : (1 : ℚ) / a + 1 / b = 1 / n i + 1 / n j) :
+    (∑ t, (1 : ℚ) / (Function.update (Function.update n i a) j b t : ℚ)) =
+      ∑ t, (1 : ℚ) / (n t : ℚ) := by
+…</pre></li><li id=L47><b>theorem</b> <code>OAI.Problem337.lex_update_two_lt</code> <small>line 47</small><div class="doc"><p>Any first-coordinate decrease beats a later-coordinate change lexicographically.</p></div><pre>theorem lex_update_two_lt {k : ℕ} (n : Fin k → ℕ) {i j : Fin k}
+    (hij : i &lt; j) (a b : ℕ) (ha : a &lt; n i) :
+    Pi.Lex (· &lt; ·) (· &lt; ·) (Function.update (Function.update n i a) j b) n := by
+…</pre></li><li id=L56><b>theorem</b> <code>OAI.Problem337.exists_strictMono_of_two_replacements</code> <small>line 56</small><div class="doc"><p>A reusable lexicographic minimization principle for constrained tuples.</p></div><pre>theorem exists_strictMono_of_two_replacements {k : ℕ}
+    (P : (Fin k → ℕ) → Prop) (hP : ∃ n, P n)
+    (hstep : ∀ n, P n → ∀ i j : Fin k, i &lt; j → n j ≤ n i →
+      ∃ a b : ℕ, a &lt; n i ∧ P (Function.update (Function.update n i a) j b)) :
+    ∃ n, P n ∧ StrictMono n := by
+…</pre></li><li id=L72><b>theorem</b> <code>OAI.Problem337.remove_repetitions_below_one</code> <small>line 72</small><div class="doc"><p>Takenouchi cleanup, proved using a lexicographically least tuple.
+No distinctness or ordering is required of the original representation.</p></div><pre>theorem remove_repetitions_below_one {k : ℕ} (x : ℚ)
+    (hx : x &lt; 1) (original : Fin k → ℕ)
+    (hpos : ∀ i, 1 ≤ original i)
+    (hsum : (∑ i, (1 : ℚ) / (original i : ℚ)) = x) :
+    ∃ n : Fin k → ℕ, (∀ i, 2 ≤ n i) ∧ StrictMono n ∧
+      (∑ i, (1 : ℚ) / (n i : ℚ)) = x := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

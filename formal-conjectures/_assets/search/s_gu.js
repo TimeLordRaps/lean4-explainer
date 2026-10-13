@@ -1,0 +1,1 @@
+window.l4shard("gu", [["Erdos100.erdos_100.variants.guth_katz",139,72],["Erdos138.monoAP_guarantee_set",293,49],["Erdos138.monoAP_guarantee_set_nonempty",293,59],["Erdos387.erdos_387.variants.guy",491,88],["Erdos95.erdos_95.variants.guth_katz",882,66],["Green14.mixedMonoAPGuaranteeSet",969,55],["Green51.guaranteedMaxAPLength",1004,86],["Green51.guaranteedMaxCosetDim",1004,43]]);

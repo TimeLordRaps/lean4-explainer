@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/Falconer/Graphs/GraphDegrees.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/Falconer/Graphs/GraphDegrees.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">MeasureTheory</a> / <a href="../index.html">Falconer</a> / <a href="index.html">Graphs</a> / <span>GraphDegrees.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">MeasureTheory</a>/<a href="../index.html">Falconer</a>/<a href="index.html">Graphs</a>/<span>GraphDegrees.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/Falconer/Graphs/GraphDegrees.lean#L1">source</a></p><div class="doc"><h3>Degrees of the higher-dimensional retained graph</h3><p>The vertex sets are the eligible depth-<code>p</code> grid cells for a
+fixed pair of caps. A parallel test controls the first unknown cell; the
+scalar constraint then controls the second, in its own cap direction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.Falconer.perpendicularPart_neg</code> <small>line 17</small></li><li id=L24><b>def</b> <code>OAI.Falconer.retainedGridEdge</code> <small>line 24</small><div class="doc"><p>The three center tests for a fixed pair of angular caps.</p></div><pre>def retainedGridEdge {d : ℕ} (s : ℝ) (w₁ w₂ : Space d) (τ : ℝ)
+    (row col : (Fin d → ℤ) × (Fin d → ℤ)) : Prop :=
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a></p></li><li id=L31><b>theorem</b> <code>OAI.Falconer.retainedGridEdge_symm</code> <small>line 31</small></li><li id=L39><b>theorem</b> <code>OAI.Falconer.retainedGridEdge_swap</code> <small>line 39</small></li><li id=L48><b>theorem</b> <code>OAI.Falconer.pair_card_le</code> <small>line 48</small><div class="doc"><p>Counting a finite set of pairs by its first-coordinate candidates and
+the uniformly bounded second-coordinate fibers.</p></div><pre>theorem pair_card_le {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (S : Finset (α × β)) (A : Finset α) (K : ℕ)
+    (hA : ∀ z ∈ S, z.1 ∈ A)
+    (hK : ∀ a ∈ A, ((S.filter (fun z =&gt; z.1 = a)).image Prod.snd).card ≤ K) :
+    S.card ≤ K * A.card := by
+…</pre></li><li id=L63><b>theorem</b> <code>OAI.Falconer.retainedGrid_degree_first</code> <small>line 63</small><div class="doc"><p>Row degree from the first endpoint's parallel-test count. The second
+endpoint only uses its unit cap direction and the grid packing bound.</p></div><pre>theorem retainedGrid_degree_first {d L C : ℕ} {s τ : ℝ} (hs : 0 &lt; s)
+    (hL : 4 * τ * s ≤ L) (A B : Finset (Fin d → ℤ))
+    (w₁ w₂ : Space d) (hw₂ : ‖w₂‖ = 1)
+    (row : (Fin d → ℤ) × (Fin d → ℤ))
+    (hparallel : (A.filter (fun z =&gt;
+      ‖perpendicularPart w₁ (scaledGridPoint s z - scaledGridPoint s row.1)‖ ≤ τ)).card ≤ C) :
+    ((A ×ˢ B).filter (retainedGridEdge s w₁ w₂ τ row)).card ≤
+      (2 * L + 1)^d * C := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="AllDimensionalGraphGeometry.lean.html#L22">OAI.Falconer.perpendicularPart</a>, <a href="../Incidence/GridCount.lean.html#L19">OAI.Falconer.scaledGridPoint</a>, <a href="GraphDegrees.lean.html#L24">OAI.Falconer.retainedGridEdge</a></p></li><li id=L95><b>theorem</b> <code>OAI.Falconer.retainedGrid_degree_min</code> <small>line 95</small><div class="doc"><p>Both choices of the first unknown are valid, so the smaller parallel
+count controls the degree.</p></div><pre>theorem retainedGrid_degree_min {d L C₁ C₂ : ℕ} {s τ : ℝ} (hs : 0 &lt; s)
+    (hL : 4 * τ * s ≤ L) (A B : Finset (Fin d → ℤ))
+    (w₁ w₂ : Space d) (hw₁ : ‖w₁‖ = 1) (hw₂ : ‖w₂‖ = 1)
+    (row : (Fin d → ℤ) × (Fin d → ℤ))
+    (h₁ : (A.filter (fun z =&gt;
+      ‖perpendicularPart w₁ (scaledGridPoint s z - scaledGridPoint s row.1)‖ ≤ τ)).card ≤ C₁)
+    (h₂ : (B.filter (fun z =&gt;
+      ‖perpendicularPart w₂ (scaledGridPoint s z - scaledGridPoint s row.2)‖ ≤ τ)).card ≤ C₂) :
+    ((A ×ˢ B).filter (retainedGridEdge s w₁ w₂ τ row)).card ≤
+      (2 * L + 1)^d * min C₁ C₂ := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="AllDimensionalGraphGeometry.lean.html#L22">OAI.Falconer.perpendicularPart</a>, <a href="../Incidence/GridCount.lean.html#L19">OAI.Falconer.scaledGridPoint</a>, <a href="GraphDegrees.lean.html#L24">OAI.Falconer.retainedGridEdge</a></p></li><li id=L128><b>theorem</b> <code>OAI.Falconer.retainedGrid_column_degree_min</code> <small>line 128</small><div class="doc"><p>Reversing every edge gives the identical column degree bound.</p></div><pre>theorem retainedGrid_column_degree_min {d L C₁ C₂ : ℕ} {s τ : ℝ} (hs : 0 &lt; s)
+    (hL : 4 * τ * s ≤ L) (A B : Finset (Fin d → ℤ))
+    (w₁ w₂ : Space d) (hw₁ : ‖w₁‖ = 1) (hw₂ : ‖w₂‖ = 1)
+    (col : (Fin d → ℤ) × (Fin d → ℤ))
+    (h₁ : (A.filter (fun z =&gt;
+      ‖perpendicularPart w₁ (scaledGridPoint s z - scaledGridPoint s col.1)‖ ≤ τ)).card ≤ C₁)
+    (h₂ : (B.filter (fun z =&gt;
+      ‖perpendicularPart w₂ (scaledGridPoint s z - scaledGridPoint s col.2)‖ ≤ τ)).card ≤ C₂) :
+    ((A ×ˢ B).filter (fun row =&gt; retainedGridEdge s w₁ w₂ τ row col)).card ≤
+      (2 * L + 1)^d * min C₁ C₂ := by
+…</pre><p class="refs">Mentions: <a href="../Estimates/AllDimensions.lean.html#L26">OAI.Falconer.Space</a>, <a href="AllDimensionalGraphGeometry.lean.html#L22">OAI.Falconer.perpendicularPart</a>, <a href="../Incidence/GridCount.lean.html#L19">OAI.Falconer.scaledGridPoint</a>, <a href="GraphDegrees.lean.html#L24">OAI.Falconer.retainedGridEdge</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

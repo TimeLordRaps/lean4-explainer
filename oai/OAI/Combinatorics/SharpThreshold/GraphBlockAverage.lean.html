@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/SharpThreshold/GraphBlockAverage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/SharpThreshold/GraphBlockAverage.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">SharpThreshold</a> / <span>GraphBlockAverage.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">SharpThreshold</a>/<span>GraphBlockAverage.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/SharpThreshold/GraphBlockAverage.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.Problem313.graph_fourier_capture_of_block_bounds</code> <small>line 22</small><div class="doc"><p>The fixed-block Fourier estimate and the pointwise support-capture estimate
+combine into the global captured-mass bound. All graph sampling probabilities
+are the canonical <code>blockProbability</code>; the edge-touch bound is discharged here.
+The two hypotheses are precisely the analytic and combinatorial inputs, with
+no requirement that a single block capture every support simultaneously.</p></div><pre>theorem graph_fourier_capture_of_block_bounds
+    {n m : ℕ} (f : GraphConfig n → Bool) {p : ℝ}
+    (hp : 0 ≤ p) (hp1 : p ≤ 1) (hm : 1 ≤ m) (hmn : m ≤ n)
+    (k a : ℝ) (ha : 0 ≤ a)
+    (hcapture : ∀ S : Finset (GraphEdge n), S.Nonempty →
+      (S.card : ℝ) ≤ k ^ 2 / 2 →
+      (m : ℝ) / (2 * n) ≤
+        blockProbability (Finset.univ : Finset (Fin n)) m (fun B =&gt;
+          1 ≤ (S.filter (EdgeTouches B)).card ∧
+            ((S.filter (EdgeTouches B)).card : ℝ) ≤ k))
+    (hblock : ∀ B : Finset (Fin n), B.card = m →
+      (∑ S : Finset (GraphEdge n),
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L11">OAI.Problem313.GraphConfig</a>, <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L9">OAI.Problem313.GraphEdge</a>, <a href="BlockCounting.lean.html#L16">OAI.Problem313.blockProbability</a>, <a href="BlockRestrictionSymmetry.lean.html#L9">OAI.Problem313.EdgeTouches</a></p></li><li id=L94><b>theorem</b> <code>OAI.Problem313.graph_fourier_captured_mass_of_block_bound</code> <small>line 94</small><div class="doc"><p>At the square-root block size all counting and numerical capture premises
+are discharged. Only the fixed-block analytic estimate remains as input.</p></div><pre>theorem graph_fourier_captured_mass_of_block_bound
+    {n : ℕ} (f : GraphConfig n → Bool) {p : ℝ}
+    (hn : 2 ≤ n) (ht : 16 ≤ Real.log (n : ℝ))
+    (hp : 0 &lt; p) (hp1 : p &lt; 1)
+    (hblock : ∀ B : Finset (Fin n), B.card = ⌊Real.sqrt (n : ℝ)⌋₊ →
+      (∑ S : Finset (GraphEdge n),
+        if 1 ≤ (S.filter (EdgeTouches B)).card ∧
+            ((S.filter (EdgeTouches B)).card : ℝ) ≤
+              Real.sqrt (p * (1 - p)) * Real.log (⌊Real.sqrt (n : ℝ)⌋₊ : ℝ) / 64
+        then BiasedFourier.coeff p (fun x =&gt; boolReal (f x)) S ^ 2 else 0) ≤
+      (⌊Real.sqrt (n : ℝ)⌋₊ : ℝ) ^ (-1 / 4 : ℝ) *
+        ∑ e : GraphEdge n, if EdgeTouches B e then edgeInfluence p f e else 0) :
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L11">OAI.Problem313.GraphConfig</a>, <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L9">OAI.Problem313.GraphEdge</a>, <a href="BlockRestrictionSymmetry.lean.html#L9">OAI.Problem313.EdgeTouches</a>, <a href="FourierBasis.lean.html#L27">OAI.Problem313.BiasedFourier.coeff</a>, <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L33">OAI.Problem313.boolReal</a>, <a href="Model.lean.html#L56">OAI.Problem313.edgeInfluence</a></p></li><li id=L132><b>theorem</b> <code>OAI.Problem313.graph_fourier_captured_mass</code> <small>line 132</small><div class="doc"><p>The complete captured Fourier-mass bound for a vertex-invariant graph
+property. The bias is unrestricted within <code>(0,1)</code> and no monotonicity is used.</p></div><pre>theorem graph_fourier_captured_mass
+    {n : ℕ} (f : GraphConfig n → Bool) {p : ℝ}
+    (hn : 2 ≤ n) (ht : 16 ≤ Real.log (n : ℝ)) (hf : VertexInvariant f)
+    (hp : 0 &lt; p) (hp1 : p &lt; 1) :
+    (∑ S : Finset (GraphEdge n),
+      if S.Nonempty ∧ (S.card : ℝ) ≤
+          (Real.sqrt (p * (1 - p)) * Real.log (⌊Real.sqrt (n : ℝ)⌋₊ : ℝ) / 64) ^ 2 / 2
+      then BiasedFourier.coeff p (fun x =&gt; boolReal (f x)) S ^ 2 else 0) ≤
+      4 * (⌊Real.sqrt (n : ℝ)⌋₊ : ℝ) ^ (-1 / 4 : ℝ) * totalInfluence p f := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L11">OAI.Problem313.GraphConfig</a>, <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L20">OAI.Problem313.VertexInvariant</a>, <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L9">OAI.Problem313.GraphEdge</a>, <a href="FourierBasis.lean.html#L27">OAI.Problem313.BiasedFourier.coeff</a>, <a href="../../../ComparatorChallenges/SharpThreshold.lean.html#L33">OAI.Problem313.boolReal</a>, <a href="Model.lean.html#L63">OAI.Problem313.totalInfluence</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

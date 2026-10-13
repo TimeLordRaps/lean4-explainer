@@ -1,0 +1,171 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Encoding/VisibleTransfer.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Encoding/VisibleTransfer.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Encoding</a> / <span>VisibleTransfer.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Encoding</a>/<span>VisibleTransfer.lean</span></code></h1><p class="muted">41 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Encoding/VisibleTransfer.lean#L1">source</a></p><div class="doc"><p>The complete-data conditional law of the actual projected experiment.
+The residual private matrix is uniform even when the occurrence law is
+weighted and the public row map has deficient rank.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.fiberEvent</code> <small>line 16</small><div class="doc"><p>The part of an event in one actual visible-data fiber.</p></div><pre>def fiberEvent (observe : Ω → D) (d : D) (event : Ω → Bool) : Ω → Bool := by
+…</pre></li><li id=L20><b>def</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.fiberMass</code> <small>line 20</small></li><li id=L25><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.fiberMass_nonnegative</code> <small>line 25</small></li><li id=L30><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.fiberMass_mono</code> <small>line 30</small></li><li id=L39><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.sum_fiberMass</code> <small>line 39</small></li><li id=L49><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.observation_weight</code> <small>line 49</small></li><li id=L57><b>def</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</code> <small>line 57</small><div class="doc"><p>Positive projected column-slice mass and sufficient conditional target
+agreement. Both quantities are computed after fixing actual visible data.</p></div><pre>def visibleWitness (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (d : D) : Bool := by
+…</pre></li><li id=L66><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.witness_margin_le_visible_probability</code> <small>line 66</small><div class="doc"><p>The positive part of the witness margin is paid for by the probability of
+the actual observed data, rather than by the larger hidden sample space.</p></div><pre>theorem witness_margin_le_visible_probability
+    (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (hthreshold : 0 ≤ threshold) :
+    μ.probability (fun x =&gt; slice x &amp;&amp; targetHit x) - threshold * μ.probability slice ≤
+      (μ.pushforward observe).probability (visibleWitness μ observe slice targetHit threshold) := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransfer.lean.html#L57">OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</a></p></li><li id=L109><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness_conditional</code> <small>line 109</small><div class="doc"><p>On every selected datum the conditional distribution is defined on an
+actual nonempty positive-mass slice and has the promised target agreement.</p></div><pre>theorem visibleWitness_conditional
+    (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (d : D)
+    (h : visibleWitness μ observe slice targetHit threshold d = true) :
+    ∃ hpositive : 0 &lt; μ.probability (fiberEvent observe d slice),
+      threshold ≤ (μ.condition (fiberEvent observe d slice) hpositive).probability targetHit := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransfer.lean.html#L57">OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</a>, <a href="VisibleTransfer.lean.html#L16">OAI.MaxCutGames.Decoder.VisibleTransfer.fiberEvent</a></p></li><li id=L133><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness_good</code> <small>line 133</small><div class="doc"><p>Goodness is inherited from any event whose membership requires good
+visible advice. Positivity supplies an actual supporting hidden sample.</p></div><pre>theorem visibleWitness_good
+    (μ : FiniteDistribution Ω) (observe : Ω → D)
+    (slice targetHit : Ω → Bool) (threshold : ℝ)
+    (good : D → Prop) (hslice : ∀ x, slice x = true → good (observe x))
+    (d : D) (h : visibleWitness μ observe slice targetHit threshold d = true) :
+    good d := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransfer.lean.html#L57">OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</a></p></li><li id=L157><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.margin_transfer</code> <small>line 157</small><div class="doc"><p>A pair of full-table event probabilities transfers with error
+<code>(1 + threshold) * TV</code>. This estimate precedes all conditioning.</p></div><pre>theorem margin_transfer (μ ν : FiniteDistribution Ω)
+    (slice targetHit : Ω → Bool) (threshold : ℝ) (hthreshold : 0 ≤ threshold) :
+    μ.probability (fun x =&gt; slice x &amp;&amp; targetHit x) - threshold * μ.probability slice -
+        (1 + threshold) * μ.totalVariation ν ≤
+      ν.probability (fun x =&gt; slice x &amp;&amp; targetHit x) - threshold * ν.probability slice := by
+…</pre></li><li id=L170><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.wholeTable_transfer_to_visibleWitness</code> <small>line 170</small><div class="doc"><p>The whole-table comparison and the exact finite disintegration combine
+without any assumption on conditional projection laws.</p></div><pre>theorem wholeTable_transfer_to_visibleWitness
+    {Γ : Type*} [Fintype Γ]
+    (unrestricted : FiniteDistribution Ω) (actual : FiniteDistribution Γ)
+    (pad : Γ → Ω) (observe : Γ → D) (slice targetHit : Ω → Bool)
+    (threshold γ : ℝ) (hthreshold : 0 ≤ threshold)
+    (hmargin : γ ≤
+      unrestricted.probability (fun x =&gt; slice x &amp;&amp; targetHit x) -
+        threshold * unrestricted.probability slice -
+        (1 + threshold) * unrestricted.totalVariation (actual.pushforward pad)) :
+    γ ≤ (actual.pushforward observe).probability
+      (visibleWitness actual observe (fun x =&gt; slice (pad x))
+        (fun x =&gt; targetHit (pad x)) threshold) := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransfer.lean.html#L57">OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</a></p></li><li id=L189><b>theorem</b> <code>OAI.MaxCutGames.Decoder.VisibleTransfer.projected_witness_mass</code> <small>line 189</small></li><li id=L219><b>def</b> <code>OAI.MaxCutGames.Decoder.UniformFibers.selectedFiberEquiv</code> <small>line 219</small></li><li id=L239><b>theorem</b> <code>OAI.MaxCutGames.Decoder.UniformFibers.selectedFiberEquiv_point</code> <small>line 239</small></li><li id=L247><b>theorem</b> <code>OAI.MaxCutGames.Decoder.UniformFibers.conditional_probability</code> <small>line 247</small><div class="doc"><p>Conditioning after fixing the complete datum and the selected column
+event leaves precisely the uniform restricted private fiber.</p></div><pre>theorem conditional_probability [Fintype Ω] [Fintype Y]
+    (μ : FiniteDistribution Ω) (observe : Ω → D) (d : D)
+    (slice event : Ω → Bool)
+    (positive : 0 &lt; μ.probability (VisibleTransfer.fiberEvent observe d slice))
+    (c : ℝ) (hconstant : ∀ x, observe x = d → μ.weight x = c)
+    (e : Y ≃ {x : Ω // observe x = d}) :
+    (μ.condition (VisibleTransfer.fiberEvent observe d slice) positive).probability event =
+      𝔼 y : {y : Y // slice (e y).val = true},
+        if event (e y.val).val then (1 : ℝ) else 0 := by
+…</pre><p class="refs">Mentions: <a href="VisibleTransfer.lean.html#L16">OAI.MaxCutGames.Decoder.VisibleTransfer.fiberEvent</a></p></li><li id=L294><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualConditionalLaw.probability_condition_complete</code> <small>line 294</small></li><li id=L319><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualConditionalLaw.observedAgreement_completeDraw</code> <small>line 319</small><div class="doc"><p>Both provers' answers, and their equality predicate, are fixed on the
+complete observation fiber. Only the hidden matrix varies within that fiber.</p></div><pre>theorem observedAgreement_completeDraw (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (good : VisiblePolicies.LeftInput S k s d (Vector r) → VisiblePolicies.ResponseWitness k → Prop)
+    (data : AdviceLaw.CompleteData k (Fin S.occurrences) (Alphabet s) (Vector d) (Vector r))
+    (N N&#x27; : AdviceLaw.PrivateMap data) :
+    VisiblePolicies.observedAgreement S labeling good (AdviceLaw.completeDraw data N) =
+      VisiblePolicies.observedAgreement S labeling good (AdviceLaw.completeDraw data N&#x27;) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="TransferredDecoding.lean.html#L208">OAI.MaxCutGames.Decoder.VisiblePolicies.LeftInput</a>, <a href="TransferredDecoding.lean.html#L198">OAI.MaxCutGames.Decoder.VisiblePolicies.ResponseWitness</a>, <a href="AdviceLaw.lean.html#L579">OAI.MaxCutGames.Decoder.AdviceLaw.CompleteData</a>, <a href="AdviceLaw.lean.html#L587">OAI.MaxCutGames.Decoder.AdviceLaw.PrivateMap</a>, <a href="TransferredDecoding.lean.html#L292">OAI.MaxCutGames.Decoder.VisiblePolicies.observedAgreement</a>, <a href="AdviceLaw.lean.html#L644">OAI.MaxCutGames.Decoder.AdviceLaw.completeDraw</a></p></li><li id=L331><b>def</b> <code>OAI.MaxCutGames.Decoder.ActualConditionalLaw.datumAgreement</code> <small>line 331</small></li><li id=L337><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualConditionalLaw.datumAgreement_nonneg</code> <small>line 337</small></li><li id=L346><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualConditionalLaw.observedAgreement_seed</code> <small>line 346</small><div class="doc"><p>The actual success observable factors through the complete visible datum;
+this justifies integrating a lower bound over visible-witness probability.</p></div><pre>theorem observedAgreement_seed (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (good : VisiblePolicies.LeftInput S k s d (Vector r) → VisiblePolicies.ResponseWitness k → Prop)
+    (x : AdviceLaw.FullSeed k (Fin S.occurrences) (Alphabet s) (Vector d) (Vector r)) :
+    VisiblePolicies.observedAgreement S labeling good
+      (AdviceLaw.seedToActualDraw x.1.1 x.1.2 x.2) =
+        datumAgreement S labeling good (AdviceLaw.completeObserve x) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="TransferredDecoding.lean.html#L208">OAI.MaxCutGames.Decoder.VisiblePolicies.LeftInput</a>, <a href="TransferredDecoding.lean.html#L198">OAI.MaxCutGames.Decoder.VisiblePolicies.ResponseWitness</a>, <a href="AdviceLaw.lean.html#L572">OAI.MaxCutGames.Decoder.AdviceLaw.FullSeed</a>, <a href="TransferredDecoding.lean.html#L292">OAI.MaxCutGames.Decoder.VisiblePolicies.observedAgreement</a>, <a href="AdviceLaw.lean.html#L345">OAI.MaxCutGames.Decoder.AdviceLaw.seedToActualDraw</a>, <a href="VisibleTransfer.lean.html#L331">OAI.MaxCutGames.Decoder.ActualConditionalLaw.datumAgreement</a>, <a href="AdviceLaw.lean.html#L612">OAI.MaxCutGames.Decoder.AdviceLaw.completeObserve</a></p></li><li id=L393><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.univ_congr_inline_SelectedFiberLaw</code> <small>line 393</small><div class="doc"><p>The universe finset is independent of the chosen finite enumeration.
+The instances are explicit so elaboration need not unfold either enumeration.</p></div><pre>private theorem univ_congr_inline_SelectedFiberLaw {X : Type*} (i j : Fintype X) :
+    @Finset.univ X i = @Finset.univ X j := by
+…</pre></li><li id=L398><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.condition_prob_enumeration</code> <small>line 398</small></li><li id=L413><b>def</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumLeft</code> <small>line 413</small></li><li id=L416><b>def</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumMatrix</code> <small>line 416</small></li><li id=L419><b>def</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumProjection</code> <small>line 419</small></li><li id=L422><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumLeft_eq</code> <small>line 422</small></li><li id=L428><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumMatrix_rows</code> <small>line 428</small></li><li id=L432><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumMatrix_rowAdvice</code> <small>line 432</small></li><li id=L444><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.slice_assemble_iff</code> <small>line 444</small><div class="doc"><p>Every event membership uses the same selected normalized witness on the
+entire complete-data fiber.</p></div><pre>theorem slice_assemble_iff (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (N : AdviceLaw.PrivateMap data) :
+    slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true ↔
+      mapEquiv k s ((datumMatrix S data N).comp (datumProjection S data)) ∈
+        (normalizedDescription S labeling α hα hsmall (datumLeft S data) hgood).toSlice.points := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransfer.lean.html#L413">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="AdviceLaw.lean.html#L587">OAI.MaxCutGames.Decoder.AdviceLaw.PrivateMap</a>, <a href="AdviceLaw.lean.html#L615">OAI.MaxCutGames.Decoder.AdviceLaw.completeAssemble</a>, <a href="VisibleTransfer.lean.html#L416">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumMatrix</a>, <a href="VisibleTransfer.lean.html#L419">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumProjection</a></p></li><li id=L463><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.target_assemble_iff</code> <small>line 463</small><div class="doc"><p>On the selected event, the actual full-table target-hit predicate equals
+projected affine equality with the very same normalized coefficient/intercept.</p></div><pre>theorem target_assemble_iff (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (N : AdviceLaw.PrivateMap data)
+    (hN : slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true) :
+    targetHit S k s d r labeling α (AdviceLaw.completeAssemble data N) = true ↔
+      TableKeysRestoration.projectedAnswer S k s d labeling (PaddedLaw.choiceMask data.2.1)
+        (RawPrivateTable.supported (PaddedLaw.choiceMask data.2.1) (ActualGame.names S)
+          data.1.1 (PaddedLaw.choiceSlots data.2.1)) ((datumMatrix S data N).prod data.2.2.1) =
+        datumMatrix S data N (datumProjection S data
+          (normalizedResponse S labeling α hα hsmall (datumLeft S data) hgood).coefficient) +
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransfer.lean.html#L413">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="AdviceLaw.lean.html#L587">OAI.MaxCutGames.Decoder.AdviceLaw.PrivateMap</a>, <a href="AdviceLaw.lean.html#L615">OAI.MaxCutGames.Decoder.AdviceLaw.completeAssemble</a>, <a href="TableKeysGame.lean.html#L316">OAI.MaxCutGames.Decoder.TableKeysRestoration.projectedAnswer</a>, <a href="PaddedLaw.lean.html#L525">OAI.MaxCutGames.Decoder.PaddedLaw.choiceMask</a>, <a href="PaddedLaw.lean.html#L532">OAI.MaxCutGames.Decoder.PaddedLaw.choiceSlots</a>, <a href="VisibleTransfer.lean.html#L416">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumMatrix</a>, <a href="VisibleTransfer.lean.html#L419">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumProjection</a></p></li><li id=L498><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.exists_selected_private</code> <small>line 498</small><div class="doc"><p>Positive mass supplies a supporting private coordinate in the selected
+fiber; neither a hidden matrix nor good advice is an additional premise.</p></div><pre>theorem exists_selected_private (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α β : ℝ) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1) (data : Datum S k s d r)
+    (positive : 0 &lt; (law S k s d r β hβ hβ&#x27;).probability
+      (VisibleTransfer.fiberEvent AdviceLaw.completeObserve data (slice S k s d r labeling α))) :
+    ∃ N : AdviceLaw.PrivateMap data,
+      slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransfer.lean.html#L16">OAI.MaxCutGames.Decoder.VisibleTransfer.fiberEvent</a>, <a href="AdviceLaw.lean.html#L612">OAI.MaxCutGames.Decoder.AdviceLaw.completeObserve</a>, <a href="AdviceLaw.lean.html#L587">OAI.MaxCutGames.Decoder.AdviceLaw.PrivateMap</a>, <a href="AdviceLaw.lean.html#L615">OAI.MaxCutGames.Decoder.AdviceLaw.completeAssemble</a></p></li><li id=L524><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.good_of_selected_private</code> <small>line 524</small></li><li id=L538><b>def</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.selectedPrivateEquiv</code> <small>line 538</small><div class="doc"><p>The actual selected private coordinates are in bijection with the complete
+projected affine slice. The supporting point is used only to state its column
+equations; the canonical visible base still defines the private coordinates.</p></div><pre>def selectedPrivateEquiv (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (Nstar : AdviceLaw.PrivateMap data)
+    (hstar : slice S k s d r labeling α (AdviceLaw.completeAssemble data Nstar) = true) :
+    {N : AdviceLaw.PrivateMap data //
+      slice S k s d r labeling α (AdviceLaw.completeAssemble data N) = true} ≃
+      RowErasureSliceQuotient.AffineSlice data.1.2
+        ((normalizedResponse S labeling α hα hsmall (datumLeft S data) hgood).columns.map
+          (datumProjection S data)) (datumMatrix S data Nstar) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransfer.lean.html#L413">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="AdviceLaw.lean.html#L587">OAI.MaxCutGames.Decoder.AdviceLaw.PrivateMap</a>, <a href="AdviceLaw.lean.html#L615">OAI.MaxCutGames.Decoder.AdviceLaw.completeAssemble</a>, <a href="VisibleTransfer.lean.html#L419">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumProjection</a>, <a href="VisibleTransfer.lean.html#L416">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumMatrix</a></p></li><li id=L586><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.selectedPrivateEquiv_val</code> <small>line 586</small></li><li id=L598><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.conditional_eq_transferred</code> <small>line 598</small><div class="doc"><p>Exact conditional target probability, with no assumed uniformity premise.</p></div><pre>theorem conditional_eq_transferred (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (β : ℝ) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1)
+    (data : Datum S k s d r) (hgood : GoodAdvice S labeling α (datumLeft S data))
+    (Nstar : AdviceLaw.PrivateMap data)
+    (hstar : slice S k s d r labeling α (AdviceLaw.completeAssemble data Nstar) = true)
+    (positive : 0 &lt; (law S k s d r β hβ hβ&#x27;).probability
+      (VisibleTransfer.fiberEvent AdviceLaw.completeObserve data (slice S k s d r labeling α))) :
+    ((law S k s d r β hβ hβ&#x27;).condition
+      (VisibleTransfer.fiberEvent AdviceLaw.completeObserve data (slice S k s d r labeling α))
+        positive).probability (targetHit S k s d r labeling α) =
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransfer.lean.html#L413">OAI.MaxCutGames.Decoder.SelectedFiberLaw.datumLeft</a>, <a href="AdviceLaw.lean.html#L587">OAI.MaxCutGames.Decoder.AdviceLaw.PrivateMap</a>, <a href="AdviceLaw.lean.html#L615">OAI.MaxCutGames.Decoder.AdviceLaw.completeAssemble</a>, <a href="VisibleTransfer.lean.html#L16">OAI.MaxCutGames.Decoder.VisibleTransfer.fiberEvent</a>, <a href="AdviceLaw.lean.html#L612">OAI.MaxCutGames.Decoder.AdviceLaw.completeObserve</a></p></li><li id=L682><b>theorem</b> <code>OAI.MaxCutGames.Decoder.SelectedFiberLaw.visibleWitness_decoding</code> <small>line 682</small><div class="doc"><p>Every complete visible datum selected by the actual witness event pays the
+private-decoding success constant. Good advice and a nonempty transferred
+slice follow from positivity and are not additional hypotheses.</p></div><pre>theorem visibleWitness_decoding (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α : ℝ) (hα : 0 &lt; α) (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (β : ℝ) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1) (data : Datum S k s d r)
+    (hvisible : VisibleTransfer.visibleWitness (law S k s d r β hβ hβ&#x27;)
+      AdviceLaw.completeObserve (slice S k s d r labeling α)
+      (targetHit S k s d r labeling α) (α / 4) data = true) :
+    (α / 8) ^ 2 / (2 : ℝ) ^ (s * r) / (2 : ℝ) ^ r ≤
+      ActualConditionalLaw.datumAgreement S labeling (goodPredicate S labeling α hα hsmall) data := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="VisibleTransfer.lean.html#L57">OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</a>, <a href="AdviceLaw.lean.html#L612">OAI.MaxCutGames.Decoder.AdviceLaw.completeObserve</a>, <a href="VisibleTransfer.lean.html#L331">OAI.MaxCutGames.Decoder.ActualConditionalLaw.datumAgreement</a></p></li><li id=L724><b>def</b> <code>OAI.MaxCutGames.Decoder.ActualProjectedTransfer.slopeVariation</code> <small>line 724</small></li><li id=L732><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualProjectedTransfer.visible_mass</code> <small>line 732</small><div class="doc"><p>The actual complete-data event has positive mass depending only on the
+fixed inverse and alphabet parameters.</p></div><pre>theorem visible_mass (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α g₀ β : ℝ) (hα : 0 &lt; α) (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1)
+    (hgood : g₀ ≤ ActualGoodRows.adviceMass S k s d r labeling α)
+    (hvariation : slopeVariation k s d β ≤ ConstantSelection.variationBudget α g₀ s r) :
+    ConstantSelection.visibleMass α g₀ s r ≤
+      ((ActualSeedEvents.law S k s d r β hβ hβ&#x27;).pushforward AdviceLaw.completeObserve).probability
+        (VisibleTransfer.visibleWitness (ActualSeedEvents.law S k s d r β hβ hβ&#x27;)
+          AdviceLaw.completeObserve (ActualSeedEvents.slice S k s d r labeling α)
+          (ActualSeedEvents.targetHit S k s d r labeling α) (α / 4)) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="ActualGoodRows.lean.html#L48">OAI.MaxCutGames.Decoder.ActualGoodRows.adviceMass</a>, <a href="VisibleTransfer.lean.html#L724">OAI.MaxCutGames.Decoder.ActualProjectedTransfer.slopeVariation</a>, <a href="ActualGoodRows.lean.html#L120">OAI.MaxCutGames.Decoder.ConstantSelection.variationBudget</a>, <a href="ActualGoodRows.lean.html#L108">OAI.MaxCutGames.Decoder.ConstantSelection.visibleMass</a>, <a href="SelectedPolicies.lean.html#L212">OAI.MaxCutGames.Decoder.ActualSeedEvents.law</a>, <a href="AdviceLaw.lean.html#L612">OAI.MaxCutGames.Decoder.AdviceLaw.completeObserve</a>, <a href="VisibleTransfer.lean.html#L57">OAI.MaxCutGames.Decoder.VisibleTransfer.visibleWitness</a>, <a href="SelectedPolicies.lean.html#L225">OAI.MaxCutGames.Decoder.ActualSeedEvents.slice</a>, <a href="SelectedPolicies.lean.html#L230">OAI.MaxCutGames.Decoder.ActualSeedEvents.targetHit</a></p></li><li id=L759><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualProjectedTransfer.event_expectation_lower</code> <small>line 759</small><div class="doc"><p>Integrating a pointwise lower bound over a genuine probability event.</p></div><pre>theorem event_expectation_lower {Ω : Type*} [Fintype Ω]
+    (μ : FiniteDistribution Ω) (event : Ω → Bool) (f : Ω → ℝ)
+    (γ₁ γ₂ : ℝ) (hγ₂ : 0 ≤ γ₂) (hf : ∀ x, 0 ≤ f x)
+    (hmass : γ₁ ≤ μ.probability event)
+    (hpoint : ∀ x, event x = true → γ₂ ≤ f x) :
+    γ₁ * γ₂ ≤ μ.expectation f := by
+…</pre></li><li id=L779><b>theorem</b> <code>OAI.MaxCutGames.Decoder.ActualProjectedTransfer.actual_success_lower</code> <small>line 779</small><div class="doc"><p>End-to-end lower bound for actual local stochastic responses. No hidden
+matrix, selected witness, or opposing observation is passed to a prover.</p></div><pre>theorem actual_success_lower (S : Source)
+    (labeling : Fin (TableKeysGame.vertexCount S k s d) → Fin (2 ^ s))
+    (α g₀ β : ℝ) (hα : 0 &lt; α)
+    (hsmall : 1 / (2 : ℝ) ^ (s - r) &lt; α / 8)
+    (hβ : 0 ≤ β) (hβ&#x27; : β ≤ 1)
+    (hgood : g₀ ≤ ActualGoodRows.adviceMass S k s d r labeling α)
+    (hvariation : slopeVariation k s d β ≤ ConstantSelection.variationBudget α g₀ s r) :
+    ConstantSelection.decodingMass α g₀ s r ≤
+      (ActualSeedEvents.law S k s d r β hβ hβ&#x27;).expectation
+        (fun seed =&gt; VisiblePolicies.observedAgreement S labeling
+          (SelectedPolicies.goodPredicate S labeling α hα hsmall)
+          (AdviceLaw.seedToActualDraw seed.1.1 seed.1.2 seed.2)) := by
+…</pre><p class="refs">Mentions: <a href="TableKeysGame.lean.html#L25">OAI.MaxCutGames.Decoder.TableKeysGame.vertexCount</a>, <a href="ActualGoodRows.lean.html#L48">OAI.MaxCutGames.Decoder.ActualGoodRows.adviceMass</a>, <a href="VisibleTransfer.lean.html#L724">OAI.MaxCutGames.Decoder.ActualProjectedTransfer.slopeVariation</a>, <a href="ActualGoodRows.lean.html#L120">OAI.MaxCutGames.Decoder.ConstantSelection.variationBudget</a>, <a href="ActualGoodRows.lean.html#L115">OAI.MaxCutGames.Decoder.ConstantSelection.decodingMass</a>, <a href="SelectedPolicies.lean.html#L212">OAI.MaxCutGames.Decoder.ActualSeedEvents.law</a>, <a href="TransferredDecoding.lean.html#L292">OAI.MaxCutGames.Decoder.VisiblePolicies.observedAgreement</a>, <a href="SelectedPolicies.lean.html#L126">OAI.MaxCutGames.Decoder.SelectedPolicies.goodPredicate</a>, <a href="AdviceLaw.lean.html#L345">OAI.MaxCutGames.Decoder.AdviceLaw.seedToActualDraw</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

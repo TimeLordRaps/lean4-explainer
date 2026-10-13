@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/GroupTheory/PolycyclicRecognition/Analysis/BoundedPathGrowth.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/GroupTheory/PolycyclicRecognition/Analysis/BoundedPathGrowth.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">GroupTheory</a> / <a href="../index.html">PolycyclicRecognition</a> / <a href="index.html">Analysis</a> / <span>BoundedPathGrowth.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">GroupTheory</a>/<a href="../index.html">PolycyclicRecognition</a>/<a href="index.html">Analysis</a>/<span>BoundedPathGrowth.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/GroupTheory/PolycyclicRecognition/Analysis/BoundedPathGrowth.lean#L1">source</a></p><div class="doc"><h3>From bounded-height word paths to polynomial growth</h3><p>Word chains and a uniform metric multiplicity bound turn polynomial packing
+of bounded-height chains into polynomial growth. Gromov's theorem then gives
+virtual nilpotence of the subgroup.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>inductive</b> <code>OAI.PolycyclicRecognition.BoundedHeightChain</code> <small>line 20</small><div class="doc"><p>A finite chain whose steps and heights are uniformly bounded.</p></div><pre>inductive BoundedHeightChain (π : X → W) (L M : ℝ) : ℕ → X → X → Prop
+  | nil (x : X) (hheight : ‖π x‖ ≤ M) : BoundedHeightChain π L M 0 x x
+  | cons {n : ℕ} {x y z : X} (hheight : ‖π x‖ ≤ M) (hstep : dist x y ≤ L)
+      (tail : BoundedHeightChain π L M n y z) : BoundedHeightChain π L M (n + 1) x z
+
+/-- A pointwise height domination transfers every bounded-height chain. -/</pre></li><li id=L26><b>theorem</b> <code>OAI.PolycyclicRecognition.BoundedHeightChain.change_height</code> <small>line 26</small><div class="doc"><p>A pointwise height domination transfers every bounded-height chain.</p></div><pre>theorem BoundedHeightChain.change_height
+    {V : Type*} [NormedAddCommGroup V] {π : X → W} {π&#x27; : X → V}
+    {L M M&#x27; : ℝ} {n : ℕ} {x y : X}
+    (h : BoundedHeightChain π L M n x y)
+    (hheight : ∀ z, ‖π z‖ ≤ M → ‖π&#x27; z‖ ≤ M&#x27;) :
+    BoundedHeightChain π&#x27; L M&#x27; n x y := by
+…</pre><p class="refs">Mentions: <a href="BoundedPathGrowth.lean.html#L20">OAI.PolycyclicRecognition.BoundedHeightChain</a></p></li><li id=L37><b>def</b> <code>OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</code> <small>line 37</small><div class="doc"><p>Polynomial packing of bounded-height chains in the Lie model.</p></div><pre>def PolynomialBoundedChainPacking [DecidableEq X] (π : X → W) : Prop :=
+…</pre></li><li id=L47><b>theorem</b> <code>OAI.PolycyclicRecognition.polynomialBoundedChainPacking_of_height_domination</code> <small>line 47</small><div class="doc"><p>It suffices to pack chains for a height dominated by the height in the
+application, as when all representation characters factor through the
+canonical quotient.</p></div><pre>theorem polynomialBoundedChainPacking_of_height_domination
+    {V : Type*} [NormedAddCommGroup V] [DecidableEq X]
+    (π : X → W) (π&#x27; : X → V) (C : ℝ) (hC : 0 ≤ C)
+    (hdom : ∀ x, ‖π&#x27; x‖ ≤ C * ‖π x‖)
+    (packing : PolynomialBoundedChainPacking π&#x27;) : PolynomialBoundedChainPacking π := by
+…</pre><p class="refs">Mentions: <a href="BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li><li id=L59><b>theorem</b> <code>OAI.PolycyclicRecognition.boundedHeightChain_of_word</code> <small>line 59</small></li><li id=L73><b>theorem</b> <code>OAI.PolycyclicRecognition.boundedHeightChain_of_mem_wordBall</code> <small>line 73</small></li><li id=L85><b>theorem</b> <code>OAI.PolycyclicRecognition.virtuallyNilpotent_of_boundedHeight_steps</code> <small>line 85</small><div class="doc"><p>A generating set, bounded steps and bounded multiplicity suffice for the
+intrinsic growth argument. No metric or undistortion hypothesis on the domain
+is required.</p></div><pre>theorem virtuallyNilpotent_of_boundedHeight_steps
+    {J : Type*} [Group J] [DecidableEq J] [DecidableEq X]
+    (gromov : GromovPolynomialGrowthInput J)
+    (f : J → X) (π : X → W) (packing : PolynomialBoundedChainPacking π)
+    (T : Finset J) (hsymm : ∀ t ∈ T, t⁻¹ ∈ T)
+    (hgen : Subgroup.closure (T : Set J) = ⊤)
+    {L M : ℝ} (hL : 0 ≤ L) (hM : 0 ≤ M)
+    (hheight : ∀ j, ‖π (f j)‖ ≤ M)
+    (hstep : ∀ j t, t ∈ T → dist (f j) (f (j * t)) ≤ L)
+    (N : ℕ) (hN : ∀ (c : X) (A : Finset J),
+      (∀ j ∈ A, dist (f j) c ≤ 1) → A.card ≤ N) :
+    Group.IsVirtuallyNilpotent J := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li><li id=L107><b>theorem</b> <code>OAI.PolycyclicRecognition.virtuallyNilpotent_of_boundedHeight</code> <small>line 107</small><div class="doc"><p>Intrinsic word growth follows from bounded height and the geometric chain
+packing property, even when the chosen proper group metric is distorted with
+respect to the intrinsic word metric.</p></div><pre>theorem virtuallyNilpotent_of_boundedHeight
+    {J : Type*} [Group J] [MetricSpace J] [IsIsometricSMul J J]
+    [Group.FG J] [DecidableEq J] [DecidableEq X]
+    (gromov : GromovPolynomialGrowthInput J)
+    (f : J → X) (π : X → W) (packing : PolynomialBoundedChainPacking π)
+    (hfinite : ∀ R : ℝ, (Metric.closedBall (1 : J) R).Finite)
+    {K C K&#x27; C&#x27; M : ℝ} (hK : 0 ≤ K) (hC : 0 ≤ C) (hK&#x27; : 0 ≤ K&#x27;) (hM : 0 ≤ M)
+    (hupper : ∀ x y, dist (f x) (f y) ≤ K * dist x y + C)
+    (hlower : ∀ x y, dist x y ≤ K&#x27; * dist (f x) (f y) + C&#x27;)
+    (hheight : ∀ j, ‖π (f j)‖ ≤ M) : Group.IsVirtuallyNilpotent J := by
+…</pre><p class="refs">Mentions: <a href="../Algebra/GromovInput.lean.html#L33">OAI.PolycyclicRecognition.GromovPolynomialGrowthInput</a>, <a href="BoundedPathGrowth.lean.html#L37">OAI.PolycyclicRecognition.PolynomialBoundedChainPacking</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

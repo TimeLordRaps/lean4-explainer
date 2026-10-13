@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/UniformInterpolation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/UniformInterpolation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>UniformInterpolation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>UniformInterpolation.lean</span></code></h1><p class="muted">14 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/UniformInterpolation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Problem358.SupportingMapInterpolation.supports_of_finite_affine_maximizers</code> <small>line 16</small><div class="doc"><p>Finite-affine maximizing selections furnish global supporting maps directly.</p></div><pre>theorem supports_of_finite_affine_maximizers
+    {I F : Type*} [Fintype I] [Nonempty I]
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+    (y : I → F) (c : I → ℝ) {T : F → F}
+    (hactive : ∀ x, ∃ i, T x = y i ∧ FiniteAffine.Maximizes y c x i) :
+    Supports (FiniteAffine.potential y c) T := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificate.lean.html#L20">OAI.Problem358.FiniteAffine.Maximizes</a>, <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a>, <a href="AffineCertificate.lean.html#L16">OAI.Problem358.FiniteAffine.potential</a></p></li><li id=L30><b>theorem</b> <code>OAI.Problem358.SupportingMapInterpolation.exists_integral_interpolation_constant</code> <small>line 30</small><div class="doc"><p>Full quantitative interpolation for bounded supporting maps over an arbitrary
+compact convex body. Its geometric constant is independent of the potentials,
+maps, atom counts, masses, and slope separation.</p></div><pre>theorem exists_integral_interpolation_constant
+    {ι : Type*} [Fintype ι]
+    (μ : Measure (EuclideanSpace ℝ ι)) [Measure.IsAddHaarMeasure μ]
+    {K : Set (EuclideanSpace ℝ ι)}
+    (hKc : IsCompact K) (hK : Convex ℝ K) (hKi : (interior K).Nonempty)
+    (L : ℝ) :
+    ∃ B : ℝ, 0 ≤ B ∧
+      ∀ (u v : EuclideanSpace ℝ ι → ℝ)
+        (T S : EuclideanSpace ℝ ι → EuclideanSpace ℝ ι),
+      Continuous u → Continuous v → Supports u T → Supports v S →
+      Measurable T → Measurable S → (∀ x, ‖T x‖ ≤ L) → (∀ x, ‖S x‖ ≤ L) →
+      ∀ h : ℝ, 0 &lt; h →
+…</pre><p class="refs">Mentions: <a href="SupportingInterpolation.lean.html#L15">OAI.Problem358.SupportingMapInterpolation.Supports</a></p></li><li id=L63><b>lemma</b> <code>OAI.Problem358.one_third_rpow_cube</code> <small>line 63</small><div class="doc"><p>The real one-third power is a nonnegative cube root.</p></div><pre>lemma one_third_rpow_cube {w : ℝ} (hw : 0 ≤ w) :
+    (Real.rpow w (1 / 3 : ℝ)) ^ 3 = w := by
+…</pre></li><li id=L75><b>theorem</b> <code>OAI.Problem358.stability_of_slice_bound</code> <small>line 75</small><div class="doc"><p>The scalar optimization in the gradient-interpolation argument.
+The hypothesis is the squared slice estimate, valid at every positive scale.
+This formulation includes zero Wasserstein distance without a limiting argument.</p></div><pre>theorem stability_of_slice_bound {D w A B : ℝ}
+    (hD : 0 ≤ D) (hw : 0 ≤ w) (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (hbound : ∀ h : ℝ, 0 &lt; h → D ^ 2 ≤ A * w ^ 2 / h ^ 2 + B * h) :
+    D ≤ Real.sqrt (A + B) * Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li><li id=L111><b>theorem</b> <code>OAI.Problem358.stability_of_cubic_bound</code> <small>line 111</small><div class="doc"><p>A cubic stability estimate implies a one-third Hölder estimate.</p></div><pre>theorem stability_of_cubic_bound {D w A : ℝ}
+    (hD : 0 ≤ D) (hw : 0 ≤ w) (hA : 0 ≤ A)
+    (hbound : D ^ 3 ≤ A * w) :
+    D ≤ Real.rpow A (1 / 3 : ℝ) * Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li><li id=L122><b>theorem</b> <code>OAI.Problem358.stability_of_potential_slice_bound</code> <small>line 122</small><div class="doc"><p>Combine a Lipschitz bound on potentials with the squared slice estimate.</p></div><pre>theorem stability_of_potential_slice_bound {D F w A B P : ℝ}
+    (hD : 0 ≤ D) (hF : 0 ≤ F) (hw : 0 ≤ w)
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hP : 0 ≤ P)
+    (hpotential : F ≤ P * w)
+    (hbound : ∀ h : ℝ, 0 &lt; h → D ^ 2 ≤ A * F ^ 2 / h ^ 2 + B * h) :
+    D ≤ Real.sqrt (A * P ^ 2 + B) * Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.Problem358.stability_of_local_slice_bound</code> <small>line 141</small><div class="doc"><p>Small-scale interpolation estimates suffice when a uniform map bound is available.
+The extra coefficient absorbs all scales larger than <code>H</code>; this is useful when the
+boundary-strip estimate is obtained by contracting the source inside an interior ball.</p></div><pre>theorem stability_of_local_slice_bound {D w A B M H : ℝ}
+    (hD : 0 ≤ D) (hw : 0 ≤ w) (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (hM : D ≤ M) (hH : 0 &lt; H)
+    (hbound : ∀ h : ℝ, 0 &lt; h → h ≤ H →
+      D ^ 2 ≤ A * w ^ 2 / h ^ 2 + B * h) :
+    D ≤ Real.sqrt (A + (B + M ^ 2 / H)) * Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li><li id=L178><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.integral_eq</code> <small>line 178</small><div class="doc"><p>Normalizing the source multiplies every real integral by the same
+nonnegative scalar. No finiteness assumptions are needed for this identity.</p></div><pre>theorem integral_eq (f : E d → ℝ) :
+    (∫ x, f x ∂uniformMeasure K) =
+      ((volume K)⁻¹).toReal * ∫ x in K, f x := by
+…</pre></li><li id=L184><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.mapL2Dist_sq_eq</code> <small>line 184</small><div class="doc"><p>The squared map distance is the normalized unnormalized-source energy.</p></div><pre>theorem mapL2Dist_sq_eq (T S : E d → E d) :
+    mapL2Dist (uniformMeasure K) T S ^ 2 =
+      ((volume K)⁻¹).toReal * ∫ x in K, ‖T x - S x‖ ^ 2 := by
+…</pre></li><li id=L193><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.slice_bound_of_raw</code> <small>line 193</small><div class="doc"><p>Transfer the raw finite-difference estimate to the exact normalized-source
+and map-distance conventions of the qualified problem.</p></div><pre>theorem slice_bound_of_raw
+    {T S : E d → E d} {f : E d → ℝ} {A B h : ℝ}
+    (hraw : (∫ x in K, ‖T x - S x‖ ^ 2) ≤
+      (A / h ^ 2) * (∫ x in K, f x ^ 2) + B * h) :
+    mapL2Dist (uniformMeasure K) T S ^ 2 ≤
+      (A / h ^ 2) * (∫ x, f x ^ 2 ∂uniformMeasure K) +
+        (((volume K)⁻¹).toReal * B) * h := by
+…</pre></li><li id=L209><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.one_third_bound_of_raw</code> <small>line 209</small><div class="doc"><p>Raw volume interpolation plus a normalized squared-potential estimate
+implies the desired one-third bound, including zero target distance.</p></div><pre>theorem one_third_bound_of_raw
+    {T S : E d → E d} {f : E d → ℝ} {A B P w : ℝ}
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hw : 0 ≤ w)
+    (hpotential : (∫ x, f x ^ 2 ∂uniformMeasure K) ≤ P ^ 2 * w ^ 2)
+    (hraw : ∀ h : ℝ, 0 &lt; h → (∫ x in K, ‖T x - S x‖ ^ 2) ≤
+      (A / h ^ 2) * (∫ x in K, f x ^ 2) + B * h) :
+    mapL2Dist (uniformMeasure K) T S ≤
+      Real.sqrt (A * P ^ 2 + ((volume K)⁻¹).toReal * B) *
+        Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li><li id=L231><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.one_third_bound_of_raw_of_potential</code> <small>line 231</small><div class="doc"><p>Norm-form version matching the manuscript's Lipschitz potential estimate.</p></div><pre>theorem one_third_bound_of_raw_of_potential
+    {T S : E d → E d} {f : E d → ℝ} {A B P w : ℝ}
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (hP : 0 ≤ P) (hw : 0 ≤ w)
+    (hpotential : Real.sqrt (∫ x, f x ^ 2 ∂uniformMeasure K) ≤ P * w)
+    (hraw : ∀ h : ℝ, 0 &lt; h → (∫ x in K, ‖T x - S x‖ ^ 2) ≤
+      (A / h ^ 2) * (∫ x in K, f x ^ 2) + B * h) :
+    mapL2Dist (uniformMeasure K) T S ≤
+      Real.sqrt (A * P ^ 2 + ((volume K)⁻¹).toReal * B) *
+        Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li><li id=L261><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.supports_add_const</code> <small>line 261</small><div class="doc"><p>Adding a constant to a potential does not change its supporting map.</p></div><pre>theorem supports_add_const {d : ℕ} {u : E d → ℝ} {T : E d → E d}
+    (hu : Supports u T) (c : ℝ) : Supports (fun x =&gt; u x + c) T := by
+…</pre></li><li id=L271><b>theorem</b> <code>OAI.Problem358.UniformInterpolation.exists_normalized_one_third_constant</code> <small>line 271</small><div class="doc"><p>The full normalized interpolation theorem, with no residual geometric or
+finite-difference hypotheses.  The potential estimate may be supplied modulo
+an arbitrary additive constant, as in a variance bound.</p></div><pre>theorem exists_normalized_one_third_constant
+    {d : ℕ} {K : Set (E d)}
+    (hKc : IsCompact K) (hK : Convex ℝ K) (hKi : (interior K).Nonempty)
+    (L P : ℝ) :
+    ∃ C : ℝ, 0 ≤ C ∧
+      ∀ (u v : E d → ℝ) (T S : E d → E d),
+      Continuous u → Continuous v → Supports u T → Supports v S →
+      Measurable T → Measurable S → (∀ x, ‖T x‖ ≤ L) → (∀ x, ‖S x‖ ≤ L) →
+      ∀ w : ℝ, 0 ≤ w →
+      (∃ c : ℝ, (∫ x, (u x - v x - c) ^ 2 ∂uniformMeasure K) ≤ P ^ 2 * w ^ 2) →
+      mapL2Dist (uniformMeasure K) T S ≤ C * Real.rpow w (1 / 3 : ℝ) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

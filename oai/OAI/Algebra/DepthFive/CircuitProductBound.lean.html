@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/CircuitProductBound.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/CircuitProductBound.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>CircuitProductBound.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>CircuitProductBound.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/CircuitProductBound.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>def</b> <code>OAI.Problem335.LowProductBound</code> <small>line 14</small><div class="doc"><p>The product estimate required when every positive formal degree is small.</p></div><pre>def LowProductBound {K : Type u} [CommSemiring K] {σ : Type v}
+    (R : MvPolynomial σ K → ℝ) (d : ℕ) (t B : ℝ) : Prop :=
+…</pre></li><li id=L22><b>def</b> <code>OAI.Problem335.HighProductBound</code> <small>line 22</small><div class="doc"><p>The product estimate required after opening one large middle factor.</p></div><pre>def HighProductBound {K : Type u} [CommSemiring K] {σ : Type v}
+    (R : MvPolynomial σ K → ℝ) (d : ℕ) (t B : ℝ) : Prop :=
+…</pre></li><li id=L33><b>theorem</b> <code>OAI.Problem335.positive_middle_product_measure_le</code> <small>line 33</small><div class="doc"><p>Opening one high middle factor, or applying the all-low estimate, bounds
+an actual list of positive-degree middle-gate occurrences.</p></div><pre>theorem positive_middle_product_measure_le
+    {K : Type u} [CommSemiring K] {n : ℕ} (c : Depth5Circuit K n)
+    (R : MvPolynomial (Fin n × Fin n × Fin n) K → ℝ)
+    (hzero : R 0 = 0) (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (d : ℕ) (t B : ℝ) (hB : 0 ≤ B)
+    (hlow : LowProductBound R d t B) (hhigh : HighProductBound R d t B)
+    (l : List (Fin c.middleCount))
+    (hpos : ∀ j ∈ l, 0 &lt; c.middleDegree j)
+    (hdegree : (l.map c.middleDegree).sum = d) :
+    R (l.map (middleValue c)).prod ≤ (circuitSize c : ℝ) * B := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DepthFive.lean.html#L20">OAI.Problem335.Depth5Circuit</a>, <a href="CircuitProductBound.lean.html#L14">OAI.Problem335.LowProductBound</a>, <a href="CircuitProductBound.lean.html#L22">OAI.Problem335.HighProductBound</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L69">OAI.Problem335.middleValue</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L88">OAI.Problem335.circuitSize</a></p></li><li id=L110><b>theorem</b> <code>OAI.Problem335.circuit_measure_le_of_product_estimates</code> <small>line 110</small><div class="doc"><p>The manuscript's gate-count reduction instantiated with the actual circuit
+normal forms. All remaining hypotheses are bounds on homogeneous products,
+not circuit-specific summands or wire counts.</p></div><pre>theorem circuit_measure_le_of_product_estimates
+    {K : Type u} [CommSemiring K] {n : ℕ} (c : Depth5Circuit K n)
+    (R : MvPolynomial (Fin n × Fin n × Fin n) K → ℝ)
+    (hzero : R 0 = 0) (hadd : ∀ x y, R (x + y) ≤ R x + R y)
+    (hscale : ∀ a p, R (MvPolynomial.C a * p) ≤ R p)
+    (d : ℕ) (houtput : c.outputDegree = d) (t B : ℝ) (hB : 0 ≤ B)
+    (hlow : LowProductBound R d t B) (hhigh : HighProductBound R d t B) :
+    R (circuitValue c) ≤ (circuitSize c : ℝ) ^ 2 * B := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/DepthFive.lean.html#L20">OAI.Problem335.Depth5Circuit</a>, <a href="CircuitProductBound.lean.html#L14">OAI.Problem335.LowProductBound</a>, <a href="CircuitProductBound.lean.html#L22">OAI.Problem335.HighProductBound</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L82">OAI.Problem335.circuitValue</a>, <a href="../../../ComparatorChallenges/DepthFive.lean.html#L88">OAI.Problem335.circuitSize</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/PCP/KernelIteration.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/PCP/KernelIteration.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">PCP</a> / <span>KernelIteration.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">PCP</a>/<span>KernelIteration.lean</span></code></h1><p class="muted">39 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/PCP/KernelIteration.lean#L1">source</a></p><div class="doc"><p>Independent repetitions of the actual conditional projection kernel. The
+resulting game has precisely the original game's product question law. A
+successor tuple is a reindexed independent product, so collision bounds on the
+product apply to unrestricted strategies on whole tuples.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>def</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.repetition</code> <small>line 24</small></li><li id=L37><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.repetition_accepts_iff</code> <small>line 37</small></li><li id=L44><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.toGame_repetition</code> <small>line 44</small></li><li id=L62><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.eq_of_data_eq</code> <small>line 62</small></li><li id=L74><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.repetition_succ</code> <small>line 74</small><div class="doc"><p>Separate the first coordinate without restricting answer dependence on
+any coordinate of the complete local question tuple.</p></div><pre>theorem repetition_succ (K : ProjectionKernel Q₁ Q₂ A₁ A₂) (n : Nat) :
+    K.repetition (n + 1) =
+      (K.product (K.repetition n)).reindex
+        (Fin.consEquiv (fun _ : Fin (n + 1) =&gt; Q₁))
+        (Fin.consEquiv (fun _ : Fin (n + 1) =&gt; Q₂))
+        (Fin.consEquiv (fun _ : Fin (n + 1) =&gt; A₁))
+        (Fin.consEquiv (fun _ : Fin (n + 1) =&gt; A₂)) := by
+…</pre><p class="refs">Mentions: <a href="Rounding.lean.html#L320">OAI.MaxCutGames.Repetition.ProjectionKernel</a>, <a href="ProductCollisionBounds.lean.html#L615">OAI.MaxCutGames.Repetition.ProjectionKernel.reindex</a></p></li><li id=L107><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.collisionValue_repetition_succ</code> <small>line 107</small></li><li id=L113><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.collisionValue_repetition_zero_le_one</code> <small>line 113</small></li><li id=L140><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.revealedProductWeight</code> <small>line 140</small><div class="doc"><p><code>mask i = false</code> reveals the first question, and <code>true</code> the second.</p></div><pre>def revealedProductWeight (weight : ι → α → β → ℝ) (mask : ι → Bool)
+    (fixedLeft : ι → α) (fixedRight : ι → β) (x : ι → α) (y : ι → β) : ℝ :=
+…</pre></li><li id=L146><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.revealedLeftWeight</code> <small>line 146</small></li><li id=L151><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.revealedRightWeight</code> <small>line 151</small></li><li id=L159><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.revealedProductWeight_factorizes</code> <small>line 159</small><div class="doc"><p>Exact factorization after fixing the selected endpoint at every position.
+No assumption on coordinate alphabets or probabilities is needed for this
+identity, so it applies separately at every fixed outside question tuple.</p></div><pre>theorem revealedProductWeight_factorizes (weight : ι → α → β → ℝ) (mask : ι → Bool)
+    (fixedLeft : ι → α) (fixedRight : ι → β) (x : ι → α) (y : ι → β) :
+    revealedProductWeight weight mask fixedLeft fixedRight x y =
+      revealedLeftWeight weight mask fixedLeft fixedRight x *
+        revealedRightWeight weight mask fixedLeft fixedRight y := by
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L140">OAI.MaxCutGames.Foundations.Repetition.revealedProductWeight</a>, <a href="KernelIteration.lean.html#L146">OAI.MaxCutGames.Foundations.Repetition.revealedLeftWeight</a>, <a href="KernelIteration.lean.html#L151">OAI.MaxCutGames.Foundations.Repetition.revealedRightWeight</a></p></li><li id=L174><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.revealedProductWeight_local_restrictions</code> <small>line 174</small><div class="doc"><p>Local answer tests are separate functions of the complete local question
+vectors. Multiplying by both tests leaves a product of two local weights.</p></div><pre>theorem revealedProductWeight_local_restrictions
+    (weight : ι → α → β → ℝ) (mask : ι → Bool)
+    (fixedLeft : ι → α) (fixedRight : ι → β)
+    (leftTest : (ι → α) → ℝ) (rightTest : (ι → β) → ℝ)
+    (x : ι → α) (y : ι → β) :
+    revealedProductWeight weight mask fixedLeft fixedRight x y * leftTest x * rightTest y =
+      (revealedLeftWeight weight mask fixedLeft fixedRight x * leftTest x) *
+      (revealedRightWeight weight mask fixedLeft fixedRight y * rightTest y) := by
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L140">OAI.MaxCutGames.Foundations.Repetition.revealedProductWeight</a>, <a href="KernelIteration.lean.html#L146">OAI.MaxCutGames.Foundations.Repetition.revealedLeftWeight</a>, <a href="KernelIteration.lean.html#L151">OAI.MaxCutGames.Foundations.Repetition.revealedRightWeight</a></p></li><li id=L187><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.productWeight_mass</code> <small>line 187</small></li><li id=L193><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.normalizedWeight</code> <small>line 193</small></li><li id=L196><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.normalizedWeight_isProbability</code> <small>line 196</small></li><li id=L206><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.normalized_productWeight</code> <small>line 206</small><div class="doc"><p>Normalizing an actual product weight gives the product of its separately
+normalized marginals. This is the finite conditional-independence identity.</p></div><pre>theorem normalized_productWeight (left : X → ℝ) (right : Y → ℝ)
+    (hleft : 0 &lt; ∑ x, left x) (hright : 0 &lt; ∑ y, right y) (xy : X × Y) :
+    normalizedWeight (fun z : X × Y =&gt; left z.1 * right z.2) xy =
+      normalizedWeight left xy.1 * normalizedWeight right xy.2 := by
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L193">OAI.MaxCutGames.Foundations.Repetition.normalizedWeight</a></p></li><li id=L216><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.normalized_rectangle_restriction</code> <small>line 216</small><div class="doc"><p>Conditioning a product law on separate local events keeps the two factors
+independent, with each conditioned on its own event.</p></div><pre>theorem normalized_rectangle_restriction
+    (left : X → ℝ) (right : Y → ℝ) (leftTest : X → ℝ) (rightTest : Y → ℝ)
+    (hleft : 0 &lt; ∑ x, left x * leftTest x)
+    (hright : 0 &lt; ∑ y, right y * rightTest y) (xy : X × Y) :
+    normalizedWeight
+      (fun z : X × Y =&gt; left z.1 * right z.2 * leftTest z.1 * rightTest z.2) xy =
+      normalizedWeight (fun x =&gt; left x * leftTest x) xy.1 *
+      normalizedWeight (fun y =&gt; right y * rightTest y) xy.2 := by
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L193">OAI.MaxCutGames.Foundations.Repetition.normalizedWeight</a></p></li><li id=L247><b>def</b> <code>OAI.MaxCutGames.Foundations.Repetition.normalizeOr</code> <small>line 247</small></li><li id=L255><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.sum_mul_normalizeOr</code> <small>line 255</small></li><li id=L272><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.local_completion_recombination</code> <small>line 272</small><div class="doc"><p>Exact reconstruction from two separately normalized local completion
+laws, valid even when either unnormalized row has mass zero.</p></div><pre>theorem local_completion_recombination
+    (left : X → ℝ) (right : Y → ℝ)
+    (hl : ∀ x, 0 ≤ left x) (hr : ∀ y, 0 ≤ right y)
+    (defaultLeft : FiniteDistribution X) (defaultRight : FiniteDistribution Y)
+    (c : ℝ) (x : X) (y : Y) :
+    (c * (∑ z, left z) * (∑ z, right z)) *
+      ((normalizeOr left hl defaultLeft).weight x *
+        (normalizeOr right hr defaultRight).weight y) = c * left x * right y := by
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L247">OAI.MaxCutGames.Foundations.Repetition.normalizeOr</a></p></li><li id=L287><b>theorem</b> <code>OAI.MaxCutGames.Foundations.Repetition.factorized_completion_row</code> <small>line 287</small><div class="doc"><p>The row mass appearing in reconstruction is the actual sum of product
+weights, not an assumed marginal identity.</p></div><pre>theorem factorized_completion_row
+    (left : X → ℝ) (right : Y → ℝ)
+    (hl : ∀ x, 0 ≤ left x) (hr : ∀ y, 0 ≤ right y)
+    (defaultLeft : FiniteDistribution X) (defaultRight : FiniteDistribution Y)
+    (c : ℝ) (xy : X × Y) :
+    (∑ z : X × Y, c * left z.1 * right z.2) *
+      ((normalizeOr left hl defaultLeft).product
+        (normalizeOr right hr defaultRight)).weight xy = c * left xy.1 * right xy.2 := by
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L247">OAI.MaxCutGames.Foundations.Repetition.normalizeOr</a></p></li><li id=L323><b>def</b> <code>OAI.MaxCutGames.Repetition.leftQuestionMarginal</code> <small>line 323</small></li><li id=L330><b>def</b> <code>OAI.MaxCutGames.Repetition.rightQuestionMarginal</code> <small>line 330</small></li><li id=L339><b>def</b> <code>OAI.MaxCutGames.Repetition.leftGivenRight</code> <small>line 339</small><div class="doc"><p>The fallback exists even when the question types were not supplied with
+<code>Nonempty</code> instances: it is a marginal of the game's actual probability law.</p></div><pre>def leftGivenRight (G : Game Q₁ Q₂ A₁ A₂) (y : Q₂) : FiniteDistribution Q₁ :=
+…</pre></li><li id=L346><b>theorem</b> <code>OAI.MaxCutGames.Repetition.rightQuestionMarginal_mul_leftGivenRight</code> <small>line 346</small><div class="doc"><p>Exact disintegration, including right questions of marginal probability
+zero. The conditional law is never assumed to reconstruct the question law.</p></div><pre>theorem rightQuestionMarginal_mul_leftGivenRight
+    (G : Game Q₁ Q₂ A₁ A₂) (x : Q₁) (y : Q₂) :
+    (rightQuestionMarginal G).weight y * (leftGivenRight G y).weight x =
+      G.questions.weight (x, y) :=
+…</pre><p class="refs">Mentions: <a href="KernelIteration.lean.html#L330">OAI.MaxCutGames.Repetition.rightQuestionMarginal</a>, <a href="KernelIteration.lean.html#L339">OAI.MaxCutGames.Repetition.leftGivenRight</a></p></li><li id=L356><b>def</b> <code>OAI.MaxCutGames.Repetition.kernelOfGame</code> <small>line 356</small><div class="doc"><p>A projection game's predicate and actual question distribution determine
+the conditional kernel used by the collision argument.</p></div><pre>def kernelOfGame (G : Game Q₁ Q₂ A₁ A₂) (hG : IsProjection G) :
+    ProjectionKernel Q₁ Q₂ A₁ A₂ where
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L26">OAI.MaxCutGames.Repetition.IsProjection</a>, <a href="Rounding.lean.html#L320">OAI.MaxCutGames.Repetition.ProjectionKernel</a></p></li><li id=L363><b>theorem</b> <code>OAI.MaxCutGames.Repetition.kernelOfGame_question_weight</code> <small>line 363</small></li><li id=L368><b>theorem</b> <code>OAI.MaxCutGames.Repetition.toGame_kernelOfGame</code> <small>line 368</small></li><li id=L380><b>theorem</b> <code>OAI.MaxCutGames.Repetition.kernelOfGame_success</code> <small>line 380</small></li><li id=L386><b>theorem</b> <code>OAI.MaxCutGames.Repetition.kernelOfGame_value</code> <small>line 386</small></li><li id=L396><b>theorem</b> <code>OAI.MaxCutGames.Repetition.sequence_le_power</code> <small>line 396</small></li><li id=L408><b>theorem</b> <code>OAI.MaxCutGames.Repetition.squared_rate_le_dsRate_sq</code> <small>line 408</small></li><li id=L414><b>theorem</b> <code>OAI.MaxCutGames.Repetition.rate_of_squared_collision_recurrence</code> <small>line 414</small></li><li id=L459><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.collisionValue_product_le_gap_rate</code> <small>line 459</small></li><li id=L473><b>theorem</b> <code>OAI.MaxCutGames.Repetition.ProjectionKernel.repetition_value_le_dsRate</code> <small>line 473</small></li><li id=L498><b>theorem</b> <code>OAI.MaxCutGames.Repetition.projection_repetition_value</code> <small>line 498</small><div class="doc"><p>The v2 projection-repetition estimate, including the empty product.
+The repetition exponent is independent of all question and answer cardinalities.</p></div><pre>theorem projection_repetition_value
+    (G : Game Q₁ Q₂ A₁ A₂) (hG : IsProjection G) (n : ℕ)
+    {gap : ℝ} (hgap₀ : 0 &lt; gap) (hgap₁ : gap &lt; 1)
+    (hvalue : G.value ≤ 1 - gap) :
+    (G.repetition n).value ≤ (1 - gap ^ 2 / 16) ^ n := by
+…</pre><p class="refs">Mentions: <a href="Product.lean.html#L26">OAI.MaxCutGames.Repetition.IsProjection</a></p></li><li id=L507><b>theorem</b> <code>OAI.MaxCutGames.Repetition.projection_repetition_success</code> <small>line 507</small></li><li id=L516><b>theorem</b> <code>OAI.MaxCutGames.Repetition.clean_repetition_value</code> <small>line 516</small></li><li id=L526><b>theorem</b> <code>OAI.MaxCutGames.Repetition.final_repetition_value</code> <small>line 526</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

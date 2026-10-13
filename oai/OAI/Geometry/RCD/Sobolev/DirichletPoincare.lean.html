@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Sobolev/DirichletPoincare.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Sobolev/DirichletPoincare.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Sobolev</a> / <span>DirichletPoincare.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Sobolev</a>/<span>DirichletPoincare.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Sobolev/DirichletPoincare.lean#L1">source</a></p><div class="doc"><h3>RCD coercivity for the actual zero-boundary Sobolev space</h3><p>A positive-measure exterior set gives the Poincare constant required by
+the Dirichlet solver. The estimate is deduced from the existing RCD
+transport proof of integral coercivity.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.RegularPointCoordinates.lp_integral_square_eq_norm_square</code> <small>line 23</small></li><li id=L30><b>theorem</b> <code>OAI.RegularPointCoordinates.NoncollapsedRCD.exists_dirichlet_poincare</code> <small>line 30</small><div class="doc"><p>A bounded Dirichlet domain with positive-measure exterior has an
+explicit finite Poincare constant.</p></div><pre>theorem NoncollapsedRCD.exists_dirichlet_poincare
+    (K : ℝ) (n : ℕ) (hn : 2 ≤ n) (hX : NoncollapsedRCD K n X)
+    (p : X) {R : ℝ} (hR : 0 ≤ R) (Ω B : Set X)
+    (hΩ : MeasurableSet Ω) (hB : MeasurableSet B)
+    (hΩ0 : hausdorff n X Ω ≠ 0) (hB0 : hausdorff n X B ≠ 0)
+    (hsΩ : Ω ⊆ Metric.closedBall p R) (hsB : B ⊆ Metric.closedBall p R)
+    (hBΩ : B ⊆ Ωᶜ) :
+    ∃ P : ℝ, 0 ≤ P ∧
+      ∀ f : SobolevSpace.dirichlet (hausdorff n X) hX.quadratic Ω,
+        ‖SobolevSpace.toLp (hausdorff n X) hX.quadratic f.val‖ ^ 2 ≤
+          P * energyForm (hausdorff n X) hX.quadratic f.val f.val := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L132">OAI.RegularPointCoordinates.NoncollapsedRCD</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L39">OAI.RegularPointCoordinates.hausdorff</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L67">OAI.RegularPointCoordinates.SobolevSpace.toLp</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L303">OAI.RegularPointCoordinates.energyForm</a></p></li><li id=L67><b>theorem</b> <code>OAI.RegularPointCoordinates.NoncollapsedRCD.exists_dirichlet_harmonic_replacement</code> <small>line 67</small><div class="doc"><p>The harmonic replacement exists for the genuine RCD Dirichlet form;
+its coercivity is derived above, rather than supplied as an extra input.</p></div><pre>theorem NoncollapsedRCD.exists_dirichlet_harmonic_replacement
+    (K : ℝ) (n : ℕ) (hn : 2 ≤ n) (hX : NoncollapsedRCD K n X)
+    (p : X) {R : ℝ} (hR : 0 ≤ R) (Ω B : Set X)
+    (hΩ : MeasurableSet Ω) (hB : MeasurableSet B)
+    (hΩ0 : hausdorff n X Ω ≠ 0) (hB0 : hausdorff n X B ≠ 0)
+    (hsΩ : Ω ⊆ Metric.closedBall p R) (hsB : B ⊆ Metric.closedBall p R)
+    (hBΩ : B ⊆ Ωᶜ) (u : SobolevSpace (hausdorff n X) hX.quadratic) :
+    ∃ h : SobolevSpace (hausdorff n X) hX.quadratic,
+      h - u ∈ SobolevSpace.dirichlet (hausdorff n X) hX.quadratic Ω ∧
+      IsSobolevHarmonicOn (hausdorff n X) hX.quadratic Ω h := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L132">OAI.RegularPointCoordinates.NoncollapsedRCD</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L39">OAI.RegularPointCoordinates.hausdorff</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L182">OAI.RegularPointCoordinates.IsSobolevHarmonicOn</a></p></li><li id=L83><b>theorem</b> <code>OAI.RegularPointCoordinates.NoncollapsedRCD.exists_dirichlet_harmonic_column</code> <small>line 83</small><div class="doc"><p>Componentwise replacement constructs the full harmonic coordinate
+column without assuming a harmonic solution as data.</p></div><pre>theorem NoncollapsedRCD.exists_dirichlet_harmonic_column
+    (K : ℝ) (n : ℕ) (hn : 2 ≤ n) (hX : NoncollapsedRCD K n X)
+    (p : X) {R : ℝ} (hR : 0 ≤ R) (Ω B : Set X)
+    (hΩ : MeasurableSet Ω) (hB : MeasurableSet B)
+    (hΩ0 : hausdorff n X Ω ≠ 0) (hB0 : hausdorff n X B ≠ 0)
+    (hsΩ : Ω ⊆ Metric.closedBall p R) (hsB : B ⊆ Metric.closedBall p R)
+    (hBΩ : B ⊆ Ωᶜ) (u : Fin n → SobolevSpace (hausdorff n X) hX.quadratic) :
+    ∃ h : Fin n → SobolevSpace (hausdorff n X) hX.quadratic,
+      ∀ a, h a - u a ∈ SobolevSpace.dirichlet (hausdorff n X) hX.quadratic Ω ∧
+        IsSobolevHarmonicOn (hausdorff n X) hX.quadratic Ω (h a) := by
+…</pre><p class="refs">Mentions: <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L132">OAI.RegularPointCoordinates.NoncollapsedRCD</a>, <a href="../../../Analysis/RCDHeat/Foundations.lean.html#L39">OAI.RegularPointCoordinates.hausdorff</a>, <a href="../../../Analysis/RCDHeat/EnergyLp.lean.html#L57">OAI.RegularPointCoordinates.SobolevSpace</a>, <a href="../../../Analysis/RCDHeat/ExistingAnalytic.lean.html#L5270">OAI.RegularPointCoordinates.SobolevSpace.dirichlet</a>, <a href="../Harmonic/HarmonicGrams.lean.html#L182">OAI.RegularPointCoordinates.IsSobolevHarmonicOn</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

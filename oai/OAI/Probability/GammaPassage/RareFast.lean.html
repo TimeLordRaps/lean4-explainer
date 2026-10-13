@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/GammaPassage/RareFast.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/GammaPassage/RareFast.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Probability</a> / <a href="index.html">GammaPassage</a> / <span>RareFast.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Probability</a>/<a href="index.html">GammaPassage</a>/<span>RareFast.lean</span></code></h1><p class="muted">4 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/GammaPassage/RareFast.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.gamma_rareFast_eventually</code> <small>line 13</small><div class="doc"><p>Quantitative rare-fast bound in terms of an integer ceiling.</p></div><pre>theorem gamma_rareFast_eventually (h : GammaEnvironment shape rate P τ)
+    (hshape : 0 &lt; shape) (hrate : 0 &lt; rate)
+    (b A R ε : ℝ) (hb : |b| ≤ 1) (hA : 0 &lt; A) (hR : 0 ≤ R) (hε : 0 &lt; ε)
+    (plus : Bool) (p0 : ℝ) (hp0 : 0 &lt; p0) (hp1 : p0 ≤ 1) :
+    ∃ D0 : ℝ, 1 ≤ D0 ∧ ∀ᶠ s : ℝ in atTop, ∀ n : ℤ,
+      (⌈D0*s⌉ : ℝ)+s ≤ n →
+      P.real {ω | (fun e =&gt; τ e ω) ∈
+        rareFastEvent b ((gammaMeanNorm h hshape hrate) (direction b)) (extremeSlope (gammaMeanNorm h hshape hrate) b plus) A R ε s n 0} &lt; p0 := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="RareFastEvents.lean.html#L70">OAI.GammaFPP.CrossingBridge.rareFastEvent</a>, <a href="MeanNorm.lean.html#L64">OAI.GammaFPP.gammaMeanNorm</a></p></li><li id=L60><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.gamma_rareFast_bound</code> <small>line 60</small><div class="doc"><p>Exact two-parameter epsilon formulation: once s and n/s are large,
+the probability of the manuscript's strict localized event is small.</p></div><pre>theorem gamma_rareFast_bound (h : GammaEnvironment shape rate P τ)
+    (hshape : 0 &lt; shape) (hrate : 0 &lt; rate)
+    (b A R ε : ℝ) (hb : |b| ≤ 1) (hA : 0 &lt; A) (hR : 0 ≤ R) (hε : 0 &lt; ε)
+    (plus : Bool) (κ : ℝ) (hκ : 0 &lt; κ) :
+    ∃ S K : ℝ, 1 ≤ S ∧ 0 &lt; K ∧ ∀ s : ℝ, S ≤ s → ∀ n : ℤ,
+      K*s ≤ n → P.real {ω | (fun e =&gt; τ e ω) ∈
+        rareFastEvent b ((gammaMeanNorm h hshape hrate) (direction b)) (extremeSlope (gammaMeanNorm h hshape hrate) b plus) A R ε s n 0} &lt; κ := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="RareFastEvents.lean.html#L70">OAI.GammaFPP.CrossingBridge.rareFastEvent</a>, <a href="MeanNorm.lean.html#L64">OAI.GammaFPP.gammaMeanNorm</a></p></li><li id=L80><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.gamma_rareFast_tendsto</code> <small>line 80</small><div class="doc"><p>Rare-fast joint limit along arbitrary filters with <code>s → ∞</code> and
+<code>n/s → ∞</code>, where <code>n</code> is integer-valued and eventually positive.</p></div><pre>theorem gamma_rareFast_tendsto {ι : Type*} {l : Filter ι}
+    (h : GammaEnvironment shape rate P τ)
+    (hshape : 0 &lt; shape) (hrate : 0 &lt; rate)
+    (b A R ε : ℝ) (hb : |b| ≤ 1) (hA : 0 &lt; A) (hR : 0 ≤ R) (hε : 0 &lt; ε)
+    (plus : Bool) (s : ι → ℝ) (n : ι → ℤ)
+    (hs : Tendsto s l atTop) (hn : Tendsto (fun i =&gt; (n i : ℝ)/s i) l atTop) :
+    Tendsto (fun i =&gt; P.real {ω | (fun e =&gt; τ e ω) ∈
+      rareFastEvent b ((gammaMeanNorm h hshape hrate) (direction b)) (extremeSlope (gammaMeanNorm h hshape hrate) b plus) A R ε (s i) (n i) 0}) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="RareFastEvents.lean.html#L70">OAI.GammaFPP.CrossingBridge.rareFastEvent</a>, <a href="MeanNorm.lean.html#L64">OAI.GammaFPP.gammaMeanNorm</a></p></li><li id=L100><b>theorem</b> <code>OAI.GammaFPP.CrossingBridge.gamma_rareFast_translate_tendsto</code> <small>line 100</small><div class="doc"><p>Exact translations, even chosen differently at each scale, have the same
+probability and therefore the same rare-fast limit.</p></div><pre>theorem gamma_rareFast_translate_tendsto {ι : Type*} {l : Filter ι}
+    (h : GammaEnvironment shape rate P τ)
+    (hshape : 0 &lt; shape) (hrate : 0 &lt; rate)
+    (b A R ε : ℝ) (hb : |b| ≤ 1) (hA : 0 &lt; A) (hR : 0 ≤ R) (hε : 0 &lt; ε)
+    (plus : Bool) (s : ι → ℝ) (n : ι → ℤ) (t : ι → Vertex)
+    (hs : Tendsto s l atTop) (hn : Tendsto (fun i =&gt; (n i : ℝ)/s i) l atTop) :
+    Tendsto (fun i =&gt; P.real {ω | (fun e =&gt; τ e ω) ∈
+      rareFastEvent b ((gammaMeanNorm h hshape hrate) (direction b)) (extremeSlope (gammaMeanNorm h hshape hrate) b plus) A R ε (s i) (n i) (t i)}) l (𝓝 0) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/GammaPassage.lean.html#L79">OAI.GammaFPP.GammaEnvironment</a>, <a href="RareFastEvents.lean.html#L70">OAI.GammaFPP.CrossingBridge.rareFastEvent</a>, <a href="MeanNorm.lean.html#L64">OAI.GammaFPP.gammaMeanNorm</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

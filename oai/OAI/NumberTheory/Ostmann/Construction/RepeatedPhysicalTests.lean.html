@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/Ostmann/Construction/RepeatedPhysicalTests.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/Ostmann/Construction/RepeatedPhysicalTests.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">Ostmann</a> / <a href="index.html">Construction</a> / <span>RepeatedPhysicalTests.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">Ostmann</a>/<a href="index.html">Construction</a>/<span>RepeatedPhysicalTests.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/Ostmann/Construction/RepeatedPhysicalTests.lean#L1">source</a></p><div class="doc"><h3>Repeated local tests with normalized probability energy</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.Ostmann.localTest_bound_of_energy</code> <small>line 14</small><div class="doc"><p>The physical giant need not be bounded by one; its normalized energy
+still gives the exact square-root bound needed for repeated factors.</p></div><pre>theorem localTest_bound_of_energy {q : ℕ} [NeZero q] (F : ZMod q → ℂ)
+    (hF : ∑ x, ‖F x‖ ^ 2 ≤ (q : ℝ)) (x : ZMod q) :
+    ‖F x‖ ≤ Real.sqrt q := by
+…</pre></li><li id=L22><b>theorem</b> <code>OAI.Ostmann.sum_norm_product_le_sqrt_pow</code> <small>line 22</small><div class="doc"><p>Two repeated factors use Cauchy; all remaining factors use the
+square-root bound. The local tests may belong to different roles.</p></div><pre>theorem sum_norm_product_le_sqrt_pow {I : Type*} {q : ℕ} [NeZero q]
+    (S : Finset I) (F : I → ZMod q → ℂ) (hS : 2 ≤ S.card)
+    (hF : ∀ i ∈ S, ∑ x, ‖F i x‖ ^ 2 ≤ (q : ℝ)) :
+    (∑ x : ZMod q, ‖∏ i ∈ S, F i x‖) ≤ (Real.sqrt q) ^ S.card := by
+…</pre></li><li id=L62><b>theorem</b> <code>OAI.Ostmann.product_complete_mean_norm_le</code> <small>line 62</small></li><li id=L73><b>def</b> <code>OAI.Ostmann.groupedPhysicalTest</code> <small>line 73</small></li><li id=L78><b>theorem</b> <code>OAI.Ostmann.groupedPhysicalTest_product</code> <small>line 78</small></li><li id=L92><b>theorem</b> <code>OAI.Ostmann.groupedPhysicalTest_singleton</code> <small>line 92</small></li><li id=L105><b>def</b> <code>OAI.Ostmann.physicalTupleSum</code> <small>line 105</small><div class="doc"><p>Grouping at each distinct prime preserves the original physical product,
+including when a prime occurs in several different roles.</p></div><pre>noncomputable def physicalTupleSum {I : Type*} [Fintype I]
+    (P : Finset ℕ) (p : I → P) (F : I → (q : P) → ZMod (q : ℕ) → ℂ)
+    (ψ : 𝓢(ℝ, ℂ)) (X : ℝ) : ℂ :=
+…</pre></li><li id=L112><b>theorem</b> <code>OAI.Ostmann.physicalTupleSum_singleton_zero</code> <small>line 112</small><div class="doc"><p>A single occurrence of a mean-zero test annihilates the entire short-
+period sum, without any character assumption.</p></div><pre>theorem physicalTupleSum_singleton_zero {I : Type*} [Fintype I]
+    (P : Finset ℕ) [∀ q : P, NeZero (q : ℕ)] (hP : ∀ q ∈ P, q.Prime) (p : I → P)
+    (F : I → (q : P) → ZMod (q : ℕ) → ℂ)
+    (i : I) (hi : ∀ j, p j = p i → j = i) (hmean : ∑ x, F i (p i) x = 0)
+    (ψ : 𝓢(ℝ, ℂ)) (X H : ℝ) (hX : 0 &lt; X)
+    (hperiod : H &lt; X / (∏ q : P, (q : ℕ)))
+    (hsupp : ∀ x : ℝ, H &lt; |x| → 𝓕 ψ x = 0) :
+    physicalTupleSum P p F ψ X = 0 := by
+…</pre><p class="refs">Mentions: <a href="RepeatedPhysicalTests.lean.html#L105">OAI.Ostmann.physicalTupleSum</a></p></li><li id=L138><b>theorem</b> <code>OAI.Ostmann.groupedPhysicalTest_sqrt_product</code> <small>line 138</small></li><li id=L153><b>theorem</b> <code>OAI.Ostmann.physicalTupleSum_multiple_bound</code> <small>line 153</small><div class="doc"><p>The repeated tuple estimate needed in Section 7.3. Its dependence on
+the product counted with multiplicity is exact.</p></div><pre>theorem physicalTupleSum_multiple_bound {I : Type*} [Fintype I]
+    (P : Finset ℕ) [∀ q : P, NeZero (q : ℕ)] (hP : ∀ q ∈ P, q.Prime) (p : I → P)
+    (F : I → (q : P) → ZMod (q : ℕ) → ℂ)
+    (hmultiple : ∀ q : P, 2 ≤ (Finset.univ.filter (fun i =&gt; p i = q)).card)
+    (henergy : ∀ i, ∑ x, ‖F i (p i) x‖ ^ 2 ≤ (p i : ℝ))
+    (ψ : 𝓢(ℝ, ℂ)) (X H : ℝ) (hX : 0 &lt; X)
+    (hperiod : H &lt; X / (∏ q : P, (q : ℕ)))
+    (hsupp : ∀ x : ℝ, H &lt; |x| → 𝓕 ψ x = 0) :
+    ‖physicalTupleSum P p F ψ X‖ ≤
+      X * ‖𝓕 ψ 0‖ * (Real.sqrt (∏ i, (p i : ℝ)) / ∏ q : P, (q : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="RepeatedPhysicalTests.lean.html#L105">OAI.Ostmann.physicalTupleSum</a></p></li><li id=L194><b>theorem</b> <code>OAI.Ostmann.physicalTupleSum_short_period_bound</code> <small>line 194</small><div class="doc"><p>Either every used prime occurs twice, or a singleton mean-zero test
+makes the complete residue mean vanish. This is the uniform short-period
+bound before any summation over repeated tuples.</p></div><pre>theorem physicalTupleSum_short_period_bound {I : Type*} [Fintype I]
+    (P : Finset ℕ) [∀ q : P, NeZero (q : ℕ)]
+    (hP : ∀ q ∈ P, q.Prime) (p : I → P) (hp : Function.Surjective p)
+    (F : I → (q : P) → ZMod (q : ℕ) → ℂ)
+    (hmean : ∀ i, ∑ x, F i (p i) x = 0)
+    (henergy : ∀ i, ∑ x, ‖F i (p i) x‖ ^ 2 ≤ (p i : ℝ))
+    (ψ : 𝓢(ℝ, ℂ)) (X H : ℝ) (hX : 0 &lt; X)
+    (hperiod : H &lt; X / (∏ q : P, (q : ℕ)))
+    (hsupp : ∀ x : ℝ, H &lt; |x| → 𝓕 ψ x = 0) :
+    ‖physicalTupleSum P p F ψ X‖ ≤
+      X * ‖𝓕 ψ 0‖ * (Real.sqrt (∏ i, (p i : ℝ)) / ∏ q : P, (q : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="RepeatedPhysicalTests.lean.html#L105">OAI.Ostmann.physicalTupleSum</a></p></li><li id=L222><b>theorem</b> <code>OAI.Ostmann.physicalTupleSum_repeated_bound</code> <small>line 222</small><div class="doc"><p>Repeating one prime makes the true period short at the initial product
+scale. The resulting bound uses the actual physical tests throughout.</p></div><pre>theorem physicalTupleSum_repeated_bound {I : Type*} [Fintype I]
+    (P : Finset ℕ) [∀ q : P, NeZero (q : ℕ)]
+    (hP : ∀ q ∈ P, q.Prime) (p : I → P) (hp : Function.Surjective p)
+    (F : I → (q : P) → ZMod (q : ℕ) → ℂ)
+    (hmean : ∀ i, ∑ x, F i (p i) x = 0)
+    (henergy : ∀ i, ∑ x, ‖F i (p i) x‖ ^ 2 ≤ (p i : ℝ))
+    (ψ : 𝓢(ℝ, ℂ)) (X H R : ℝ) (hX : 0 &lt; X) (hR : 0 &lt; R)
+    (hsupp : ∀ x : ℝ, H &lt; |x| → 𝓕 ψ x = 0)
+    (hsmall : ∀ i, H * R &lt; (p i : ℝ)) (hprod : (∏ i, (p i : ℝ)) ≤ X * R)
+    (i j : I) (hij : i ≠ j) (heq : p i = p j) :
+    ‖physicalTupleSum P p F ψ X‖ ≤
+      X * ‖𝓕 ψ 0‖ * (Real.sqrt (∏ i, (p i : ℝ)) / ∏ q : P, (q : ℝ)) := by
+…</pre><p class="refs">Mentions: <a href="RepeatedPhysicalTests.lean.html#L105">OAI.Ostmann.physicalTupleSum</a></p></li><li id=L254><b>theorem</b> <code>OAI.Ostmann.physicalTupleSum_repeated_bound_used</code> <small>line 254</small><div class="doc"><p>The ambient prime set may contain unused values. Restricting to the
+actual image gives the true squarefree period and leaves every test unchanged.</p></div><pre>theorem physicalTupleSum_repeated_bound_used {I : Type*} [Fintype I]
+    (P : Finset ℕ) [∀ q : P, NeZero (q : ℕ)]
+    (hP : ∀ q ∈ P, q.Prime) (p : I → P)
+    (F : I → (q : P) → ZMod (q : ℕ) → ℂ)
+    (hmean : ∀ i, ∑ x, F i (p i) x = 0)
+    (henergy : ∀ i, ∑ x, ‖F i (p i) x‖ ^ 2 ≤ (p i : ℝ))
+    (ψ : 𝓢(ℝ, ℂ)) (X H R : ℝ) (hX : 0 &lt; X) (hR : 0 &lt; R)
+    (hsupp : ∀ x : ℝ, H &lt; |x| → 𝓕 ψ x = 0)
+    (hsmall : ∀ i, H * R &lt; (p i : ℝ)) (hprod : (∏ i, (p i : ℝ)) ≤ X * R)
+    (i j : I) (hij : i ≠ j) (heq : p i = p j) :
+    ‖physicalTupleSum P p F ψ X‖ ≤
+      X * ‖𝓕 ψ 0‖ * (Real.sqrt (∏ i, (p i : ℝ)) /
+…</pre><p class="refs">Mentions: <a href="RepeatedPhysicalTests.lean.html#L105">OAI.Ostmann.physicalTupleSum</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

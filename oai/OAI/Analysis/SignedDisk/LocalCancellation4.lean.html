@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/SignedDisk/LocalCancellation4.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/SignedDisk/LocalCancellation4.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">SignedDisk</a> / <span>LocalCancellation4.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">SignedDisk</a>/<span>LocalCancellation4.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/SignedDisk/LocalCancellation4.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L26><b>structure</b> <code>OAI.SignedDisk.LocalCancellation.ConeDensity</code> <small>line 26</small><div class="doc"><p>An integrable aggregate of vectors in a fixed acute cone. It covers the
+positive pieces by taking their sum; no direction is imposed on errors.</p></div><pre>structure ConeDensity (e : ℂ) (κ : ℝ) where
+…</pre></li><li id=L31><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.inner_unit_bound</code> <small>line 31</small></li><li id=L34><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.negative_projection_le_norm</code> <small>line 34</small></li><li id=L38><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.negative_projection_change</code> <small>line 38</small></li><li id=L48><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.cone_pairing</code> <small>line 48</small></li><li id=L65><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.cone_mass_of_nonpositive</code> <small>line 65</small><div class="doc"><p>Nonpositive total projection bounds the weighted good mass by the error.</p></div><pre>lemma cone_mass_of_nonpositive {e : ℂ} {κ : ℝ} (a : ConeDensity e κ)
+    (he : ‖e‖ = 1) (hκ : 0 &lt; κ) {K : ℂ → ℝ} (hK : AEStronglyMeasurable K)
+    (hK0 : ∀ y, 0 ≤ K y) (hK1 : ∀ y, K y ≤ 1) {p : ℂ}
+    (hp : inner ℝ e ((∫ y, (K y : ℂ)*a.density y)+p) ≤ 0) :
+    (∫ y, K y*‖a.density y‖) ≤ ‖p‖/κ := by
+…</pre><p class="refs">Mentions: <a href="LocalCancellation4.lean.html#L26">OAI.SignedDisk.LocalCancellation.ConeDensity</a></p></li><li id=L79><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.crossing_interpolation</code> <small>line 79</small><div class="doc"><p>Crossing the zero projection selects a genuine convex kernel, not an
+arbitrary discontinuous truncation.</p></div><pre>lemma crossing_interpolation (e p q : ℂ) (hq : inner ℝ e q &lt; 0) :
+    ∃ θ : ℝ, 0 ≤ θ ∧ θ ≤ 1 ∧
+      inner ℝ e (θ • p+(1-θ) • q) ≤ 0 ∧
+      max 0 (-inner ℝ e (θ • p+(1-θ) • q)) = max 0 (-inner ℝ e p) := by
+…</pre></li><li id=L95><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.cone_corrected_cap</code> <small>line 95</small><div class="doc"><p>The cap cost of the good density is weighted interior mass, not its
+possibly enormous total mass.</p></div><pre>lemma cone_corrected_cap {a : ℂ → ℂ} (ha : Integrable a)
+    {K L : ℂ → ℝ} (hK : AEStronglyMeasurable K) (hL : AEStronglyMeasurable L)
+    (hK0 : ∀ y, 0 ≤ K y) (hK1 : ∀ y, K y ≤ 1)
+    (hL0 : ∀ y, 0 ≤ L y) (hL1 : ∀ y, L y ≤ 1)
+    {D : Set ℂ} (hD : MeasurableSet D) (hsupp : ∀ y, L y-K y ≠ 0 → y ∈ D)
+    (x z : ℂ) {ρ : ℝ} (hρ : 0 ≤ ρ) (hz : (1 : ℝ)/2 ≤ ‖z-x‖)
+    (hD3 : ∀ y ∈ D, ‖y-x‖ ≤ 3) :
+    ‖∫ y, correction x z y*((L y : ℂ)-K y)*a y‖ ≤
+      2*ρ*(∫ y, (L y+K y)*‖a y‖)+7*(∫ y in D \ Metric.ball z ρ, ‖a y‖) := by
+…</pre><p class="refs">Mentions: <a href="LocalCancellation1.lean.html#L157">OAI.SignedDisk.LocalCancellation.correction</a></p></li><li id=L148><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.corrected_error_bound</code> <small>line 148</small><div class="doc"><p>The error contribution to the corrected first active step; no moment
+cancellation for the errors alone is presumed.</p></div><pre>lemma corrected_error_bound {Cs α δ ρ : ℝ} (b : ι → ErrorPiece Cs) (hCs : 0 ≤ Cs)
+    (hα : α ≤ 1) (hδ : 0 ≤ δ) (hδ1 : δ ≤ 1) (hρ : 0 ≤ ρ)
+    {L : ℝ≥0} {F : ℂ → ℂ} (hF : LipschitzWith L F) {D : Set ℂ} (hD : MeasurableSet D)
+    (hFb : ∀ y, ‖F y‖ ≤ 1) (hFD : ∀ y, F y ≠ 0 → y ∈ D) (x z : ℂ)
+    (hz : (1 : ℝ)/2 ≤ ‖z-x‖) (hD3 : ∀ y ∈ D, ‖y-x‖ ≤ 3) :
+    ‖∑ d, ∫ y, correction x z y*F y*(b d).density y‖ ≤
+      2*ρ*coarseMass b δ univ+7*coarseMass b δ (D \ Metric.ball z ρ)+
+      ((L : ℝ)+2*(3*(L : ℝ)+1))*Cs*δ^(2*(1-α))*errorPrice b α := by
+…</pre><p class="refs">Mentions: <a href="LocalCancellation1.lean.html#L79">OAI.SignedDisk.LocalCancellation.ErrorPiece</a>, <a href="LocalCancellation1.lean.html#L157">OAI.SignedDisk.LocalCancellation.correction</a>, <a href="LocalCancellation1.lean.html#L413">OAI.SignedDisk.LocalCancellation.coarseMass</a>, <a href="LocalCancellation1.lean.html#L216">OAI.SignedDisk.LocalCancellation.errorPrice</a></p></li><li id=L189><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.increment_bound_general</code> <small>line 189</small></li><li id=L218><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.correction_kernel_bound</code> <small>line 218</small></li><li id=L227><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.corrected_inactive_bound</code> <small>line 227</small></li><li id=L249><b>lemma</b> <code>OAI.SignedDisk.last_active_bound</code> <small>line 249</small><div class="doc"><p>A finite last-active-index induction. Its hypotheses are local gaps, not
+an assumed global estimate, and no infinite list of active indices is chosen.</p></div><pre>lemma last_active_bound (active : ℕ → Prop) (N a : ℕ → ℝ) (B : ℝ)
+    (ha : ∀ i, 0 ≤ a i)
+    (hfirst : ∀ n, (∀ i &lt; n, ¬active i) → N n ≤ B+∑ i ∈ Finset.range n, a i)
+    (hgap : ∀ j n, j &lt; n → active j → (∀ i, j &lt; i → i &lt; n → ¬active i) →
+      N n ≤ N j+a j) : ∀ n, N n ≤ B+∑ i ∈ Finset.range n, a i := by
+…</pre></li><li id=L278><b>lemma</b> <code>OAI.SignedDisk.last_active_limit</code> <small>line 278</small></li><li id=L291><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.real_weight_integrable</code> <small>line 291</small></li><li id=L297><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.real_weight_norm_integrable</code> <small>line 297</small></li><li id=L303><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.convex_pairing</code> <small>line 303</small></li><li id=L321><b>lemma</b> <code>OAI.SignedDisk.LocalCancellation.negative_gap_cap</code> <small>line 321</small><div class="doc"><p>Analytic comparison of two balanced mixtures at a negative later
+projection. The only error term is their fixed-correction difference.</p></div><pre>lemma negative_gap_cap {e : ℂ} {κ B ρ H : ℝ} (a : ConeDensity e κ)
+    (he : ‖e‖ = 1) (hκ : 0 &lt; κ) (hρ : 0 ≤ ρ)
+    {K L : ℂ → ℝ} (hK : AEStronglyMeasurable K) (hL : AEStronglyMeasurable L)
+    (hK0 : ∀ y, 0 ≤ K y) (hK1 : ∀ y, K y ≤ 1)
+    (hL0 : ∀ y, 0 ≤ L y) (hL1 : ∀ y, L y ≤ 1)
+    {D : Set ℂ} (hD : MeasurableSet D) (hsupp : ∀ y, L y-K y ≠ 0 → y ∈ D)
+    (x z : ℂ) (hz : (1 : ℝ)/2 ≤ ‖z-x‖) (hD3 : ∀ y ∈ D, ‖y-x‖ ≤ 3)
+    (hcap : (∫ y in D \ Metric.ball z ρ, ‖a.density y‖) ≤ H)
+    {p q R : ℂ} (hp : ‖p‖ ≤ B) (hq : ‖q‖ ≤ B)
+    (hneg : inner ℝ e ((∫ y, (L y : ℂ)*a.density y)+q) &lt; 0)
+    (hcor : ((∫ y, (L y : ℂ)*a.density y)+q)-((∫ y, (K y : ℂ)*a.density y)+p) =
+      (∫ y, correction x z y*((L y : ℂ)-K y)*a.density y)+R) :
+…</pre><p class="refs">Mentions: <a href="LocalCancellation4.lean.html#L26">OAI.SignedDisk.LocalCancellation.ConeDensity</a>, <a href="LocalCancellation1.lean.html#L157">OAI.SignedDisk.LocalCancellation.correction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/PrimeHits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/PrimeHits.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>PrimeHits.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>PrimeHits.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/PrimeHits.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>theorem</b> <code>OAI.Problem337.gcd_prod_dvd_prod_gcd</code> <small>line 9</small><div class="doc"><p>A gcd of a product divides the product of the individual gcds.</p></div><pre>theorem gcd_prod_dvd_prod_gcd {ι : Type*} (s : Finset ι) (p : ι → ℕ) (u : ℕ) :
+    Nat.gcd (∏ i ∈ s, p i) u ∣ ∏ i ∈ s, Nat.gcd (p i) u := by
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Problem337.gcd_prime_product_dvd_hits</code> <small>line 24</small><div class="doc"><p>Only prime samples that divide the modulus contribute to its gcd with
+the sampled product, even when sampled values repeat.</p></div><pre>theorem gcd_prime_product_dvd_hits {ι : Type*} (s : Finset ι) (p : ι → ℕ)
+    (u : ℕ) (hp : ∀ i ∈ s, (p i).Prime) :
+    Nat.gcd (∏ i ∈ s, p i) u ∣ ∏ i ∈ s.filter (fun i =&gt; p i ∣ u), p i := by
+…</pre></li><li id=L40><b>theorem</b> <code>OAI.Problem337.gcd_prime_product_le_pow_hits</code> <small>line 40</small><div class="doc"><p>Bounded sampled primes give a power bound in the number of hits.</p></div><pre>theorem gcd_prime_product_le_pow_hits {ι : Type*} (s : Finset ι) (p : ι → ℕ)
+    (u B : ℕ) (hp : ∀ i ∈ s, (p i).Prime) (hB : ∀ i ∈ s, p i ≤ B) :
+    Nat.gcd (∏ i ∈ s, p i) u ≤ B ^ (s.filter (fun i =&gt; p i ∣ u)).card := by
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.Problem337.gcd_frequency_prime_product_le</code> <small>line 54</small><div class="doc"><p>The extra frequency factor costs at most its full size.</p></div><pre>theorem gcd_frequency_prime_product_le {ι : Type*} (s : Finset ι) (p : ι → ℕ)
+    (u B l : ℕ) (hp : ∀ i ∈ s, (p i).Prime)
+    (hB : ∀ i ∈ s, p i ≤ B) (hl : 0 &lt; l) :
+    Nat.gcd (l * ∏ i ∈ s, p i) u ≤ l * B ^ (s.filter (fun i =&gt; p i ∣ u)).card := by
+…</pre></li><li id=L71><b>theorem</b> <code>OAI.Problem337.prime_divisor_population_pow_le</code> <small>line 71</small><div class="doc"><p>A set of distinct prime divisors, all at least <code>L</code>, has size bounded
+by the logarithm of the modulus. This bounds the population of hit values.</p></div><pre>theorem prime_divisor_population_pow_le (P : Finset ℕ) (u L : ℕ)
+    (hu : 0 &lt; u) (hp : ∀ p ∈ P, p.Prime) (hL : ∀ p ∈ P, L ≤ p) :
+    L ^ (P.filter (fun p =&gt; p ∣ u)).card ≤ u := by
+…</pre></li><li id=L89><b>theorem</b> <code>OAI.Problem337.prime_divisor_population_log_le</code> <small>line 89</small><div class="doc"><p>Real logarithmic version of the prime hit population estimate.</p></div><pre>theorem prime_divisor_population_log_le (P : Finset ℕ) (u L : ℕ)
+    (hu : 0 &lt; u) (hL1 : 1 &lt; L)
+    (hp : ∀ p ∈ P, p.Prime) (hL : ∀ p ∈ P, L ≤ p) :
+    ((P.filter (fun p =&gt; p ∣ u)).card : ℝ) ≤
+      Real.log (u : ℝ) / Real.log (L : ℝ) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

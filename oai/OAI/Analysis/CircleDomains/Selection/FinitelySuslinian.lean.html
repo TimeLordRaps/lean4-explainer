@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Selection/FinitelySuslinian.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Selection/FinitelySuslinian.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Selection</a> / <span>FinitelySuslinian.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Selection</a>/<span>FinitelySuslinian.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Selection/FinitelySuslinian.lean#L1">source</a></p><div class="doc"><h3>Finite bounds on disjoint continua imply local connectedness</h3><p>This is the topological implication (ii) to (iii) in the generic-level
+continua lemma of <code>047-02</code>, Section 1. Components of a closed ball that
+meet its half-radius ball have uniformly positive diameter by boundary
+bumping. There are only finitely many of them, so the component through
+the center is a neighborhood of that center.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L28><b>def</b> <code>OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</code> <small>line 28</small><div class="doc"><p>A uniform finite bound on the number of pairwise disjoint subcontinua
+having any fixed positive minimum diameter.</p></div><pre>def HasFiniteLargeContinuumBound (X : Type*) [MetricSpace X] : Prop :=
+…</pre></li><li id=L36><b>theorem</b> <code>OAI.CircleDomainRigidity.finite_large_continuum_bound_of_measure</code> <small>line 36</small><div class="doc"><p>Finite total length gives a uniform cardinal bound when every continuum
+of a fixed minimum diameter pays a positive amount of that length. The
+geometric lower payment remains an explicit hypothesis.</p></div><pre>theorem finite_large_continuum_bound_of_measure {X : Type*} [MetricSpace X]
+    [MeasurableSpace X] [BorelSpace X] (μ : MeasureTheory.Measure X)
+    [MeasureTheory.IsFiniteMeasure μ]
+    (hpayment : ∀ ε : ℝ, 0 &lt; ε → ∃ δ : ℝ, 0 &lt; δ ∧
+      ∀ C : Set X, IsCompact C → IsConnected C → ε ≤ diam C → δ ≤ μ.real C) :
+    HasFiniteLargeContinuumBound X := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L60><b>theorem</b> <code>OAI.CircleDomainRigidity.finite_large_continuum_family</code> <small>line 60</small></li><li id=L73><b>theorem</b> <code>OAI.CircleDomainRigidity.closed_componentIn</code> <small>line 73</small></li><li id=L83><b>theorem</b> <code>OAI.CircleDomainRigidity.countable_disjoint_nontrivial_subcontinua</code> <small>line 83</small><div class="doc"><p>A disjoint family of nondegenerate subcontinua is countable: for each
+positive reciprocal diameter threshold only finitely many can occur.</p></div><pre>theorem countable_disjoint_nontrivial_subcontinua {X : Type*} [MetricSpace X]
+    (hbound : HasFiniteLargeContinuumBound X) {S : Set (Set X)}
+    (hS : ∀ C ∈ S, IsCompact C ∧ IsConnected C ∧ C.Nontrivial)
+    (hdisj : S.Pairwise Disjoint) : S.Countable := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L99><b>theorem</b> <code>OAI.CircleDomainRigidity.countable_nontrivial_connectedComponents</code> <small>line 99</small><div class="doc"><p>The nondegenerate connected components of a compact metric space are
+countable under the finite-continuum bound.</p></div><pre>theorem countable_nontrivial_connectedComponents {X : Type*} [MetricSpace X]
+    [CompactSpace X] (hbound : HasFiniteLargeContinuumBound X) :
+    {C : Set X | (∃ x, C = connectedComponent x) ∧ C.Nontrivial}.Countable := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L112><b>theorem</b> <code>OAI.CircleDomainRigidity.closedBall_component_mem_nhds</code> <small>line 112</small><div class="doc"><p>The component of a closed ball through its center is a neighborhood
+when the ambient continuum has finite bounds on large disjoint continua.</p></div><pre>theorem closedBall_component_mem_nhds {X : Type*} [MetricSpace X]
+    [CompactSpace X] [PreconnectedSpace X]
+    (hbound : HasFiniteLargeContinuumBound X) (x : X) {r : ℝ} (hr : 0 &lt; r) :
+    connectedComponentIn (closedBall x r) x ∈ 𝓝 x := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L170><b>theorem</b> <code>OAI.CircleDomainRigidity.locallyConnectedSpace_of_finite_large_continuum_bound</code> <small>line 170</small><div class="doc"><p>A compact metric continuum with uniform finite bounds on large
+pairwise disjoint subcontinua is locally connected.</p></div><pre>theorem locallyConnectedSpace_of_finite_large_continuum_bound
+    {X : Type*} [MetricSpace X] [CompactSpace X] [PreconnectedSpace X]
+    (hbound : HasFiniteLargeContinuumBound X) : LocallyConnectedSpace X := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L182><b>theorem</b> <code>OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound.subtype</code> <small>line 182</small><div class="doc"><p>The finite bound is inherited by metric subspaces, with the same
+bound on cardinalities.</p></div><pre>theorem HasFiniteLargeContinuumBound.subtype {X : Type*} [MetricSpace X]
+    (hbound : HasFiniteLargeContinuumBound X) (K : Set X) :
+    HasFiniteLargeContinuumBound K := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li><li id=L209><b>theorem</b> <code>OAI.CircleDomainRigidity.locallyConnected_subcontinuum_of_finite_large_continuum_bound</code> <small>line 209</small><div class="doc"><p>In particular every compact connected subcontinuum is locally
+connected under the ambient finite-continuum bound.</p></div><pre>theorem locallyConnected_subcontinuum_of_finite_large_continuum_bound
+    {X : Type*} [MetricSpace X] (hbound : HasFiniteLargeContinuumBound X)
+    {K : Set X} (hK : IsCompact K) (hconn : IsConnected K) :
+    LocallyConnectedSpace K := by
+…</pre><p class="refs">Mentions: <a href="FinitelySuslinian.lean.html#L28">OAI.CircleDomainRigidity.HasFiniteLargeContinuumBound</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/DukePrimeDegree/Arithmetic/ExceptionalPolynomial.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/DukePrimeDegree/Arithmetic/ExceptionalPolynomial.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">DukePrimeDegree</a> / <a href="index.html">Arithmetic</a> / <span>ExceptionalPolynomial.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">DukePrimeDegree</a>/<a href="index.html">Arithmetic</a>/<span>ExceptionalPolynomial.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/DukePrimeDegree/Arithmetic/ExceptionalPolynomial.lean#L1">source</a></p><div class="doc"><h3>A scalar double block in an integral return matrix</h3><p>The centralizer of the root SL₂ has a scalar two-dimensional block.
+The remaining block in a sufficiently separated return has simple real
+spectrum. Such a return matrix cannot be conjugate to an integral
+special-linear matrix unless the scalar eigenvalue is ±1.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>lemma</b> <code>OAI.DukePrimeDegree.double_factor_unique_repeated_root</code> <small>line 21</small></li><li id=L41><b>theorem</b> <code>OAI.DukePrimeDegree.integer_unit_polynomial_double_factor</code> <small>line 41</small><div class="doc"><p>The arithmetic obstruction only needs a scalar double factor and a
+separable residual polynomial, not a complete eigenbasis.</p></div><pre>theorem integer_unit_polynomial_double_factor
+    (p : ℤ[X]) (hp : p.Monic) (hc : IsUnit (p.coeff 0))
+    (c : ℝ) (q : ℝ[X]) (hq : q.Monic) (hsep : q.Separable)
+    (hfactor : p.map (algebraMap ℤ ℝ) = (X - C c) ^ 2 * q) :
+    c = 1 ∨ c = -1 := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.DukePrimeDegree.integer_sl_double_factor</code> <small>line 65</small><div class="doc"><p>No integral special-linear return can have a nonunit scalar double
+block and a separable complementary characteristic factor.</p></div><pre>theorem integer_sl_double_factor {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (g : Matrix.SpecialLinearGroup ι ℤ)
+    (c : ℝ) (q : ℝ[X]) (hq : q.Monic) (hsep : q.Separable)
+    (hfactor : g.val.charpoly.map (algebraMap ℤ ℝ) = (X - C c) ^ 2 * q) :
+    c = 1 ∨ c = -1 := by
+…</pre></li><li id=L79><b>theorem</b> <code>OAI.DukePrimeDegree.integer_sl_scalar_double_block</code> <small>line 79</small><div class="doc"><p>The matrix form of the double-factor obstruction, invariant under a real
+change of basis.</p></div><pre>theorem integer_sl_scalar_double_block {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (g : Matrix.SpecialLinearGroup (Fin 2 ⊕ ι) ℤ)
+    (P : Matrix.SpecialLinearGroup (Fin 2 ⊕ ι) ℝ)
+    (c : ℝ) (B : Matrix ι ι ℝ) (hsep : B.charpoly.Separable)
+    (hblock : P.val * g.val.map (algebraMap ℤ ℝ) * (P⁻¹).val =
+      Matrix.fromBlocks (Matrix.diagonal (fun _ : Fin 2 =&gt; c)) 0 0 B) :
+    c = 1 ∨ c = -1 := by
+…</pre></li><li id=L101><b>theorem</b> <code>OAI.DukePrimeDegree.no_integral_scalar_double_return</code> <small>line 101</small><div class="doc"><p>A sufficiently small return with separated complementary weights cannot
+be integral up to conjugacy when its scalar double block is not a unit.</p></div><pre>theorem no_integral_scalar_double_return {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (g : Matrix.SpecialLinearGroup (Fin 2 ⊕ ι) ℤ)
+    (P : Matrix.SpecialLinearGroup (Fin 2 ⊕ ι) ℝ)
+    (c : ℝ) (hc : c ≠ 1 ∧ c ≠ -1)
+    (ell : ι → ℝ) (hgap : ∀ i j, i ≠ j → 1 &lt; |ell i - ell j|)
+    (H : Matrix ι ι ℝ)
+    (hH : ∀ i, ∑ j, ‖(H - 1) i j‖ &lt; spectralRelativeRadius)
+    (hblock : P.val * g.val.map (algebraMap ℤ ℝ) * (P⁻¹).val =
+      Matrix.fromBlocks (Matrix.diagonal (fun _ : Fin 2 =&gt; c)) 0 0
+        (H * Matrix.diagonal (fun j =&gt; Real.exp (ell j)))) : False := by
+…</pre><p class="refs">Mentions: <a href="../Geometry/SpectralSeparation.lean.html#L21">OAI.DukePrimeDegree.spectralRelativeRadius</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

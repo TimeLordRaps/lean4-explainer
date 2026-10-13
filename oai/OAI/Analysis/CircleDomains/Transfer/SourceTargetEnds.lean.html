@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/CircleDomains/Transfer/SourceTargetEnds.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/CircleDomains/Transfer/SourceTargetEnds.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">CircleDomains</a> / <a href="index.html">Transfer</a> / <span>SourceTargetEnds.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">CircleDomains</a>/<a href="index.html">Transfer</a>/<span>SourceTargetEnds.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/CircleDomains/Transfer/SourceTargetEnds.lean#L1">source</a></p><div class="doc"><h3>A target component corresponding to a source component</h3><p>For the same sequence of matched boundary labels, the nested source disks
+intersect in the original complementary component and the nested target
+disks intersect in a full target complementary component.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>theorem</b> <code>OAI.CircleDomainRigidity.corresponding_target_end_of_source_of_continuous_open</code> <small>line 22</small></li><li id=L97><b>theorem</b> <code>OAI.CircleDomainRigidity.corresponding_target_end_of_source</code> <small>line 97</small></li><li id=L122><b>theorem</b> <code>OAI.CircleDomainRigidity.corresponding_source_end_of_target_of_continuous_open</code> <small>line 122</small><div class="doc"><p>Conversely every target complementary component has a source component
+with the same matched boundary address.</p></div><pre>theorem corresponding_source_end_of_target_of_continuous_open
+    {G : Set Sphere} (hG : IsOpen G) {f : Sphere → Sphere}
+    (hf : ContinuousOn f G)
+    (ho : ∀ S, IsOpen S → S ⊆ G → IsOpen (f &#x27;&#x27; S)) (hi : InjOn f G)
+    (C : ℕ → SmoothJordanCore G) (J : (n : ℕ) → Fin (C n).count → ℂ ≃ₜ ℂ)
+    (hstrict : ∀ n, (C n).carrier ⊆ interior (C (n + 1)).carrier)
+    (hcover : (⋃ n, interior (C n).carrier) = G)
+    (hJd : ∀ n, Pairwise (Disjoint on fun i =&gt; closure (jordanInterior (J n i))))
+    (hJe : ∀ n, (f &#x27;&#x27; (C n).carrier)ᶜ = ⋃ i, ((↑) : ℂ → Sphere) &#x27;&#x27; jordanInterior (J n i))
+    (hboundary : ∀ n i, f &#x27;&#x27; (((↑) : ℂ → Sphere) &#x27;&#x27; frontier (jordanInterior ((C n).disk i))) =
+      ((↑) : ℂ → Sphere) &#x27;&#x27; frontier (jordanInterior (J n i)))
+    (hside : ∀ n i, f &#x27;&#x27; (G ∩ (((↑) : ℂ → Sphere) &#x27;&#x27; jordanInterior ((C n).disk i))) =
+…</pre><p class="refs">Mentions: <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a>, <a href="../Sobolev/SmoothJordanExhaustion.lean.html#L24">OAI.CircleDomainRigidity.SmoothJordanCore</a>, <a href="../Selection/OuterContours.lean.html#L19">OAI.CircleDomainRigidity.jordanInterior</a></p></li><li id=L192><b>theorem</b> <code>OAI.CircleDomainRigidity.corresponding_source_end_of_target</code> <small>line 192</small></li><li id=L218><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_matched_component_exhaustion_of_continuous_open</code> <small>line 218</small><div class="doc"><p>The constructed smooth exhaustion gives every complementary component on
+either side a matched source/target address. Only the previously used Sard,
+one-manifold classification and Schoenflies inputs enter the construction.</p></div><pre>theorem exists_matched_component_exhaustion_of_continuous_open
+    (hsard : SmoothPlanarSard) (hschoenflies : PlanarSchoenflies)
+    {G : Set Sphere} (hG : IsOpen G) (hconn : IsConnected G)
+    (hinf : OnePoint.infty ∈ G)
+    {f : Sphere → Sphere} (hf : ContinuousOn f G)
+    (ho : ∀ S, IsOpen S → S ⊆ G → IsOpen (f &#x27;&#x27; S)) (hi : InjOn f G)
+    (hfix : f OnePoint.infty = OnePoint.infty) :
+    ∃ (C : ℕ → SmoothJordanCore G) (J : (n : ℕ) → Fin (C n).count → ℂ ≃ₜ ℂ),
+      (∀ n, (C n).carrier ⊆ interior (C (n + 1)).carrier) ∧
+      (⋃ n, interior (C n).carrier) = G ∧
+      (∀ q ∈ Gᶜ, ∃ (b : (n : ℕ) → Fin (C n).count) (p : Sphere),
+        p ∈ (f &#x27;&#x27; G)ᶜ ∧
+…</pre><p class="refs">Mentions: <a href="../Sobolev/SmoothContours.lean.html#L65">OAI.CircleDomainRigidity.SmoothPlanarSard</a>, <a href="../Topology/JordanContours.lean.html#L44">OAI.CircleDomainRigidity.PlanarSchoenflies</a>, <a href="../../../../ComparatorChallenges/KoebeCircleDomains.lean.html#L13">OAI.CircleDomainRigidity.Sphere</a>, <a href="../Sobolev/SmoothJordanExhaustion.lean.html#L24">OAI.CircleDomainRigidity.SmoothJordanCore</a></p></li><li id=L248><b>theorem</b> <code>OAI.CircleDomainRigidity.exists_matched_component_exhaustion</code> <small>line 248</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

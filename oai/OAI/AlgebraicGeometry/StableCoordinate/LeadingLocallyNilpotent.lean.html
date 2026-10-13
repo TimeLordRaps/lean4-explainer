@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/StableCoordinate/LeadingLocallyNilpotent.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/StableCoordinate/LeadingLocallyNilpotent.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">StableCoordinate</a> / <span>LeadingLocallyNilpotent.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">StableCoordinate</a>/<span>LeadingLocallyNilpotent.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/StableCoordinate/LeadingLocallyNilpotent.lean#L1">source</a></p><div class="doc"><h3>A nonzero leading locally nilpotent derivation</h3><p>This module combines finite algebra generation with the actual homogeneous
+component construction.  It establishes the auxiliary-grading passage in
+§5 of the source without assuming a global degree-shift bound.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.StableCoordinate.LeadingComponent.exists_nonzero_locallyNilpotent_component</code> <small>line 25</small><div class="doc"><p>Every nonzero locally nilpotent derivation of a finitely generated
+integer-graded algebra with homogeneous generators has a nonzero leading
+homogeneous locally nilpotent component.</p></div><pre>theorem exists_nonzero_locallyNilpotent_component
+    (g : ι → A) (d : ι → ℤ)
+    (hg : Algebra.adjoin k (Set.range g) = ⊤)
+    (hhom : ∀ i, g i ∈ 𝒜 (d i))
+    (D : Derivation k A A) (hD : D ≠ 0)
+    (hln : ∀ x : A, ∃ n : ℕ, (D : A → A)^[n] x = 0) :
+    ∃ m : ℤ, component 𝒜 D m ≠ 0 ∧
+      HasShiftLE 𝒜 D.toLinearMap m ∧
+      (∀ x : A, ∃ n : ℕ, ((component 𝒜 D m : A → A)^[n] x) = 0) := by
+…</pre><p class="refs">Mentions: <a href="LeadingComponent.lean.html#L99">OAI.StableCoordinate.LeadingComponent.component</a>, <a href="LeadingComponent.lean.html#L139">OAI.StableCoordinate.LeadingComponent.HasShiftLE</a></p></li><li id=L42><b>theorem</b> <code>OAI.StableCoordinate.LeadingComponent.exists_nonzero_locallyNilpotent_component_annihilating_top</code> <small>line 42</small><div class="doc"><p>The source's auxiliary-grading reduction: if a locally nilpotent
+derivation annihilates a sum of two distinct homogeneous degrees, its
+nonzero leading locally nilpotent component annihilates the higher part.</p></div><pre>theorem exists_nonzero_locallyNilpotent_component_annihilating_top
+    (g : ι → A) (d : ι → ℤ)
+    (hg : Algebra.adjoin k (Set.range g) = ⊤)
+    (hhom : ∀ i, g i ∈ 𝒜 (d i))
+    (D : Derivation k A A) (hD : D ≠ 0)
+    (hln : ∀ x : A, ∃ n : ℕ, (D : A → A)^[n] x = 0)
+    {i j : ℤ} {x y : A} (hx : x ∈ 𝒜 i) (hy : y ∈ 𝒜 j)
+    (hij : i &lt; j) (hxy : D (x + y) = 0) :
+    ∃ m : ℤ, component 𝒜 D m ≠ 0 ∧
+      (∀ z : A, ∃ n : ℕ, ((component 𝒜 D m : A → A)^[n] z) = 0) ∧
+      component 𝒜 D m y = 0 := by
+…</pre><p class="refs">Mentions: <a href="LeadingComponent.lean.html#L99">OAI.StableCoordinate.LeadingComponent.component</a></p></li><li id=L60><b>theorem</b> <code>OAI.StableCoordinate.LeadingComponent.exists_nonzero_locallyNilpotent_component_compatible</code> <small>line 60</small><div class="doc"><p>The leading component also preserves a compatible second grading.
+This packages the full leading-component step of the source's rigidity
+proof, including preservation of the fiber weights.</p></div><pre>theorem exists_nonzero_locallyNilpotent_component_compatible
+    (ℬ : ℤ → Submodule k A) [GradedAlgebra ℬ]
+    (hcomm : ∀ (i j : ℤ) (x : A),
+      proj 𝒜 i (proj ℬ j x) = proj ℬ j (proj 𝒜 i x))
+    (g : ι → A) (d : ι → ℤ)
+    (hg : Algebra.adjoin k (Set.range g) = ⊤)
+    (hhom : ∀ i, g i ∈ 𝒜 (d i))
+    (D : Derivation k A A) (hD : D ≠ 0)
+    (hln : ∀ x : A, ∃ n : ℕ, (D : A → A)^[n] x = 0)
+    (hpres : ∀ (r : ℤ) (z : A), z ∈ ℬ r → D z ∈ ℬ r)
+    {i j : ℤ} {x y : A} (hx : x ∈ 𝒜 i) (hy : y ∈ 𝒜 j)
+    (hij : i &lt; j) (hxy : D (x + y) = 0) :
+…</pre><p class="refs">Mentions: <a href="LeadingComponent.lean.html#L25">OAI.StableCoordinate.LeadingComponent.proj</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

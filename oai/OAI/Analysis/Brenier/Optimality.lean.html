@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/Optimality.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/Optimality.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>Optimality.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>Optimality.lean</span></code></h1><p class="muted">18 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/Optimality.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Problem358.eq_graph_map_of_ae_on_graph</code> <small>line 13</small><div class="doc"><p>A measure concentrated on the graph of a measurable function is determined
+by its first marginal. This is the last step in uniqueness of a transport plan.</p></div><pre>theorem eq_graph_map_of_ae_on_graph
+    {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    (π : Measure (X × Y)) {T : X → Y} (hT : Measurable T)
+    (hgraph : ∀ᵐ p ∂π, p.2 = T p.1) :
+    π = Measure.map (fun x =&gt; (x, T x)) (Measure.map Prod.fst π) := by
+…</pre></li><li id=L28><b>theorem</b> <code>OAI.Problem358.eq_graph_map_of_fst_eq_and_ae_on_graph</code> <small>line 28</small><div class="doc"><p>The same reconstruction statement with an explicitly prescribed marginal.</p></div><pre>theorem eq_graph_map_of_fst_eq_and_ae_on_graph
+    {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    {π : Measure (X × Y)} {ρ : Measure X} {T : X → Y}
+    (hT : Measurable T) (hfst : Measure.map Prod.fst π = ρ)
+    (hgraph : ∀ᵐ p ∂π, p.2 = T p.1) :
+    π = Measure.map (fun x =&gt; (x, T x)) ρ := by
+…</pre></li><li id=L50><b>theorem</b> <code>OAI.Problem358.integrable_sqdist_of_cost_ne_top</code> <small>line 50</small><div class="doc"><p>A finite quadratic plan cost is an ordinary integrable squared distance.</p></div><pre>theorem integrable_sqdist_of_cost_ne_top
+    (h : quadraticPlanCost π ≠ ∞) :
+    Integrable (fun p : E d × E d =&gt; ‖p.1 - p.2‖ ^ 2) π := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.Problem358.quadraticPlanCost_eq_ofReal_integral</code> <small>line 58</small><div class="doc"><p>Conversion between the extended and real quadratic costs.</p></div><pre>theorem quadraticPlanCost_eq_ofReal_integral
+    (h : Integrable (fun p : E d × E d =&gt; ‖p.1 - p.2‖ ^ 2) π) :
+    quadraticPlanCost π = ENNReal.ofReal (∫ p, ‖p.1 - p.2‖ ^ 2 ∂π) := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.Problem358.dual_integrable_sum</code> <small>line 65</small><div class="doc"><p>Integrability of a separable dual potential under any coupling.</p></div><pre>theorem dual_integrable_sum (hπ : IsCoupling ρ μ π)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ) :
+    Integrable (fun p : E d × E d =&gt; f p.1 + g p.2) π := by
+…</pre></li><li id=L74><b>theorem</b> <code>OAI.Problem358.dual_integral_sum</code> <small>line 74</small><div class="doc"><p>The integral of a separable dual potential depends only on the marginals.</p></div><pre>theorem dual_integral_sum (hπ : IsCoupling ρ μ π)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ) :
+    (∫ p, f p.1 + g p.2 ∂π) = (∫ x, f x ∂ρ) + ∫ y, g y ∂μ := by
+…</pre></li><li id=L87><b>theorem</b> <code>OAI.Problem358.dual_cost_lower_bound</code> <small>line 87</small><div class="doc"><p>Weak Kantorovich duality for the problem's quadratic cost definition.</p></div><pre>theorem dual_cost_lower_bound (hπ : IsCoupling ρ μ π)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ)
+    (hbound : ∀ᵐ p ∂π, f p.1 + g p.2 ≤ ‖p.1 - p.2‖ ^ 2) :
+    ENNReal.ofReal ((∫ x, f x ∂ρ) + ∫ y, g y ∂μ) ≤ quadraticPlanCost π := by
+…</pre></li><li id=L99><b>theorem</b> <code>OAI.Problem358.quadraticPlanCost_graph_eq_dual</code> <small>line 99</small><div class="doc"><p>A graph saturating a separable dual bound has exactly the dual cost.</p></div><pre>theorem quadraticPlanCost_graph_eq_dual
+    {T : E d → E d} (hT : Measurable T) (hpush : Measure.map T ρ = μ)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ)
+    (heq : ∀ᵐ x ∂ρ, ‖x - T x‖ ^ 2 = f x + g (T x)) :
+    quadraticPlanCost (graphPlan ρ T) =
+      ENNReal.ofReal ((∫ x, f x ∂ρ) + ∫ y, g y ∂μ) := by
+…</pre></li><li id=L118><b>theorem</b> <code>OAI.Problem358.isQuadraticOptimalMap_of_dual</code> <small>line 118</small><div class="doc"><p>Dual attainment certifies optimality against every probability coupling.</p></div><pre>theorem isQuadraticOptimalMap_of_dual
+    {T : E d → E d} (hT : Measurable T) (hpush : Measure.map T ρ = μ)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ)
+    (hbound : ∀ π : Measure (E d × E d), IsCoupling ρ μ π →
+      ∀ᵐ p ∂π, f p.1 + g p.2 ≤ ‖p.1 - p.2‖ ^ 2)
+    (heq : ∀ᵐ x ∂ρ, ‖x - T x‖ ^ 2 = f x + g (T x)) :
+    IsQuadraticOptimalMap ρ μ T := by
+…</pre></li><li id=L140><b>theorem</b> <code>OAI.Problem358.coupling_dirac_eq_graphPlan_const</code> <small>line 140</small><div class="doc"><p>There is only one coupling with a fixed first marginal and a Dirac second marginal.</p></div><pre>theorem coupling_dirac_eq_graphPlan_const {d : ℕ} {ρ : Measure (E d)}
+    {π : Measure (E d × E d)} {y : E d}
+    (hπ : IsCoupling ρ (Measure.dirac y) π) :
+    π = graphPlan ρ (fun _ =&gt; y) := by
+…</pre></li><li id=L151><b>theorem</b> <code>OAI.Problem358.isUniqueQuadraticOptimalMap_const</code> <small>line 151</small><div class="doc"><p>The constant map to a point is the unique quadratic optimal map to its Dirac law.
+No moment assumption is necessary: every competing coupling is already the same graph.</p></div><pre>theorem isUniqueQuadraticOptimalMap_const {d : ℕ} (ρ : Measure (E d))
+    [IsProbabilityMeasure ρ] (y : E d) :
+    IsUniqueQuadraticOptimalMap ρ (Measure.dirac y) (fun _ =&gt; y) := by
+…</pre></li><li id=L163><b>theorem</b> <code>OAI.Problem358.eq_dirac_of_supported_singleton</code> <small>line 163</small><div class="doc"><p>A probability measure supported on a singleton is the corresponding Dirac law.</p></div><pre>theorem eq_dirac_of_supported_singleton {d : ℕ} (μ : Measure (E d))
+    [IsProbabilityMeasure μ] (y : E d) (hμ : IsSupported μ {y}) :
+    μ = Measure.dirac y := by
+…</pre></li><li id=L174><b>theorem</b> <code>OAI.Problem358.eq_dirac_of_supported_subsingleton</code> <small>line 174</small><div class="doc"><p>The same conclusion holds for any nonempty subsingleton support set.</p></div><pre>theorem eq_dirac_of_supported_subsingleton {d : ℕ} (μ : Measure (E d))
+    [IsProbabilityMeasure μ] {Y : Set (E d)} (hY : Y.Subsingleton)
+    {y : E d} (hy : y ∈ Y) (hμ : IsSupported μ Y) :
+    μ = Measure.dirac y := by
+…</pre></li><li id=L185><b>theorem</b> <code>OAI.Problem358.one_third_stability_of_subsingleton_target</code> <small>line 185</small><div class="doc"><p>The singleton-target case of stability, for an arbitrary probability source.</p></div><pre>theorem one_third_stability_of_subsingleton_target {d : ℕ}
+    (ρ : Measure (E d)) [IsProbabilityMeasure ρ]
+    {Y : Set (E d)} (hY : Y.Subsingleton) (hYn : Y.Nonempty) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (μ ν : Measure (E d)),
+      IsProbabilityMeasure μ → IsProbabilityMeasure ν →
+      IsSupported μ Y → IsSupported ν Y →
+      ∃ Tμ Tν : E d → E d,
+        IsUniqueQuadraticOptimalMap ρ μ Tμ ∧
+        IsUniqueQuadraticOptimalMap ρ ν Tν ∧
+        mapL2Dist ρ Tμ Tν ≤ C * Real.rpow (wasserstein2 μ ν) (1 / 3 : ℝ) := by
+…</pre></li><li id=L220><b>theorem</b> <code>OAI.Problem358.dual_saturation_of_integral_eq</code> <small>line 220</small><div class="doc"><p>Equality in the integral dual bound forces saturation almost everywhere.</p></div><pre>theorem dual_saturation_of_integral_eq
+    (hπ : IsCoupling ρ μ π) {f g : E d → ℝ}
+    (hf : Integrable f ρ) (hg : Integrable g μ)
+    (hc : Integrable (fun p : E d × E d =&gt; ‖p.1 - p.2‖ ^ 2) π)
+    (hbound : ∀ᵐ p ∂π, f p.1 + g p.2 ≤ ‖p.1 - p.2‖ ^ 2)
+    (heq : (∫ p, ‖p.1 - p.2‖ ^ 2 ∂π) =
+      (∫ x, f x ∂ρ) + ∫ y, g y ∂μ) :
+    ∀ᵐ p ∂π, f p.1 + g p.2 = ‖p.1 - p.2‖ ^ 2 := by
+…</pre></li><li id=L233><b>theorem</b> <code>OAI.Problem358.eq_graphPlan_of_dual_saturation</code> <small>line 233</small><div class="doc"><p>A saturated dual bound whose equality locus is a graph identifies the full plan.</p></div><pre>theorem eq_graphPlan_of_dual_saturation
+    {T : E d → E d} (hT : Measurable T)
+    (hπ : IsCoupling ρ μ π) {f g : E d → ℝ}
+    (hf : Integrable f ρ) (hg : Integrable g μ)
+    (hc : Integrable (fun p : E d × E d =&gt; ‖p.1 - p.2‖ ^ 2) π)
+    (hbound : ∀ᵐ p ∂π, f p.1 + g p.2 ≤ ‖p.1 - p.2‖ ^ 2)
+    (heq : (∫ p, ‖p.1 - p.2‖ ^ 2 ∂π) =
+      (∫ x, f x ∂ρ) + ∫ y, g y ∂μ)
+    (hstrict : ∀ᵐ p ∂π,
+      f p.1 + g p.2 = ‖p.1 - p.2‖ ^ 2 → p.2 = T p.1) :
+    π = graphPlan ρ T := by
+…</pre></li><li id=L250><b>theorem</b> <code>OAI.Problem358.dual_value_nonneg_of_graph</code> <small>line 250</small><div class="doc"><p>A dual value attained by a graph is nonnegative.</p></div><pre>theorem dual_value_nonneg_of_graph
+    {T : E d → E d} (hT : Measurable T) (hpush : Measure.map T ρ = μ)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ)
+    (heq : ∀ᵐ x ∂ρ, ‖x - T x‖ ^ 2 = f x + g (T x)) :
+    0 ≤ (∫ x, f x ∂ρ) + ∫ y, g y ∂μ := by
+…</pre></li><li id=L267><b>theorem</b> <code>OAI.Problem358.isUniqueQuadraticOptimalMap_of_dual</code> <small>line 267</small><div class="doc"><p>Strictness of a dual certificate identifies every optimal plan with its graph.
+The strictness premise is only required almost everywhere for each coupling, so
+null tie sets and support restrictions can be used directly.</p></div><pre>theorem isUniqueQuadraticOptimalMap_of_dual
+    {T : E d → E d} (hT : Measurable T) (hpush : Measure.map T ρ = μ)
+    {f g : E d → ℝ} (hf : Integrable f ρ) (hg : Integrable g μ)
+    (hbound : ∀ π : Measure (E d × E d), IsCoupling ρ μ π →
+      ∀ᵐ p ∂π, f p.1 + g p.2 ≤ ‖p.1 - p.2‖ ^ 2)
+    (heq : ∀ᵐ x ∂ρ, ‖x - T x‖ ^ 2 = f x + g (T x))
+    (hstrict : ∀ π : Measure (E d × E d), IsCoupling ρ μ π →
+      ∀ᵐ p ∂π, f p.1 + g p.2 = ‖p.1 - p.2‖ ^ 2 → p.2 = T p.1) :
+    IsUniqueQuadraticOptimalMap ρ μ T := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

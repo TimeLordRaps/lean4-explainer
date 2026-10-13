@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/CellDerivative.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/CellDerivative.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>CellDerivative.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>CellDerivative.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/CellDerivative.lean#L1">source</a></p><div class="doc"><p>Actual vector moment and real mass differentials for positive affine cells.
+This specializes the proved scalar moving-cell formula, not an assumed derivative.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>theorem</b> <code>OAI.Problem358.hasDerivAt_positive_cell_cut_remainder</code> <small>line 21</small><div class="doc"><p>The signed variation of one interface of a positive-mass affine cell.
+Compactness, convexity, injectivity, and positive cell masses now discharge
+all analytic bounds and all exceptional-face hypotheses. Other cuts may move
+independently, as required by the finite-intersection telescoping formula.</p></div><pre>theorem hasDerivAt_positive_cell_cut_remainder
+    {d : ℕ} {ι : Type*} [Fintype ι]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y : ι → E d) (c : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    {i j : ι} (hij : i ≠ j) {z : E d} (hz : z ∈ interior K)
+    (htie : ⟪z, y i⟫_ℝ + c i = ⟪z, y j⟫_ℝ + c j)
+    (w : E d → ℝ) (hw : Continuous w) (v : E d) (r : ℝ)
+    (J : Finset ι) (hJ : ∀ k ∈ J, k ≠ i ∧ k ≠ j)
+    (ell : ℝ → ι → E d → ℝ)
+    (hell : ∀ k ∈ J, Continuous (fun p : ℝ × E d =&gt; ell p.1 k p.2))
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L102><b>lemma</b> <code>OAI.Problem358.PositiveCellFullDerivative.prod_sub_prod_ordered</code> <small>line 102</small></li><li id=L135><b>lemma</b> <code>OAI.Problem358.PositiveCellFullDerivative.cutIndicator_eq_ite</code> <small>line 135</small></li><li id=L139><b>lemma</b> <code>OAI.Problem358.PositiveCellFullDerivative.norm_cutIndicator_sub_le_one</code> <small>line 139</small></li><li id=L146><b>theorem</b> <code>OAI.Problem358.PositiveCellFullDerivative.hasDerivAt_cut_product_integral</code> <small>line 146</small><div class="doc"><p>Ordered single-cut derivatives reassemble into the actual product integral.
+The order is used only for the proof, not in the resulting derivative.</p></div><pre>theorem hasDerivAt_cut_product_integral
+    {ι X : Type*} [LinearOrder ι] [MeasurableSpace X]
+    {μ : Measure X} (s : Finset ι) (ell : ℝ → ι → X → ℝ)
+    (hell : ∀ t j, Measurable (ell t j))
+    {w : X → ℝ} (hw : Integrable w μ) (D : ι → ℝ)
+    (hd : ∀ j ∈ s, HasDerivAt (fun t : ℝ =&gt; ∫ x,
+      (w x * ∏ k ∈ s.erase j,
+        cutIndicator (if k &lt; j then ell t k x else ell 0 k x)) *
+          (cutIndicator (ell t j x) - cutIndicator (ell 0 j x)) ∂μ) (D j) 0) :
+    HasDerivAt (fun t : ℝ =&gt; ∫ x,
+      w x * ∏ j ∈ s, cutIndicator (ell t j x) ∂μ) (∑ j ∈ s, D j) 0 := by
+…</pre></li><li id=L201><b>lemma</b> <code>OAI.Problem358.PositiveCellFullDerivative.prod_cutIndicator_eq_indicator</code> <small>line 201</small></li><li id=L218><b>def</b> <code>OAI.Problem358.PositiveCellFullDerivative.faceVariation</code> <small>line 218</small><div class="doc"><p>The signed face integral in a full affine-cell variation.</p></div><pre>def faceVariation {d : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (K : Set (E d)) (y v : ι → E d) (c r : ι → ℝ)
+    (w : E d → ℝ) (i j : ι) (z : E d) : ℝ :=
+…</pre></li><li id=L230><b>theorem</b> <code>OAI.Problem358.PositiveCellFullDerivative.hasDerivAt_closedCell_integral</code> <small>line 230</small><div class="doc"><p>Full scalar weighted-cell derivative. Only actual compact convex positive-cell
+geometry is assumed: all trace, domination, and signed-cut limits are proved.</p></div><pre>theorem hasDerivAt_closedCell_integral
+    {d : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y v : ι → E d) (c r : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    (w : E d → ℝ) (hw : Continuous w) (i : ι) (z : ι → E d)
+    (hz : ∀ j, j ≠ i → z j ∈ interior K)
+    (htie : ∀ j, j ≠ i → ⟪z j, y i⟫_ℝ + c i = ⟪z j, y j⟫_ℝ + c j) :
+    HasDerivAt (fun t : ℝ =&gt; ∫ x in
+      CellGeometry.closedCell K (fun j =&gt; y j + t • v j) (fun j =&gt; c j + t * r j) i,
+      w x)
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L355><b>theorem</b> <code>OAI.Problem358.PositiveCellFullDerivative.hasDerivAt_uniform_closedCell_moment</code> <small>line 355</small><div class="doc"><p>The genuine vector first-moment derivative, written in coordinates of the
+signed intrinsic face integrals. All scalar differentiation hypotheses are
+discharged by the full-cell calculus.</p></div><pre>theorem hasDerivAt_uniform_closedCell_moment
+    {d : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y v : ι → E d) (c r : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    (i : ι) (z : ι → E d)
+    (hz : ∀ j, j ≠ i → z j ∈ interior K)
+    (htie : ∀ j, j ≠ i → ⟪z j, y i⟫_ℝ + c i = ⟪z j, y j⟫_ℝ + c j) :
+    HasDerivAt (fun t : ℝ =&gt; ∫ x in
+      CellGeometry.closedCell K (fun j =&gt; y j + t • v j) (fun j =&gt; c j + t * r j) i,
+      x ∂uniformMeasure K)
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a></p></li><li id=L377><b>theorem</b> <code>OAI.Problem358.PositiveCellFullDerivative.hasDerivAt_uniform_closedCell_mass</code> <small>line 377</small><div class="doc"><p>The true real mass derivative of a positive cell under the probability
+source, with normalization by the source volume.</p></div><pre>theorem hasDerivAt_uniform_closedCell_mass
+    {d : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {ρ : Measure (E d)} (hρ : ρ ≪ volume)
+    {K : Set (E d)} (hK : IsCompact K) (hconv : Convex ℝ K)
+    (y v : ι → E d) (c r : ι → ℝ) (hy : Function.Injective y)
+    (hpos : ∀ k, ρ (CellGeometry.closedCell K y c k) ≠ 0)
+    (i : ι) (z : ι → E d)
+    (hz : ∀ j, j ≠ i → z j ∈ interior K)
+    (htie : ∀ j, j ≠ i → ⟪z j, y i⟫_ℝ + c i = ⟪z j, y j⟫_ℝ + c j) :
+    HasDerivAt (fun t : ℝ =&gt; (uniformMeasure K).real
+      (CellGeometry.closedCell K (fun j =&gt; y j + t • v j) (fun j =&gt; c j + t * r j) i))
+      ((∑ j ∈ Finset.univ.erase i, faceVariation K y v c r (fun _ =&gt; 1) i j (z j)) /
+…</pre><p class="refs">Mentions: <a href="CellGeometry.lean.html#L16">OAI.Problem358.CellGeometry.closedCell</a>, <a href="CellDerivative.lean.html#L218">OAI.Problem358.PositiveCellFullDerivative.faceVariation</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

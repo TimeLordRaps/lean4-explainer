@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/InfiniteProducts.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/InfiniteProducts.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>InfiniteProducts.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>InfiniteProducts.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/InfiniteProducts.lean#L1">source</a></p><div class="doc"><h3>Uniform estimates and limits for infinite products</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L27><b>theorem</b> <code>OAI.Nagata.W03.tendstoLocallyUniformlyOn_const_one</code> <small>line 27</small><div class="doc"><p>A constant family of functions with value one converges locally uniformly.</p></div><pre>theorem tendstoLocallyUniformlyOn_const_one :
+    TendstoLocallyUniformlyOn (fun _ : α =&gt; fun _ : β =&gt; (1 : R))
+      (fun _ =&gt; 1) l s :=
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.Nagata.W03.tendstoLocallyUniformlyOn_pow_one</code> <small>line 34</small><div class="doc"><p>A fixed natural power of a family converging locally uniformly to one has
+the same limit. No pointwise differentiability premise is needed.</p></div><pre>theorem tendstoLocallyUniformlyOn_pow_one {F : α → β → R}
+    (hF : TendstoLocallyUniformlyOn F (fun _ =&gt; 1) l s) (c : ℕ) :
+    TendstoLocallyUniformlyOn (fun a x =&gt; F a x ^ c) (fun _ =&gt; 1) l s := by
+…</pre></li><li id=L45><b>theorem</b> <code>OAI.Nagata.W03.tendstoLocallyUniformlyOn_finset_prod_one</code> <small>line 45</small><div class="doc"><p>Every finite product of families tending locally uniformly to one tends
+locally uniformly to one, including the empty product.</p></div><pre>theorem tendstoLocallyUniformlyOn_finset_prod_one {ι : Type*}
+    (T : Finset ι) {F : ι → α → β → R}
+    (hF : ∀ i ∈ T, TendstoLocallyUniformlyOn (F i) (fun _ =&gt; 1) l s) :
+    TendstoLocallyUniformlyOn (fun a x =&gt; ∏ i ∈ T, F i a x) (fun _ =&gt; 1) l s := by
+…</pre></li><li id=L60><b>theorem</b> <code>OAI.Nagata.W03.tendstoLocallyUniformlyOn_fintype_prod_one</code> <small>line 60</small><div class="doc"><p>Fintype form, convenient for the nine marked-point factors.</p></div><pre>theorem tendstoLocallyUniformlyOn_fintype_prod_one {ι : Type*} [Fintype ι]
+    {F : ι → α → β → R}
+    (hF : ∀ i, TendstoLocallyUniformlyOn (F i) (fun _ =&gt; 1) l s) :
+    TendstoLocallyUniformlyOn (fun a x =&gt; ∏ i, F i a x) (fun _ =&gt; 1) l s :=
+…</pre></li><li id=L82><b>theorem</b> <code>OAI.Nagata.W03.norm_tprod_one_add_sub_one_le</code> <small>line 82</small><div class="doc"><p>Infinite-product version of the finite product estimate.</p></div><pre>theorem norm_tprod_one_add_sub_one_le {ι R : Type*}
+    [NormedCommRing R] [NormOneClass R] [CompleteSpace R]
+    {u : ι → R} (hu : Summable (fun i =&gt; ‖u i‖)) :
+    ‖(∏&#x27; i, (1 + u i)) - 1‖ ≤ Real.exp (∑&#x27; i, ‖u i‖) - 1 := by
+…</pre></li><li id=L95><b>theorem</b> <code>OAI.Nagata.W03.norm_tprod_one_add_sub_one_le_of_tsum_norm_le</code> <small>line 95</small><div class="doc"><p>A scalar upper bound on the norm sum bounds the infinite product's error.</p></div><pre>theorem norm_tprod_one_add_sub_one_le_of_tsum_norm_le {ι R : Type*}
+    [NormedCommRing R] [NormOneClass R] [CompleteSpace R]
+    {u : ι → R} {B : ℝ} (hu : Summable (fun i =&gt; ‖u i‖))
+    (hB : (∑&#x27; i, ‖u i‖) ≤ B) :
+    ‖(∏&#x27; i, (1 + u i)) - 1‖ ≤ Real.exp B - 1 :=
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.Nagata.W03.tendstoUniformlyOn_tprod_one_add_of_tsum_norm_le</code> <small>line 105</small><div class="doc"><p>Uniform vanishing of a scalar bound on total norms makes the actual products
+converge uniformly to one. Summability and bounds need hold only eventually.</p></div><pre>theorem tendstoUniformlyOn_tprod_one_add_of_tsum_norm_le
+    {α β ι R : Type*} [NormedCommRing R] [NormOneClass R] [CompleteSpace R]
+    {l : Filter α} {s : Set β} {u : α → ι → β → R} {B : α → ℝ}
+    (hB : Tendsto B l (𝓝 0))
+    (hsum : ∀ᶠ a in l, ∀ x ∈ s, Summable (fun i =&gt; ‖u a i x‖))
+    (hbound : ∀ᶠ a in l, ∀ x ∈ s, (∑&#x27; i, ‖u a i x‖) ≤ B a) :
+    TendstoUniformlyOn (fun a x =&gt; ∏&#x27; i, (1 + u a i x)) (fun _ =&gt; 1) l s := by
+…</pre></li><li id=L125><b>theorem</b> <code>OAI.Nagata.W03.tendstoLocallyUniformlyOn_tprod_one_add_of_local_tsum_norm_le</code> <small>line 125</small><div class="doc"><p>Local bounds may use a different scalar majorant on each neighbourhood.</p></div><pre>theorem tendstoLocallyUniformlyOn_tprod_one_add_of_local_tsum_norm_le
+    {α β ι R : Type*} [TopologicalSpace β]
+    [NormedCommRing R] [NormOneClass R] [CompleteSpace R]
+    {l : Filter α} {s : Set β} {u : α → ι → β → R}
+    (hlocal : ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, ∃ B : α → ℝ,
+      Tendsto B l (𝓝 0) ∧
+      (∀ᶠ a in l, ∀ y ∈ t, Summable (fun i =&gt; ‖u a i y‖)) ∧
+      (∀ᶠ a in l, ∀ y ∈ t, (∑&#x27; i, ‖u a i y‖) ≤ B a)) :
+    TendstoLocallyUniformlyOn (fun a x =&gt; ∏&#x27; i, (1 + u a i x))
+      (fun _ =&gt; 1) l s := by
+…</pre></li><li id=L142><b>theorem</b> <code>OAI.Nagata.W03.tendstoLocallyUniformlyOn_tprod_one_add_of_compact_tsum_norm_le</code> <small>line 142</small><div class="doc"><p>On an open locally compact domain it suffices to give vanishing majorants
+on every compact subset; this is the usual analytic local-uniform formulation.</p></div><pre>theorem tendstoLocallyUniformlyOn_tprod_one_add_of_compact_tsum_norm_le
+    {α β ι R : Type*} [TopologicalSpace β] [LocallyCompactSpace β]
+    [NormedCommRing R] [NormOneClass R] [CompleteSpace R]
+    {l : Filter α} {s : Set β} {u : α → ι → β → R} (hs : IsOpen s)
+    (hcompact : ∀ K : Set β, K ⊆ s → IsCompact K → ∃ B : α → ℝ,
+      Tendsto B l (𝓝 0) ∧
+      (∀ᶠ a in l, ∀ x ∈ K, Summable (fun i =&gt; ‖u a i x‖)) ∧
+      (∀ᶠ a in l, ∀ x ∈ K, (∑&#x27; i, ‖u a i x‖) ≤ B a)) :
+    TendstoLocallyUniformlyOn (fun a x =&gt; ∏&#x27; i, (1 + u a i x))
+      (fun _ =&gt; 1) l s := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

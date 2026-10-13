@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tracial/SourceCornerQuantization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tracial/SourceCornerQuantization.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tracial</a> / <span>SourceCornerQuantization.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tracial</a>/<span>SourceCornerQuantization.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tracial/SourceCornerQuantization.lean#L1">source</a></p><div class="doc"><p>Local quantization inside every nonzero corner of the prescribed source.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.KadisonSimilarity.sourceCornerHom</code> <small>line 20</small><div class="doc"><p>The original inclusion restricted to matching corners.</p></div><pre>def sourceCornerHom (φ : A →⋆ₐ[ℂ] B) (p : A) (hp : IsStarProjection p) :
+    Corner p hp →⋆ₐ[ℂ] Corner (φ p) (hp.map φ) where
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.KadisonSimilarity.sourceCornerHom_coe</code> <small>line 35</small></li><li id=L53><b>theorem</b> <code>OAI.KadisonSimilarity.source_corner_irreducible</code> <small>line 53</small><div class="doc"><p>Corner irreducibility retains the given source inclusion.</p></div><pre>theorem source_corner_irreducible
+    (hirr : ∀ c : M.toStarSubalgebra,
+      (∀ a : N.toStarSubalgebra, coordinateInclusion hNM a * c =
+        c * coordinateInclusion hNM a) → ∃ z : ℂ, c = z • 1)
+    (p : N.toStarSubalgebra) (hp : IsStarProjection p) :
+    ∀ c : Corner (coordinateInclusion hNM p) (hp.map (coordinateInclusion hNM)),
+      (∀ a : Corner p hp, sourceCornerHom (coordinateInclusion hNM) p hp a * c =
+        c * sourceCornerHom (coordinateInclusion hNM) p hp a) → ∃ z : ℂ, c = z • 1 := by
+…</pre><p class="refs">Mentions: <a href="SourceCornerQuantization.lean.html#L20">OAI.KadisonSimilarity.sourceCornerHom</a></p></li><li id=L85><b>theorem</b> <code>OAI.KadisonSimilarity.exists_source_corner_model</code> <small>line 85</small><div class="doc"><p>The normalized source-corner inclusion has a simultaneous normal model.</p></div><pre>theorem exists_source_corner_model (p : N.toStarSubalgebra) (hp : IsStarProjection p)
+    (hp0 : p ≠ 0) :
+    Nonempty (TracialInclusionModel (sourceCornerHom (coordinateInclusion hNM) p hp)
+      (cornerTrace (coordinateInclusion hNM p) (hp.map (coordinateInclusion hNM))
+        (vectorPositiveFunctional M υ.vector))) := by
+…</pre><p class="refs">Mentions: <a href="TracialInclusionModel.lean.html#L19">OAI.KadisonSimilarity.TracialInclusionModel</a>, <a href="SourceCornerQuantization.lean.html#L20">OAI.KadisonSimilarity.sourceCornerHom</a>, <a href="FiniteFactorTrace.lean.html#L19">OAI.KadisonSimilarity.vectorPositiveFunctional</a></p></li><li id=L120><b>theorem</b> <code>OAI.KadisonSimilarity.source_corner_factor</code> <small>line 120</small><div class="doc"><p>Scalar center of a nonzero source corner.</p></div><pre>theorem source_corner_factor
+    (hfactor : ∀ c : N.toStarSubalgebra, (∀ a, a * c = c * a) → ∃ z : ℂ, c = z • 1)
+    (hdiff : ∀ p : N.toStarSubalgebra, IsStarProjection p → p ≠ 0 →
+      ∃ q, IsStarProjection q ∧ q ≠ 0 ∧ q ≠ p ∧ p * q = q ∧ q * p = q)
+    (p : N.toStarSubalgebra) (hp : IsStarProjection p) (hp0 : p ≠ 0) :
+    ∀ c : Corner p hp, (∀ a, a * c = c * a) → ∃ z : ℂ, c = z • 1 := by
+…</pre></li><li id=L142><b>theorem</b> <code>OAI.KadisonSimilarity.source_corner_diffuse</code> <small>line 142</small><div class="doc"><p>A nonzero projection in the source corner can be split there.</p></div><pre>theorem source_corner_diffuse
+    (hdiff : ∀ p : N.toStarSubalgebra, IsStarProjection p → p ≠ 0 →
+      ∃ q, IsStarProjection q ∧ q ≠ 0 ∧ q ≠ p ∧ p * q = q ∧ q * p = q)
+    (p : N.toStarSubalgebra) (hp : IsStarProjection p) :
+    ∀ q : Corner p hp, IsStarProjection q → q ≠ 0 →
+      ∃ r, IsStarProjection r ∧ r ≠ 0 ∧ r ≠ q ∧ q * r = r ∧ r * q = r := by
+…</pre></li><li id=L158><b>theorem</b> <code>OAI.KadisonSimilarity.exists_source_corner_compression</code> <small>line 158</small><div class="doc"><p>Centered coefficients in the normalized corner admit small source projections.</p></div><pre>theorem exists_source_corner_compression
+    (hfactor : ∀ c : N.toStarSubalgebra, (∀ a, a * c = c * a) → ∃ z : ℂ, c = z • 1)
+    (hdiff : ∀ p : N.toStarSubalgebra, IsStarProjection p → p ≠ 0 →
+      ∃ q, IsStarProjection q ∧ q ≠ 0 ∧ q ≠ p ∧ p * q = q ∧ q * p = q)
+    (hirr : ∀ c : M.toStarSubalgebra,
+      (∀ a : N.toStarSubalgebra, coordinateInclusion hNM a * c =
+        c * coordinateInclusion hNM a) → ∃ z : ℂ, c = z • 1)
+    (p : N.toStarSubalgebra) (hp : IsStarProjection p) (hp0 : p ≠ 0)
+    {I : Type*} [Fintype I]
+    (x : I → Corner (coordinateInclusion hNM p) (hp.map (coordinateInclusion hNM)))
+    (hx : ∀ i, cornerTrace (coordinateInclusion hNM p)
+      (hp.map (coordinateInclusion hNM)) (vectorPositiveFunctional M υ.vector) (x i) = 0)
+…</pre><p class="refs">Mentions: <a href="FiniteFactorTrace.lean.html#L19">OAI.KadisonSimilarity.vectorPositiveFunctional</a></p></li><li id=L213><b>theorem</b> <code>OAI.KadisonSimilarity.sourceCorner_compressed_eq</code> <small>line 213</small><div class="doc"><p>Compression of a centered corner element in the original coordinates.</p></div><pre>theorem sourceCorner_compressed_eq (p : N.toStarSubalgebra) (hp : IsStarProjection p)
+    (q : Corner p hp) (hq : IsStarProjection q) (x : M.toStarSubalgebra) (c : ℂ) :
+    let φ := coordinateInclusion hNM
+…</pre></li><li id=L235><b>theorem</b> <code>OAI.KadisonSimilarity.exists_source_relative_small_corner</code> <small>line 235</small><div class="doc"><p>Every nonzero source corner admits relative compression, with the
+normalization expressed using the original ambient trace.</p></div><pre>theorem exists_source_relative_small_corner
+    (hfactor : ∀ c : N.toStarSubalgebra, (∀ a, a * c = c * a) → ∃ z : ℂ, c = z • 1)
+    (hdiff : ∀ p : N.toStarSubalgebra, IsStarProjection p → p ≠ 0 →
+      ∃ q, IsStarProjection q ∧ q ≠ 0 ∧ q ≠ p ∧ p * q = q ∧ q * p = q)
+    (hirr : ∀ c : M.toStarSubalgebra,
+      (∀ a : N.toStarSubalgebra, coordinateInclusion hNM a * c =
+        c * coordinateInclusion hNM a) → ∃ z : ℂ, c = z • 1)
+    (p : N.toStarSubalgebra) (hp : IsStarProjection p) (hp0 : p ≠ 0)
+    {I : Type*} [Fintype I] (x : I → M.toStarSubalgebra)
+    {δ η : ℝ} (hδ : 0 &lt; δ) (hη : 0 &lt; η) :
+    ∃ q : N.toStarSubalgebra, IsStarProjection q ∧ q ≤ p ∧ q ≠ 0 ∧
+      (υ.trace (coordinateInclusion hNM q)).re &lt; η ∧
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

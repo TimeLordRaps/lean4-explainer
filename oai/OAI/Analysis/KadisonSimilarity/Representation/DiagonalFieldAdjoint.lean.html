@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Representation/DiagonalFieldAdjoint.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Representation/DiagonalFieldAdjoint.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Representation</a> / <span>DiagonalFieldAdjoint.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Representation</a>/<span>DiagonalFieldAdjoint.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Representation/DiagonalFieldAdjoint.lean#L1">source</a></p><div class="doc"><h3>Adjoint compatibility of the actual diagonal field</h3><p>Localized inner products recover the adjoint identity almost everywhere.
+Together with the algebraic laws, this supplies the raw AE relations needed
+for the conull fiber-representation construction.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.KadisonSimilarity.l2Localization_inner</code> <small>line 24</small><div class="doc"><p>A measurable localization is symmetric for the L² inner product.</p></div><pre>theorem l2Localization_inner (s : Set Ω) (hs : MeasurableSet s)
+    (f g : Lp H 2 μ) :
+    inner ℂ (l2Localization μ s hs f) g = inner ℂ f (l2Localization μ s hs g) := by
+…</pre><p class="refs">Mentions: <a href="L2Localization.lean.html#L55">OAI.KadisonSimilarity.l2Localization</a></p></li><li id=L38><b>theorem</b> <code>OAI.KadisonSimilarity.inner_indicatorConstLp_right</code> <small>line 38</small><div class="doc"><p>The right-indicator version of the standard L² set-integral formula.</p></div><pre>theorem inner_indicatorConstLp_right (f : Lp H 2 μ)
+    (s : Set Ω) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (y : H) :
+    inner ℂ f (indicatorConstLp 2 hs hμs y) = ∫ a in s, inner ℂ (f a) y ∂μ := by
+…</pre></li><li id=L54><b>theorem</b> <code>OAI.KadisonSimilarity.diagonal_adjoint_columns</code> <small>line 54</small><div class="doc"><p>Equality of all localized inner products identifies adjoint constant
+columns almost everywhere.</p></div><pre>theorem diagonal_adjoint_columns
+    (T : Lp H 2 μ →L[ℂ] Lp H 2 μ)
+    (hT : ∀ (r : Set Ω) (hr : MeasurableSet r),
+      T * l2Localization μ r hr = l2Localization μ r hr * T) (x y : H) :
+    ∀ᵐ a ∂μ, inner ℂ x (T (Lp.const 2 μ y) a) =
+      inner ℂ ((star T) (Lp.const 2 μ x) a) y := by
+…</pre><p class="refs">Mentions: <a href="L2Localization.lean.html#L55">OAI.KadisonSimilarity.l2Localization</a></p></li><li id=L93><b>theorem</b> <code>OAI.KadisonSimilarity.pointwise_field_star</code> <small>line 93</small><div class="doc"><p>Adjoint compatibility follows from the original operator's localized
+inner products, rather than being postulated as a field relation.</p></div><pre>theorem pointwise_field_star
+    (T : Lp H 2 μ →L[ℂ] Lp H 2 μ)
+    (hT : ∀ (r : Set Ω) (hr : MeasurableSet r),
+      T * l2Localization μ r hr = l2Localization μ r hr * T)
+    (R Q : Ω → H →L[ℂ] H)
+    (hR : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, T f a = R a (f a))
+    (hQ : ∀ f : Lp H 2 μ, ∀ᵐ a ∂μ, (star T) f a = Q a (f a)) :
+    ∀ᵐ a ∂μ, Q a = star (R a) := by
+…</pre><p class="refs">Mentions: <a href="L2Localization.lean.html#L55">OAI.KadisonSimilarity.l2Localization</a></p></li><li id=L125><b>theorem</b> <code>OAI.KadisonSimilarity.exists_diagonal_subalgebra_fields</code> <small>line 125</small><div class="doc"><p>A star subalgebra of the diagonal commutant has actual bounded fields
+whose raw algebraic relations all hold almost everywhere. Each fixed
+operator also has its full pointwise L²-action formula.</p></div><pre>theorem exists_diagonal_subalgebra_fields
+    (P : StarSubalgebra ℂ (Lp H 2 μ →L[ℂ] Lp H 2 μ))
+    (hP : ∀ (T : P) (r : Set Ω) (hr : MeasurableSet r),
+      (T : Lp H 2 μ →L[ℂ] Lp H 2 μ) * l2Localization μ r hr =
+        l2Localization μ r hr * (T : Lp H 2 μ →L[ℂ] Lp H 2 μ)) :
+    ∃ field : P → Ω → H →L[ℂ] H,
+      (∀ T a, ‖field T a‖ ≤ ‖T‖) ∧
+      (∀ (T : P) (f : Lp H 2 μ), ∀ᵐ a ∂μ, T.val f a = field T a (f a)) ∧
+      (∀ᵐ a ∂μ, field 0 a = 0) ∧
+      (∀ᵐ a ∂μ, field 1 a = 1) ∧
+      (∀ T S : P, ∀ᵐ a ∂μ, field (T + S) a = field T a + field S a) ∧
+      (∀ T S : P, ∀ᵐ a ∂μ, field (T * S) a = field T a * field S a) ∧
+…</pre><p class="refs">Mentions: <a href="L2Localization.lean.html#L55">OAI.KadisonSimilarity.l2Localization</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

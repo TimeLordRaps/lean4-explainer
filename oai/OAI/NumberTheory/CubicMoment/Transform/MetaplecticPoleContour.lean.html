@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/CubicMoment/Transform/MetaplecticPoleContour.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/CubicMoment/Transform/MetaplecticPoleContour.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">CubicMoment</a> / <a href="index.html">Transform</a> / <span>MetaplecticPoleContour.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">CubicMoment</a>/<a href="index.html">Transform</a>/<span>MetaplecticPoleContour.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/CubicMoment/Transform/MetaplecticPoleContour.lean#L1">source</a></p><div class="doc"><p>The pole crossed by the Type-I Mellin contour. These are calculus
+lemmas: no analytic continuation or arithmetic estimate is assumed.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>lemma</b> <code>OAI.CubicFirstMoment.simplePole_line_continuous</code> <small>line 14</small></li><li id=L25><b>lemma</b> <code>OAI.CubicFirstMoment.simplePole_line_integral</code> <small>line 25</small><div class="doc"><p>The symmetric integral of a simple-pole kernel is an arctangent.
+Keeping its imaginary part exact avoids any conditionally convergent
+integral in the eventual contour shift.</p></div><pre>lemma simplePole_line_integral {c : ℝ} (hc : c ≠ 0) (T : ℝ) :
+    (∫ t in -T..T, ((c:ℂ)+(t:ℂ)*Complex.I)⁻¹) = (2*Real.arctan (T/c):ℝ) := by
+…</pre></li><li id=L48><b>lemma</b> <code>OAI.CubicFirstMoment.simplePole_line_tendsto_pos</code> <small>line 48</small></li><li id=L58><b>lemma</b> <code>OAI.CubicFirstMoment.simplePole_line_tendsto_neg</code> <small>line 58</small></li><li id=L68><b>def</b> <code>OAI.CubicFirstMoment.poleRegularPart</code> <small>line 68</small></li><li id=L71><b>lemma</b> <code>OAI.CubicFirstMoment.poleRegularPart_differentiableOn</code> <small>line 71</small></li><li id=L81><b>lemma</b> <code>OAI.CubicFirstMoment.poleRegularPart_eq</code> <small>line 81</small></li><li id=L88><b>lemma</b> <code>OAI.CubicFirstMoment.simplePole_horizontal_tendsto</code> <small>line 88</small><div class="doc"><p>The horizontal edges of the subtracted constant pole tend to zero.</p></div><pre>lemma simplePole_horizontal_tendsto (a b c : ℝ) :
+    Tendsto (fun T : ℝ =&gt; ∫ x in a..b,
+      ((x:ℂ)+(T:ℂ)*Complex.I-(c:ℂ))⁻¹) atTop (𝓝 0) := by
+…</pre></li><li id=L103><b>lemma</b> <code>OAI.CubicFirstMoment.poleRegularPart_vertical_limit</code> <small>line 103</small></li><li id=L140><b>theorem</b> <code>OAI.CubicFirstMoment.mellin_single_pole_shift</code> <small>line 140</small><div class="doc"><p>A one-pole contour shift with both horizontal limits kept explicit.
+The removable part is constructed from a divided difference, and the
+residue contribution comes from the proved arctangent kernel limits.</p></div><pre>theorem mellin_single_pole_shift (M g : ℂ → ℂ) (ρ : ℂ) {a b c : ℝ}
+    (hac : a &lt; c) (hcb : c &lt; b) (hM : Differentiable ℂ M)
+    (hg : DifferentiableOn ℂ g (closedVerticalStrip a b))
+    (ha : Integrable (fun t : ℝ =&gt; M ((a:ℂ)+(t:ℂ)*Complex.I)*
+      (g ((a:ℂ)+(t:ℂ)*Complex.I)+ρ/((a:ℂ)+(t:ℂ)*Complex.I-(c:ℂ)))))
+    (hb : Integrable (fun t : ℝ =&gt; M ((b:ℂ)+(t:ℂ)*Complex.I)*
+      (g ((b:ℂ)+(t:ℂ)*Complex.I)+ρ/((b:ℂ)+(t:ℂ)*Complex.I-(c:ℂ)))))
+    (hTop : Tendsto (fun T : ℝ =&gt; ∫ x in a..b,
+      poleRegularPart M g ρ c ((x:ℂ)+(T:ℂ)*Complex.I)) atTop (𝓝 0))
+    (hBot : Tendsto (fun T : ℝ =&gt; ∫ x in a..b,
+      poleRegularPart M g ρ c ((x:ℂ)-(T:ℂ)*Complex.I)) atTop (𝓝 0)) :
+    (∫ t : ℝ, M ((b:ℂ)+(t:ℂ)*Complex.I)*
+…</pre><p class="refs">Mentions: <a href="../Estimates/MellinContour.lean.html#L16">OAI.CubicFirstMoment.closedVerticalStrip</a>, <a href="MetaplecticPoleContour.lean.html#L68">OAI.CubicFirstMoment.poleRegularPart</a></p></li><li id=L180><b>lemma</b> <code>OAI.CubicFirstMoment.poleRegularPart_edge_bound</code> <small>line 180</small></li><li id=L212><b>theorem</b> <code>OAI.CubicFirstMoment.mellin_single_pole_shift_of_majorant</code> <small>line 212</small><div class="doc"><p>A vanishing majorant for the original meromorphic integrand supplies
+the regularized horizontal limits required by the residue calculation.</p></div><pre>theorem mellin_single_pole_shift_of_majorant (M g : ℂ → ℂ) (ρ : ℂ) {a b c : ℝ}
+    (hac : a &lt; c) (hcb : c &lt; b) (hM : Differentiable ℂ M)
+    (hg : DifferentiableOn ℂ g (closedVerticalStrip a b))
+    (ha : Integrable (fun t : ℝ =&gt; M ((a:ℂ)+(t:ℂ)*Complex.I)*
+      (g ((a:ℂ)+(t:ℂ)*Complex.I)+ρ/((a:ℂ)+(t:ℂ)*Complex.I-(c:ℂ)))))
+    (hb : Integrable (fun t : ℝ =&gt; M ((b:ℂ)+(t:ℂ)*Complex.I)*
+      (g ((b:ℂ)+(t:ℂ)*Complex.I)+ρ/((b:ℂ)+(t:ℂ)*Complex.I-(c:ℂ)))))
+    (H : ℝ → ℝ) (hHt : Tendsto H atTop (𝓝 0)) (hHb : Tendsto H atBot (𝓝 0))
+    (hH : ∀ x ∈ Icc a b, ∀ t : ℝ, 1 ≤ |t| →
+      ‖M ((x:ℂ)+(t:ℂ)*Complex.I)*
+        (g ((x:ℂ)+(t:ℂ)*Complex.I)+ρ/((x:ℂ)+(t:ℂ)*Complex.I-(c:ℂ)))‖ ≤ H t) :
+    (∫ t : ℝ, M ((b:ℂ)+(t:ℂ)*Complex.I)*
+…</pre><p class="refs">Mentions: <a href="../Estimates/MellinContour.lean.html#L16">OAI.CubicFirstMoment.closedVerticalStrip</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

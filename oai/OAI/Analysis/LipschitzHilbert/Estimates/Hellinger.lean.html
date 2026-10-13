@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Estimates/Hellinger.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Estimates/Hellinger.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Estimates</a> / <span>Hellinger.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Estimates</a>/<span>Hellinger.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Estimates/Hellinger.lean#L1">source</a></p><div class="doc"><h3>The finite probability estimate in the phase argument</h3><p>This is the Hellinger-affinity calculation in §7, proof of <code>phase:quantile-gap</code>,
+of <em>A uniform Hilbert transform estimate for Lipschitz directions</em>.
+The finite probability calculation is proved directly.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.LipschitzHilbert.affinity</code> <small>line 21</small><div class="doc"><p>Hellinger affinity of finite probability weights.</p></div><pre>noncomputable def affinity {ι : Type*} [Fintype ι] (p q : ι → ℝ) : ℝ :=
+…</pre></li><li id=L25><b>theorem</b> <code>OAI.LipschitzHilbert.l1_sq_le_affinity</code> <small>line 25</small><div class="doc"><p>Squared total variation estimate, before division of the <code>ℓ¹</code> distance by two.</p></div><pre>theorem l1_sq_le_affinity {ι : Type*} [Fintype ι]
+    (p q : ι → ℝ) (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i)
+    (hp1 : ∑ i, p i = 1) (hq1 : ∑ i, q i = 1) :
+    (∑ i, |p i - q i|) ^ 2 ≤ 4 * (1 - affinity p q ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="Hellinger.lean.html#L21">OAI.LipschitzHilbert.affinity</a></p></li><li id=L64><b>theorem</b> <code>OAI.LipschitzHilbert.event_deficit_le_l1_half</code> <small>line 64</small><div class="doc"><p>Each event deficit is at most the total variation distance.</p></div><pre>theorem event_deficit_le_l1_half {ι : Type*} [Fintype ι]
+    (p q : ι → ℝ) (hp1 : ∑ i, p i = 1) (hq1 : ∑ i, q i = 1)
+    (s : Finset ι) :
+    2 * |∑ i ∈ s, (p i - q i)| ≤ ∑ i, |p i - q i| := by
+…</pre></li><li id=L84><b>theorem</b> <code>OAI.LipschitzHilbert.event_deficit_sq_le_one_sub_affinity_sq</code> <small>line 84</small><div class="doc"><p>The event estimate used to turn a quantile deficit into a fourth-moment gap.</p></div><pre>theorem event_deficit_sq_le_one_sub_affinity_sq {ι : Type*} [Fintype ι]
+    (p q : ι → ℝ) (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i)
+    (hp1 : ∑ i, p i = 1) (hq1 : ∑ i, q i = 1) (s : Finset ι) :
+    (∑ i ∈ s, (p i - q i)) ^ 2 ≤ 1 - affinity p q ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="Hellinger.lean.html#L21">OAI.LipschitzHilbert.affinity</a></p></li><li id=L98><b>theorem</b> <code>OAI.LipschitzHilbert.subprobability_event_deficit_sq</code> <small>line 98</small><div class="doc"><p>The completed triple law may have mass less than one. Adjoining its missing
+mass at one point, where the independent law has mass zero, preserves affinity.</p></div><pre>theorem subprobability_event_deficit_sq {ι : Type*} [Fintype ι]
+    (p q : ι → ℝ) (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i)
+    (hp1 : ∑ i, p i ≤ 1) (hq1 : ∑ i, q i = 1) (s : Finset ι) :
+    (∑ i ∈ s, (q i - p i)) ^ 2 ≤ 1 - affinity p q ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="Hellinger.lean.html#L21">OAI.LipschitzHilbert.affinity</a></p></li><li id=L132><b>theorem</b> <code>OAI.LipschitzHilbert.strict_gap_of_event_deficit</code> <small>line 132</small><div class="doc"><p>A definite event deficit forces the strict fourth-moment gain. This is the
+last algebraic step of the manuscript's quantile-gap argument.</p></div><pre>theorem strict_gap_of_event_deficit {ι : Type*} [Fintype ι]
+    (p q : ι → ℝ) (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 ≤ q i)
+    (hp1 : ∑ i, p i ≤ 1) (hq1 : ∑ i, q i = 1) (s : Finset ι)
+    {Q g : ℝ} (hQ : 0 ≤ Q) (hg : 0 ≤ g)
+    (hgain : Q ^ 2 ≤ affinity p q)
+    (hdeficit : g ≤ ∑ i ∈ s, (q i - p i)) :
+    Q ≤ 1 - g ^ 2 / 4 := by
+…</pre><p class="refs">Mentions: <a href="Hellinger.lean.html#L21">OAI.LipschitzHilbert.affinity</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

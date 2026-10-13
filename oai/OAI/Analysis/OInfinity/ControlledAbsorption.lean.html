@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/ControlledAbsorption.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/ControlledAbsorption.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>ControlledAbsorption.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>ControlledAbsorption.lean</span></code></h1><p class="muted">6 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/ControlledAbsorption.lean#L1">source</a></p><div class="doc"><h3>Controlled paths for the concrete absorption unitary</h3><p>The two-swap Fock completion has its actual <code>4π</code> path. The absorption
+polynomial is <code>2</code>-Lipschitz on unitaries. Consequently its path bound
+depends on the fixed anchor, independently of the requested Fock error.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>lemma</b> <code>OAI.WeakPureInfiniteness.BufferAbsorptionCorner.rotation_sub_norm_le</code> <small>line 20</small></li><li id=L44><b>lemma</b> <code>OAI.WeakPureInfiniteness.BufferAbsorptionCorner.absorption_sub_norm_le</code> <small>line 44</small></li><li id=L66><b>lemma</b> <code>OAI.WeakPureInfiniteness.BufferAbsorptionCorner.controlled_absorption_path</code> <small>line 66</small><div class="doc"><p>Multiply the fixed anchor path by the normalized absorption path.</p></div><pre>lemma BufferAbsorptionCorner.controlled_absorption_path [Nontrivial E]
+    (D : BufferAbsorptionCorner E) (L K : ℝ)
+    (p₀ : Path (1 : unitary E) D.anchor)
+    (hp₀ : ∀ a b, ‖(p₀ a : E) - p₀ b‖ ≤ L * |(a : ℝ) - b|)
+    (u : unitary E) (p : Path (1 : unitary E) u)
+    (hp : ∀ a b, ‖(p a : E) - p b‖ ≤ K * |(a : ℝ) - b|) :
+    ∃ q : Path (1 : unitary E) (D.absorption u),
+      ∀ a b, ‖(q a : E) - q b‖ ≤ (L + 2 * K) * |(a : ℝ) - b| := by
+…</pre><p class="refs">Mentions: <a href="BufferAbsorption.lean.html#L22">OAI.WeakPureInfiniteness.BufferAbsorptionCorner</a></p></li><li id=L98><b>lemma</b> <code>OAI.WeakPureInfiniteness.BufferAbsorptionCorner.exists_controlled_vacuum_absorption_on</code> <small>line 98</small><div class="doc"><p>The actual Fock completion gives a path cost independent of its accuracy.</p></div><pre>lemma BufferAbsorptionCorner.exists_controlled_vacuum_absorption_on [Nontrivial E]
+    (D : BufferAbsorptionCorner E) (s t : I → E) (r z : E) (P : I → Prop)
+    (hrr : star r * r = 1) (hr : ∀ i, star r * s i = 0)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (hzz : star z * z = 1) (hqz : D.q * z = 0)
+    (hzr : star z * r = 0) (hzs : ∀ i, star z * s i = 0)
+    (htq : ∀ i, t i * D.q = t i) (ht : ∑ i, t i * star (t i) = D.q)
+    (htt : ∀ i j, star (t i) * t j = if i = j then D.q else 0)
+    (hat : ∀ i, P i → Commute (star D.a) (t i))
+    (hbt : ∀ i, P i → Commute (star D.b) (t i))
+    (L : ℝ) (p₀ : Path (1 : unitary E) D.anchor)
+    (hp₀ : ∀ a b, ‖(p₀ a : E) - p₀ b‖ ≤ L * |(a : ℝ) - b|)
+…</pre><p class="refs">Mentions: <a href="BufferAbsorption.lean.html#L22">OAI.WeakPureInfiniteness.BufferAbsorptionCorner</a></p></li><li id=L167><b>lemma</b> <code>OAI.WeakPureInfiniteness.BufferAbsorptionCorner.exists_controlled_proper_vacuum_absorption</code> <small>line 167</small><div class="doc"><p>The selected proper target row inherits the same accuracy-independent bound.</p></div><pre>lemma BufferAbsorptionCorner.exists_controlled_proper_vacuum_absorption [Nontrivial E]
+    (D : BufferAbsorptionCorner E) (s t : ℕ → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (n : ℕ) (hqz : D.q * s (n + 2) = 0)
+    (hqt : ∀ i, Commute D.q (t i))
+    (hat : ∀ i, Commute (star D.a) (t i))
+    (hbt : ∀ i, Commute (star D.b) (t i))
+    (L : ℝ) (p₀ : Path (1 : unitary E) D.anchor)
+    (hp₀ : ∀ a b, ‖(p₀ a : E) - p₀ b‖ ≤ L * |(a : ℝ) - b|)
+    (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ U : unitary E,
+…</pre><p class="refs">Mentions: <a href="BufferAbsorption.lean.html#L22">OAI.WeakPureInfiniteness.BufferAbsorptionCorner</a></p></li><li id=L271><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_canonical_uniform_buffered_paths</code> <small>line 271</small><div class="doc"><p>The concrete canonical corner has a single path bound for every depth
+and every requested final error. The exact terminal representation remains
+in the target of the estimate.</p></div><pre>lemma exists_canonical_uniform_buffered_paths [Nontrivial E]
+    (s t : ℕ → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hst : bergRowsCommute s t) (n : ℕ) (κ : ℝ) (hκ : 0 &lt; κ) :
+    ∃ D : BufferAbsorptionCorner E, D.q ≠ 0 ∧
+      (∀ i : Fin (n + 1), ‖s i * D.q - D.q * s i‖ &lt; κ) ∧
+      (∀ i : Fin (n + 1),
+        ‖D.q * s i * D.q - zeroCornerRow D.q D.a D.b n i‖ &lt; κ) ∧
+      ∃ L : ℝ, 0 ≤ L ∧ ∀ (m : ℕ) (ε : ℝ), 0 &lt; ε →
+        ∃ v : unitary E,
+          (∀ i : Fin n, ‖(v : E) * s i * star (v : E) -
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="BufferAbsorption.lean.html#L22">OAI.WeakPureInfiniteness.BufferAbsorptionCorner</a>, <a href="ZeroCornerRows.lean.html#L45">OAI.WeakPureInfiniteness.zeroCornerRow</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

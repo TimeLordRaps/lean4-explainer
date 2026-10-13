@@ -1,0 +1,108 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/MaxCut/Games/KMSAnalyticFrequencyShift.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/MaxCut/Games/KMSAnalyticFrequencyShift.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">MaxCut</a> / <a href="index.html">Games</a> / <span>KMSAnalyticFrequencyShift.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">MaxCut</a>/<a href="index.html">Games</a>/<span>KMSAnalyticFrequencyShift.lean</span></code></h1><p class="muted">35 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/MaxCut/Games/KMSAnalyticFrequencyShift.lean#L1">source</a></p><div class="doc"><p>The dependent branches in the KMS fixed-character recursion inject into the
+lower-rank restricted Fourier sum. The new coordinate value is kept fixed,
+so no multiplicity or ambient-dimension loss is introduced here.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L23><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend_old_injective</code> <small>line 23</small><div class="doc"><p>Fixing the new coordinate still allows recovery of the entire old map.</p></div><pre>theorem hyperplaneExtend_old_injective (w : J) :
+    Function.Injective (fun z : B →ₗ[F2] J =&gt; hyperplaneExtend z w) := by
+…</pre><p class="refs">Mentions: <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a></p></li><li id=L31><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend_surjective</code> <small>line 31</small><div class="doc"><p>A surjective old frequency stays surjective after any new coordinate.</p></div><pre>theorem hyperplaneExtend_surjective {z : B →ₗ[F2] J}
+    (hz : Function.Surjective z) (w : J) :
+    Function.Surjective (hyperplaneExtend z w) := by
+…</pre><p class="refs">Mentions: <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a></p></li><li id=L40><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.comp_hyperplaneExtend</code> <small>line 40</small><div class="doc"><p>The fixed partial frequency extends by its actual projected new value.</p></div><pre>theorem comp_hyperplaneExtend (π : J →ₗ[F2] K) (z : B →ₗ[F2] J) (w : J) :
+    π.comp (hyperplaneExtend z w) = hyperplaneExtend (π.comp z) (π w) := by
+…</pre><p class="refs">Mentions: <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a></p></li><li id=L55><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.dependent_extension_energy_le</code> <small>line 55</small><div class="doc"><p>Each fixed dependent extension branch is bounded by the genuine restricted
+small-component energy. There is no hidden cardinality factor.</p></div><pre>theorem dependent_extension_energy_le
+    (ι : J →ₗ[F2] E) (f : (E →ₗ[F2] (B × F2)) → ℝ)
+    (π : J →ₗ[F2] K) (A0 : B →ₗ[F2] K) (w : J) :
+    (∑ z : B →ₗ[F2] J with π.comp z = A0 ∧ Function.Surjective z,
+      linearCoeff f (ι.comp (hyperplaneExtend z w)) ^ 2) ≤
+        fixedFrequencyEnergy ι f π (hyperplaneExtend A0 (π w)) := by
+…</pre><p class="refs">Mentions: <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a>, <a href="KMSFourthMomentPointShuffle.lean.html#L132">OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy</a></p></li><li id=L111><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.coefficient_lifted_zoomOut_sq_bound</code> <small>line 111</small><div class="doc"><p>The exact zoom-out square bound after embedding the small frequency
+space; the dependent sum is indexed by that small space itself.</p></div><pre>theorem coefficient_lifted_zoomOut_sq_bound
+    (ι : (J × F2) →ₗ[F2] E) (hι : Function.Injective ι)
+    (f : (E →ₗ[F2] (B × F2)) → ℝ) (hf : IsBasisInvariant f)
+    (z : B →ₗ[F2] J) (hz : Function.Surjective z) :
+    (((Fintype.card E - Fintype.card J : ℕ) : ℝ) ^ 2) *
+        linearCoeff f (hyperplaneExtend ((leftEmbedding ι).comp z) (ι (0, 1))) ^ 2 ≤
+      ((Fintype.card J : ℝ) + 1) *
+        (linearCoeff (fun X =&gt; f ((LinearMap.inl F2 B F2).comp X))
+            ((leftEmbedding ι).comp z) ^ 2 +
+          ∑ w : J, linearCoeff f ((leftEmbedding ι).comp (hyperplaneExtend z w)) ^ 2) := by
+…</pre><p class="refs">Mentions: <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a>, <a href="KMSInjectionCountBounds.lean.html#L701">OAI.MaxCutGames.Inverse.KMSAnalytic.leftEmbedding</a></p></li><li id=L134><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fixedCharacter_step_sum</code> <small>line 134</small><div class="doc"><p>Summing the genuine pointwise recurrence bounds every dependent branch
+by an actual lower-rank fixed-character energy, with no missing multiplicity.</p></div><pre>theorem fixedCharacter_step_sum
+    (ι : (J × F2) →ₗ[F2] E) (hι : Function.Injective ι)
+    (f : (E →ₗ[F2] (B × F2)) → ℝ) (hf : IsBasisInvariant f)
+    (π : J →ₗ[F2] K) (A : B →ₗ[F2] K) :
+    (((Fintype.card E - Fintype.card J : ℕ) : ℝ) ^ 2) *
+        (∑ z ∈ Finset.univ.filter (fun z : B →ₗ[F2] J =&gt;
+            π.comp z = A ∧ Function.Surjective z),
+          linearCoeff f (hyperplaneExtend ((leftEmbedding ι).comp z) (ι (0, 1))) ^ 2) ≤
+      ((Fintype.card J : ℝ) + 1) *
+        (fixedFrequencyEnergy (leftEmbedding ι)
+          (fun X : E →ₗ[F2] B =&gt; f ((LinearMap.inl F2 B F2).comp X)) π A +
+        ∑ w : J, fixedFrequencyEnergy (leftEmbedding ι) f π (hyperplaneExtend A (π w))) := by
+…</pre><p class="refs">Mentions: <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a>, <a href="KMSInjectionCountBounds.lean.html#L701">OAI.MaxCutGames.Inverse.KMSAnalytic.leftEmbedding</a>, <a href="KMSFourthMomentPointShuffle.lean.html#L132">OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy</a></p></li><li id=L194><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency</code> <small>line 194</small><div class="doc"><p>Adjoin a new identity coordinate and an arbitrary off-diagonal vector.</p></div><pre>def blockFrequency (z : B →ₗ[F2] J) (w : J) : (B × F2) →ₗ[F2] (J × F2) :=
+…</pre></li><li id=L197><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency_apply</code> <small>line 197</small></li><li id=L200><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency_surjective_iff</code> <small>line 200</small></li><li id=L215><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.ker_blockFrequency</code> <small>line 215</small><div class="doc"><p>The kernel is independent of the off-diagonal vector, without any
+surjectivity assumption.</p></div><pre>theorem ker_blockFrequency (z : B →ₗ[F2] J) (w : J) :
+    (blockFrequency z w).ker = z.ker.prod (⊥ : Submodule F2 F2) := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticFrequencyShift.lean.html#L194">OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency</a></p></li><li id=L226><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency_compatible_iff</code> <small>line 226</small></li><li id=L243><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockOld</code> <small>line 243</small></li><li id=L246><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockNew</code> <small>line 246</small></li><li id=L248><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockOld_blockFrequency</code> <small>line 248</small></li><li id=L253><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockNew_blockFrequency</code> <small>line 253</small></li><li id=L256><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency_recover</code> <small>line 256</small></li><li id=L269><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.CompatibleBlockFrequency</code> <small>line 269</small></li><li id=L274><b>abbrev</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.CompatibleOldFrequency</code> <small>line 274</small></li><li id=L278><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.compatibleBlockFrequencyEquiv</code> <small>line 278</small><div class="doc"><p>The actual compatible frequency fiber, with its exact kernel-vector parameter.</p></div><pre>def compatibleBlockFrequencyEquiv (π : J →ₗ[F2] K) (A : B →ₗ[F2] K) :
+    CompatibleBlockFrequency π A ≃ CompatibleOldFrequency π A × π.ker where
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticFrequencyShift.lean.html#L269">OAI.MaxCutGames.Inverse.KMSAnalytic.CompatibleBlockFrequency</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L274">OAI.MaxCutGames.Inverse.KMSAnalytic.CompatibleOldFrequency</a></p></li><li id=L304><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.coefficient_blockFrequency_eq</code> <small>line 304</small><div class="doc"><p>Actual lifted coefficients are independent of the block vector.</p></div><pre>theorem coefficient_blockFrequency_eq (ι : (J × F2) →ₗ[F2] E)
+    (hι : Function.Injective ι) (f : (E →ₗ[F2] (B × F2)) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f) (z : B →ₗ[F2] J) (u v : J) :
+    linearCoeff f (ι.comp (blockFrequency z u)) =
+      linearCoeff f (ι.comp (blockFrequency z v)) := by
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L194">OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency</a></p></li><li id=L322><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy_block</code> <small>line 322</small><div class="doc"><p>Exact collapse of the new-coordinate fiber in the prescribed-frequency
+energy. The multiplier is the actual number of vectors in <code>ker π</code>.</p></div><pre>theorem fixedFrequencyEnergy_block (ι : (J × F2) →ₗ[F2] E)
+    (hι : Function.Injective ι) (f : (E →ₗ[F2] (B × F2)) → ℝ)
+    (hf : KMSBasisInvariant.IsBasisInvariant f) (π : J →ₗ[F2] K) (A : B →ₗ[F2] K) :
+    fixedFrequencyEnergy ι f (π.prodMap (LinearMap.id : F2 →ₗ[F2] F2))
+      (A.prodMap (LinearMap.id : F2 →ₗ[F2] F2)) =
+      (Fintype.card π.ker : ℝ) * ∑ z : CompatibleOldFrequency π A,
+        linearCoeff f (ι.comp (blockFrequency z.val 0)) ^ 2 := by
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSFourthMomentPointShuffle.lean.html#L132">OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L274">OAI.MaxCutGames.Inverse.KMSAnalytic.CompatibleOldFrequency</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L194">OAI.MaxCutGames.Inverse.KMSAnalytic.blockFrequency</a></p></li><li id=L372><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.comp_blockFrequency_zero</code> <small>line 372</small></li><li id=L397><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy_product_step</code> <small>line 397</small><div class="doc"><p>A genuine one-step recurrence in the actual restricted Fourier energy.
+Every term on the right has one fewer small-space dimension and one fewer
+fixed character.</p></div><pre>theorem fixedFrequencyEnergy_product_step
+    (ι : (J × F2) →ₗ[F2] E) (hι : Function.Injective ι)
+    (f : (E →ₗ[F2] (B × F2)) → ℝ) (hf : IsBasisInvariant f)
+    (π : J →ₗ[F2] K) (A : B →ₗ[F2] K) :
+    (((Fintype.card E - Fintype.card J : ℕ) : ℝ) ^ 2) *
+        fixedFrequencyEnergy ι f (π.prodMap (LinearMap.id : F2 →ₗ[F2] F2))
+          (A.prodMap (LinearMap.id : F2 →ₗ[F2] F2)) ≤
+      (Fintype.card π.ker : ℝ) * (((Fintype.card J : ℝ) + 1) *
+        (fixedFrequencyEnergy (leftEmbedding ι)
+          (fun X : E →ₗ[F2] B =&gt; f ((LinearMap.inl F2 B F2).comp X)) π A +
+        ∑ w : J, fixedFrequencyEnergy (leftEmbedding ι) f π (hyperplaneExtend A (π w)))) := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentPointShuffle.lean.html#L132">OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy</a>, <a href="KMSInjectionCountBounds.lean.html#L701">OAI.MaxCutGames.Inverse.KMSAnalytic.leftEmbedding</a>, <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a></p></li><li id=L437><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fixedCharacter_constant_step</code> <small>line 437</small><div class="doc"><p>The recurrence cost in Lemma 3.19 is absorbed by <code>2^(4 i²)</code>. The proof only
+needs <code>n &lt; ell</code>, weaker than the usual <code>2*(n+1) ≤ ell</code> induction hypothesis.</p></div><pre>theorem fixedCharacter_constant_step (n m ell : ℕ) (hnell : n &lt; ell) :
+    (2 : ℝ) ^ n * ((2 : ℝ) ^ n + 1) ^ 2 * (2 : ℝ) ^ (4 * n * n) /
+        ((((2 : ℝ) ^ ell - (2 : ℝ) ^ n) ^ 2) * (2 : ℝ) ^ ((n + m) * ell)) ≤
+      (2 : ℝ) ^ (4 * (n + 1) * (n + 1)) /
+        (2 : ℝ) ^ (((n + 1) + (m + 1)) * ell) := by
+…</pre></li><li id=L530><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy_product_bound</code> <small>line 530</small><div class="doc"><p>The fixed-character recurrence preserves the explicit quadratic constant.
+No local-density or Fourier bound is hidden in the scalar accounting.</p></div><pre>theorem fixedFrequencyEnergy_product_bound
+    (ι : (J × F2) →ₗ[F2] E) (hι : Function.Injective ι)
+    (f : (E →ₗ[F2] (B × F2)) → ℝ) (hf : IsBasisInvariant f)
+    (π : J →ₗ[F2] K) (A : B →ₗ[F2] K) (ε : ℝ) (hε : 0 ≤ ε)
+    (hfirst : (2 : ℝ) ^ ((Module.finrank F2 J + Module.finrank F2 K) *
+        Module.finrank F2 E) * fixedFrequencyEnergy (leftEmbedding ι)
+        (fun X : E →ₗ[F2] B =&gt; f ((LinearMap.inl F2 B F2).comp X)) π A ≤
+      (2 : ℝ) ^ (4 * Module.finrank F2 J * Module.finrank F2 J) * ε)
+    (hlower : ∀ w : J, (2 : ℝ) ^ ((Module.finrank F2 J + Module.finrank F2 K) *
+        Module.finrank F2 E) * fixedFrequencyEnergy (leftEmbedding ι) f π
+        (hyperplaneExtend A (π w)) ≤
+      (2 : ℝ) ^ (4 * Module.finrank F2 J * Module.finrank F2 J) * ε) :
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentPointShuffle.lean.html#L132">OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy</a>, <a href="KMSInjectionCountBounds.lean.html#L701">OAI.MaxCutGames.Inverse.KMSAnalytic.leftEmbedding</a>, <a href="KMSInjectionCountBounds.lean.html#L439">OAI.MaxCutGames.Inverse.KMSAnalytic.hyperplaneExtend</a></p></li><li id=L654><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.codomainTransport</code> <small>line 654</small></li><li id=L658><b>def</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.codomainFrequencyEquiv</code> <small>line 658</small><div class="doc"><p>Actual dual frequencies are reindexed by precomposition with the inverse.</p></div><pre>def codomainFrequencyEquiv (e : F ≃ₗ[F2] F&#x27;) : (F →ₗ[F2] I) ≃ (F&#x27; →ₗ[F2] I) where
+…</pre></li><li id=L664><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.codomainFrequencyEquiv_apply</code> <small>line 664</small></li><li id=L667><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.codomainFrequency_cancel</code> <small>line 667</small></li><li id=L670><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.surjective_comp_codomainEquiv_iff</code> <small>line 670</small></li><li id=L687><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.linearCoeff_codomainTransport</code> <small>line 687</small><div class="doc"><p>The Fourier pullback fiber of a codomain equivalence has a single term.</p></div><pre>theorem linearCoeff_codomainTransport (e : F ≃ₗ[F2] F&#x27;)
+    (f : (E →ₗ[F2] F) → ℝ) (S&#x27; : F&#x27; →ₗ[F2] E) :
+    linearCoeff (codomainTransport e f) S&#x27; = linearCoeff f (S&#x27;.comp e.toLinearMap) := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticFrequencyShift.lean.html#L654">OAI.MaxCutGames.Inverse.KMSAnalytic.codomainTransport</a></p></li><li id=L707><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.basisInvariant_codomainTransport</code> <small>line 707</small><div class="doc"><p>Codomain transport preserves the original basis invariance.</p></div><pre>theorem basisInvariant_codomainTransport (e : F ≃ₗ[F2] F&#x27;)
+    (f : (E →ₗ[F2] F) → ℝ) (hf : KMSBasisInvariant.IsBasisInvariant f) :
+    KMSBasisInvariant.IsBasisInvariant (codomainTransport e f) := by
+…</pre><p class="refs">Mentions: <a href="KMSBasisInvariant.lean.html#L30">OAI.MaxCutGames.Inverse.KMSBasisInvariant.IsBasisInvariant</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L654">OAI.MaxCutGames.Inverse.KMSAnalytic.codomainTransport</a></p></li><li id=L722><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.smallCoeff_codomainTransport</code> <small>line 722</small></li><li id=L734><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.smallComponent_codomainTransport</code> <small>line 734</small><div class="doc"><p>The synthesized small component itself commutes with codomain transport.</p></div><pre>theorem smallComponent_codomainTransport (e : F ≃ₗ[F2] F&#x27;) (ι : I →ₗ[F2] E)
+    (f : (E →ₗ[F2] F) → ℝ) :
+    smallComponent ι (codomainTransport e f) =
+      codomainTransport e (smallComponent ι f) := by
+…</pre><p class="refs">Mentions: <a href="KMSAnalyticHybridEnergyImageSplit.lean.html#L564">OAI.MaxCutGames.Inverse.KMSAnalytic.smallComponent</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L654">OAI.MaxCutGames.Inverse.KMSAnalytic.codomainTransport</a></p></li><li id=L747><b>theorem</b> <code>OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy_codomainTransport</code> <small>line 747</small><div class="doc"><p>Transport the prescribed partial frequency together with the primal
+codomain; the normalized energy remains exactly unchanged.</p></div><pre>theorem fixedFrequencyEnergy_codomainTransport (e : F ≃ₗ[F2] F&#x27;) (ι : I →ₗ[F2] E)
+    (f : (E →ₗ[F2] F) → ℝ) (π : I →ₗ[F2] J) (A : F →ₗ[F2] J) :
+    fixedFrequencyEnergy ι (codomainTransport e f) π (A.comp e.symm.toLinearMap) =
+      fixedFrequencyEnergy ι f π A := by
+…</pre><p class="refs">Mentions: <a href="KMSFourthMomentPointShuffle.lean.html#L132">OAI.MaxCutGames.Inverse.KMSAnalytic.fixedFrequencyEnergy</a>, <a href="KMSAnalyticFrequencyShift.lean.html#L654">OAI.MaxCutGames.Inverse.KMSAnalytic.codomainTransport</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

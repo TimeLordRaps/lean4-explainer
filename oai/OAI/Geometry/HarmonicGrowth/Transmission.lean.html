@@ -1,0 +1,406 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/HarmonicGrowth/Transmission.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/HarmonicGrowth/Transmission.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">HarmonicGrowth</a> / <span>Transmission.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">HarmonicGrowth</a>/<span>Transmission.lean</span></code></h1><p class="muted">71 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/HarmonicGrowth/Transmission.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix_injective</code> <small>line 21</small></li><li id=L35><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix_norm_bound</code> <small>line 35</small><div class="doc"><p>A fixed coordinate norm constant, chosen independently of the pulse,
+its duration, its history and its parameters.</p></div><pre>theorem orthogonalMatrix_norm_bound (b : OrthonormalBasis ι ℝ E) :
+    ∃ C : ℝ,0 &lt; C ∧ ∀ T : E →L[ℝ] E,‖T‖ ≤ C*‖orthogonalMatrix b T‖ := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Damping.lean.html#L25">OAI.HarmonicCounterexample.LinearODE.orthogonalMatrix</a></p></li><li id=L41><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.integrated_matrix_error_to_operator</code> <small>line 41</small></li><li id=L76><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.bounded_target_log</code> <small>line 76</small><div class="doc"><p>The bounded exact positive scalar from local attainment has a UNIFORM
+logarithm cost. It cannot become exponentially small along histories.</p></div><pre>lemma bounded_target_log {c : ℝ} (hc : c ∈ Ioo (1/2:ℝ) (3/2)) :
+    |Real.log c| ≤ Real.log 2 := by
+…</pre></li><li id=L89><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.undo_scalar_normalization</code> <small>line 89</small><div class="doc"><p>Undoing exactly the scalar baseline normalizer preserves an exact positive
+scalar-permutation endpoint and adds only the genuine baseline integral to its
+logarithm. This is an equality of actual operators, not a weighted model.</p></div><pre>lemma undo_scalar_normalization {R : Type*} [NormedAddCommGroup R] [NormedSpace ℝ R]
+    {Y perm : R} {I c : ℝ} (he : Real.exp (-I) • Y=c • perm) :
+    Y=(Real.exp I*c) • perm := by
+…</pre></li><li id=L96><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.lifted_target_log</code> <small>line 96</small></li><li id=L106><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_baseline_log_cost</code> <small>line 106</small><div class="doc"><p>Actual scalar PB baseline integrated log cost. The constant precedes all
+pulse histories and lengths; no value of an unproved scalar ODE is supplied.</p></div><pre>theorem actual_baseline_log_cost {α p : ℝ → ℝ}
+    (hα : Continuous α) (hp : Continuous p)
+    {M Mp B β p₀ θ γ δ T : ℝ}
+    (hM : 0 ≤ M) (hMp : 0 ≤ Mp) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hδ : 0 ≤ δ) (hT : 0 ≤ T)
+    (hαn : ∀ t,|α t| ≤ M) (hpn : ∀ t,|p t| ≤ Mp)
+    (hAp : ∀ t,0 ≤ t → 0 ≤ α t*B) (hroot : β*B-p₀*θ-θ^2=0)
+    (hscale : ∀ t ∈ Icc 0 T,|α t-β| ≤ δ)
+    (hpt : ∀ t ∈ Icc 0 T,|p t-p₀| ≤ δ)
+    (hpl : ∀ t ∈ Icc 0 T,γ ≤ p t) :
+    |∫ t in (0:ℝ)..T,scalarBaseline (fun s =&gt; α s*B) p θ t| ≤
+      (θ+((|B|+|θ|)/γ)*δ)*T := by
+…</pre><p class="refs">Mentions: <a href="ScalarODE.lean.html#L234">OAI.HarmonicCounterexample.LinearODE.scalarBaseline</a></p></li><li id=L153><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.bergerSlowGenerator_eq_smul</code> <small>line 153</small></li><li id=L179><b>theorem</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitBergerPacket_selected</code> <small>line 179</small><div class="doc"><p>Exact representation of the normalized smooth finite-word coefficient
+and its time derivative by the selected Berger angular generator.</p></div><pre>theorem unitBergerPacket_selected (a : Fin n → ℝ) (D : Fin n → R)
+    (r B β p₀ θ : ℝ) (d : ℝ → Fin n)
+    (hd : ∀ t i,i ≠ d t → bump i t=0 ∧ deriv (bump i) t=0) (t : ℝ) :
+    unitPacketCoefficient a (fun j =&gt; bergerSlowGenerator r B β p₀ θ 1 (D j)) t=
+      bergerSlowGenerator r B β p₀ θ (unitPacketScalar a t) (D (d (duration n*t))) ∧
+    unitPacketCoefficientD a (fun j =&gt; bergerSlowGenerator r B β p₀ θ 1 (D j)) t=
+      bergerSlowGenerator r B β p₀ θ (unitPacketScalarD a t) (D (d (duration n*t))) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="SmoothWord.lean.html#L17">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.bump</a>, <a href="SmoothWord.lean.html#L455">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketCoefficient</a>, <a href="SmoothWord.lean.html#L461">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketScalar</a>, <a href="SmoothWord.lean.html#L128">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.duration</a>, <a href="SmoothWord.lean.html#L458">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketCoefficientD</a>, <a href="SmoothWord.lean.html#L464">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketScalarD</a></p></li><li id=L193><b>theorem</b> <code>OAI.HarmonicCounterexample.FiniteControl.SmoothWord.exists_unit_round_gap_selector</code> <small>line 193</small><div class="doc"><p>The normalized selector is locally constant unless every actual scalar
+packet vanishes on a neighborhood. Thus angular changes occur on ROUND gaps.</p></div><pre>theorem exists_unit_round_gap_selector (n : ℕ) [NeZero n] :
+    ∃ d : ℝ → Fin n,
+      (∀ t i,i ≠ d t → bump i (duration n*t)=0 ∧ deriv (bump i) (duration n*t)=0) ∧
+      ∀ t,(∀ᶠ s in 𝓝 t,d s=d t) ∨
+        (∀ᶠ s in 𝓝 t,∀ a : Fin n → ℝ,unitPacketScalar a s=0) := by
+…</pre><p class="refs">Mentions: <a href="SmoothWord.lean.html#L17">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.bump</a>, <a href="SmoothWord.lean.html#L128">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.duration</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="SmoothWord.lean.html#L461">OAI.HarmonicCounterexample.FiniteControl.SmoothWord.unitPacketScalar</a></p></li><li id=L244><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_finite_berger_word_estimates</code> <small>line 244</small><div class="doc"><p>Model-specific value and variational-slope estimates for an EXPLICIT smooth
+finite word, with all shape identities and bounds discharged. The selector and
+constants are chosen before every history, amplitude vector and duration.</p></div><pre>theorem actual_finite_berger_word_estimates (basis : OrthonormalBasis ι ℝ E)
+    (r B β p₀ θ γ : ℝ) (D : Fin n → E →L[ℝ] E) {M U : ℝ}
+    (hM : 0 ≤ M) (hU : 0 ≤ U) (hθ : 0 ≤ θ) (hγ : 0 &lt; γ)
+    (hc : p₀+2*θ ≠ 0) (hroot : β*B-p₀*θ-θ^2=0) :
+    ∃ Z C : ℝ,∃ d : ℝ → Fin n,0 ≤ Z ∧ 1 ≤ C ∧
+      (∀ t,(∀ᶠ s in 𝓝 t,d s=d t) ∨
+        (∀ᶠ s in 𝓝 t,∀ v : Fin n → ℝ,unitPacketScalar v s=0)) ∧ ∀ (A : H → ℝ → E →L[ℝ] E) (b : ℝ → ℝ)
+      (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+      (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E) (x h : H)
+      (α p : ℝ → ℝ) (amps rays : Fin n → ℝ) (Mp MB MA Mb l B₀ a T δ ε : ℝ),
+      (∀ j,|amps j| ≤ U) → (∀ j,|rays j| ≤ U) →
+      Continuous (A x) → Continuous b → Continuous (B&#x27; x) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L367><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_slope_jet_continuousOn</code> <small>line 367</small><div class="doc"><p>The regular Riccati value and its entire Frechet jet are continuous in
+physical time on the actual nonnegative half-line. Invertibility is produced
+from positivity, not assumed as an analytic bridge.</p></div><pre>theorem actual_slope_jet_continuousOn
+    (A : H → ℝ → E →L[ℝ] E) (b : ℝ → ℝ)
+    (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+    (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E) (p : H)
+    (hA : Continuous (A p)) (hb : Continuous b) (hB&#x27; : Continuous (B&#x27; p))
+    (hBeval : ∀ t z v,B&#x27; p t z v=(0,A&#x27; p t z*v.1))
+    {M MA Mb : ℝ} (hM : 0 ≤ M) (hMA : 0 ≤ MA) (hMb : 0 ≤ Mb)
+    (hnB : ∀ t,‖block (leftAction (A p)) b t‖ ≤ M) (hnB&#x27; : ∀ t,‖B&#x27; p t‖ ≤ M)
+    (hnA : ∀ t,‖A p t‖ ≤ MA) (hnb : ∀ t,|b t| ≤ Mb)
+    (hpos : ∀ t v,0 ≤ inner ℝ v (A p t v)) {l : ℝ} (hl : 0 &lt; l) :
+    ContinuousOn (slope (A p) b l) (Ici 0) ∧
+    ContinuousOn (slopeJet A b B&#x27; l p) (Ici 0) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="Flow.lean.html#L213">OAI.HarmonicCounterexample.LinearODE.block</a>, <a href="Flow.lean.html#L550">OAI.HarmonicCounterexample.LinearODE.leftAction</a>, <a href="Flow.lean.html#L675">OAI.HarmonicCounterexample.LinearODE.slope</a>, <a href="Variation.lean.html#L489">OAI.HarmonicCounterexample.LinearODE.slopeJet</a></p></li><li id=L391><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_normalized_slope_hasFDerivAt</code> <small>line 391</small><div class="doc"><p>The normalized coefficient's first jet is the genuine parameter derivative
+of the actual center-regular PB slope after slow-time rescaling.</p></div><pre>theorem actual_normalized_slope_hasFDerivAt
+    (A : H → ℝ → E →L[ℝ] E) (b v : ℝ → ℝ)
+    (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+    {S : Set H} (hS : IsOpen S) (hSc : IsPreconnected S)
+    (hA : ∀ p ∈ S,Continuous (A p)) (hb : Continuous b) (hB&#x27; : ∀ p ∈ S,Continuous (B&#x27; p))
+    (hdB : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; block (leftAction (A q)) b t) (B&#x27; p t) p)
+    {M MA Mb : ℝ} (hM : 0 ≤ M) (hMA : 0 ≤ MA) (hMb : 0 ≤ Mb)
+    (hnB : ∀ p ∈ S,∀ t,‖block (leftAction (A p)) b t‖ ≤ M)
+    (hnB&#x27; : ∀ p ∈ S,∀ t,‖B&#x27; p t‖ ≤ M)
+    (hnA : ∀ p ∈ S,∀ t,‖A p t‖ ≤ MA) (hnb : ∀ t,|b t| ≤ Mb)
+    (hpos : ∀ p ∈ S,∀ t w,0 ≤ inner ℝ w (A p t w)) {l : ℝ} (hl : 0 &lt; l)
+    {p : H} (hp : p ∈ S) {a T u : ℝ} (ha : 0 ≤ a) (hT : 0 ≤ T) (hu : 0 ≤ u) :
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="Flow.lean.html#L213">OAI.HarmonicCounterexample.LinearODE.block</a>, <a href="Flow.lean.html#L550">OAI.HarmonicCounterexample.LinearODE.leftAction</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L430><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.integral_gronwall</code> <small>line 430</small><div class="doc"><p>The variable-coefficient Gronwall estimate in precisely the integrated
+norm used for long pulses. No supremum-times-pulse-length loss occurs.</p></div><pre>theorem integral_gronwall {a b c : ℝ} (hab : a ≤ b)
+    (u q r : ℝ → ℝ) (hu : Continuous u) (hq : Continuous q) (hr : Continuous r)
+    (hq0 : ∀ t ∈ Icc a b,0 ≤ q t) (hr0 : ∀ t ∈ Icc a b,0 ≤ r t)
+    (hineq : ∀ t ∈ Icc a b,u t ≤ c+∫ s in a..t,q s*u s+r s) :
+    u b ≤ (c+∫ s in a..b,r s)*Real.exp (∫ s in a..b,q s) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L475><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.norm_le_integrated_gronwall</code> <small>line 475</small><div class="doc"><p>Sharp-in-L1 stability for a genuinely differentiable Banach-valued path.</p></div><pre>theorem norm_le_integrated_gronwall {a b : ℝ} (hab : a ≤ b)
+    (f f&#x27; : ℝ → E) (hf : ∀ t,HasDerivAt f (f&#x27; t) t) (hfc : Continuous f&#x27;)
+    (q r : ℝ → ℝ) (hq : Continuous q) (hr : Continuous r)
+    (hq0 : ∀ t ∈ Icc a b,0 ≤ q t) (hr0 : ∀ t ∈ Icc a b,0 ≤ r t)
+    (hbound : ∀ t ∈ Icc a b,‖f&#x27; t‖ ≤ q t*‖f t‖+r t) :
+    ‖f b‖ ≤ (‖f a‖+∫ s in a..b,r s)*Real.exp (∫ s in a..b,q s) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L517><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_norm_integral_bound</code> <small>line 517</small><div class="doc"><p>The actual Peano--Baker flow has the sharp L1 exponential bound.</p></div><pre>lemma flow_norm_integral_bound {A : ℝ → E →L[ℝ] E} (hA : Continuous A)
+    {M : ℝ} (hM : 0 ≤ M) (hbound : ∀ t,‖A t‖ ≤ M) (x : E) {t : ℝ} (ht : 0 ≤ t) :
+    ‖flow A x t‖ ≤ ‖x‖*Real.exp (∫ s in (0:ℝ)..t,‖A s‖) := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L528><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.norm_integral_mono_upper</code> <small>line 528</small></li><li id=L538><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_L1_difference</code> <small>line 538</small><div class="doc"><p>Actual solution stability with a length-independent L1 coefficient error.
+Both solutions are constructed, not postulated, and no commutativity is used.</p></div><pre>theorem flow_L1_difference {A B : ℝ → E →L[ℝ] E}
+    (hA : Continuous A) (hB : Continuous B) {MA MB : ℝ} (hMA : 0 ≤ MA) (hMB : 0 ≤ MB)
+    (hAb : ∀ s,‖A s‖ ≤ MA) (hBb : ∀ s,‖B s‖ ≤ MB) (x : E) {t : ℝ} (ht : 0 ≤ t) :
+    ‖flow A x t-flow B x t‖ ≤
+      ‖x‖*Real.exp ((∫ s in (0:ℝ)..t,‖A s‖)+(∫ s in (0:ℝ)..t,‖B s‖)) *
+        (∫ s in (0:ℝ)..t,‖A s-B s‖) := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L592><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.jetBlock</code> <small>line 592</small><div class="doc"><p>The exact first-jet coefficient on value/parameter-derivative pairs.</p></div><pre>def jetBlock (A : E →L[ℝ] E) (A&#x27; : H →L[ℝ] E →L[ℝ] E) :
+    E×(H →L[ℝ] E) →L[ℝ] E×(H →L[ℝ] E) :=
+…</pre></li><li id=L599><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.jetBlock_apply</code> <small>line 599</small></li><li id=L603><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.jetBlock_continuous</code> <small>line 603</small></li><li id=L613><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.jetBlock_norm</code> <small>line 613</small></li><li id=L636><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.jetBlock_sub</code> <small>line 636</small></li><li id=L650><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_jet</code> <small>line 650</small><div class="doc"><p>The actual parameter jet is itself the actual constructed linear flow.</p></div><pre>lemma flow_jet (A : H → ℝ → E →L[ℝ] E) (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    (hA : ∀ p,Continuous (A p)) (hA&#x27; : ∀ p,Continuous (A&#x27; p))
+    {M : ℝ} (hM : 0 ≤ M) (hb : ∀ p s,‖A p s‖ ≤ M) (hb&#x27; : ∀ p s,‖A&#x27; p s‖ ≤ M)
+    (x : E) (p : H) (t : ℝ) :
+    (flow (A p) x t,flowD A A&#x27; x p t) =
+      flow (fun s =&gt; jetBlock (A p s) (A&#x27; p s)) (x,0) t := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a>, <a href="Variation.lean.html#L229">OAI.HarmonicCounterexample.LinearODE.flowD</a>, <a href="Transmission.lean.html#L592">OAI.HarmonicCounterexample.LinearODE.jetBlock</a></p></li><li id=L669><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_jet_L1_difference</code> <small>line 669</small><div class="doc"><p>A genuine C1-in-parameter endpoint estimate, with an L1 (not duration)
+constant, for two actual coefficient families.</p></div><pre>theorem flow_jet_L1_difference
+    (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    (hA : ∀ p,Continuous (A p)) (hB : ∀ p,Continuous (B p))
+    (hA&#x27; : ∀ p,Continuous (A&#x27; p)) (hB&#x27; : ∀ p,Continuous (B&#x27; p))
+    {M : ℝ} (hM : 0 ≤ M) (hbA : ∀ p s,‖A p s‖ ≤ M) (hbB : ∀ p s,‖B p s‖ ≤ M)
+    (hbA&#x27; : ∀ p s,‖A&#x27; p s‖ ≤ M) (hbB&#x27; : ∀ p s,‖B&#x27; p s‖ ≤ M)
+    (x : E) (p : H) {t : ℝ} (ht : 0 ≤ t) :
+    max ‖flow (A p) x t-flow (B p) x t‖ ‖flowD A A&#x27; x p t-flowD B B&#x27; x p t‖ ≤
+      ‖x‖*Real.exp ((∫ s in (0:ℝ)..t,‖jetBlock (A p s) (A&#x27; p s)‖)+
+        (∫ s in (0:ℝ)..t,‖jetBlock (B p s) (B&#x27; p s)‖)) *
+        (∫ s in (0:ℝ)..t,‖jetBlock (A p s-B p s) (A&#x27; p s-B&#x27; p s)‖) := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a>, <a href="Variation.lean.html#L229">OAI.HarmonicCounterexample.LinearODE.flowD</a>, <a href="Transmission.lean.html#L592">OAI.HarmonicCounterexample.LinearODE.jetBlock</a></p></li><li id=L714><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flowD_hasDerivAt_pointwise</code> <small>line 714</small><div class="doc"><p>The actual time variational equation needs bounds only at the current
+parameter, not at the irrelevant parameters outside the admissible ball.</p></div><pre>lemma flowD_hasDerivAt_pointwise
+    (A : H → ℝ → E →L[ℝ] E) (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    (p : H) (hA : Continuous (A p)) (hA&#x27; : Continuous (A&#x27; p))
+    {M : ℝ} (hM : 0 ≤ M) (hb : ∀ s,‖A p s‖ ≤ M) (hb&#x27; : ∀ s,‖A&#x27; p s‖ ≤ M)
+    (x : E) (t : ℝ) :
+    HasDerivAt (flowD A A&#x27; x p)
+      ((A p t).comp (flowD A A&#x27; x p t)+(A&#x27; p t).flip (flow (A p) x t)) t := by
+…</pre><p class="refs">Mentions: <a href="Variation.lean.html#L229">OAI.HarmonicCounterexample.LinearODE.flowD</a>, <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L729><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_jet_L1_difference_pointwise</code> <small>line 729</small><div class="doc"><p>Local-in-parameter actual jet stability. The parameter universe is not
+silently restricted; coefficients outside the admissible set are unused.</p></div><pre>theorem flow_jet_L1_difference_pointwise
+    (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    (p : H) (hA : Continuous (A p)) (hB : Continuous (B p))
+    (hA&#x27; : Continuous (A&#x27; p)) (hB&#x27; : Continuous (B&#x27; p))
+    {M : ℝ} (hM : 0 ≤ M) (hbA : ∀ s,‖A p s‖ ≤ M) (hbB : ∀ s,‖B p s‖ ≤ M)
+    (hbA&#x27; : ∀ s,‖A&#x27; p s‖ ≤ M) (hbB&#x27; : ∀ s,‖B&#x27; p s‖ ≤ M)
+    (x : E) {t : ℝ} (ht : 0 ≤ t) :
+    max ‖flow (A p) x t-flow (B p) x t‖ ‖flowD A A&#x27; x p t-flowD B B&#x27; x p t‖ ≤
+      ‖x‖*Real.exp ((∫ s in (0:ℝ)..t,‖jetBlock (A p s) (A&#x27; p s)‖)+
+        (∫ s in (0:ℝ)..t,‖jetBlock (B p s) (B&#x27; p s)‖)) *
+        (∫ s in (0:ℝ)..t,‖jetBlock (A p s-B p s) (A&#x27; p s-B&#x27; p s)‖) := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a>, <a href="Variation.lean.html#L229">OAI.HarmonicCounterexample.LinearODE.flowD</a>, <a href="Transmission.lean.html#L592">OAI.HarmonicCounterexample.LinearODE.jetBlock</a></p></li><li id=L748><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_fderiv_L1_difference_on</code> <small>line 748</small><div class="doc"><p>Quantitative C1 endpoint stability for the genuine Frechet derivatives on
+an admissible open connected parameter domain. The right side depends on L1
+coefficient and jet norms, so it does not lose a factor equal to pulse duration.</p></div><pre>theorem flow_fderiv_L1_difference_on
+    (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    {S : Set H} (hS : IsOpen S) (hSc : IsPreconnected S)
+    (hA : ∀ p ∈ S,Continuous (A p)) (hB : ∀ p ∈ S,Continuous (B p))
+    (hA&#x27; : ∀ p ∈ S,Continuous (A&#x27; p)) (hB&#x27; : ∀ p ∈ S,Continuous (B&#x27; p))
+    (hdA : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; A q t) (A&#x27; p t) p)
+    (hdB : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; B q t) (B&#x27; p t) p)
+    {M : ℝ} (hM : 0 ≤ M) (hbA : ∀ p ∈ S,∀ s,‖A p s‖ ≤ M)
+    (hbB : ∀ p ∈ S,∀ s,‖B p s‖ ≤ M) (hbA&#x27; : ∀ p ∈ S,∀ s,‖A&#x27; p s‖ ≤ M)
+    (hbB&#x27; : ∀ p ∈ S,∀ s,‖B&#x27; p s‖ ≤ M)
+    (x : E) {p : H} (hp : p ∈ S) {t : ℝ} (ht : 0 ≤ t) :
+    max ‖flow (A p) x t-flow (B p) x t‖
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L791><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.slow_time_integral_norm</code> <small>line 791</small><div class="doc"><p>Rescaling an integrated error introduces NO pulse-duration factor.</p></div><pre>lemma slow_time_integral_norm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (X : ℝ → F) (a : ℝ) {T : ℝ} (hT : 0 &lt; T) :
+    (∫ τ in (0:ℝ)..1,‖T • X (a+T*τ)‖)=(∫ t in a..a+T,‖X t‖) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L803><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.jetBlock_integral_le</code> <small>line 803</small></li><li id=L821><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.pulse_endpoint_C1_of_integrated_errors</code> <small>line 821</small><div class="doc"><p>The actual flow AND its genuine parameter Frechet derivative converge in
+C1 from integrated coefficient errors. All resulting constants are independent
+of the (possibly large) global M used only to construct/differentiate PB flow.</p></div><pre>theorem pulse_endpoint_C1_of_integrated_errors
+    (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    {S : Set H} (hS : IsOpen S) (hSc : IsPreconnected S)
+    (hA : ∀ p ∈ S,Continuous (A p)) (hB : ∀ p ∈ S,Continuous (B p))
+    (hA&#x27; : ∀ p ∈ S,Continuous (A&#x27; p)) (hB&#x27; : ∀ p ∈ S,Continuous (B&#x27; p))
+    (hdA : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; A q t) (A&#x27; p t) p)
+    (hdB : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; B q t) (B&#x27; p t) p)
+    {M : ℝ} (hM : 0 ≤ M) (hbA : ∀ p ∈ S,∀ s,‖A p s‖ ≤ M)
+    (hbB : ∀ p ∈ S,∀ s,‖B p s‖ ≤ M) (hbA&#x27; : ∀ p ∈ S,∀ s,‖A&#x27; p s‖ ≤ M)
+    (hbB&#x27; : ∀ p ∈ S,∀ s,‖B&#x27; p s‖ ≤ M)
+    (x : E) {p : H} (hp : p ∈ S) {C η : ℝ}
+    (hIB : (∫ s in (0:ℝ)..1,‖B p s‖)+(∫ s in (0:ℝ)..1,‖B&#x27; p s‖) ≤ C)
+…</pre></li><li id=L895><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.opNorm_le_sum_basis</code> <small>line 895</small><div class="doc"><p>Finite-direction estimates control the genuine derivative operator norm.
+No interchange of supremum and integral is used.</p></div><pre>lemma opNorm_le_sum_basis (b : OrthonormalBasis ι ℝ H) (L : H →L[ℝ] F) :
+    ‖L‖ ≤ ∑ i,‖L (b i)‖ := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L915><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.integrated_opNorm_le_basis_sum</code> <small>line 915</small><div class="doc"><p>Turning the integrated raywise Riccati-jet estimates into the C1 operator
+estimate costs only the FIXED parameter dimension, never the pulse duration.</p></div><pre>theorem integrated_opNorm_le_basis_sum (b : OrthonormalBasis ι ℝ H)
+    {L : ℝ → H →L[ℝ] F} {a z C : ℝ} (haz : a ≤ z)
+    (hL : ContinuousOn L (Set.Icc a z))
+    (hI : ∀ i,(∫ t in a..z,‖L t (b i)‖) ≤ C) :
+    (∫ t in a..z,‖L t‖) ≤ (Fintype.card ι:ℝ)*C := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L959><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.endpoint_C1_of_matrix_ray_errors</code> <small>line 959</small><div class="doc"><p>Passage from finite Frobenius estimates on the actual Riccati value and
+parameter basis rays to the genuine C1 endpoint estimate. The parameter and
+angular coordinate constants are fixed before every history map.</p></div><pre>theorem endpoint_C1_of_matrix_ray_errors
+    (e : OrthonormalBasis ι ℝ E) (h : OrthonormalBasis κ ℝ H)
+    {C : ℝ} (hC : 0 ≤ C) :
+    ∃ J : ℝ,C ≤ J ∧ 0 ≤ J ∧
+    ∀ (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (S : Set H) (p : H) (M η : ℝ) (x : E),
+      IsOpen S → IsPreconnected S → p ∈ S →
+      (∀ q ∈ S,Continuous (A q)) → (∀ q ∈ S,Continuous (B q)) →
+      (∀ q ∈ S,Continuous (A&#x27; q)) → (∀ q ∈ S,Continuous (B&#x27; q)) →
+      (∀ q ∈ S,∀ t,HasFDerivAt (fun r =&gt; A r t) (A&#x27; q t) q) →
+      (∀ q ∈ S,∀ t,HasFDerivAt (fun r =&gt; B r t) (B&#x27; q t) q) →
+      0 ≤ M → 0 ≤ η →
+…</pre></li><li id=L1031><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.pulse_endpoint_C1_of_contracted_errors</code> <small>line 1031</small><div class="doc"><p>A fixed contraction lifts value and genuine parameter derivative L1
+errors to the endpoint flow, without a dimension- or duration-dependent loss.
+Taking L to be left multiplication gives the actual operator endpoint.</p></div><pre>theorem pulse_endpoint_C1_of_contracted_errors
+    (L : V →L[ℝ] E →L[ℝ] E) (hL : ‖L‖ ≤ 1)
+    (A B : H → ℝ → V) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] V)
+    {S : Set H} (hS : IsOpen S) (hSc : IsPreconnected S)
+    (hA : ∀ p ∈ S,Continuous (A p)) (hB : ∀ p ∈ S,Continuous (B p))
+    (hA&#x27; : ∀ p ∈ S,Continuous (A&#x27; p)) (hB&#x27; : ∀ p ∈ S,Continuous (B&#x27; p))
+    (hdA : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; A q t) (A&#x27; p t) p)
+    (hdB : ∀ p ∈ S,∀ t,HasFDerivAt (fun q =&gt; B q t) (B&#x27; p t) p)
+    {M : ℝ} (hM : 0 ≤ M) (hbA : ∀ p ∈ S,∀ s,‖A p s‖ ≤ M)
+    (hbB : ∀ p ∈ S,∀ s,‖B p s‖ ≤ M) (hbA&#x27; : ∀ p ∈ S,∀ s,‖A&#x27; p s‖ ≤ M)
+    (hbB&#x27; : ∀ p ∈ S,∀ s,‖B&#x27; p s‖ ≤ M)
+    (x : E) {p : H} (hp : p ∈ S) {C η : ℝ}
+…</pre></li><li id=L1106><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.contracted_endpoint_C1_of_matrix_ray_errors</code> <small>line 1106</small><div class="doc"><p>Passage from finite Frobenius estimates on the actual Riccati value and
+parameter basis rays to the genuine C1 endpoint estimate. The parameter and
+angular coordinate constants are fixed before every history map.</p></div><pre>theorem contracted_endpoint_C1_of_matrix_ray_errors
+    (L : (E →L[ℝ] E) →L[ℝ] F →L[ℝ] F) (hL : ‖L‖ ≤ 1)
+    (e : OrthonormalBasis ι ℝ E) (h : OrthonormalBasis κ ℝ H)
+    {C : ℝ} (hC : 0 ≤ C) :
+    ∃ J : ℝ,C ≤ J ∧ 0 ≤ J ∧
+    ∀ (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (S : Set H) (p : H) (M η : ℝ) (x : F),
+      IsOpen S → IsPreconnected S → p ∈ S →
+      (∀ q ∈ S,Continuous (A q)) → (∀ q ∈ S,Continuous (B q)) →
+      (∀ q ∈ S,Continuous (A&#x27; q)) → (∀ q ∈ S,Continuous (B&#x27; q)) →
+      (∀ q ∈ S,∀ t,HasFDerivAt (fun r =&gt; A r t) (A&#x27; q t) q) →
+      (∀ q ∈ S,∀ t,HasFDerivAt (fun r =&gt; B r t) (B&#x27; q t) q) →
+…</pre></li><li id=L1181><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.operator_endpoint_C1_of_matrix_ray_errors</code> <small>line 1181</small><div class="doc"><p>Passage from finite Frobenius estimates on the actual Riccati value and
+parameter basis rays to the genuine C1 endpoint estimate. The parameter and
+angular coordinate constants are fixed before every history map.</p></div><pre>theorem operator_endpoint_C1_of_matrix_ray_errors
+    (e : OrthonormalBasis ι ℝ E) (h : OrthonormalBasis κ ℝ H)
+    {C : ℝ} (hC : 0 ≤ C) :
+    ∃ J : ℝ,C ≤ J ∧ 0 ≤ J ∧
+    ∀ (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (S : Set H) (p : H) (M η : ℝ),
+      IsOpen S → IsPreconnected S → p ∈ S →
+      (∀ q ∈ S,Continuous (A q)) → (∀ q ∈ S,Continuous (B q)) →
+      (∀ q ∈ S,Continuous (A&#x27; q)) → (∀ q ∈ S,Continuous (B&#x27; q)) →
+      (∀ q ∈ S,∀ t,HasFDerivAt (fun r =&gt; A r t) (A&#x27; q t) q) →
+      (∀ q ∈ S,∀ t,HasFDerivAt (fun r =&gt; B r t) (B&#x27; q t) q) →
+      0 ≤ M → 0 ≤ η →
+…</pre></li><li id=L1233><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.clip01</code> <small>line 1233</small><div class="doc"><p>Exterior extension is by constant coefficients, never by altering the
+actual solution on the pulse.</p></div><pre>def clip01 (t : ℝ) : ℝ := min 1 (max 0 t)</pre></li><li id=L1234><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clip01_continuous</code> <small>line 1234</small></li><li id=L1236><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clip01_mem</code> <small>line 1236</small></li><li id=L1238><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clip01_eq</code> <small>line 1238</small></li><li id=L1240><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.integral_clip01</code> <small>line 1240</small></li><li id=L1273><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.clipped_operator_endpoint_C1_of_matrix_ray_errors</code> <small>line 1273</small><div class="doc"><p>Passage from finite Frobenius estimates on the actual Riccati value and
+parameter basis rays to the genuine C1 endpoint estimate. The parameter and
+angular coordinate constants are fixed before every history map.</p></div><pre>theorem clipped_operator_endpoint_C1_of_matrix_ray_errors
+    (e : OrthonormalBasis ι ℝ E) (h : OrthonormalBasis κ ℝ H)
+    {C : ℝ} (hC : 0 ≤ C) :
+    ∃ J : ℝ,C ≤ J ∧ 0 ≤ J ∧
+    ∀ (A B : H → ℝ → E →L[ℝ] E) (A&#x27; B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (S : Set H) (p : H) (M η : ℝ),
+      IsOpen S → IsPreconnected S → p ∈ S →
+      (∀ q ∈ S,ContinuousOn (A q) (Set.Icc (0:ℝ) 1)) → (∀ q ∈ S,ContinuousOn (B q) (Set.Icc (0:ℝ) 1)) →
+      (∀ q ∈ S,ContinuousOn (A&#x27; q) (Set.Icc (0:ℝ) 1)) → (∀ q ∈ S,ContinuousOn (B&#x27; q) (Set.Icc (0:ℝ) 1)) →
+      (∀ q ∈ S,∀ t ∈ Set.Icc (0:ℝ) 1,HasFDerivAt (fun r =&gt; A r t) (A&#x27; q t) q) →
+      (∀ q ∈ S,∀ t ∈ Set.Icc (0:ℝ) 1,HasFDerivAt (fun r =&gt; B r t) (B&#x27; q t) q) →
+      0 ≤ M → 0 ≤ η →
+…</pre></li><li id=L1338><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.term_congr_interval</code> <small>line 1338</small><div class="doc"><p>PB iteration uses only coefficient values on the actual elapsed interval.</p></div><pre>lemma term_congr_interval {A B : ℝ → E →L[ℝ] E} {b : ℝ}
+    (hAB : EqOn A B (Icc 0 b)) (x : E) (n : ℕ) :
+    ∀ t ∈ Icc 0 b,term A x n t=term B x n t := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Flow.lean.html#L17">OAI.HarmonicCounterexample.LinearODE.term</a></p></li><li id=L1355><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_congr_interval</code> <small>line 1355</small><div class="doc"><p>Exact identity, not an endpoint estimate, under exterior coefficient
+extension; this also identifies genuine parameter derivatives by congruence.</p></div><pre>lemma flow_congr_interval {A B : ℝ → E →L[ℝ] E} {b : ℝ}
+    (hAB : EqOn A B (Icc 0 b)) (x : E) {t : ℝ} (ht : t ∈ Icc 0 b) :
+    flow A x t=flow B x t := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L1363><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_clip01_endpoint</code> <small>line 1363</small></li><li id=L1369><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.normalized_matrix_integral</code> <small>line 1369</small><div class="doc"><p>The Frobenius integrated error of the normalized coefficient is EXACTLY
+that of the actual physical-time Riccati comparison. No factor T is lost.</p></div><pre>lemma normalized_matrix_integral {F G : Type*} [NormedAddCommGroup F]
+    [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G]
+    (L : F →L[ℝ] G) (P S : ℝ → F) (v : ℝ → ℝ) (I : F) (a : ℝ) {T : ℝ} (hT : 0 &lt; T) :
+    (∫ u in (0:ℝ)..1,‖L (T • (P (a+T*u)-v (a+T*u) • I))-L (S u)‖)=
+    ∫ t in a..a+T,‖L (P t)-L (v t • I+T⁻¹ • S (T⁻¹*(t-a)))‖ := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L1412><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.term_history_eq</code> <small>line 1412</small><div class="doc"><p>Peano--Baker construction is causal on the positive half line, before any
+existence/summability assumption is imposed.</p></div><pre>lemma term_history_eq {A B : ℝ → E →L[ℝ] E} {T : ℝ}
+    (h : Set.EqOn A B (Set.Icc 0 T)) (x : E) (n : ℕ) :
+    Set.EqOn (term A x n) (term B x n) (Set.Icc 0 T) := by
+…</pre><p class="refs">Mentions: <a href="Flow.lean.html#L17">OAI.HarmonicCounterexample.LinearODE.term</a></p></li><li id=L1428><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flow_history_eq</code> <small>line 1428</small></li><li id=L1437><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.termD_history_zero</code> <small>line 1437</small><div class="doc"><p>A control parameter not used in the incoming history has identically zero
+actual variational flow throughout that history.</p></div><pre>lemma termD_history_zero {A : H → ℝ → E →L[ℝ] E}
+    {A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E} {p : H} {T : ℝ}
+    (h : ∀ t ∈ Set.Icc 0 T,A&#x27; p t=0) (x : E) (n : ℕ) :
+    ∀ t ∈ Set.Icc 0 T,termD A A&#x27; x p n t=0 := by
+…</pre><p class="refs">Mentions: <a href="Variation.lean.html#L94">OAI.HarmonicCounterexample.LinearODE.termD</a></p></li><li id=L1458><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flowD_history_zero</code> <small>line 1458</small></li><li id=L1469><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.solution_unique_on_Icc</code> <small>line 1469</small><div class="doc"><p>Exact restart, independent of earlier coefficients, follows from interval
+ODE uniqueness with the actual incoming value, not an artificially reset value.</p></div><pre>lemma solution_unique_on_Icc {A : ℝ → E →L[ℝ] E} {M a b : ℝ}
+    (hM : 0 ≤ M) (hb : ∀ t ∈ Set.Ico a b,‖A t‖ ≤ M) {f g : ℝ → E}
+    (hfc : ContinuousOn f (Set.Icc a b)) (hgc : ContinuousOn g (Set.Icc a b))
+    (hf : ∀ t ∈ Set.Ico a b,HasDerivAt f (A t (f t)) t)
+    (hg : ∀ t ∈ Set.Ico a b,HasDerivAt g (A t (g t)) t)
+    (he : f a=g a) : Set.EqOn f g (Set.Icc a b) := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a></p></li><li id=L1499><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized</code> <small>line 1499</small></li><li id=L1505><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_deriv</code> <small>line 1505</small><div class="doc"><p>Removing the exact scalar baseline, rather than its frozen limit, from an
+actual solution is an exact differentiable identity.</p></div><pre>lemma scalarNormalized_deriv {v : ℝ → ℝ} (hv : Continuous v)
+    {P : ℝ → E →L[ℝ] E} {f : ℝ → E} {a t : ℝ}
+    (hf : HasDerivAt f (P t (f t)) t) :
+    HasDerivAt (scalarNormalized v a f)
+      ((P t-v t • ContinuousLinearMap.id ℝ E) (scalarNormalized v a f t)) t := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Transmission.lean.html#L1499">OAI.HarmonicCounterexample.LinearODE.scalarNormalized</a></p></li><li id=L1520><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_initial</code> <small>line 1520</small></li><li id=L1526><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_rescaled_deriv</code> <small>line 1526</small><div class="doc"><p>Exact passage to slow pulse time. The factor T belongs inside the
+coefficient; scalar phase may grow with T but causes no error amplification.</p></div><pre>lemma scalarNormalized_rescaled_deriv {v : ℝ → ℝ} (hv : Continuous v)
+    {P : ℝ → E →L[ℝ] E} {f : ℝ → E} {a T τ : ℝ}
+    (hf : HasDerivAt f (P (a+T*τ) (f (a+T*τ))) (a+T*τ)) :
+    HasDerivAt (fun u =&gt; scalarNormalized v a f (a+T*u))
+      ((T • (P (a+T*τ)-v (a+T*τ) • ContinuousLinearMap.id ℝ E))
+        (scalarNormalized v a f (a+T*τ))) τ := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Transmission.lean.html#L1499">OAI.HarmonicCounterexample.LinearODE.scalarNormalized</a></p></li><li id=L1539><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_eq_flow</code> <small>line 1539</small><div class="doc"><p>The normalized ACTUAL solution equals the actual constructed first-order
+flow on the entire pulse. The incoming value is not replaced or estimated.</p></div><pre>theorem scalarNormalized_eq_flow {v : ℝ → ℝ} (hv : Continuous v)
+    {P : ℝ → E →L[ℝ] E} {f : ℝ → E} {a T : ℝ}
+    (hf : ∀ t,HasDerivAt f (P t (f t)) t)
+    {C : ℝ → E →L[ℝ] E}
+    (hC : Continuous C) {M : ℝ} (hM : 0 ≤ M) (hCb : ∀ t,‖C t‖ ≤ M)
+    (hCe : ∀ τ ∈ Set.Icc (0:ℝ) 1,
+      C τ=T • (P (a+T*τ)-v (a+T*τ) • ContinuousLinearMap.id ℝ E)) :
+    ∀ τ ∈ Set.Icc (0:ℝ) 1,
+      scalarNormalized v a f (a+T*τ)=flow C (f a) τ := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Transmission.lean.html#L1499">OAI.HarmonicCounterexample.LinearODE.scalarNormalized</a>, <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L1559><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_hasFDerivAt_parameter</code> <small>line 1559</small><div class="doc"><p>The scalar baseline is independent of the current control parameter, so
+normalization commutes exactly with its Frechet derivative.</p></div><pre>lemma scalarNormalized_hasFDerivAt_parameter {H : Type*}
+    [NormedAddCommGroup H] [NormedSpace ℝ H]
+    {f : H → ℝ → E} {f&#x27; : H →L[ℝ] E} {p : H} {v : ℝ → ℝ} {a t : ℝ}
+    (hf : HasFDerivAt (fun q =&gt; f q t) f&#x27; p) :
+    HasFDerivAt (fun q =&gt; scalarNormalized v a (f q) t)
+      (Real.exp (-(∫ s in a..t,v s)) • f&#x27;) p := hf.const_smul _
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Transmission.lean.html#L1499">OAI.HarmonicCounterexample.LinearODE.scalarNormalized</a></p></li><li id=L1589><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_deriv_local</code> <small>line 1589</small><div class="doc"><p>Local normalization: only integrability from a to t and continuity at t
+are required of the scalar baseline. Irrelevant pre-pulse poles are allowed.</p></div><pre>lemma scalarNormalized_deriv_local {v : ℝ → ℝ} {a t : ℝ}
+    (hvint : IntervalIntegrable v volume a t) (hvmeas : StronglyMeasurableAtFilter v (𝓝 t))
+    (hv : ContinuousAt v t) {P : ℝ → E →L[ℝ] E} {f : ℝ → E}
+    (hf : HasDerivAt f (P t (f t)) t) :
+    HasDerivAt (scalarNormalized v a f)
+      ((P t-v t • ContinuousLinearMap.id ℝ E) (scalarNormalized v a f t)) t := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Transmission.lean.html#L1499">OAI.HarmonicCounterexample.LinearODE.scalarNormalized</a></p></li><li id=L1602><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_rescaled_deriv_local</code> <small>line 1602</small></li><li id=L1618><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.scalarNormalized_eq_flow_on</code> <small>line 1618</small><div class="doc"><p>Exact identification of the normalized actual solution with PB flow,
+using derivatives only on the pulse. The exterior extension is applied only
+to its coefficient, never to the unknown solution or its derivative.</p></div><pre>theorem scalarNormalized_eq_flow_on {v : ℝ → ℝ} {a T : ℝ}
+    (hT : 0 ≤ T) (hvc : ∀ t ∈ Icc a (a+T),ContinuousAt v t)
+    (hvm : StronglyMeasurable v)
+    {P : ℝ → E →L[ℝ] E} {f : ℝ → E}
+    (hf : ∀ t ∈ Icc a (a+T),HasDerivAt f (P t (f t)) t)
+    {C : ℝ → E →L[ℝ] E}
+    (hC : Continuous C) {M : ℝ} (hM : 0 ≤ M) (hCb : ∀ t,‖C t‖ ≤ M)
+    (hCe : ∀ τ ∈ Icc (0:ℝ) 1,
+      C τ=T • (P (a+T*τ)-v (a+T*τ) • ContinuousLinearMap.id ℝ E)) :
+    ∀ τ ∈ Icc (0:ℝ) 1,
+      scalarNormalized v a f (a+T*τ)=flow C (f a) τ := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Transmission.lean.html#L1499">OAI.HarmonicCounterexample.LinearODE.scalarNormalized</a>, <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a></p></li><li id=L1649><b>def</b> <code>OAI.HarmonicCounterexample.LinearODE.clippedPulse</code> <small>line 1649</small><div class="doc"><p>Constant exterior extension of a pulse coefficient. Its boundedness
+follows from genuine continuity on the compact pulse, rather than global
+invertibility of an irrelevant scalar comparison.</p></div><pre>def clippedPulse (C : ℝ → E →L[ℝ] E) : ℝ → E →L[ℝ] E :=
+…</pre></li><li id=L1653><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clippedPulse_eq</code> <small>line 1653</small></li><li id=L1657><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clippedPulse_continuous</code> <small>line 1657</small></li><li id=L1662><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.clippedPulse_bounded</code> <small>line 1662</small></li><li id=L1699><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_normalized_value_endpoint</code> <small>line 1699</small><div class="doc"><p>The actual normalized value transmission, not a surrogate first-order
+solution, is EXACTLY the clipped slow-time operator PB endpoint.</p></div><pre>theorem actual_normalized_value_endpoint
+    {A : ℝ → E →L[ℝ] E} {b v : ℝ → ℝ}
+    (hA : Continuous A) (hb : Continuous b) {MA Mb : ℝ}
+    (hMA : 0 ≤ MA) (hMb : 0 ≤ Mb)
+    (hnA : ∀ t,‖A t‖ ≤ MA) (hnb : ∀ t,|b t| ≤ Mb)
+    (hpos : ∀ t w,0 ≤ inner ℝ w (A t w)) {l a T : ℝ}
+    (hl : 0 &lt; l) (ha : 0 ≤ a) (hT : 0 ≤ T)
+    (hvc : ∀ t ∈ Icc a (a+T),ContinuousAt v t) (hvm : StronglyMeasurable v) :
+    Real.exp (-(∫ t in a..a+T,v t)) •
+      (operatorValue A b l (a+T)*Ring.inverse (operatorValue A b l a)) =
+      flow (fun u =&gt; ContinuousLinearMap.mul ℝ (E →L[ℝ] E)
+        (T • (slope A b l (a+T*clip01 u)-
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a>, <a href="Flow.lean.html#L565">OAI.HarmonicCounterexample.LinearODE.operatorValue</a>, <a href="Flow.lean.html#L71">OAI.HarmonicCounterexample.LinearODE.flow</a>, <a href="Flow.lean.html#L675">OAI.HarmonicCounterexample.LinearODE.slope</a>, <a href="Transmission.lean.html#L1233">OAI.HarmonicCounterexample.LinearODE.clip01</a></p></li><li id=L1785><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_value_inverse_norm_le_one</code> <small>line 1785</small><div class="doc"><p>Positivity produces a contraction bound for the inverse actual value
+operator. This is uniform over all positive histories and all t &gt;= 0.</p></div><pre>theorem actual_value_inverse_norm_le_one
+    {A : ℝ → E →L[ℝ] E} {b : ℝ → ℝ}
+    (hA : Continuous A) (hb : Continuous b) {MA Mb : ℝ}
+    (hMA : 0 ≤ MA) (hMb : 0 ≤ Mb)
+    (hnA : ∀ t,‖A t‖ ≤ MA) (hnb : ∀ t,|b t| ≤ Mb)
+    (hpos : ∀ t w,0 ≤ inner ℝ w (A t w)) {l t : ℝ}
+    (hl : 0 &lt; l) (ht : 0 ≤ t) :
+    ‖Ring.inverse (operatorValue A b l t)‖ ≤ 1 := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Flow.lean.html#L565">OAI.HarmonicCounterexample.LinearODE.operatorValue</a></p></li><li id=L1855><b>lemma</b> <code>OAI.HarmonicCounterexample.LinearODE.flowD_norm_bound_pointwise</code> <small>line 1855</small><div class="doc"><p>A coarse finite-time bound used ONLY to justify local parameter
+differentiation; it is not the uniform-history C1 error constant.</p></div><pre>lemma flowD_norm_bound_pointwise
+    (A : H → ℝ → E →L[ℝ] E) (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+    {p : H} (hA : Continuous (A p)) (hA&#x27; : Continuous (A&#x27; p))
+    {M : ℝ} (hM : 0 ≤ M) (hb : ∀ s,‖A p s‖ ≤ M) (hb&#x27; : ∀ s,‖A&#x27; p s‖ ≤ M)
+    (x : E) (t : ℝ) : ‖flowD A A&#x27; x p t‖ ≤ ‖x‖*Real.exp (2*M*|t|) := by
+…</pre><p class="refs">Mentions: <a href="Variation.lean.html#L229">OAI.HarmonicCounterexample.LinearODE.flowD</a></p></li><li id=L1901><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_slope_jet_uniform_bound_on</code> <small>line 1901</small><div class="doc"><p>The finite-time norm bound needed for differentiation under the PB series
+is PRODUCED for the actual slope and actual full parameter jet, uniformly on
+the admissible parameter set. No unknown-solution bounds are assumptions.</p></div><pre>theorem actual_slope_jet_uniform_bound_on
+    (A : H → ℝ → E →L[ℝ] E) (b : ℝ → ℝ)
+    (B&#x27; : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+    (S : Set H) (hA : ∀ p ∈ S,Continuous (A p)) (hb : Continuous b)
+    (hB&#x27; : ∀ p ∈ S,Continuous (B&#x27; p))
+    {M MA Mb : ℝ} (hM : 0 ≤ M) (hMA : 0 ≤ MA) (hMb : 0 ≤ Mb)
+    (hnB : ∀ p ∈ S,∀ t,‖block (leftAction (A p)) b t‖ ≤ M)
+    (hnB&#x27; : ∀ p ∈ S,∀ t,‖B&#x27; p t‖ ≤ M)
+    (hnA : ∀ p ∈ S,∀ t,‖A p t‖ ≤ MA) (hnb : ∀ t,|b t| ≤ Mb)
+    (hpos : ∀ p ∈ S,∀ t w,0 ≤ inner ℝ w (A p t w)) {l R : ℝ}
+    (hl : 0 &lt; l) : ∃ N : ℝ,0 ≤ N ∧ ∀ p ∈ S,∀ t ∈ Icc 0 R,
+      ‖slope (A p) b l t‖ ≤ N ∧ ‖slopeJet A b B&#x27; l p t‖ ≤ N := by
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="Flow.lean.html#L213">OAI.HarmonicCounterexample.LinearODE.block</a>, <a href="Flow.lean.html#L550">OAI.HarmonicCounterexample.LinearODE.leftAction</a>, <a href="Flow.lean.html#L675">OAI.HarmonicCounterexample.LinearODE.slope</a>, <a href="Variation.lean.html#L489">OAI.HarmonicCounterexample.LinearODE.slopeJet</a></p></li><li id=L2000><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_normalized_endpoint_C1</code> <small>line 2000</small><div class="doc"><p>Actual regular second-order transmission has the uniform C1 endpoint
+estimate. Its full parameter derivative is genuine. The comparison constant
+is selected before all histories; finite-time slope/jet bounds needed only
+for justified differentiation are produced internally from positivity.</p></div><pre>theorem actual_normalized_endpoint_C1
+    (e : OrthonormalBasis ι ℝ E) (h : OrthonormalBasis κ ℝ H)
+    {C : ℝ} (hC : 0 ≤ C) :
+    ∃ J : ℝ,C ≤ J ∧ 0 ≤ J ∧
+    ∀ (A : H → ℝ → E →L[ℝ] E) (b v : ℝ → ℝ)
+      (K : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+      (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (B : H → ℝ → E →L[ℝ] E) (B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (S : Set H) (p : H) (M MA Mb M₀ l a T η : ℝ),
+      IsOpen S → IsPreconnected S → p ∈ S →
+      (∀ q ∈ S,Continuous (A q)) → Continuous b → Continuous v →
+      (∀ q ∈ S,Continuous (K q)) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li><li id=L2136><b>theorem</b> <code>OAI.HarmonicCounterexample.LinearODE.actual_physical_endpoint_C1</code> <small>line 2136</small><div class="doc"><p>Physical-time Frobenius L1 VALUE and basis-ray JET errors imply the
+uniform C1 estimate for the ACTUAL second-order transmission. The complete
+scalar baseline is removed; no pulse-duration factor is introduced.</p></div><pre>theorem actual_physical_endpoint_C1
+    (e : OrthonormalBasis ι ℝ E) (h : OrthonormalBasis κ ℝ H)
+    {C : ℝ} (hC : 0 ≤ C) :
+    ∃ J : ℝ,C ≤ J ∧ 0 ≤ J ∧
+    ∀ (A : H → ℝ → E →L[ℝ] E) (b v : ℝ → ℝ)
+      (K : H → ℝ → H →L[ℝ] OperatorPhase E →L[ℝ] OperatorPhase E)
+      (A&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (B : H → ℝ → E →L[ℝ] E) (B&#x27; : H → ℝ → H →L[ℝ] E →L[ℝ] E)
+      (S : Set H) (p : H) (M MA Mb M₀ l a T η : ℝ),
+      IsOpen S → IsPreconnected S → p ∈ S →
+      (∀ q ∈ S,Continuous (A q)) → Continuous b → Continuous v →
+      (∀ q ∈ S,Continuous (K q)) →
+…</pre><p class="refs">Mentions: <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L118">OAI.HarmonicCounterexample.b</a>, <a href="Variation.lean.html#L471">OAI.HarmonicCounterexample.LinearODE.OperatorPhase</a>, <a href="../Riemannian/HarmonicCore/WarpProfiles.lean.html#L18">OAI.HarmonicCounterexample.a</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

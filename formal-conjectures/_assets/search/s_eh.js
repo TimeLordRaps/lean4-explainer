@@ -1,0 +1,1 @@
+window.l4shard("eh", [["Erdos1074.EHSNumbers",199,35],["Erdos1074.erdos_1074.variants.EHSNumbers_init",199,116],["Erdos1074.erdos_1074.variants.EHSNumbers_one",199,132],["Erdos533.erdos_533.variants.ehsss_upper",609,81],["Erdos579.erdos_579.variants.ehss_large_delta",637,71]]);

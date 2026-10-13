@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/RepresentationTheory/RowColumn/TensorFilter.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/RepresentationTheory/RowColumn/TensorFilter.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">RepresentationTheory</a> / <a href="index.html">RowColumn</a> / <span>TensorFilter.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">RepresentationTheory</a>/<a href="index.html">RowColumn</a>/<span>TensorFilter.lean</span></code></h1><p class="muted">29 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/RepresentationTheory/RowColumn/TensorFilter.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>lemma</b> <code>OAI.RowColumn.MatrixState.hsVector_tensor_norm_sq</code> <small>line 16</small></li><li id=L24><b>lemma</b> <code>OAI.RowColumn.MatrixState.sectorTensor_hermitian</code> <small>line 24</small></li><li id=L33><b>lemma</b> <code>OAI.RowColumn.MatrixState.sectorTensor_positive</code> <small>line 33</small></li><li id=L38><b>lemma</b> <code>OAI.RowColumn.MatrixState.sectorTensor_root_square</code> <small>line 38</small></li><li id=L50><b>lemma</b> <code>OAI.RowColumn.MatrixState.sector_unitary_sandwich_bound</code> <small>line 50</small><div class="doc"><p>The restriction is taken only after factoring the positive weighted
+Hilbert--Schmidt norm. In particular no diagonal of a nonpositive product is
+compared to the full trace.</p></div><pre>lemma sector_unitary_sandwich_bound (odd : C → Prop) [DecidablePred odd] (k : ℕ)
+    (M N : S → Matrix C C ℂ) (U : Matrix C C ℂ)
+    (hM : ∀ i, (M i).PosSemidef) (hN : ∀ i, (N i).PosSemidef)
+    (heM : ∀ i, M i ∈ evenAlgebra odd) (_ : ∀ i, N i ∈ evenAlgebra odd)
+    (heU : U ∈ evenAlgebra odd) :
+    ‖hsVector (sectorTensor odd k (fun i =&gt; CFC.sqrt (M i)) *
+      sectorTensor odd k (fun _ : S =&gt; U) *
+      sectorTensor odd k (fun i =&gt; CFC.sqrt (N i)))‖^2 ≤
+        ∏ i, (M i * U * N i * U.conjTranspose).trace.re := by
+…</pre><p class="refs">Mentions: <a href="Sectors.lean.html#L14">OAI.RowColumn.MatrixState.evenAlgebra</a>, <a href="../../LinearAlgebra/MatrixState/HilbertSchmidt.lean.html#L11">OAI.RowColumn.MatrixState.hsVector</a>, <a href="Sectors.lean.html#L55">OAI.RowColumn.MatrixState.sectorTensor</a></p></li><li id=L77><b>lemma</b> <code>OAI.RowColumn.MatrixState.algebra_reconstruction_hilbert_bound</code> <small>line 77</small><div class="doc"><p>Use the intrinsic spectral order on the closed finite C*-algebra. Its
+physical Hilbert--Schmidt structure and existing operator norm are unchanged.</p></div><pre>lemma algebra_reconstruction_hilbert_bound
+    {E H G : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    [FiniteDimensional ℂ E] [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Group G]
+    (A : StarSubalgebra ℂ (E →L[ℂ] E)) (u : G →* unitary A)
+    (hspan : Submodule.span ℂ (Set.range fun g : G =&gt; (u g : A)) = ⊤)
+    (B : A) (F : A →ₗ[ℂ] H) (R : ℝ) (hR : 0 ≤ R)
+    (hU : ∀ g, ‖F (u g : A)‖ ≤ R) :
+    ‖F B‖ ≤ 4 * (Module.finrank ℂ A : ℝ) * ‖B‖ * R := by
+…</pre></li><li id=L92><b>def</b> <code>OAI.RowColumn.MatrixState.algebraMatrix</code> <small>line 92</small><div class="doc"><p>Matrix form of an actual algebra element, with the unchanged physical
+coordinate basis on the signed tensor sector.</p></div><pre>def algebraMatrix {I : Type*} [Fintype I] [DecidableEq I]
+    (A : StarSubalgebra ℂ (EuclideanSpace ℂ I →L[ℂ] EuclideanSpace ℂ I)) :
+    A →ₗ[ℂ] Matrix I I ℂ :=
+…</pre></li><li id=L97><b>def</b> <code>OAI.RowColumn.MatrixState.sandwichMap</code> <small>line 97</small></li><li id=L102><b>lemma</b> <code>OAI.RowColumn.MatrixState.sandwichMap_apply</code> <small>line 102</small></li><li id=L107><b>lemma</b> <code>OAI.RowColumn.MatrixState.sector_unitary_matrix</code> <small>line 107</small></li><li id=L115><b>theorem</b> <code>OAI.RowColumn.MatrixState.whitened_reconstruction_bound</code> <small>line 115</small><div class="doc"><p>Weighted reconstruction in the actual signed sector, with the exact
+occupied-board entropy loss and singular quarter-root normalization.</p></div><pre>theorem whitened_reconstruction_bound {L K : Type*} [Fintype L] [Fintype K]
+    [DecidableEq L] [DecidableEq K] [Nonempty S]
+    (odd : C → Prop) [DecidablePred odd] (k : ℕ) (e : S ↪ L × K)
+    (M : L → Matrix C C ℂ) (N : K → Matrix C C ℂ)
+    (hM : ∀ i, (M i).PosSemidef) (hN : ∀ j, (N j).PosSemidef)
+    (heM : ∀ i, M i ∈ evenAlgebra odd) (heN : ∀ j, N j ∈ evenAlgebra odd)
+    (hMt : ∀ i, (M i).trace.re ≤ 1) (hNt : ∀ j, (N j).trace.re ≤ 1)
+    (B : sectorAlgebra (S := S) odd k) :
+…</pre><p class="refs">Mentions: <a href="Sectors.lean.html#L14">OAI.RowColumn.MatrixState.evenAlgebra</a>, <a href="Sectors.lean.html#L385">OAI.RowColumn.MatrixState.sectorAlgebra</a></p></li><li id=L178><b>lemma</b> <code>OAI.RowColumn.MatrixState.filtered_trace_identity</code> <small>line 178</small></li><li id=L207><b>lemma</b> <code>OAI.RowColumn.MatrixState.algebraMatrix_mul</code> <small>line 207</small></li><li id=L210><b>lemma</b> <code>OAI.RowColumn.MatrixState.algebraMatrix_star</code> <small>line 210</small></li><li id=L213><b>lemma</b> <code>OAI.RowColumn.MatrixState.algebraMatrix_hermitian</code> <small>line 213</small></li><li id=L217><b>lemma</b> <code>OAI.RowColumn.MatrixState.algebraMatrix_trace</code> <small>line 217</small></li><li id=L227><b>lemma</b> <code>OAI.RowColumn.MatrixState.tensorMatrix_trace_re</code> <small>line 227</small></li><li id=L236><b>lemma</b> <code>OAI.RowColumn.MatrixState.sectorTensor_trace_le</code> <small>line 236</small></li><li id=L244><b>lemma</b> <code>OAI.RowColumn.MatrixState.sectorTensor_substate_trace</code> <small>line 244</small></li><li id=L251><b>def</b> <code>OAI.RowColumn.MatrixState.positiveTensor</code> <small>line 251</small></li><li id=L257><b>lemma</b> <code>OAI.RowColumn.MatrixState.positiveTensor_matrix</code> <small>line 257</small></li><li id=L263><b>lemma</b> <code>OAI.RowColumn.MatrixState.positiveTensor_isPositive</code> <small>line 263</small></li><li id=L268><b>lemma</b> <code>OAI.RowColumn.MatrixState.positiveTensor_selfAdjoint</code> <small>line 268</small></li><li id=L274><b>lemma</b> <code>OAI.RowColumn.MatrixState.positiveTensor_trace_le_one</code> <small>line 274</small></li><li id=L280><b>lemma</b> <code>OAI.RowColumn.MatrixState.positiveTensor_quarter_four</code> <small>line 280</small></li><li id=L296><b>theorem</b> <code>OAI.RowColumn.MatrixState.quarter_tensor_filter_bound</code> <small>line 296</small><div class="doc"><p>The actual irreducible-dimension filter acts on fourth powers of both
+mean-state tensors. Its quarter-root sandwich has squared norm at most 1/d.</p></div><pre>theorem quarter_tensor_filter_bound (odd : C → Prop) [DecidablePred odd] (k : ℕ)
+    (q : sectorAlgebra (S := S) odd k) (hqs : star q=q) (hqq : q*q=q)
+…</pre><p class="refs">Mentions: <a href="Sectors.lean.html#L385">OAI.RowColumn.MatrixState.sectorAlgebra</a></p></li><li id=L316><b>lemma</b> <code>OAI.RowColumn.MatrixState.sector_unwhiten_identity</code> <small>line 316</small></li><li id=L350><b>theorem</b> <code>OAI.RowColumn.MatrixState.sector_filtered_trace_bound</code> <small>line 350</small><div class="doc"><p>The quantitative global bridge: two arbitrary admissible fibre-product
+substates, on the actual signed sector and the actual central isotypic filter.
+No invertibility, sector-surrogate, or postselection bound is assumed.</p></div><pre>theorem sector_filtered_trace_bound {L K : Type*} [Fintype L] [Fintype K]
+    [DecidableEq L] [DecidableEq K] [Nonempty S]
+    (odd : C → Prop) [DecidablePred odd] (k : ℕ) (e : S ↪ L × K)
+    (q : sectorAlgebra (S := S) odd k) (hqs : star q=q) (hqq : q*q=q)
+…</pre><p class="refs">Mentions: <a href="Sectors.lean.html#L385">OAI.RowColumn.MatrixState.sectorAlgebra</a></p></li><li id=L412><b>theorem</b> <code>OAI.RowColumn.MatrixState.exists_sector_isotypic_filter</code> <small>line 412</small><div class="doc"><p>The filter used above exists in the concrete tensor algebra, for every
+actual irreducible that occurs. The identity condition on its isotypic carrier
+will be applied to the explicit isometric hook embedding.</p></div><pre>theorem exists_sector_isotypic_filter {V : Type*} [AddCommGroup V]
+    [Module ℂ V] [FiniteDimensional ℂ V]
+    (odd : C → Prop) [DecidablePred odd] (k : ℕ)
+    (ρ : Representation ℂ (Equiv.Perm S) V) [Representation.IsIrreducible ρ] :
+    ∃ q : sectorAlgebra (S := S) odd k, star q=q ∧ q*q=q ∧ (∀ a, q*a=a*q) ∧
+…</pre><p class="refs">Mentions: <a href="Sectors.lean.html#L385">OAI.RowColumn.MatrixState.sectorAlgebra</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

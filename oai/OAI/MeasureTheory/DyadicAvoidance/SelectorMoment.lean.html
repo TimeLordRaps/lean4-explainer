@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/MeasureTheory/DyadicAvoidance/SelectorMoment.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/MeasureTheory/DyadicAvoidance/SelectorMoment.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">MeasureTheory</a> / <a href="index.html">DyadicAvoidance</a> / <span>SelectorMoment.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">MeasureTheory</a>/<a href="index.html">DyadicAvoidance</a>/<span>SelectorMoment.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/MeasureTheory/DyadicAvoidance/SelectorMoment.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>lemma</b> <code>OAI.Problem310.SelectorMoment.product_eq_pow_active</code> <small>line 14</small></li><li id=L20><b>theorem</b> <code>OAI.Problem310.SelectorMoment.independent_boolean_moment</code> <small>line 20</small><div class="doc"><p>Exponential moment of the number of active independent Boolean trials.</p></div><pre>theorem independent_boolean_moment
+    {Ω : Type u_Ω} {I : Type u_I} [MeasurableSpace Ω] [Fintype I] [DecidableEq I]
+    [MeasurableSpace Bool] [MeasurableSingletonClass Bool]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (ν : Measure Bool)
+    (X : I → Ω → Bool) (hX : iIndepFun X μ)
+    (hXm : ∀ i, Measurable (X i)) (hmap : ∀ i, μ.map (X i) = ν)
+    (q : ℝ≥0∞) :
+    (∫⁻ ω, q ^ Fintype.card {i // X i ω = true} ∂μ) =
+      (ν {false} + q * ν {true}) ^ Fintype.card I := by
+…</pre></li><li id=L48><b>theorem</b> <code>OAI.Problem310.SelectorMoment.lookup_boolean_moment</code> <small>line 48</small><div class="doc"><p>The same moment for injective coordinate lookups in a larger product table.</p></div><pre>theorem lookup_boolean_moment
+    {I : Type u_I} {K : Type u_K} [Fintype I] [DecidableEq I] [Fintype K]
+    [MeasurableSpace Bool] [MeasurableSingletonClass Bool]
+    (ν : Measure Bool) [IsProbabilityMeasure ν]
+    (addr : I → K) (hinj : Function.Injective addr) (q : ℝ≥0∞) :
+    (∫⁻ ω : K → Bool, q ^ Fintype.card {i // ω (addr i) = true}
+      ∂(Measure.pi (fun _ : K =&gt; ν))) =
+      (ν {false} + q * ν {true}) ^ Fintype.card I := by
+…</pre></li><li id=L65><b>theorem</b> <code>OAI.Problem310.SelectorMoment.lookup_fair_moment</code> <small>line 65</small><div class="doc"><p>Fair fresh selector entries, with an arbitrary nonnegative failure factor.</p></div><pre>theorem lookup_fair_moment
+    {I : Type u_I} {K : Type u_K} [Fintype I] [DecidableEq I] [Fintype K]
+    [MeasurableSpace Bool] [MeasurableSingletonClass Bool]
+    (ν : Measure Bool) [IsProbabilityMeasure ν]
+    (hfalse : ν {false} = 1 / 2) (htrue : ν {true} = 1 / 2)
+    (addr : I → K) (hinj : Function.Injective addr) (q : ℝ≥0∞) :
+    (∫⁻ ω : K → Bool, q ^ Fintype.card {i // ω (addr i) = true}
+      ∂(Measure.pi (fun _ : K =&gt; ν))) =
+      (1 / 2 + q / 2) ^ Fintype.card I := by
+…</pre></li><li id=L78><b>theorem</b> <code>OAI.Problem310.SelectorMoment.lookup_fair_failure_moment</code> <small>line 78</small><div class="doc"><p>The exact fixed-scale base, with real parameter p.</p></div><pre>theorem lookup_fair_failure_moment
+    {I : Type u_I} {K : Type u_K} [Fintype I] [DecidableEq I] [Fintype K]
+    [MeasurableSpace Bool] [MeasurableSingletonClass Bool]
+    (ν : Measure Bool) [IsProbabilityMeasure ν]
+    (hfalse : ν {false} = 1 / 2) (htrue : ν {true} = 1 / 2)
+    (addr : I → K) (hinj : Function.Injective addr)
+    (p : ℝ) (hp : p ≤ 1) :
+    (∫⁻ ω : K → Bool, (ENNReal.ofReal (1 - p)) ^ Fintype.card {i // ω (addr i) = true}
+      ∂(Measure.pi (fun _ : K =&gt; ν))) =
+      (ENNReal.ofReal (1 - p / 2)) ^ Fintype.card I := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

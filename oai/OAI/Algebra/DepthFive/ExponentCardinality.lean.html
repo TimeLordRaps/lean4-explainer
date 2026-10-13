@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/ExponentCardinality.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/ExponentCardinality.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>ExponentCardinality.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>ExponentCardinality.lean</span></code></h1><p class="muted">13 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/ExponentCardinality.lean#L1">source</a></p><div class="doc"><h3>Cardinalities of homogeneous and bihomogeneous exponent sets</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>theorem</b> <code>OAI.Problem335.card_homogeneous_exponents</code> <small>line 15</small><div class="doc"><p>Stars and bars for finitely supported natural exponent vectors.</p></div><pre>theorem card_homogeneous_exponents (σ : Type*) [Fintype σ] (a : ℕ) :
+    Nat.card {d : σ →₀ ℕ // d.sum (fun _ n =&gt; n) = a} =
+      (Fintype.card σ).multichoose a := by
+…</pre></li><li id=L24><b>theorem</b> <code>OAI.Problem335.card_homogeneous_functions</code> <small>line 24</small><div class="doc"><p>Stars and bars for ordinary natural exponent vectors on a finite type.</p></div><pre>theorem card_homogeneous_functions (σ : Type*) [Fintype σ] (a : ℕ) :
+    Nat.card {d : σ → ℕ // ∑ x, d x = a} =
+      (Fintype.card σ).multichoose a := by
+…</pre></li><li id=L31><b>lemma</b> <code>OAI.Problem335.bidegreeWeight_fst_sum</code> <small>line 31</small></li><li id=L45><b>lemma</b> <code>OAI.Problem335.bidegreeWeight_snd_sum</code> <small>line 45</small></li><li id=L60><b>def</b> <code>OAI.Problem335.bidegreeExponentsEquiv</code> <small>line 60</small><div class="doc"><p>Split a bihomogeneous monomial into its two independent exponent vectors.</p></div><pre>def bidegreeExponentsEquiv [Fintype σ] (isV : σ → Bool) (a b : ℕ) :
+    {d : σ →₀ ℕ // Finsupp.weight (bidegreeWeight isV) d = (a, b)} ≃
+      {d : {x // isV x = true} → ℕ // ∑ x, d x = a} ×
+      {d : {x // ¬ isV x = true} → ℕ // ∑ x, d x = b} := by
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L19">OAI.Problem335.bidegreeWeight</a></p></li><li id=L81><b>theorem</b> <code>OAI.Problem335.card_bidegree_exponents</code> <small>line 81</small><div class="doc"><p>Bihomogeneous monomials are counted by the product of two stars-and-bars
+numbers; the variable sets may be empty.</p></div><pre>theorem card_bidegree_exponents [Fintype σ] (isV : σ → Bool) (a b : ℕ) :
+    Nat.card {d : σ →₀ ℕ // Finsupp.weight (bidegreeWeight isV) d = (a, b)} =
+      (Fintype.card {x // isV x = true}).multichoose a *
+        (Fintype.card {x // ¬ isV x = true}).multichoose b := by
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L19">OAI.Problem335.bidegreeWeight</a></p></li><li id=L90><b>theorem</b> <code>OAI.Problem335.card_bidegree_exponents_bool</code> <small>line 90</small><div class="doc"><p>The same count with the explicit <code>false</code> Boolean fiber.</p></div><pre>theorem card_bidegree_exponents_bool [Fintype σ] (isV : σ → Bool) (a b : ℕ) :
+    Nat.card {d : σ →₀ ℕ // Finsupp.weight (bidegreeWeight isV) d = (a, b)} =
+      (Fintype.card {x // isV x = true}).multichoose a *
+        (Fintype.card {x // isV x = false}).multichoose b := by
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L19">OAI.Problem335.bidegreeWeight</a></p></li><li id=L97><b>theorem</b> <code>OAI.Problem335.card_layer_variables</code> <small>line 97</small><div class="doc"><p>Each selected matrix layer contributes all <code>n²</code> ambient variables.</p></div><pre>theorem card_layer_variables {n : ℕ} (s : Finset (Fin n)) :
+    Fintype.card {x : Fin n × Fin n × Fin n // x.1 ∈ s} = s.card * n ^ 2 := by
+…</pre></li><li id=L105><b>theorem</b> <code>OAI.Problem335.card_complement_layer_variables</code> <small>line 105</small><div class="doc"><p>The complementary group has the expected number of ambient variables.</p></div><pre>theorem card_complement_layer_variables {n : ℕ} (s : Finset (Fin n)) :
+    Fintype.card {x : Fin n × Fin n × Fin n // x.1 ∉ s} =
+      (n - s.card) * n ^ 2 := by
+…</pre></li><li id=L114><b>theorem</b> <code>OAI.Problem335.card_layer_bidegree_exponents</code> <small>line 114</small><div class="doc"><p>The exact dimension index count for a partition by complete matrix layers.
+In particular, inactive endpoint coordinates remain part of both stars-and-bars
+counts, as required in the occupation-moment argument.</p></div><pre>theorem card_layer_bidegree_exponents {n : ℕ} (s : Finset (Fin n)) (a b : ℕ) :
+    Nat.card {d : (Fin n × Fin n × Fin n) →₀ ℕ //
+      Finsupp.weight (bidegreeWeight (fun x =&gt; decide (x.1 ∈ s))) d = (a, b)} =
+      (s.card * n ^ 2).multichoose a *
+        ((n - s.card) * n ^ 2).multichoose b := by
+…</pre><p class="refs">Mentions: <a href="OperatorRank.lean.html#L19">OAI.Problem335.bidegreeWeight</a></p></li><li id=L126><b>abbrev</b> <code>OAI.Problem335.homogeneousFunctionsFintype</code> <small>line 126</small><div class="doc"><p>An explicit finite enumeration for a weak-composition function type.  This
+is not installed globally, so consumers may choose their preferred enumeration.</p></div><pre>abbrev homogeneousFunctionsFintype (σ : Type*) [Fintype σ] (a : ℕ) :
+    Fintype {d : σ → ℕ // ∑ x, d x = a} := by
+…</pre></li><li id=L133><b>def</b> <code>OAI.Problem335.homogeneousFunctionsEquivAntidiag</code> <small>line 133</small><div class="doc"><p>The weak-composition function representation and the finite antidiagonal
+representation used by power-series coefficient extraction are equivalent.</p></div><pre>def homogeneousFunctionsEquivAntidiag [Fintype σ] [DecidableEq σ] (a : ℕ) :
+    {d : σ → ℕ // ∑ x, d x = a} ≃
+      ↥(Finset.finsuppAntidiag (Finset.univ : Finset σ) a) := by
+…</pre></li><li id=L142><b>theorem</b> <code>OAI.Problem335.sum_homogeneousFunctions_eq_antidiag</code> <small>line 142</small><div class="doc"><p>Exact transport of a weak-composition sum to the finite antidiagonal.</p></div><pre>theorem sum_homogeneousFunctions_eq_antidiag [Fintype σ] [DecidableEq σ] (a : ℕ)
+    [Fintype {d : σ → ℕ // ∑ x, d x = a}]
+    {M : Type*} [AddCommMonoid M] (f : (σ →₀ ℕ) → M) :
+    (∑ d : {d : σ → ℕ // ∑ x, d x = a},
+      f (Finsupp.equivFunOnFinite.symm d.val)) =
+      ∑ d ∈ Finset.finsuppAntidiag (Finset.univ : Finset σ) a, f d := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

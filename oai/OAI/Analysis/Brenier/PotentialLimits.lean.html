@@ -1,0 +1,155 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/Brenier/PotentialLimits.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/Brenier/PotentialLimits.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">Brenier</a> / <span>PotentialLimits.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">Brenier</a>/<span>PotentialLimits.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/Brenier/PotentialLimits.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Problem358.exists_uniformly_convergent_subseq_of_lipschitz</code> <small>line 13</small><div class="doc"><p>Arzelà--Ascoli in the form needed for a sequence of transport potentials.</p></div><pre>theorem exists_uniformly_convergent_subseq_of_lipschitz
+    {X : Type*} [PseudoMetricSpace X] [CompactSpace X]
+    (u : ℕ → X → ℝ) (L : ℝ≥0) (M : ℝ)
+    (hLip : ∀ n, LipschitzWith L (u n))
+    (hbound : ∀ n x, |u n x| ≤ M) :
+    ∃ (v : X → ℝ) (φ : ℕ → ℕ), StrictMono φ ∧
+      TendstoUniformly (fun n =&gt; u (φ n)) v atTop ∧ LipschitzWith L v := by
+…</pre></li><li id=L42><b>theorem</b> <code>OAI.Problem358.convexOn_of_pointwise_limit</code> <small>line 42</small><div class="doc"><p>Convexity on a fixed set is preserved by pointwise limits on that set.</p></div><pre>theorem convexOn_of_pointwise_limit
+    {V : Type*} [AddCommMonoid V] [Module ℝ V]
+    {K : Set V} {u : ℕ → V → ℝ} {v : V → ℝ}
+    (hconv : ∀ n, ConvexOn ℝ K (u n))
+    (hlim : ∀ x ∈ K, Tendsto (fun n =&gt; u n x) atTop (𝓝 (v x))) :
+    ConvexOn ℝ K v := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.Problem358.exists_normalized_convex_potential_subseq</code> <small>line 57</small><div class="doc"><p>Normalized convex potentials with a uniform Lipschitz constant on a compact convex
+body admit a uniformly convergent subsequence, and the limit has the same properties.</p></div><pre>theorem exists_normalized_convex_potential_subseq
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    {K : Set V} (hK : IsCompact K)
+    (x₀ : V) (hx₀ : x₀ ∈ K) (u : ℕ → V → ℝ) (L : ℝ≥0)
+    (hLip : ∀ n, LipschitzOnWith L (u n) K)
+    (hconv : ∀ n, ConvexOn ℝ K (u n))
+    (hnormal : ∀ n, u n x₀ = 0) :
+    ∃ (v : V → ℝ) (φ : ℕ → ℕ), StrictMono φ ∧
+      TendstoUniformlyOn (fun n =&gt; u (φ n)) v atTop K ∧
+      LipschitzOnWith L v K ∧ ConvexOn ℝ K v ∧ v x₀ = 0 := by
+…</pre></li><li id=L100><b>theorem</b> <code>OAI.Problem358.supporting_inequality_of_pointwise_limit</code> <small>line 100</small><div class="doc"><p>Supporting inequalities survive simultaneous convergence of potentials and slopes.
+The conclusion holds for every comparison point in <code>K</code>, without a countability restriction.</p></div><pre>theorem supporting_inequality_of_pointwise_limit
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    {K : Set V} {u : ℕ → V → ℝ} {v : V → ℝ} {p : ℕ → V} {q x : V}
+    (hx : x ∈ K)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; u n z) atTop (𝓝 (v z)))
+    (hp : Tendsto p atTop (𝓝 q))
+    (hsupport : ∀ n z, z ∈ K → u n x + inner ℝ (p n) (z - x) ≤ u n z) :
+    ∀ z ∈ K, v x + inner ℝ q (z - x) ≤ v z := by
+…</pre></li><li id=L116><b>theorem</b> <code>OAI.Problem358.ae_supporting_inequality_of_pointwise_limit</code> <small>line 116</small><div class="doc"><p>Almost-everywhere version of the limiting supporting inequality. Countably many
+full-measure support conditions are intersected before taking the limit, so the
+comparison point remains universally quantified in the conclusion.</p></div><pre>theorem ae_supporting_inequality_of_pointwise_limit
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MeasurableSpace V]
+    (μ : MeasureTheory.Measure V)
+    {K : Set V} {u : ℕ → V → ℝ} {v : V → ℝ}
+    {T : ℕ → V → V} {S : V → V}
+    (hK : ∀ᵐ x ∂μ, x ∈ K)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; u n z) atTop (𝓝 (v z)))
+    (hT : ∀ᵐ x ∂μ, Tendsto (fun n =&gt; T n x) atTop (𝓝 (S x)))
+    (hsupport : ∀ n, ∀ᵐ x ∂μ,
+      ∀ z ∈ K, u n x + inner ℝ (T n x) (z - x) ≤ u n z) :
+    ∀ᵐ x ∂μ, ∀ z ∈ K, v x + inner ℝ (S x) (z - x) ≤ v z := by
+…</pre></li><li id=L149><b>theorem</b> <code>OAI.Problem358.hasFDerivAt_eq_of_eventually_support</code> <small>line 149</small><div class="doc"><p>A linear functional supporting a differentiable function locally is its derivative.
+Convexity is not needed once the supporting inequality has been established.</p></div><pre>theorem hasFDerivAt_eq_of_eventually_support
+    (hu : HasFDerivAt u u&#x27; x)
+    (hp : ∀ᶠ z in 𝓝 x, u x + inner ℝ p (z - x) ≤ u z) :
+    u&#x27; = innerSL ℝ p := by
+…</pre></li><li id=L163><b>theorem</b> <code>OAI.Problem358.supporting_maps_ae_eq</code> <small>line 163</small><div class="doc"><p>Supporting maps coincide almost everywhere if the potential is differentiable
+almost everywhere and the source gives full mass to the interior.</p></div><pre>theorem supporting_maps_ae_eq [MeasurableSpace V] (ρ : Measure V)
+    {T S : V → V}
+    (hu : ∀ᵐ x ∂ρ, DifferentiableAt ℝ u x)
+    (hK : ∀ᵐ x ∂ρ, x ∈ interior K)
+    (hT : ∀ᵐ x ∂ρ, ∀ z ∈ K, u x + inner ℝ (T x) (z - x) ≤ u z)
+    (hS : ∀ᵐ x ∂ρ, ∀ z ∈ K, u x + inner ℝ (S x) (z - x) ≤ u z) :
+    T =ᵐ[ρ] S := by
+…</pre></li><li id=L175><b>theorem</b> <code>OAI.Problem358.supporting_inequality_of_tendsto</code> <small>line 175</small><div class="doc"><p>Supporting inequalities are closed under pointwise convergence of potentials
+and convergence of the supporting slope.</p></div><pre>theorem supporting_inequality_of_tendsto
+    {ι : Type*} {l : Filter ι} [NeBot l]
+    {uₙ : ι → V → ℝ} {pₙ : ι → V}
+    (hx : x ∈ K)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; uₙ n z) l (𝓝 (u z)))
+    (hp : Tendsto pₙ l (𝓝 p))
+    (hs : ∀ᶠ n in l, ∀ z ∈ K,
+      uₙ n x + inner ℝ (pₙ n) (z - x) ≤ uₙ n z) :
+    ∀ z ∈ K, u x + inner ℝ p (z - x) ≤ u z := by
+…</pre></li><li id=L193><b>theorem</b> <code>OAI.Problem358.supporting_maps_of_ae_tendsto</code> <small>line 193</small><div class="doc"><p>Countably many almost-everywhere supporting inequalities pass to an
+almost-everywhere converging sequence of slopes.  The potential convergence
+is assumed on the whole body, so the resulting inequality is simultaneous
+for every comparison point, not merely almost every comparison point.</p></div><pre>theorem supporting_maps_of_ae_tendsto [MeasurableSpace V]
+    (ρ : Measure V) {uₙ : ℕ → V → ℝ} {Tₙ : ℕ → V → V} {T : V → V}
+    (hK : ∀ᵐ x ∂ρ, x ∈ K)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; uₙ n z) atTop (𝓝 (u z)))
+    (hT : ∀ᵐ x ∂ρ, Tendsto (fun n =&gt; Tₙ n x) atTop (𝓝 (T x)))
+    (hs : ∀ n, ∀ᵐ x ∂ρ, ∀ z ∈ K,
+      uₙ n x + inner ℝ (Tₙ n x) (z - x) ≤ uₙ n z) :
+    ∀ᵐ x ∂ρ, ∀ z ∈ K, u x + inner ℝ (T x) (z - x) ≤ u z := by
+…</pre></li><li id=L208><b>theorem</b> <code>OAI.Problem358.supporting_slopes_tendsto_of_isCompact</code> <small>line 208</small><div class="doc"><p>Compactly constrained supporting slopes converge wherever the limiting
+potential is differentiable.  This is valid for arbitrary filters and requires
+only pointwise convergence of potentials, not convergence of their derivatives.</p></div><pre>theorem supporting_slopes_tendsto_of_isCompact
+    {ι : Type*} {l : Filter ι} {uₙ : ι → V → ℝ} {pₙ : ι → V} {Y : Set V}
+    (hY : IsCompact Y) (hx : x ∈ interior K)
+    (hderiv : HasFDerivAt u (innerSL ℝ p) x)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; uₙ n z) l (𝓝 (u z)))
+    (hmem : ∀ᶠ n in l, pₙ n ∈ Y)
+    (hs : ∀ᶠ n in l, ∀ z ∈ K,
+      uₙ n x + inner ℝ (pₙ n) (z - x) ≤ uₙ n z) :
+    Tendsto pₙ l (𝓝 p) := by
+…</pre></li><li id=L228><b>theorem</b> <code>OAI.Problem358.exists_supporting_slope_limit_of_isCompact</code> <small>line 228</small><div class="doc"><p>A differentiable pointwise limit of potentials admits a supporting slope
+in the same compact target set, and the full slope family converges to it.</p></div><pre>theorem exists_supporting_slope_limit_of_isCompact
+    {ι : Type*} {l : Filter ι} [NeBot l]
+    {uₙ : ι → V → ℝ} {pₙ : ι → V} {Y : Set V}
+    (hY : IsCompact Y) (hx : x ∈ interior K)
+    (hderiv : DifferentiableAt ℝ u x)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; uₙ n z) l (𝓝 (u z)))
+    (hmem : ∀ᶠ n in l, pₙ n ∈ Y)
+    (hs : ∀ᶠ n in l, ∀ z ∈ K,
+      uₙ n x + inner ℝ (pₙ n) (z - x) ≤ uₙ n z) :
+    ∃ p ∈ Y, Tendsto pₙ l (𝓝 p) ∧
+      ∀ z ∈ K, u x + inner ℝ p (z - x) ≤ u z := by
+…</pre></li><li id=L252><b>theorem</b> <code>OAI.Problem358.ae_exists_supporting_map_limit</code> <small>line 252</small><div class="doc"><p>The compact-slope limit construction holds almost everywhere simultaneously
+for an entire sequence of supporting maps.</p></div><pre>theorem ae_exists_supporting_map_limit [MeasurableSpace V]
+    (ρ : Measure V) {uₙ : ℕ → V → ℝ} {Tₙ : ℕ → V → V} {Y : Set V}
+    (hY : IsCompact Y)
+    (hK : ∀ᵐ x ∂ρ, x ∈ interior K)
+    (hderiv : ∀ᵐ x ∂ρ, DifferentiableAt ℝ u x)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; uₙ n z) atTop (𝓝 (u z)))
+    (hmem : ∀ n, ∀ᵐ x ∂ρ, Tₙ n x ∈ Y)
+    (hs : ∀ n, ∀ᵐ x ∂ρ, ∀ z ∈ K,
+      uₙ n x + inner ℝ (Tₙ n x) (z - x) ≤ uₙ n z) :
+    ∀ᵐ x ∂ρ, ∃ p ∈ Y, Tendsto (fun n =&gt; Tₙ n x) atTop (𝓝 p) ∧
+      ∀ z ∈ K, u x + inner ℝ p (z - x) ≤ u z := by
+…</pre></li><li id=L281><b>theorem</b> <code>OAI.Problem358.exists_measurable_supporting_map_limit</code> <small>line 281</small><div class="doc"><p>Compactly constrained supporting maps have a measurable limiting representative
+when their potentials converge to an almost-everywhere differentiable potential.</p></div><pre>theorem exists_measurable_supporting_map_limit
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    [MeasurableSpace V] [BorelSpace V]
+    (ρ : Measure V) {K Y : Set V} {uₙ : ℕ → V → ℝ} {u : V → ℝ}
+    {Tₙ : ℕ → V → V}
+    (hY : IsCompact Y)
+    (hK : ∀ᵐ x ∂ρ, x ∈ interior K)
+    (hderiv : ∀ᵐ x ∂ρ, DifferentiableAt ℝ u x)
+    (hu : ∀ z ∈ K, Tendsto (fun n =&gt; uₙ n z) atTop (𝓝 (u z)))
+    (hmeas : ∀ n, Measurable (Tₙ n))
+    (hmem : ∀ n, ∀ᵐ x ∂ρ, Tₙ n x ∈ Y)
+    (hs : ∀ n, ∀ᵐ x ∂ρ, ∀ z ∈ K,
+…</pre></li><li id=L312><b>theorem</b> <code>OAI.Problem358.exists_potential_and_map_limit</code> <small>line 312</small><div class="doc"><p>Joint subsequential compactness of normalized convex potentials and their
+compactly constrained supporting maps on a uniform convex source.</p></div><pre>theorem exists_potential_and_map_limit
+    {d : ℕ} {K Y : Set (E d)}
+    (hK : IsCompact K) (hKconv : Convex ℝ K) (hY : IsCompact Y)
+    (x₀ : E d) (hx₀ : x₀ ∈ K)
+    (uₙ : ℕ → E d → ℝ) (Tₙ : ℕ → E d → E d) (L : ℝ≥0)
+    (hLip : ∀ n, LipschitzOnWith L (uₙ n) K)
+    (hconv : ∀ n, ConvexOn ℝ K (uₙ n))
+    (hnormal : ∀ n, uₙ n x₀ = 0)
+    (hmeas : ∀ n, Measurable (Tₙ n))
+    (hmem : ∀ n, ∀ᵐ x ∂uniformMeasure K, Tₙ n x ∈ Y)
+    (hs : ∀ n, ∀ᵐ x ∂uniformMeasure K, ∀ z ∈ K,
+      uₙ n x + inner ℝ (Tₙ n x) (z - x) ≤ uₙ n z) :
+…</pre></li><li id=L347><b>theorem</b> <code>OAI.Problem358.exists_uniqueOptimalMap_of_quantized_supporting_potentials</code> <small>line 347</small><div class="doc"><p>The approximation step for Brenier-map existence. Finite supporting potentials
+and quantized target laws suffice; quantitative stability is not an assumption.</p></div><pre>theorem exists_uniqueOptimalMap_of_quantized_supporting_potentials
+    {d : ℕ} {K Y : Set (E d)} {μ : Measure (E d)}
+    [IsFiniteMeasure (uniformMeasure K)] [IsFiniteMeasure μ]
+    (hK : IsCompact K) (hKconv : Convex ℝ K) (hY : IsCompact Y)
+    (hμ : IsSupported μ Y) (x₀ : E d) (hx₀ : x₀ ∈ K)
+    (uₙ : ℕ → E d → ℝ) (Tₙ Qₙ : ℕ → E d → E d) (L : ℝ≥0)
+    (hLip : ∀ n, LipschitzOnWith L (uₙ n) K)
+    (hconv : ∀ n, ConvexOn ℝ K (uₙ n))
+    (hnormal : ∀ n, uₙ n x₀ = 0)
+    (hTmeas : ∀ n, Measurable (Tₙ n))
+    (hQmeas : ∀ n, Measurable (Qₙ n))
+    (hQmem : ∀ n, ∀ᵐ y ∂μ, Qₙ n y ∈ Y)
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RuledCovering/LocalApproximation.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RuledCovering/LocalApproximation.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Geometry</a> / <a href="index.html">RuledCovering</a> / <span>LocalApproximation.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Geometry</a>/<a href="index.html">RuledCovering</a>/<span>LocalApproximation.lean</span></code></h1><p class="muted">5 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RuledCovering/LocalApproximation.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L14><b>theorem</b> <code>OAI.RuledApproximation.c1_local_remainder</code> <small>line 14</small><div class="doc"><p>A quantitative derivative remainder in convex local coordinates.</p></div><pre>theorem c1_local_remainder {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    {v : E → F} {U : Set E} (hU : IsOpen U) (hv : ContDiffOn ℝ 1 v U)
+    {p : E} (hp : p ∈ U) {delta : ℝ} (hd : 0 &lt; delta) :
+    ∃ r : ℝ, 0 &lt; r ∧ ball p r ⊆ U ∧ ∀ x ∈ ball p r, ∀ y ∈ ball p r,
+      ‖v x - v y - fderiv ℝ v p (x - y)‖ ≤ delta * ‖x - y‖ := by
+…</pre></li><li id=L34><b>theorem</b> <code>OAI.RuledApproximation.continuous_nonneg_extension</code> <small>line 34</small><div class="doc"><p>Extending a nonnegative continuous weight from a compact patch does not alter it there.</p></div><pre>theorem continuous_nonneg_extension {E : Type*} [TopologicalSpace E] [NormalSpace E]
+    {K : Set E} (hK : IsClosed K) {f : E → ℝ} (hf : ContinuousOn f K)
+    (hn : ∀ x ∈ K, 0 ≤ f x) :
+    ∃ F : E → ℝ, Continuous F ∧ (∀ x, 0 ≤ F x) ∧ Set.EqOn F f K := by
+…</pre></li><li id=L47><b>abbrev</b> <code>OAI.RuledApproximation.Parameter</code> <small>line 47</small></li><li id=L50><b>def</b> <code>OAI.RuledApproximation.LatticeModel</code> <small>line 50</small><div class="doc"><p>Exact affine lattice template. The uniform bound retains finitely many centers.</p></div><pre>def LatticeModel (A : Parameter →L[ℝ] Parameter) (L R : ℝ) : Prop :=
+…</pre><p class="refs">Mentions: <a href="LocalApproximation.lean.html#L47">OAI.RuledApproximation.Parameter</a></p></li><li id=L57><b>theorem</b> <code>OAI.RuledApproximation.local_finite_certificate</code> <small>line 57</small><div class="doc"><p>The nonlinear local producer. Unlike tilting a continuum of lines, it produces a
+finite set of intercept centers covering every label and every time simultaneously.</p></div><pre>theorem local_finite_certificate {K U : Set Parameter} (hK : IsCompact K)
+    (hU : IsOpen U) (hKU : K ⊆ U) (v : Parameter → Parameter)
+    (A : Parameter →L[ℝ] Parameter) {L R delta : ℝ}
+    (hL : 0 ≤ L) (hdelta : 0 ≤ delta) (hmodel : LatticeModel A L R)
+    (hrem : ∀ p ∈ U, ∀ b ∈ U,
+      ‖v p - v b - A (p - b)‖ ≤ delta * ‖p - b‖)
+    {F : Parameter → ℝ} (hF : Continuous F) (hFpos : ∀ p, 0 ≤ F p)
+    {eps : ℝ} (heps : 0 &lt; eps) :
+    ∃ n : ℕ, 0 &lt; n ∧ ∃ S : Set Parameter, S.Finite ∧ S ⊆ U ∧
+      (∀ p ∈ K, ∀ r : ℝ, |r| ≤ L → ∃ b ∈ S,
+        ‖p + r • v p - (b + r • v b)‖ ≤ (1 / 2 + L * delta * R) / n) ∧
+      (∑&#x27; b : S, F b) / (n : ℝ) ^ 2 &lt; (∫ p in K, F p) + eps := by
+…</pre><p class="refs">Mentions: <a href="LocalApproximation.lean.html#L47">OAI.RuledApproximation.Parameter</a>, <a href="LocalApproximation.lean.html#L50">OAI.RuledApproximation.LatticeModel</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

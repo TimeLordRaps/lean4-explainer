@@ -1,0 +1,1 @@
+window.l4shard("ru", [["Imo2017P1.Rule",114,42],["Imo2017P1.run_linear",114,99],["Imo2018P5.val_rule",121,90],["Imo2022P6.rule_down",134,1972],["Imo2022P6.rule_left",134,2070],["Imo2022P6.rule_right",134,2152],["Imo2022P6.rule_up",134,2019],["Usa1995P2.run",217,42],["Usa1995P2.run_chainInv",217,61],["Usa1995P2.run_chainSqrt",217,83]]);

@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/EgyptianFractions/ResidueStep.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/EgyptianFractions/ResidueStep.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">NumberTheory</a> / <a href="index.html">EgyptianFractions</a> / <span>ResidueStep.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">NumberTheory</a>/<a href="index.html">EgyptianFractions</a>/<span>ResidueStep.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/EgyptianFractions/ResidueStep.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L9><b>theorem</b> <code>OAI.Problem337.nat_ceiling_residue</code> <small>line 9</small><div class="doc"><p>The natural-number ceiling algorithm, including its least nonnegative residue.</p></div><pre>theorem nat_ceiling_residue (N u : ℕ) (hN : 0 &lt; N) (hu : 0 &lt; u) :
+    ∃ z h : ℕ, 0 &lt; z ∧ h &lt; u ∧ N + h = u * z := by
+…</pre></li><li id=L23><b>theorem</b> <code>OAI.Problem337.residue_step_identity</code> <small>line 23</small><div class="doc"><p>The division step underlying both the terminal and backward numerator descent.</p></div><pre>theorem residue_step_identity (M Q u t z h : ℕ)
+    (hM : 0 &lt; M) (hQ : 0 &lt; Q) (ht : 0 &lt; t) (hz : 0 &lt; z)
+    (htM : t ∣ M) (hres : Q * t + h = u * z) :
+    (u : ℚ) / (M * Q : ℕ) =
+      (1 : ℚ) / ((M / t) * z : ℕ) +
+        (1 : ℚ) / z * ((h : ℚ) / (M * Q : ℕ)) := by
+…</pre></li><li id=L43><b>theorem</b> <code>OAI.Problem337.unit_fraction_list_scale</code> <small>line 43</small><div class="doc"><p>Rescale an arbitrary positive unit-fraction list by a positive integer.</p></div><pre>theorem unit_fraction_list_scale {k : ℕ} (n : Fin k → ℕ) (z : ℕ)
+    (hn : ∀ i, 0 &lt; n i) (hz : 0 &lt; z) :
+    (∀ i, 0 &lt; z * n i) ∧
+      (∑ i : Fin k, (1 : ℚ) / (z * n i : ℕ)) =
+        (1 : ℚ) / z * (∑ i : Fin k, (1 : ℚ) / (n i : ℚ)) := by
+…</pre></li><li id=L57><b>theorem</b> <code>OAI.Problem337.residue_step_list</code> <small>line 57</small><div class="doc"><p>Adjoining the unit fraction produced by a residue step lifts any expansion
+of the smaller numerator. Repeated denominators are deliberately permitted.</p></div><pre>theorem residue_step_list {k : ℕ} (M Q u t z h : ℕ)
+    (hM : 0 &lt; M) (hQ : 0 &lt; Q) (ht : 0 &lt; t) (hz : 0 &lt; z)
+    (htM : t ∣ M) (hres : Q * t + h = u * z)
+    (n : Fin k → ℕ) (hn : ∀ i, 0 &lt; n i)
+    (hsum : (∑ i : Fin k, (1 : ℚ) / (n i : ℚ)) = (h : ℚ) / (M * Q : ℕ)) :
+    ∃ n&#x27; : Fin (k + 1) → ℕ, (∀ i, 0 &lt; n&#x27; i) ∧
+      (∑ i : Fin (k + 1), (1 : ℚ) / (n&#x27; i : ℚ)) = (u : ℚ) / (M * Q : ℕ) := by
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.Problem337.unit_fraction_list_change_factor</code> <small>line 77</small><div class="doc"><p>Passing from a smaller denominator factor to a divisible larger one only
+scales all unit denominators, and does not add terms.</p></div><pre>theorem unit_fraction_list_change_factor {k : ℕ} (M Q Qnext h : ℕ)
+    (hM : 0 &lt; M) (hQ : 0 &lt; Q) (hQnext : 0 &lt; Qnext) (hdiv : Qnext ∣ Q)
+    (n : Fin k → ℕ) (hn : ∀ i, 0 &lt; n i)
+    (hsum : (∑ i : Fin k, (1 : ℚ) / (n i : ℚ)) =
+      (h : ℚ) / (M * Qnext : ℕ)) :
+    ∃ n&#x27; : Fin k → ℕ, (∀ i, 0 &lt; n&#x27; i) ∧
+      (∑ i : Fin k, (1 : ℚ) / (n&#x27; i : ℚ)) = (h : ℚ) / (M * Q : ℕ) := by
+…</pre></li><li id=L100><b>theorem</b> <code>OAI.Problem337.residue_step_list_change_factor</code> <small>line 100</small><div class="doc"><p>The full backward step, allowing the denominator factor to change by
+an integer divisor between adjacent levels.</p></div><pre>theorem residue_step_list_change_factor {k : ℕ} (M Q Qnext u t z h : ℕ)
+    (hM : 0 &lt; M) (hQ : 0 &lt; Q) (hQnext : 0 &lt; Qnext)
+    (ht : 0 &lt; t) (hz : 0 &lt; z) (htM : t ∣ M) (hdiv : Qnext ∣ Q)
+    (hres : Q * t + h = u * z)
+    (n : Fin k → ℕ) (hn : ∀ i, 0 &lt; n i)
+    (hsum : (∑ i : Fin k, (1 : ℚ) / (n i : ℚ)) =
+      (h : ℚ) / (M * Qnext : ℕ)) :
+    ∃ n&#x27; : Fin (k + 1) → ℕ, (∀ i, 0 &lt; n&#x27; i) ∧
+      (∑ i : Fin (k + 1), (1 : ℚ) / (n&#x27; i : ℚ)) = (u : ℚ) / (M * Q : ℕ) := by
+…</pre></li><li id=L115><b>theorem</b> <code>OAI.Problem337.unit_fraction_denominators_two_of_sum_lt_one</code> <small>line 115</small><div class="doc"><p>Every positive unit fraction in a list of total less than one has
+an integer denominator at least two.</p></div><pre>theorem unit_fraction_denominators_two_of_sum_lt_one {k : ℕ} (n : Fin k → ℕ)
+    (hn : ∀ i, 0 &lt; n i)
+    (hsum : (∑ i : Fin k, (1 : ℚ) / (n i : ℚ)) &lt; 1) :
+    ∀ i, 2 ≤ n i := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonSimilarity/Tracial/PopaConjugatePosition.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonSimilarity/Tracial/PopaConjugatePosition.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">KadisonSimilarity</a> / <a href="index.html">Tracial</a> / <span>PopaConjugatePosition.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">KadisonSimilarity</a>/<a href="index.html">Tracial</a>/<span>PopaConjugatePosition.lean</span></code></h1><p class="muted">7 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonSimilarity/Tracial/PopaConjugatePosition.lean#L1">source</a></p><div class="doc"><p>The conjugacy form of Popa's free-position construction: a unitary in
+an irreducibly included subfactor's tracial ultrapower conjugates a prescribed
+constant subfactor to a copy free from the ambient constant algebra.
+The conjugating unitary remains in the prescribed subfactor ultrapower, and
+trace preservation transports the matrix presentation to its conjugated copy.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L30><b>def</b> <code>OAI.KadisonSimilarity.conjugatedConstantEmbedding</code> <small>line 30</small><div class="doc"><p>The prescribed subfactor is embedded as constants, conjugated inside A^ω,
+then included in B^ω. Thus membership in the prescribed ultrapower is retained.</p></div><pre>def conjugatedConstantEmbedding (ρ : R →⋆ₐ[ℂ] A)
+    (u : unitary (Ultrapower τA hA ω trA)) : R →⋆ₐ[ℂ] Ultrapower τB hB ω trB :=
+…</pre></li><li id=L39><b>def</b> <code>OAI.KadisonSimilarity.Popa1995ConjugateFreenessInput</code> <small>line 39</small><div class="doc"><p>Local published specialization for a fixed irreducible inclusion of
+separable II₁ factors A⊂B and a fixed separable subfactor ρ(R)⊂A.
+The two free algebras are concrete ranges, rather than unspecified copies.</p></div><pre>def Popa1995ConjugateFreenessInput
+    (_hω : (ω : Filter ℕ) ≤ Filter.cofinite) (ρ : R →⋆ₐ[ℂ] A) : Prop :=
+…</pre></li><li id=L46><b>theorem</b> <code>OAI.KadisonSimilarity.quotientTrace_unitary_conjugate</code> <small>line 46</small></li><li id=L56><b>theorem</b> <code>OAI.KadisonSimilarity.conjugatedConstantEmbedding_trace</code> <small>line 56</small><div class="doc"><p>The conjugated constant copy has exactly its original trace.</p></div><pre>theorem conjugatedConstantEmbedding_trace (ρ : R →⋆ₐ[ℂ] A)
+    (u : unitary (Ultrapower τA hA ω trA)) (x : R) :
+    quotientTrace τB hB ω trB
+      (conjugatedConstantEmbedding τA τB hA hB ω trA trB φ hφ ρ u x) = τA (ρ x) := by
+…</pre><p class="refs">Mentions: <a href="PopaConjugatePosition.lean.html#L30">OAI.KadisonSimilarity.conjugatedConstantEmbedding</a></p></li><li id=L68><b>theorem</b> <code>OAI.KadisonSimilarity.conjugatedConstantEmbedding_range_le</code> <small>line 68</small><div class="doc"><p>Its range lies inside the included A-ultrapower, as required by the
+coordinate small-corner transfer.</p></div><pre>theorem conjugatedConstantEmbedding_range_le (ρ : R →⋆ₐ[ℂ] A)
+    (u : unitary (Ultrapower τA hA ω trA)) :
+    (conjugatedConstantEmbedding τA τB hA hB ω trA trB φ hφ ρ u).range ≤
+      (tracialUltrapowerMap τA τB hA hB ω trA trB φ hφ).range := by
+…</pre><p class="refs">Mentions: <a href="PopaConjugatePosition.lean.html#L30">OAI.KadisonSimilarity.conjugatedConstantEmbedding</a>, <a href="TracialUltrapowerHom.lean.html#L51">OAI.KadisonSimilarity.tracialUltrapowerMap</a></p></li><li id=L76><b>theorem</b> <code>OAI.KadisonSimilarity.conjugatedConstantEmbedding_injective</code> <small>line 76</small><div class="doc"><p>Faithfulness survives the constant embedding, conjugation, and inclusion.</p></div><pre>theorem conjugatedConstantEmbedding_injective (ρ : R →⋆ₐ[ℂ] A)
+    (hρ : Function.Injective ρ)
+    (hfA : ∀ a : A, τA (star a * a) = 0 → a = 0)
+    (u : unitary (Ultrapower τA hA ω trA)) :
+    Function.Injective (conjugatedConstantEmbedding τA τB hA hB ω trA trB φ hφ ρ u) :=
+…</pre><p class="refs">Mentions: <a href="PopaConjugatePosition.lean.html#L30">OAI.KadisonSimilarity.conjugatedConstantEmbedding</a></p></li><li id=L87><b>theorem</b> <code>OAI.KadisonSimilarity.conjugatedConstantEmbedding_range_isClosed</code> <small>line 87</small><div class="doc"><p>An embedded C-star algebra has closed range; this supplies the actual
+closed subalgebra used for the matrix-tower transport.</p></div><pre>theorem conjugatedConstantEmbedding_range_isClosed (ρ : R →⋆ₐ[ℂ] A)
+    (hρ : Function.Injective ρ)
+    (hfA : ∀ a : A, τA (star a * a) = 0 → a = 0)
+    (u : unitary (Ultrapower τA hA ω trA)) :
+    IsClosed ((conjugatedConstantEmbedding τA τB hA hB ω trA trB φ hφ ρ u).range :
+      Set (Ultrapower τB hB ω trB)) :=
+…</pre><p class="refs">Mentions: <a href="PopaConjugatePosition.lean.html#L30">OAI.KadisonSimilarity.conjugatedConstantEmbedding</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

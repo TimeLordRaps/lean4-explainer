@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/TypeFamilyCertificate.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/TypeFamilyCertificate.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>TypeFamilyCertificate.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>TypeFamilyCertificate.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/TypeFamilyCertificate.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_approximatesOnSupport</code> <small>line 16</small><div class="doc"><p>Project the full lower-dimensional approximation certificate into a member of the
+injection-indexed type family. The approximating exponents need not stay in any cube.</p></div><pre>theorem typeFamily_approximatesOnSupport {k d : ℕ} (t β b : ℝ)
+    (E : (Fin d → ℝ) → ℝ)
+    (C : ∀ e : Fin k ↪ Fin d,
+      FullCertificate k β b (fun s =&gt; E (embedCoordinates e t s)))
+    (e : Fin k ↪ Fin d) {L : Label k} (hL : L ∈ (C e).labels) :
+    ApproximatesOnSupport
+      (typeFamily t β (fun e =&gt; (C e).labels)) (L.embed e t β)
+      (Finset.univ.map e) t b β E := by
+…</pre><p class="refs">Mentions: <a href="AffineCertificates.lean.html#L28">OAI.Problem326.Affine.FullCertificate</a>, <a href="CoordinateEmbedding.lean.html#L14">OAI.Problem326.Affine.embedCoordinates</a>, <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="AffineLayers.lean.html#L12">OAI.Problem326.Affine.ApproximatesOnSupport</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a></p></li><li id=L40><b>theorem</b> <code>OAI.Problem326.Affine.typeFamily_layerCertificate</code> <small>line 40</small><div class="doc"><p>The actual positive-type constructor: lower-dimensional full certificates for every
+coordinate injection produce the exact layer certificate consumed by fixed-minimum assembly.</p></div><pre>theorem typeFamily_layerCertificate {k d : ℕ} (hk : 0 &lt; k)
+    {t β b : ℝ} (htβ : t &lt; β) (hβb : β &lt; b)
+    (E : (Fin d → ℝ) → ℝ)
+    (hE : ∀ r, Cube t b r → 0 &lt; E r)
+    (C : ∀ e : Fin k ↪ Fin d,
+      FullCertificate k β b (fun s =&gt; E (embedCoordinates e t s))) :
+    LayerCertificate t b E k β (typeFamily t β (fun e =&gt; (C e).labels)) := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L25">OAI.Problem326.Affine.Cube</a>, <a href="AffineCertificates.lean.html#L28">OAI.Problem326.Affine.FullCertificate</a>, <a href="CoordinateEmbedding.lean.html#L14">OAI.Problem326.Affine.embedCoordinates</a>, <a href="AffineLayers.lean.html#L24">OAI.Problem326.Affine.LayerCertificate</a>, <a href="TypeFamily.lean.html#L15">OAI.Problem326.Affine.typeFamily</a></p></li><li id=L74><b>theorem</b> <code>OAI.Problem326.Affine.exists_typeFamily_layerCertificate</code> <small>line 74</small><div class="doc"><p>The per-layer existence interface used by the finite threshold recursion.
+The only input is the lower-dimensional full approximation theorem.</p></div><pre>theorem exists_typeFamily_layerCertificate {k d : ℕ}
+    (hk : 0 &lt; k) (hkd : k &lt; d) {t β b : ℝ}
+    (htβ : t &lt; β) (hβb : β &lt; b)
+    (E : (Fin d → ℝ) → ℝ)
+    (hE : ∀ r, Cube t b r → 0 &lt; E r)
+    (hIH : ∀ E&#x27; : (Fin k → ℝ) → ℝ,
+      (∀ s, Cube β b s → 0 &lt; E&#x27; s) → Nonempty (FullCertificate k β b E&#x27;)) :
+    ∃ F : Finset (Label d), F.Nonempty ∧ LayerCertificate t b E k β F := by
+…</pre><p class="refs">Mentions: <a href="FixedMinimum.lean.html#L25">OAI.Problem326.Affine.Cube</a>, <a href="AffineCertificates.lean.html#L28">OAI.Problem326.Affine.FullCertificate</a>, <a href="FixedMinimum.lean.html#L14">OAI.Problem326.Affine.Label</a>, <a href="AffineLayers.lean.html#L24">OAI.Problem326.Affine.LayerCertificate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

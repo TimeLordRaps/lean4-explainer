@@ -1,0 +1,167 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Computability/UniqueGames/PCP/SourceHonestLemmas.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Computability/UniqueGames/PCP/SourceHonestLemmas.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Computability</a> / <a href="../index.html">UniqueGames</a> / <a href="index.html">PCP</a> / <span>SourceHonestLemmas.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Computability</a>/<a href="../index.html">UniqueGames</a>/<a href="index.html">PCP</a>/<span>SourceHonestLemmas.lean</span></code></h1><p class="muted">82 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Computability/UniqueGames/PCP/SourceHonestLemmas.lean#L1">source</a></p><div class="doc"><p>The actual global addresses use three input-dependent base registers.
+Every local query contributes only a fixed finite selector and fixed offset,
+so a finite control table can select a base and emit its unary offset.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L18><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment</code> <small>line 18</small><div class="doc"><p>Padded query tables are evaluated at one coordinate per context. Left and
+right tables have disjoint tags, and the unused dummy bit is fixed to false.</p></div><pre>def taggedAssignment {V C I J : Type} (left : V → I) (right : C → J) :
+    (V × Cube I) ⊕ ((C × Cube J) ⊕ Unit) → Bool
+  | .inl (v, f) =&gt; f (left v)
+  | .inr (.inl (c, g)) =&gt; g (right c)
+  | .inr (.inr _) =&gt; false</pre><p class="refs">Mentions: <a href="SourceNoiseParameterLemmas.lean.html#L81">OAI.UniqueGamesTheorem.Foundations.Hastad.Cube</a></p></li><li id=L24><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment_left</code> <small>line 24</small></li><li id=L28><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment_right</code> <small>line 28</small></li><li id=L34><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment_right_restriction</code> <small>line 34</small><div class="doc"><p>Extending a conditioned half-table into padded ambient storage does not
+change its honest bit. Only correctness on valid coordinates is required.</p></div><pre>theorem taggedAssignment_right_restriction {V C I J : Type}
+    (left : V → I) (right : C → J) (c : C) (valid : J → Bool)
+    (honest : {j : J // valid j = true}) (hright : right c = honest.val)
+    (extend : Cube {j : J // valid j = true} → Cube J)
+    (hextend : ∀ (g : Cube {j : J // valid j = true})
+      (j : {j : J // valid j = true}), extend g j.val = g j)
+    (j₀ : {j : J // valid j = true}) (h : HalfCube j₀) :
+    taggedAssignment left right (.inr (.inl (c, extend h.val))) = h.val honest := by
+…</pre><p class="refs">Mentions: <a href="SourceNoiseParameterLemmas.lean.html#L81">OAI.UniqueGamesTheorem.Foundations.Hastad.Cube</a>, <a href="SourceNoiseParameterLemmas.lean.html#L395">OAI.UniqueGamesTheorem.Foundations.Hastad.HalfCube</a>, <a href="SourceHonestLemmas.lean.html#L18">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment</a></p></li><li id=L53><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.conditioned_equation_honest_satisfied</code> <small>line 53</small><div class="doc"><p>Each honest emitted equation fails exactly when its selected noise bit is
+true. This is a pointwise statement, before averaging any random tape.</p></div><pre>theorem conditioned_equation_honest_satisfied
+    (valid : J → Bool) (π : J → I) (i₀ i : I)
+    (j₀ j : {j : J // valid j = true}) (hπ : π j.val = i)
+    (f : Cube I) (g μ : Cube J) :
+    satisfied (FoldedEquation.conditionedEquation valid π i₀ j₀ f g μ)
+        (FoldedEquation.storedAssignment (fun h =&gt; h.val i) (fun h =&gt; h.val j)) =
+      !(μ j.val) := by
+…</pre><p class="refs">Mentions: <a href="SourceNoiseParameterLemmas.lean.html#L81">OAI.UniqueGamesTheorem.Foundations.Hastad.Cube</a>, <a href="FoldedEquationLemmas.lean.html#L113">OAI.UniqueGamesTheorem.Foundations.Hastad.FoldedEquation.conditionedEquation</a>, <a href="FoldedEquationLemmas.lean.html#L27">OAI.UniqueGamesTheorem.Foundations.Hastad.FoldedEquation.storedAssignment</a></p></li><li id=L67><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.mapped_conditioned_equation_honest_satisfied</code> <small>line 67</small><div class="doc"><p>Local table equalities are enough to reuse the same assignment even when
+different occurrences, contexts, or query positions name the same proof bit.</p></div><pre>theorem mapped_conditioned_equation_honest_satisfied {Name : Type}
+    (valid : J → Bool) (π : J → I) (i₀ i : I)
+    (j₀ j : {j : J // valid j = true}) (hπ : π j.val = i)
+    (rename : FoldedEquation.Address i₀ j₀ → Name) (assignment : Name → Bool)
+    (hleft : ∀ h, assignment (rename (.inl h)) = h.val i)
+    (hright : ∀ h, assignment (rename (.inr h)) = h.val j)
+    (f : Cube I) (g μ : Cube J) :
+    satisfied (mapEquation rename
+        (FoldedEquation.conditionedEquation valid π i₀ j₀ f g μ)) assignment =
+      !(μ j.val) := by
+…</pre><p class="refs">Mentions: <a href="FoldedEquationLemmas.lean.html#L25">OAI.UniqueGamesTheorem.Foundations.Hastad.FoldedEquation.Address</a>, <a href="SourceNoiseParameterLemmas.lean.html#L81">OAI.UniqueGamesTheorem.Foundations.Hastad.Cube</a>, <a href="FoldedEquationLemmas.lean.html#L222">OAI.UniqueGamesTheorem.Foundations.Hastad.mapEquation</a>, <a href="FoldedEquationLemmas.lean.html#L113">OAI.UniqueGamesTheorem.Foundations.Hastad.FoldedEquation.conditionedEquation</a></p></li><li id=L88><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.tapeAcceptance_conditioned_dictators</code> <small>line 88</small><div class="doc"><p>The exact finite noise law gives honest acceptance for a conditioned right
+table and an unconditioned left table, with arbitrary fixed folding bases.</p></div><pre>theorem tapeAcceptance_conditioned_dictators {D : ℕ} (positive : 0 &lt; D)
+    (valid : J → Bool) (π : J → I) (i₀ i : I)
+    (j₀ j : {j : J // valid j = true}) (hπ : π j.val = i) :
+    SourceTape.tapeAcceptance D π
+      (foldedAnswer i₀ (fun h =&gt; h.val i))
+      (conditionedFoldedAnswer valid j₀ (fun h =&gt; h.val j)) =
+        1 - (D : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="HonestTestLemmas.lean.html#L262">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceTape.tapeAcceptance</a>, <a href="SourceNoiseParameterLemmas.lean.html#L407">OAI.UniqueGamesTheorem.Foundations.Hastad.foldedAnswer</a>, <a href="SourceNoiseParameterLemmas.lean.html#L506">OAI.UniqueGamesTheorem.Foundations.Hastad.conditionedFoldedAnswer</a></p></li><li id=L108><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.numbered_assignment_restriction</code> <small>line 108</small><div class="doc"><p>Numbering the global proof and then restricting it to one local table
+recovers exactly the local honest half-tables.</p></div><pre>theorem numbered_assignment_restriction
+    (vE : Encoding V) (cE : Encoding C) (iE : Encoding I) (jE : Encoding J)
+    (left : V → I) (right : C → J) (v : V) (c : C)
+    (valid : J → Bool) (i₀ : I) (j₀ j : {j : J // valid j = true})
+    (hright : right c = j.val) :
+    assignmentOfKey vE cE iE jE (taggedAssignment left right) ∘
+      localAddress vE cE iE jE v c valid i₀ j₀ =
+      FoldedEquation.storedAssignment (fun h =&gt; h.val (left v)) (fun h =&gt; h.val j) := by
+…</pre><p class="refs">Mentions: <a href="SourceHonestLemmas.lean.html#L18">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment</a>, <a href="FoldedEquationLemmas.lean.html#L27">OAI.UniqueGamesTheorem.Foundations.Hastad.FoldedEquation.storedAssignment</a></p></li><li id=L131><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.conditionedOccurrence_honest_satisfied</code> <small>line 131</small><div class="doc"><p>The globally numbered honest proof satisfies each actual occurrence
+precisely when the corresponding noise bit is false.</p></div><pre>theorem conditionedOccurrence_honest_satisfied
+    (vE : Encoding V) (cE : Encoding C) (iE : Encoding I) (jE : Encoding J)
+    (left : V → I) (right : C → J) (v : V) (c : C)
+    (valid : J → Bool) (π : J → I) (i₀ : I)
+    (j₀ j : {j : J // valid j = true})
+    (hright : right c = j.val) (hπ : π j.val = left v)
+    (f : Cube I) (g μ : Cube J) :
+    satisfied (conditionedOccurrence vE cE iE jE v c valid π i₀ j₀ f g μ)
+      (assignmentOfKey vE cE iE jE (taggedAssignment left right)) = !(μ j.val) := by
+…</pre><p class="refs">Mentions: <a href="SourceNoiseParameterLemmas.lean.html#L81">OAI.UniqueGamesTheorem.Foundations.Hastad.Cube</a>, <a href="SourceHonestLemmas.lean.html#L18">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.taggedAssignment</a></p></li><li id=L146><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.conditionedOccurrenceList_honest_acceptance</code> <small>line 146</small><div class="doc"><p>Exact normalized accepted count for the actual ordered random-tape list
+at one incidence context. Equal equations remain separate occurrences.</p></div><pre>theorem conditionedOccurrenceList_honest_acceptance {D : ℕ} (positive : 0 &lt; D)
+    (vE : Encoding V) (cE : Encoding C) (iE : Encoding I) (jE : Encoding J)
+    (left : V → I) (right : C → J) (v : V) (c : C)
+    (valid : J → Bool) (π : J → I) (i₀ : I)
+    (j₀ j : {j : J // valid j = true})
+    (hright : right c = j.val) (hπ : π j.val = left v)
+    (tape : Encoding (SourceTape.TestTape I J D)) :
+    let equations := occurrenceList tape (fun t =&gt;
+…</pre><p class="refs">Mentions: <a href="HonestTestLemmas.lean.html#L187">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceTape.TestTape</a></p></li><li id=L180><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestGlobal</code> <small>line 180</small><div class="doc"><p>A single assignment to the globally tagged padded tables. It is defined
+from the input assignment alone, before any incidence or test is sampled.</p></div><pre>def honestGlobal (F : Target.Formula) (u : ℕ)
+    (assignment : Fin F.variables → Bool) :
+    (VariableContext F u × Cube (I u)) ⊕
+      ((ClauseContext F u × Cube (J u)) ⊕ Unit) → Bool :=
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a>, <a href="SourceNoiseParameterLemmas.lean.html#L81">OAI.UniqueGamesTheorem.Foundations.Hastad.Cube</a></p></li><li id=L187><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestBits</code> <small>line 187</small><div class="doc"><p>The same global proof in the construction's explicit radix numbering.</p></div><pre>def honestBits (F : Target.Formula) (u : ℕ)
+    (assignment : Fin F.variables → Bool) : Fin (nBits F u) → Bool :=
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a></p></li><li id=L192><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestBits_code</code> <small>line 192</small></li><li id=L200><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestBits_dummy</code> <small>line 200</small></li><li id=L208><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestValidJ</code> <small>line 208</small><div class="doc"><p>Satisfiability supplies one consistent valid right coordinate in every
+clause tuple, including tuples with repeated clauses or variable names.</p></div><pre>def honestValidJ (F : Target.Formula) {u : ℕ} (c : ClauseContext F u)
+    (assignment : Fin F.variables → Bool)
+    (hs : ∀ clause ∈ F.clauses, clause.eval assignment = true) :
+    {j : J u // validJ F c j = true} :=
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a></p></li><li id=L214><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.validJ_nonempty_of_satisfying</code> <small>line 214</small></li><li id=L220><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.leftResponse_honest</code> <small>line 220</small></li><li id=L228><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.rightResponse_honest</code> <small>line 228</small></li><li id=L253><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.context_tapeAcceptance</code> <small>line 253</small><div class="doc"><p>Actual sampled incidence contexts attain the same honest finite-noise
+acceptance. Folding bases may be chosen independently of the assignment.</p></div><pre>theorem context_tapeAcceptance {D : ℕ} (positive : 0 &lt; D)
+    (F : Target.Formula) {u : ℕ} (c : ClauseContext F u) (s : SlotContext u)
+    (assignment : Fin F.variables → Bool)
+    (hs : ∀ clause ∈ F.clauses, clause.eval assignment = true)
+    (i₀ : I u) (j₀ : {j : J u // validJ F c j = true}) :
+    SourceTape.tapeAcceptance D (pi F c (sampledVariables F c s))
+      (foldedAnswer i₀ (fun h =&gt; h.val (honestI F (sampledVariables F c s) assignment)))
+      (conditionedFoldedAnswer (validJ F c) j₀
+        (fun h =&gt; h.val (honestValidJ F c assignment hs))) =
+      1 - (D : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a>, <a href="HonestTestLemmas.lean.html#L262">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceTape.tapeAcceptance</a>, <a href="SourceNoiseParameterLemmas.lean.html#L407">OAI.UniqueGamesTheorem.Foundations.Hastad.foldedAnswer</a>, <a href="SourceNoiseParameterLemmas.lean.html#L506">OAI.UniqueGamesTheorem.Foundations.Hastad.conditionedFoldedAnswer</a>, <a href="SourceHonestLemmas.lean.html#L208">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestValidJ</a></p></li><li id=L269><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.sourceEquation_honest_satisfied</code> <small>line 269</small><div class="doc"><p>The emitted equation, under the one global honest assignment, reads the
+noise coordinate corresponding to the honest tuple of clause answers.</p></div><pre>theorem sourceEquation_honest_satisfied (F : Target.Formula) (u D : ℕ)
+    (assignment : Fin F.variables → Bool)
+    (hs : ∀ clause ∈ F.clauses, clause.eval assignment = true)
+    (p : SourceIndex F u D) :
+    satisfied (sourceEquation F u D p) (honestBits F u assignment) =
+      !(realizedNoise p.2.2.1 (honestJ F p.1.1 assignment)) := by
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a>, <a href="SourceHonestLemmas.lean.html#L187">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestBits</a></p></li><li id=L281><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.rawSourceList_honest_acceptance</code> <small>line 281</small><div class="doc"><p>Every actual occurrence is counted, even when its visible context,
+equation, or one of its three addresses repeats.</p></div><pre>theorem rawSourceList_honest_acceptance (F : Target.Formula) (u D : ℕ)
+    (hD : 0 &lt; D) (hF : F.clauses ≠ [])
+    (assignment : Fin F.variables → Bool)
+    (hs : ∀ clause ∈ F.clauses, clause.eval assignment = true) :
+    ((rawSourceList F u D).countP
+      (fun e =&gt; satisfied e (honestBits F u assignment)) : ℝ) /
+        (rawSourceList F u D).length = 1 - (D : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a>, <a href="SourceHonestLemmas.lean.html#L187">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestBits</a></p></li><li id=L300><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.sourceList_honest_acceptance_nonempty</code> <small>line 300</small></li><li id=L310><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.sourceList_honest_acceptance</code> <small>line 310</small></li><li id=L325><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.sourceList_honest_acceptance_rat</code> <small>line 325</small><div class="doc"><p>Rational acceptance form used by the finite reduction interface.</p></div><pre>theorem sourceList_honest_acceptance_rat (F : Target.Formula) (u D : ℕ)
+    (hD : 0 &lt; D) (assignment : Fin F.variables → Bool)
+    (hs : ∀ clause ∈ F.clauses, clause.eval assignment = true) :
+    1 - (D : ℚ)⁻¹ ≤ ((sourceList F u D).countP
+      (fun e =&gt; satisfied e (honestBits F u assignment)) : ℚ) /
+        (sourceList F u D).length := by
+…</pre><p class="refs">Mentions: <a href="../Foundations/PinskerLemmas.lean.html#L507">OAI.UniqueGamesTheorem.Foundations.Target.Formula</a>, <a href="SourceHonestLemmas.lean.html#L187">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.honestBits</a></p></li><li id=L335><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceHonest.sourceList_honest_acceptance_nonempty_rat</code> <small>line 335</small></li><li id=L354><b>abbrev</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.LocalKey</code> <small>line 354</small></li><li id=L355><b>abbrev</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.LocalInput</code> <small>line 355</small></li><li id=L357><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.signatureEncoding</code> <small>line 357</small></li><li id=L363><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.signatureList</code> <small>line 363</small></li><li id=L365><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.mem_signatureList</code> <small>line 365</small></li><li id=L368><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.signatureList_nodup</code> <small>line 368</small></li><li id=L371><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.signatureList_length</code> <small>line 371</small></li><li id=L375><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.localInputEncoding</code> <small>line 375</small></li><li id=L378><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.localInputs</code> <small>line 378</small></li><li id=L380><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.mem_localInputs</code> <small>line 380</small></li><li id=L383><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.localInputs_nodup</code> <small>line 383</small></li><li id=L386><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.localInputs_length</code> <small>line 386</small></li><li id=L390><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.localKeyEncoding</code> <small>line 390</small></li><li id=L394><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.emptyLocalAddress</code> <small>line 394</small></li><li id=L398><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.foldedLocalAddress</code> <small>line 398</small></li><li id=L406><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.equationFor</code> <small>line 406</small><div class="doc"><p>One local descriptor, reusing the existing folded and empty-context
+equations. The first-valid search is over the fixed explicit answer encoding.</p></div><pre>def equationFor (u D : ℕ) (valid : J u → Bool) (π : J u → I u)
+    (t : SourceTape.TestTape (I u) (J u) D) : Equation (LocalKey u) :=
+…</pre><p class="refs">Mentions: <a href="HonestTestLemmas.lean.html#L187">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceTape.TestTape</a>, <a href="SourceHonestLemmas.lean.html#L354">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.LocalKey</a></p></li><li id=L414><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.equation</code> <small>line 414</small></li><li id=L418><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.emit</code> <small>line 418</small></li><li id=L421><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.addressMap</code> <small>line 421</small></li><li id=L427><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.mapEquation_comp</code> <small>line 427</small></li><li id=L430><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.addressMap_emptyLocalAddress</code> <small>line 430</small></li><li id=L436><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.addressMap_foldedLocalAddress</code> <small>line 436</small></li><li id=L447><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.contextEquation_eq_map_equationFor</code> <small>line 447</small><div class="doc"><p>A generic factorization first aligns the validity function itself, so no
+unproved transport of dependent anchor subtypes is needed.</p></div><pre>theorem contextEquation_eq_map_equationFor (F : Formula) (u D : ℕ)
+    (c : ClauseContext F u) (v : VariableContext F u)
+    (t : SourceTape.TestTape (I u) (J u) D) :
+    contextEquation F u D c v t =
+      mapEquation (addressMap F u c v) (equationFor u D (validJ F c) (pi F c v) t) := by
+…</pre><p class="refs">Mentions: <a href="HonestTestLemmas.lean.html#L187">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceTape.TestTape</a>, <a href="FoldedEquationLemmas.lean.html#L222">OAI.UniqueGamesTheorem.Foundations.Hastad.mapEquation</a>, <a href="SourceHonestLemmas.lean.html#L421">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.addressMap</a>, <a href="SourceHonestLemmas.lean.html#L406">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.equationFor</a></p></li><li id=L460><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.contextEquation_eq_map</code> <small>line 460</small></li><li id=L473><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceLocalEquation.sourceEquation_eq_map_emit</code> <small>line 473</small></li><li id=L492><b>abbrev</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.Descriptor</code> <small>line 492</small></li><li id=L494><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.descriptor</code> <small>line 494</small></li><li id=L501><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.baseValue</code> <small>line 501</small><div class="doc"><p>Registers zero and one start the selected left and right query blocks;
+register two is the single dummy address.</p></div><pre>def baseValue (F : Formula) (u : ℕ) (c : ClauseContext F u)
+    (v : VariableContext F u) (side : Fin 3) : ℕ :=
+…</pre></li><li id=L508><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.realize</code> <small>line 508</small></li><li id=L510><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.words</code> <small>line 510</small></li><li id=L514><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.realize_descriptor</code> <small>line 514</small></li><li id=L531><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.descriptor_offset_bound</code> <small>line 531</small></li><li id=L554><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.sourceEquation_numeric</code> <small>line 554</small></li><li id=L563><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.sourceEquation_words</code> <small>line 563</small></li><li id=L572><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.baseValue_lt</code> <small>line 572</small></li><li id=L589><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceAddressDescriptors.equation_emit_steps_le</code> <small>line 589</small></li><li id=L611><b>inductive</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Label</code> <small>line 611</small></li><li id=L617><b>abbrev</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Layout</code> <small>line 617</small></li><li id=L619><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.digits</code> <small>line 619</small></li><li id=L622><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.horner_value</code> <small>line 622</small></li><li id=L626><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.steps</code> <small>line 626</small></li><li id=L629><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.operandLength</code> <small>line 629</small></li><li id=L632><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.timePolynomial</code> <small>line 632</small></li><li id=L636><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.timePolynomial_eval</code> <small>line 636</small></li><li id=L641><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.steps_le_timePolynomial</code> <small>line 641</small></li><li id=L658><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.statement</code> <small>line 658</small></li><li id=L666><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.program</code> <small>line 666</small></li><li id=L670><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.coefficientTapes</code> <small>line 670</small></li><li id=L674><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.affineTrace</code> <small>line 674</small><div class="doc"><p>Exact affine execution, including coefficient initialization and cleanup.</p></div><pre>theorem affineTrace (slots : Layout ↪ K) (coefficient : Nat) (labels : Label → Λ) (exit : Option Λ)
+    (p : Λ → TM2.Stmt (fun _ : K =&gt; Bool) Λ (MachineHorner.State σ))
+    (atLabels : ∀ label, p (labels label) = statement slots coefficient labels exit label)
+    (base : K → List Bool) (rank offset : Nat)
+    (rankWord : base (slots (.inl 0)) = encodeWord rank)
+    (offsetWord : base (slots (.inr 1)) = encodeWord offset)
+    (coefficientEmpty : base (slots (.inr 0)) = [])
+    (clean : MachineHorner.Clean slots base) (ambient : σ) (register : Option Bool) :
+    (MachineComposition.advance (TM2.step p))^[steps coefficient rank offset]
+      (some ⟨some (labels .seed), ((ambient, ()), register), base⟩) =
+      some ⟨exit, ((ambient, ()), none),
+        MachineHorner.resultTapes slots base (coefficient * rank + offset)⟩ := by
+…</pre><p class="refs">Mentions: <a href="SourceHonestLemmas.lean.html#L617">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Layout</a>, <a href="SourceNoiseParameterLemmas.lean.html#L142">OAI.UniqueGamesTheorem.Foundations.Hastad.coefficient</a>, <a href="SourceHonestLemmas.lean.html#L611">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Label</a>, <a href="SourceHonestLemmas.lean.html#L658">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.statement</a>, <a href="SourceHonestLemmas.lean.html#L626">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.steps</a></p></li><li id=L742><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.affineInTime</code> <small>line 742</small></li><li id=L759><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.affineInPolynomialTime</code> <small>line 759</small></li><li id=L776><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.programInTime</code> <small>line 776</small></li><li id=L789><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.leftBaseInTime</code> <small>line 789</small><div class="doc"><p>Left query-block base from the preserved variable tuple rank and a zero offset field.</p></div><pre>def leftBaseInTime (F : Formula) (u : Nat) (c : ClauseContext F u) (v : VariableContext F u)
+    (slots : Layout ↪ K) (labels : Label → Λ) (exit : Option Λ)
+    (p : Λ → TM2.Stmt (fun _ : K =&gt; Bool) Λ (MachineHorner.State σ))
+    (atLabels : ∀ label, p (labels label) = statement slots (2 ^ (2 ^ u)) labels exit label)
+    (base : K → List Bool)
+    (rankWord : base (slots (.inl 0)) = encodeWord (((variableEncoding F u).code v).val))
+    (zeroWord : base (slots (.inr 1)) = encodeWord 0)
+    (coefficientEmpty : base (slots (.inr 0)) = [])
+    (clean : MachineHorner.Clean slots base) (ambient : σ) (register : Option Bool) :
+    StateTransition.EvalsToInTime (TM2.step p)
+      ⟨some (labels .seed), ((ambient, ()), register), base⟩
+      (some ⟨exit, ((ambient, ()), none), MachineHorner.resultTapes slots base (baseValue F u c v 0)⟩)
+…</pre><p class="refs">Mentions: <a href="SourceHonestLemmas.lean.html#L617">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Layout</a>, <a href="SourceHonestLemmas.lean.html#L611">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Label</a>, <a href="SourceHonestLemmas.lean.html#L658">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.statement</a></p></li><li id=L809><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.rightBaseInTime</code> <small>line 809</small><div class="doc"><p>Right query-block base using the globally retained left-block size.</p></div><pre>def rightBaseInTime (F : Formula) (u : Nat) (c : ClauseContext F u) (v : VariableContext F u)
+    (slots : Layout ↪ K) (labels : Label → Λ) (exit : Option Λ)
+    (p : Λ → TM2.Stmt (fun _ : K =&gt; Bool) Λ (MachineHorner.State σ))
+    (atLabels : ∀ label, p (labels label) = statement slots (2 ^ (8 ^ u)) labels exit label)
+    (base : K → List Bool)
+    (rankWord : base (slots (.inl 0)) = encodeWord (((clauseEncoding F u).code c).val))
+    (leftBlockWord : base (slots (.inr 1)) = encodeWord (2 ^ (2 ^ u) * F.variables ^ u))
+    (coefficientEmpty : base (slots (.inr 0)) = [])
+    (clean : MachineHorner.Clean slots base) (ambient : σ) (register : Option Bool) :
+    StateTransition.EvalsToInTime (TM2.step p)
+      ⟨some (labels .seed), ((ambient, ()), register), base⟩
+      (some ⟨exit, ((ambient, ()), none), MachineHorner.resultTapes slots base (baseValue F u c v 1)⟩)
+…</pre><p class="refs">Mentions: <a href="SourceHonestLemmas.lean.html#L617">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Layout</a>, <a href="SourceHonestLemmas.lean.html#L611">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Label</a>, <a href="SourceHonestLemmas.lean.html#L658">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.statement</a></p></li><li id=L832><b>theorem</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.resultTapes_dummy</code> <small>line 832</small><div class="doc"><p>The retained dummy register is among the unchanged external tapes.</p></div><pre>theorem resultTapes_dummy (slots : Layout ↪ K) (base : K → List Bool) (value : Nat)
+    (dummy : K) (distinct : dummy ≠ slots (.inl 3)) :
+    MachineHorner.resultTapes slots base value dummy = base dummy :=
+…</pre><p class="refs">Mentions: <a href="SourceHonestLemmas.lean.html#L617">OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.Layout</a></p></li><li id=L837><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.machine</code> <small>line 837</small></li><li id=L848><b>def</b> <code>OAI.UniqueGamesTheorem.Foundations.Hastad.SourceBasePhase.machineInTime</code> <small>line 848</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

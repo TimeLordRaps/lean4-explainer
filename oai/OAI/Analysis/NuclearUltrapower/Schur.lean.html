@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/NuclearUltrapower/Schur.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/NuclearUltrapower/Schur.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">NuclearUltrapower</a> / <span>Schur.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">NuclearUltrapower</a>/<span>Schur.lean</span></code></h1><p class="muted">15 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/NuclearUltrapower/Schur.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.NuclearUltrapower.FiniteUnitaryRep.scalar_of_commuting</code> <small>line 24</small><div class="doc"><p>Schur's scalar lemma, proved from an actual eigenvalue over C.</p></div><pre>theorem scalar_of_commuting {π : FiniteUnitaryRep.{u,v} Γ} (hπ : π.Irreducible)
+    (T : π →ₗ[ℂ] π) (hT : ∀ g x, T (π.action g x) = π.action g (T x)) :
+    ∃ c : ℂ, T = c • LinearMap.id := by
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.NuclearUltrapower.FiniteUnitaryRep.isometry_of_intertwiner</code> <small>line 41</small><div class="doc"><p>Every nonzero intertwiner out of an irreducible finite-dimensional unitary
+representation is a positive scalar multiple of an isometry. The target can
+be any Hilbert space, not necessarily separable or finite-dimensional.</p></div><pre>theorem isometry_of_intertwiner {π : FiniteUnitaryRep.{u,v} Γ} (hπ : π.Irreducible)
+    {K : Type*} [NormedAddCommGroup K] [InnerProductSpace ℂ K] [CompleteSpace K]
+    (σ : Γ →* (K ≃ₗᵢ[ℂ] K)) (T : π →L[ℂ] K) (hT0 : T ≠ 0)
+    (hT : ∀ g x, T (π.action g x) = σ g (T x)) :
+    ∃ U : π →ₗᵢ[ℂ] K, ∀ g x, U (π.action g x) = σ g (U x) := by
+…</pre></li><li id=L86><b>theorem</b> <code>OAI.NuclearUltrapower.FiniteUnitaryRep.equivalent_of_nonzero_intertwiner</code> <small>line 86</small><div class="doc"><p>The unitary form of Schur's lemma used by the coordinate-quotient argument.</p></div><pre>theorem equivalent_of_nonzero_intertwiner {π τ : FiniteUnitaryRep.{u,v} Γ}
+    (hπ : π.Irreducible) (hτ : τ.Irreducible) (T : π →L[ℂ] τ) (hT0 : T ≠ 0)
+    (hT : ∀ g x, T (π.action g x) = τ.action g (T x)) : π.Equivalent τ :=
+…</pre></li><li id=L103><b>def</b> <code>OAI.NuclearUltrapower.mixedTensorOperator</code> <small>line 103</small><div class="doc"><p>The finite-rank operator represented by a rectangular Hilbert tensor.</p></div><pre>def mixedTensorOperator : E ⊗[ℂ] StrongDual ℂ F →ₗ[ℂ] (F →L[ℂ] E) :=
+…</pre></li><li id=L113><b>theorem</b> <code>OAI.NuclearUltrapower.mixedTensorOperator_tmul</code> <small>line 113</small></li><li id=L117><b>theorem</b> <code>OAI.NuclearUltrapower.mixedTensorOperator_inner</code> <small>line 117</small><div class="doc"><p>All matrix coefficients, using Lean's second-variable-linear inner product.</p></div><pre>theorem mixedTensorOperator_inner (z : E ⊗[ℂ] StrongDual ℂ F) (v : F) (y : E) :
+    ⟪y, mixedTensorOperator z v⟫_ℂ = ⟪y ⊗ₜ[ℂ] InnerProductSpace.toDual ℂ F v, z⟫_ℂ := by
+…</pre><p class="refs">Mentions: <a href="Schur.lean.html#L103">OAI.NuclearUltrapower.mixedTensorOperator</a></p></li><li id=L125><b>theorem</b> <code>OAI.NuclearUltrapower.mixedTensorOperator_injective</code> <small>line 125</small></li><li id=L140><b>theorem</b> <code>OAI.NuclearUltrapower.mixedTensorOperator_action</code> <small>line 140</small><div class="doc"><p>Tensor invariance is the genuine intertwining equation.</p></div><pre>theorem mixedTensorOperator_action (u : E ≃ₗᵢ[ℂ] E) (v : F ≃ₗᵢ[ℂ] F)
+    (z : E ⊗[ℂ] StrongDual ℂ F) :
+    mixedTensorOperator (TensorProduct.congrIsometry u (dualUnitary v) z) =
+      (u : E →L[ℂ] E).comp ((mixedTensorOperator z).comp (v.symm : F →L[ℂ] F)) := by
+…</pre><p class="refs">Mentions: <a href="Schur.lean.html#L103">OAI.NuclearUltrapower.mixedTensorOperator</a>, <a href="HilbertSchmidt.lean.html#L160">OAI.NuclearUltrapower.dualUnitary</a></p></li><li id=L148><b>def</b> <code>OAI.NuclearUltrapower.tensorContragredientRep</code> <small>line 148</small></li><li id=L171><b>theorem</b> <code>OAI.NuclearUltrapower.invariant_tensor_intertwines</code> <small>line 171</small><div class="doc"><p>The invariant tensor defines an actual bounded intertwiner.</p></div><pre>theorem invariant_tensor_intertwines
+    (ρ : Γ →* (E ≃ₗᵢ[ℂ] E)) (π : Γ →* (F ≃ₗᵢ[ℂ] F))
+    (z : E ⊗[ℂ] StrongDual ℂ F)
+    (hz : ∀ g, tensorContragredientRep ρ π g z = z) (g : Γ) (x : F) :
+    mixedTensorOperator z (π g x) = ρ g (mixedTensorOperator z x) := by
+…</pre><p class="refs">Mentions: <a href="Schur.lean.html#L148">OAI.NuclearUltrapower.tensorContragredientRep</a>, <a href="Schur.lean.html#L103">OAI.NuclearUltrapower.mixedTensorOperator</a></p></li><li id=L184><b>theorem</b> <code>OAI.NuclearUltrapower.tensor_no_invariants_of_inequivalent</code> <small>line 184</small><div class="doc"><p>Schur exclusion at each nonexceptional coordinate.</p></div><pre>theorem tensor_no_invariants_of_inequivalent
+    {π τ : FiniteUnitaryRep.{u,v} Γ} (hπ : π.Irreducible) (hτ : τ.Irreducible)
+    (hne : ¬ τ.Equivalent π) (z : π ⊗[ℂ] StrongDual ℂ τ)
+    (hz : ∀ g, tensorContragredientRep π.action τ.action g z = z) : z = 0 := by
+…</pre><p class="refs">Mentions: <a href="Schur.lean.html#L148">OAI.NuclearUltrapower.tensorContragredientRep</a></p></li><li id=L206><b>theorem</b> <code>OAI.NuclearUltrapower.mixedTensorOperator_surjective</code> <small>line 206</small><div class="doc"><p>Every operator with finite-dimensional domain is represented by an actual
+algebraic tensor; no completed-tensor compactness argument is hidden here.</p></div><pre>theorem mixedTensorOperator_surjective :
+    Function.Surjective (mixedTensorOperator (E := E) (F := F)) := by
+…</pre><p class="refs">Mentions: <a href="Schur.lean.html#L103">OAI.NuclearUltrapower.mixedTensorOperator</a></p></li><li id=L220><b>theorem</b> <code>OAI.NuclearUltrapower.exists_invariant_tensor_of_intertwiner</code> <small>line 220</small><div class="doc"><p>A nonzero finite-dimensional intertwiner gives a nonzero invariant tensor.</p></div><pre>theorem exists_invariant_tensor_of_intertwiner {Γ : Type*} [Group Γ]
+    (ρ : Γ →* (E ≃ₗᵢ[ℂ] E)) (π : Γ →* (F ≃ₗᵢ[ℂ] F))
+    (T : F →L[ℂ] E) (hT : T ≠ 0)
+    (hcomm : ∀ g x, T (π g x) = ρ g (T x)) :
+    ∃ z : E ⊗[ℂ] StrongDual ℂ F, z ≠ 0 ∧
+      ∀ g, tensorContragredientRep ρ π g z = z := by
+…</pre><p class="refs">Mentions: <a href="Schur.lean.html#L148">OAI.NuclearUltrapower.tensorContragredientRep</a></p></li><li id=L249><b>def</b> <code>OAI.NuclearUltrapower.finiteSubspaceRep</code> <small>line 249</small><div class="doc"><p>The honest finite-dimensional subrepresentation on an invariant subspace.</p></div><pre>def finiteSubspaceRep : FiniteUnitaryRep.{u,v} Γ where
+…</pre></li><li id=L266><b>theorem</b> <code>OAI.NuclearUltrapower.finiteSubspace_exists_irreducible</code> <small>line 266</small><div class="doc"><p>Every nonzero finite subrepresentation contains an irreducible one, with
+an explicit isometric intertwiner into the original ambient Hilbert space.</p></div><pre>theorem finiteSubspace_exists_irreducible :
+    ∃ τ : FiniteUnitaryRep.{u,v} Γ, τ.Irreducible ∧
+      ∃ T : τ →ₗᵢ[ℂ] K, ∀ g x, T (τ.action g x) = σ g (T x) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/CategoryTheory/Thomason/Simplicial/PosetSieveNaturality.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/CategoryTheory/Thomason/Simplicial/PosetSieveNaturality.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">CategoryTheory</a> / <a href="../index.html">Thomason</a> / <a href="index.html">Simplicial</a> / <span>PosetSieveNaturality.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">CategoryTheory</a>/<a href="../index.html">Thomason</a>/<a href="index.html">Simplicial</a>/<span>PosetSieveNaturality.lean</span></code></h1><p class="muted">16 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/CategoryTheory/Thomason/Simplicial/PosetSieveNaturality.lean#L1">source</a></p><div class="doc"><h3>The canonical categorified sieve is its actual full zero fibre</h3><p>The inverse is descended from clamped simplex maps. Both inverse identities
+follow from the actual simplex colimits, with empty pieces included.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L25><b>theorem</b> <code>OAI.Thomason.Construction.SieveSimplex.inverse_inclusion</code> <small>line 25</small><div class="doc"><p>Forgetting the descended inverse recovers the original fibre inclusion.</p></div><pre>theorem inverse_inclusion :
+    inverse A hA h ≫ h.posetMap (subposetInclusion A) =
+      labelFiberInclusion (h.membershipLabel A hA) 0 := by
+…</pre><p class="refs">Mentions: <a href="SieveFiberPresentation.lean.html#L718">OAI.Thomason.Construction.SieveSimplex.inverse</a>, <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L41><b>theorem</b> <code>OAI.Thomason.Construction.SieveSimplex.inverse_posetFiberMap</code> <small>line 41</small><div class="doc"><p>The descended inverse is a right inverse of the canonical sieve map.</p></div><pre>theorem inverse_posetFiberMap :
+    inverse A hA h ≫ h.posetFiberMap A hA = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="SieveFiberPresentation.lean.html#L718">OAI.Thomason.Construction.SieveSimplex.inverse</a></p></li><li id=L47><b>theorem</b> <code>OAI.Thomason.Construction.SieveSimplex.whole_fiberLeg</code> <small>line 47</small><div class="doc"><p>The whole sieve simplex maps to the original colimit leg after forgetting.</p></div><pre>theorem whole_fiberLeg {m : ℕ} (s : Fin (m+1) →o A) :
+    whole A hA h s ≫ (fiberCocone A hA h).ι.app
+        (CostructuredArrow.mk (SSet.yonedaEquiv.symm
+          (orderSimplex ((subposetInclusion A).comp s)))) =
+      h.posetLeg s ≫ h.posetFiberMap A hA := by
+…</pre><p class="refs">Mentions: <a href="SimplexCubeRetract.lean.html#L819">OAI.Thomason.Construction.SieveSimplex.whole</a>, <a href="SieveFiberPresentation.lean.html#L692">OAI.Thomason.Construction.SieveSimplex.fiberCocone</a>, <a href="../Strict/UnderlyingCategory.lean.html#L270">OAI.Thomason.Construction.subposetInclusion</a></p></li><li id=L57><b>theorem</b> <code>OAI.Thomason.Construction.SieveSimplex.posetFiberMap_inverse_on_leg</code> <small>line 57</small><div class="doc"><p>The inverse identity on an arbitrary simplex of the original sieve.</p></div><pre>theorem posetFiberMap_inverse_on_leg {m : ℕ} (s : Fin (m+1) →o A) :
+    h.posetLeg s ≫ (h.posetFiberMap A hA ≫ inverse A hA h) = h.posetLeg s := by
+…</pre><p class="refs">Mentions: <a href="SieveFiberPresentation.lean.html#L718">OAI.Thomason.Construction.SieveSimplex.inverse</a></p></li><li id=L82><b>theorem</b> <code>OAI.Thomason.Construction.SieveSimplex.posetFiberMap_inverse</code> <small>line 82</small><div class="doc"><p>The descended inverse is also a left inverse, on the original sieve colimit.</p></div><pre>theorem posetFiberMap_inverse :
+    h.posetFiberMap A hA ≫ inverse A hA h = 𝟙 _ := by
+…</pre><p class="refs">Mentions: <a href="SieveFiberPresentation.lean.html#L718">OAI.Thomason.Construction.SieveSimplex.inverse</a></p></li><li id=L100><b>def</b> <code>OAI.NormalizedSimplexIdentities.posetSieveIso</code> <small>line 100</small><div class="doc"><p>A poset sieve categorifies to exactly the full zero fibre of membership.</p></div><pre>noncomputable def posetSieveIso (h : NormalizedSimplexIdentities) [StrictColimitsInput]
+    {P : Type} [PartialOrder P] (A : Set P) (hA : IsLowerSet A) :
+    h.categorification.obj (nerve A) ≅ labelFiber (h.membershipLabel A hA) 0 where
+…</pre></li><li id=L109><b>theorem</b> <code>OAI.NormalizedSimplexIdentities.constructedOmegaPosetSieveInput</code> <small>line 109</small><div class="doc"><p>The simplex construction gives the full-sieve comparison in omega dimension.</p></div><pre>theorem constructedOmegaPosetSieveInput (h : NormalizedSimplexIdentities)
+    [StrictColimitsInput] : PublishedOmegaPosetSieveInput h where
+…</pre></li><li id=L129><b>theorem</b> <code>Thomason.Construction.FiniteReflectionInput.oneFiberComparison_inclusion</code> <small>line 129</small><div class="doc"><p>The one-fibre comparison commutes with the original full inclusion.</p></div><pre>theorem oneFiberComparison_inclusion {X : StrictOmegaCategory.{0}}
+    (p : X ⟶ StrictPoset.category (Fin 2))
+    (q : (r.reflect.obj X).val ⟶ StrictPoset.category (Fin 2))
+    (hq : r.adjunction.unit.app X ≫ q = p) :
+    r.oneFiberComparison p q hq ≫
+      (show r.reflectedOneLabelFiber q ⟶ r.reflect.obj X from labelFiberInclusion q 1) =
+      r.reflect.map (labelFiberInclusion p 1) := by
+…</pre></li><li id=L159><b>def</b> <code>Thomason.Construction.FiniteReflectionInput.posetCosieveIso</code> <small>line 159</small><div class="doc"><p>A finite cosieve is its actual full one fibre, not merely an equivalent
+replacement category.</p></div><pre>noncomputable def posetCosieveIso {P : Type} [PartialOrder P]
+    (A : Set P) (hA : IsUpperSet A) :
+    (r.categorification h).obj (nerve A) ≅
+      r.reflectedOneLabelFiber (r.membershipLabel h Aᶜ hA.compl) := by
+…</pre></li><li id=L170><b>theorem</b> <code>Thomason.Construction.FiniteReflectionInput.posetCosieveIso_inclusion</code> <small>line 170</small><div class="doc"><p>The isomorphism factors the literal reflected poset inclusion.</p></div><pre>theorem posetCosieveIso_inclusion {P : Type} [PartialOrder P]
+    (A : Set P) (hA : IsUpperSet A) :
+    (r.posetCosieveIso h A hA).hom ≫
+      (show r.reflectedOneLabelFiber (r.membershipLabel h Aᶜ hA.compl) ⟶
+        (r.categorification h).obj (nerve P) from
+          labelFiberInclusion (r.membershipLabel h Aᶜ hA.compl) 1) =
+      r.reflect.map (h.posetMap (subposetInclusion A)) := by
+…</pre></li><li id=L219><b>def</b> <code>Thomason.Construction.SieveMap.restriction</code> <small>line 219</small><div class="doc"><p>The ordinary restriction to the two sieves.</p></div><pre>def restriction : A →o B where
+…</pre></li><li id=L224><b>theorem</b> <code>Thomason.Construction.SieveMap.restriction_inclusion</code> <small>line 224</small><div class="doc"><p>Restriction commutes with the original full-subposet inclusions.</p></div><pre>theorem restriction_inclusion :
+    (subposetInclusion B).comp (restriction A B f hf) = f.comp (subposetInclusion A) := rfl
+…</pre><p class="refs">Mentions: <a href="PosetSieveNaturality.lean.html#L219">Thomason.Construction.SieveMap.restriction</a></p></li><li id=L230><b>theorem</b> <code>Thomason.Construction.SieveMap.characteristic</code> <small>line 230</small><div class="doc"><p>Pullback equality of sieves is exactly equality of binary characteristic labels.</p></div><pre>theorem characteristic (hA : IsLowerSet A) (hB : IsLowerSet B) :
+    (sieveCharacteristic B hB).comp f = sieveCharacteristic A hA := by
+…</pre></li><li id=L242><b>theorem</b> <code>Thomason.Construction.SieveMap.membership</code> <small>line 242</small><div class="doc"><p>The actual categorified map respects the original membership labels.</p></div><pre>theorem membership :
+    h.posetMap f ≫ h.membershipLabel B hB = h.membershipLabel A hA := by
+…</pre></li><li id=L258><b>def</b> <code>Thomason.Construction.SieveMap.fiberMap</code> <small>line 258</small><div class="doc"><p>The full-fibre map is the restriction of the original strict functor.</p></div><pre>noncomputable def fiberMap :
+    labelFiber (h.membershipLabel A hA) 0 ⟶ labelFiber (h.membershipLabel B hB) 0 :=
+…</pre></li><li id=L263><b>theorem</b> <code>Thomason.Construction.SieveMap.naturality</code> <small>line 263</small><div class="doc"><p>The constructed sieve isomorphisms commute with every pullback-preserving map.</p></div><pre>theorem naturality :
+    h.posetFiberMap A hA ≫ fiberMap A B f hf h hA hB =
+      h.posetMap (restriction A B f hf) ≫ h.posetFiberMap B hB := by
+…</pre><p class="refs">Mentions: <a href="PosetSieveNaturality.lean.html#L258">Thomason.Construction.SieveMap.fiberMap</a>, <a href="PosetSieveNaturality.lean.html#L219">Thomason.Construction.SieveMap.restriction</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

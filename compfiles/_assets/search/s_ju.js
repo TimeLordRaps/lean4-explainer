@@ -1,0 +1,1 @@
+window.l4shard("ju", [["Imo1988P6.constant_descent_vieta_jumping",54,79],["Imo1998P2.AgreedTriple.judgePair",73,75],["Imo1998P2.JudgePair",73,40],["Imo1998P2.JudgePair.Agree",73,56],["Imo1998P2.JudgePair.Distinct",73,52],["Imo1998P2.JudgePair.judge₁",73,44],["Imo1998P2.JudgePair.judge₂",73,48],["Usa2006P5.minJumps",254,58]]);

@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Geometry/RCD/Sobolev/FiniteMomentConvergence.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Geometry/RCD/Sobolev/FiniteMomentConvergence.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Geometry</a> / <a href="../index.html">RCD</a> / <a href="index.html">Sobolev</a> / <span>FiniteMomentConvergence.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Geometry</a>/<a href="../index.html">RCD</a>/<a href="index.html">Sobolev</a>/<span>FiniteMomentConvergence.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Geometry/RCD/Sobolev/FiniteMomentConvergence.lean#L1">source</a></p><div class="doc"><h3>Passing finite affine fits through convergence of actual L² moments</h3><p>Only the finitely many pairings of the target, constant and coordinate
+functions are needed. The spaces containing them may vary with the index.
+This is the algebraic step following local strong L² compactness.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_sum_smul_sq</code> <small>line 24</small><div class="doc"><p>The squared norm of a finite linear combination uses precisely its
+finite Gram matrix.</p></div><pre>theorem norm_sum_smul_sq {H : Type*} [NormedAddCommGroup H]
+    [InnerProductSpace ℝ H] (f : ι → H) (a : ι → ℝ) :
+    ‖∑ i, a i • f i‖ ^ 2 = ∑ i, ∑ j, a i * a j * ⟪f i, f j⟫_ℝ := by
+…</pre></li><li id=L38><b>theorem</b> <code>OAI.RegularPointCoordinates.norm_sum_smul_tendsto_of_inner_tendsto</code> <small>line 38</small><div class="doc"><p>Joint local L² convergence implies convergence of every fixed affine
+fit error, without choosing minimizers or identifying the varying spaces.</p></div><pre>theorem norm_sum_smul_tendsto_of_inner_tendsto
+    {H : ℕ → Type*} [∀ k, NormedAddCommGroup (H k)]
+    [∀ k, InnerProductSpace ℝ (H k)]
+    {Hlim : Type*} [NormedAddCommGroup Hlim] [InnerProductSpace ℝ Hlim]
+    (f : ∀ k, ι → H k) (flim : ι → Hlim)
+    (h : ∀ i j, Tendsto (fun k =&gt; ⟪f k i, f k j⟫_ℝ) atTop (𝓝 ⟪flim i, flim j⟫_ℝ))
+    (a : ι → ℝ) :
+    Tendsto (fun k =&gt; ‖∑ i, a i • f k i‖) atTop (𝓝 ‖∑ i, a i • flim i‖) := by
+…</pre></li><li id=L61><b>theorem</b> <code>OAI.RegularPointCoordinates.eventually_norm_sum_smul_lt</code> <small>line 61</small><div class="doc"><p>A strict bound on one Euclidean candidate is inherited by the actual
+finite linear combinations for all sufficiently late indices.</p></div><pre>theorem eventually_norm_sum_smul_lt
+    {H : ℕ → Type*} [∀ k, NormedAddCommGroup (H k)]
+    [∀ k, InnerProductSpace ℝ (H k)]
+    {Hlim : Type*} [NormedAddCommGroup Hlim] [InnerProductSpace ℝ Hlim]
+    (f : ∀ k, ι → H k) (flim : ι → Hlim)
+    (h : ∀ i j, Tendsto (fun k =&gt; ⟪f k i, f k j⟫_ℝ) atTop (𝓝 ⟪flim i, flim j⟫_ℝ))
+    (a : ι → ℝ) {η : ℝ} (hη : ‖∑ i, a i • flim i‖ &lt; η) :
+    ∀ᶠ k in atTop, ‖∑ i, a i • f k i‖ &lt; η :=
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

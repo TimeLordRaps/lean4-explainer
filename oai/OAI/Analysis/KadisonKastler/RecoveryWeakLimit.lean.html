@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/KadisonKastler/RecoveryWeakLimit.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/KadisonKastler/RecoveryWeakLimit.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">KadisonKastler</a> / <span>RecoveryWeakLimit.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">KadisonKastler</a>/<span>RecoveryWeakLimit.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/KadisonKastler/RecoveryWeakLimit.lean#L1">source</a></p><div class="doc"><h3>The recovery average converges weakly to its scalar expectation</h3><p>The average is formed from actual bounded coordinate sequences. Its
+quotient is computed by continuous functional calculus; the constructed
+expectation and free-word trace identities then identify its weak limit.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L24><b>theorem</b> <code>OAI.KadisonKastler.map_recoveryObservable</code> <small>line 24</small><div class="doc"><p>Naturality of the whole observable, including its continuous cutoff.</p></div><pre>theorem map_recoveryObservable (π : B →⋆ₐ[ℂ] C) {n : ℕ} (hn : 0 &lt; n)
+    (N : ℕ) (p : B) (u : unitary B) (v : unitary C)
+    (huv : π (u : B) = (v : C)) :
+    π (recoveryObservable n N p u) = recoveryObservable n N (π p) v := by
+…</pre><p class="refs">Mentions: <a href="RecoveryExpectation.lean.html#L19">OAI.KadisonKastler.recoveryObservable</a></p></li><li id=L32><b>theorem</b> <code>OAI.KadisonKastler.map_complex_smul_one</code> <small>line 32</small><div class="doc"><p>Scalar identities are preserved without any choice of representation.</p></div><pre>theorem map_complex_smul_one (π : B →⋆ₐ[ℂ] C) (c : ℂ) :
+    π (c • (1 : B)) = c • (1 : C) := by
+…</pre></li><li id=L37><b>theorem</b> <code>OAI.KadisonKastler.map_finiteAverage</code> <small>line 37</small><div class="doc"><p>A star homomorphism commutes with the finite uniform average.</p></div><pre>theorem map_finiteAverage {ι : Type*} [Fintype ι]
+    (π : B →⋆ₐ[ℂ] C) (x : ι → B) :
+    π (finiteAverage x) = finiteAverage (fun i =&gt; π (x i)) := by
+…</pre><p class="refs">Mentions: <a href="FiniteAveraging.lean.html#L17">OAI.KadisonKastler.finiteAverage</a></p></li><li id=L43><b>def</b> <code>OAI.KadisonKastler.sequenceUnitaryEval</code> <small>line 43</small><div class="doc"><p>The unitary represented by one coordinate of a bounded unitary sequence.</p></div><pre>def sequenceUnitaryEval (v : unitary (BoundedSequence B)) (j : ℕ) : unitary B :=
+…</pre><p class="refs">Mentions: <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a></p></li><li id=L47><b>theorem</b> <code>OAI.KadisonKastler.sequenceUnitaryEval_coe</code> <small>line 47</small></li><li id=L52><b>theorem</b> <code>OAI.KadisonKastler.recoveryObservable_sequence_apply</code> <small>line 52</small><div class="doc"><p>The sequence-level continuous cutoff evaluates to the actual
+coordinate contraction.</p></div><pre>theorem recoveryObservable_sequence_apply {n : ℕ} (hn : 0 &lt; n) (N : ℕ)
+    (p : B) (v : unitary (BoundedSequence B)) (j : ℕ) :
+    recoveryObservable n N (boundedSequenceConst p) v j =
+      recoveryObservable n N p (sequenceUnitaryEval v j) :=
+…</pre><p class="refs">Mentions: <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="RecoveryExpectation.lean.html#L19">OAI.KadisonKastler.recoveryObservable</a>, <a href="UltrapowerExpectation.lean.html#L24">OAI.KadisonKastler.boundedSequenceConst</a>, <a href="RecoveryWeakLimit.lean.html#L43">OAI.KadisonKastler.sequenceUnitaryEval</a></p></li><li id=L59><b>theorem</b> <code>OAI.KadisonKastler.recoveryAverage_sequence_apply</code> <small>line 59</small><div class="doc"><p>Evaluation also respects the actual finite averaging operation.</p></div><pre>theorem recoveryAverage_sequence_apply {ι : Type*} [Fintype ι]
+    {n : ℕ} (hn : 0 &lt; n) (N : ℕ) (p : ι → B)
+    (v : ι → unitary (BoundedSequence B)) (j : ℕ) :
+    (finiteAverage (fun i =&gt; recoveryObservable n N (boundedSequenceConst (p i)) (v i))) j =
+      finiteAverage (fun i =&gt; recoveryObservable n N (p i) (sequenceUnitaryEval (v i) j)) := by
+…</pre><p class="refs">Mentions: <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="FiniteAveraging.lean.html#L17">OAI.KadisonKastler.finiteAverage</a>, <a href="RecoveryExpectation.lean.html#L19">OAI.KadisonKastler.recoveryObservable</a>, <a href="UltrapowerExpectation.lean.html#L24">OAI.KadisonKastler.boundedSequenceConst</a>, <a href="RecoveryWeakLimit.lean.html#L43">OAI.KadisonKastler.sequenceUnitaryEval</a></p></li><li id=L79><b>theorem</b> <code>OAI.KadisonKastler.TraceQuotientMap.weak_scalar_limit</code> <small>line 79</small><div class="doc"><p>Scalar expectation determines the weak operator limit in the given
+representation, rather than only in the tracial representation.</p></div><pre>theorem weak_scalar_limit (s : BoundedSequence (Algebra M)) (c : ℂ)
+    (hs : D.baseExpectationCLM hτ (D.quotient s) = c • (1 : C)) :
+    WeakOperatorConverges (ω : Filter ℕ)
+      (fun j =&gt; (s j : H →L[ℂ] H)) (c • ContinuousLinearMap.id ℂ H) := by
+…</pre><p class="refs">Mentions: <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="RowPairing.lean.html#L32">OAI.KadisonKastler.WeakOperatorConverges</a></p></li><li id=L97><b>theorem</b> <code>OAI.KadisonKastler.TraceQuotientMap.recovery_average_weak_limit</code> <small>line 97</small><div class="doc"><p>The weak scalar limit of the actual sequence-level recovery average.</p></div><pre>theorem recovery_average_weak_limit
+    {ι : Type*} [Fintype ι] [Nonempty ι]
+    (p : ι → Algebra M) (v : ι → unitary (BoundedSequence (Algebra M)))
+    (u : ι → unitary C)
+    (hu : ∀ i, D.quotient (v i : BoundedSequence (Algebra M)) = (u i : C))
+    (hp : ∀ i, IsStarProjection (p i))
+    (hfree : ∀ i, FreeHaarMoments σ D.constant.range (u i))
+    {t : ℂ} (hptrace : ∀ i, τ.toLinearMap (p i) = t)
+    (ht0 : t ≠ 0) (ht1 : t ≠ 1)
+    (hpavg : finiteAverage p = t • (1 : Algebra M))
+    {n : ℕ} (hn : 0 &lt; n) (N : ℕ) (i₀ : ι) :
+    WeakOperatorConverges (ω : Filter ℕ)
+…</pre><p class="refs">Mentions: <a href="Algebra.lean.html#L26">OAI.KadisonKastler.Algebra</a>, <a href="BoundedSequence.lean.html#L24">OAI.KadisonKastler.BoundedSequence</a>, <a href="FreeHaar.lean.html#L53">OAI.KadisonKastler.FreeHaarMoments</a>, <a href="FiniteAveraging.lean.html#L17">OAI.KadisonKastler.finiteAverage</a>, <a href="RowPairing.lean.html#L32">OAI.KadisonKastler.WeakOperatorConverges</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

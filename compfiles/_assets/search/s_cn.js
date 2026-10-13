@@ -1,0 +1,1 @@
+window.l4shard("cn", [["Usa1979P3.cnt",171,40],["Usa1979P3.cnt_sum",171,58],["Usa2017P2.cntP",292,78],["Usa2017P2.eCnt",292,75],["Usa2017P2.eCnt_comp_skipEmb_of_ne",292,846],["Usa2024P6.cntS_pair",320,358],["Usa2024P6.cntS_single",320,326],["Usa2024P6.cnt_bridge",320,395],["Usa2024P6.cnt_bridge1",320,412]]);

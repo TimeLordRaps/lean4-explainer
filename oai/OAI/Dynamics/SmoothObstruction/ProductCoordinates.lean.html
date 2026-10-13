@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Dynamics/SmoothObstruction/ProductCoordinates.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Dynamics/SmoothObstruction/ProductCoordinates.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Dynamics</a> / <a href="index.html">SmoothObstruction</a> / <span>ProductCoordinates.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Dynamics</a>/<a href="index.html">SmoothObstruction</a>/<span>ProductCoordinates.lean</span></code></h1><p class="muted">21 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Dynamics/SmoothObstruction/ProductCoordinates.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.SmoothObstruction.ProductBasis.blockMap</code> <small>line 19</small></li><li id=L26><b>lemma</b> <code>OAI.SmoothObstruction.ProductBasis.blockMap_apply</code> <small>line 26</small></li><li id=L33><b>lemma</b> <code>OAI.SmoothObstruction.ProductBasis.sum_norm_sq</code> <small>line 33</small></li><li id=L41><b>lemma</b> <code>OAI.SmoothObstruction.ProductBasis.norm_blockMap</code> <small>line 41</small><div class="doc"><p>The source's basis consists of orthonormal columns within each summand.
+Its forward norm is uniformly bounded even when the angle is small.</p></div><pre>lemma norm_blockMap (U V : Submodule ℝ E) (h : IsCompl U V)
+    (bU : OrthonormalBasis ι ℝ U) (bV : OrthonormalBasis κ ℝ V) :
+    ‖(blockMap U V h bU bV).toContinuousLinearMap‖≤Real.sqrt 2 := by
+…</pre><p class="refs">Mentions: <a href="ProductCoordinates.lean.html#L19">OAI.SmoothObstruction.ProductBasis.blockMap</a></p></li><li id=L55><b>lemma</b> <code>OAI.SmoothObstruction.ProductBasis.blockMap_symm_components</code> <small>line 55</small></li><li id=L66><b>lemma</b> <code>OAI.SmoothObstruction.ProductBasis.norm_blockMap_symm</code> <small>line 66</small><div class="doc"><p>Only the inverse pays the complementary-projection condition number.</p></div><pre>lemma norm_blockMap_symm (U V : Submodule ℝ E) (h : IsCompl U V)
+    (bU : OrthonormalBasis ι ℝ U) (bV : OrthonormalBasis κ ℝ V)
+    {H : ℝ} (hH : 0≤H)
+    (hU : ∀ x,‖U.projectionOnto V h x‖≤H*‖x‖)
+    (hV : ∀ x,‖V.projectionOnto U h.symm x‖≤H*‖x‖) :
+    ‖(blockMap U V h bU bV).symm.toContinuousLinearMap‖≤Real.sqrt 2*H := by
+…</pre><p class="refs">Mentions: <a href="ProductCoordinates.lean.html#L19">OAI.SmoothObstruction.ProductBasis.blockMap</a></p></li><li id=L93><b>theorem</b> <code>OAI.SmoothObstruction.ProductBasis.exists_coordinates</code> <small>line 93</small><div class="doc"><p>A fixed ambient coordinate alphabet for the orthonormal-within-group
+product basis. The rank may vary from bin to bin without being charged as an
+orbit code. Even rank-zero groups retain the exact mixing property.</p></div><pre>theorem exists_coordinates (U V : Submodule ℝ E) (h : IsCompl U V)
+    {H : ℝ} (hH : 0≤H)
+    (hU : ∀ x,‖U.projectionOnto V h x‖≤H*‖x‖)
+    (hV : ∀ x,‖V.projectionOnto U h.symm x‖≤H*‖x‖) :
+    ∃ A : E ≃L[ℝ] E,
+      ‖A.toContinuousLinearMap‖≤Real.sqrt 2 ∧
+      ‖A.symm.toContinuousLinearMap‖≤Real.sqrt 2*H ∧
+      ∀ x y : E,∀ i : Fin d,
+        (A.symm (x+(U.projectionOnto V h (y-x):E))) i=(A.symm x) i ∨
+        (A.symm (x+(U.projectionOnto V h (y-x):E))) i=(A.symm y) i := by
+…</pre></li><li id=L161><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.ranges_isCompl</code> <small>line 161</small></li><li id=L179><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.range_projection_slow</code> <small>line 179</small></li><li id=L190><b>lemma</b> <code>OAI.SmoothObstruction.FiniteGreen.Splitting.range_projection_fast</code> <small>line 190</small></li><li id=L209><b>theorem</b> <code>OAI.SmoothObstruction.ProductBasis.splitting_coordinates</code> <small>line 209</small><div class="doc"><p>The authentic complementary splitting produces its own uniform product
+coordinate map, with the exact slow/fast ideal mix and no rank assumptions.</p></div><pre>theorem splitting_coordinates {T : Evolution E} (B : Splitting T) (t : ℕ)
+    {H : ℝ} (hH : 0≤H) (hs : ‖B.slow t‖≤H) (hf : ‖B.fast t‖≤H) :
+    ∃ A : E ≃L[ℝ] E,
+      ‖A.toContinuousLinearMap‖≤Real.sqrt 2 ∧
+      ‖A.symm.toContinuousLinearMap‖≤Real.sqrt 2*H ∧
+      ∀ x y : E,∀ i : Fin d,
+        (A.symm (x+B.slow t (y-x))) i=(A.symm x) i ∨
+        (A.symm (x+B.slow t (y-x))) i=(A.symm y) i := by
+…</pre></li><li id=L236><b>theorem</b> <code>OAI.SmoothObstruction.ShortBin.Gauge.product_coordinates</code> <small>line 236</small><div class="doc"><p>Authentic gauges give product coordinates for the original coarse bin.
+The coordinate groups are allowed to have either rank zero or full rank.</p></div><pre>theorem Gauge.product_coordinates (A : Gauge d n K) (S : Finset (Fin d)) :
+    ∃ L : EuclideanSpace ℝ (Fin d) ≃L[ℝ] EuclideanSpace ℝ (Fin d),
+      ‖L.toContinuousLinearMap‖≤Real.sqrt 2 ∧
+      ‖L.symm.toContinuousLinearMap‖≤Real.sqrt 2*Real.exp (2*K) ∧
+      ∀ x y : EuclideanSpace ℝ (Fin d),∀ i : Fin d,
+        (L.symm (x+(A.splitting S).slow 0 (y-x))) i=(L.symm x) i ∨
+        (L.symm (x+(A.splitting S).slow 0 (y-x))) i=(L.symm y) i := by
+…</pre><p class="refs">Mentions: <a href="Charts.lean.html#L770">OAI.SmoothObstruction.ShortBin.Gauge</a></p></li><li id=L257><b>theorem</b> <code>OAI.SmoothObstruction.FiniteBins.product_coordinates</code> <small>line 257</small><div class="doc"><p>Extend the genuinely selected bin coordinates to unused bins. The arbitrary
+identity coordinates are never used by a retained input.</p></div><pre>theorem product_coordinates (P : X → C) (G : Set X) (hK : 0≤K)
+    (A : Active P G → ShortBin.Gauge d n K) (S : Active P G → Finset (Fin d)) :
+    ∃ L : C → E ≃L[ℝ] E,
+      (∀ c,‖(L c).toContinuousLinearMap‖≤Real.sqrt 2) ∧
+      (∀ c,‖(L c).symm.toContinuousLinearMap‖≤Real.sqrt 2*Real.exp (2*K)) ∧
+      ∀ c : Active P G,∀ x y : E,∀ i : Fin d,
+        ((L c.val).symm (x+((A c).splitting (S c)).slow 0 (y-x))) i=
+          ((L c.val).symm x) i ∨
+        ((L c.val).symm (x+((A c).splitting (S c)).slow 0 (y-x))) i=
+          ((L c.val).symm y) i := by
+…</pre><p class="refs">Mentions: <a href="TubeProjection.lean.html#L19">OAI.SmoothObstruction.FiniteBins.Active</a>, <a href="Charts.lean.html#L770">OAI.SmoothObstruction.ShortBin.Gauge</a></p></li><li id=L297><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.finite_cores</code> <small>line 297</small><div class="doc"><p>Compact cores of a finite measurable cover cost arbitrarily little of the
+original measure. No relative distribution inside a selector fiber is used.</p></div><pre>theorem finite_cores (μ : Measure M) [IsFiniteMeasure μ]
+    [Measure.InnerRegularCompactLTTop μ] (A : ι → Set M)
+    (hA : ∀ i,MeasurableSet (A i)) (hcover : ∀ x,∃ i,x∈A i)
+    (ε : ℝ≥0) (hε : 0&lt;ε) :
+    ∃ K : ι → Set M,(∀ i,K i⊆A i) ∧ (∀ i,IsCompact (K i)) ∧
+      μ (⋃ i,K i)ᶜ≤ε := by
+…</pre></li><li id=L327><b>lemma</b> <code>OAI.SmoothObstruction.AtlasCores.finite_positive_min</code> <small>line 327</small><div class="doc"><p>Positive finitely many scales have a positive common lower bound, including
+an empty index type. This avoids a nonempty-atlas convention.</p></div><pre>lemma finite_positive_min (a : ι → ℝ) (ha : ∀ i,0&lt;a i) :
+    ∃ r : ℝ,0&lt;r ∧ ∀ i,r≤a i := by
+…</pre></li><li id=L347><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.separated_neighborhoods</code> <small>line 347</small><div class="doc"><p>Disjoint compact chart cores admit one radius whose closed thickenings
+remain pairwise disjoint and inside the designated open charts.</p></div><pre>theorem separated_neighborhoods (K U : ι → Set M)
+    (hK : ∀ i,IsCompact (K i)) (hU : ∀ i,IsOpen (U i))
+    (hKU : ∀ i,K i⊆U i) (hdisj : Pairwise (fun i j =&gt; Disjoint (K i) (K j))) :
+    ∃ r : ℝ,0&lt;r ∧ (∀ i,cthickening r (K i)⊆U i) ∧
+      Pairwise (fun i j =&gt; Disjoint (cthickening r (K i)) (cthickening r (K j))) := by
+…</pre></li><li id=L372><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.selector_cores</code> <small>line 372</small><div class="doc"><p>The finite atlas selector now yields coherent disjoint retained chart cores
+and a single positive safety radius, with error measured in the ORIGINAL law.</p></div><pre>theorem selector_cores [CompactSpace M] [MeasurableSpace ι]
+    [MeasurableSingletonClass ι] (μ : Measure M) [IsFiniteMeasure μ]
+    (c : M → ι) (hc : Measurable c) (U : ι → Set M)
+    (hU : ∀ i,IsOpen (U i)) (hcU : ∀ x,x∈U (c x))
+    (ε : ℝ≥0) (hε : 0&lt;ε) :
+    ∃ (K : ι → Set M) (r : ℝ),
+      (∀ i,IsCompact (K i)) ∧ (∀ i,K i⊆c ⁻¹&#x27; {i}) ∧
+      μ (⋃ i,K i)ᶜ≤ε ∧ 0&lt;r ∧
+      (∀ i,cthickening r (K i)⊆U i) ∧
+      Pairwise (fun i j =&gt; Disjoint (cthickening r (K i)) (cthickening r (K j))) := by
+…</pre></li><li id=L406><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.protected_selector</code> <small>line 406</small><div class="doc"><p>Modify a chart selector only in disjoint protected neighborhoods. On the
+retained compact cores the new selector is genuinely locally constant, so
+nearby switched endpoints recover the same chart label.</p></div><pre>theorem protected_selector (c : M → ι) (hc : Measurable c)
+    (U V : ι → Set M) (hV : ∀ i,MeasurableSet (V i))
+    (hVU : ∀ i,V i⊆U i) (hcU : ∀ x,x∈U (c x))
+    (hd : Pairwise (fun i j =&gt; Disjoint (V i) (V j))) :
+    ∃ q : M → ι,Measurable q ∧ (∀ x,x∈U (q x)) ∧
+      (∀ i,∀ x∈V i,q x=i) ∧
+      ∀ x,x∉⋃ i,V i → q x=c x := by
+…</pre></li><li id=L446><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.stable_selector</code> <small>line 446</small><div class="doc"><p>A coherent finite chart selector with an original-measure compact core
+and a uniform endpoint recoverability radius. Nothing is conditioned on a
+good Oseledets/frame set, and no intermediate chart codes refine the cells.</p></div><pre>theorem stable_selector [CompactSpace M] (μ : Measure M) [IsFiniteMeasure μ]
+    (c : M → ι) (hc : Measurable c) (U : ι → Set M)
+    (hU : ∀ i,IsOpen (U i)) (hcU : ∀ x,x∈U (c x))
+    (ε : ℝ≥0) (hε : 0&lt;ε) :
+    ∃ (q : M → ι) (K : ι → Set M) (r : ℝ),
+      Measurable q ∧ (∀ x,x∈U (q x)) ∧
+      (∀ i,IsCompact (K i)) ∧ μ (⋃ i,K i)ᶜ≤ε ∧ 0&lt;r ∧
+      (∀ i,∀ x∈K i,q x=i) ∧
+      ∀ x∈⋃ i,K i,∀ y,dist y x≤r → q y=q x := by
+…</pre></li><li id=L479><b>theorem</b> <code>OAI.SmoothObstruction.AtlasCores.compact_stable_selector</code> <small>line 479</small><div class="doc"><p>A stable selector can be chosen in any prescribed positive enlargement
+of the original compact patches. This preserves uniform chart bounds while
+charging only one fixed compact-core error in the original measure.</p></div><pre>theorem compact_stable_selector (μ : Measure M) [IsFiniteMeasure μ]
+    (c : M → ι) (hc : Measurable c) (K : ι → Set M)
+    (hcK : ∀ x,x∈K (c x))
+    {r : ℝ} (hr : 0&lt;r) (ε : ℝ≥0) (hε : 0&lt;ε) :
+    ∃ (q : M → ι) (L : ι → Set M) (s : ℝ),
+      Measurable q ∧ (∀ x,x∈cthickening r (K (q x))) ∧
+      (∀ i,IsCompact (L i)) ∧ μ (⋃ i,L i)ᶜ≤ε ∧ 0&lt;s ∧
+      (∀ i,L i⊆K i) ∧ (∀ i,∀ x∈L i,q x=i) ∧
+      ∀ x∈⋃ i,L i,∀ y,dist y x ≤ s → q y=q x := by
+…</pre></li><li id=L520><b>theorem</b> <code>OAI.SmoothObstruction.ManifoldCoordinates.good_stable_gauges</code> <small>line 520</small><div class="doc"><p>Stable endpoint chart labels and actual good gauges are compatible.
+The chart-core error is fixed before the dyadic sequence is constructed;
+no orbit code or endpoint label is added to the future cell partition.</p></div><pre>theorem good_stable_gauges (S : Diffeomorph I I M M ∞)
+    (μ : ProbabilityMeasure M) (hS : MeasurePreserving S (μ : Measure M) (μ : Measure M))
+    {η : ℝ} (hη : 0&lt;η) (ε : ℝ≥0) (hε : 0&lt;ε) :
+    ∃ (ι : Type u) (_ : Fintype ι) (_ : MeasurableSpace ι) (_ : MeasurableSingletonClass ι)
+      (a : ι → M) (K L : ι → Set M) (q : M → ι) (s : ℝ),
+      (∀ i,IsCompact (K i)) ∧ (∀ i,K i⊆(chartAt H (a i)).source) ∧
+      Measurable q ∧ (∀ x,x∈K (q x)) ∧
+      (∀ i,IsCompact (L i)) ∧ (μ : Measure M) (⋃ i,L i)ᶜ≤ε ∧ 0&lt;s ∧
+      (∀ i,L i⊆K i) ∧ (∀ i,∀ x∈L i,q x=i) ∧
+      (∀ x∈⋃ i,L i,∀ y,dist y x ≤ s → q y=q x) ∧
+      ∃ (b : ℕ → ℝ) (R C : ℝ) (G : ℕ → Set M),
+        0≤R ∧ 0≤C ∧ (∀ k,0&lt;b k) ∧ (∀ k,GoodStationary.floorAt k≤b k) ∧
+…</pre><p class="refs">Mentions: <a href="StationaryGauge.lean.html#L19">OAI.SmoothObstruction.GoodStationary.floorAt</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

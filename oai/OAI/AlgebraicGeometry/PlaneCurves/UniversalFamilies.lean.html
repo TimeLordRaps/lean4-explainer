@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/AlgebraicGeometry/PlaneCurves/UniversalFamilies.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/AlgebraicGeometry/PlaneCurves/UniversalFamilies.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">AlgebraicGeometry</a> / <a href="index.html">PlaneCurves</a> / <span>UniversalFamilies.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">AlgebraicGeometry</a>/<a href="index.html">PlaneCurves</a>/<span>UniversalFamilies.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/AlgebraicGeometry/PlaneCurves/UniversalFamilies.lean#L1">source</a></p><div class="doc"><h3>Universal polynomial families and moving matrix kernels</h3></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L19><b>def</b> <code>OAI.Nagata.Workers.W14.parameterMatrix</code> <small>line 19</small><div class="doc"><p>Substitute genuine polynomial coordinate motions into every matrix entry.</p></div><pre>def parameterMatrix {K σ ρ κ : Type*} [CommRing K]
+    (A : Matrix ρ κ (MvPolynomial σ K)) (p : σ → Polynomial K) :
+    Matrix ρ κ (Polynomial K) :=
+…</pre></li><li id=L26><b>theorem</b> <code>OAI.Nagata.Workers.W14.specialize_parameterMatrix</code> <small>line 26</small><div class="doc"><p>Evaluating after polynomial-coordinate substitution equals evaluating each
+coordinate first; the identity is of actual matrices.</p></div><pre>theorem specialize_parameterMatrix {K σ ρ κ : Type*} [CommRing K]
+    (A : Matrix ρ κ (MvPolynomial σ K)) (p : σ → Polynomial K) (s : K) :
+    (parameterMatrix A p).map (Polynomial.evalRingHom s) =
+      A.map (MvPolynomial.eval (fun j =&gt; (p j).eval s)) := by
+…</pre><p class="refs">Mentions: <a href="UniversalFamilies.lean.html#L19">OAI.Nagata.Workers.W14.parameterMatrix</a></p></li><li id=L40><b>theorem</b> <code>OAI.Nagata.Workers.W14.parameterMatrix_mulVec</code> <small>line 40</small></li><li id=L50><b>theorem</b> <code>OAI.Nagata.Workers.W14.normalized_kernel_of_parameter_equations</code> <small>line 50</small><div class="doc"><p>Nonzero solutions of the specialized actual jet equations supply a
+normalized polynomial coefficient family in their parameter-substituted matrix.</p></div><pre>theorem normalized_kernel_of_parameter_equations
+    {K σ ρ κ : Type*} [Field K] [Infinite K]
+    [Fintype κ] [Fintype ρ] [DecidableEq κ] [DecidableEq ρ]
+    (A : Matrix ρ κ (MvPolynomial σ K)) (p : σ → Polynomial K) (E : Finset K)
+    (hkernel : ∀ s ∉ E, ∃ v : κ → K, v ≠ 0 ∧
+      Nagata.W27.coefficientLinearMap A (fun j =&gt; (p j).eval s) v = 0) :
+    ∃ q : κ → Polynomial K, (∃ i, (q i).coeff 0 ≠ 0) ∧
+      (parameterMatrix A p).mulVec q = 0 := by
+…</pre><p class="refs">Mentions: <a href="ChartJets.lean.html#L116">OAI.Nagata.W27.coefficientLinearMap</a>, <a href="UniversalFamilies.lean.html#L19">OAI.Nagata.Workers.W14.parameterMatrix</a></p></li><li id=L79><b>theorem</b> <code>OAI.Nagata.Workers.W14.universalSupport_general_chart_kernels</code> <small>line 79</small><div class="doc"><p>Actual universal homogeneous equations give actual nonzero specialized
+kernels along every good polynomial affine-chart motion.</p></div><pre>theorem universalSupport_general_chart_kernels {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (c : Fin r → Fin 3) (p : Fin r × Fin 2 → Polynomial ℂ)
+    (hbase : Function.Injective
+      (configurationChartEmbedding c (fun ij =&gt; (p ij).eval 0))) :
+    ∃ E : Finset ℂ, 0 ∉ E ∧ ∀ s ∉ E,
+      ∃ v : Nagata.W27.HomogeneousMonomial d → ℂ, v ≠ 0 ∧
+        Nagata.W27.coefficientLinearMap (Nagata.W27.chartPlaneJetMatrix c d m)
+          (fun ij =&gt; (p ij).eval s) v = 0 := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="ChartJets.lean.html#L172">OAI.Nagata.W27.HomogeneousMonomial</a>, <a href="ChartJets.lean.html#L116">OAI.Nagata.W27.coefficientLinearMap</a>, <a href="ChartJets.lean.html#L675">OAI.Nagata.W27.chartPlaneJetMatrix</a></p></li><li id=L102><b>theorem</b> <code>OAI.Nagata.Workers.W14.universalSupport_normalized_parameter_family</code> <small>line 102</small><div class="doc"><p>Complete algebraic family bridge along genuine moving projective tuples:
+from an actual universal system to a polynomial coefficient family with a
+nonzero constant coefficient, in the genuine global homogeneous jet matrix.</p></div><pre>theorem universalSupport_normalized_parameter_family {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (c : Fin r → Fin 3) (p : Fin r × Fin 2 → Polynomial ℂ)
+    (hbase : Function.Injective
+      (configurationChartEmbedding c (fun ij =&gt; (p ij).eval 0))) :
+    ∃ q : Nagata.W27.HomogeneousMonomial d → Polynomial ℂ,
+      (∃ i, (q i).coeff 0 ≠ 0) ∧
+      (parameterMatrix (Nagata.W27.chartPlaneJetMatrix c d m) p).mulVec q = 0 := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="ChartJets.lean.html#L172">OAI.Nagata.W27.HomogeneousMonomial</a>, <a href="UniversalFamilies.lean.html#L19">OAI.Nagata.Workers.W14.parameterMatrix</a>, <a href="ChartJets.lean.html#L675">OAI.Nagata.W27.chartPlaneJetMatrix</a></p></li><li id=L135><b>def</b> <code>OAI.Nagata.Workers.W14.affineChartCoordinateMotion</code> <small>line 135</small><div class="doc"><p>The manuscript's affine-linear motions in the chosen local charts, expressed
+as actual coordinate polynomials in the parameter.</p></div><pre>def affineChartCoordinateMotion {r : ℕ} (c : ConfigurationChart r)
+    (base : Fin r → PlanePoint) (velocity : Fin r × Fin 2 → ℂ) :
+    Fin r × Fin 2 → Polynomial ℂ :=
+…</pre></li><li id=L141><b>theorem</b> <code>OAI.Nagata.Workers.W14.affineChartCoordinateMotion_eval</code> <small>line 141</small></li><li id=L151><b>theorem</b> <code>OAI.Nagata.Workers.W14.universalSupport_affine_chart_family</code> <small>line 151</small><div class="doc"><p>Every actual universal system yields a normalized polynomial family along
+arbitrary affine-linear motions based at a genuine distinct configuration.</p></div><pre>theorem universalSupport_affine_chart_family {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (base : Fin r → PlanePoint) (hbase : Function.Injective base)
+    (c : ConfigurationChart r) (hc : InConfigurationChart c base)
+    (velocity : Fin r × Fin 2 → ℂ) :
+    ∃ q : Nagata.W27.HomogeneousMonomial d → Polynomial ℂ,
+      (∃ i, (q i).coeff 0 ≠ 0) ∧
+      (parameterMatrix (Nagata.W27.chartPlaneJetMatrix c d m)
+        (affineChartCoordinateMotion c base velocity)).mulVec q = 0 := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="ChartJets.lean.html#L172">OAI.Nagata.W27.HomogeneousMonomial</a>, <a href="UniversalFamilies.lean.html#L19">OAI.Nagata.Workers.W14.parameterMatrix</a>, <a href="ChartJets.lean.html#L675">OAI.Nagata.W27.chartPlaneJetMatrix</a>, <a href="UniversalFamilies.lean.html#L135">OAI.Nagata.Workers.W14.affineChartCoordinateMotion</a></p></li><li id=L168><b>theorem</b> <code>OAI.Nagata.Workers.W14.universalSupport_family_with_normal_displacements</code> <small>line 168</small><div class="doc"><p>Choose arbitrary scalar normal displacements and simultaneously obtain the
+normalized polynomial family of actual universal equations along those motions.
+Smoothness-to-differential identification is the explicit <code>hnonzero</code> input.</p></div><pre>theorem universalSupport_family_with_normal_displacements {r d : ℕ} {m : Fin r → ℕ}
+    (hU : Nagata.W13.UniversalSupport r d m)
+    (base : Fin r → PlanePoint) (hbase : Function.Injective base)
+    (c : ConfigurationChart r) (hc : InConfigurationChart c base)
+    (normalDifferential : Fin r → (Fin 2 → ℂ) →ₗ[ℂ] ℂ)
+    (hnonzero : ∀ i, normalDifferential i ≠ 0) (displacement : Fin r → ℂ) :
+    ∃ velocity : Fin r × Fin 2 → ℂ,
+      (∀ i, normalDifferential i (fun j =&gt; velocity (i, j)) = displacement i) ∧
+      ∃ q : Nagata.W27.HomogeneousMonomial d → Polynomial ℂ,
+        (∃ i, (q i).coeff 0 ≠ 0) ∧
+        (parameterMatrix (Nagata.W27.chartPlaneJetMatrix c d m)
+          (affineChartCoordinateMotion c base velocity)).mulVec q = 0 := by
+…</pre><p class="refs">Mentions: <a href="UniversalReduction.lean.html#L85">OAI.Nagata.W13.UniversalSupport</a>, <a href="ChartJets.lean.html#L172">OAI.Nagata.W27.HomogeneousMonomial</a>, <a href="UniversalFamilies.lean.html#L19">OAI.Nagata.Workers.W14.parameterMatrix</a>, <a href="ChartJets.lean.html#L675">OAI.Nagata.W27.chartPlaneJetMatrix</a>, <a href="UniversalFamilies.lean.html#L135">OAI.Nagata.Workers.W14.affineChartCoordinateMotion</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

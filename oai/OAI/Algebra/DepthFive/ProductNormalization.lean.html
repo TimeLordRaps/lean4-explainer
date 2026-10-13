@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/ProductNormalization.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/ProductNormalization.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>ProductNormalization.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>ProductNormalization.lean</span></code></h1><p class="muted">3 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/ProductNormalization.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L17><b>theorem</b> <code>OAI.Problem335.homogeneous_zero_eq_C</code> <small>line 17</small><div class="doc"><p>A homogeneous polynomial of formal degree zero is a scalar, including
+the zero polynomial.</p></div><pre>theorem homogeneous_zero_eq_C {p : MvPolynomial σ K}
+    (hp : p.IsHomogeneous 0) : p = C (constantCoeff p) := by
+…</pre></li><li id=L25><b>theorem</b> <code>OAI.Problem335.homogeneous_product_positive_factors</code> <small>line 25</small><div class="doc"><p>Remove formal-degree-zero factors from a homogeneous product and absorb
+them into a single scalar. Positive-degree occurrences, including repeated
+occurrences and zero polynomials, are retained.</p></div><pre>theorem homogeneous_product_positive_factors
+    (l : List (MvPolynomial σ K × ℕ))
+    (hl : ∀ q ∈ l, q.1.IsHomogeneous q.2) :
+    ∃ a : K, ∃ factors : List (MvPolynomial σ K × ℕ),
+      (∀ q ∈ factors, 0 &lt; q.2 ∧ q.1.IsHomogeneous q.2) ∧
+      (factors.map Prod.snd).sum = (l.map Prod.snd).sum ∧
+      (l.map Prod.fst).prod = C a * (factors.map Prod.fst).prod ∧
+      factors.Sublist l ∧
+      factors.length ≤ (l.map Prod.snd).sum := by
+…</pre></li><li id=L68><b>theorem</b> <code>OAI.Problem335.homogeneous_product_linear_factors</code> <small>line 68</small><div class="doc"><p>When the original formal degrees are at most one, removing the scalar
+factors leaves exactly the total formal degree many homogeneous linear
+forms. No assumption on variable support is required.</p></div><pre>theorem homogeneous_product_linear_factors
+    (l : List (MvPolynomial σ K × ℕ))
+    (hl : ∀ q ∈ l, q.1.IsHomogeneous q.2)
+    (hle : ∀ q ∈ l, q.2 ≤ 1) :
+    ∃ a : K, ∃ factors : List (MvPolynomial σ K),
+      factors.length = (l.map Prod.snd).sum ∧
+      (∀ p ∈ factors, p.IsHomogeneous 1) ∧
+      (l.map Prod.fst).prod = C a * factors.prod := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

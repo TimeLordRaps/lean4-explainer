@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Algebra/DepthFive/ImmSecondTrace.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Algebra/DepthFive/ImmSecondTrace.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Algebra</a> / <a href="index.html">DepthFive</a> / <span>ImmSecondTrace.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Algebra</a>/<a href="index.html">DepthFive</a>/<span>ImmSecondTrace.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Algebra/DepthFive/ImmSecondTrace.lean#L1">source</a></p><div class="doc"><p>The second trace identity for the actual IMM operator in normalized
+monomial coordinates.  Invalid path actions have zero amplitude, so their
+chosen finite target index does not enter the trace.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L16><b>def</b> <code>OAI.Problem335.immPathSignedShift</code> <small>line 16</small><div class="doc"><p>The signed exponent displacement of an actual IMM path.</p></div><pre>def immPathSignedShift (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (p : Fin (immPaths n hn).length) : (Fin n × Fin n × Fin n) →₀ ℤ :=
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a></p></li><li id=L22><b>theorem</b> <code>OAI.Problem335.signedOccupation_immPathOccupation</code> <small>line 22</small><div class="doc"><p>Every nonzero actual path action has its prescribed signed displacement.</p></div><pre>theorem signedOccupation_immPathOccupation (n : ℕ) (hn : 0 &lt; n)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (d : (Fin n × Fin n × Fin n) →₀ ℕ) (p : Fin (immPaths n hn).length)
+    (hamp : immPathAmplitude n hn isV d p ≠ 0) :
+    signedOccupation (immPathOccupation n hn isV d p) =
+      signedOccupation d + immPathSignedShift n hn isV p := by
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a>, <a href="FockPaths.lean.html#L109">OAI.Problem335.signedOccupation</a>, <a href="ImmFockMatrix.lean.html#L20">OAI.Problem335.immPathOccupation</a>, <a href="ImmSecondTrace.lean.html#L16">OAI.Problem335.immPathSignedShift</a></p></li><li id=L32><b>def</b> <code>OAI.Problem335.immCoefficientMatrix</code> <small>line 32</small><div class="doc"><p>A finite submatrix of the genuine normalized IMM operator.</p></div><pre>def immCoefficientMatrix {I J : Type*} (n : ℕ)
+    (isV : (Fin n × Fin n × Fin n) → Bool)
+    (source : I → (Fin n × Fin n × Fin n) →₀ ℕ)
+    (target : J → (Fin n × Fin n × Fin n) →₀ ℕ) : Matrix J I ℂ :=
+…</pre></li><li id=L41><b>theorem</b> <code>OAI.Problem335.immCoefficientMatrix_eq_pathShiftMatrix</code> <small>line 41</small><div class="doc"><p>The finite normalized coefficient matrix is the actual weighted path matrix
+whenever all nonzero path actions are represented in its target coordinates.</p></div><pre>theorem immCoefficientMatrix_eq_pathShiftMatrix {I J : Type*}
+    [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
+    (n : ℕ) (hn : 0 &lt; n) (isV : (Fin n × Fin n × Fin n) → Bool)
+    (source : I → (Fin n × Fin n × Fin n) →₀ ℕ)
+    (target : J → (Fin n × Fin n × Fin n) →₀ ℕ)
+    (htarget : Function.Injective target)
+    (shift : I → Fin (immPaths n hn).length → J)
+    (hshift : ∀ i p, immPathAmplitude n hn isV (source i) p ≠ 0 →
+      target (shift i p) = immPathOccupation n hn isV (source i) p) :
+    immCoefficientMatrix n isV source target =
+      pathShiftMatrix shift (fun i p =&gt; (immPathAmplitude n hn isV (source i) p : ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a>, <a href="ImmFockMatrix.lean.html#L20">OAI.Problem335.immPathOccupation</a>, <a href="ImmSecondTrace.lean.html#L32">OAI.Problem335.immCoefficientMatrix</a>, <a href="TraceExpansion.lean.html#L17">OAI.Problem335.pathShiftMatrix</a></p></li><li id=L67><b>theorem</b> <code>OAI.Problem335.immCoefficientMatrix_second_trace</code> <small>line 67</small><div class="doc"><p>Source-eliminated second trace for the genuine finite IMM coefficient
+matrix.  The only coordinate hypothesis says that nonzero path actions stay
+in the chosen target basis; no trace or moment formula is assumed.</p></div><pre>theorem immCoefficientMatrix_second_trace {I J : Type*}
+    [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
+    (n : ℕ) (hn : 0 &lt; n) (isV : (Fin n × Fin n × Fin n) → Bool)
+    (source : I → (Fin n × Fin n × Fin n) →₀ ℕ)
+    (hsource : Function.Injective source)
+    (target : J → (Fin n × Fin n × Fin n) →₀ ℕ)
+    (htarget : Function.Injective target)
+    (shift : I → Fin (immPaths n hn).length → J)
+    (hshift : ∀ i p, immPathAmplitude n hn isV (source i) p ≠ 0 →
+      target (shift i p) = immPathOccupation n hn isV (source i) p) :
+    let A := immCoefficientMatrix n isV source target
+…</pre><p class="refs">Mentions: <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a>, <a href="ImmFockMatrix.lean.html#L20">OAI.Problem335.immPathOccupation</a>, <a href="ImmSecondTrace.lean.html#L32">OAI.Problem335.immCoefficientMatrix</a></p></li><li id=L100><b>def</b> <code>OAI.Problem335.immFinitePathShift</code> <small>line 100</small><div class="doc"><p>A finite target index for each path.  The fallback is used only for a
+zero-amplitude path, and is therefore invisible in the operator matrix.</p></div><pre>def immFinitePathShift (n : ℕ) (hn : 0 &lt; n) (side : Fin n → Bool) (a b : ℕ)
+    (e0 : ImmTargetIndex n side a b) (d : ImmSourceIndex n side a b)
+    (p : Fin (immPaths n hn).length) : ImmTargetIndex n side a b := by
+…</pre><p class="refs">Mentions: <a href="ImmFiniteMatrix.lean.html#L27">OAI.Problem335.ImmTargetIndex</a>, <a href="ImmFiniteMatrix.lean.html#L23">OAI.Problem335.ImmSourceIndex</a>, <a href="ImmOperatorPaths.lean.html#L35">OAI.Problem335.immPaths</a></p></li><li id=L109><b>theorem</b> <code>OAI.Problem335.immFinitePathShift_val_of_amplitude_ne_zero</code> <small>line 109</small></li><li id=L120><b>theorem</b> <code>OAI.Problem335.immNormalizedMatrix_eq_immCoefficientMatrix</code> <small>line 120</small><div class="doc"><p>The finite normalized operator matrix is the indicated submatrix of its
+ambient normalized monomial coefficients.</p></div><pre>theorem immNormalizedMatrix_eq_immCoefficientMatrix
+    (n : ℕ) (hn : 0 &lt; n) (side : Fin n → Bool) (a b : ℕ) :
+    immNormalizedMatrix n side a b =
+      immCoefficientMatrix n (fun x =&gt; side x.1)
+        (fun d : ImmSourceIndex n side a b =&gt; d.1)
+        (fun e : ImmTargetIndex n side a b =&gt; e.1) := by
+…</pre><p class="refs">Mentions: <a href="ImmFiniteMatrix.lean.html#L32">OAI.Problem335.immNormalizedMatrix</a>, <a href="ImmSecondTrace.lean.html#L32">OAI.Problem335.immCoefficientMatrix</a>, <a href="ImmFiniteMatrix.lean.html#L23">OAI.Problem335.ImmSourceIndex</a>, <a href="ImmFiniteMatrix.lean.html#L27">OAI.Problem335.ImmTargetIndex</a></p></li><li id=L132><b>theorem</b> <code>OAI.Problem335.immNormalizedMatrix_eq_pathShiftMatrix_of_fallback</code> <small>line 132</small><div class="doc"><p>The actual finite IMM matrix has a weighted finite-path representation.</p></div><pre>theorem immNormalizedMatrix_eq_pathShiftMatrix_of_fallback
+    (n : ℕ) (hn : 0 &lt; n) (side : Fin n → Bool) (a b : ℕ)
+    (e0 : ImmTargetIndex n side a b) :
+    immNormalizedMatrix n side a b =
+      pathShiftMatrix (immFinitePathShift n hn side a b e0)
+        (fun d p =&gt; (immPathAmplitude n hn (fun x =&gt; side x.1) d.1 p : ℂ)) := by
+…</pre><p class="refs">Mentions: <a href="ImmFiniteMatrix.lean.html#L27">OAI.Problem335.ImmTargetIndex</a>, <a href="ImmFiniteMatrix.lean.html#L32">OAI.Problem335.immNormalizedMatrix</a>, <a href="TraceExpansion.lean.html#L17">OAI.Problem335.pathShiftMatrix</a>, <a href="ImmSecondTrace.lean.html#L100">OAI.Problem335.immFinitePathShift</a>, <a href="ImmFockMatrix.lean.html#L14">OAI.Problem335.immPathAmplitude</a></p></li><li id=L147><b>theorem</b> <code>OAI.Problem335.immNormalizedMatrix_second_trace</code> <small>line 147</small><div class="doc"><p>Exact source-eliminated second trace of the genuine finite IMM operator.
+This includes an empty target space: then every path amplitude vanishes.
+There are no trace, closure, or nonempty-index assumptions in the statement.</p></div><pre>theorem immNormalizedMatrix_second_trace
+    (n : ℕ) (hn : 0 &lt; n) (side : Fin n → Bool) (a b : ℕ) :
+    let A := immNormalizedMatrix n side a b
+…</pre><p class="refs">Mentions: <a href="ImmFiniteMatrix.lean.html#L32">OAI.Problem335.immNormalizedMatrix</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

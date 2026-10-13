@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Probability/SLE/Geometry/RandomBoundaryTubes.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Probability/SLE/Geometry/RandomBoundaryTubes.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Probability</a> / <a href="../index.html">SLE</a> / <a href="index.html">Geometry</a> / <span>RandomBoundaryTubes.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Probability</a>/<a href="../index.html">SLE</a>/<a href="index.html">Geometry</a>/<span>RandomBoundaryTubes.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Probability/SLE/Geometry/RandomBoundaryTubes.lean#L1">source</a></p><div class="doc"><p>Measurable continuation tubes whose physical boundary charts depend on
+the stopped past. Positivity of each section uses the published geometric
+support theorem only for one fixed open tube at a time.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.SLEExactGauge.ClosedPathProperty</code> <small>line 20</small></li><li id=L22><b>theorem</b> <code>OAI.SLEExactGauge.isClosed_closedPathProperty</code> <small>line 22</small></li><li id=L33><b>def</b> <code>OAI.SLEExactGauge.liftClosedPath</code> <small>line 33</small><div class="doc"><p>Give arbitrary continuous paths a measurable closed-half-plane version.
+On every actual chordal trace this is precisely the original path.</p></div><pre>def liftClosedPath (p : C(ℝ≥0, ℂ)) : C(ℝ≥0, closedHalfPlane) := by
+…</pre><p class="refs">Mentions: <a href="StoppedBoundaryMeasurability.lean.html#L18">OAI.SLEExactGauge.closedHalfPlane</a></p></li><li id=L39><b>theorem</b> <code>OAI.SLEExactGauge.liftClosedPath_apply</code> <small>line 39</small></li><li id=L43><b>theorem</b> <code>OAI.SLEExactGauge.measurable_liftClosedPath</code> <small>line 43</small></li><li id=L55><b>def</b> <code>OAI.SLEExactGauge.pathTubeEventIn</code> <small>line 55</small></li><li id=L59><b>theorem</b> <code>OAI.SLEExactGauge.isOpen_pathTubeEventIn</code> <small>line 59</small></li><li id=L73><b>def</b> <code>OAI.SLEExactGauge.randomBoundaryTubeSet</code> <small>line 73</small></li><li id=L78><b>theorem</b> <code>OAI.SLEExactGauge.measurableSet_randomBoundaryTubeSet</code> <small>line 78</small></li><li id=L90><b>theorem</b> <code>OAI.SLEExactGauge.boundary_tube_positive_of_geometric_support</code> <small>line 90</small><div class="doc"><p>Each physical open continuation has positive probability under the
+fresh trace law once one simple parameter route lies in it.</p></div><pre>theorem boundary_tube_positive_of_geometric_support
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (gp : Ω → C(ℝ≥0, ℂ)) (hclosed : ∀ ω, ClosedPathProperty (gp ω))
+    (hsupport : PublishedGeometricTubeSupport P (fun ω =&gt; gp ω))
+    (Fb : C(closedHalfPlane, OnePoint ℂ))
+    (O W : Set (OnePoint ℂ)) (hO : IsOpen O) (hW : IsOpen W)
+    (z : ℂ) (p : Path (0 : ℂ) z) (hinj : Function.Injective p)
+    (hpH : ∀ t, t ≠ 0 → p t ∈ upperHalfPlane)
+    (hroute : ∀ t, Fb ⟨p t, by
+      by_cases ht : t = 0
+      · simp [ht, closedHalfPlane]
+      · exact (show 0 &lt; (p t).im from hpH t ht).le⟩ ∈ O)
+…</pre><p class="refs">Mentions: <a href="RandomBoundaryTubes.lean.html#L20">OAI.SLEExactGauge.ClosedPathProperty</a>, <a href="GeometricTubeSupport.lean.html#L45">OAI.SLEExactGauge.PublishedGeometricTubeSupport</a>, <a href="StoppedBoundaryMeasurability.lean.html#L18">OAI.SLEExactGauge.closedHalfPlane</a>, <a href="../../../../ComparatorChallenges/SLELowerPositivity.lean.html#L17">OAI.SLEExactGauge.upperHalfPlane</a></p></li><li id=L141><b>theorem</b> <code>OAI.SLEExactGauge.restart_law_liftClosedPath</code> <small>line 141</small><div class="doc"><p>The restricted restart law also holds after applying the measurable
+closed-half-plane lift to the fresh path.</p></div><pre>theorem restart_law_liftClosedPath
+    {Ω : Type*} [mΩ : MeasurableSpace Ω] (P : Measure Ω)
+    (m : MeasurableSpace Ω)
+    (Y gp : Ω → C(ℝ≥0, ℂ)) (hY : Measurable[mΩ] Y) (hgp : Measurable[mΩ] gp)
+    (hlaw : ∀ A : Set Ω, MeasurableSet[m] A →
+      @Measure.map Ω C(ℝ≥0, ℂ) mΩ _ Y (P.restrict A) =
+        P A • @Measure.map Ω C(ℝ≥0, ℂ) mΩ _ gp P) :
+    ∀ A : Set Ω, MeasurableSet[m] A →
+      @Measure.map Ω C(ℝ≥0, closedHalfPlane) mΩ _ (liftClosedPath ∘ Y) (P.restrict A) =
+        P A • @Measure.map Ω C(ℝ≥0, closedHalfPlane) mΩ _ (liftClosedPath ∘ gp) P := by
+…</pre><p class="refs">Mentions: <a href="StoppedBoundaryMeasurability.lean.html#L18">OAI.SLEExactGauge.closedHalfPlane</a>, <a href="RandomBoundaryTubes.lean.html#L33">OAI.SLEExactGauge.liftClosedPath</a></p></li><li id=L160><b>theorem</b> <code>OAI.SLEExactGauge.conditional_random_boundary_tube_positive</code> <small>line 160</small><div class="doc"><p>No uniform support constant is needed for random pasts. Pointwise
+simple access routes imply strictly positive conditional passage probability.</p></div><pre>theorem conditional_random_boundary_tube_positive
+    {Ω : Type*} [mΩ : MeasurableSpace Ω]
+    (P : Measure Ω) [IsFiniteMeasure P]
+    (m : MeasurableSpace Ω) (hm : m ≤ mΩ)
+    (Y gp : Ω → C(ℝ≥0, ℂ)) (hY : Measurable[mΩ] Y) (hgp : Measurable[mΩ] gp)
+    (hlaw : ∀ A : Set Ω, MeasurableSet[m] A →
+      @Measure.map Ω C(ℝ≥0, ℂ) mΩ _ Y (P.restrict A) =
+        P A • @Measure.map Ω C(ℝ≥0, ℂ) mΩ _ gp P)
+    (hclosed : ∀ ω, ClosedPathProperty (gp ω))
+    (hsupport : @PublishedGeometricTubeSupport Ω mΩ P (fun ω =&gt; gp ω))
+    (Fb : Ω → C(closedHalfPlane, OnePoint ℂ)) (hFb : Measurable[m] Fb)
+    (O W : Set (OnePoint ℂ)) (hO : IsOpen O) (hW : IsOpen W)
+…</pre><p class="refs">Mentions: <a href="RandomBoundaryTubes.lean.html#L20">OAI.SLEExactGauge.ClosedPathProperty</a>, <a href="GeometricTubeSupport.lean.html#L45">OAI.SLEExactGauge.PublishedGeometricTubeSupport</a>, <a href="StoppedBoundaryMeasurability.lean.html#L18">OAI.SLEExactGauge.closedHalfPlane</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

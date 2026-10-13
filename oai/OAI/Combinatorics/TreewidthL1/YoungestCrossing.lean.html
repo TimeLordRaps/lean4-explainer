@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/TreewidthL1/YoungestCrossing.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/TreewidthL1/YoungestCrossing.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">TreewidthL1</a> / <span>YoungestCrossing.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">TreewidthL1</a>/<span>YoungestCrossing.lean</span></code></h1><p class="muted">28 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/TreewidthL1/YoungestCrossing.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L8><b>def</b> <code>OAI.BoundedTreewidthL1.InfinitesimalAlong</code> <small>line 8</small></li><li id=L13><b>def</b> <code>OAI.BoundedTreewidthL1.CrossingSequence</code> <small>line 13</small><div class="doc"><p>A reservation interval whose effective start is early and terminal time is
+late. Validity is explicit; no anchor is created merely by taking a quotient.</p></div><pre>def CrossingSequence {I : Type*} (U : Ultrafilter I)
+    (valid : I → ℕ → Prop) (start finish : I → ℕ → ℕ)
+    (δ : I → ℕ → ℝ) (a : I → ℕ) : Prop :=
+…</pre></li><li id=L21><b>def</b> <code>OAI.BoundedTreewidthL1.CrossingGerms</code> <small>line 21</small><div class="doc"><p>Crossing anchor sequences identified precisely when they agree eventually.</p></div><pre>def CrossingGerms {I : Type*} (U : Ultrafilter I)
+    (valid : I → ℕ → Prop) (start finish : I → ℕ → ℕ) (δ : I → ℕ → ℝ) :
+    Set (Germ (U : Filter I) ℕ) :=
+…</pre></li><li id=L32><b>lemma</b> <code>OAI.BoundedTreewidthL1.noninfinitesimal_iff</code> <small>line 32</small></li><li id=L46><b>lemma</b> <code>OAI.BoundedTreewidthL1.early_precedes_late</code> <small>line 46</small></li><li id=L57><b>lemma</b> <code>OAI.BoundedTreewidthL1.germ_total</code> <small>line 57</small></li><li id=L67><b>theorem</b> <code>OAI.BoundedTreewidthL1.crossing_family_card_le</code> <small>line 67</small><div class="doc"><p>Any fixed finite collection of pairwise distinct crossing reservations is
+simultaneously present at the latest of its effective start times.</p></div><pre>theorem crossing_family_card_le {I J : Type*} [Fintype J] (U : Ultrafilter I)
+    (valid : I → ℕ → Prop) (start finish : I → ℕ → ℕ) (δ : I → ℕ → ℝ)
+    (cache : I → ℕ → Finset ℕ) (N : ℕ)
+    (hmono : ∀ i, Antitone (δ i))
+    (hcache : ∀ i a t, valid i a → start i a ≤ t → t ≤ finish i a → a ∈ cache i t)
+    (hsize : ∀ i t, (cache i t).card ≤ N)
+    (a : J → I → ℕ) (ha : ∀ j, CrossingSequence U valid start finish δ (a j))
+    (hdistinct : ∀ j k, j ≠ k → ∀ᶠ i in U, a j i ≠ a k i) :
+    Fintype.card J ≤ N := by
+…</pre><p class="refs">Mentions: <a href="YoungestCrossing.lean.html#L13">OAI.BoundedTreewidthL1.CrossingSequence</a></p></li><li id=L115><b>lemma</b> <code>OAI.BoundedTreewidthL1.crossing_finset_card_le</code> <small>line 115</small></li><li id=L140><b>theorem</b> <code>OAI.BoundedTreewidthL1.youngest_crossing</code> <small>line 140</small><div class="doc"><p>The youngest crossing, with the inclusive cache bound and monotone
+normalized distances made explicit.</p></div><pre>theorem youngest_crossing {I : Type*} (U : Ultrafilter I)
+    (valid : I → ℕ → Prop) (start finish : I → ℕ → ℕ) (δ : I → ℕ → ℝ)
+    (cache : I → ℕ → Finset ℕ) (N : ℕ)
+    (hmono : ∀ i, Antitone (δ i))
+    (hcache : ∀ i a t, valid i a → start i a ≤ t → t ≤ finish i a → a ∈ cache i t)
+    (hsize : ∀ i t, (cache i t).card ≤ N)
+    (hne : (CrossingGerms U valid start finish δ).Nonempty) :
+    (CrossingGerms U valid start finish δ).Finite ∧
+    (CrossingGerms U valid start finish δ).ncard ≤ N ∧
+    ∃ youngest ∈ CrossingGerms U valid start finish δ,
+      ∀ a ∈ CrossingGerms U valid start finish δ, a ≤ youngest := by
+…</pre><p class="refs">Mentions: <a href="YoungestCrossing.lean.html#L21">OAI.BoundedTreewidthL1.CrossingGerms</a></p></li><li id=L179><b>def</b> <code>OAI.BoundedTreewidthL1.ReservationPath.Present</code> <small>line 179</small></li><li id=L181><b>def</b> <code>OAI.BoundedTreewidthL1.ReservationPath.Successor</code> <small>line 181</small></li><li id=L185><b>lemma</b> <code>OAI.BoundedTreewidthL1.ReservationPath.mem_inclusive</code> <small>line 185</small></li><li id=L191><b>lemma</b> <code>OAI.BoundedTreewidthL1.ReservationPath.proposal_present</code> <small>line 191</small></li><li id=L194><b>lemma</b> <code>OAI.BoundedTreewidthL1.ReservationPath.successor_exists</code> <small>line 194</small></li><li id=L207><b>lemma</b> <code>OAI.BoundedTreewidthL1.ReservationPath.proposal_retained_of_other_release</code> <small>line 207</small></li><li id=L217><b>lemma</b> <code>OAI.BoundedTreewidthL1.ReservationPath.successor_at_later_test</code> <small>line 217</small><div class="doc"><p>Once b immediately follows a after an eviction test, no subsequent insertion
+can appear between them: new anchors have later launch times.</p></div><pre>lemma successor_at_later_test (P : ReservationPath) (a b t u : ℕ)
+    (hab : a &lt; b) (hbt : b ≤ t) (htu : t &lt; u)
+    (ha : P.Present a u) (hb : P.Present b u)
+    (hmin : ∀ c, a &lt; c → c ≤ t → t &lt; P.finish c → b ≤ c) :
+    P.Successor a b u := by
+…</pre><p class="refs">Mentions: <a href="Particles.lean.html#L396">OAI.BoundedTreewidthL1.ReservationPath</a></p></li><li id=L231><b>lemma</b> <code>OAI.BoundedTreewidthL1.ReservationPath.retained_successor</code> <small>line 231</small><div class="doc"><p>A surviving younger anchor exists after the last eviction of any younger
+anchor launched above S. The only use of protection is for a successor already
+launched at or after <code>S</code>.</p></div><pre>lemma retained_successor (P : ReservationPath) (a S t : ℕ)
+    (haS : a &lt; S) (hSt : S ≤ t) (ht : t &lt; P.last)
+    (ha : t &lt; P.finish a)
+    (hold : ∀ c, a &lt; c → c &lt; S → P.finish c ≤ t)
+    (hprotect : ∀ b, S ≤ b → P.Successor a b t → t &lt; P.finish b) :
+    ∃ b, a &lt; b ∧ S ≤ b ∧ b ≤ t ∧ t &lt; P.finish b ∧
+      ∀ c, a &lt; c → c ≤ t → t &lt; P.finish c → b ≤ c := by
+…</pre><p class="refs">Mentions: <a href="Particles.lean.html#L396">OAI.BoundedTreewidthL1.ReservationPath</a></p></li><li id=L270><b>def</b> <code>OAI.BoundedTreewidthL1.PathCrossing</code> <small>line 270</small></li><li id=L276><b>lemma</b> <code>OAI.BoundedTreewidthL1.infinitesimal_congr</code> <small>line 276</small></li><li id=L286><b>lemma</b> <code>OAI.BoundedTreewidthL1.infinitesimal_mono</code> <small>line 286</small></li><li id=L293><b>lemma</b> <code>OAI.BoundedTreewidthL1.eventually_choose_nat</code> <small>line 293</small></li><li id=L301><b>theorem</b> <code>OAI.BoundedTreewidthL1.younger_crossing</code> <small>line 301</small></li><li id=L399><b>theorem</b> <code>OAI.BoundedTreewidthL1.cache_no_failure</code> <small>line 399</small></li><li id=L444><b>structure</b> <code>OAI.BoundedTreewidthL1.CacheControl</code> <small>line 444</small><div class="doc"><p>Numerical interface to the actual cached ensemble. The three tests below
+are proved from that ensemble, rather than postulated in the embedding theorem.</p></div><pre>structure CacheControl (N : ℕ) (Q H : ℝ) where
+…</pre></li><li id=L464><b>lemma</b> <code>OAI.BoundedTreewidthL1.infinitesimal_add_mul</code> <small>line 464</small></li><li id=L474><b>lemma</b> <code>OAI.BoundedTreewidthL1.CacheControl.no_failure</code> <small>line 474</small></li><li id=L539><b>theorem</b> <code>OAI.BoundedTreewidthL1.CacheControl.uniform_lower</code> <small>line 539</small><div class="doc"><p>Compactness is used only on numerical cache data, not on random samplers or
+on a bounded number of vertices.</p></div><pre>theorem CacheControl.uniform_lower (N : ℕ) (Q H : ℝ) (hQ : 0 &lt; Q) :
+    ∃ c : ℝ, 0 &lt; c ∧ ∀ C : CacheControl N Q H, c ≤ C.error := by
+…</pre><p class="refs">Mentions: <a href="YoungestCrossing.lean.html#L444">OAI.BoundedTreewidthL1.CacheControl</a></p></li><li id=L563><b>theorem</b> <code>OAI.BoundedTreewidthL1.protected_threshold</code> <small>line 563</small></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

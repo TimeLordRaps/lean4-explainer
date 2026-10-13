@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Combinatorics/BinaryEdit/EncodedImage.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Combinatorics/BinaryEdit/EncodedImage.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Combinatorics</a> / <a href="index.html">BinaryEdit</a> / <span>EncodedImage.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Combinatorics</a>/<a href="index.html">BinaryEdit</a>/<span>EncodedImage.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Combinatorics/BinaryEdit/EncodedImage.lean#L1">source</a></p><div class="doc"><p>Distortion transport through finite images of fixed-width codes.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L15><b>def</b> <code>OAI.TreeEdit.BinaryLower.encodedWord</code> <small>line 15</small><div class="doc"><p>The concatenation extension, viewed in its exact-length target type.</p></div><pre>def encodedWord {α : Type u} {M P : ℕ} (c : α → Word Bool P)
+    (x : Word α M) : Word Bool (M * P) :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a></p></li><li id=L20><b>def</b> <code>OAI.TreeEdit.BinaryLower.encodedSet</code> <small>line 20</small><div class="doc"><p>The actual finite image, rather than an abstract copy of the source set.</p></div><pre>def encodedSet {α : Type u} {M P : ℕ} (c : α → Word Bool P)
+    (W : Finset (Word α M)) : Finset (Word Bool (M * P)) :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a></p></li><li id=L24><b>lemma</b> <code>OAI.TreeEdit.BinaryLower.encodedWord_injective_of_lower</code> <small>line 24</small></li><li id=L39><b>lemma</b> <code>OAI.TreeEdit.BinaryLower.encodedSet_card</code> <small>line 39</small></li><li id=L49><b>def</b> <code>OAI.TreeEdit.BinaryLower.encodedMember</code> <small>line 49</small><div class="doc"><p>The map from source membership witnesses into membership witnesses of the
+encoded finite set, with no choice of an inverse.</p></div><pre>def encodedMember {α : Type u} {M P : ℕ} (c : α → Word Bool P)
+    (W : Finset (Word α M)) : {x : Word α M // x ∈ W} →
+      {y : Word Bool (M * P) // y ∈ encodedSet c W} :=
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="EncodedImage.lean.html#L20">OAI.TreeEdit.BinaryLower.encodedSet</a></p></li><li id=L54><b>lemma</b> <code>OAI.TreeEdit.BinaryLower.encodedMember_injective</code> <small>line 54</small></li><li id=L66><b>lemma</b> <code>OAI.TreeEdit.BinaryLower.c1_le_encodedSet_mul</code> <small>line 66</small><div class="doc"><p>Distortion transport for the concrete finite image of a bi-Lipschitz code.</p></div><pre>lemma c1_le_encodedSet_mul {α : Type u} {M P : ℕ}
+    (c : α → Word Bool P) (W : Finset (Word α M)) (hW : 2 ≤ W.card)
+    {a b : ℝ} (ha : 0 &lt; a) (hb : 0 &lt; b)
+    (hlower : ∀ x y : Word α M,
+      a * (ed x.val y.val : ℝ) ≤
+        (ed (encode c x.val) (encode c y.val) : ℝ))
+    (hupper : ∀ x y : Word α M,
+      (ed (encode c x.val) (encode c y.val) : ℝ) ≤
+        b * (ed x.val y.val : ℝ)) :
+    c1 {x : Word α M // x ∈ W}
+      (fun x y =&gt; (ed x.val.val y.val.val : ℝ)) ≤
+        (b / a) * binarySetDistortion (encodedSet c W) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L21">OAI.TreeEdit.ed</a>, <a href="../TreeEdit/Model.lean.html#L57">OAI.TreeEdit.encode</a>, <a href="EncodedImage.lean.html#L20">OAI.TreeEdit.BinaryLower.encodedSet</a></p></li><li id=L102><b>lemma</b> <code>OAI.TreeEdit.BinaryLower.c1_le_804_encodedSet</code> <small>line 102</small><div class="doc"><p>The scale cancels: lower factor <code>P/804</code> and upper factor <code>P</code> lose only <code>804</code>.</p></div><pre>lemma c1_le_804_encodedSet {α : Type u} {M P : ℕ}
+    (c : α → Word Bool P) (hP : 0 &lt; P)
+    (W : Finset (Word α M)) (hW : 2 ≤ W.card)
+    (hlower : ∀ x y : Word α M,
+      ((P : ℝ) / 804) * (ed x.val y.val : ℝ) ≤
+        (ed (encode c x.val) (encode c y.val) : ℝ)) :
+    c1 {x : Word α M // x ∈ W}
+      (fun x y =&gt; (ed x.val.val y.val.val : ℝ)) ≤
+        804 * binarySetDistortion (encodedSet c W) := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L21">OAI.TreeEdit.ed</a>, <a href="../TreeEdit/Model.lean.html#L57">OAI.TreeEdit.encode</a>, <a href="EncodedImage.lean.html#L20">OAI.TreeEdit.BinaryLower.encodedSet</a></p></li><li id=L119><b>theorem</b> <code>OAI.TreeEdit.BinaryLower.exists_binary_image_of_code</code> <small>line 119</small><div class="doc"><p>Existential form used by the finite-tree binary-family construction.</p></div><pre>theorem exists_binary_image_of_code {α : Type u} {M P : ℕ}
+    (c : α → Word Bool P) (hP : 0 &lt; P)
+    (W : Finset (Word α M)) (hW : 2 ≤ W.card)
+    (hlower : ∀ x y : Word α M,
+      ((P : ℝ) / 804) * (ed x.val y.val : ℝ) ≤
+        (ed (encode c x.val) (encode c y.val) : ℝ)) :
+    ∃ V : Finset (Word Bool (M * P)), 2 ≤ V.card ∧
+      c1 {x : Word α M // x ∈ W}
+        (fun x y =&gt; (ed x.val.val y.val.val : ℝ)) / 804 ≤
+          binarySetDistortion V := by
+…</pre><p class="refs">Mentions: <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L25">OAI.TreeEdit.Word</a>, <a href="../../../ComparatorChallenges/BinaryEditLower.lean.html#L21">OAI.TreeEdit.ed</a>, <a href="../TreeEdit/Model.lean.html#L57">OAI.TreeEdit.encode</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

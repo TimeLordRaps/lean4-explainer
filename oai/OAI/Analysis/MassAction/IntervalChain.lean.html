@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/MassAction/IntervalChain.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/MassAction/IntervalChain.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">MassAction</a> / <span>IntervalChain.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">MassAction</a>/<span>IntervalChain.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/MassAction/IntervalChain.lean#L1">source</a></p><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L13><b>theorem</b> <code>OAI.Problem326.IntervalChain.exists_irredundant_subcover</code> <small>line 13</small><div class="doc"><p>A finite cover can be reduced so that no selected set is contained in
+another selected set.</p></div><pre>theorem exists_irredundant_subcover {ι : Type uIota} {X : Type uX}
+    (s : Finset ι) (U : ι → Set X) (K : Set X)
+    (hcover : ∀ x ∈ K, ∃ i ∈ s, x ∈ U i) :
+    ∃ t : Finset ι, t ⊆ s ∧
+      (∀ x ∈ K, ∃ i ∈ t, x ∈ U i) ∧
+      ∀ i ∈ t, ∀ j ∈ t, i ≠ j → ¬ U i ⊆ U j := by
+…</pre></li><li id=L35><b>theorem</b> <code>OAI.Problem326.IntervalChain.exists_finite_center_cover</code> <small>line 35</small><div class="doc"><p>Compactness supplies finitely many centers from the original interval.</p></div><pre>theorem exists_finite_center_cover {a b : ℝ} (ρ : ℝ → ℝ)
+    (hρ : ∀ t ∈ Set.Icc a b, 0 &lt; ρ t) :
+    ∃ s : Finset ℝ,
+      (∀ t ∈ s, t ∈ Set.Icc a b) ∧
+      ∀ x ∈ Set.Icc a b, ∃ t ∈ s, x ∈ Set.Ioo (t - ρ t) (t + ρ t) := by
+…</pre></li><li id=L58><b>theorem</b> <code>OAI.Problem326.IntervalChain.endpoints_strictMono</code> <small>line 58</small><div class="doc"><p>Noncontainment forces the interval endpoints to be ordered in the same
+way as their centers.</p></div><pre>theorem endpoints_strictMono {u v ru rv : ℝ}
+    (huv : u &lt; v)
+    (hnot : ¬ Set.Ioo (u - ru) (u + ru) ⊆ Set.Ioo (v - rv) (v + rv))
+    (hnot&#x27; : ¬ Set.Ioo (v - rv) (v + rv) ⊆ Set.Ioo (u - ru) (u + ru)) :
+    u - ru &lt; v - rv ∧ u + ru &lt; v + rv := by
+…</pre></li><li id=L77><b>theorem</b> <code>OAI.Problem326.IntervalChain.adjacent_overlap</code> <small>line 77</small><div class="doc"><p>Successive selected intervals overlap when their union covers the
+whole interval and their endpoint order follows their center order.</p></div><pre>theorem adjacent_overlap {a b : ℝ} {ρ : ℝ → ℝ} {s : Finset ℝ}
+    (hcenters : ∀ t ∈ s, t ∈ Set.Icc a b)
+    (hρ : ∀ t ∈ s, 0 &lt; ρ t)
+    (hcover : ∀ x ∈ Set.Icc a b, ∃ t ∈ s, x ∈ Set.Ioo (t - ρ t) (t + ρ t))
+    (horder : ∀ u ∈ s, ∀ v ∈ s, u &lt; v →
+      u - ρ u &lt; v - ρ v ∧ u + ρ u &lt; v + ρ v)
+    {u v : ℝ} (hu : u ∈ s) (hv : v ∈ s) (huv : u &lt; v)
+    (hadj : ∀ w ∈ s, u &lt; w → v ≤ w) :
+    v - ρ v &lt; u + ρ u := by
+…</pre></li><li id=L107><b>theorem</b> <code>OAI.Problem326.IntervalChain.exists_transition_cut</code> <small>line 107</small><div class="doc"><p>An overlapping pair admits a transition cut in both neighborhoods and
+strictly between the two centers.</p></div><pre>theorem exists_transition_cut {u v ru rv : ℝ}
+    (huv : u &lt; v) (hru : 0 &lt; ru) (hrv : 0 &lt; rv)
+    (hoverlap : v - rv &lt; u + ru) :
+    ∃ q : ℝ, u &lt; q ∧ q &lt; v ∧
+      q ∈ Set.Ioo (u - ru) (u + ru) ∧
+      q ∈ Set.Ioo (v - rv) (v + rv) := by
+…</pre></li><li id=L125><b>theorem</b> <code>OAI.Problem326.IntervalChain.left_endpoint_mem</code> <small>line 125</small><div class="doc"><p>The first selected neighborhood contains the left endpoint.</p></div><pre>theorem left_endpoint_mem {a b : ℝ} {ρ : ℝ → ℝ} {s : Finset ℝ}
+    (hab : a ≤ b)
+    (hcenters : ∀ t ∈ s, t ∈ Set.Icc a b)
+    (hρ : ∀ t ∈ s, 0 &lt; ρ t)
+    (hcover : ∀ x ∈ Set.Icc a b, ∃ t ∈ s, x ∈ Set.Ioo (t - ρ t) (t + ρ t))
+    (horder : ∀ u ∈ s, ∀ v ∈ s, u &lt; v →
+      u - ρ u &lt; v - ρ v ∧ u + ρ u &lt; v + ρ v)
+    {u : ℝ} (hu : u ∈ s) (hmin : ∀ w ∈ s, u ≤ w) :
+    a ∈ Set.Ioo (u - ρ u) (u + ρ u) := by
+…</pre></li><li id=L144><b>theorem</b> <code>OAI.Problem326.IntervalChain.right_endpoint_mem</code> <small>line 144</small><div class="doc"><p>The last selected neighborhood contains the right endpoint.</p></div><pre>theorem right_endpoint_mem {a b : ℝ} {ρ : ℝ → ℝ} {s : Finset ℝ}
+    (hab : a ≤ b)
+    (hcenters : ∀ t ∈ s, t ∈ Set.Icc a b)
+    (hρ : ∀ t ∈ s, 0 &lt; ρ t)
+    (hcover : ∀ x ∈ Set.Icc a b, ∃ t ∈ s, x ∈ Set.Ioo (t - ρ t) (t + ρ t))
+    (horder : ∀ u ∈ s, ∀ v ∈ s, u &lt; v →
+      u - ρ u &lt; v - ρ v ∧ u + ρ u &lt; v + ρ v)
+    {v : ℝ} (hv : v ∈ s) (hmax : ∀ w ∈ s, w ≤ v) :
+    b ∈ Set.Ioo (v - ρ v) (v + ρ v) := by
+…</pre></li><li id=L165><b>theorem</b> <code>OAI.Problem326.IntervalChain.exists_interval_chain</code> <small>line 165</small><div class="doc"><p>Assemble ordered centers and transition cuts. The endpoint and overlap
+conditions imply each closed interval between neighboring cuts lies in its
+assigned neighborhood.</p></div><pre>theorem exists_interval_chain {a b : ℝ} (hab : a ≤ b) (ρ : ℝ → ℝ)
+    (hρ : ∀ t ∈ Set.Icc a b, 0 &lt; ρ t) :
+    ∃ n : ℕ, ∃ c : Fin (n + 1) → ℝ, ∃ q : Fin n → ℝ,
+      StrictMono c ∧ (∀ i, c i ∈ Set.Icc a b) ∧
+      a ∈ Set.Ioo (c 0 - ρ (c 0)) (c 0 + ρ (c 0)) ∧
+      b ∈ Set.Ioo (c (Fin.last n) - ρ (c (Fin.last n)))
+        (c (Fin.last n) + ρ (c (Fin.last n))) ∧
+      ∀ i : Fin n, c i.castSucc &lt; q i ∧ q i &lt; c i.succ ∧
+        q i ∈ Set.Ioo (c i.castSucc - ρ (c i.castSucc))
+          (c i.castSucc + ρ (c i.castSucc)) ∧
+        q i ∈ Set.Ioo (c i.succ - ρ (c i.succ))
+          (c i.succ + ρ (c i.succ)) := by
+…</pre></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

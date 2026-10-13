@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/LipschitzHilbert/Trees/UnaryTelescope.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/LipschitzHilbert/Trees/UnaryTelescope.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">Analysis</a> / <a href="../index.html">LipschitzHilbert</a> / <a href="index.html">Trees</a> / <span>UnaryTelescope.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">Analysis</a>/<a href="../index.html">LipschitzHilbert</a>/<a href="index.html">Trees</a>/<span>UnaryTelescope.lean</span></code></h1><p class="muted">8 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/LipschitzHilbert/Trees/UnaryTelescope.lean#L1">source</a></p><div class="doc"><h3>The unary-segment energy telescope</h3><p>This is the finite cancellation behind §10, equation <code>src-28</code>. The actual
+and propagated endpoint amounts agree, leaving only amplitude errors and
+the small baseline-denominator corrections.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>theorem</b> <code>OAI.LipschitzHilbert.log_add_baseline</code> <small>line 20</small></li><li id=L27><b>theorem</b> <code>OAI.LipschitzHilbert.unary_log_telescope</code> <small>line 27</small></li><li id=L67><b>theorem</b> <code>OAI.LipschitzHilbert.unary_log_telescope_errors</code> <small>line 67</small><div class="doc"><p>The telescope, with each surviving correction controlled by an
+actual logarithmic-energy error and the relative baseline drop.</p></div><pre>theorem unary_log_telescope_errors (N : ℕ) (V W n h beta error : ℕ → ℝ)
+    (hn : ∀ i ≤ N, 0 &lt; n i)
+    (hV : ∀ i ≤ N, n i ≤ V i) (hW : ∀ i ≤ N, n i ≤ W i)
+    (hh : ∀ i &lt; N, 0 ≤ h i) (hbeta : ∀ i &lt; N, 0 &lt; beta i)
+    (hprediction : ∀ i &lt; N, beta i ≤ V i / (h i + V (i + 1)))
+    (hstar : ∀ i &lt; N, W i ≤ h i + W (i + 1)) (hend : W N = V N)
+    (herror : ∀ i ≤ N, |Real.log (V i) - Real.log (W i)| ≤ error i) :
+    (∑ i ∈ Finset.range N, Real.log (beta i)) ≤ error 0 +
+      ∑ i ∈ Finset.range N, (h i / n (i + 1)) * error (i + 1) := by
+…</pre></li><li id=L99><b>theorem</b> <code>OAI.LipschitzHilbert.unary_vertex_telescope</code> <small>line 99</small><div class="doc"><p>Applying the scalar telescope to the actual vertex amounts gives
+the finite form of <code>src-28</code> before the segment mass comparison.</p></div><pre>theorem unary_vertex_telescope (N : ℕ) (n : ℕ → ℝ) (A Astar : ℕ → E)
+    (beta : ℕ → ℝ) {a p D : ℝ} (hp : 1 ≤ p) (hap : a ≤ p)
+    (hn : ∀ i ≤ N, 0 &lt; n i) (hmass : ∀ i &lt; N, n (i + 1) ≤ n i)
+    (hcontraction : ∀ i &lt; N, ‖Astar i‖ ≤ ‖Astar (i + 1)‖)
+    (hend : Astar N = A N) (hbeta : ∀ i &lt; N, 0 &lt; beta i)
+    (hprediction : ∀ i &lt; N, beta i ≤ vertexAmount (n i) (A i) a p /
+      (n i - n (i + 1) + vertexAmount (n (i + 1)) (A (i + 1)) a p))
+    (herror : ∀ i ≤ N, ‖A i - Astar i‖ ≤ D) :
+    (∑ i ∈ Finset.range N, Real.log (beta i)) ≤
+      p * n 0 ^ ((a - 1) / p - 1) * D +
+        ∑ i ∈ Finset.range N, ((n i - n (i + 1)) / n (i + 1)) *
+          (p * n (i + 1) ^ ((a - 1) / p - 1) * D) := by
+…</pre><p class="refs">Mentions: <a href="VertexIntegration.lean.html#L131">OAI.LipschitzHilbert.vertexAmount</a></p></li><li id=L132><b>theorem</b> <code>OAI.LipschitzHilbert.unary_vertex_telescope_uniform</code> <small>line 132</small><div class="doc"><p>A lower mass bound makes all the energy Lipschitz constants uniform.
+Only the sum of relative drops remains; no factor counts unary indices.</p></div><pre>theorem unary_vertex_telescope_uniform (N : ℕ) (n : ℕ → ℝ) (A Astar : ℕ → E)
+    (beta : ℕ → ℝ) {a p D m : ℝ} (hp : 1 ≤ p) (hap : a ≤ p)
+    (hm : 0 &lt; m) (hD : 0 ≤ D) (hn : ∀ i ≤ N, m ≤ n i)
+    (hmass : ∀ i &lt; N, n (i + 1) ≤ n i)
+    (hcontraction : ∀ i &lt; N, ‖Astar i‖ ≤ ‖Astar (i + 1)‖)
+    (hend : Astar N = A N) (hbeta : ∀ i &lt; N, 0 &lt; beta i)
+    (hprediction : ∀ i &lt; N, beta i ≤ vertexAmount (n i) (A i) a p /
+      (n i - n (i + 1) + vertexAmount (n (i + 1)) (A (i + 1)) a p))
+    (herror : ∀ i ≤ N, ‖A i - Astar i‖ ≤ D) :
+    (∑ i ∈ Finset.range N, Real.log (beta i)) ≤
+      (p * m ^ ((a - 1) / p - 1) * D) *
+        (1 + ∑ i ∈ Finset.range N, (n i - n (i + 1)) / n (i + 1)) := by
+…</pre><p class="refs">Mentions: <a href="VertexIntegration.lean.html#L131">OAI.LipschitzHilbert.vertexAmount</a></p></li><li id=L172><b>theorem</b> <code>OAI.LipschitzHilbert.segment_relative_drop_sum_le</code> <small>line 172</small><div class="doc"><p>The mass drop over a segment telescopes even if the segment contains
+arbitrarily many very small unary drops.</p></div><pre>theorem segment_relative_drop_sum_le (N : ℕ) (n : ℕ → ℝ) {m : ℝ} (hm : 0 &lt; m)
+    (hn : ∀ i ≤ N, m ≤ n i) (hmass : ∀ i &lt; N, n (i + 1) ≤ n i) :
+    (∑ i ∈ Finset.range N, (n i - n (i + 1)) / n (i + 1)) ≤ (n 0 - n N) / m := by
+…</pre></li><li id=L187><b>theorem</b> <code>OAI.LipschitzHilbert.half_mass_rpow_le</code> <small>line 187</small></li><li id=L202><b>theorem</b> <code>OAI.LipschitzHilbert.unary_vertex_telescope_short_segment</code> <small>line 202</small><div class="doc"><p>The final <code>src-28</code> estimate, with an explicit absolute constant, on
+a segment whose total mass drop is at most two.</p></div><pre>theorem unary_vertex_telescope_short_segment {E : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (N : ℕ) (n : ℕ → ℝ) (A Astar : ℕ → E) (beta : ℕ → ℝ)
+    {a p D : ℝ} (hp : 1 ≤ p) (ha : 1 ≤ a) (hap : a ≤ p) (hD : 0 ≤ D)
+    (hstart : 4 ≤ n 0) (hn : ∀ i ≤ N, n 0 - 2 ≤ n i)
+    (hmass : ∀ i &lt; N, n (i + 1) ≤ n i)
+    (hcontraction : ∀ i &lt; N, ‖Astar i‖ ≤ ‖Astar (i + 1)‖)
+    (hend : Astar N = A N) (hbeta : ∀ i &lt; N, 0 &lt; beta i)
+    (hprediction : ∀ i &lt; N, beta i ≤ vertexAmount (n i) (A i) a p /
+      (n i - n (i + 1) + vertexAmount (n (i + 1)) (A (i + 1)) a p))
+    (herror : ∀ i ≤ N, ‖A i - Astar i‖ ≤ D) :
+    (∑ i ∈ Finset.range N, Real.log (beta i)) ≤
+…</pre><p class="refs">Mentions: <a href="VertexIntegration.lean.html#L131">OAI.LipschitzHilbert.vertexAmount</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

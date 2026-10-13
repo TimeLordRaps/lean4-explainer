@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/ClockCocycleFamily.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/ClockCocycleFamily.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>ClockCocycleFamily.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>ClockCocycleFamily.lean</span></code></h1><p class="muted">9 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/ClockCocycleFamily.lean#L1">source</a></p><div class="doc"><h3>Finite families of clocked cocycle contractions</h3><p>A single joint partition must control every coefficient homotopy. The
+maximum cocycle length is fixed before the clock and all error tolerances
+are chosen. The final theorem constructs the finite family on that one
+partition; it makes no choice of independent towers for different lengths.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L20><b>def</b> <code>OAI.WeakPureInfiniteness.clockCocycleCost</code> <small>line 20</small></li><li id=L24><b>lemma</b> <code>OAI.WeakPureInfiniteness.clockCocycleCost_pos</code> <small>line 24</small></li><li id=L28><b>lemma</b> <code>OAI.WeakPureInfiniteness.family_product_commutator</code> <small>line 28</small></li><li id=L44><b>lemma</b> <code>OAI.WeakPureInfiniteness.clocked_cocycle_path_on_partition</code> <small>line 44</small><div class="doc"><p>Finite fragmentation is applied to the supplied partition;
+only its actual mixed quarter paths are needed.</p></div><pre>lemma clocked_cocycle_path_on_partition (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) {N : ℕ} (e : ZMod N → E)
+    (he : ∀ j, IsStarProjection (e j)) (η : ℝ) (hη : 0 &lt; η)
+    (hS : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η)
+    (hT : ∀ j, ‖finiteRowShift t (e j) - e (j + 1)‖ ≤ η) (n : ℕ)
+    (hquarter : ∀ i r l : Fin 2, i ≠ l → ∃ p : Path
+      (binaryCornerUnitary (s i * s r)
+        (binaryProduct_isometry _ _ (by simpa using hs i i) (by simpa using hs r r))
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="BinaryFragmentation.lean.html#L19">OAI.WeakPureInfiniteness.binaryCornerUnitary</a>, <a href="BinaryFragmentation.lean.html#L90">OAI.WeakPureInfiniteness.binaryProduct_isometry</a></p></li><li id=L149><b>lemma</b> <code>OAI.WeakPureInfiniteness.family_isometry_norm</code> <small>line 149</small></li><li id=L155><b>lemma</b> <code>OAI.WeakPureInfiniteness.family_near_commutator</code> <small>line 155</small></li><li id=L170><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_joint_clocked_quarter_family_angular</code> <small>line 170</small><div class="doc"><p>A single clock supplies all mixed quarter paths up to the prescribed finite length.</p></div><pre>lemma exists_joint_clocked_quarter_family_angular [Nontrivial E] (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (m M : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ (k : unitary E) (e : ZMod (2 ^ m) → E),
+      (k : E) ^ (2 ^ m) = 1 ∧
+      (∀ j, IsStarProjection (e j)) ∧ (∑ j, e j) = 1 ∧
+      (∀ j l, j ≠ l → e j * e l = 0) ∧
+      (∀ j, (k : E) * e j = e (j + 1) * (k : E)) ∧
+      ‖finiteRowShift s k - (k : E)‖ &lt; ε ∧
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a></p></li><li id=L286><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_joint_clocked_quarter_family</code> <small>line 286</small></li><li id=L333><b>lemma</b> <code>OAI.WeakPureInfiniteness.exists_joint_clocked_cocycle_family</code> <small>line 333</small><div class="doc"><p>One actual joint partition controls every cocycle path in the chosen
+finite range. Both errors are selected after that range and the tower
+height have been fixed.</p></div><pre>lemma exists_joint_clocked_cocycle_family [Nontrivial E] (s t : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (ht : ∀ i j, star (t i) * t j = if i = j then 1 else 0)
+    (hsum : (∑ i, s i * star (s i)) = 1)
+    (htsum : (∑ i, t i * star (t i)) = 1)
+    (hcomm : bergRowsCommute s t) (m M : ℕ) (ε : ℝ) (hε : 0 &lt; ε) :
+    ∃ e : ZMod (2 ^ m) → E,
+      (∀ j, IsStarProjection (e j)) ∧ (∑ j, e j) = 1 ∧
+      (∀ j l, j ≠ l → e j * e l = 0) ∧
+      (∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ &lt; ε) ∧
+      (∀ j, ‖finiteRowShift t (e j) - e (j + 1)‖ &lt; ε) ∧
+      ∀ n : ℕ, n ≤ M → ∃ p : Path (binaryRowCocycleUnitary s t hs ht hsum htsum n) 1,
+…</pre><p class="refs">Mentions: <a href="MixedTower.lean.html#L21">OAI.WeakPureInfiniteness.bergRowsCommute</a>, <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="RowCocycleDefect.lean.html#L144">OAI.WeakPureInfiniteness.binaryRowCocycleUnitary</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>

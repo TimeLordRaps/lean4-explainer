@@ -1,0 +1,1 @@
+window.l4shard("df", [["DFA.IsSynchronizing",123,42],["DFA.IsSynchronizingWord",123,38],["DFA.IsSynchronizingWord.append",123,55],["DFA.isSynchronizingWord_nil",123,48],["DFA.isSynchronizing_of_subsingleton",123,63]]);

@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/NumberTheory/TwoPoint/Bounds/PositiveWordProbability.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/NumberTheory/TwoPoint/Bounds/PositiveWordProbability.lean.html"><link rel="stylesheet" href="../../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../../index.html">All corpora</a> | <a href="../../../../index.html">Index</a> | <a href="../../../../glossary.html">Glossary</a> | <a href="../../../../find.html">Find</a> | <a href="../../../../implications.html">Implications</a> | <a href="../../../../annotate.html">Explanation guide</a> | <a href="../../../../learning-path.html">Learning path</a> | <a href="../../../../trust.html">Trust</a> | <a href="../../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../../index.html">Corpus home</a> / <a href="../../../index.html">OAI</a> / <a href="../../index.html">NumberTheory</a> / <a href="../index.html">TwoPoint</a> / <a href="index.html">Bounds</a> / <span>PositiveWordProbability.lean</span></nav></header><h1 class="path-title"><code><a href="../../../index.html">OAI</a>/<a href="../../index.html">NumberTheory</a>/<a href="../index.html">TwoPoint</a>/<a href="index.html">Bounds</a>/<span>PositiveWordProbability.lean</span></code></h1><p class="muted">10 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/NumberTheory/TwoPoint/Bounds/PositiveWordProbability.lean#L1">source</a></p><div class="doc"><h3>Probability of one positive numerical word</h3><p>The same residue coordinate is reused at every occurrence of a prime.
+Selecting one occurrence per distinct prime therefore bounds the probability
+by one reciprocal per distinct prime, including all padding factors. There
+is no independence assumption between different sites of the word.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L22><b>lemma</b> <code>OAI.TwoPointCorrelations.FiniteLaw.probability_mono_of_imp</code> <small>line 22</small></li><li id=L34><b>theorem</b> <code>OAI.TwoPointCorrelations.uniformResidueLaw_mod_eq</code> <small>line 34</small><div class="doc"><p>Every residue modulo the true modulus has precisely its uniform mass,
+even though the common carrier <code>Fin B</code> also contains zero-weight points.</p></div><pre>theorem uniformResidueLaw_mod_eq (B p : ℕ) (hp : 0 &lt; p) (hpB : p ≤ B) (r : ZMod p) :
+    (uniformResidueLaw B p hp hpB).probability
+      (fun x =&gt; (x.val : ZMod p) = r) = (p : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="UniformResidues.lean.html#L14">OAI.TwoPointCorrelations.uniformResidueLaw</a></p></li><li id=L67><b>def</b> <code>OAI.TwoPointCorrelations.wordDivisorPrimeSupport</code> <small>line 67</small><div class="doc"><p>Distinct prime factors in all the step divisors, both tuples and padding.</p></div><pre>def wordDivisorPrimeSupport (w : List SignedStep) : Finset ℕ :=
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedWords.lean.html#L18">OAI.TwoPointCorrelations.SignedStep</a></p></li><li id=L70><b>lemma</b> <code>OAI.TwoPointCorrelations.mem_wordDivisorPrimeSupport</code> <small>line 70</small></li><li id=L77><b>def</b> <code>OAI.TwoPointCorrelations.ResiduePositiveWord</code> <small>line 77</small><div class="doc"><p>Positivity expressed in the one common set of residue coordinates.</p></div><pre>def ResiduePositiveWord {ι : Type*} (p : ι → ℕ) (h : ℕ) (w : List SignedStep)
+    (r : ∀ i, ZMod (p i)) : Prop :=
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedWords.lean.html#L18">OAI.TwoPointCorrelations.SignedStep</a></p></li><li id=L84><b>theorem</b> <code>OAI.TwoPointCorrelations.residuePositiveWord_iff</code> <small>line 84</small><div class="doc"><p>A residue test is exact arithmetic positivity at any common integer lift.</p></div><pre>theorem residuePositiveWord_iff {ι : Type*} (p : ι → ℕ) (h : ℕ)
+    (w : List SignedStep) (r : ∀ i, ZMod (p i)) (n : ℤ)
+    (hn : ∀ i, (n : ZMod (p i)) = r i)
+    (hsq : ∀ a ∈ w, Squarefree (a.padding * a.tuple))
+    (hcover : ∀ q ∈ wordDivisorPrimeSupport w, ∃ i, p i = q) :
+    ResiduePositiveWord p h w r ↔ PositiveWord h n w := by
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedWords.lean.html#L18">OAI.TwoPointCorrelations.SignedStep</a>, <a href="PositiveWordProbability.lean.html#L67">OAI.TwoPointCorrelations.wordDivisorPrimeSupport</a>, <a href="PositiveWordProbability.lean.html#L77">OAI.TwoPointCorrelations.ResiduePositiveWord</a>, <a href="../Walks/ProhibitedWords.lean.html#L101">OAI.TwoPointCorrelations.PositiveWord</a></p></li><li id=L102><b>theorem</b> <code>OAI.TwoPointCorrelations.residuePositiveWord_probability_le</code> <small>line 102</small><div class="doc"><p>One reciprocal factor for every used residue coordinate. Repeated
+occurrences can only make the event smaller, by adding compatibility tests.</p></div><pre>theorem residuePositiveWord_probability_le {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (B : ℕ) (p : ι → ℕ) (hp : ∀ i, 0 &lt; p i) (hpB : ∀ i, p i ≤ B)
+    (h : ℕ) (w : List SignedStep) :
+    (FiniteLaw.independent (fun i =&gt; uniformResidueLaw B (p i) (hp i) (hpB i))).probability
+      (fun x =&gt; ResiduePositiveWord p h w (fun i =&gt; ((x i).val : ZMod (p i)))) ≤
+      ∏ i ∈ univ.filter (fun i =&gt; p i ∈ wordDivisorPrimeSupport w), (p i : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedWords.lean.html#L18">OAI.TwoPointCorrelations.SignedStep</a>, <a href="FiniteProbability.lean.html#L114">OAI.TwoPointCorrelations.FiniteLaw.independent</a>, <a href="UniformResidues.lean.html#L14">OAI.TwoPointCorrelations.uniformResidueLaw</a>, <a href="PositiveWordProbability.lean.html#L77">OAI.TwoPointCorrelations.ResiduePositiveWord</a>, <a href="PositiveWordProbability.lean.html#L67">OAI.TwoPointCorrelations.wordDivisorPrimeSupport</a></p></li><li id=L133><b>theorem</b> <code>OAI.TwoPointCorrelations.residuePositiveWord_probability_distinct_primes</code> <small>line 133</small><div class="doc"><p>For an injectively indexed prime pool covering every step factor, the
+bound is literally the product over distinct numerical primes in the word.</p></div><pre>theorem residuePositiveWord_probability_distinct_primes {ι : Type*}
+    [Fintype ι] [DecidableEq ι] (B : ℕ) (p : ι → ℕ)
+    (hinj : Function.Injective p) (hp : ∀ i, 0 &lt; p i) (hpB : ∀ i, p i ≤ B)
+    (h : ℕ) (w : List SignedStep)
+    (hcover : ∀ q ∈ wordDivisorPrimeSupport w, ∃ i, p i = q) :
+    (FiniteLaw.independent (fun i =&gt; uniformResidueLaw B (p i) (hp i) (hpB i))).probability
+      (fun x =&gt; ResiduePositiveWord p h w (fun i =&gt; ((x i).val : ZMod (p i)))) ≤
+      ∏ q ∈ wordDivisorPrimeSupport w, (q : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedWords.lean.html#L18">OAI.TwoPointCorrelations.SignedStep</a>, <a href="PositiveWordProbability.lean.html#L67">OAI.TwoPointCorrelations.wordDivisorPrimeSupport</a>, <a href="FiniteProbability.lean.html#L114">OAI.TwoPointCorrelations.FiniteLaw.independent</a>, <a href="UniformResidues.lean.html#L14">OAI.TwoPointCorrelations.uniformResidueLaw</a>, <a href="PositiveWordProbability.lean.html#L77">OAI.TwoPointCorrelations.ResiduePositiveWord</a></p></li><li id=L157><b>theorem</b> <code>OAI.TwoPointCorrelations.prohibited_residue_catalog_iff</code> <small>line 157</small><div class="doc"><p>The finite catalog's modular event is exactly the deleted event at any
+common integer lift. Minimality remains in the catalog, not in the random law.</p></div><pre>theorem prohibited_residue_catalog_iff {ι : Type*} (p : ι → ℕ)
+    (pairs : Finset (ℕ × ℕ)) (h s : ℕ) (r : ∀ i, ZMod (p i)) (n : ℤ)
+    (hn : ∀ i, (n : ZMod (p i)) = r i)
+    (hsq : ∀ dq ∈ pairs, Squarefree (dq.2 * dq.1))
+    (hcover : ∀ c : ProhibitedCatalog pairs h s,
+      ∀ q ∈ wordDivisorPrimeSupport (decodeStepWord c.val), ∃ i, p i = q) :
+    (∃ c : ProhibitedCatalog pairs h s, ResiduePositiveWord p h (decodeStepWord c.val) r) ↔
+      ProhibitedSite h s (fun d q =&gt; (d, q) ∈ pairs) n := by
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedCircuit.lean.html#L86">OAI.TwoPointCorrelations.ProhibitedCatalog</a>, <a href="PositiveWordProbability.lean.html#L67">OAI.TwoPointCorrelations.wordDivisorPrimeSupport</a>, <a href="../Walks/ProhibitedCircuit.lean.html#L66">OAI.TwoPointCorrelations.decodeStepWord</a>, <a href="PositiveWordProbability.lean.html#L77">OAI.TwoPointCorrelations.ResiduePositiveWord</a>, <a href="../Walks/ProhibitedWords.lean.html#L225">OAI.TwoPointCorrelations.ProhibitedSite</a></p></li><li id=L182><b>theorem</b> <code>OAI.TwoPointCorrelations.prohibited_residue_probability_le_catalog</code> <small>line 182</small><div class="doc"><p>A literal union bound for the actual minimal-word catalog. The remaining
+arithmetic task is to sum these distinct-prime weights over that catalog.</p></div><pre>theorem prohibited_residue_probability_le_catalog {ι : Type*}
+    [Fintype ι] [DecidableEq ι] (B : ℕ) (p : ι → ℕ)
+    (hinj : Function.Injective p) (hp : ∀ i, 0 &lt; p i) (hpB : ∀ i, p i ≤ B)
+    (pairs : Finset (ℕ × ℕ)) (h s : ℕ)
+    (hcover : ∀ c : ProhibitedCatalog pairs h s,
+      ∀ q ∈ wordDivisorPrimeSupport (decodeStepWord c.val), ∃ i, p i = q) :
+    (FiniteLaw.independent (fun i =&gt; uniformResidueLaw B (p i) (hp i) (hpB i))).probability
+      (fun x =&gt; ∃ c : ProhibitedCatalog pairs h s,
+        ResiduePositiveWord p h (decodeStepWord c.val)
+          (fun i =&gt; ((x i).val : ZMod (p i)))) ≤
+      ∑ c : ProhibitedCatalog pairs h s,
+        ∏ q ∈ wordDivisorPrimeSupport (decodeStepWord c.val), (q : ℝ)⁻¹ := by
+…</pre><p class="refs">Mentions: <a href="../Walks/ProhibitedCircuit.lean.html#L86">OAI.TwoPointCorrelations.ProhibitedCatalog</a>, <a href="PositiveWordProbability.lean.html#L67">OAI.TwoPointCorrelations.wordDivisorPrimeSupport</a>, <a href="../Walks/ProhibitedCircuit.lean.html#L66">OAI.TwoPointCorrelations.decodeStepWord</a>, <a href="FiniteProbability.lean.html#L114">OAI.TwoPointCorrelations.FiniteLaw.independent</a>, <a href="UniformResidues.lean.html#L14">OAI.TwoPointCorrelations.uniformResidueLaw</a>, <a href="PositiveWordProbability.lean.html#L77">OAI.TwoPointCorrelations.ResiduePositiveWord</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../../_assets/site.js"></script><script src="../../../../_assets/lean2tex.js" defer></script><script src="../../../../_assets/reader.js" defer></script></body></html>

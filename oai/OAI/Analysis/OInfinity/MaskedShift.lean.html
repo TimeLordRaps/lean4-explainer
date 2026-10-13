@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OAI/Analysis/OInfinity/MaskedShift.lean — openai/math</title><link rel="canonical" href="https://timelordraps.github.io/lean4-explainer/oai/OAI/Analysis/OInfinity/MaskedShift.lean.html"><link rel="stylesheet" href="../../../_assets/site.css"></head><body><a class="skip-link" href="#content">Skip to content</a><main id="content" tabindex="-1"><header class="site-head"><nav class="top"><a href="../../../../index.html">All corpora</a> | <a href="../../../index.html">Index</a> | <a href="../../../glossary.html">Glossary</a> | <a href="../../../find.html">Find</a> | <a href="../../../implications.html">Implications</a> | <a href="../../../annotate.html">Explanation guide</a> | <a href="../../../learning-path.html">Learning path</a> | <a href="../../../trust.html">Trust</a> | <a href="../../../search.html">Search</a></nav><nav class="crumbs" aria-label="Breadcrumb"><a href="../../../index.html">Corpus home</a> / <a href="../../index.html">OAI</a> / <a href="../index.html">Analysis</a> / <a href="index.html">OInfinity</a> / <span>MaskedShift.lean</span></nav></header><h1 class="path-title"><code><a href="../../index.html">OAI</a>/<a href="../index.html">Analysis</a>/<a href="index.html">OInfinity</a>/<span>MaskedShift.lean</span></code></h1><p class="muted">12 declarations, 0 contain sorry, 0 axioms</p><p><a class="src" href="https://github.com/openai/math/blob/fd4aeeb2ee4fc729c18d98444fed42fd0529eeeb/lean/OAI/Analysis/OInfinity/MaskedShift.lean#L1">source</a></p><div class="doc"><h3>Shifting the actual masked bands</h3><p>Shifting an iterated-word band changes the input mask from cell zero to
+cell one. Reindexing exposes both exceptional cells explicitly, including
+the genuine N-th iterate on the cyclic return. No terminal norm estimate
+is inferred from its support.</p></div><input type="search" data-filter aria-label="Filter declarations" placeholder="Filter declarations"><ol class="decls" data-filter-rows><li id=L21><b>def</b> <code>OAI.WeakPureInfiniteness.shiftedMaskedBand</code> <small>line 21</small><div class="doc"><p>The shifted finite sum before reindexing its cyclic variable.</p></div><pre>def shiftedMaskedBand {N : ℕ} [NeZero N] (s : Fin 2 → E)
+    (e : ZMod N → E) (d : ZMod N) (x : E) : E :=
+…</pre></li><li id=L26><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedShift_triple_bound</code> <small>line 26</small></li><li id=L45><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedBand_shift_approx</code> <small>line 45</small><div class="doc"><p>The quantitative shift error comes solely from the supplied cyclic
+projection errors; the word iterate itself shifts exactly.</p></div><pre>lemma maskedBand_shift_approx {N : ℕ} [NeZero N] (s : Fin 2 → E)
+    (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, IsStarProjection (e j))
+    (d : ZMod N) (x : E) (η : ℝ) (hη : 0 ≤ η)
+    (hshift : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η) :
+    ‖finiteRowShift s (maskedTowerBand e (Equiv.addRight d)
+        (fun j =&gt; finiteRowShiftIterate s j.val x) 0) - shiftedMaskedBand s e d x‖ ≤
+      2 * (N : ℝ) * η * ‖x‖ := by
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="MaskedBandRows.lean.html#L23">OAI.WeakPureInfiniteness.maskedTowerBand</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a>, <a href="MaskedShift.lean.html#L21">OAI.WeakPureInfiniteness.shiftedMaskedBand</a></p></li><li id=L84><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedShift_val_predecessor</code> <small>line 84</small></li><li id=L92><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedShift_val_return</code> <small>line 92</small></li><li id=L100><b>lemma</b> <code>OAI.WeakPureInfiniteness.shiftedMaskedBand_boundary</code> <small>line 100</small><div class="doc"><p>Reindexing exposes the missing cell one and the returned cell zero.
+The coefficient on cell zero is the actual N-th iterate.</p></div><pre>lemma shiftedMaskedBand_boundary {N : ℕ} [NeZero N] (hN : 1 &lt; N)
+    (s : Fin 2 → E) (e : ZMod N → E) (d : ZMod N) (x : E) :
+    shiftedMaskedBand s e d x =
+      maskedTowerBand e (Equiv.addRight d) (fun j =&gt; finiteRowShiftIterate s j.val x) 0 +
+        e d * finiteRowShiftIterate s N x * e 0 -
+        e (1 + d) * finiteRowShiftIterate s 1 x * e 1 := by
+…</pre><p class="refs">Mentions: <a href="MaskedShift.lean.html#L21">OAI.WeakPureInfiniteness.shiftedMaskedBand</a>, <a href="MaskedBandRows.lean.html#L23">OAI.WeakPureInfiniteness.maskedTowerBand</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a></p></li><li id=L142><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedBand_shift_boundary_error</code> <small>line 142</small><div class="doc"><p>The complete generator-shift estimate retains both boundary operators.</p></div><pre>lemma maskedBand_shift_boundary_error {N : ℕ} [NeZero N] (hN : 1 &lt; N)
+    (s : Fin 2 → E) (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, IsStarProjection (e j))
+    (d : ZMod N) (x : E) (η : ℝ) (hη : 0 ≤ η)
+    (hshift : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η) :
+    ‖finiteRowShift s (maskedTowerBand e (Equiv.addRight d)
+        (fun j =&gt; finiteRowShiftIterate s j.val x) 0) -
+      (maskedTowerBand e (Equiv.addRight d) (fun j =&gt; finiteRowShiftIterate s j.val x) 0 +
+        e d * finiteRowShiftIterate s N x * e 0 -
+        e (1 + d) * finiteRowShiftIterate s 1 x * e 1)‖ ≤ 2 * (N : ℝ) * η * ‖x‖ := by
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="MaskedBandRows.lean.html#L23">OAI.WeakPureInfiniteness.maskedTowerBand</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a></p></li><li id=L157><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedBand_shift_times_bound</code> <small>line 157</small><div class="doc"><p>Multiplication by an angular coefficient controls the two actual
+boundary pieces through its cell-zero and cell-one components.</p></div><pre>lemma maskedBand_shift_times_bound {N : ℕ} [NeZero N] (hN : 1 &lt; N)
+    (s : Fin 2 → E) (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, IsStarProjection (e j))
+    (d : ZMod N) (x c : E) (η : ℝ) (hη : 0 ≤ η)
+    (hshift : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η) :
+    let a := maskedTowerBand e (Equiv.addRight d) (fun j =&gt; finiteRowShiftIterate s j.val x) 0
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="MaskedBandRows.lean.html#L23">OAI.WeakPureInfiniteness.maskedTowerBand</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a></p></li><li id=L207><b>lemma</b> <code>OAI.WeakPureInfiniteness.projection_mul_masked_sum</code> <small>line 207</small></li><li id=L230><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedAngle_boundary_bounds</code> <small>line 230</small><div class="doc"><p>The removed cell annihilates both actual angular coefficients. Their
+cell-one components are bounded by the first retained angle.</p></div><pre>lemma maskedAngle_boundary_bounds {N : ℕ} [NeZero N] (hN : 1 &lt; N)
+    (e : ZMod N → E) (he : ∀ i, IsStarProjection (e i))
+    (ho : ∀ i j, i ≠ j → e i * e j = 0) (θ : ZMod N → ℝ) :
+    e 0 * maskedAngleCos (maskedBandCoefficients e 0) θ = 0 ∧
+      e 0 * maskedAngleSin (maskedBandCoefficients e 0) θ = 0 ∧
+      ‖e 1 * maskedAngleCos (maskedBandCoefficients e 0) θ‖ ≤ |θ 1| ∧
+      ‖e 1 * maskedAngleSin (maskedBandCoefficients e 0) θ‖ ≤ |θ 1| := by
+…</pre><p class="refs">Mentions: <a href="MaskedRotations.lean.html#L167">OAI.WeakPureInfiniteness.maskedAngleCos</a>, <a href="MaskedBandRows.lean.html#L20">OAI.WeakPureInfiniteness.maskedBandCoefficients</a>, <a href="MaskedRotations.lean.html#L170">OAI.WeakPureInfiniteness.maskedAngleSin</a></p></li><li id=L255><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedBand_shift_sine_error</code> <small>line 255</small><div class="doc"><p>For the actual sine profile, the exceptional-cell term is bounded by
+the first retained angle, rather than by the norm of a whole projection.</p></div><pre>lemma maskedBand_shift_sine_error {N : ℕ} [NeZero N] (hN : 1 &lt; N)
+    (s : Fin 2 → E) (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, IsStarProjection (e j))
+    (ho : ∀ i j, i ≠ j → e i * e j = 0)
+    (d : ZMod N) (x : E) (θ : ZMod N → ℝ) (η : ℝ) (hη : 0 ≤ η)
+    (hshift : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η) :
+    let a := maskedTowerBand e (Equiv.addRight d) (fun j =&gt; finiteRowShiftIterate s j.val x) 0
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="MaskedBandRows.lean.html#L23">OAI.WeakPureInfiniteness.maskedTowerBand</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a></p></li><li id=L275><b>lemma</b> <code>OAI.WeakPureInfiniteness.maskedBand_shift_cosine_error</code> <small>line 275</small><div class="doc"><p>The cosine-minus-one profile has the same actual boundary control.</p></div><pre>lemma maskedBand_shift_cosine_error {N : ℕ} [NeZero N] (hN : 1 &lt; N)
+    (s : Fin 2 → E) (hs : ∀ i j, star (s i) * s j = if i = j then 1 else 0)
+    (e : ZMod N → E) (he : ∀ j, IsStarProjection (e j))
+    (ho : ∀ i j, i ≠ j → e i * e j = 0)
+    (d : ZMod N) (x : E) (θ : ZMod N → ℝ) (η : ℝ) (hη : 0 ≤ η)
+    (hshift : ∀ j, ‖finiteRowShift s (e j) - e (j + 1)‖ ≤ η) :
+    let a := maskedTowerBand e (Equiv.addRight d) (fun j =&gt; finiteRowShiftIterate s j.val x) 0
+…</pre><p class="refs">Mentions: <a href="CocycleFlip.lean.html#L22">OAI.WeakPureInfiniteness.finiteRowShift</a>, <a href="MaskedBandRows.lean.html#L23">OAI.WeakPureInfiniteness.maskedTowerBand</a>, <a href="JointCycleIdentity.lean.html#L18">OAI.WeakPureInfiniteness.finiteRowShiftIterate</a></p></li></ol><div id="lean-source" hidden></div></main><script src="../../../_assets/site.js"></script><script src="../../../_assets/lean2tex.js" defer></script><script src="../../../_assets/reader.js" defer></script></body></html>
