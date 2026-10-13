@@ -1,0 +1,1 @@
+window.l4shard("ha", [["Erdos138.HasMonoAP",18,103],["OpenQuantumProblem35.HasMaximallyMixedFirstReduction",30,215],["OpenQuantumProblem35.diagonalState_hasMaximallyMixedFirstReduction_one",30,594],["OpenQuantumProblem35.hasMaximallyMixedFirstReduction_of_completion",30,578],["half_ceil",47,111]]);

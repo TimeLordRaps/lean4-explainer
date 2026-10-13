@@ -1,0 +1,1 @@
+window.l4shard("57", [["Green57.baseΦ",26,60],["Green57.baseΦ'",26,67],["Green57.functional",26,87],["Green57.green_57",26,1120],["Green57.green_57.variants.z3",26,1101],["Green57.green_57.variants.z3_functional",26,1071],["Green57.supportFn",26,92],["Green57.tripleKernel",26,52],["Green57.Φ",26,78],["Green57.Φ'",26,82]]);

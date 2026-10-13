@@ -1,0 +1,1 @@
+window.l4shard("na", [["Erdos846.bipartite_max_cut_nat",23,96],["MonochromaticQuantumGraph.eqSystem4_d2_nat",28,223],["MonochromaticQuantumGraph.eqSystem4_d3_nat",28,261],["MonochromaticQuantumGraph.eqSystem6_d2_nat",28,300],["reverse_nat",37,43]]);

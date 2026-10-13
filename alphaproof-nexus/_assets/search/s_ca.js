@@ -1,0 +1,1 @@
+window.l4shard("ca", [["OpenQuantumProblem35.card_config",30,256],["ca_rule_167",38,43],["ca_state",38,54],["card_filter_union_inter",39,216],["catalan_reciprocal_sum",40,50],["is_carmichael_number",51,54]]);

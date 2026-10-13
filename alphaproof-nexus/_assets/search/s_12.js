@@ -1,0 +1,1 @@
+window.l4shard("12", [["Erdos12.IsGood",16,48],["Erdos12.exists_prime_bounded",16,89],["Erdos125.zero_in_A",17,91],["MonochromaticQuantumGraph.eqSystem12_no_solution_d3",28,535],["OpenQuantumProblem35.ame_12_10_open",30,2183],["OpenQuantumProblem35.ame_12_5_open",30,2171],["OpenQuantumProblem35.ame_12_6_open",30,2177]]);
