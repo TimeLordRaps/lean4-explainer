@@ -398,7 +398,10 @@ def _trust_page(ctx, analysis: Analysis) -> str:
             continue
         body.append(f'<h2>{heading} ({len(rows)})</h2><ol class="list">')
         for rel, d in rows[:_TRUST_ROWS]:
-            where = ctx.locations.get(d.name, (rel + ".html", d.line))[0]
+            # ``href`` adds the rendered ``.html`` suffix. Ambiguous names are
+            # deliberately absent from ``ctx.locations``, so their fallback must
+            # remain the Lean-relative source path rather than an output filename.
+            where = ctx.locations.get(d.name, (rel, d.line))[0]
             link = escape(href([], where, f"#L{d.line}"), quote=True)
             note = "" if wanted == "sorry" else f' <span class="muted">{escape(F.classify(d.axioms)[1])}</span>'
             body.append(f'<li><a href="{link}"><code>{escape(d.name)}</code></a> <span class="ln">{escape(rel)}</span>{note}</li>')

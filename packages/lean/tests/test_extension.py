@@ -11,7 +11,8 @@ import pytest
 
 from lean4_explainer.build import build_site
 from lean4_explainer.config import Config
-from lean4_explainer_lean import extension, runner
+from lean4_explainer.render import default_context
+from lean4_explainer_lean import extension, facts, runner
 
 needs_lean = pytest.mark.skipif(shutil.which("lean") is None, reason="lean is not installed")
 
@@ -205,6 +206,20 @@ def test_changing_a_file_changes_the_answer(tmp_path):
 def test_probe_digest_tracks_the_probe_source():
     assert len(runner.probe_digest()) == 16 and Path(runner.PROBE).is_file()
     assert extension.LeanExtension().fingerprint({}).count(":") == 3
+
+
+def test_trust_page_fallback_for_an_ambiguous_name_adds_html_only_once():
+    result = facts.DeclFacts("Demo.duplicate", 7, ("Demo.extraAxiom",))
+    analysis = extension.Analysis(
+        {"Demo.lean": facts.FileFacts("ok", decls=(result,))},
+        "Lean (version 9.9)",
+        100,
+    )
+
+    trust = extension._trust_page(default_context(), analysis)
+
+    assert 'href="Demo.lean.html#L7"' in trust
+    assert ".lean.html.html" not in trust
 
 
 def _alive(pid: int) -> bool:
