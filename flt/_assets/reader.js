@@ -1358,10 +1358,10 @@
     note.id = "reader-note";
     const traced = !!document.querySelector("details.trace");  // the lean extension ran: its tactic traces are on the page
     note.innerHTML = "<strong>Readings.</strong> Each declaration has a reading: what it says in words, what it assumes, " +
-      "and what each proof step does. It is made from the source text" +
+      "and what each proof step does. The reading is derived from source text" +
       (traced ? ". Lean was also run for this site: a step's “goals” link opens the goals Lean shows before and after it, " +
         "and each step of a tactic trace links back to its words."
-        : "; Lean was not run, so it does not show the goal left after each step.") +
+        : "; it does not reconstruct Lean's intermediate goals. Any Lean-backed trust result is reported separately on the Trust page.") +
       (source ? " This page loads its source from the pinned commit on GitHub to make them." : "") +
       " <span class=\"reader-status\"></span>";
     list.parentNode.insertBefore(note, list);
