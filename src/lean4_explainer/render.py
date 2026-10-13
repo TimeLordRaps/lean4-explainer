@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import re
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
@@ -629,23 +628,6 @@ def page(
             meta.append(f'<meta property="og:url" content="{escape(canonical, quote=True)}">')
     if not compact:
         meta.append('<meta property="og:site_name" content="lean4-explainer">')
-        if canonical:
-            structured = {
-                "@context": "https://schema.org",
-                "@type": "WebPage",
-                "name": full_title,
-                "description": description,
-                "url": canonical,
-                "isPartOf": {
-                    "@type": "WebSite",
-                    "name": "lean4-explainer",
-                    "url": ctx.site_url,
-                },
-            }
-            if ctx.project_url:
-                structured["isBasedOn"] = ctx.project_url
-            payload = json.dumps(structured, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
-            meta.append(f'<script type="application/ld+json">{payload}</script>')
     footer_links = []
     if ctx.project_url:
         footer_links.append(f'<a href="{escape(ctx.project_url, quote=True)}">Project source</a>')

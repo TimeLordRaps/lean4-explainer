@@ -208,6 +208,15 @@ def test_probe_digest_tracks_the_probe_source():
     assert extension.LeanExtension().fingerprint({}).count(":") == 3
 
 
+def test_zero_step_limit_suppresses_trace_markup_without_changing_the_facts():
+    step = facts.Step(2, 3, "exact trivial", ("⊢ True",), ())
+    found = facts.DeclFacts("Demo.t", 1, (), steps=(step,))
+
+    assert extension._trace(found, 0, "Demo.lean", default_context()) == ""
+    assert "Tactic trace: 1 steps" in extension._trace(found, 1, "Demo.lean", default_context())
+    assert found.axioms == ()
+
+
 def test_trust_page_fallback_for_an_ambiguous_name_adds_html_only_once():
     result = facts.DeclFacts("Demo.duplicate", 7, ("Demo.extraAxiom",))
     analysis = extension.Analysis(

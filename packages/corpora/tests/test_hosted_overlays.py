@@ -11,7 +11,7 @@ from lean4_explainer_l4del.overlay import parse_overlay
 ROOT = Path(__file__).resolve().parents[3]
 HOSTED = ROOT / "hosted" / "overlays"
 EXPECTED = {
-    "alphaproof-nexus": 518,
+    "alphaproof-nexus": 515,
     "carleson": 997,
     "compfiles": 3321,
     "flt": 1280,
@@ -67,4 +67,4 @@ def test_real_hosted_overlays_are_bound_parseable_and_annotation_rich():
 
     assert not errors
     assert counts == EXPECTED
-    assert sum(counts.values()) == 15_493
+    assert sum(counts.values()) == 15_490

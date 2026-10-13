@@ -97,6 +97,11 @@ def generate(corpus_name: str, checkout: Path, current: str) -> tuple[str, int, 
         text = path.read_bytes().decode("utf-8-sig", errors="replace").replace("\r\n", "\n")
         lean_file = parse_source(text, rel, extra_kinds=corpus.extra_kinds)
         for declaration in lean_file.declarations:
+            # L4DEL deliberately cannot attach annotations to synthesized anonymous
+            # names such as ``(instance at line 95)``. Do not count or emit entries
+            # that the renderer must ignore.
+            if "(" in declaration.name:
+                continue
             target = (rel, declaration.name)
             # An overlay selects by file and name, not by source occurrence. If a
             # file repeats a name, it attaches to the first occurrence; never use

@@ -282,7 +282,7 @@ def _uses(found: F.DeclFacts, ctx, dirs: list[str]) -> str:
 def _trace(found: F.DeclFacts, limit: int, rel: str, ctx) -> str:
     """Each step is `L<declaration line>-step<k>`, with `data-line` the source line of its tactic: the reader joins its
     plain-English steps to these on that line."""
-    if not found.steps:
+    if limit <= 0 or not found.steps:
         return ""
     items = []
     for k, step in enumerate(found.steps[:limit], 1):
