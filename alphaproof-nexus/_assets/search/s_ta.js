@@ -1,1 +1,1 @@
-window.l4shard("ta", [["continued_fraction_tail",43,46]]);
+window.l4shard("ta", [["continued_fraction_tail",32,46]]);

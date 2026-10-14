@@ -1,1 +1,1 @@
-window.l4shard("mx", [["mXYZ",24,127],["mXZ2",24,131]]);
+window.l4shard("mx", [["mXYZ",21,127],["mXZ2",21,131]]);

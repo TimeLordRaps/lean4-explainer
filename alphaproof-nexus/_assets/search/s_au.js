@@ -1,1 +1,1 @@
-window.l4shard("au", [["MonochromaticQuantumGraph.pmSumListAux",28,164]]);
+window.l4shard("au", [["MonochromaticQuantumGraph.pmSumListAux",24,164]]);

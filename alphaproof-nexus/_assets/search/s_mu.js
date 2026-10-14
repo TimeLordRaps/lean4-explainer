@@ -1,1 +1,1 @@
-window.l4shard("mu", [["Erdos26.MultiplesOf",20,49],["OpenQuantumProblem35.uniformCoeff_mul_star",30,363]]);
+window.l4shard("mu", [["Erdos26.MultiplesOf",19,49],["OpenQuantumProblem35.uniformCoeff_mul_star",26,363]]);

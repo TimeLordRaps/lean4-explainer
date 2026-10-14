@@ -1,1 +1,1 @@
-window.l4shard("ba", [["A227582_base",3,46],["Erdos741.basis_of_order_two_iff",22,79],["Green57.baseΦ",26,60],["Green57.baseΦ'",26,67],["isAlgebraic_intermediateField_adjoin_of_isTranscendenceBasis",50,45],["tensor_basis",60,60]]);
+window.l4shard("ba", [["A227582_base",3,46],["Green57.baseΦ",22,60],["Green57.baseΦ'",22,67]]);

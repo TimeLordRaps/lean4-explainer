@@ -1,1 +1,1 @@
-window.l4shard("pu", [["ExistsNonLogConcavePureOSeq",24,184],["IsPure",24,91],["PureOrderIdeal",24,95],["pureOSequence",24,110]]);
+window.l4shard("pu", [["ExistsNonLogConcavePureOSeq",21,184],["IsPure",21,91],["PureOrderIdeal",21,95],["pureOSequence",21,110]]);

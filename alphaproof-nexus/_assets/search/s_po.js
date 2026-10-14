@@ -1,1 +1,1 @@
-window.l4shard("po", [["NormalDomain.powerSeries",29,382],["period_of_power_mod",7,56],["period_of_power_mod_T0_is_period",7,96],["pow_add_nilpotent",27,96],["typePO",24,101],["vsc_sum_range_pow",51,95],["xyz_pow_n",32,55],["yz_pow_n",32,109]]);
+window.l4shard("po", [["NormalDomain.powerSeries",25,382],["period_of_power_mod",7,56],["typePO",21,101],["xyz_pow_n",27,55]]);

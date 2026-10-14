@@ -1,1 +1,1 @@
-window.l4shard("fn", [["Green57.supportFn",26,92]]);
+window.l4shard("fn", [["Green57.supportFn",22,92]]);

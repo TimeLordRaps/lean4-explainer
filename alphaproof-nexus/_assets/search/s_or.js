@@ -1,1 +1,1 @@
-window.l4shard("or", [["Erdos741.basis_of_order_two_iff",22,79],["OpenQuantumProblem35.eq_leftIndex_zero_or_eq_rightIndex",30,457],["OrderIdeal",24,47],["PureOrderIdeal",24,95],["generatedOrderIdeal",24,64]]);
+window.l4shard("or", [["OpenQuantumProblem35.eq_leftIndex_zero_or_eq_rightIndex",26,457],["OrderIdeal",21,47],["PureOrderIdeal",21,95],["generatedOrderIdeal",21,64]]);

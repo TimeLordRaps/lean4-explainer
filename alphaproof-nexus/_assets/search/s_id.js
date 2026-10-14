@@ -1,1 +1,1 @@
-window.l4shard("id", [["OrderIdeal",24,47],["PureOrderIdeal",24,95],["generatedOrderIdeal",24,64],["reduced_quotient_directed_idempotents",58,62]]);
+window.l4shard("id", [["OrderIdeal",21,47],["PureOrderIdeal",21,95],["generatedOrderIdeal",21,64],["reduced_quotient_directed_idempotents",38,62]]);

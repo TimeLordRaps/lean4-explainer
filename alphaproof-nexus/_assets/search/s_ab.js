@@ -1,1 +1,1 @@
-window.l4shard("ab", [["IsAbsoluteEulerPseudoprime",27,57]]);
+window.l4shard("ab", [["IsAbsoluteEulerPseudoprime",23,57]]);

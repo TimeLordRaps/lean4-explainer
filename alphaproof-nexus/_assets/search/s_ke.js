@@ -1,1 +1,1 @@
-window.l4shard("ke", [["Green57.tripleKernel",26,52]]);
+window.l4shard("ke", [["Green57.tripleKernel",22,52]]);

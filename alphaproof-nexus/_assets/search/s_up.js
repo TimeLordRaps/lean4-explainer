@@ -1,1 +1,1 @@
-window.l4shard("up", [["IsLogConcaveUpTo",24,122]]);
+window.l4shard("up", [["IsLogConcaveUpTo",21,122]]);

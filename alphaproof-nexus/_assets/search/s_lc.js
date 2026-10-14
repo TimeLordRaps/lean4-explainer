@@ -1,1 +1,1 @@
-window.l4shard("lc", [["LCFailureThreshold",24,207]]);
+window.l4shard("lc", [["LCFailureThreshold",21,207]]);

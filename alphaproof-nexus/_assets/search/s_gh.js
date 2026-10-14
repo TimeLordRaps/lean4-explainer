@@ -1,1 +1,1 @@
-window.l4shard("gh", [["OpenQuantumProblem35.ghzState",30,318],["OpenQuantumProblem35.ghzState4",30,322],["OpenQuantumProblem35.ghzState4_not_ame",30,663],["OpenQuantumProblem35.ghzState_isAME",30,630]]);
+window.l4shard("gh", [["OpenQuantumProblem35.ghzState",26,318],["OpenQuantumProblem35.ghzState4",26,322],["OpenQuantumProblem35.ghzState4_not_ame",26,663],["OpenQuantumProblem35.ghzState_isAME",26,630]]);

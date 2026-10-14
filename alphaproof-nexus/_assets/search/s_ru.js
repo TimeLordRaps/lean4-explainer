@@ -1,1 +1,1 @@
-window.l4shard("ru", [["ca_rule_167",38,43]]);
+window.l4shard("ru", [["ca_rule_167",30,43]]);

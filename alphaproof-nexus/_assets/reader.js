@@ -401,7 +401,11 @@
     const last = head.split(".").pop();
     const say = PREDICATES[last];
     if (!say || !rest.length) {
-      if (rest.length && /^[A-Z]/.test(last) && /^(Is|Has)[A-Z]|^[A-Z][a-z]+[A-Z]/.test(last)) return propertyWords(last, rest[rest.length - 1], rest.slice(0, -1));
+      // Only the conventional `IsFoo x`/`HasFoo x` shapes justify property prose.
+      // An unknown multi-argument predicate such as `ExistsAME 11 5` must remain
+      // `ExistsAME(11, 5)`: choosing its last argument as a subject changes meaning.
+      if (rest.length && /^(Is|Has)[A-Z]/.test(last)) return propertyWords(last, rest[rest.length - 1], rest.slice(0, -1));
+      if (rest.length && /^[A-Z]/.test(last)) return code(head + "(" + rest.join(", ") + ")") + " holds";
       return null;
     }
     // explicit type arguments (Differentiable ℝ f): drop number-type words
@@ -1238,7 +1242,7 @@
     if (used.size) {
       out.push("<p class=\"rd-uses\"><strong>Results and definitions it uses:</strong> " + Array.from(used).map((id) => {
         const here = links.get(id);
-        if (here) return "<a href=\"#" + esc(here) + "\">" + esc(id) + "</a>";
+        if (here) return "<a href=\"" + esc(here) + "\">" + esc(id) + "</a>";
         return "<a href=\"https://leanprover-community.github.io/mathlib4_docs/find/?pattern=" + encodeURIComponent(id) + "#doc\" title=\"look it up in the Mathlib documentation\">" + esc(id) + "</a>";
       }).join(", ") + "</p>");
     }
@@ -1248,7 +1252,7 @@
         symbols.map(([s, w]) => "<dt>" + esc(s) + "</dt><dd>" + esc(w) + "</dd>").join("") + "</dl></details>");
     }
     const lines = original.split("\n").length;
-    out.push("<details class=\"rd-src\"><summary>The Lean source (" + lines + " line" + (lines === 1 ? "" : "s") + ")</summary><pre>" + esc(original) + "</pre></details>");
+    out.push("<details class=\"rd-src\"><summary>The Lean source (" + lines + " line" + (lines === 1 ? "" : "s") + ")</summary><pre>" + linkedCode(original, links) + "</pre></details>");
     return out.join("");
   }
   const KEYWORDS = new Set(["fun", "by", "with", "have", "show", "from", "then", "else", "match", "let", "using", "only", "at", "this", "Type", "Prop", "Sort", "where", "theorem", "lemma", "def", "instance", "structure", "class", "inductive", "abbrev", "example", "calc", "do", "return", "if", "for", "in", "mut", "true", "false", "True", "False", "Nat", "Int", "Real", "Set", "Finset", "List", "Fin", "noncomputable", "private", "protected", "termination_by", "decreasing_by", "deriving"]);
@@ -1272,20 +1276,44 @@
       return { line, original: lines.slice(start, end).join("\n"), masked: maskedLines.slice(start, end).join("\n") };
     });
   }
-  function nameLinks(declNames) {
+  function suffixLinks(names) {
     const links = new Map();
-    for (const [full, anchor] of declNames) {
+    for (const [full, href] of names) {
       const parts = full.split(".");
       for (let i = 0; i < parts.length; i++) {
         const suffix = parts.slice(i).join(".");
-        if (!links.has(suffix)) links.set(suffix, anchor);
+        if (!links.has(suffix)) links.set(suffix, href);
+        else if (links.get(suffix) !== href) links.set(suffix, null);
       }
     }
     return links;
   }
-  function pageReadings(text, declarations) {
-    // declarations: [[line, qualified name], ...]
-    const links = nameLinks(declarations.map(([line, name]) => [name, "L" + line]));
+  function nameLinks(declarations, references) {
+    const links = suffixLinks(references || []);
+    // A declaration on this page is the authoritative destination for its suffix.  Ambiguous local suffixes stay
+    // unlinked rather than inheriting an unrelated external declaration with the same short name.
+    for (const [suffix, href] of suffixLinks(declarations).entries()) {
+      if (href) links.set(suffix, href); else links.delete(suffix);
+    }
+    for (const [suffix, href] of Array.from(links.entries())) if (!href) links.delete(suffix);
+    return links;
+  }
+  function linkedCode(text, links) {
+    const pattern = /[A-Za-z_][\w'!?₀-₉]*(?:\.[A-Za-z_][\w'!?₀-₉]*)*/g;
+    let out = "";
+    let start = 0;
+    for (const found of text.matchAll(pattern)) {
+      const id = found[0];
+      const href = links.get(id);
+      out += esc(text.slice(start, found.index));
+      out += href ? "<a href=\"" + esc(href) + "\">" + esc(id) + "</a>" : esc(id);
+      start = found.index + id.length;
+    }
+    return out + esc(text.slice(start));
+  }
+  function pageReadings(text, declarations, references) {
+    // declarations: [[line, qualified name], ...]; references: [[qualified name, href], ...]
+    const links = nameLinks(declarations.map(([line, name]) => [name, "#L" + line]), references || []);
     const byLine = new Map();
     for (const span of spans(text, declarations.map((d) => d[0]))) {
       let html = null;
@@ -1375,7 +1403,15 @@
       ? (status("Loading the source from GitHub to read it…"), fetch(source).then((r) => (r.ok ? r.text() : Promise.reject(new Error("HTTP " + r.status)))))
       : Promise.resolve(JSON.parse(holder.textContent));
     got.then((text) => {
-      const readings = pageReadings(text.replace(/\r\n/g, "\n"), decls);
+      let references = [];
+      const mapHolder = document.getElementById("map-data");
+      if (mapHolder) {
+        try {
+          const map = JSON.parse(mapHolder.textContent);
+          references = (map.r || []).map((index) => map.n[index]).filter((row) => row && row.length >= 2);
+        } catch (e) { /* a broken optional map must not prevent the readings */ }
+      }
+      const readings = pageReadings(text.replace(/\r\n/g, "\n"), decls, references);
       const eager = items.length <= 40;
       items.forEach((li, k) => {
         const html = readings.get(decls[k][0]);
@@ -1451,8 +1487,8 @@
     }).catch(() => { /* without KaTeX the Lean code stays */ });
   }
 
-  // Doc comments: the core draws their Markdown and marks each $…$ or $$…$$ as <span class="tex">, written as the
-  // author wrote it. The reader typesets those. TeX an author wrote may use macros KaTeX lacks: then it stays as
+  // Doc comments: the core draws their Markdown and marks each $…$, $$…$$, \(…\) or \[…\] as <span class="tex">,
+  // written as the author wrote it. The reader typesets those. TeX an author wrote may use macros KaTeX lacks: then it stays as
   // written, never KaTeX's red error. PROJECT_MACROS are the project's own (from its blueprint), filled in when the
   // site is written.
   const PROJECT_MACROS = {};
@@ -1477,18 +1513,29 @@
     }
     throw failure;
   }
+  function docFormula(text) {
+    let display = false, tex = null;
+    if (text.startsWith("$$") && text.endsWith("$$") && text.length > 4) {
+      display = true; tex = text.slice(2, -2);
+    } else if (text.startsWith("$") && text.endsWith("$") && text.length > 2) {
+      tex = text.slice(1, -1);
+    } else if (text.startsWith("\\[") && text.endsWith("\\]") && text.length > 4) {
+      display = true; tex = text.slice(2, -2);
+    } else if (text.startsWith("\\(") && text.endsWith("\\)") && text.length > 4) {
+      tex = text.slice(2, -2);
+    }
+    return tex === null || !tex.trim() ? null : { display, tex: tex.trim() };
+  }
   function drawDocs(root) {
     let drew = false;
     root.querySelectorAll(".tex:not(.m)").forEach((el) => {
-      const text = el.textContent;
-      const display = text.startsWith("$$") && text.endsWith("$$") && text.length > 4;
-      const tex = (display ? text.slice(2, -2) : text.slice(1, -1)).trim();
-      if (!tex) return;
+      const formula = docFormula(el.textContent);
+      if (!formula) return;
       el.classList.add("m");
-      el.setAttribute("data-tex", tex);
+      el.setAttribute("data-tex", formula.tex);
       el.setAttribute("data-doc", "");
-      if (display) el.setAttribute("data-display", "");
-      el.title = "TeX: " + tex;
+      if (formula.display) el.setAttribute("data-display", "");
+      el.title = "TeX: " + formula.tex;
       drew = true;
     });
     if (drew) typeset(root);
@@ -1496,7 +1543,7 @@
 
   // `tables`: what tools/vocabulary.cjs turns into the glossary's sections (vocabulary.json)
   const tables = { TYPES, TYPE_FORMS, CLASSES, PREDICATES, SYMBOLS, TACTICS };
-  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docTex, docTexTries, tables, DOC_MACROS, traceLinks };
+  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docFormula, docTex, docTexTries, tables, DOC_MACROS, traceLinks };
   if (typeof module === "object" && module.exports) module.exports = api;
   else if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
