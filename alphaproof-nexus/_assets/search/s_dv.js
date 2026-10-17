@@ -1,1 +1,1 @@
-window.l4shard("dv", [["not_squarefree_of_dvd_sq",4,92]]);
+window.l4shard("dv", [["Erdos12.K_dvd_M",16,292],["Erdos12.K_dvd_P",16,288],["Erdos12.P_dvd_M",16,282],["Erdos12.dvd_sub_of_mod_eq",16,989],["Erdos12.prime_dvd_K",16,237],["Erdos12.q_dvd_K",16,181],["Erdos12.q_dvd_M",16,294],["Erdos12.q_dvd_P",16,290]]);

@@ -1,1 +1,1 @@
-window.l4shard("na", [["MonochromaticQuantumGraph.eqSystem4_d2_nat",24,223],["MonochromaticQuantumGraph.eqSystem4_d3_nat",24,261],["MonochromaticQuantumGraph.eqSystem6_d2_nat",24,300],["reverse_nat",29,43]]);
+window.l4shard("na", [["MonochromaticQuantumGraph.eqSystem4_d2_nat",27,223],["MonochromaticQuantumGraph.eqSystem4_d3_nat",27,261],["MonochromaticQuantumGraph.eqSystem6_d2_nat",27,300],["reverse_nat",32,43]]);

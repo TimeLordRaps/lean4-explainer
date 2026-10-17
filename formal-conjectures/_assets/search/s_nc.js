@@ -1,1 +1,1 @@
-window.l4shard("nc", [["EllipticCurveRank.RatEllipticCurve.ncard_twistIndexLE",134,176],["Erdos1048.erdos_1048.variants.pommerenke_ncard_components",175,67],["Erdos434.Nat.NcardUnrepresentable",534,47],["PollocksConjecture.pollock_tetrahedral.ncard_exceptions",1404,74]]);
+window.l4shard("nc", [["EllipticCurveRank.RatEllipticCurve.ncard_twistIndexLE",134,176],["Erdos1048.erdos_1048.variants.pommerenke_ncard_components",175,67],["Erdos434.Nat.NcardUnrepresentable",534,47],["PollocksConjecture.pollock_tetrahedral.ncard_exceptions",1405,74]]);

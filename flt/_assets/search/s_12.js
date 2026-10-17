@@ -1,1 +1,1 @@
-window.l4shard("12", [["SL2.E12",110,68]]);
+window.l4shard("12", [["SL2.E12",108,68]]);

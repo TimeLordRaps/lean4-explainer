@@ -1,1 +1,1 @@
-window.l4shard("sz", [["OAI.InvariantIsing.DavidsonSzarekInput",7015,47]]);
+window.l4shard("sz", [["OAI.InvariantIsing.DavidsonSzarekInput",7041,47]]);

@@ -1,1 +1,1 @@
-window.l4shard("bi", [["BipartiteIso",14,52],["bipartiteDeck",14,69],["isBipartiteWith_deleteIncidenceSet",14,59],["middle_column_bit",30,62]]);
+window.l4shard("bi", [["BipartiteIso",14,52],["bipartiteDeck",14,69],["bipartiteDeck_determines_degreeMultiset",14,250],["bipartiteDeck_determines_edgeCount",14,203],["h_seq_le_binom",25,689],["isBipartiteWith_deleteIncidenceSet",14,59],["middle_column_bit",33,62],["multiset_map_eq_implies_bij",14,110],["type_preserving_bijection_is_iso",14,994]]);

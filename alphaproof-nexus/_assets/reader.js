@@ -1,9 +1,11 @@
-/* lean4-explainer reader: a plain-English reading of each declaration, made from its Lean source text.
+/* lean4-explainer reader: a plain-English reading of each declaration.
 
    For every declaration on a file page it says what the statement claims in words, lists what is given and assumed,
-   and walks through the proof one tactic at a time, saying what each step does. It reads text only: Lean is not run,
-   so it cannot show the goal left after each step (the Lean extension does that). The same code runs in the browser
-   and under node for the tests. */
+   and walks through the proof one tactic at a time, saying what each step does. The statement and the assumptions are
+   read from the source text. Each proof step is read from the goals Lean reports before and after it when the Lean
+   extension ran for the site (its tactic traces are on the page); otherwise, or for a step Lean has no goals for, from the
+   text of the tactic, and the step says so. This script never runs Lean. The same code runs in the browser and under
+   node for the tests. */
 (function () {
   "use strict";
   const SOURCE_URL_TEMPLATE = "";
@@ -945,25 +947,164 @@
     });
   }
 
-  function stepHtml(step, counter) {
-    const li = step.line ? "<li data-line=\"" + step.line + "\">" : "<li>";
-    if (step.arm !== undefined) {
-      return li + "<span class=\"rd-case\">" + armWords(step.arm) + "</span>" + (step.children.length ? stepsHtml(step.children) : "") + "</li>";
+  // ---------------------------------------------------------------- steps read from the goals Lean reports
+  // A Lean run (the lean extension) ships every tactic step with the goals Lean showed before and after it, in the text
+  // Lean prints: an optional `case tag` line, the hypotheses (`a b : T`; a long type goes on in indented lines), then
+  // `⊢ target`. A step's words are read off how those goals change. What the tactic's own text says stays beside them
+  // as the "how". A step with no Lean step to read gets the words of its text and says so.
+  function parseGoal(raw) {
+    const groups = [];
+    const goal = { tag: "", hyps: [], target: "", raw: String(raw) };
+    let last = null;  // what the indented lines that follow belong to: a hypothesis group or the target
+    for (const line of goal.raw.split("\n")) {
+      let m;
+      if (/^\s/.test(line) && last) {
+        if (last === "target") goal.target += " " + line.trim(); else last.type += " " + line.trim();
+      } else if ((m = line.match(/^case (.+)$/))) {
+        goal.tag = m[1].trim();
+        last = null;
+      } else if ((m = line.match(/^⊢ ?([\s\S]*)$/))) {
+        goal.target = m[1];
+        last = "target";
+      } else if ((m = line.match(/^(\S.*?) : ([\s\S]*)$/))) {
+        last = { names: m[1].split(/\s+/), type: m[2] };
+        groups.push(last);
+      } else {
+        last = null;
+      }
     }
+    for (const g of groups) for (const name of g.names) goal.hyps.push({ name, type: squash(g.type) });
+    goal.target = squash(goal.target);
+    return goal;
+  }
+
+  // What the step did to the goals: `before` and `after` are the goals Lean listed (strings). The first goal is the one
+  // the tactic works on; goals after it that the step left alone stay at the end of `after`. null: Lean had no goal there.
+  function goalChange(before, after) {
+    const b = before.map(parseGoal);
+    const a = after.map(parseGoal);
+    if (!b.length) return null;
+    const same = (x, y) => x.length === y.length && x.every((g, k) => g.raw === y[k].raw);
+    if (same(a, b)) return { kind: "same", from: b[0] };
+    if (a.length === b.length && same(a.slice().sort((x, y) => (x.raw < y.raw ? -1 : 1)), b.slice().sort((x, y) => (x.raw < y.raw ? -1 : 1)))) return { kind: "reordered", from: b[0] };
+    const rest = b.slice(1);
+    let left = rest.length;
+    let upTo = a.length;
+    while (left > 0 && upTo > 0 && a[upTo - 1].raw === rest[left - 1].raw) { left--; upTo--; }
+    const made = a.slice(0, upTo);
+    if (!made.length) return { kind: "closed", from: b[0], others: left };
+    return { kind: made.length === 1 ? "one" : "split", from: b[0], made, others: left };
+  }
+
+  const GOAL_CHARS = 140;
+  // A term out of a goal: typeset when it is short; cut, with the whole of it on hover, when it is not.
+  function goalTerm(s) {
+    s = squash(s);
+    if (s.length > GOAL_CHARS) return "<code title=\"" + esc(s) + "\">" + esc(s.slice(0, GOAL_CHARS - 1)) + "…</code>";
+    try { return math(s); } catch (e) { return code(s); }
+  }
+  function hypCode(h) {
+    const full = squash(h.name + " : " + h.type);
+    return full.length > GOAL_CHARS ? "<code title=\"" + esc(full) + "\">" + esc(full.slice(0, GOAL_CHARS - 1)) + "…</code>" : "<code>" + esc(full) + "</code>";
+  }
+  function andList(items) {
+    return items.length < 2 ? items.join("") : items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
+  }
+  function someOf(items, limit) {
+    return items.length > limit ? items.slice(0, limit).concat(["" + (items.length - limit) + " more"]) : items;
+  }
+  function hypChanges(from, to) {
+    const was = new Map(from.hyps.map((h) => [h.name, h.type]));
+    const now = new Map(to.hyps.map((h) => [h.name, h.type]));
+    return {
+      added: to.hyps.filter((h) => !was.has(h.name)),
+      removed: from.hyps.filter((h) => !now.has(h.name)),
+      changed: to.hyps.filter((h) => was.has(h.name) && was.get(h.name) !== h.type),
+    };
+  }
+  // The sentences for one goal turning into another.
+  function movedWords(from, to) {
+    const d = hypChanges(from, to);
+    const out = [];
+    if (d.added.length) out.push("Introduces " + andList(someOf(d.added.map(hypCode), 5)));
+    if (d.changed.length) out.push(andList(someOf(d.changed.map((h) => "<code>" + esc(h.name) + "</code> becomes " + goalTerm(h.type)), 4)));
+    if (d.removed.length) out.push("Removes " + andList(someOf(d.removed.map((h) => "<code>" + esc(h.name) + "</code>"), 5)));
+    out.push(from.target === to.target ? "The goal does not change" : "The goal becomes " + goalTerm(to.target));
+    return out.map((s) => s + ".").join(" ");
+  }
+  // The words for a step read off its goals; `container`: the step has sub-steps that do the work.
+  function goalWords(change, container) {
+    if (!change) return "";
+    const from = change.from;
+    if (change.kind === "closed") {
+      if (container) return "Works on " + (from.tag ? "the case <code>" + esc(from.tag) + "</code>: " : "the goal ") + goalTerm(from.target) + ".";
+      return "Closes the goal" + (change.others ? " and " + change.others + " other goal" + (change.others === 1 ? "" : "s") + " with it" : "") + ".";
+    }
+    if (change.kind === "same") return "Leaves the goals as they were.";
+    if (change.kind === "reordered") return "Reorders the goals.";
+    if (change.kind === "one") return movedWords(from, change.made[0]);
+    const shown = change.made.slice(0, 6).map((g) => {
+      const added = hypChanges(from, g).added;
+      return (g.tag ? "<code>" + esc(g.tag) + "</code>: " : "") + goalTerm(g.target) + (added.length ? " (with " + andList(someOf(added.map(hypCode), 3)) + ")" : "");
+    });
+    return "Splits the goal into " + change.made.length + " goals: " + shown.join("; ") + (change.made.length > 6 ? "; and " + (change.made.length - 6) + " more" : "") + ".";
+  }
+  function sameTactic(reading, traced) {
+    const a = squash(reading);
+    const b = squash(traced);
+    if (!a || !b) return false;
+    if (/^[·.]$/.test(a)) return /^[·.]/.test(b);  // a bullet: the trace step is `· first tactic`
+    return a === b || a.startsWith(b) || b.startsWith(a);  // the trace keeps a tactic's first line only
+  }
+  // The Lean step for a reading step: on its line, the same tactic, not already given to an earlier step.
+  function takeTrace(step, context) {
+    if (!context || !step.line) return null;
+    for (let k = 0; k < context.trace.length; k++) {
+      const t = context.trace[k];
+      if (context.used.has(k) || t[0] !== step.line || !sameTactic(step.text, t[1])) continue;
+      context.used.add(k);
+      return t;
+    }
+    return null;
+  }
+
+  // `context` is null for a page with no Lean run: the reading is the source's alone and says nothing about goals.
+  // Otherwise {trace: this declaration's Lean steps, used: the ones already given to a step}.
+  function stepHtml(step, counter, context) {
+    const open = (basis) => "<li" + (step.line ? " data-line=\"" + step.line + "\"" : "") + (basis ? " data-basis=\"" + basis + "\"" : "") + ">";
+    if (step.arm !== undefined) {
+      return open() + "<span class=\"rd-case\">" + armWords(step.arm) + "</span>" + (step.children.length ? stepsHtml(step.children, context) : "") + "</li>";
+    }
+    const lean = takeTrace(step, context);
+    const goals = lean && lean[2].length ? goalChange(lean[2], lean[3]) : null;
     if (step.bullet) {
       counter.n++;
-      return li + "<span class=\"rd-case\">Case " + counter.n + ":</span>" + stepsHtml(step.children) + "</li>";
+      if (goals) {
+        const g = goals.from;
+        return open("goals") + "<span class=\"rd-case\">Case " + counter.n + "</span> <span class=\"rd-fact\" title=\"" + FROM_GOALS + "\">(" +
+          (g.tag ? "<code>" + esc(g.tag) + "</code>, " : "") + "to show " + goalTerm(g.target) + "):</span>" + stepsHtml(step.children, context) + "</li>";
+      }
+      return open(context ? "source" : "") + "<span class=\"rd-case\">Case " + counter.n + ":</span>" + stepsHtml(step.children, context) + "</li>";
     }
-    let out = li + "<code class=\"rd-tac\">" + esc(step.text.length > 160 ? step.text.slice(0, 157) + "…" : step.text) + "</code> " + tacticWords(step.text.replace(/\s*(=>|\bwith)\s*$/, ""));
+    const how = tacticWords(step.text.replace(/\s*(=>|\bwith)\s*$/, ""));
+    const tactic = "<code class=\"rd-tac\">" + esc(step.text.length > 160 ? step.text.slice(0, 157) + "…" : step.text) + "</code> ";
+    let out;
+    // A step that holds sub-steps, or opens alternatives (`induction n with | zero => …`, whose arms sit beside it), does
+    // not close the goal by itself: Lean's "no goals after" is the whole block's.
+    const fact = goals && goalWords(goals, step.children.length > 0 || /\bwith\s*$/.test(step.text));
+    if (fact) out = open("goals") + tactic + "<span class=\"rd-fact\" title=\"" + FROM_GOALS + "\">" + fact + "</span> <span class=\"rd-how\">" + how + "</span>";
+    else if (context) out = open("source") + tactic + how + " <span class=\"rd-basis\">(read from the source text: no Lean goals matched this step)</span>";
+    else out = open() + tactic + how;
     if (step.calc) {
       out += "<ol class=\"rd-calc\">" + step.calc.map((l) => "<li>" + math(l.claim, { calc: true }) + (l.why ? " — " + l.why : "") + "</li>").join("") + "</ol>";
     }
-    if (step.children.length) out += stepsHtml(step.children);
+    if (step.children.length) out += stepsHtml(step.children, context);
     return out + "</li>";
   }
-  function stepsHtml(steps) {
+  const FROM_GOALS = "Read from the goals Lean reports before and after this step";
+  function stepsHtml(steps, context) {
     const counter = { n: 0 };
-    return "<ol class=\"rd-steps\">" + steps.map((s) => { if (!s.bullet) counter.n = 0; return stepHtml(s, counter); }).join("") + "</ol>";
+    return "<ol class=\"rd-steps\">" + steps.map((s) => { if (!s.bullet) counter.n = 0; return stepHtml(s, counter, context || null); }).join("") + "</ol>";
   }
   function armWords(pat) {
     const p = squash(pat);
@@ -1152,7 +1293,8 @@
     return out;
   }
   // `startLine`: the source line the declaration starts on, when known; each proof step then carries its own line.
-  function readDeclaration(original, masked, links, startLine) {
+  // `context`: see stepHtml; omit it for a page that has no Lean run.
+  function readDeclaration(original, masked, links, startLine, context) {
     const fromMasked = splitHeader(masked);
     const h = fromMasked || splitHeader(original);
     if (!h) return null;
@@ -1205,7 +1347,7 @@
       const steps = tacticSteps(rows);
       if (steps.length) {
         out.push("<p class=\"rd-shape\"><strong>" + (isProof || /^(theorem|lemma|problem|example)$/.test(h.kind) ? "How the proof goes" : "How it is built") + ":</strong> " + proofShape(steps) + "</p>");
-        out.push(stepsHtml(steps.length > 200 ? steps.slice(0, 200) : steps));
+        out.push(stepsHtml(steps.length > 200 ? steps.slice(0, 200) : steps, context));
       }
     } else if (h.bodyKind === "term" && body) {
       const isValue = !(/^(theorem|lemma|problem|example)$/.test(h.kind) || isProof);
@@ -1311,13 +1453,16 @@
     }
     return out + esc(text.slice(start));
   }
-  function pageReadings(text, declarations, references) {
+  function pageReadings(text, declarations, references, traces) {
     // declarations: [[line, qualified name], ...]; references: [[qualified name, href], ...]
+    // traces: Map(declaration line -> the Lean steps [line, tactic, goals before, goals after, href]) when Lean was run for
+    // the page, else undefined. With it, each step is read from its goals; a declaration the Map lacks is read from source.
     const links = nameLinks(declarations.map(([line, name]) => [name, "#L" + line]), references || []);
     const byLine = new Map();
     for (const span of spans(text, declarations.map((d) => d[0]))) {
       let html = null;
-      try { html = readDeclaration(span.original, span.masked, links, span.line); } catch (e) { html = null; }
+      const context = traces ? { trace: traces.get(span.line) || [], used: new Set() } : null;
+      try { html = readDeclaration(span.original, span.masked, links, span.line, context); } catch (e) { html = null; }
       byLine.set(span.line, html);
     }
     return byLine;
@@ -1333,27 +1478,58 @@
       return (same || here[0] || [null])[0];
     });
   }
+  // The lean extension draws a declaration's trace when it is opened, and numbers its steps L<declaration line>-step<k> in
+  // the order of its data. The reader holds that data, so it knows the ids before they are on the page.
+  const traceMemory = new Map();  // declaration element id -> memoryTrace(...)
+  function memoryTrace(declarationLine, steps) {
+    return steps.map((s, k) => ["L" + declarationLine + "-step" + (k + 1), String(s[0]), s[1]]);
+  }
+  // Resolves with the element once the page has drawn it (the trace is fetched and drawn after it is opened), else null.
+  function whenDrawn(trace, id) {
+    const now = document.getElementById(id);
+    if (now || typeof MutationObserver !== "function") return Promise.resolve(now);
+    return new Promise((resolve) => {
+      const done = (el) => { observer.disconnect(); clearTimeout(timer); resolve(el); };
+      const observer = new MutationObserver(() => { const el = document.getElementById(id); if (el) done(el); });
+      const timer = setTimeout(() => done(document.getElementById(id)), 15000);
+      observer.observe(trace, { childList: true, subtree: true });
+    });
+  }
+  // Idempotent: it runs when a reading is filled and again when a trace has been drawn.
   function linkTrace(li) {
     const trace = li.querySelector("details.trace");
     if (!trace) return;
-    const steps = Array.prototype.map.call(trace.querySelectorAll("li[data-line]"), (t) => {
+    const drawn = Array.prototype.map.call(trace.querySelectorAll("li[data-line]"), (t) => {
       const c = t.querySelector(":scope > code");
       return [t.id, t.getAttribute("data-line"), c ? c.textContent : ""];
     });
+    const steps = drawn.length ? drawn : (traceMemory.get(li.id) || []);
     const rows = Array.prototype.filter.call(li.querySelectorAll(".rd-steps li[data-line]"), (r) => r.querySelector(":scope > code.rd-tac"));
     const ids = traceLinks(rows.map((r) => [r.getAttribute("data-line"), r.querySelector(":scope > code.rd-tac").textContent]), steps);
     const reading = li.querySelector("details.reading");
     rows.forEach((r, k) => {
-      const target = ids[k] && document.getElementById(ids[k]);
-      if (!target) return;
-      r.id = r.id || ids[k] + "-words";
-      const goals = document.createElement("a");
-      goals.className = "rd-goals";
-      goals.href = "#" + ids[k];
-      goals.textContent = "goals";
-      goals.addEventListener("click", () => { trace.open = true; });
-      r.querySelector(":scope > code.rd-tac").after(goals);
-      if (!target.querySelector(":scope > .rd-words")) {
+      const id = ids[k];
+      if (!id) return;
+      const target = document.getElementById(id);
+      r.id = r.id || id + "-words";
+      if (!r.querySelector(":scope > a.rd-goals")) {
+        const goals = document.createElement("a");
+        goals.className = "rd-goals";
+        goals.href = "#" + id;
+        goals.textContent = "goals";
+        goals.addEventListener("click", (e) => {
+          trace.open = true;
+          if (document.getElementById(id)) return;  // drawn: the link goes there
+          e.preventDefault();
+          whenDrawn(trace, id).then((el) => {
+            if (!el) return;
+            el.scrollIntoView({ block: "center" });
+            try { history.replaceState(null, "", "#" + id); } catch (x) { /* a page without history still shows the step */ }
+          });
+        });
+        r.querySelector(":scope > code.rd-tac").after(goals);
+      }
+      if (target && !target.querySelector(":scope > .rd-words")) {
         const words = document.createElement("a");
         words.className = "rd-words";
         words.href = "#" + r.id;
@@ -1363,6 +1539,67 @@
         if (c) c.after(words); else target.prepend(words);
       }
     });
+  }
+
+  // What the note at the top of a page says about where its readings come from. state: "source" (no Lean run for this
+  // site), "pending" (Lean's goals are loading), "goals" (steps are read from them) or "failed" (Lean was run but its
+  // goals could not be loaded). info: {derived, total, reason, source}.
+  function readingNote(state, info) {
+    info = info || {};
+    const lead = "Each declaration has a reading: what it says in words, what it assumes, and what each proof step does.";
+    const tail = info.source ? " This page loads its source from the pinned commit on GitHub to make them." : "";
+    if (state === "goals") {
+      return lead + " Lean was run over this site's source, and each step is read from the goals Lean reports before and after it" +
+        (info.total ? " (" + info.derived + " of " + info.total + " steps on this page)" : "") + ": the words say how the goals change. " +
+        "A step Lean has no goals for is read from the text of its tactic, and says so. A step's “goals” link opens those goals, " +
+        "and each step of a tactic trace links back to its words." + tail;
+    }
+    if (state === "failed") {
+      return lead + " Lean was run for this site, but the goals it reported could not be loaded here" +
+        (info.reason ? " (" + info.reason + ")" : "") + ", so this reading falls back to the source text." + tail;
+    }
+    if (state === "pending") return lead + " Loading the goals Lean reported for this site…" + tail;
+    return lead + " The reading is derived from source text; it does not reconstruct Lean's intermediate goals. " +
+      "Any Lean-backed trust result is reported separately on the Trust page." + tail;
+  }
+
+  // The lean extension's trace files: {"v": 1, "d": {"<declaration line>:<name>": [[line, tactic, before, after, href]]}},
+  // gzipped. This is the same format trace.js reads when a trace is opened; a payload of another version is refused.
+  const traceFiles = new Map();
+  function fetchTrace(url) {
+    if (!traceFiles.has(url)) {
+      const abort = typeof AbortController === "function" ? new AbortController() : null;
+      const timer = abort ? setTimeout(() => abort.abort(), 30000) : 0;
+      traceFiles.set(url, fetch(url, abort ? { signal: abort.signal } : undefined).then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.arrayBuffer();
+      }).then((buffer) => {
+        const bytes = new Uint8Array(buffer);
+        if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
+          if (typeof DecompressionStream === "undefined") throw new Error("this browser cannot open gzip trace data");
+          return new Response(new Blob([buffer]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
+        }
+        return new TextDecoder().decode(bytes);
+      }).then((text) => {
+        const payload = JSON.parse(text);
+        if (!payload || payload.v !== 1 || typeof payload.d !== "object") throw new Error("unknown trace format");
+        return payload;
+      }).then((payload) => { clearTimeout(timer); return payload; }, (e) => { clearTimeout(timer); throw e; }));
+    }
+    return traceFiles.get(url);
+  }
+  // Map(declaration line -> steps) for the declarations on the page, and the first reason a trace could not be read.
+  function loadTraces(items) {
+    const byLine = new Map();
+    let failure = "";
+    return Promise.all(items.map((li) => {
+      const details = li.querySelector("details.trace[data-trace-src]");
+      if (!details) return null;
+      return fetchTrace(details.getAttribute("data-trace-src")).then((payload) => {
+        const steps = payload.d[details.getAttribute("data-trace-key")];
+        if (Array.isArray(steps)) byLine.set(parseInt(li.id.slice(1), 10), steps);
+      }, (e) => { failure = failure || (e && e.name === "AbortError" ? "timed out" : e.message); });
+    })).then(() => ({ byLine, failure }));
   }
 
   // ---------------------------------------------------------------- the browser side
@@ -1382,16 +1619,13 @@
       (holder.tagName === "DIV" && SOURCE_URL_TEMPLATE && sourcePath
         ? SOURCE_URL_TEMPLATE.replace("{path}", sourcePath)
         : "");
-    const note = document.createElement("div");
+    const note = document.createElement("details");
     note.id = "reader-note";
     const traced = !!document.querySelector("details.trace");  // the lean extension ran: its tactic traces are on the page
-    note.innerHTML = "<strong>Readings.</strong> Each declaration has a reading: what it says in words, what it assumes, " +
-      "and what each proof step does. The reading is derived from source text" +
-      (traced ? ". Lean was also run for this site: a step's “goals” link opens the goals Lean shows before and after it, " +
-        "and each step of a tactic trace links back to its words."
-        : "; it does not reconstruct Lean's intermediate goals. Any Lean-backed trust result is reported separately on the Trust page.") +
-      (source ? " This page loads its source from the pinned commit on GitHub to make them." : "") +
-      " <span class=\"reader-status\"></span>";
+    note.innerHTML = "<summary><strong>Reading guide</strong><span class=\"reader-status\"></span></summary>" +
+      "<div class=\"reader-note-body\"><p></p></div>";
+    const say = (state, info) => { note.querySelector(".reader-note-body p").textContent = readingNote(state, Object.assign({ source: !!source }, info)); };
+    say(traced ? "pending" : "source");
     list.parentNode.insertBefore(note, list);
     const items = Array.prototype.slice.call(list.children).filter((li) => /^L\d+$/.test(li.id));
     const decls = items.map((li) => {
@@ -1402,7 +1636,11 @@
     const got = source
       ? (status("Loading the source from GitHub to read it…"), fetch(source).then((r) => (r.ok ? r.text() : Promise.reject(new Error("HTTP " + r.status)))))
       : Promise.resolve(JSON.parse(holder.textContent));
-    got.then((text) => {
+    // The goals Lean reported, one fetch per trace file. A trace that cannot be read leaves the reading to the source
+    // text, and the note says so; it is never filled in from a guess.
+    const gotTraces = traced ? loadTraces(items) : Promise.resolve(null);
+    Promise.all([got, gotTraces]).then(([text, found]) => {
+      const traces = found && found.byLine.size ? found.byLine : undefined;
       let references = [];
       const mapHolder = document.getElementById("map-data");
       if (mapHolder) {
@@ -1411,11 +1649,17 @@
           references = (map.r || []).map((index) => map.n[index]).filter((row) => row && row.length >= 2);
         } catch (e) { /* a broken optional map must not prevent the readings */ }
       }
-      const readings = pageReadings(text.replace(/\r\n/g, "\n"), decls, references);
+      const readings = pageReadings(text.replace(/\r\n/g, "\n"), decls, references, traces);
+      if (traced) {
+        const all = Array.from(readings.values()).join("");
+        const derived = (all.match(/data-basis="goals"/g) || []).length;
+        say(traces ? "goals" : "failed", { derived, total: derived + (all.match(/data-basis="source"/g) || []).length, reason: found && found.failure });
+      }
       const eager = items.length <= 40;
       items.forEach((li, k) => {
         const html = readings.get(decls[k][0]);
         if (!html) return;
+        if (traces && traces.get(decls[k][0])) traceMemory.set(li.id, memoryTrace(decls[k][0], traces.get(decls[k][0])));
         const box = document.createElement("details");
         box.className = "reading";
         box.innerHTML = "<summary>Reading: what it says, step by step</summary>";
@@ -1432,6 +1676,11 @@
         // a trace opened first gets its "in words" links too: opening it fills the reading, which stays closed
         const trace = li.querySelector("details.trace");
         if (trace && !eager) trace.addEventListener("toggle", fill);
+        // the lean extension sets data-trace-state to "loaded" once it has drawn the steps: they get their "in words" links
+        if (trace && typeof MutationObserver === "function") {
+          new MutationObserver(() => { if (trace.dataset.traceState === "loaded" && box.dataset.filled) linkTrace(li); })
+            .observe(trace, { attributes: true, attributeFilter: ["data-trace-state"] });
+        }
       });
       if (document.querySelector("details.reading")) {
         const controls = document.createElement("span");
@@ -1445,7 +1694,7 @@
           });
           controls.appendChild(button);
         });
-        note.appendChild(controls);
+        note.querySelector(".reader-note-body").appendChild(controls);
       }
       status(eager ? "" : "Open any “Reading” to see it.");
     }).catch((e) => status("Could not load the source (" + e.message + "). The source links still work."));
@@ -1526,7 +1775,48 @@
     }
     return tex === null || !tex.trim() ? null : { display, tex: tex.trim() };
   }
+  // Inline code in explanatory prose often retains Lean's whitespace application syntax (`f x y`).
+  // Use the same parser that reads declarations to recognize actual applications, then present them as
+  // conventional mathematics (`f(x, y)`). The exact Lean spelling remains in the hover title.
+  // Quoted source, declaration statements and fenced code are deliberately outside this surface.
+  function proseApplicationText(text) {
+    const source = squash(text);
+    const t = translator();
+    if (!t) return null;
+    try {
+      const tree = t.parse(source);
+      if (!tree || tree.t !== "app") return null;
+      const pieces = glueCalls(appArgs(source));
+      if (pieces.length < 2) return null;  // already written f(x), or not whitespace application
+      const argument = (raw) => {
+        let shown = squash(raw);
+        if (OPEN.indexOf(shown[0]) >= 0 && matching(shown, 0) === shown.length - 1) {
+          shown = shown.slice(1, -1).trim();
+        }
+        return proseApplicationText(shown) || shown;
+      };
+      return pieces[0] + "(" + pieces.slice(1).map(argument).join(", ") + ")";
+    } catch (e) {
+      return null;
+    }
+  }
+  function drawProseApplications(root) {
+    const selector = [
+      ".doc code", ".title code", ".intuition code", ".steps code", ".l4term code",
+      "dl.glossary dd code", "ol.path .title code"
+    ].join(", ");
+    root.querySelectorAll(selector).forEach((el) => {
+      if (el.closest("pre") || el.closest(".l4del-quote") || el.closest("[data-tex]")) return;
+      const source = squash(el.textContent);
+      const readable = proseApplicationText(source);
+      if (!readable) return;
+      el.textContent = readable;
+      el.classList.add("prose-application");
+      el.title = "Lean syntax: " + source;
+    });
+  }
   function drawDocs(root) {
+    drawProseApplications(root);
     let drew = false;
     root.querySelectorAll(".tex:not(.m)").forEach((el) => {
       const formula = docFormula(el.textContent);
@@ -1543,7 +1833,7 @@
 
   // `tables`: what tools/vocabulary.cjs turns into the glossary's sections (vocabulary.json)
   const tables = { TYPES, TYPE_FORMS, CLASSES, PREDICATES, SYMBOLS, TACTICS };
-  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docFormula, docTex, docTexTries, tables, DOC_MACROS, traceLinks };
+  const api = { mask, spans, splitHeader, sayProp, typeWords, givenItems, tacticWords, tacticSteps, readDeclaration, pageReadings, symbolsIn, docFormula, docTex, docTexTries, proseApplicationText, drawProseApplications, tables, DOC_MACROS, traceLinks, memoryTrace, parseGoal, goalChange, goalWords, readingNote };
   if (typeof module === "object" && module.exports) module.exports = api;
   else if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

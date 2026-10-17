@@ -1,1 +1,1 @@
-window.l4shard("60", [["OAI.MUB6.Certificate.PairData.row60",10678,190],["OAI.MaxCutGames.Foundations.Repetition.scalar_bound_6000",11245,823],["OAI.UniqueGamesTheorem.Foundations.Repetition.scalar_bound_6000",20261,802]]);
+window.l4shard("60", [["OAI.MUB6.Certificate.PairData.row60",10710,190],["OAI.MaxCutGames.Foundations.Repetition.scalar_bound_6000",11278,823],["OAI.UniqueGamesTheorem.Foundations.Repetition.scalar_bound_6000",20306,802]]);

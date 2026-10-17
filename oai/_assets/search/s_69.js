@@ -1,1 +1,1 @@
-window.l4shard("69", [["OAI.MUB6.Certificate.PairData.row69",10678,217]]);
+window.l4shard("69", [["OAI.MUB6.Certificate.PairData.row69",10710,217]]);

@@ -1,1 +1,1 @@
-window.l4shard("he", [["helper_div",45,96]]);
+window.l4shard("he", [["Erdos12.density_helper_pow",16,776],["Erdos12.density_ineq_q_helper",16,793],["Erdos12.q_pow_four_bound_helper",16,552],["Erdos125.exists_small_pos_lin_comb_help",17,157],["inr_high_reduction_goal_helper",25,1840],["inr_low_reduction_goal_helper",25,1692],["sum_log_concave_helper",25,2090]]);

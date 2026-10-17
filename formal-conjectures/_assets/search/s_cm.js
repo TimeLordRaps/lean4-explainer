@@ -1,1 +1,1 @@
-window.l4shard("cm", [["SatoTateConjecture.HasCM",1433,83],["SatoTateConjecture.cmJInvariants",1433,76],["SerreUniformity.cmJInvariants",1441,48]]);
+window.l4shard("cm", [["SatoTateConjecture.HasCM",1434,83],["SatoTateConjecture.cmJInvariants",1434,76],["SerreUniformity.cmJInvariants",1442,48]]);

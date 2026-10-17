@@ -1,1 +1,1 @@
-window.l4shard("nh", [["RestrictedProduct.mem_nhds_iff_of_cofinite",36,569],["RestrictedProduct.mem_nhds_iff_of_principal",36,533],["RestrictedProduct.mem_nhds_of_exists_nhds_of_cofinite",36,545],["TateCurve.tendsto_pow_nhds_zero",155,214]]);
+window.l4shard("nh", [["RestrictedProduct.mem_nhds_iff_of_cofinite",35,569],["RestrictedProduct.mem_nhds_iff_of_principal",35,533],["RestrictedProduct.mem_nhds_of_exists_nhds_of_cofinite",35,545],["TateCurve.tendsto_pow_nhds_zero",154,214]]);

@@ -1,0 +1,1 @@
+window.l4shard("sa", [["Erdos741.SandorA",21,96],["Erdos741.SandorA_add_SandorA_eq_univ",21,451],["Erdos741.SandorA_fluctuation_bounds",21,1359],["Erdos741.SandorA_has_pos_density",21,471],["Erdos741.SandorA_no_valid_partition",21,1447],["Erdos741.sandor_cross_sums",21,1291]]);

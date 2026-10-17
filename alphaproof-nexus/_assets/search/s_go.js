@@ -1,1 +1,1 @@
-window.l4shard("go", [["Erdos12.IsGood",16,48]]);
+window.l4shard("go", [["Erdos12.IsGood",16,48],["Erdos12.MyGoodSet",16,125],["Erdos12.exists_good_in_block",16,323],["Erdos12.f_val_in_good_set",16,631],["Erdos12.good_set_inj",16,1010],["Erdos12.good_set_inter_finite",16,718],["Erdos12.my_good_set_density",16,1214],["Erdos12.my_good_set_has_block",16,1058],["Erdos12.my_good_set_infinite",16,398],["Erdos12.my_good_set_is_good",16,409],["inr_high_reduction_goal_helper",25,1840],["inr_low_reduction_goal_helper",25,1692]]);

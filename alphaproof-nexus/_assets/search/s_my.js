@@ -1,1 +1,1 @@
-window.l4shard("my", [["my_digits",9,89]]);
+window.l4shard("my", [["Erdos12.MyGoodSet",16,125],["Erdos12.my_good_set_density",16,1214],["Erdos12.my_good_set_has_block",16,1058],["Erdos12.my_good_set_infinite",16,398],["Erdos12.my_good_set_is_good",16,409]]);

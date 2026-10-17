@@ -1,1 +1,1 @@
-window.l4shard("do", [["NormalDomain.powerSeries",25,382],["doubleDeck",14,101]]);
+window.l4shard("do", [["NormalDomain.powerSeries",28,382],["doubleDeck",14,101]]);

@@ -1,1 +1,1 @@
-window.l4shard("pa", [["A258667_asymptotic_sum_part",5,80],["A382590_pair",12,47],["frac_part",31,62]]);
+window.l4shard("pa", [["A258667_asymptotic_sum_part",5,80],["A382590_pair",12,47],["Erdos741.B_partition_alpha_bound",21,1199],["Erdos741.SandorA_no_valid_partition",21,1447],["f_preserves_partitions",14,397],["frac_part",34,62]]);

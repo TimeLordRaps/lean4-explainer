@@ -1,1 +1,1 @@
-window.l4shard("yu", [["Erdos405.erdos_405.variants.yu_liu",509,94],["Green26.green_26.variants.yu25",980,61],["OpenQuantumProblem13.Qubit.YU",1392,286],["UnionClosed.union_closed.variants.yu",1520,72]]);
+window.l4shard("yu", [["Erdos405.erdos_405.variants.yu_liu",509,94],["Green26.green_26.variants.yu25",980,61],["OpenQuantumProblem13.Qubit.YU",1393,286],["UnionClosed.union_closed.variants.yu",1520,72]]);

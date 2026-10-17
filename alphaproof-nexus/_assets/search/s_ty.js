@@ -1,1 +1,1 @@
-window.l4shard("ty", [["ProblemP2Type1LogConcave",21,160],["ProblemP2Type1Unimodal",21,155],["typePO",21,101]]);
+window.l4shard("ty", [["ProblemP2Type1LogConcave",23,160],["ProblemP2Type1Unimodal",23,155],["count_typeProfile_eq_one_iff_adj",14,968],["rightV_types_del_eq",14,660],["typeDrop",14,494],["typePO",23,101],["typeProfile",14,947],["type_preserving_bijection_is_iso",14,994],["type_two_implies_two_maximals",25,221]]);
