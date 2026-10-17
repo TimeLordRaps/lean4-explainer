@@ -24,7 +24,7 @@ from lean4_explainer.render import Context, filter_box, href, page
 
 from .deps import Resolver, bound_in, declaration_end, imports_in, names_in, opens_in, reverse, variables_in, reachable, visible_files
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 HERE = Path(__file__).parent
 SCRIPT = "_assets/map.js"
@@ -173,10 +173,12 @@ class MapExtension(Extension):
             return table[key]
 
         entries = []
+        references: set[int] = set()
         for decl in lean_file.declarations:
             key = decl.name if decl.name in ctx.locations else f"{decl.name}@{lean_file.path}"
             if key not in ctx.locations or not _holds(ctx, key, lean_file.path, decl.line):
                 continue
+            references.update(node(target) for target in _direct_uses(key, graph, lean_file.path) if target in ctx.locations)
             hood = _neighbourhood(key, graph, ctx.locations, lean_file.path)
             if hood is None:
                 continue
@@ -187,7 +189,13 @@ class MapExtension(Extension):
             entries.append([decl.line, local[key], flat, n_up, n_down, more_up, more_down])
         if not entries:
             return ""
-        payload = json.dumps({"n": nodes, "d": entries}, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+        # `r` keeps every direct, resolved reference used by this file, including dependencies omitted from the
+        # deliberately small drawing.  It stores node indices so names and links are not repeated in every page.
+        payload = json.dumps(
+            {"n": nodes, "d": entries, "r": sorted(references)},
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).replace("<", "\\u003c")
         return f'<script type="application/json" id="map-data">{payload}</script>'
 
     def summary(self, analysis: Graph) -> Sequence[str]:
@@ -235,11 +243,19 @@ def _rank(keys: Iterable[str], graph: Graph) -> list[str]:
     return sorted(keys, key=lambda k: (-len(graph.used_by.get(k, ())), k))
 
 
+def _direct_uses(key: str, graph: Graph, rel: str = "") -> Sequence[str]:
+    """Every direct dependency of this copy of `key`, before the drawing applies its display limit."""
+    declared = getattr(graph, "declared", set())
+    own = graph.copy_uses.get((key, rel))
+    if own is None:
+        return graph.uses.get(key, ())
+    return [*own, *(target for target in graph.uses.get(key, ()) if (target, key) in declared)]
+
+
 def _neighbourhood(key: str, graph: Graph, locations: Mapping[str, Any], rel: str = ""):
     """`key`'s neighbourhood as drawn on the page of file `rel` (which matters for a key with identical copies)."""
     declared = getattr(graph, "declared", set())
-    own = graph.copy_uses.get((key, rel))
-    mine = graph.uses.get(key, ()) if own is None else [*own, *(t for t in graph.uses.get(key, ()) if (t, key) in declared)]
+    mine = _direct_uses(key, graph, rel)
 
     def targets(user: str) -> Sequence[str]:
         return mine if user == key else graph.uses.get(user, ())

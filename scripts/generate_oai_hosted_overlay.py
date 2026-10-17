@@ -31,6 +31,11 @@ from lean4_explainer_corpora.registry import installed
 
 BEGIN = "# BEGIN GENERATED OPENAI/MATH FORMALIZATION-NOTE ANNOTATIONS"
 END = "# END GENERATED OPENAI/MATH FORMALIZATION-NOTE ANNOTATIONS"
+# Intuition for a comparator declaration whose formalization note covers several results and which has no doc comment.
+MULTI_RESULT_FALLBACK = (
+    "This declaration is an exact comparator-selected statement. "
+    "Read the Lean statement below for its mathematical content."
+)
 _COMPARATOR_LINK = re.compile(r"\.\./ComparatorChallenges/([^/)]+)\.lean")
 _MARKDOWN_LINK = re.compile(r"\[([^]]+)]\([^)]+\)")
 _HTML_TAG = re.compile(r"</?[A-Za-z][^>]*>")
@@ -42,6 +47,7 @@ class Note:
     title: str
     scope: str
     comparators: tuple[str, ...]
+    result_titles: tuple[str, ...]
     source: str
 
 
@@ -77,11 +83,20 @@ def _note(path: Path) -> Note | None:
             break
         if line.strip():
             scope_lines.append(line.strip())
-    comparators = tuple(dict.fromkeys(_COMPARATOR_LINK.findall("\n".join(lines))))
+    comparator_rows: dict[str, str] = {}
+    for line in lines:
+        for comparator in _COMPARATOR_LINK.findall(line):
+            if comparator in comparator_rows:
+                continue
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            label = _plain(cells[0]) if cells else ""
+            comparator_rows[comparator] = label or comparator
+    comparators = tuple(comparator_rows)
+    result_titles = tuple(comparator_rows[comparator] for comparator in comparators)
     scope = _bounded_scope(" ".join(scope_lines))
     if not title or not scope or not comparators:
         return None
-    return Note(title, scope, comparators, path.name)
+    return Note(title, scope, comparators, result_titles, path.name)
 
 
 def _existing_targets(text: str) -> set[tuple[str, str]]:
@@ -157,12 +172,12 @@ def generate(repo: Path, current: str, declarations_jsonl: Path | None = None) -
         for row in declarations or ()
         if isinstance(row.get("doc"), str) and row["doc"].strip() and isinstance(row.get("path"), str)
     }
-    note_rows: list[tuple[Note, str, Path, str, str]] = []
+    note_rows: list[tuple[Note, str, Path, str, str, str]] = []
     for path in sorted(docs.glob("*.md")):
         note = _note(path)
         if note is None:
             continue
-        for stem in note.comparators:
+        for stem, result_title in zip(note.comparators, note.result_titles, strict=True):
             config_path = configs / f"{stem}.json"
             if not config_path.is_file():
                 raise ValueError(f"{note.source}: missing comparator config {config_path.name}")
@@ -179,7 +194,7 @@ def generate(repo: Path, current: str, declarations_jsonl: Path | None = None) -
             for name in names:
                 if not isinstance(name, str):
                     raise ValueError(f"{config_path}: declaration names must be strings")
-                note_rows.append((note, file, config_path, solution, name))
+                note_rows.append((note, file, config_path, solution, name, result_title))
 
     source = _source_declarations(repo, candidate_files)
     # target -> (priority, annotation lines). Formalization notes take priority
@@ -188,9 +203,13 @@ def generate(repo: Path, current: str, declarations_jsonl: Path | None = None) -
     notes_used = 0
 
     used_notes: set[str] = set()
-    for note, file, config_path, solution, name in note_rows:
+    multi_result_targets: dict[tuple[str, str], tuple[Note, str, str]] = {}
+    for note, file, config_path, solution, name, result_title in note_rows:
         target = (file, name)
         if target in curated or target not in source:
+            continue
+        if len(note.comparators) > 1:
+            multi_result_targets[target] = (note, result_title, solution)
             continue
         proposals[target] = (
             0,
@@ -202,7 +221,6 @@ def generate(repo: Path, current: str, declarations_jsonl: Path | None = None) -
             ),
         )
         used_notes.add(note.source)
-    notes_used = len(used_notes)
 
     # The repository's own doc comments are the next safest source of explanatory
     # text.  Add every documented declaration that is not already covered by a
@@ -219,14 +237,55 @@ def generate(repo: Path, current: str, declarations_jsonl: Path | None = None) -
             target = (file, name)
             if target in curated or target in proposals or target not in source:
                 continue
-            proposals[target] = (
-                1,
-                (
-                    f"-- L4DEL: title: {_doc_title(name, doc)}",
-                    f"-- L4DEL: intuition: {_bounded_scope(doc)}",
-                    "-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.",
-                ),
-            )
+            # The extraction JSONL is an exact-target inventory, not textual
+            # authority. Older inventories bounded ``doc`` at 300 characters
+            # and can end mid-word. Once the target is located, always render
+            # the full doc comment parsed from the pinned Lean source bytes.
+            source_doc = source[target].doc
+            if not source_doc:
+                continue
+            multi_result = multi_result_targets.get(target)
+            if multi_result is None:
+                proposals[target] = (
+                    1,
+                    (
+                        f"-- L4DEL: title: {_doc_title(name, source_doc)}",
+                        f"-- L4DEL: intuition: {_bounded_scope(source_doc)}",
+                        "-- L4DEL: step: This explanation is a condensed rendering of the declaration's own doc comment at the pinned source commit; consult the exact Lean statement below for authority.",
+                    ),
+                )
+            else:
+                note, result_title, solution = multi_result
+                proposals[target] = (
+                    0,
+                    (
+                        f"-- L4DEL: title: Challenge statement: {result_title}",
+                        f"-- L4DEL: intuition: {_bounded_scope(source_doc)}",
+                        "-- L4DEL: step: This explanation is a condensed rendering of this declaration's own doc comment at the pinned source commit.",
+                        f"-- L4DEL: step: The linked formalization note covers {len(note.comparators)} distinct comparator results, so its combined Scope prose is not copied onto this declaration.",
+                        f"-- L4DEL: step: The repository's comparator configuration selects {solution} as the released solution module checked against this declaration.",
+                    ),
+                )
+                used_notes.add(note.source)
+
+    # A multi-result note is not target-specific prose. If its exact comparator
+    # declaration has no source doc comment, retain only the row label and the
+    # checked solution binding rather than publishing the combined note scope.
+    for target, (note, result_title, solution) in multi_result_targets.items():
+        if target in proposals:
+            continue
+        proposals[target] = (
+            2,
+            (
+                f"-- L4DEL: title: Challenge statement: {result_title}",
+                f"-- L4DEL: intuition: {MULTI_RESULT_FALLBACK}",
+                f"-- L4DEL: step: The linked formalization note covers {len(note.comparators)} distinct comparator results, so its combined Scope prose is not copied onto this declaration.",
+                f"-- L4DEL: step: The repository's comparator configuration selects {solution} as the released solution module checked against this declaration.",
+            ),
+        )
+        used_notes.add(note.source)
+
+    notes_used = len(used_notes)
 
     # The site collapses same-named, byte-identical declarations across files.
     # Their overlay payloads must therefore also be identical. Pick the

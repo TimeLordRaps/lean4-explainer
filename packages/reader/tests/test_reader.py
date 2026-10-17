@@ -109,6 +109,9 @@ def test_readings_have_page_level_expand_and_collapse_controls():
     assert 'Expand all readings' in READER_JS
     assert 'Collapse all readings' in READER_JS
     assert 'document.querySelectorAll("details.reading")' in READER_JS
+    assert 'document.createElement("details")' in READER_JS
+    assert '<summary><strong>Reading guide</strong>' in READER_JS
+    assert 'note.querySelector(".reader-note-body").appendChild(controls)' in READER_JS
 
 
 def test_source_that_contains_a_closing_script_tag_cannot_end_the_block(tmp_path):
@@ -138,7 +141,8 @@ def test_a_file_over_the_embed_limit_gets_no_reading(tmp_path):
 
 # ---- reader.js, run under node --------------------------------------------------------------------------------
 
-def _readings(tmp_path, text, decls):
+def _readings(tmp_path, text, decls, references=None, traces=None):
+    """`traces`: {declaration line: [[line, tactic, before, after, source], ...]}, what a Lean run put on the page."""
     script = tmp_path / "reader.cjs"
     script.write_text(READER_JS, encoding="utf-8")
     (tmp_path / "lean2tex.js").write_text(LEAN2TEX_JS, encoding="utf-8")  # reader.js finds the translator next to itself
@@ -148,8 +152,10 @@ def _readings(tmp_path, text, decls):
         "const fs = require('fs');\n"
         "const text = fs.readFileSync(process.argv[3], 'utf8');\n"
         "const decls = JSON.parse(fs.readFileSync(process.argv[4], 'utf8'));\n"
+        "const refs = JSON.parse(fs.readFileSync(process.argv[5], 'utf8'));\n"
+        "const traces = process.argv[6] ? new Map(Object.entries(JSON.parse(fs.readFileSync(process.argv[6], 'utf8'))).map(([k, v]) => [Number(k), v])) : undefined;\n"
         "const out = {};\n"
-        "for (const [line, html] of R.pageReadings(text, decls)) out[line] = html;\n"
+        "for (const [line, html] of R.pageReadings(text, decls, refs, traces)) out[line] = html;\n"
         "process.stdout.write(JSON.stringify(out));\n",
         encoding="utf-8",
     )
@@ -157,7 +163,14 @@ def _readings(tmp_path, text, decls):
     source.write_bytes(text.encode("utf-8"))  # exactly these characters: no newline translation
     listing = tmp_path / "decls.json"
     listing.write_text(json.dumps(decls), encoding="utf-8")
-    done = subprocess.run([str(NODE), str(driver), str(script), str(source), str(listing)], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    refs = tmp_path / "refs.json"
+    refs.write_text(json.dumps(references or []), encoding="utf-8")
+    args = [str(NODE), str(driver), str(script), str(source), str(listing), str(refs)]
+    if traces is not None:
+        trace_file = tmp_path / "traces.json"
+        trace_file.write_text(json.dumps(traces, ensure_ascii=False), encoding="utf-8")
+        args.append(str(trace_file))
+    done = subprocess.run(args, capture_output=True, text=True, encoding="utf-8", timeout=60)
     assert done.returncode == 0, done.stderr
     return {int(k): v for k, v in json.loads(done.stdout).items()}
 
@@ -231,6 +244,32 @@ def test_names_declared_on_the_page_link_to_their_anchor(demo):
 
 
 @needs_node
+def test_resolved_cross_file_references_link_in_the_use_list_and_lean_source(tmp_path):
+    name = "MeasureTheory.BoundedCompactSupport.indicator_of_isCompact_closure"
+    short = "BoundedCompactSupport.indicator_of_isCompact_closure"
+    href = "ToMathlib/BoundedCompactSupport.lean.html#L388"
+    text = f"theorem t : True := by\n  exact {short} (memLp_top_const _)\n"
+    out = _readings(tmp_path, text, [[1, "t"]], [[name, href]])[1]
+    link = f'href="{href}">{short}</a>'
+    assert link in out
+    assert out.count(link) == 2  # the dependency summary and the exact source occurrence
+
+
+@needs_node
+def test_an_ambiguous_short_reference_is_not_linked_to_the_wrong_declaration(tmp_path):
+    text = "theorem t : Foo.item = Bar.item := by\n  exact item\n"
+    out = _readings(
+        tmp_path,
+        text,
+        [[1, "t"]],
+        [["Foo.item", "Foo.lean.html#L1"], ["Bar.item", "Bar.lean.html#L1"]],
+    )[1]
+    assert 'href="Foo.lean.html#L1">Foo.item</a>' in out
+    assert 'href="Bar.lean.html#L1">Bar.item</a>' in out
+    assert '>item</a>' not in out
+
+
+@needs_node
 def test_lean_source_is_escaped_in_the_reading(tmp_path):
     text = 'theorem t : "<b>" = "<b>" := rfl\n'
     out = _readings(tmp_path, text, [[1, "t"]])
@@ -262,6 +301,14 @@ def test_a_property_written_with_a_dot_reads_as_a_property_of_that_value(tmp_pat
     out = _readings(tmp_path, text, [[1, "t"], [3, "u"]])
     assert "{p : ℕ | p.Prime} is infinite" in _text(out[1])
     assert "G is bipartite" in _text(out[3])
+
+
+@needs_node
+def test_an_unknown_multi_argument_predicate_is_not_rewritten_as_a_property(tmp_path):
+    text = "theorem t : ExistsAME 11 5 := sorry\n"
+    rendered = _text(_readings(tmp_path, text, [[1, "t"]])[1])
+    assert "ExistsAME(11, 5)" in rendered
+    assert "property ExistsAME" not in rendered
 
 
 @needs_node
@@ -596,6 +643,77 @@ GENERATOR = Path(__file__).resolve().parents[1] / "tools" / "vocabulary.cjs"
 READER_FILE = Path(__file__).resolve().parents[1] / "src" / "lean4_explainer_reader" / "reader.js"
 
 
+@needs_node
+def test_explanatory_lean_applications_use_conventional_function_notation(tmp_path):
+    driver = (
+        "const R = require(process.argv[2]);\n"
+        "const cases = JSON.parse(process.argv[3]);\n"
+        "process.stdout.write(JSON.stringify(cases.map((x) => R.proseApplicationText(x))));\n"
+    )
+    cases = [
+        "Fin r",
+        "Monomial r",
+        "h_seq m d",
+        "f (a + b)",
+        "Nat.fib n",
+        "Fin r →₀ ℕ",
+        "r = 3",
+        "A ∈ s",
+        "Monomial",
+    ]
+    assert _node(tmp_path, driver, READER_FILE, json.dumps(cases, ensure_ascii=False)) == [
+        "Fin(r)",
+        "Monomial(r)",
+        "h_seq(m, d)",
+        "f(a + b)",
+        "Nat.fib(n)",
+        None,
+        None,
+        None,
+        None,
+    ]
+
+
+def test_application_presentation_is_confined_to_explanatory_prose():
+    assert '".doc code", ".title code", ".intuition code", ".steps code", ".l4term code"' in READER_JS
+    assert 'el.closest("pre")' in READER_JS
+    assert 'el.closest(".l4del-quote")' in READER_JS
+    assert 'el.title = "Lean syntax: " + source' in READER_JS
+
+
+@needs_node
+def test_application_presentation_mutates_only_the_explanatory_elements(tmp_path):
+    driver = r"""
+const R = require(process.argv[2]);
+function element(text, blocked) {
+  return {
+    textContent: text,
+    title: "",
+    classes: [],
+    classList: { add(name) { this.owner.classes.push(name); }, owner: null },
+    closest(selector) { return blocked.includes(selector) ? {} : null; }
+  };
+}
+const rows = [
+  element("Fin r", []),
+  element("h_seq m d", []),
+  element("Fin r →₀ ℕ", []),
+  element("f x", ["pre"]),
+  element("g y", [".l4del-quote"])
+];
+for (const row of rows) row.classList.owner = row;
+R.drawProseApplications({ querySelectorAll() { return rows; } });
+process.stdout.write(JSON.stringify(rows.map((row) => [row.textContent, row.title, row.classes])));
+"""
+    assert _node(tmp_path, driver, READER_FILE) == [
+        ["Fin(r)", "Lean syntax: Fin r", ["prose-application"]],
+        ["h_seq(m, d)", "Lean syntax: h_seq m d", ["prose-application"]],
+        ["Fin r →₀ ℕ", "", []],
+        ["f x", "", []],
+        ["g y", "", []],
+    ]
+
+
 def _glossary_section(html, key):
     import re
 
@@ -716,6 +834,27 @@ def test_the_reader_typesets_the_formulas_the_core_marks():
     assert "docPieces" not in READER_JS  # the core finds the formulas now: one dollar rule, in one place
 
 
+@needs_node
+def test_doc_formula_accepts_dollar_and_latex_delimiters(tmp_path):
+    driver = (
+        "const R = require(process.argv[2]);\n"
+        "const cases = JSON.parse(process.argv[3]);\n"
+        "process.stdout.write(JSON.stringify(cases.map((x) => R.docFormula(x))));\n"
+    )
+    assert _node(
+        tmp_path,
+        driver,
+        READER_FILE,
+        json.dumps(["$x$", "$$x$$", r"\(x\)", r"\[x\]", r"\[unclosed"]),
+    ) == [
+        {"display": False, "tex": "x"},
+        {"display": True, "tex": "x"},
+        {"display": False, "tex": "x"},
+        {"display": True, "tex": "x"},
+        None,
+    ]
+
+
 BLUEPRINT = r"""
 % comment: \newcommand{\ignored}{x}
 \newcommand{\bbH}{\mathbb{H}}
@@ -774,3 +913,145 @@ def test_the_reader_draws_doc_text_on_every_page_it_loads_on():
     # the glossary has no source to read, so drawing the docs must not wait for one
     boot = READER_JS[READER_JS.index("function boot() {") :]
     assert boot.index("drawDocs(document)") < boot.index('document.getElementById("lean-source")')
+
+
+# ---- readings derived from the goals Lean reports ----------------------------------------------------------------
+# tests/data/demo-goals.lean was run through the lean extension's probe with Lean 4.35.0; the trace is what that
+# extension puts on the page ({"v": 1, "d": {"<declaration line>:<name>": [[line, tactic, goals before, goals after, href]]}}).
+# A step's words are read off how its goals change. Where no Lean step matches, the words come from the tactic's text,
+# and the step says so.
+DATA = Path(__file__).with_name("data")
+GOALS_LEAN = (DATA / "demo-goals.lean").read_text(encoding="utf-8")
+GOALS_TRACE = json.loads((DATA / "demo-goals.lean-4.35.0.trace.json").read_text(encoding="utf-8"))["d"]
+GOAL_DECLS = [[1, "and_swap'"], [6, "add_zero_comm"], [13, "imp_chain"], [18, "or_comm'"], [24, "has_step"]]
+
+
+def _by_line(trace):
+    return {int(key.split(":", 1)[0]): steps for key, steps in trace.items()}
+
+
+@pytest.fixture
+def goals(tmp_path):
+    return _readings(tmp_path, GOALS_LEAN, GOAL_DECLS, traces=_by_line(GOALS_TRACE))
+
+
+def _prose(html):
+    """_text, with the space a removed tag leaves before , . ; ? ! ) and after ( closed up (a colon keeps its spaces: `h : p`)."""
+    import re
+
+    return re.sub(r"\(\s+", "(", re.sub(r"\s+([,.;?!)])", r"\1", _text(html)))
+
+
+def _step_text(html, line):
+    """The words of the reading step on a source line (up to the next step), tags removed."""
+    import re
+
+    (found,) = re.findall(r'<li data-line="%d"[^>]*>(.*?)(?=<li data-line=|</ol>)' % line, html, flags=re.S)
+    return _prose(found)
+
+
+@needs_node
+def test_a_step_is_read_from_how_the_goals_lean_reports_change(goals):
+    imp = goals[13]
+    assert "Introduces hpq : p → q, hqr : q → r and hp : p" in _step_text(imp, 14)
+    assert "The goal becomes r" in _step_text(imp, 14)
+    assert "The goal becomes q" in _step_text(imp, 15)  # apply hqr: r is shown by showing q
+    assert "Closes the goal" in _step_text(imp, 16)
+    rewrite = _step_text(goals[6], 10)
+    assert "ih becomes 0 + k = k" in rewrite and "The goal becomes 0 + (k + 1) = k + 1" in rewrite
+    have = _step_text(goals[24], 25)
+    assert "Introduces h2 : b < b + 1" in have and "The goal does not change" in have
+
+
+@needs_node
+def test_a_step_that_splits_the_goal_says_what_each_goal_is(goals):
+    split = _step_text(goals[1], 2)
+    assert "Splits the goal into 2 goals" in split
+    assert "left : q" in split and "right : p" in split
+
+
+@needs_node
+def test_a_bullet_names_the_goal_it_works_on_and_a_block_the_goal_it_starts_from(goals):
+    assert "Case 1 (left, to show q)" in _prose(goals[1])
+    assert "Works on the goal 0 + n = n + 0" in _step_text(goals[6], 7)  # induction: its alternatives are its sub-steps
+
+
+@needs_node
+def test_each_step_says_where_its_words_come_from(goals):
+    html = goals[13]
+    assert html.count('data-basis="goals"') == 3  # all three tactics have a Lean step
+    assert 'class="rd-how"' in html  # the tactic's own words stay beside the goals, as the how
+    assert 'data-basis="source"' not in html
+
+
+@needs_node
+def test_a_tactic_that_differs_from_the_traced_one_on_its_line_is_not_given_its_goals(tmp_path):
+    other = {key: [list(step) for step in steps] for key, steps in GOALS_TRACE.items()}
+    other["13:imp_chain"][0][1] = "simp"  # Lean's step on line 14 is not the `intro` the reading reads there
+    got = _readings(tmp_path, GOALS_LEAN, GOAL_DECLS, traces=_by_line(other))
+    intro = _step_text(got[13], 14)
+    assert "Introduces" not in intro and "goal becomes" not in intro
+    assert 'data-line="14" data-basis="source"' in got[13]
+    assert 'data-line="15" data-basis="goals"' in got[13]  # its neighbours keep theirs
+
+
+@needs_node
+def test_without_a_trace_a_reading_makes_no_claim_about_goals(tmp_path):
+    got = _readings(tmp_path, GOALS_LEAN, GOAL_DECLS)
+    for html in got.values():
+        assert "data-basis" not in html and "rd-fact" not in html
+
+
+@needs_node
+def test_a_declaration_without_a_trace_entry_is_read_from_source_and_says_so(tmp_path):
+    only = _by_line({key: steps for key, steps in GOALS_TRACE.items() if key.startswith("13:")})
+    got = _readings(tmp_path, GOALS_LEAN, GOAL_DECLS, traces=only)
+    assert 'data-basis="goals"' in got[13]
+    assert 'data-basis="source"' in got[18] and 'data-basis="goals"' not in got[18]
+
+
+@needs_node
+def test_the_note_says_which_kind_of_reading_the_page_has(tmp_path):
+    driver = (
+        "const R = require(process.argv[2]);\n"
+        "const out = {};\n"
+        "out.source = R.readingNote('source', {});\n"
+        "out.goals = R.readingNote('goals', {derived: 12, total: 15, fetched: true});\n"
+        "out.failed = R.readingNote('failed', {reason: 'HTTP 404', fetched: false});\n"
+        "process.stdout.write(JSON.stringify(out));\n"
+    )
+    reader = tmp_path / "reader.cjs"
+    reader.write_text(READER_JS, encoding="utf-8")
+    note = _node(tmp_path, driver, reader)
+    assert "derived from source text" in note["source"] and "does not reconstruct Lean's intermediate goals" in note["source"]
+    assert "does not reconstruct" not in note["goals"] and "12 of 15 steps" in note["goals"]
+    assert "goals Lean reports" in note["goals"]
+    assert "could not be loaded" in note["failed"] and "HTTP 404" in note["failed"] and "source text" in note["failed"]
+    assert "does not reconstruct" not in note["failed"]  # it did run Lean; saying it did not would be wrong the other way
+
+
+@needs_node
+def test_a_reading_can_link_to_goals_before_the_trace_is_drawn(tmp_path):
+    # trace.js draws a trace when it is opened, and numbers its steps L<declaration line>-step<k> in the order of the data
+    # (packages/lean tests pin that numbering). So the reader works the ids out from the data it already holds, instead of
+    # waiting for the page to draw them: a trace opened later left every "goals" and "in words" link missing.
+    driver = (
+        "const R = require(process.argv[2]);\n"
+        "const steps = [[14, 'intro hpq hqr hp', [], [], ''], [15, 'apply hqr', [], [], ''], [16, 'exact hpq hp', [], [], '']];\n"
+        "const memory = R.memoryTrace(13, steps);\n"
+        "const reading = [['15', 'apply hqr'], ['16', 'exact hpq hp'], ['17', 'omega']];\n"
+        "process.stdout.write(JSON.stringify([memory, R.traceLinks(reading, memory)]));\n"
+    )
+    reader = tmp_path / "reader.cjs"
+    reader.write_text(READER_JS, encoding="utf-8")
+    memory, links = _node(tmp_path, driver, reader)
+    assert memory == [["L13-step1", "14", "intro hpq hqr hp"], ["L13-step2", "15", "apply hqr"], ["L13-step3", "16", "exact hpq hp"]]
+    assert links == ["L13-step2", "L13-step3", None]
+
+
+def test_links_are_made_again_when_a_trace_that_was_opened_later_has_been_drawn():
+    boot = READER_JS[READER_JS.index("function boot() {") :]
+    assert 'attributeFilter: ["data-trace-state"]' in boot  # trace.js sets data-trace-state=loaded once its steps are drawn
+    link = READER_JS[READER_JS.index("function linkTrace(li) {") : READER_JS.index("function readingNote(")]
+    assert "traceMemory.get(li.id)" in link  # without a drawn trace, the links come from the data
+    assert "e.preventDefault()" in link and "whenDrawn(" in link  # a "goals" link opens the trace and scrolls once it is drawn

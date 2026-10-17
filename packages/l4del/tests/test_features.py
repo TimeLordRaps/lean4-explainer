@@ -55,7 +55,7 @@ def test_an_annotated_file_gets_full_share_metadata(make_context):
     assert '<meta property="og:title"' not in file_page(bare, ctx)
 
 
-def test_annotated_page_starts_with_an_acronym_legend(make_context):
+def test_annotated_page_starts_with_a_collapsed_acronym_legend(make_context):
     extension = L4delExtension()
     ctx = make_context(extensions=((extension, None),))
     source = (
@@ -65,8 +65,45 @@ def test_annotated_page_starts_with_an_acronym_legend(make_context):
     )
     rendered = file_page(parse_source(source, "A.lean"), ctx)
     assert "Explanation legend" in rendered
+    legend = rendered[rendered.index('<details class="explanation-legend">') :]
+    legend = legend[: legend.index("</details>") + len("</details>")]
+    assert legend.startswith('<details class="explanation-legend"><summary>')
+    assert "<details open" not in legend
+    assert "Lean4 Domain Explanation Language (L4DEL)" in legend
     assert "Lean4 Domain Explanation Language" in rendered
     assert "nondeterministic polynomial time" in rendered
+    assert '.explanation-legend > summary::before { content: "\\25B8";' in extension.css({})
+    assert '.explanation-legend[open] > summary::before { content: "\\25BE";' in extension.css({})
+
+
+def test_legend_only_lists_acronyms_with_real_expansions(make_context):
+    extension = L4delExtension()
+    ctx = make_context(extensions=((extension, Analysis(notes=())),))
+    source = (
+        "-- L4DEL: title: P5 uses NP and N3 notation\n"
+        "-- L4DEL: quote: Paper = HA, LA, U1, and U2 are formula labels\n"
+        "-- L4DEL: source: Paper = https://example.org/paper\n"
+        "-- L4DEL: acronym: NP = nondeterministic polynomial time\n"
+        "theorem fact : True := trivial\n"
+    )
+    rendered = file_page(parse_source(source, "A.lean"), ctx)
+    legend = rendered[rendered.index('<details class="explanation-legend">') :]
+    legend = legend[: legend.index("</details>") + len("</details>")]
+
+    assert "nondeterministic polynomial time" in legend
+    for notation in ("P5", "N3", "HA", "LA", "U1", "U2"):
+        assert f">{notation}</abbr>" not in legend
+
+
+def test_l4del_explanation_is_visually_separate_from_source_documentation(make_context):
+    extension = L4delExtension()
+    ctx = make_context(extensions=((extension, Analysis(notes=())),))
+    source = "/-- Source words. -/\n-- L4DEL: intuition: Explanation words.\ntheorem fact : True := trivial\n"
+    rendered = file_page(parse_source(source, "A.lean"), ctx)
+
+    assert '<section class="source-doc" aria-label="Source documentation">' in rendered
+    assert '<section class="l4del" aria-label="Lean4 Domain Explanation Language explanation">' in rendered
+    assert rendered.index('<section class="source-doc"') < rendered.index('<section class="l4del"')
 
 
 def test_corpus_status_expands_l4del_before_using_the_acronym():

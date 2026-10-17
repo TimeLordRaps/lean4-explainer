@@ -44,7 +44,7 @@ __all__ = [
 CACHE_FORMAT = 9
 # Rendered-page compatibility is separate from the parsed-source cache. Increment this when
 # shared HTML changes so incremental builds rewrite pages without needlessly rescanning Lean.
-PAGE_FORMAT = 6
+PAGE_FORMAT = 8
 # Lake's build configuration and its older dependency directory are not library source. Always skipped,
 # at the root and in any subdirectory, on top of the user's exclude patterns. Hidden directories (.lake)
 # are already skipped by the scanner.

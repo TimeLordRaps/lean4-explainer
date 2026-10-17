@@ -6,7 +6,7 @@ import re
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
 from html import escape
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urljoin, urlsplit
 
 from .extensions import Extension
 from .imports import docs_url
@@ -71,6 +71,9 @@ ol.decls > li > b:first-child { font-weight: normal; }
 .doc h3 { font-size: 1.08rem; }
 .doc blockquote { margin-left: 0; padding-left: 0.7rem; border-left: 3px solid var(--line); color: var(--muted); }
 .doc hr { border: 0; border-top: 1px solid var(--line); }
+.source-doc { margin: 0.4rem 0; padding: 0.2rem 0 0.2rem 0.7rem; border-left: 3px solid var(--line); }
+.source-doc > .layer-label { margin: 0 0 0.25rem; color: var(--muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.source-doc > .doc { margin: 0; }
 pre { overflow-x: auto; margin: 0.4rem 0; padding: 0.5rem 0.6rem; font-size: 0.85rem; background: rgba(127, 127, 127, 0.08); border-radius: 4px; }
 [hidden] { display: none !important; }
 .title { font-style: italic; }
@@ -273,14 +276,20 @@ def file_page(lean_file: LeanFile, ctx: Context | None = None, text: str = "") -
         _crumbs(dirs, name),
         _path_title(dirs, name),
     ]
+    # Every file page should expose its exact upstream file plainly.  The
+    # declaration mode adds more precise line links below, but those small
+    # links should not be the only way a reader can discover the repository.
+    if ctx.source_url:
+        source = source_href(lean_file.path, 1, ctx)
+        label = "GitHub source file" if urlsplit(source).netloc.lower() == "github.com" else "Source file"
+        body.append(
+            f'<p class="source-file"><a class="src" href="{escape(source, quote=True)}">{label}</a></p>'
+        )
     for ext, analysis in ctx.extensions:
         preamble = ext.file_preamble(lean_file, ctx, analysis)
         if preamble:
             body.append(preamble)
     body.append(f'<p class="muted">{_stats(len(declarations), sorry, axioms)}</p>')
-    if ctx.source_url and ctx.source_links == "file":
-        href = escape(source_href(lean_file.path, 1, ctx), quote=True)
-        body.append(f'<p><a class="src" href="{href}">source</a></p>')
     if lean_file.module_doc:
         body.append(f'<div class="doc">{doc_html(lean_file.module_doc)}</div>')
     shown = ctx.imports == "all" or (ctx.imports == "import-only" and lean_file.import_only)
@@ -434,9 +443,15 @@ def _decl_item(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> st
         head += f' <a class="src" href="{href}">source</a>'
     parts = [f'<li id=L{decl.line}>{head}']
     if decl.doc:  # a doc comment is Markdown; a plain comment above a declaration is shown as written
-        parts.append(f'<div class="doc">{doc_html(decl.doc)}</div>')
+        parts.append(
+            '<section class="source-doc" aria-label="Source documentation">'
+            f'<p class="layer-label">Source documentation</p><div class="doc">{doc_html(decl.doc)}</div></section>'
+        )
     elif decl.comment:
-        parts.append(f'<div class="doc plain">{escape(decl.comment)}</div>')
+        parts.append(
+            '<section class="source-doc" aria-label="Source comment">'
+            f'<p class="layer-label">Source comment</p><div class="doc plain">{escape(decl.comment)}</div></section>'
+        )
     before: list[str] = []
     after: list[str] = []
     for ext, analysis in ctx.extensions:
@@ -471,11 +486,11 @@ def _copies(decl: Declaration, rel: str, dirs: list[str], ctx: Context) -> str:
     items = []
     for copy in others:
         if copy.code == decl.code_digest:
-            how = "identical"
+            how = "same declaration text"
         elif copy.header == decl.header_digest:
-            how = "same statement, different proof or body"
+            how = "same statement text; different proof or body"
         else:
-            how = "different statement"
+            how = "different declaration text"
         link = escape(href(dirs, copy.rel, f"#L{copy.line}"), quote=True)
         items.append(f'<a href="{link}">{escape(copy.rel)}:{copy.line}</a> ({how})')
     if decl.name in objects.ambiguous:
@@ -553,7 +568,7 @@ def search_page(ctx: Context) -> str:
 
 
 def _stats(declarations: int, sorry: int, axioms: int) -> str:
-    return f"{declarations} declarations, {sorry} contain sorry, {axioms} axioms"
+    return f"{declarations} declarations, {sorry} contain sorry, {axioms} declared as axioms"
 
 
 def up_path(levels: int) -> str:

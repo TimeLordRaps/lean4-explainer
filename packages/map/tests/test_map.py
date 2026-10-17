@@ -156,9 +156,31 @@ def test_each_declaration_carries_its_neighbourhood_across_files(tmp_path):
     assert lonely_line not in edges  # a name in a string or doc comment is no use
     links = {name: link for name, link in _data(more_page)["n"]}
     assert links["Demo.base"] == "Base.lean.html#L3" and links["Demo.More.middle"].startswith("#L")
+    refs = {_data(more_page)["n"][index][0] for index in _data(more_page)["r"]}
+    assert {"Demo.base", "Demo.base_pos", "Demo.More.middle"} <= refs
     base_edges = _edges(_data(base_page))
     assert all("Demo.More.top" != user or target != "Demo.base" for target, user, _ in base_edges[3])
     assert not any(("Demo.More.top", "Demo.base_pos", 0) == e for e in base_edges[6])  # only named in a comment
+
+
+def test_reference_index_keeps_direct_uses_omitted_from_the_small_drawing(tmp_path):
+    src = tmp_path / "src"
+    src.mkdir()
+    names = [f"value{k}" for k in range(12)]
+    (src / "Values.lean").write_text(
+        "\n".join(f"def {name} : ℕ := {k}" for k, name in enumerate(names)) + "\n",
+        encoding="utf-8",
+    )
+    (src / "Total.lean").write_text(
+        "import Values\n\ndef total : ℕ := " + " + ".join(names) + "\n",
+        encoding="utf-8",
+    )
+    build_site(src, tmp_path / "out", Config(), tmp_path / "idx", jobs=1)
+    data = _data((tmp_path / "out" / "Total.lean.html").read_text(encoding="utf-8"))
+    refs = {data["n"][index][0] for index in data["r"]}
+    assert set(names) <= refs
+    drawn = {data["n"][index][0] for entry in data["d"] for index in entry[2][::3] + entry[2][1::3]}
+    assert set(names) - drawn  # direct references beyond the NEAR display limit remain linkable
 
 
 SHADOW_DEF = "def Kc : ℕ := 7\n"

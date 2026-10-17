@@ -58,6 +58,7 @@ def classify(axioms: tuple[str, ...] | None) -> tuple[str, str]:
 def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
     """Read the probe's JSON lines. `declarations` are (name, 1-based line) pairs from the text scan."""
     steps: dict[tuple[int, int], Step] = {}
+    ranks: dict[tuple[int, int], tuple[int, ...]] = {}
     axioms: dict[str, tuple[str, ...] | None] = {}
     uses: dict[str, tuple[tuple[str, ...], tuple[str, ...], int]] = {}
     errors: list[str] = []
@@ -70,6 +71,9 @@ def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
             continue
         kind = item.get("kind")
         if kind == "tactic":
+            flagged = "isTactic" in item
+            if flagged and not item["isTactic"]:
+                continue  # a `by` block, a tactic sequence, a rewrite rule, a binder in a macro expansion: no step of its own
             first = item["tactic"].split("\n", 1)[0].strip()
             if not first or first == "by":
                 continue
@@ -81,8 +85,13 @@ def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
                 tuple(_clip(g) for g in item["before"]),
                 tuple(_clip(g) for g in item["after"]),
             )
-            if key not in steps or len(item["tactic"]) < len(steps[key].tactic):  # keep the innermost node at a position
+            # Several nodes can sit at one position. A flagged tactic is the one as written, so the widest span wins (the
+            # smaller ones are pieces of its macro expansion, such as `intro a` inside `intro a b`). An older probe's output
+            # has no flag, so the innermost node wins there: the shortest text, compared with the others' full text.
+            rank = (item.get("endLine", 0), item.get("endColumn", 0)) if flagged else (-len(item["tactic"]),)
+            if key not in steps or rank > ranks[key]:
                 steps[key] = step
+                ranks[key] = rank
         elif kind == "decl":
             axioms[item["name"]] = None if item["axioms"] is None else tuple(item["axioms"])
             uses[item["name"]] = (
@@ -91,7 +100,9 @@ def parse_probe(output: str, declarations: list[tuple[str, int]]) -> FileFacts:
                 int(item.get("hidden", 0)),
             )
         elif kind == "message" and item.get("severity") == "error":
-            errors.append(f"line {item['line']}: {item['text'].splitlines()[0] if item['text'] else ''}")
+            message = f"line {item['line']}: {item['text'].splitlines()[0] if item['text'] else ''}"
+            if message not in errors:
+                errors.append(message)
     ordered = sorted(declarations, key=lambda d: d[1])
     lines = [line for _, line in ordered]
     grouped: dict[int, list[Step]] = {i: [] for i in range(len(ordered))}

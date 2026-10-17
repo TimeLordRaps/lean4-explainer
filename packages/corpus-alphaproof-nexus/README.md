@@ -17,6 +17,6 @@ human-written prose companions, or the hosted L4DEL overlay. Sources are fetched
 builds the corpus. The public showcase compiles the pin locally and keeps its separately disclosed explanatory overlay
 under `hosted/overlays/`.
 
-The hosted showcase retains each declaration's local Lean trust classification and the corpus Trust page, but omits
-the repeated per-tactic goal trace for this corpus (`lean_steps = 0`). Those traces add roughly 70 MB to the generated
-HTML and would push the complete nine-corpus site beyond GitHub Pages' 1 GB published-site limit.
+The hosted showcase retains each declaration's local Lean trust classification, corpus Trust page, and bounded
+per-tactic goal traces. The complete site is measured before publication so these traces cannot silently cross the
+GitHub Pages published-site boundary.

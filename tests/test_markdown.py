@@ -27,6 +27,7 @@ def _tex(text):
         (SUM_DISTINCT, ["$A$", "$N \\in \\mathbb{N}$", "$A\\subseteq\\{1, ..., N\\}$", "$\\sum_{a\\in S}a$", "$S\\subseteq A$"]),
         ("Let $P(n, k)$ be the largest prime factor of $\\binom{n}{k}$.", ["$P(n, k)$", "$\\binom{n}{k}$"]),
         ("Display $$\\sum_i a_i$$ here", ["$$\\sum_i a_i$$"]),
+        (r"Inline \(x + y\) and display \[x = y\]", [r"\(x + y\)", r"\[x = y\]"]),
         ("costs $5 and $6, not math", []),
         ("In [Er93] Erdős offers $100 for a proof of this and $1000 for a disproof, but says", []),
         ("an unclosed $x and a ` lone backtick", []),
@@ -56,6 +57,9 @@ def test_formulas_are_kept_as_written_for_the_reader_and_escaped():
     assert inline_html(SUM_DISTINCT).count('<span class="tex">') == 5
     # TeX is not Markdown: underscores and stars inside a formula stay
     assert inline_html("$a_1 * b_1 * c$ and $x_i$") == '<span class="tex">$a_1 * b_1 * c$</span> and <span class="tex">$x_i$</span>'
+    assert inline_html(r"\(a<b\) then \[c>d\]") == (
+        '<span class="tex">\\(a&lt;b\\)</span> then <span class="tex">\\[c&gt;d\\]</span>'
+    )
 
 
 @pytest.mark.parametrize(

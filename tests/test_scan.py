@@ -25,6 +25,24 @@ def test_attributes_and_modifiers_are_skipped():
     assert [decl.kind for decl in declarations(text)] == ["theorem", "lemma"]
 
 
+def test_universe_binders_are_not_part_of_declaration_names():
+    text = "lemma polymorphic.{u} (α : Type u) : True := trivial\nlemma ordinary.name : True := trivial\n"
+    assert names(text) == ["polymorphic", "ordinary.name"]
+
+
+def test_compound_namespaces_close_one_component_at_a_time_and_single_space_commands_are_seen():
+    found = parse_source(
+        "namespace OAI\nnamespace StrongThinTree.MultiGraph\nlemma helper : True := trivial\n"
+        "end MultiGraph\n theorem main : True := trivial\nend StrongThinTree\nend OAI\n",
+        "Demo.lean",
+    )
+
+    assert [decl.name for decl in found.declarations] == [
+        "OAI.StrongThinTree.MultiGraph.helper",
+        "OAI.StrongThinTree.main",
+    ]
+
+
 def test_comments_and_strings_do_not_create_declarations_or_sorry():
     text = '-- theorem fake : True := sorry\n/- theorem fake2 := sorry -/\ndef s : String := "sorry theorem fake3"\n'
     found = declarations(text)
@@ -100,6 +118,21 @@ def test_doc_comment_takes_precedence_over_plain_comment():
 def test_consecutive_line_comments_join():
     decl = declarations("-- one\n-- two\ndef h : Nat := 0\n")[0]
     assert decl.comment == "one\ntwo"
+
+
+def test_upstream_workflow_sentinels_are_not_presented_as_mathematical_documentation():
+    start = declarations("-- EVOLVE-BLOCK-START\ndef f (n : Nat) := Nat.fib n\n")[0]
+    end = declarations("-- EVOLVE-BLOCK-END\ndef g : Nat := 0\n")[0]
+
+    assert start.comment is None
+    assert start.description is None
+    assert end.comment is None
+
+
+def test_workflow_sentinel_line_does_not_hide_adjacent_real_documentation():
+    decl = declarations("-- Useful helper definition.\n-- EVOLVE-BLOCK-START\ndef f : Nat := 0\n")[0]
+
+    assert decl.comment == "Useful helper definition."
 
 
 def test_extra_kinds_list_a_project_specific_declaration_keyword():

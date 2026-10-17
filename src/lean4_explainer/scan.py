@@ -36,11 +36,13 @@ def _decl_re(extra_kinds: tuple[str, ...] = ()) -> re.Pattern[str]:
         r"^(?:@\[[^\]]*\]\s*)?"
         r"(?:(?:private|protected|noncomputable|partial|unsafe|nonrec)\s+)*"
         r"(?P<kind>class[ \t]+inductive|" + kinds + r")\b"  # before `class`, or a class inductive's name is lost
-        r"(?:[ \t]+(?P<name>[^\s:(){}\[\]|]+))?"
+        # A declaration's universe binder is syntax, not part of the constant name:
+        # `lemma map.{u}` must be queried from Lean as `map`, not `map.`.
+        r"(?:[ \t]+(?P<name>[^\s:(){}\[\]|.]+(?:\.(?!\{)[^\s:(){}\[\]|.]+)*))?"
     )
 _NAMESPACE_RE = re.compile(r"^namespace[ \t]+(?P<name>\S+)")
 _SECTION_RE = re.compile(r"^(?:noncomputable[ \t]+)?section\b")
-_END_RE = re.compile(r"^end\b")
+_END_RE = re.compile(r"^end(?:[ \t]+(?P<name>\S+))?\b")
 # `import A B`, and the module system's `public import A`, `meta import A`, `import all A`
 _IMPORT_RE = re.compile(r"^(?:(?:public|private|meta)[ \t]+)*import[ \t]+(?:all[ \t]+)?(?P<names>[^\n]*)")
 _HEADER_RE = re.compile(r"^(?:module|prelude)[ \t]*$")
@@ -54,6 +56,7 @@ _CHAR_LITERAL_RE = re.compile(r"'(?:\\.|[^'\\\n])'")
 _LEADING_SKIP_PREFIXES = ("@[", "set_option")
 _STATEMENT_MAX_LINES = 12
 _INDENTED = ("", " ", "\t")
+_WORKFLOW_MARKER_RE = re.compile(r"^EVOLVE-BLOCK-(?:START|END)$", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -216,17 +219,21 @@ def _declaration_heads(code: list[str], extra_kinds: tuple[str, ...] = ()) -> li
     heads: list[tuple[int, str, str]] = []
     scope: list[str] = []
     for index, line in enumerate(code):
-        if line[:1] in _INDENTED:
+        # Lean permits a stray single leading space before a command. Generated corpora use it on real top-level
+        # theorems; two spaces or a tab still denote nested syntax for this conservative source scanner.
+        if not line or line.startswith("\t") or line.startswith("  "):
             continue
-        namespace = _NAMESPACE_RE.match(line)
-        decl = decl_re.match(line)
+        command = line[1:] if line.startswith(" ") else line
+        namespace = _NAMESPACE_RE.match(command)
+        decl = decl_re.match(command)
         if namespace:
-            scope.append(namespace["name"])
-        elif _SECTION_RE.match(line):
+            scope.extend(part for part in namespace["name"].split(".") if part)
+        elif _SECTION_RE.match(command):
             scope.append("")
-        elif _END_RE.match(line):
+        elif ending := _END_RE.match(command):
             if scope:
-                scope.pop()
+                count = len((ending["name"] or "").split(".")) if ending["name"] else 1
+                del scope[max(0, len(scope) - count):]
         elif decl:
             local = decl["name"] or f"({decl['kind']} at line {index + 1})"
             qualified = ".".join(part for part in [*scope, local] if part)
@@ -333,7 +340,16 @@ def _leading_comments(
 
 
 def _plain_text(plain: list[_Comment]) -> str | None:
-    return "\n".join(_clean(c.body) for c in reversed(plain)) or None
+    # Some generated proof corpora leave control sentinels immediately above a
+    # declaration.  They delimit an upstream synthesis region; they are not a
+    # title or mathematical documentation for the declaration that follows.
+    visible: list[str] = []
+    for comment in reversed(plain):
+        cleaned = _clean(comment.body)
+        kept = [line for line in cleaned.splitlines() if not _WORKFLOW_MARKER_RE.fullmatch(line.strip())]
+        if any(line.strip() for line in kept):
+            visible.append("\n".join(kept).strip())
+    return "\n".join(visible) or None
 
 
 def _statement(source: list[str], code: list[str], index: int, bound: int) -> str:

@@ -1,6 +1,7 @@
-"""Doc comments as HTML. Lean doc comments are Markdown with TeX in them, as doc-gen4 shows them. This draws the
+r"""Doc comments as HTML. Lean doc comments are Markdown with TeX in them, as doc-gen4 shows them. This draws the
 part people use: paragraphs, headings, lists, quotes, rules, fenced code, `code`, *emphasis*, **strong**, links and
-bare URLs. `$…$` and `$$…$$` stay as written, inside <span class="tex">, for an extension (the reader) to typeset.
+bare URLs. `$…$`, `$$…$$`, `\(…\)` and `\[…\]` stay as written, inside <span class="tex">, for an extension (the
+reader) to typeset.
 
 Everything is escaped. A link is made only to an http, https or mailto URL, or to a relative one.
 
@@ -39,7 +40,7 @@ _PLACEHOLDER = re.compile("(\\d+)")
 # ---- inline -------------------------------------------------------------------------------------------------------
 
 def math_spans(text: str) -> list[tuple[int, int]]:
-    """Where the formulas are: (start, end) of each `$…$` or `$$…$$`, dollars included."""
+    """Where the formulas are: (start, end), including their dollar or backslash delimiters."""
     return [(start, end) for kind, start, end in _scan(text) if kind == "tex"]
 
 
@@ -49,7 +50,15 @@ def _scan(s: str) -> list[tuple[str, int, int]]:
     i, n = 0, len(s)
     while i < n:
         c = s[i]
-        if c == "\\" and i + 1 < n and s[i + 1] in _PUNCT:
+        if c == "\\" and i + 1 < n and s[i + 1] in "([":
+            end = _backslash_math_end(s, i)
+            if end is None:
+                found.append(("escape", i, i + 2))
+                i += 2
+            else:
+                found.append(("tex", i, end))
+                i = end
+        elif c == "\\" and i + 1 < n and s[i + 1] in _PUNCT:
             found.append(("escape", i, i + 2))
             i += 2
         elif c == "`":
@@ -72,6 +81,18 @@ def _scan(s: str) -> list[tuple[str, int, int]]:
         else:
             i += 1
     return found
+
+
+def _backslash_math_end(s: str, i: int) -> int | None:
+    r"""End of a LaTeX ``\(...\)`` or ``\[...\]`` formula, or None when it is unclosed/empty."""
+    close = "\\)" if s[i + 1] == "(" else "\\]"
+    end = s.find(close, i + 2)
+    if end < 0:
+        return None
+    body = s[i + 2 : end]
+    if not body.strip() or _BLANK.search(body):
+        return None
+    return end + 2
 
 
 def _code_end(s: str, i: int, run: int) -> int | None:

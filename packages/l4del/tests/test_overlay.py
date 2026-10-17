@@ -84,6 +84,21 @@ def test_overlay_annotations_reach_the_page_and_the_source_is_untouched(tmp_path
     assert (root / "Demo.lean").read_text(encoding="utf-8") == SOURCE  # the sidecar never writes upstream
 
 
+def test_mechanical_overlay_does_not_repeat_an_identical_source_doc_comment(tmp_path):
+    overlay = """@file Demo.lean
+@decl Demo.first
+-- L4DEL: title: Upstream description
+-- L4DEL: intuition: Doc comment from upstream.
+"""
+    _, out, _ = _site(tmp_path, overlay)
+
+    page = (out / "Demo.lean.html").read_text(encoding="utf-8")
+    assert page.count("Doc comment from upstream.") == 1
+    assert "Upstream description" in page
+    assert '<section class="source-doc" aria-label="Source documentation">' in page
+    assert '<section class="l4del" aria-label="Lean4 Domain Explanation Language explanation">' not in page
+
+
 def test_linked_quote_renders_as_a_citation(tmp_path):
     overlay = """@file Demo.lean
 @decl Demo.first
@@ -94,6 +109,25 @@ def test_linked_quote_renders_as_a_citation(tmp_path):
     rendered = (out / "Demo.lean.html").read_text(encoding="utf-8")
     assert '<blockquote class="l4del-quote" cite="https://example.org/note">' in rendered
     assert '>Original note</a>' in rendered
+
+
+def test_overlay_explanation_renders_inline_and_display_tex_and_markdown(tmp_path):
+    overlay = r"""@file Demo.lean
+@decl Demo.first
+-- L4DEL: title: Sequence $a(n)$
+-- L4DEL: intuition: A103311: The sequence $a(n)$ satisfies $$a(n) = 3a(n-1) - 4a(n-2)$$ and lies in $\mathbb{Z}$.
+-- L4DEL: step: Use `ring` and **finish**.
+-- L4DEL: term: sequence = values $a(n)$ indexed by integers
+"""
+    _, out, _ = _site(tmp_path, overlay)
+
+    rendered = (out / "Demo.lean.html").read_text(encoding="utf-8")
+    assert '<span class="title">Sequence <span class="tex">$a(n)$</span></span>' in rendered
+    assert '<a class="term" href="glossary.html#t0">sequence</a> <span class="tex">$a(n)$</span> satisfies' in rendered
+    assert '<span class="tex">$$a(n) = 3a(n-1) - 4a(n-2)$$</span>' in rendered
+    assert '<span class="tex">$\\mathbb{Z}$</span>' in rendered
+    assert '<code>ring</code> and <strong>finish</strong>' in rendered
+    assert 'values <span class="tex">$a(n)$</span> indexed by integers' in rendered
 
 
 def test_overlay_adds_the_configured_pinned_source_beside_the_explanation(tmp_path):
@@ -137,6 +171,11 @@ def test_unreviewed_overlay_discloses_its_provenance_beside_the_annotation(tmp_p
     page = (tmp_path / "out" / "Demo.lean.html").read_text(encoding="utf-8")
     assert "AI-generated and not human-reviewed" in page
     assert "not mathematical authority" in page
+    assert page.count("Annotation provenance.") == 1
+    legend = page[page.index('<details class="explanation-legend">') :]
+    legend = legend[: legend.index("</details>") + len("</details>")]
+    assert "Annotation provenance." in legend
+    assert not legend.startswith('<details class="explanation-legend" open>')
 
 
 def test_a_source_annotation_wins_over_the_overlay(tmp_path):

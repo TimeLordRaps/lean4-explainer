@@ -1,6 +1,6 @@
 # lean4-explainer-reader
 
-Gives every declaration on a lean4-explainer site a **Reading**, written in plain English from its source:
+Gives every declaration on a lean4-explainer site a **Reading**, written in plain English from its source (and, for each proof step, from the goals Lean reports when the Lean extension ran; see [Where a step's words come from](#where-a-steps-words-come-from)):
 
 - **It says:** the statement in words, for example "for every n, there is m such that n is less than m", and then the statement as a typeset formula.
 - **Its value:** for a definition, the definition as a formula: `def capacity (z : Phase n) : ℝ := Real.pi * ∑ j, Complex.normSq (z j)` shows as capacity(z) = π ∑ⱼ |zⱼ|². A `match` or `if` it cannot draw is read case by case, and anything else it cannot draw is shown as written. Only a function applied to arguments is read as "Apply f to a, b".
@@ -30,6 +30,8 @@ Parentheses are plain `( )` unless what they hold is tall (a fraction, a sum, a 
 
 ## Doc comments
 
+Inline Lean applications in explanatory prose use the same parser-backed mathematical renderer as declaration readings: `f x`, `Fin r`, and `h_seq m d` appear as $f(x)$, $\operatorname{Fin}(r)$, and $h_{\mathrm{seq}}(m,d)$. Hovering preserves the exact Lean spelling. Linked quotations, fenced code, source blocks, and declaration statements remain verbatim.
+
 Doc comments are Markdown with TeX in them. The core draws the Markdown and marks each formula (its rules for dollars are in the [reference](../../docs/REFERENCE.md#doc-comments)); the reader typesets the formulas, on file pages and in the glossary. A formula is drawn as its author wrote it. When KaTeX will not take it, the reader tries what TeX itself would accept: a Markdown escape left in the TeX (`p_n\\#`, `\Sigma^\*`), and a command as a subscript (`f_\max`, which KaTeX wants as `f_{\max}`). Plain TeX's `\sp` and `\sb` are defined. A formula it still cannot draw stays as its TeX, never KaTeX's red error.
 
 A project with a [blueprint](https://github.com/PatrickMassot/leanblueprint) keeps its TeX macros in `blueprint/src/macros/common.tex` (or `macro/`, `preamble/`) and `web.tex`. The reader reads `\newcommand`, `\renewcommand`, `\providecommand`, `\DeclareMathOperator` and `\def` from there, so `\bbH[X]` in PFR's doc comments draws as it does in PFR's blueprint. A macro with an optional argument is left out, since KaTeX's macros cannot have one. The macros go into the site's `_assets/reader.js`, not into every page. PFR has 25, Carleson 39, FLT 39.
@@ -46,9 +48,18 @@ node packages/reader/tools/vocabulary.cjs > packages/reader/src/lean4_explainer_
 
 Run it after changing a table. A test checks the file is up to date and that every table entry is in it; the script stops on an entry that reads badly with no argument and has no sample.
 
-## What it does not do
+## Where a step's words come from
 
-It reads text. Lean is not run, so a reading says what each tactic does in general, not the goal it leaves. For real goals after every step, install the Lean extension (`packages/lean`): when the same build runs Lean, each step of the Reading gets a "goals" link that opens the tactic trace at that step, and each trace step an "in words" link back. Steps are joined by source line, and by tactic where a line holds several. The words for a statement come from patterns over common notation (quantifiers, connectives, relations, and predicates such as `Injective`, `Prime` and `Tendsto`). Anything it does not recognize is shown as code, never guessed.
+`reader.js` never runs Lean. What a proof step says depends on whether the same build ran the Lean extension (`packages/lean`):
+
+- **Lean was run.** Each tactic step is read from the goals Lean reports before and after it. The words say how the goals change: `intro hpq hqr hp` reads "Introduces `hpq : p → q`, `hqr : q → r` and `hp : p`. The goal becomes `r`.", `constructor` reads "Splits the goal into 2 goals: `left`: `q`; `right`: `p`.", `exact h` reads "Closes the goal.". A `·` case names the goal it works on, and a step that holds sub-steps (`induction n with`, `cases h with`) says which goal it starts from, since the "no goals" Lean reports after it belongs to the whole block. The tactic's own words stay beside this as a quieter "how". A step carries `data-basis="goals"`.
+- **A step Lean has no matching step for** is read from the text of its tactic and marked `data-basis="source"` and "read from the source text". A step matches the Lean step on its source line with the same tactic (Lean keeps a tactic's first line); a different tactic on that line is never given another step's goals.
+- **The goals cannot be loaded** (the trace file is missing, of another version, or slow): the reading falls back to the source text, and the note at the top of the page says that and why.
+- **Lean was not run** for the site: the reading is the source's alone, the page says "it does not reconstruct Lean's intermediate goals", and no step says anything about goals.
+
+The page loads a declaration's trace (`_traces/*.json.gz`, the format `packages/lean` writes: `{"v": 1, "d": {"<line>:<name>": [[line, tactic, goals before, goals after, href]]}}`) when the page opens. Each step also gets a "goals" link that opens the tactic trace at that step, and each trace step an "in words" link back. The links are made from the trace data, so they exist before the trace is opened.
+
+The words for a statement come from patterns over common notation (quantifiers, connectives, relations, and predicates such as `Injective`, `Prime` and `Tendsto`). Anything it does not recognize is shown as code, never guessed.
 
 ## Config keys
 

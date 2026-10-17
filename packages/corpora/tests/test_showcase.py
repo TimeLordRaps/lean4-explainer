@@ -54,6 +54,11 @@ def upstream(tmp_path):
     (repo / "Demo.lean").write_text("import Demo.A\n", encoding="utf-8")
     (repo / "Demo" / "A.lean").write_text("/-- first -/\ntheorem a_fact : True := trivial\n", encoding="utf-8")
     (repo / "Tools" / "T.lean").write_text("theorem tool_fact : True := trivial\n", encoding="utf-8")
+    (repo / "formalization.yaml").write_text(
+        "status:\n  main_results:\n    - comparator_config: Demo.json\n"
+        "      declaration: a_fact\n      file: Demo/A.lean\n",
+        encoding="utf-8",
+    )
     _git(repo, "add", ".")
     _git(repo, "commit", "-q", "-m", "one")
     pinned = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
@@ -111,6 +116,67 @@ def test_showcase_builds_a_subsite_per_corpus_and_a_landing_page(upstream, tmp_p
     assert 'href="../index.html">All corpora<' in (out / "demo" / "index.html").read_text(encoding="utf-8")
     assert result.total_bytes > 0 and not result.over_budget
     assert (out / ".nojekyll").is_file()
+
+
+def test_showcase_reads_the_upstream_main_result_catalogue_into_the_lean_scope(upstream, tmp_path, monkeypatch):
+    from lean4_explainer import extensions
+    from lean4_explainer_corpora import showcase
+    from lean4_explainer_lean import LeanExtension
+
+    corpus, base = upstream
+    corpus = replace(corpus, lean_catalogue="formalization.yaml")
+    seen = []
+    summary = BuildSummary(
+        files=1, declarations=1, sorry=0, axioms=0, pages_written=1, pages_reused=0,
+        bytes_written=1, total_bytes=1, byte_budget=1000, search_entries=1, errors=(), warnings=(),
+        identical_names=0, variant_names=0,
+    )
+
+    def spy(root, out, config, cache, jobs=1):
+        seen.append(dict(config.options))
+        return summary
+
+    monkeypatch.setattr(showcase, "build_site", spy)
+    extensions.activate([LeanExtension()])
+    try:
+        build_showcase([corpus], tmp_path / "work", tmp_path / "site", base_url=base)
+    finally:
+        extensions.activate(None)
+
+    assert seen[0]["lean_targets"] == ["Demo/A.lean\ta_fact"]
+    assert "formalization.yaml" in seen[0]["lean_selection_label"]
+
+
+def test_showcase_passes_explicit_lean_cache_and_cache_only_mode(upstream, tmp_path, monkeypatch):
+    from lean4_explainer import extensions
+    from lean4_explainer_corpora import showcase
+    from lean4_explainer_lean import LeanExtension
+
+    corpus, base = upstream
+    cache = tmp_path / "evidence-cache"
+    seen = []
+    summary = BuildSummary(
+        files=1, declarations=1, sorry=0, axioms=0, pages_written=1, pages_reused=0,
+        bytes_written=1, total_bytes=1, byte_budget=1000, search_entries=1, errors=(), warnings=(),
+        identical_names=0, variant_names=0,
+    )
+
+    def spy(root, out, config, index_cache, jobs=1):
+        seen.append(dict(config.options))
+        return summary
+
+    monkeypatch.setattr(showcase, "build_site", spy)
+    extensions.activate([LeanExtension()])
+    try:
+        build_showcase(
+            [corpus], tmp_path / "work", tmp_path / "site", base_url=base,
+            lean_caches={corpus.name: cache}, lean_cached_only={corpus.name},
+        )
+    finally:
+        extensions.activate(None)
+
+    assert seen[0]["lean_cache"] == str(cache)
+    assert seen[0]["lean_cached_only"] is True
 
 
 def test_public_showcase_has_onboarding_metadata_recovery_and_discovery_files(upstream, tmp_path):
@@ -470,9 +536,10 @@ def test_a_corpus_carries_its_own_extension_settings_into_its_build(upstream, tm
     assert not (tmp_path / "off" / "demo" / "map.html").exists()
 
 
-def test_the_oai_corpus_leaves_out_the_map_to_stay_inside_the_pages_limit():
+def test_the_oai_corpus_leaves_out_the_map_but_not_the_lean_trust_pass_to_stay_inside_the_pages_limit():
     assert ("map_dependencies", False) in CORPORA["oai"].options
-    assert CORPORA["oai"].lean_file_limit == 2000
+    assert CORPORA["oai"].lean_file_limit == 0
+    assert CORPORA["oai"].lean_catalogue == "formalization.yaml"
     assert all(("map_dependencies", False) not in c.options for name, c in CORPORA.items() if name != "oai")
 
 

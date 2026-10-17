@@ -12,7 +12,7 @@ from lean4_explainer.extensions import Extension
 
 from . import registry, showcase
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 _WORK_DEFAULT = ".lean4-explainer-work"
 _SITE_DEFAULT = "lean4-explainer-site"
 _DEFAULT_JOBS = max(1, min(8, os.cpu_count() or 1))
@@ -51,6 +51,34 @@ class CorporaExtension(Extension):
             "--overlay-manifest",
             type=Path,
             help="explicit hosted-overlay manifest (content, corpus repository and commit are verified)",
+        )
+        build.add_argument(
+            "--lean-project",
+            action="append",
+            default=[],
+            metavar="CORPUS=PATH",
+            help="exact local Lake environment used to verify one corpus (repeatable)",
+        )
+        build.add_argument(
+            "--lean-cache",
+            action="append",
+            default=[],
+            metavar="CORPUS=PATH",
+            help="content-bound Lean evidence cache for one corpus (repeatable)",
+        )
+        build.add_argument(
+            "--lean-cached-only",
+            action="append",
+            default=[],
+            metavar="CORPUS",
+            help="reuse clean cached Lean evidence for one corpus and mark cache misses UNKNOWN (repeatable)",
+        )
+        build.add_argument(
+            "--lean-file-limit",
+            action="append",
+            default=[],
+            metavar="CORPUS=COUNT",
+            help="diagnostic bound for one corpus's Lean pass; 0 means every declaration file (repeatable)",
         )
         build.add_argument("--yes", action="store_true", help="download without asking")
 
@@ -110,6 +138,11 @@ def _fetch(args) -> int:
 def _showcase(args) -> int:
     try:
         corpora = registry.select(*args.names)
+        names = {corpus.name for corpus in corpora}
+        lean_projects = _named_paths(args.lean_project, names)
+        lean_caches = _named_cache_paths(args.lean_cache, names)
+        lean_cached_only = _selected_names(args.lean_cached_only, "--lean-cached-only", names)
+        lean_file_limits = _named_counts(args.lean_file_limit, names)
         if not _confirmed(args, _plan(corpora, "Will download and build")):
             return 2
         chosen = {c.name for c in corpora}
@@ -121,6 +154,10 @@ def _showcase(args) -> int:
             jobs=args.jobs,
             overlay_manifest=args.overlay_manifest,
             site_url=args.site_url,
+            lean_projects=lean_projects,
+            lean_caches=lean_caches,
+            lean_cached_only=lean_cached_only,
+            lean_file_limits=lean_file_limits,
         )
     except (ExplainerError, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -162,3 +199,61 @@ def _showcase(args) -> int:
         print(f"error: output is {result.total_bytes} bytes, over the {result.byte_budget} byte budget", file=sys.stderr)
         failed = 1
     return failed
+
+
+def _named_paths(values: list[str], selected: set[str]) -> dict[str, Path]:
+    found: dict[str, Path] = {}
+    for value in values:
+        name, raw = _named_value(value, "--lean-project", selected, found)
+        path = Path(raw).resolve()
+        if not path.is_dir() or not any(path.joinpath(lakefile).is_file() for lakefile in ("lakefile.toml", "lakefile.lean")):
+            raise ExplainerError(f"--lean-project for {name} must be a directory containing a lakefile: {path}")
+        found[name] = path
+    return found
+
+
+def _named_cache_paths(values: list[str], selected: set[str]) -> dict[str, Path]:
+    found: dict[str, Path] = {}
+    for value in values:
+        name, raw = _named_value(value, "--lean-cache", selected, found)
+        path = Path(raw).resolve()
+        if path.exists() and not path.is_dir():
+            raise ExplainerError(f"--lean-cache for {name} must be a directory path: {path}")
+        found[name] = path
+    return found
+
+
+def _selected_names(values: list[str], option: str, selected: set[str]) -> set[str]:
+    found: set[str] = set()
+    for name in values:
+        if name not in selected:
+            raise ExplainerError(f"{option} names unselected corpus '{name}'")
+        if name in found:
+            raise ExplainerError(f"{option} was supplied more than once for '{name}'")
+        found.add(name)
+    return found
+
+
+def _named_counts(values: list[str], selected: set[str]) -> dict[str, int]:
+    found: dict[str, int] = {}
+    for value in values:
+        name, raw = _named_value(value, "--lean-file-limit", selected, found)
+        try:
+            count = int(raw)
+        except ValueError as exc:
+            raise ExplainerError(f"--lean-file-limit for {name} must be a non-negative integer") from exc
+        if count < 0:
+            raise ExplainerError(f"--lean-file-limit for {name} must be a non-negative integer")
+        found[name] = count
+    return found
+
+
+def _named_value(value: str, option: str, selected: set[str], found: dict[str, object]) -> tuple[str, str]:
+    name, separator, raw = value.partition("=")
+    if not separator or not name or not raw:
+        raise ExplainerError(f"{option} must use CORPUS=VALUE")
+    if name not in selected:
+        raise ExplainerError(f"{option} names unselected corpus '{name}'")
+    if name in found:
+        raise ExplainerError(f"{option} was supplied more than once for '{name}'")
+    return name, raw

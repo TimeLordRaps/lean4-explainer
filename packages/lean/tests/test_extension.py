@@ -1,4 +1,5 @@
 import os
+import gzip
 import json
 import re
 import shutil
@@ -69,6 +70,51 @@ def test_a_hosted_build_can_keep_unknown_details_on_the_trust_page_without_repea
     assert "All trust is UNKNOWN" in (out / "trust.html").read_text(encoding="utf-8")
 
 
+def test_a_broken_lake_environment_never_falls_back_to_global_lean(tmp_path, monkeypatch):
+    root = tmp_path / "project"
+    root.mkdir()
+    (root / "lakefile.lean").write_text("import Lake\n", encoding="utf-8")
+    monkeypatch.setattr(runner.shutil, "which", lambda name, path=None: f"/{name}")
+    monkeypatch.setattr(runner, "_lake_environment", lambda lake, folder: {"PATH": "/pinned"})
+    calls = []
+
+    def version(prefix, folder, env=None):
+        calls.append((prefix, folder, env))
+        return ""
+
+    monkeypatch.setattr(runner, "_version", version)
+    with pytest.raises(runner.ToolchainError, match="no global Lean fallback"):
+        runner.find_toolchain(root)
+    assert calls == [(("/lean",), root.resolve(), {"PATH": "/pinned"})]
+
+
+def test_lake_environment_is_applied_directly_to_the_probe(tmp_path, monkeypatch):
+    root = tmp_path / "project"
+    root.mkdir()
+    (root / "lakefile.lean").write_text("import Lake\n", encoding="utf-8")
+    env = {"PATH": "/pinned", "LEAN_PATH": "/pinned/lib/lean"}
+    monkeypatch.setattr(runner.shutil, "which", lambda name, path=None: f"/{name}")
+    monkeypatch.setattr(runner, "_lake_environment", lambda lake, folder: env)
+    monkeypatch.setattr(runner, "_version", lambda prefix, folder, found_env=None: "Lean (version 9.9)")
+
+    tc = runner.find_toolchain(root)
+
+    assert tc is not None and tc.prefix == ("/lean",) and tc.env is env
+
+
+def test_a_broken_lake_environment_is_reported_as_the_reason_trust_is_unknown(tmp_path, monkeypatch):
+    reason = "The pinned Lake environment could not start `lean --version`; no global Lean fallback was used."
+    monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": (_ for _ in ()).throw(runner.ToolchainError(reason)))
+
+    summary, out = _site(tmp_path, SAMPLE)
+
+    trust = (out / "trust.html").read_text(encoding="utf-8")
+    record = json.loads((out / "trust.json").read_text(encoding="utf-8"))
+    assert "pinned Lake environment" in trust and "All trust is UNKNOWN" in trust
+    assert record["unavailable_reason"] == reason
+    assert any("pinned Lake environment" in line for line in summary.extension_lines)
+
+
 def test_a_bounded_pass_marks_every_unselected_file_and_declaration_unknown(tmp_path, monkeypatch):
     root = tmp_path / "src"
     root.mkdir()
@@ -77,7 +123,9 @@ def test_a_bounded_pass_marks_every_unselected_file_and_declaration_unknown(tmp_
     tc = runner.Toolchain(("lean",), None, "Lean (version 9.9)", "x")
     monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": tc)
     called = []
-    monkeypatch.setattr(runner, "run_probe", lambda tc, path, names, timeout: (called.append(path.name) or (1, "", "failed")))
+    monkeypatch.setattr(
+        runner, "run_probe", lambda tc, path, names, timeout, *bounds: (called.append(path.name) or (1, "", "failed"))
+    )
     config = Config(options=(("lean_cache", str(tmp_path / "cache")), ("lean_file_limit", 1)))
 
     build_site(root, tmp_path / "out", config, tmp_path / "idx")
@@ -90,10 +138,42 @@ def test_a_bounded_pass_marks_every_unselected_file_and_declaration_unknown(tmp_
     assert "Files outside this Lean pass (1)" in trust and "B.lean" in trust
 
 
+def test_a_catalogue_pass_queries_only_its_named_results_and_keeps_everything_else_unknown(tmp_path, monkeypatch):
+    root = tmp_path / "src"
+    root.mkdir()
+    (root / "A.lean").write_text("theorem target : True := trivial\ntheorem helper : True := trivial\n", encoding="utf-8")
+    (root / "B.lean").write_text("theorem other : True := trivial\n", encoding="utf-8")
+    tc = runner.Toolchain(("lean",), None, "Lean (version 9.9)", "x")
+    monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": tc)
+    called = []
+
+    def probe(tc, path, names, timeout, *bounds):
+        called.append((path.name, names))
+        return 0, json.dumps({"kind": "decl", "name": "target", "axioms": []}), ""
+
+    monkeypatch.setattr(runner, "run_probe", probe)
+    config = Config(options=tuple(sorted({
+        "lean_cache": str(tmp_path / "cache"),
+        "lean_targets": ["A.lean\ttarget"],
+        "lean_selection_label": "upstream main results",
+    }.items())))
+
+    build_site(root, tmp_path / "out", config, tmp_path / "idx")
+
+    record = json.loads((tmp_path / "out" / "trust.json").read_text(encoding="utf-8"))
+    assert called == [("A.lean", ["target"])]
+    assert record["selection"] == {
+        "label": "upstream main results", "eligible_files": 1, "selected_files": 1,
+        "requested_declarations": 1, "missing_targets": [],
+    }
+    assert record["declarations"]["total"] == 3
+    assert record["declarations"]["kernel_checked"] == 1 and record["declarations"]["unknown"] == 2
+
+
 def test_a_probe_that_crashes_marks_the_file_failed(tmp_path, monkeypatch):
     tc = runner.Toolchain(("lean",), None, "Lean (version 9.9)", "x")
     monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": tc)
-    monkeypatch.setattr(runner, "run_probe", lambda tc, path, names, timeout: (1, "", "kaboom\nfinal line"))
+    monkeypatch.setattr(runner, "run_probe", lambda tc, path, names, timeout, *bounds: (1, "", "kaboom\nfinal line"))
 
     summary, out = _site(tmp_path, SAMPLE)
 
@@ -103,12 +183,12 @@ def test_a_probe_that_crashes_marks_the_file_failed(tmp_path, monkeypatch):
     assert any("final line" in issue for issue in summary.warnings)
 
 
-def test_a_bounded_failure_is_cached_but_a_larger_timeout_retries_it(tmp_path, monkeypatch):
+def test_a_failed_probe_is_never_cached(tmp_path, monkeypatch):
     tc = runner.Toolchain(("lean",), None, "Lean (version 9.9)", "x")
     monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": tc)
     calls = []
 
-    def fail(tc, path, names, timeout):
+    def fail(tc, path, names, timeout, *bounds):
         calls.append(timeout)
         return -1, "", f"timed out after {timeout}s"
 
@@ -118,10 +198,54 @@ def test_a_bounded_failure_is_cached_but_a_larger_timeout_retries_it(tmp_path, m
     second, _ = _site(tmp_path, SAMPLE, lean_timeout=7)
     third, _ = _site(tmp_path, SAMPLE, lean_timeout=8)
 
-    assert calls == [7, 8]
+    assert calls == [7, 7, 8]
     assert any("1 files elaborated, 0 from cache" in line for line in first.extension_lines)
-    assert any("0 files elaborated, 1 from cache" in line for line in second.extension_lines)
+    assert any("1 files elaborated, 0 from cache" in line for line in second.extension_lines)
     assert any("1 files elaborated, 0 from cache" in line for line in third.extension_lines)
+
+
+def test_cache_only_rendering_never_runs_a_cache_miss(tmp_path, monkeypatch):
+    tc = runner.Toolchain(("lean",), None, "Lean (version 9.9)", "x")
+    monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": tc)
+    monkeypatch.setattr(
+        runner, "run_probe", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("probe started"))
+    )
+
+    summary, out = _site(tmp_path, SAMPLE, lean_cached_only=True)
+
+    record = json.loads((out / "trust.json").read_text(encoding="utf-8"))
+    assert record["execution"] == {
+        "elaborated_now": 0,
+        "reused_content_bound_cache": 0,
+        "cache_only": True,
+        "cache_misses": 1,
+    }
+    assert record["files"] == {"ok": 0, "failed": 0, "unavailable": 1}
+    assert record["declarations"]["unknown"] == 4
+    assert "No Lean process was started" in (out / "trust.html").read_text(encoding="utf-8")
+    assert any("1 cache misses left UNKNOWN" in line for line in summary.extension_lines)
+
+
+def test_a_clean_process_with_lean_errors_or_a_missing_constant_is_not_cached(tmp_path, monkeypatch):
+    tc = runner.Toolchain(("lean",), None, "Lean (version 9.9)", "x")
+    monkeypatch.setattr(runner, "find_toolchain", lambda root, project="": tc)
+    calls = []
+
+    def incomplete(tc, path, names, timeout, *bounds):
+        calls.append(path.name)
+        return 0, (
+            '{"kind":"message","severity":"error","line":1,"text":"unknown namespace"}\n'
+            '{"kind":"decl","name":"Demo.plain","axioms":null}\n'
+        ), ""
+
+    monkeypatch.setattr(runner, "run_probe", incomplete)
+
+    first, _ = _site(tmp_path, SAMPLE)
+    second, _ = _site(tmp_path, SAMPLE)
+
+    assert calls == ["Demo.lean", "Demo.lean"]
+    assert any("1 files elaborated, 0 from cache" in line for line in first.extension_lines)
+    assert any("1 files elaborated, 0 from cache" in line for line in second.extension_lines)
 
 
 @needs_lean
@@ -135,7 +259,10 @@ def test_real_lean_gives_badges_traces_and_a_trust_page(tmp_path):
     assert "no axioms" in page  # Demo.plain
     assert "Statement uses:" in page and "Proof uses:" in page and "Classical.em" in page
     assert "left out" in page  # instances and coercions are counted, not listed
-    assert "Tactic trace" in page and "induction n with" in page and "⊢ n + 0 = n" in page
+    assert "Tactic trace" in page and "trace-lazy" in page
+    trace_payload = json.loads(gzip.decompress((out / extension._trace_asset("Demo.lean")).read_bytes()))
+    trace_text = json.dumps(trace_payload, ensure_ascii=False)
+    assert "induction n with" in trace_text and "⊢ n + 0 = n" in trace_text
     trust = (out / "trust.html").read_text(encoding="utf-8")
     assert "Depend on sorry (1)" in trust and "Demo.uses_sorry" in trust
     link = re.search(r'href="([^"#]+)#L(\d+)"><code>Demo.uses_sorry', trust)
@@ -157,16 +284,20 @@ def test_each_trace_step_has_an_anchor_its_source_line_and_a_link_to_it(tmp_path
     build_site(root, tmp_path / "out", config, tmp_path / "idx")
 
     page = (tmp_path / "out" / "Demo.lean.html").read_text(encoding="utf-8")
-    trace = page[page.index('<details class="trace">') :]
+    trace = page[page.index('<details class="trace trace-lazy"') :]
     trace = trace[: trace.index("</details>")]
-    steps = re.findall(r'<li id="L3-step(\d+)" data-line="(\d+)"><code>([^<]*)</code> <a class="ln" href="([^"]*)">line (\d+)</a>', trace)
-    assert steps, trace[:600]
+    assert "Open to load the checked before-and-after goal states" in trace
+    payload = json.loads(gzip.decompress((tmp_path / "out" / extension._trace_asset("Demo.lean")).read_bytes()))
+    steps = payload["d"]["3:Demo.add_zero'"]
+    assert steps
     lines = SAMPLE.split("\n")
-    for k, (index, line, tactic, link, shown) in enumerate(steps, 1):
-        assert int(index) == k and line == shown  # anchors in order; the line shown is the line kept
-        assert tactic.split(" ")[0].replace("&gt;", ">") in lines[int(line) - 1]  # the tactic is on that source line: the key the reader joins on
+    for line, tactic, before, after, link in steps:
+        assert tactic.split(" ")[0] in lines[int(line) - 1]  # the tactic is on that source line: the key the reader joins on
         assert link == f"https://example.org/src/abc123/Demo.lean#L{line}"
-    assert [s[2] for s in steps][:1] == ["induction n with"] and steps[0][1] == "4"
+        assert isinstance(before, list) and isinstance(after, list)
+    assert steps[0][1] == "induction n with" and steps[0][0] == 4
+    trace_script = (tmp_path / "out" / extension.TRACE_SCRIPT).read_text(encoding="utf-8")
+    assert 'item.id = "L" + declarationLine + "-step"' in trace_script
     # a badge links to what the badges mean
     assert '<span class="trust trust-standard">standard axioms: propext</span> <a class="trust-more" href="trust.html#badges">' in page
     trust = (tmp_path / "out" / "trust.html").read_text(encoding="utf-8")
@@ -212,8 +343,9 @@ def test_zero_step_limit_suppresses_trace_markup_without_changing_the_facts():
     step = facts.Step(2, 3, "exact trivial", ("⊢ True",), ())
     found = facts.DeclFacts("Demo.t", 1, (), steps=(step,))
 
-    assert extension._trace(found, 0, "Demo.lean", default_context()) == ""
-    assert "Tactic trace: 1 steps" in extension._trace(found, 1, "Demo.lean", default_context())
+    assert extension._trace(found, 0, "Demo.lean", []) == ""
+    rendered = extension._trace(found, 1, "Demo.lean", [])
+    assert "Tactic trace: 1 steps" in rendered and extension._trace_asset("Demo.lean") in rendered
     assert found.axioms == ()
 
 
@@ -229,6 +361,20 @@ def test_trust_page_fallback_for_an_ambiguous_name_adds_html_only_once():
 
     assert 'href="Demo.lean.html#L7"' in trust
     assert ".lean.html.html" not in trust
+
+
+def test_trust_page_lists_named_unknown_declarations_and_reasons():
+    result = facts.DeclFacts("Demo.privateThing", 7, None)
+    analysis = extension.Analysis(
+        {"Demo.lean": facts.FileFacts("ok", decls=(result,))},
+        "Lean (version 9.9)",
+        100,
+    )
+
+    trust = extension._trust_page(default_context(), analysis)
+
+    assert "Trust UNKNOWN declarations (1)" in trust
+    assert "Demo.privateThing" in trust and "Lean has no constant by this name" in trust
 
 
 def _alive(pid: int) -> bool:
@@ -260,3 +406,15 @@ def test_a_probe_that_times_out_is_stopped_with_every_process_it_started(tmp_pat
     while _alive(grandchild) and time.monotonic() < deadline:
         time.sleep(0.2)
     assert not _alive(grandchild), f"process {grandchild} outlived the timeout"
+
+
+def test_a_probe_stopped_by_a_resource_guard_is_unknown_not_a_process_failure(tmp_path, monkeypatch):
+    tc = runner.Toolchain((sys.executable, "-c", "import time; time.sleep(60)"), None, "test", "x")
+    monkeypatch.setattr(runner, "_resource_state", lambda proc: (2 * 1024**2, 20 * 1024**2))
+
+    code, _, reason = runner.run_probe(
+        tc, tmp_path / "A.lean", ["A.a"], 30, max_working_set_mb=1, min_free_virtual_mb=10
+    )
+
+    assert code == -2
+    assert "1 MiB" in reason and ("working set" in reason or "process-memory ceiling" in reason)

@@ -5,8 +5,10 @@ from __future__ import annotations
 import gzip
 import json
 import os
+import re
 import subprocess
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass
 from html import escape
 from pathlib import Path
@@ -104,16 +106,25 @@ def build_showcase(
     fetch=fetch_corpus,
     overlay_manifest: Path | None = None,
     site_url: str | None = None,
+    lean_projects: Mapping[str, Path] | None = None,
+    lean_caches: Mapping[str, Path] | None = None,
+    lean_cached_only: set[str] | None = None,
+    lean_file_limits: Mapping[str, int] | None = None,
 ) -> ShowcaseResult:
     """Fetch every corpus first, so a failed download stops the run before anything is published."""
     public_url = _site_url(site_url)
     overlays = load_overlay_manifest(overlay_manifest, corpora) if overlay_manifest else {}
+    lean_projects = lean_projects or {}
+    lean_caches = lean_caches or {}
+    lean_cached_only = lean_cached_only or set()
+    lean_file_limits = lean_file_limits or {}
     lean_active = any(ext.name == "lean" for ext in extensions())
     checkouts = [(corpus, fetch(corpus, work_dir, base_url=base_url)) for corpus in corpora]
     out_dir.mkdir(parents=True, exist_ok=True)
     items = []
     for corpus, checkout in checkouts:
         overlay = overlays.get(corpus.name)
+        lean_targets = _formalization_targets(checkout / corpus.lean_root / corpus.lean_catalogue) if corpus.lean_catalogue else ()
         project = read_lake(checkout / corpus.lean_root) if corpus.lake else None
         include = include_patterns(project) if project and project.libs else corpus.include
         prefix = f"{corpus.lean_root.strip('/')}/" if corpus.lean_root else ""
@@ -148,7 +159,22 @@ def build_showcase(
                     # UNKNOWN files remain explicit on the Trust page. Repeating the same UNKNOWN badge next to
                     # every declaration would crowd actual checked evidence out of the hosted byte budget.
                     + [("lean_unknown_badges", False)] * lean_active
-                    + [("lean_file_limit", corpus.lean_file_limit)] * bool(lean_active and corpus.lean_file_limit)
+                    + (
+                        [("lean_project", str(lean_projects[corpus.name]))]
+                        if lean_active and corpus.name in lean_projects
+                        else []
+                    )
+                    + (
+                        [("lean_cache", str(lean_caches[corpus.name]))]
+                        if lean_active and corpus.name in lean_caches
+                        else []
+                    )
+                    + [("lean_cached_only", True)] * bool(lean_active and corpus.name in lean_cached_only)
+                    + [("lean_file_limit", lean_file_limits.get(corpus.name, corpus.lean_file_limit))]
+                    * bool(lean_active and lean_file_limits.get(corpus.name, corpus.lean_file_limit))
+                    + [("lean_targets", list(lean_targets))] * bool(lean_active and lean_targets)
+                    + [("lean_selection_label", f"upstream {corpus.lean_catalogue} main-result catalogue")]
+                    * bool(lean_active and lean_targets)
                     + list(corpus.options)
                 )
             ),
@@ -198,6 +224,42 @@ def build_showcase(
     if public_url:
         _write_discovery(out_dir, public_url)
     return ShowcaseResult(tuple(items), _tree_bytes(out_dir), byte_budget)
+
+
+_CATALOGUE_DECLARATION = re.compile(r"^\s+declaration:\s*(\S+)\s*$")
+_CATALOGUE_FILE = re.compile(r"^\s+file:\s*(\S+\.lean)\s*$")
+
+
+def _formalization_targets(path: Path) -> tuple[str, ...]:
+    """Read declaration/file pairs in formalization.yaml without accepting arbitrary YAML objects."""
+    if not path.is_file():
+        raise ExplainerError(f"Lean formalization catalogue not found: {path}")
+    targets: list[str] = []
+    declaration = ""
+    root = path.parent.resolve()
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
+        found_declaration = _CATALOGUE_DECLARATION.match(line)
+        if found_declaration:
+            declaration = found_declaration.group(1)
+            continue
+        found_file = _CATALOGUE_FILE.match(line)
+        if not found_file or not declaration:
+            continue
+        rel = found_file.group(1).replace("\\", "/")
+        source = (root / rel).resolve()
+        try:
+            source.relative_to(root)
+        except ValueError as exc:
+            raise ExplainerError(f"Lean formalization catalogue path escapes its source root: {rel}") from exc
+        if not source.is_file():
+            raise ExplainerError(f"Lean formalization catalogue names a missing file: {rel}")
+        targets.append(f"{rel}\t{declaration}")
+        declaration = ""
+    if not targets:
+        raise ExplainerError(f"Lean formalization catalogue contains no declaration/file pairs: {path}")
+    if len(targets) != len(set(targets)):
+        raise ExplainerError(f"Lean formalization catalogue contains duplicate declaration/file pairs: {path}")
+    return tuple(targets)
 
 
 def _copy_license(checkout: Path, target: Path, lean_root: str) -> None:

@@ -21,11 +21,11 @@ from lean4_explainer_l4del.grammar import normalize_directive, parse_l4del
 from lean4_explainer_l4del.overlay import parse_overlay
 
 try:  # direct script execution puts scripts/ on sys.path; test imports put the repository root there
-    from generate_documented_hosted_overlay import _bounded, _title
-    from generate_oai_hosted_overlay import _bounded_scope, _note
+    from generate_documented_hosted_overlay import _bounded, _explanation, _title
+    from generate_oai_hosted_overlay import MULTI_RESULT_FALLBACK, _bounded_scope, _note
 except ModuleNotFoundError:  # pragma: no cover - the other branch is covered by the Pages command
-    from scripts.generate_documented_hosted_overlay import _bounded, _title
-    from scripts.generate_oai_hosted_overlay import _bounded_scope, _note
+    from scripts.generate_documented_hosted_overlay import _bounded, _explanation, _title
+    from scripts.generate_oai_hosted_overlay import MULTI_RESULT_FALLBACK, _bounded_scope, _note
 
 
 def _head(path: Path) -> str:
@@ -76,6 +76,28 @@ def _oai_note_targets(checkout: Path) -> dict[tuple[str, str], set[str]]:
             for name in config.get("theorem_names", []) + config.get("definition_names", []):
                 if isinstance(name, str):
                     found.setdefault((f"ComparatorChallenges/{stem}.lean", name), set()).add(note.scope)
+    return found
+
+
+def _oai_multi_result_targets(checkout: Path) -> set[tuple[str, str]]:
+    """Targets of formalization notes that cover several comparator results (their prose is not target-specific)."""
+    found: set[tuple[str, str]] = set()
+    docs = checkout / "lean" / "docs"
+    configs = checkout / "lean" / "ComparatorChallenges"
+    if not docs.is_dir() or not configs.is_dir():
+        return found
+    for path in sorted(docs.glob("*.md")):
+        note = _note(path)
+        if note is None or len(note.comparators) < 2:
+            continue
+        for stem in note.comparators:
+            config_path = configs / f"{stem}.json"
+            if not config_path.is_file():
+                continue
+            config = json.loads(config_path.read_text(encoding="utf-8"))
+            for name in config.get("theorem_names", []) + config.get("definition_names", []):
+                if isinstance(name, str):
+                    found.add((f"ComparatorChallenges/{stem}.lean", name))
     return found
 
 
@@ -142,7 +164,7 @@ def audit(manifest_path: Path, work_dir: Path) -> tuple[dict, list[str]]:
                 declarations.setdefault((rel, declaration.name), declaration)
                 description = declaration.doc or declaration.comment
                 if description:
-                    value = _bounded_scope(description) if corpus_name == "oai" else _bounded(description)
+                    value = _bounded_scope(description) if corpus_name == "oai" else _bounded(_explanation(description))
                     value = normalize_directive(value)
                     by_digest.setdefault((declaration.name, declaration.code_digest), set()).add(value)
 
@@ -152,6 +174,7 @@ def audit(manifest_path: Path, work_dir: Path) -> tuple[dict, list[str]]:
             if declaration is not None:
                 by_digest.setdefault((declaration.name, declaration.code_digest), set()).update(scopes)
 
+        multi_result_targets = _oai_multi_result_targets(checkout) if corpus_name == "oai" else set()
         total = curated = generated = matched = 0
         for rel, targets in overlay.files.items():
             for name, directives in targets.items():
@@ -193,11 +216,17 @@ def audit(manifest_path: Path, work_dir: Path) -> tuple[dict, list[str]]:
                     continue
                 generated += 1
                 candidates = by_digest.get((name, declaration.code_digest), set())
+                if (
+                    notes.intuition == normalize_directive(MULTI_RESULT_FALLBACK)
+                    and (rel, name) in multi_result_targets
+                    and not (declaration.doc or declaration.comment)
+                ):
+                    candidates = {notes.intuition}
                 if notes.intuition not in candidates:
                     errors.append(f"{where}:{rel}:{name}: generated intuition no longer matches its pinned source text")
                     continue
                 if corpus_name != "oai":
-                    description = declaration.doc or declaration.comment or ""
+                    description = _explanation(declaration.doc or declaration.comment or "")
                     if notes.title != normalize_directive(_title(name, description)):
                         errors.append(f"{where}:{rel}:{name}: generated title no longer matches its pinned source text")
                         continue

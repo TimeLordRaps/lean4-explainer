@@ -40,6 +40,7 @@ class Corpus:
     imports: str = "all"  # where file pages list imports: "all", or "import-only" for a corpus too big for all
     implications: str = ""  # path to a sidecar TOML of curated implication edges (see lean4-explainer-implications)
     lean_file_limit: int = 0  # deterministic sorted-file bound for a local Lean pass; 0 means every declaration file
+    lean_catalogue: str = ""  # upstream YAML whose declaration/file pairs define the authoritative Lean verification scope
 
 
 def package_file(module_file: str, name: str) -> str:

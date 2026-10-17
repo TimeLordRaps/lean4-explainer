@@ -29,7 +29,7 @@ from lean4_explainer.render import Context
 
 from .macros import blueprint_macros
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 HERE = Path(__file__).parent
 SCRIPT = "_assets/reader.js"
@@ -44,9 +44,14 @@ KATEX_FILES = {f"_assets/katex/{'LICENSE.txt' if rel == 'LICENSE' else rel}": KA
 _EMBED_LIMIT = 2_000_000  # characters of source per page; a bigger file gets no reading unless a source URL is set
 
 CSS = """
-#reader-note { font-size: 0.9rem; color: var(--muted); border-left: 3px solid var(--line); padding: 0.2rem 0.6rem; margin: 0.6rem 0; }
+#reader-note { font-size: 0.9rem; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; margin: 0.6rem 0; }
+#reader-note > summary { cursor: pointer; padding: 0.42rem 0.65rem; list-style-position: inside; }
+#reader-note[open] > summary { border-bottom: 1px solid var(--line); }
+#reader-note .reader-note-body { padding: 0.5rem 0.7rem 0.65rem; }
+#reader-note .reader-note-body p { margin: 0 0 0.45rem; }
 #reader-note .reader-status:empty { display: none; }
-#reader-note .reader-controls { display: inline-flex; gap: 0.35rem; margin-left: 0.45rem; }
+#reader-note .reader-status:not(:empty)::before { content: " — "; }
+#reader-note .reader-controls { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
 #reader-note button { font: inherit; color: inherit; background: transparent; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
 details.reading { margin: 0.45rem 0 0.2rem; }
 details.reading > summary { cursor: pointer; font-size: 0.9rem; color: var(--muted); }

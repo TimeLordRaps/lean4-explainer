@@ -96,7 +96,11 @@ def test_showcase_with_yes_builds_and_reports(tmp_path, monkeypatch, capsys):
     seen = {}
 
     def fake(corpora, work, out, **kwargs):
-        seen.update(names=[c.name for c in corpora], out=out, jobs=kwargs["jobs"], site_url=kwargs["site_url"])
+        seen.update(
+            names=[c.name for c in corpora], out=out, jobs=kwargs["jobs"], site_url=kwargs["site_url"],
+            lean_projects=kwargs["lean_projects"], lean_caches=kwargs["lean_caches"],
+            lean_cached_only=kwargs["lean_cached_only"], lean_file_limits=kwargs["lean_file_limits"]
+        )
         return ShowcaseResult((), 1234, 1000)
 
     monkeypatch.setattr(extension.showcase, "build_showcase", fake)
@@ -108,8 +112,44 @@ def test_showcase_with_yes_builds_and_reports(tmp_path, monkeypatch, capsys):
 
     assert seen["names"] == ["mil", "tpil"]
     assert seen["site_url"] == "https://example.org/proofs/"
+    assert seen["lean_projects"] == {} and seen["lean_caches"] == {}
+    assert seen["lean_cached_only"] == set() and seen["lean_file_limits"] == {}
     assert code == 1  # the fake result is over its budget
     assert "over" in capsys.readouterr().err
+
+
+def test_showcase_passes_an_explicit_lean_environment_and_diagnostic_bound(tmp_path, monkeypatch):
+    project = tmp_path / "oai-environment"
+    project.mkdir()
+    (project / "lakefile.lean").write_text('package "oai"\n', encoding="utf-8")
+    cache = tmp_path / "lean-cache"
+    seen = {}
+
+    def fake(corpora, work, out, **kwargs):
+        seen.update(kwargs)
+        return ShowcaseResult((), 10, 1000)
+
+    monkeypatch.setattr(extension.showcase, "build_showcase", fake)
+
+    assert cli.main([
+        "showcase", "oai", "--yes", "--lean-project", f"oai={project}",
+        "--lean-cache", f"oai={cache}", "--lean-cached-only", "oai",
+        "--lean-file-limit", "oai=7", "--out", str(tmp_path / "s"), "--work", str(tmp_path / "w")
+    ]) == 0
+
+    assert seen["lean_projects"] == {"oai": project.resolve()}
+    assert seen["lean_caches"] == {"oai": cache.resolve()}
+    assert seen["lean_cached_only"] == {"oai"}
+    assert seen["lean_file_limits"] == {"oai": 7}
+
+
+def test_showcase_rejects_malformed_or_unselected_lean_overrides(tmp_path, capsys):
+    assert cli.main(["showcase", "pfr", "--yes", "--lean-project", "bad", "--out", str(tmp_path / "s")]) == 1
+    assert "CORPUS=VALUE" in capsys.readouterr().err
+    assert cli.main(["showcase", "pfr", "--yes", "--lean-file-limit", "oai=2", "--out", str(tmp_path / "s")]) == 1
+    assert "unselected corpus" in capsys.readouterr().err
+    assert cli.main(["showcase", "pfr", "--yes", "--lean-cached-only", "oai", "--out", str(tmp_path / "s")]) == 1
+    assert "unselected corpus" in capsys.readouterr().err
 
 
 def _summary(errors=(), warnings=()):

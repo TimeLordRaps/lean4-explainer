@@ -35,7 +35,6 @@ CORPUS = Corpus(
         "The pinned README licenses software under Apache-2.0 and other materials under CC-BY 4.0, with "
         "additional third-party-source notices for OEIS, Erdős Problems, Gergely Bérczi, and Mario Krenn."
     ),
-    options=(("lean_steps", 0),),
     accent="#76a7ff",
     theme_css=THEME,
 )

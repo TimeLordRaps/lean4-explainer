@@ -117,6 +117,23 @@ def test_the_core_builds_a_complete_site_with_no_extension(tmp_path, lean):
     assert not (out / "tags.html").exists()
 
 
+def test_source_comments_and_declaration_axiom_counts_are_labeled_precisely(tmp_path):
+    root = tmp_path / "lean"
+    root.mkdir()
+    (root / "A.lean").write_text(
+        "/-- Source documentation. -/\ntheorem documented : True := trivial\n\n-- Source comment.\ntheorem commented : True := trivial\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "docs"
+
+    build_site(root, out)
+
+    page = (out / "A.lean.html").read_text(encoding="utf-8")
+    assert '<section class="source-doc" aria-label="Source documentation">' in page
+    assert '<section class="source-doc" aria-label="Source comment">' in page
+    assert "2 declarations, 0 contain sorry, 0 declared as axioms" in page
+
+
 def test_without_the_extension_its_comment_syntax_is_an_ordinary_comment(tmp_path, lean):
     decl = parse_source(SOURCE, "A.lean").declarations[0]
 

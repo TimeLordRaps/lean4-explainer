@@ -58,6 +58,7 @@ def test_build_collapses_copies_and_qualifies_variants(tmp_path):
             "Copy/A.lean": "namespace Demo\ntheorem same_fact : True :=   trivial\nend Demo\n",
             "Var/A.lean": "namespace Demo\ndef value : Nat := 1\nend Demo\n",
             "Var/B.lean": "namespace Demo\ndef value : Nat := 2\nend Demo\n",
+            "Var/C.lean": 'namespace Demo\ndef value : String := "two"\nend Demo\n',
             "Use/A.lean": "namespace Demo\n-- L4DEL: prereq: Demo.value\ntheorem use_plain : True := trivial\nend Demo\n",
             "Use/B.lean": (
                 "namespace Demo\n"
@@ -73,11 +74,12 @@ def test_build_collapses_copies_and_qualifies_variants(tmp_path):
     assert summary.warnings == ()
     assert len(summary.errors) == 1
     assert "reference Demo.value is ambiguous" in summary.errors[0]
-    assert "Demo.value@Var/A.lean" in summary.errors[0] and "Demo.value@Var/B.lean" in summary.errors[0]
+    assert all(f"Demo.value@Var/{name}.lean" in summary.errors[0] for name in ("A", "B", "C"))
     learning = (tmp_path / "docs" / "learning-path.html").read_text(encoding="utf-8")
     assert "after Demo.value@Var/B.lean, Demo.same_fact" in learning
     same_page = (tmp_path / "docs" / "Same" / "A.lean.html").read_text(encoding="utf-8")
-    assert "Copy/A.lean:2</a> (identical)" in same_page
+    assert "Copy/A.lean:2</a> (same declaration text)" in same_page
     var_page = (tmp_path / "docs" / "Var" / "A.lean.html").read_text(encoding="utf-8")
     assert "Distinct definitions of this name" in var_page
-    assert "(same statement, different proof or body)" in var_page
+    assert "(same statement text; different proof or body)" in var_page
+    assert "Var/C.lean:2</a> (different declaration text)" in var_page

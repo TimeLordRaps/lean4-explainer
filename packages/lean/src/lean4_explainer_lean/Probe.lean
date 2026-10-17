@@ -3,7 +3,8 @@ open Lean Elab Meta
 
 /-!
 Elaborates one Lean file and prints one JSON object per line:
-  {"kind":"tactic", line, column, tactic, before, after}   goal states around each tactic step
+  {"kind":"tactic", line, column, tactic, before, after,   goal states around each info node that holds a tactic's state;
+   isTactic, endLine, endColumn}                          isTactic: the node's syntax kind is in the `tactic` category
   {"kind":"decl", name, axioms, statement_uses, proof_uses, hidden}  kernel axioms; constants used in its type and in its proof/value, with instances,
                                                           coercions and auxiliary definitions left out (counted in `hidden`)
   {"kind":"message", severity, line, text}                errors and warnings Lean reported
@@ -29,7 +30,16 @@ partial def walk (ctx? : Option ContextInfo) (fileMap : FileMap) (t : InfoTree) 
               r := r.push (toString (← withMCtx ti.mctxAfter (ppGoal g)))
             return r)
           let text := (ti.stx.reprint.getD "").trimAscii.toString
+          -- Lean records info nodes for more than tactics (the `by` block, a tactic sequence, a rewrite rule, a binder name
+          -- inside a macro expansion). Only a syntax kind registered in the `tactic` category is a step an author wrote.
+          let isTactic := match ((Parser.parserExtension.getState ctx.env).categories.find? `tactic) with
+            | some c => c.kinds.contains ti.stx.getKind
+            | none => false
+          let stop := match ti.stx.getTailPos? (canonicalOnly := true) with
+            | some e => fileMap.toPosition e
+            | none => p
           acc.modify (·.push (Json.mkObj [("kind", "tactic"), ("line", p.line), ("column", p.column),
+            ("isTactic", isTactic), ("endLine", stop.line), ("endColumn", stop.column),
             ("tactic", text), ("before", toJson before), ("after", toJson after)]))
     for c in cs do walk ctx? fileMap c acc
   | .hole _ => pure ()
@@ -39,6 +49,11 @@ def severityName : MessageSeverity → String
   | .warning => "warning"
   | .information => "information"
 
+def printMessage (m : Message) : IO Unit := do
+  if m.severity != .information then
+    IO.println (Json.mkObj [("kind", "message"), ("severity", severityName m.severity),
+      ("line", m.pos.line), ("text", (← m.data.toString))]).compress
+
 unsafe def main (args : List String) : IO UInt32 := do
   let [path, namesPath] := args | IO.eprintln "usage: Probe FILE NAMES_FILE"; return 2
   enableInitializersExecution
@@ -47,15 +62,20 @@ unsafe def main (args : List String) : IO UInt32 := do
   let ictx := Parser.mkInputContext input path
   let (header, pstate, msgs) ← Parser.parseHeader ictx
   let (env, msgs) ← processHeader header {} msgs ictx
+  -- An unavailable import invalidates the entire source replay. Emit the primary header diagnostics and avoid
+  -- hundreds of downstream parser/elaborator errors that would hide the real missing environment evidence.
+  if msgs.hasErrors then
+    for m in msgs.toList do printMessage m
+    let names := (← IO.FS.readFile namesPath).splitOn "\n" |>.filter (· ≠ "")
+    for n in names do
+      IO.println (Json.mkObj [("kind", "decl"), ("name", n), ("axioms", Json.null)]).compress
+    return 0
   let s ← IO.processCommands ictx pstate (Command.mkState env msgs {})
   let acc ← IO.mkRef #[]
   for t in s.commandState.infoState.trees do
     walk none ictx.fileMap t acc
   for j in ← acc.get do IO.println j.compress
-  for m in s.commandState.messages.toList do
-    if m.severity != .information then
-      IO.println (Json.mkObj [("kind", "message"), ("severity", severityName m.severity),
-        ("line", m.pos.line), ("text", (← m.data.toString))]).compress
+  for m in s.commandState.messages.toList do printMessage m
   let names := (← IO.FS.readFile namesPath).splitOn "\n" |>.filter (· ≠ "")
   let env := s.commandState.env
   for n in names do

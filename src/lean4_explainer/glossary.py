@@ -76,7 +76,10 @@ LEAN_WORDS: tuple[tuple[str, str, str], ...] = (
 )
 
 
-_MARKDOWN_PUNCT = re.compile(r"[\\`*_\[\]$<>#~|!]")
+# Escaping only the opening half of Markdown's paired constructs is enough to
+# keep them literal. It also avoids manufacturing ``\[...\]`` or ``\(...\)``
+# when the original plain text merely contains brackets or parentheses.
+_MARKDOWN_PUNCT = re.compile(r"[\\`*_\[($<>#~|!]")
 
 
 def gist(text: str | None) -> str:

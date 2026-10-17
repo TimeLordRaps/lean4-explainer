@@ -143,3 +143,94 @@ def test_grounding_audit_lists_curated_wording_with_an_exact_source_link(tmp_pat
             ],
         }
     ]
+
+
+FALLBACK = "This declaration is an exact comparator-selected statement. Read the Lean statement below for its mathematical content."
+
+
+def _oai_fixture(tmp_path, overlay_body):
+    checkout = tmp_path / "work" / "oai"
+    lean = checkout / "lean"
+    (lean / "docs").mkdir(parents=True)
+    (lean / "ComparatorChallenges").mkdir()
+    (lean / "docs" / "note.md").write_text(
+        "# Two results\n\n## Scope\n\nCombined scope prose for both results.\n\n## Results\n\n"
+        "| Result A | [A](../ComparatorChallenges/A.lean) |\n"
+        "| Result B | [B](../ComparatorChallenges/B.lean) |\n"
+        "| Result C | [C](../ComparatorChallenges/C.lean) |\n",
+        encoding="utf-8",
+    )
+    (lean / "docs" / "single.md").write_text(
+        "# One result\n\n## Scope\n\nScope prose for the single result.\n\n## Results\n\n"
+        "| Result D | [D](../ComparatorChallenges/D.lean) |\n",
+        encoding="utf-8",
+    )
+    sources = {
+        "A": "theorem thmA : True := trivial\n",
+        "B": "/-- Documented statement. -/\ntheorem thmB : True := trivial\n",
+        "C": "theorem thmC : True := trivial\n",
+        "D": "theorem thmD : True := trivial\n",
+    }
+    for stem, text in sources.items():
+        (lean / "ComparatorChallenges" / f"{stem}.lean").write_text(text, encoding="utf-8")
+        (lean / "ComparatorChallenges" / f"{stem}.json").write_text(
+            json.dumps({"theorem_names": [f"thm{stem}"]}), encoding="utf-8"
+        )
+    _git(checkout, "init", "-q")
+    _git(checkout, "add", ".")
+    _git(checkout, "commit", "-qm", "fixture")
+    commit = _git(checkout, "rev-parse", "HEAD").stdout.strip()
+    hosted = tmp_path / "hosted"
+    hosted.mkdir()
+    overlay = hosted / "oai.l4del"
+    overlay.write_text("# overlay\n# BEGIN GENERATED OPENAI/MATH FORMALIZATION-NOTE ANNOTATIONS\n" + overlay_body, encoding="utf-8")
+    manifest = hosted / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema": 1,
+                "overlays": {
+                    "oai": {
+                        "file": "oai.l4del",
+                        "repo": "example/oai",
+                        "commit": commit,
+                        "sha256": hashlib.sha256(overlay.read_bytes()).hexdigest(),
+                        "provenance": "ai-generated-unreviewed",
+                        "sources": [
+                            {"label": "Docs", "url": f"https://github.com/example/oai/blob/{commit}/README.md"},
+                            {"label": "Paper", "url": "https://arxiv.org/abs/1234.56789v1"},
+                        ],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def _entry(stem, intuition):
+    return (
+        f"@file ComparatorChallenges/{stem}.lean\n@decl thm{stem}\n"
+        f"-- L4DEL: title: Challenge statement: Result {stem}\n-- L4DEL: intuition: {intuition}\n\n"
+    )
+
+
+def test_oai_multi_result_target_without_a_doc_comment_may_carry_the_bounded_fallback(tmp_path):
+    manifest = _oai_fixture(tmp_path, _entry("A", FALLBACK))
+
+    _, errors = audit(manifest, tmp_path / "work")
+
+    assert errors == []
+
+
+def test_oai_fallback_is_rejected_where_the_generator_would_not_emit_it(tmp_path):
+    manifest = _oai_fixture(
+        tmp_path,
+        _entry("B", FALLBACK) + _entry("D", FALLBACK) + _entry("C", "Invented prose about thmC."),
+    )
+
+    _, errors = audit(manifest, tmp_path / "work")
+
+    assert len(errors) == 3
+    assert all("generated intuition no longer matches its pinned source text" in error for error in errors)

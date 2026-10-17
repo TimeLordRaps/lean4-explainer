@@ -14,6 +14,7 @@ from pathlib import Path
 
 from lean4_explainer.build import _LAKE_EXCLUDE, _excluded
 from lean4_explainer.lake import include_patterns, read_lake
+from lean4_explainer.markdown import math_spans
 from lean4_explainer.scan import iter_lean_files, parse_source
 from lean4_explainer_corpora.registry import installed
 
@@ -23,6 +24,13 @@ END = "# END GENERATED SOURCE-COMMENT ANNOTATIONS"
 _MARKDOWN_LINK = re.compile(r"\[([^]]+)]\([^)]+\)")
 _HTML_TAG = re.compile(r"</?[A-Za-z][^>]*>")
 _WHITESPACE = re.compile(r"\s+")
+_CONTROL_MARKER = re.compile(r"\b(?:EVOLVE-BLOCK-(?:START|END)|BEGIN GENERATED|END GENERATED)\b", re.IGNORECASE)
+_DANGLING = frozenset(
+    "a an and any as at be by each every for from given if in is let of on or so suppose that the then to we when where which while with".split()
+)
+# A full stop that closes one of these does not end the sentence: "a.e. point-wise", "i.e. the", "cf. Lemma 2".
+_ABBREVIATION_END = re.compile(r"(?<![A-Za-z])(?:a\.e|i\.e|e\.g|cf|vs|resp|viz|Thm|Lem|Prop|Cor|Def|Eq|Fig)\.\s*$")
+_SCAFFOLDING = re.compile(r"^(?:you can )?put (?:your )?definitions and lemmas here[.!]?$", re.IGNORECASE)
 
 
 def _plain(text: str) -> str:
@@ -42,11 +50,35 @@ def _bounded(text: str, limit: int = 1800) -> str:
     return text[: limit - 1].rstrip() + "…"
 
 
+def _explanation(text: str) -> str:
+    """Remove workflow markers while retaining any actual mathematical prose beside them."""
+    cleaned = _plain(_CONTROL_MARKER.sub(" ", text))
+    bare = cleaned.lstrip("#*- ")
+    return "" if not bare or _SCAFFOLDING.fullmatch(bare) else cleaned
+
+
 def _title(name: str, description: str) -> str:
-    text = _plain(description).lstrip("#*- ")
-    first = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0].strip()
+    text = _plain(description).replace("**", "").lstrip("#*- ")
+    spans = math_spans(text)
+    stops = (
+        match.end()
+        for match in re.finditer(r"[.!?]\s+", text)
+        if not any(start <= match.start() < end for start, end in spans)
+        and not _ABBREVIATION_END.search(text[: match.end()])
+    )
+    stop = next(stops, len(text))
+    first = text[:stop].strip()
     if first and len(first) <= 180:
         return first.rstrip(".").rstrip()
+    if spans:
+        before_math = first[: spans[0][0]].rstrip(" :,;")
+        words = before_math.split()
+        # A phrase that ends on a function word, or is a short fragment opening with one, is not a title.
+        fragment = bool(words) and (
+            words[-1].lower() in _DANGLING or (len(words) < 3 and words[0].lower() in _DANGLING)
+        )
+        if words and not fragment and len(before_math) <= 180:
+            return before_math
     return f"Documented declaration: {name.rsplit('.', 1)[-1]}"
 
 
@@ -109,20 +141,18 @@ def generate(corpus_name: str, checkout: Path, current: str) -> tuple[str, int, 
             if target in seen_source_targets:
                 continue
             seen_source_targets.add(target)
-            description = declaration.doc or declaration.comment
+            description = _explanation(declaration.doc or declaration.comment or "")
             if not description:
                 continue
             source_described += 1
             if target in existing:
                 continue
-            kind = "doc comment" if declaration.doc else "leading source comment"
             body = "\n".join(
                 [
                     f"@file {rel}",
                     f"@decl {declaration.name}",
                     f"-- L4DEL: title: {_title(declaration.name, description)}",
                     f"-- L4DEL: intuition: {_bounded(description)}",
-                    f"-- L4DEL: step: This explanation is a condensed rendering of the declaration's own {kind} at the pinned source commit; consult the exact Lean statement below for authority.",
                 ]
             )
             blocks.append((rel, declaration.name, body))
