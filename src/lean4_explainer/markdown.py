@@ -174,7 +174,11 @@ def inline_html(text: str) -> str:
     def bare(url: str) -> str:
         """A URL written out in the text, without the punctuation that ends its sentence."""
         tail = ""
-        while url and (url[-1] in ".,;:!?" or (url[-1] == ")" and url.count("(") < url.count(")"))):
+        while url and (
+            url[-1] in ".,;:!?"
+            or (url[-1] == ")" and url.count("(") < url.count(")"))
+            or (url[-1] == "]" and url.count("[") < url.count("]"))
+        ):
             tail = url[-1] + tail
             url = url[:-1]
         safe = _safe_url(url)

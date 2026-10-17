@@ -88,6 +88,16 @@ def test_static_site_gate_reports_a_broken_sampled_link(tmp_path):
     assert any("broken local link missing.html" in error for error in check_site(tmp_path, PUBLIC))
 
 
+def test_static_site_gate_reports_a_malformed_link_instead_of_crashing(tmp_path):
+    _site(tmp_path)
+    path = tmp_path / "demo" / "index.html"
+    path.write_text(
+        path.read_text(encoding="utf-8").replace("../index.html", "https://example.com]"), encoding="utf-8"
+    )
+
+    assert any("malformed link https://example.com]" in error for error in check_site(tmp_path, PUBLIC))
+
+
 def test_static_site_gate_rejects_a_global_source_only_disclaimer(tmp_path):
     _site(tmp_path)
     landing = tmp_path / "index.html"

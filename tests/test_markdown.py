@@ -76,6 +76,11 @@ def test_formulas_are_kept_as_written_for_the_reader_and_escaped():
         ),
         ("at <https://arxiv.org/abs/1234.5678>.", 'at <a href="https://arxiv.org/abs/1234.5678">https://arxiv.org/abs/1234.5678</a>.'),
         ("see https://oeis.org/A000001, and (https://example.org/x).", 'see <a href="https://oeis.org/A000001">https://oeis.org/A000001</a>, and (<a href="https://example.org/x">https://example.org/x</a>).'),
+        (
+            "a bad link: [example][https://example.com].",
+            'a bad link: [example][<a href="https://example.com">https://example.com</a>].',
+        ),
+        ("see [https://example.org/a_(b)] there", 'see [<a href="https://example.org/a_(b)">https://example.org/a_(b)</a>] there'),
         ("a [`Finset`](https://x.org/F) link", 'a <a href="https://x.org/F"><code>Finset</code></a> link'),
         ("[x](javascript:alert(1)) and [y](data:text/html,hi)", "[x](javascript:alert(1)) and [y](data:text/html,hi)"),
         ('[q](https://x.org/?a=1&b="2")', '<a href="https://x.org/?a=1&amp;b=&quot;2&quot;">q</a>'),

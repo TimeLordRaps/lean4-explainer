@@ -132,7 +132,11 @@ def check_site(site: Path, site_url: str) -> list[str]:
             if not doc.meta.get(("link", "canonical")):
                 errors.append(f"{rel}: missing canonical link")
         for href in doc.hrefs:
-            target = _local_target(site, page, href, base_path)
+            try:
+                target = _local_target(site, page, href, base_path)
+            except ValueError:
+                errors.append(f"{rel}: malformed link {href}")
+                continue
             if target is not None and not target.is_file():
                 errors.append(f"{rel}: broken local link {href}")
 
