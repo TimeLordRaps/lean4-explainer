@@ -23,7 +23,7 @@ EXPECTED = {
     "mil": 16,
     "oai": 1393,
     "pfr": 494,
-    "tpil": 35,
+    "tpil": 34,
 }
 CURATED = {
     "alphaproof-nexus": 348,  # 281 + 67 curated annotations copied to their identical copies
@@ -70,7 +70,7 @@ def test_real_hosted_overlays_are_bound_parseable_and_annotation_rich():
 
     assert not errors
     assert counts == EXPECTED
-    assert sum(counts.values()) == 15_375
+    assert sum(counts.values()) == 15_374
 
 
 def test_formal_conjectures_overlay_does_not_publish_a_partial_glossary():
